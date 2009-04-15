@@ -11,6 +11,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
@@ -337,6 +340,361 @@
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)/include&quot;;&quot;$(APR_DIST)/include&quot;;../src/main;../src/test"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4290, 4101"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib libaprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(APR_DIST)\bin&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories="&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)/include&quot;;&quot;$(APR_DIST)/include&quot;;../src/main;../src/test"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib libaprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(APR_DIST)\bin&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ReleaseDLL|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)/include&quot;;&quot;$(APR_DIST)/include&quot;;../src/main;../src/test"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib aprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(APR_DIST)\bin&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugDLL|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)/include&quot;;&quot;$(APR_DIST)/include&quot;;../src/main;../src/test"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4290, 4101"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib aprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(APR_DIST)\bin&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1000,6 +1358,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ActiveMQBytesMessageMarshallerTest.h"
@@ -1037,6 +1431,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1088,6 +1518,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ActiveMQMessageMarshallerTest.h"
@@ -1125,6 +1591,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1176,6 +1678,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ActiveMQQueueMarshallerTest.h"
@@ -1213,6 +1751,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1264,6 +1838,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ActiveMQTempQueueMarshallerTest.h"
@@ -1301,6 +1911,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1352,6 +1998,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ActiveMQTextMessageMarshallerTest.h"
@@ -1389,6 +2071,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1440,6 +2158,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\BrokerIdMarshallerTest.h"
@@ -1477,6 +2231,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1528,6 +2318,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ConnectionControlMarshallerTest.h"
@@ -1565,6 +2391,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1616,6 +2478,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ConnectionIdMarshallerTest.h"
@@ -1653,6 +2551,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1704,6 +2638,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ConsumerControlMarshallerTest.h"
@@ -1741,6 +2711,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1792,6 +2798,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ConsumerInfoMarshallerTest.h"
@@ -1829,6 +2871,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1880,6 +2958,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\DataArrayResponseMarshallerTest.h"
@@ -1917,6 +3031,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -1968,6 +3118,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\DestinationInfoMarshallerTest.h"
@@ -2005,6 +3191,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2056,6 +3278,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ExceptionResponseMarshallerTest.h"
@@ -2093,6 +3351,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2144,6 +3438,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\IntegerResponseMarshallerTest.h"
@@ -2181,6 +3511,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2232,6 +3598,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\JournalTopicAckMarshallerTest.h"
@@ -2269,6 +3671,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2320,6 +3758,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\JournalTransactionMarshallerTest.h"
@@ -2357,6 +3831,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2408,6 +3918,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\LastPartialCommandMarshallerTest.h"
@@ -2445,6 +3991,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2496,6 +4078,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\MessageAckMarshallerTest.h"
@@ -2533,6 +4151,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2584,6 +4238,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\MessageDispatchNotificationMarshallerTest.h"
@@ -2621,6 +4311,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2672,6 +4398,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\MessagePullMarshallerTest.h"
@@ -2709,6 +4471,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2760,6 +4558,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\PartialCommandMarshallerTest.h"
@@ -2797,6 +4631,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2848,6 +4718,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ProducerInfoMarshallerTest.h"
@@ -2885,6 +4791,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -2936,6 +4878,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\RemoveSubscriptionInfoMarshallerTest.h"
@@ -2973,6 +4951,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3024,6 +5038,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\ResponseMarshallerTest.h"
@@ -3061,6 +5111,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3112,6 +5198,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\SessionInfoMarshallerTest.h"
@@ -3149,6 +5271,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3200,6 +5358,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\SubscriptionInfoMarshallerTest.h"
@@ -3237,6 +5431,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3288,6 +5518,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v1\WireFormatInfoMarshallerTest.h"
@@ -3325,6 +5591,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)1.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3380,6 +5682,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQBytesMessageMarshallerTest.h"
@@ -3417,6 +5755,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3468,6 +5842,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQMessageMarshallerTest.h"
@@ -3505,6 +5915,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3556,6 +6002,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQQueueMarshallerTest.h"
@@ -3593,6 +6075,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3644,6 +6162,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQTempQueueMarshallerTest.h"
@@ -3681,6 +6235,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3732,6 +6322,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQTextMessageMarshallerTest.h"
@@ -3769,6 +6395,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3820,6 +6482,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\BrokerIdMarshallerTest.h"
@@ -3857,6 +6555,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3908,6 +6642,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ConnectionControlMarshallerTest.h"
@@ -3945,6 +6715,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3996,6 +6802,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ConnectionIdMarshallerTest.h"
@@ -4033,6 +6875,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4084,6 +6962,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ConsumerControlMarshallerTest.h"
@@ -4121,6 +7035,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4172,6 +7122,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ConsumerInfoMarshallerTest.h"
@@ -4209,6 +7195,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4260,6 +7282,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\DataArrayResponseMarshallerTest.h"
@@ -4297,6 +7355,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4348,6 +7442,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\DestinationInfoMarshallerTest.h"
@@ -4385,6 +7515,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4436,6 +7602,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ExceptionResponseMarshallerTest.h"
@@ -4473,6 +7675,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4524,6 +7762,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\IntegerResponseMarshallerTest.h"
@@ -4561,6 +7835,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4612,6 +7922,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\JournalTopicAckMarshallerTest.h"
@@ -4649,6 +7995,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4700,6 +8082,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\JournalTransactionMarshallerTest.h"
@@ -4737,6 +8155,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4788,6 +8242,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\LastPartialCommandMarshallerTest.h"
@@ -4825,6 +8315,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4876,6 +8402,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\MessageAckMarshallerTest.h"
@@ -4913,6 +8475,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -4964,6 +8562,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\MessageDispatchNotificationMarshallerTest.h"
@@ -5001,6 +8635,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5052,6 +8722,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\MessagePullMarshallerTest.h"
@@ -5096,6 +8802,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\NetworkBridgeFilterMarshallerTest.h"
@@ -5133,6 +8875,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5192,6 +8970,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ProducerIdMarshallerTest.h"
@@ -5229,6 +9043,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5280,6 +9130,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\RemoveInfoMarshallerTest.h"
@@ -5317,6 +9203,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5368,6 +9290,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ReplayCommandMarshallerTest.h"
@@ -5405,6 +9363,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5456,6 +9450,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\SessionIdMarshallerTest.h"
@@ -5493,6 +9523,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5544,6 +9610,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ShutdownInfoMarshallerTest.h"
@@ -5581,6 +9683,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -5632,6 +9770,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\TransactionInfoMarshallerTest.h"
@@ -5676,6 +9850,42 @@
 										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\WireFormatInfoMarshallerTest.h"
@@ -5713,6 +9923,42 @@
 								</FileConfiguration>
 								<FileConfiguration
 									Name="DebugDLL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Debug|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="ReleaseDLL|x64"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(InputName)2.obj"
+										XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="DebugDLL|x64"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
