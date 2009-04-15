@@ -19,29 +19,46 @@
 
 #include <vector>
 #include <sstream>
+#include <memory>
 #include <algorithm>
 
 using namespace std;
 using namespace cms;
 
+namespace cms{
+
+	class CMSExceptionData {
+	public:
+
+		std::string message;
+		std::auto_ptr<const std::exception> cause;
+		std::vector< std::pair< std::string, int> > stackTrace;
+
+	};
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException() throw() : std::exception() {
+	this->data = new CMSExceptionData();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException( const CMSException& ex ) throw() : std::exception() {
 
-    this->cause.reset( ex.cause.release() );
-    this->message = ex.message;
-    this->stackTrace = ex.stackTrace;
+	this->data = new CMSExceptionData();
+    this->data->cause.reset( ex.data->cause.release() );
+    this->data->message = ex.data->message;
+    this->data->stackTrace = ex.data->stackTrace;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException( const std::string& message,
                             const std::exception* cause ) throw() : std::exception() {
 
-    this->cause.reset( cause );
-    this->message = message;
+    this->data = new CMSExceptionData();
+    this->data->cause.reset( cause );
+    this->data->message = message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,24 +67,26 @@ CMSException::CMSException( const std::string& message,
                             const std::vector< std::pair< std::string, int> >& stackTrace )
                                 throw() : std::exception() {
 
-    this->cause.reset( cause );
-    this->message = message;
-    this->stackTrace = stackTrace;
+    this->data = new CMSExceptionData();
+    this->data->cause.reset( cause );
+    this->data->message = message;
+    this->data->stackTrace = stackTrace;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::~CMSException() throw() {
+	delete this->data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CMSException::setMark( const char* file, const int lineNumber ) {
 
     // Add this mark to the end of the stack trace.
-    stackTrace.push_back( std::make_pair( (std::string)file, (int)lineNumber ) );
+    this->data->stackTrace.push_back( std::make_pair( (std::string)file, (int)lineNumber ) );
 
     std::ostringstream stream;
-    stream << "\tFILE: " << stackTrace[stackTrace.size()-1].first;
-    stream << ", LINE: " << stackTrace[stackTrace.size()-1].second;
+    stream << "\tFILE: " << this->data->stackTrace[this->data->stackTrace.size()-1].first;
+    stream << ", LINE: " << this->data->stackTrace[this->data->stackTrace.size()-1].second;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,13 +106,28 @@ std::string CMSException::getStackTraceString() const {
     std::ostringstream stream;
 
     // Write the message and each stack entry.
-    stream << message << std::endl;
-    for( unsigned int ix=0; ix<stackTrace.size(); ++ix ){
-        stream << "\tFILE: " << stackTrace[ix].first;
-        stream << ", LINE: " << stackTrace[ix].second;
+    stream << this->data->message << std::endl;
+    for( unsigned int ix = 0; ix < this->data->stackTrace.size(); ++ix ){
+        stream << "\tFILE: " << this->data->stackTrace[ix].first;
+        stream << ", LINE: " << this->data->stackTrace[ix].second;
         stream << std::endl;
     }
 
     // Return the string from the output stream.
     return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string CMSException::getMessage() const {
+    return this->data->message;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::exception* CMSException::getCause() const {
+    return this->data->cause.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::pair< std::string, int> > CMSException::getStackTrace() const {
+    return this->data->stackTrace;
 }
