@@ -62,7 +62,7 @@ Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(
                                     "true" ) ) );
         info->setTightEncodingEnabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.tightEncodingEnabled",
-                                    "false" ) ) );
+                                    "true" ) ) );
         info->setSizePrefixDisabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.sizePrefixDisabled",
                                     "false" ) ) );
