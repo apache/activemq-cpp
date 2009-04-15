@@ -23,11 +23,12 @@
 #include <vector>
 #include <iostream>
 #include <exception>
-#include <memory>
 
 #include <cms/Config.h>
 
 namespace cms{
+
+	class CMSExceptionData;
 
     /**
      * This class represents an error that has occurred in cms, providers
@@ -40,20 +41,8 @@ namespace cms{
     class CMS_API CMSException : public std::exception {
     private:
 
-        /**
-         * The cause of this exception.
-         */
-        std::string message;
-
-        /**
-         * The Exception that caused this one to be thrown.
-         */
-        mutable std::auto_ptr<const std::exception> cause;
-
-        /**
-         * The stack trace.
-         */
-        std::vector< std::pair< std::string, int> > stackTrace;
+    	// The actual data that defines this exception.
+    	CMSExceptionData* data;
 
     public:
 
@@ -75,9 +64,7 @@ namespace cms{
          *
          * @return string errors message
          */
-        virtual std::string getMessage() const {
-            return this->message;
-        }
+        virtual std::string getMessage() const;
 
         /**
          * Gets the exception that caused this one to be thrown, this allows
@@ -88,9 +75,7 @@ namespace cms{
          * @returns a const pointer reference to the causal exception, if there
          * was no cause associated with this exception then NULL is returned.
          */
-        virtual const std::exception* getCause() const {
-            return this->cause.get();
-        }
+        virtual const std::exception* getCause() const;
 
         /**
          * Provides the stack trace for every point where
@@ -98,9 +83,7 @@ namespace cms{
          *
          * @return vector containing stack trace strings
          */
-        virtual std::vector< std::pair< std::string, int> > getStackTrace() const {
-            return this->stackTrace;
-        }
+        virtual std::vector< std::pair< std::string, int> > getStackTrace() const;
 
         /**
          * Adds a file/line number to the stack trace.
