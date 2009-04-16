@@ -36,12 +36,12 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
 
         int utfLength = dataIn.readInt();
 
-        if( utfLength == -1 ) {
+        if( utfLength <= 0 ) {
             return "";
         }
 
         std::vector<unsigned char> buffer( utfLength );
-        std::string result( utfLength, char() );
+        std::vector<unsigned char> result( utfLength );
 
         dataIn.readFully( &buffer[0], 0, utfLength );
 
@@ -50,9 +50,9 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
         unsigned char a = 0;
 
         while( count < utfLength ) {
-            if( (unsigned char)( result[index] = (char)buffer[count++] ) < 0x80 ) {
+            if( ( result[index] = buffer[count++] ) < 0x80 ) {
                 index++;
-            } else if( ( ( a = result[index++] ) & 0xE0 ) == 0xC0 ) {
+            } else if( ( ( a = result[index] ) & 0xE0 ) == 0xC0 ) {
                 if( count >= utfLength ) {
                     throw UTFDataFormatException(
                         __FILE__, __LINE__,
@@ -76,7 +76,7 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
                         "This method only supports encoded ASCII values of (0-255)." );
                 }
 
-                result[index++] = (char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
+                result[index++] = ( ( a & 0x1F ) << 6 ) | ( b & 0x3F );
 
             } else if( ( a & 0xF0 ) == 0xE0 ) {
 
@@ -102,8 +102,8 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
                 //        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
                 //}
                 //
-                //result[inde++] = (char)( ( ( a & 0x0F ) << 12 ) |
-                //                         ( ( b & 0x3F ) << 6 ) | ( c & 0x3F ) );
+                //result[inde++] = ( ( a & 0x0F ) << 12 ) |
+                //                 ( ( b & 0x3F ) << 6 ) | ( c & 0x3F );
 
             } else {
                 throw UTFDataFormatException(
@@ -111,9 +111,7 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
             }
         }
 
-        result.resize( index );
-
-        return result;
+        return std::string( (char*)( &result[0] ), index );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
