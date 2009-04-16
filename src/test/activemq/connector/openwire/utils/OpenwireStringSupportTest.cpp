@@ -108,7 +108,7 @@ void OpenwireStringSupportTest::readTestHelper( unsigned char* input, int inputL
 
     std::string result = reader.readUTF();
 
-    for( std::size_t i; i < result.length(); ++i ) {
+    for( std::size_t i = 0; i < result.length(); ++i ) {
         CPPUNIT_ASSERT( (unsigned char)result[i] == expect[i] );
     }
 }
