@@ -209,7 +209,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\activemq-cpp.dll"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Decaf\vs2005-build\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -293,7 +293,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\activemq-cppd.dll"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
