@@ -1,4 +1,25 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.6                               ==
+=========================================================================
+
+This is another bugfix release in the 2.2.x series.  This release address a few issues
+related to String marshaling and unmarshaling, we can now encode ASCII values greater
+than 127 into modified UTF-8 along with any embedded Nulls in the string.  The URI option
+for setting Max inactivity duration now works properly as well.
+
+Bug
+
+    * [AMQCPP-232] - OpenWire encode and decode UTF8 incorrect
+    * [AMQCPP-234] - URI class helpers are missing the DLLExport Macro
+    * [AMQCPP-235] - UTF8 length marshalling bug in openwire readString and writeString.
+    * [AMQCPP-236] - maxInactivityDuration of Wire-Format is not supported by ActiveMQ-CPP2.2.5
+
+Improvement
+
+    * [AMQCPP-233] - Update Windows Builds Files to use ENV vars to find dependancies
+    * [AMQCPP-237] - Create 64bit configurations in the VC2005 build projects
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2.5                               ==
 =========================================================================
 
