@@ -106,9 +106,9 @@ void OpenwireStringSupportTest::readTestHelper( unsigned char* input, int inputL
     ByteArrayInputStream myStream( input, inputLength );
     DataInputStream reader( &myStream );
 
-    std::string result = reader.readUTF();
+    std::string result = OpenwireStringSupport::readString( reader );
 
-    for( std::size_t i; i < result.length(); ++i ) {
+    for( std::size_t i = 0; i < result.length(); ++i ) {
         CPPUNIT_ASSERT( (unsigned char)result[i] == expect[i] );
     }
 }

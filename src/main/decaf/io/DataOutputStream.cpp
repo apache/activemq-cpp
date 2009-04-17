@@ -353,7 +353,9 @@ void DataOutputStream::writeUTF( const std::string& value )
         }
 
         this->writeUnsignedShort( (unsigned short)utfLength );
-        this->write( &utfBytes[0], 0, utfIndex );
+		if( utfLength > 0 ) {
+			this->write( &utfBytes[0], 0, utfLength );
+		}
     }
     DECAF_CATCH_RETHROW( UTFDataFormatException )
     DECAF_CATCH_RETHROW( IOException )
