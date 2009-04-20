@@ -18,6 +18,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/BriefTestProgressListener.h>
+#include <cppunit/XmlOutputter.h>
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
 #include <activemq/library/ActiveMQCPP.h>
@@ -41,6 +42,9 @@ int main( int argc, char **argv ) {
     }
 
     for( int i = 0; i < iterations; ++i ) {
+
+        std::ofstream outputFile( "activemq-test.xml"  );
+
         CppUnit::TextUi::TestRunner runner;
         CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
         runner.addTest( registry.makeTest() );
@@ -49,7 +53,13 @@ int main( int argc, char **argv ) {
         CppUnit::BriefTestProgressListener listener;
         runner.eventManager().addListener( &listener );
 
+        // Specify XML output and inform the test runner of this format.  The TestRunner
+        // will delete the passed XmlOutputter for us.
+        runner.setOutputter( new CppUnit::XmlOutputter( &runner.result(), outputFile ) );
+
         wasSuccessful = runner.run( "", false );
+
+        outputFile.close();
     }
 
     activemq::library::ActiveMQCPP::shutdownLibrary();
