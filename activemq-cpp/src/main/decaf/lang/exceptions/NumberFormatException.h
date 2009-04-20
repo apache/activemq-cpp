@@ -35,7 +35,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        NumberFormatException() {}
+        NumberFormatException() : Exception() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -49,7 +49,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        NumberFormatException(const NumberFormatException& ex) throw()
+        NumberFormatException( const NumberFormatException& ex ) throw()
         : Exception() {
             *(Exception*)this = ex;
         }
