@@ -1,11 +1,105 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.0                                 ==
+=========================================================================
+
+The 3.0 release represents a major reworking of the ActiveMQ-CPP code, many internal
+changes have been made to enhance stability and improve performance.  The major new
+feature in this release is the addition of the Failover Transport.
+
+Bug
+
+    * [AMQCPP-205] - CmsTemplate testBasics test can hang
+    * [AMQCPP-209] - Transaction Integration Tests for both Stomp and Openwire fail randomly
+    * [AMQCPP-218] - CMSException is not getting caught by base class std::exception.
+    * [AMQCPP-219] - Compilation errors in main/decaf/net on Solaris 10 with SunStudio 12
+    * [AMQCPP-220] - Memory leak in activemq-cpp
+    * [AMQCPP-223] - Message delivered async do not have their read only properties set properly.
+    * [AMQCPP-224] - Configure accept wrong versions of apr-util
+    * [AMQCPP-227] - Mutex class allows for double free in APR pools under certain circumstances
+    * [AMQCPP-232] - OpenWire encode and decode UTF8 incorrect
+    * [AMQCPP-234] - URI class helpers are missing the DLLExport Macro
+    * [AMQCPP-235] - UTF8 length marshalling bug in openwire readString and writeString.
+    * [AMQCPP-236] - maxInactivityDuration of Wire-Format is not supported by ActiveMQ-CPP2.2.5
+
+Improvement
+
+    * [AMQCPP-100] - Implement a Failover Transport
+    * [AMQCPP-233] - Update Windows Builds Files to use ENV vars to find dependancies
+    * [AMQCPP-237] - Create 64bit configurations in the VC2005 build projects
+
+New Feature
+
+    * [AMQCPP-153] - Additional decaf classes to support SSL
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.6                               ==
+=========================================================================
+
+This is another bugfix release in the 2.2.x series.  This release address a few issues
+related to String marshaling and unmarshaling, we can now encode ASCII values greater
+than 127 into modified UTF-8 along with any embedded Nulls in the string.  The URI option
+for setting Max inactivity duration now works properly as well.
+
+Bug
+
+    * [AMQCPP-232] - OpenWire encode and decode UTF8 incorrect
+    * [AMQCPP-234] - URI class helpers are missing the DLLExport Macro
+    * [AMQCPP-235] - UTF8 length marshalling bug in openwire readString and writeString.
+    * [AMQCPP-236] - maxInactivityDuration of Wire-Format is not supported by ActiveMQ-CPP2.2.5
+
+Improvement
+
+    * [AMQCPP-233] - Update Windows Builds Files to use ENV vars to find dependancies
+    * [AMQCPP-237] - Create 64bit configurations in the VC2005 build projects
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.5                               ==
+=========================================================================
+
+This is a minor release which mainly resolves a few small bugs that have
+been identified since the 2.2.4 release.  Also a few more fixes to improve
+compatibility with the Sun compiler has been added.  One big improvement
+in this release is that the Message's are now delivered with the read-only
+state consistently set correctly.
+
+Bug
+
+    * [AMQCPP-223] - Message delivered async do not have their read only properties set properly.
+    * [AMQCPP-224] - Configure accept wrong versions of apr-util
+    * [AMQCPP-225] - configure.ac does not work correctly on Solaris with SunStudio Compiler
+    * [AMQCPP-227] - Mutex class allows for double free in APR pools under certain circumstances
+    * [AMQCPP-230] - BlockByteArrayInputStream read method is not thread safe
+
+Improvement
+
+    * [AMQCPP-229] - Session createTopic and createQueue don't provide clear error when an empty
+                     Destination is given
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.4                               ==
+=========================================================================
+
+This is a minor release which mainly resolves a few memory leak issues that
+have been identified since the 2.2.3 release.  Also a small fix to improve
+compatibility with the Sun compiler has been added.
+
+Bug
+
+    * [AMQCPP-219] - Compilation errors in main/decaf/net on Solaris 10 with SunStudio 12
+    * [AMQCPP-220] - Memory leak in activemq-cpp
+
+Improvement
+
+    * [AMQCPP-222] - Potential memory leak in OpenWire Commands
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2.3                               ==
 =========================================================================
 
 This is a minor release that contains bugfixes that were found since the
-2.2.2 release.  This version adds support for responding to KeepAlive 
+2.2.2 release.  This version adds support for responding to KeepAlive
 requests from the broker, and it now properly sets JMSX properties on both
-stomp and openwire commands.  Users can now delete destinations using the 
+stomp and openwire commands.  Users can now delete destinations using the
 deleteDestination function in ActiveMQConnection.
 
 Bug
