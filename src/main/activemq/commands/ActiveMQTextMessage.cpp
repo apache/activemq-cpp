@@ -16,8 +16,10 @@
  */
 #include <activemq/commands/ActiveMQTextMessage.h>
 
+#include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <decaf/io/DataInputStream.h>
 #include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 
 using namespace std;
@@ -51,7 +53,10 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
             return "";
         }
 
-        return std::string( (const char*)&getContent()[4], getContent().size()-4 );
+        decaf::io::ByteArrayInputStream bais( getContent() );
+        decaf::io::DataInputStream dataIn( &bais );
+
+        return OpenwireStringSupport::readString( dataIn );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
