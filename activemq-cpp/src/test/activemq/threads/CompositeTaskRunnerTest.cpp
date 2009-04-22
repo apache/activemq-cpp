@@ -79,10 +79,6 @@ void CompositeTaskRunnerTest::test() {
         }
     }
 
-    std::cout << "\n";
-    std::cout << "task1.count = " << task1.getCount() << std::endl;
-    std::cout << "task2.count = " << task2.getCount() << std::endl;
-
     CPPUNIT_ASSERT( task1.getCount() == 100 );
     CPPUNIT_ASSERT( task2.getCount() == 200 );
 
