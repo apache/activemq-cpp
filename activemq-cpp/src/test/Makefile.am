@@ -74,6 +74,7 @@ cc_sources = \
     decaf/io/FilterOutputStreamTest.cpp \
     decaf/io/ByteArrayInputStreamTest.cpp \
     main.cpp \
+    util/teamcity/TeamCityProgressListener.cpp \
     testRegistry.cpp \
     activemq/transport/TransportRegistryTest.cpp \
     activemq/transport/mock/MockTransportFactoryTest.cpp \
@@ -183,6 +184,7 @@ h_sources = \
     decaf/io/FilterOutputStreamTest.h \
     decaf/io/DataInputStreamTest.h \
     decaf/io/BufferedInputStreamTest.h \
+    util/teamcity/TeamCityProgressListener.h \
     activemq/transport/IOTransportTest.h \
     activemq/transport/mock/MockTransportFactoryTest.h \
     activemq/transport/failover/FailoverTransportTest.h \
