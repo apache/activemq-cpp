@@ -39,6 +39,7 @@ cc_sources = \
   activemq/test/openwire/OpenwireSlowListenerTest.cpp \
   activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
   TestRegistry.cpp \
+  util/teamcity/TeamCityProgressListener.cpp \
   main.cpp
 
 #  activemq/test/stomp/StompAsyncSenderTest.cpp \
