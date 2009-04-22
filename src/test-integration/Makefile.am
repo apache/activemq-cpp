@@ -48,6 +48,7 @@ cc_sources = \
   activemq/test/openwire/OpenwireSlowListenerTest.cpp \
   activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
   TestRegistry.cpp \
+  util/teamcity/TeamCityProgressListener.cpp \
   main.cpp
 
 ## Compile this as part of make check

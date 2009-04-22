@@ -132,6 +132,7 @@ cc_sources = \
   decaf/util/concurrent/atomic/AtomicIntegerTest.cpp \
   decaf/nio/BufferTest.cpp \
   testRegistry.cpp \
+  util/teamcity/TeamCityProgressListener.cpp \
   main.cpp
 
 h_sources = \
