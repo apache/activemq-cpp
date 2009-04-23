@@ -58,3 +58,21 @@ Runtime* Runtime::getRuntime() {
 
     return &runtime;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void Runtime::initializeRuntime( int argc DECAF_UNUSED, char **argv DECAF_UNUSED ) {
+
+    // Do this for now, once we remove APR we can do this in a way that
+    // makes more sense.
+    Runtime::getRuntime();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Runtime::initializeRuntime() {
+    Runtime::initializeRuntime( 0, NULL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Runtime::shutdownRuntime() {
+
+}

@@ -37,21 +37,26 @@ using namespace activemq::transport::failover;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQCPP::initializeLibrary() {
+void ActiveMQCPP::initializeLibrary( int argc, char** argv ) {
 
     // Initialize the Decaf Library by requesting its runtime.
-    decaf::lang::Runtime::getRuntime();
+    decaf::lang::Runtime::initializeRuntime( argc, argv );
 
     // Register all WireFormats
     ActiveMQCPP::registerWireFormats();
 
-    // Registr all Transports
+    // Register all Transports
     ActiveMQCPP::registerTransports();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQCPP::shutdownLibrary() {
+void ActiveMQCPP::initializeLibrary() {
+    ActiveMQCPP::initializeLibrary( 0, NULL );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQCPP::shutdownLibrary() {
+    decaf::lang::Runtime::shutdownRuntime();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
