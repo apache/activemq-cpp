@@ -70,6 +70,58 @@
         <inherited>false</inherited>
         <executions>
           <execution>
+            <id>Benchmarks-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-benchmarks/</outputDirectory>
+              <template>${basedir}/src/test-benchmarks/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Integration-Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-integration/</outputDirectory>
+              <template>${basedir}/src/test-integration/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/test/stomp/**\*.cpp</exclude>
+                </excludes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/test/stomp/**\*.h</exclude>
+                </excludes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>Test-Makefile</id>
             <configuration>
               <outputDirectory>${basedir}/src/test/</outputDirectory>
@@ -131,6 +183,35 @@
             <phase>generate-resources</phase>
             <goals>
               <goal>makefile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly/source.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
             </goals>
           </execution>
         </executions>
