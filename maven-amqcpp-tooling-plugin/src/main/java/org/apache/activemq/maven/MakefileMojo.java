@@ -60,16 +60,16 @@ public class MakefileMojo extends AbstractToolingMojo {
             throw new MojoExecutionException( "Template File does not exist: " + this.getTemplate() );
         }
 
-        System.out.println( "Output directory = " + this.getOutputDirectory() );
-        System.out.println( "Makefile template = " + this.getTemplate() );
-        System.out.println( "" );
-        System.out.println( "Source Files Directory = " + getSources().getDirectory() );
-        System.out.println( "Source Includes = " + getSources().getIncludes()[0] );
-        System.out.println( "Sources Found = " + getSources().getFiles().size() );
-        System.out.println( "Header Files Directory = " + getHeaders().getDirectory() );
-        System.out.println( "header Includes = " + getHeaders().getIncludes()[0] );
-        System.out.println( "headers Found = " + getHeaders().getFiles().size() );
-        System.out.println( "" );
+//        System.out.println( "Output directory = " + this.getOutputDirectory() );
+//        System.out.println( "Makefile template = " + this.getTemplate() );
+//        System.out.println( "" );
+//        System.out.println( "Source Files Directory = " + getSources().getDirectory() );
+//        System.out.println( "Source Includes = " + getSources().getIncludes()[0] );
+//        System.out.println( "Sources Found = " + getSources().getFiles().size() );
+//        System.out.println( "Header Files Directory = " + getHeaders().getDirectory() );
+//        System.out.println( "header Includes = " + getHeaders().getIncludes()[0] );
+//        System.out.println( "headers Found = " + getHeaders().getFiles().size() );
+//        System.out.println( "" );
 
         try {
 
