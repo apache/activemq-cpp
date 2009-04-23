@@ -38,16 +38,12 @@ LOGDECAF_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
 LOGDECAF_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool ThreadPool::instance;
+ThreadPool::ThreadPool() {
 
-////////////////////////////////////////////////////////////////////////////////
-ThreadPool::ThreadPool()
-{
-    maxThreads  = DEFAULT_MAX_POOL_SIZE;
-    blockSize   = DEFAULT_MAX_BLOCK_SIZE;
-    freeThreads = 0;
-
-    shutdown = false;
+    this->maxThreads  = DEFAULT_MAX_POOL_SIZE;
+    this->blockSize   = DEFAULT_MAX_BLOCK_SIZE;
+    this->freeThreads = 0;
+    this->shutdown = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,13 +82,21 @@ ThreadPool::~ThreadPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ThreadPool* ThreadPool::getInstance() {
+
+    static ThreadPool instance;
+
+    return &instance;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::queueTask( ThreadPool::Task task )
    throw ( lang::Exception ) {
 
     try{
-        
+
         if( !task.first || !task.second ) {
-            throw exceptions::IllegalArgumentException( 
+            throw exceptions::IllegalArgumentException(
                 __FILE__, __LINE__,
                 "ThreadPool::QueueTask - Invalid args for Task");
         }
@@ -126,7 +130,7 @@ void ThreadPool::queueTask( ThreadPool::Task task )
 ////////////////////////////////////////////////////////////////////////////////
 ThreadPool::Task ThreadPool::deQueueTask()
     throw ( lang::Exception ) {
-    
+
     try{
         //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - syncing on queue");
 
@@ -153,7 +157,7 @@ ThreadPool::Task ThreadPool::deQueueTask()
 
             // check size again.
             if( queue.empty() ) {
-               throw lang::Exception( 
+               throw lang::Exception(
                    __FILE__, __LINE__,
                    "ThreadPool::DeQueueUserWorkItem - Empty Taskn, not in shutdown.");
             }
@@ -172,11 +176,11 @@ ThreadPool::Task ThreadPool::deQueueTask()
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::reserve( std::size_t size ) {
-    
+
     try {
-        
+
         synchronized( &poolLock ) {
-            
+
             if( size < pool.size() || pool.size() == maxThreads ) {
                 return;
             }
@@ -196,9 +200,9 @@ void ThreadPool::reserve( std::size_t size ) {
 void ThreadPool::setMaxThreads( std::size_t maxThreads ) {
 
     try{
-        
+
         synchronized( &poolLock ) {
-            
+
             if( maxThreads == 0 ) {
                 // Caller tried to do something stupid, ignore them.
                 return;
@@ -213,7 +217,7 @@ void ThreadPool::setMaxThreads( std::size_t maxThreads ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::setBlockSize( std::size_t blockSize ) {
-    
+
     try{
         if( blockSize <= 0 ) {
             // User tried something dumb, protect them from themselves
@@ -259,9 +263,9 @@ void ThreadPool::AllocateThreads( std::size_t count ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::onTaskStarted( PooledThread* thread DECAF_UNUSED ) {
-    
+
     try{
-        
+
         synchronized( &poolLock ) {
 
             freeThreads--;
@@ -303,13 +307,13 @@ void ThreadPool::onTaskCompleted( PooledThread* thread DECAF_UNUSED) {
 void ThreadPool::onTaskException(
    PooledThread* thread,
    lang::Exception& ex DECAF_UNUSED ) {
-    
+
     //LOGCMS_DEBUG(logger, "ThreadPool::onTaskException: ");
 
     try{
-        
+
         synchronized( &poolLock ) {
-            
+
             // Delete the thread that had the exception and start a new
             // one to take its place.
             freeThreads--;
