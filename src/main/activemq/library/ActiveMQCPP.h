@@ -38,8 +38,24 @@ namespace library {
          * Initialize the ActiveMQ-CPP Library constructs, this method will
          * init all the internal Registry objects and initialize the Decaf
          * library.
+         *
+         * @throws runtime_error if an error occurs while initializing this library.
          */
         static void initializeLibrary();
+
+        /**
+         * Initialize the ActiveMQ-CPP Library constructs, this method will
+         * initialize all the internal Registry objects and initialize the Decaf
+         * library.  This method takes the args passed to the main method of
+         * process for use is setting system properties and configuring the
+         * ActiveMQ-CPP Library.
+         *
+         * @param argc - the count of arguments passed to this Process.
+         * @param argv - the array of string arguments passed to this process.
+         *
+         * @throws runtime_error if an error occurs while initializing this library.
+         */
+        static void initializeLibrary( int argc, char** argv );
 
         /**
          * Shutdown the ActiveMQ-CPP Library, freeing any resources

@@ -36,6 +36,35 @@ namespace lang {
          */
         static Runtime* getRuntime();
 
+        /**
+         * Initialize the Decaf Library passing it the args that were passed
+         * to the application at startup.
+         *
+         * @param argc - The number of args passed
+         * @param args - Array of char* values passed to the Process on start.
+         *
+         * @throws runtime_error if the library is already initialized or an
+         *         error occurs during initialization.
+         */
+        static void initializeRuntime( int argc, char **argv );
+
+        /**
+         * Initialize the Decaf Library
+         *
+         * @throws runtime_error if the library is already initialized or an
+         *         error occurs during initialization.
+         */
+        static void initializeRuntime();
+
+        /**
+         * Shutdown the Decaf Library, this call should take places after all
+         * objects that were created from the Decaf library have been deallocated.
+         *
+         * @throws runtime_error if the library has not already been initialized or an
+         *         error occurs during shutdown.
+         */
+        static void shutdownRuntime();
+
     };
 
 }}

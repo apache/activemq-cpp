@@ -85,11 +85,6 @@ namespace concurrent{
         LOGDECAF_DECLARE(logger)
         LOGDECAF_DECLARE(marker)
 
-    private:   // Statics
-
-        // The singleton instance of this class
-        static ThreadPool instance;
-
     public:
 
         ThreadPool();
@@ -218,9 +213,7 @@ namespace concurrent{
          * Return the one and only Thread Pool instance.
          * @return The Thread Pool Pointer
          */
-        static ThreadPool* getInstance() {
-            return &instance;
-        }
+        static ThreadPool* getInstance();
 
     private:
 
