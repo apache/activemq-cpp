@@ -71,7 +71,7 @@
   </properties>
 
   <modules>
-    <module>maven-amqcpp-tooling-plugin</module>
+    <module>maven-cpptools-plugin</module>
     <module>activemq-cpp-openwire-generator</module>
     <module>activemq-cpp</module>
   </modules>
