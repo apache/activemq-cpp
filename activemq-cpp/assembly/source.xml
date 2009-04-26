@@ -36,9 +36,6 @@
       <directory>m4</directory>
     </fileSet>
     <fileSet>
-      <directory>activemq-cpp.xcodeproj</directory>
-    </fileSet>
-    <fileSet>
       <directory>vs2005-build</directory>
     </fileSet>
   </fileSets>
