@@ -17,11 +17,7 @@
 
 #include "StompResponseBuilder.h"
 
-#include <activemq/connector/stomp/commands/ConnectCommand.h>
-#include <activemq/connector/stomp/commands/ConnectedCommand.h>
-#include <activemq/connector/stomp/commands/SubscribeCommand.h>
-#include <activemq/connector/stomp/commands/UnsubscribeCommand.h>
-
+#include <decaf/io/IOException.h>
 #include <decaf/util/UUID.h>
 
 using namespace activemq;
@@ -31,39 +27,40 @@ using namespace activemq::transport;
 using namespace activemq::transport::mock;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* StompResponseBuilder::buildResponse( const commands::Command* cmd ){
+Pointer<Response> StompResponseBuilder::buildResponse( const Pointer<Command>& command ) {
 
     // If this command requires a response we don't know what it is
     // so we throw an exception.
-    if( cmd->isResponseRequired() ) {
+    if( command->isResponseRequired() ) {
 
-        throw commands::CommandIOException( __FILE__, __LINE__,
+        throw IOException( __FILE__, __LINE__,
             "StompResponseBuilder - unrecognized command" );
     }
 
-    return NULL;
+    return Pointer<Response>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompResponseBuilder::buildIncomingCommands(
-    const commands::Command* command, decaf::util::Queue<commands::Command*>& queue ){
+void StompResponseBuilder::buildIncomingCommands( const Pointer<Command>& command,
+                                                  decaf::util::StlQueue< Pointer<Command> >& queue ) {
 
-    const connector::stomp::commands::ConnectCommand* connectCommand =
-        dynamic_cast<const connector::stomp::commands::ConnectCommand*>( command );
-
-    if( connectCommand != NULL ) {
-        connector::stomp::commands::ConnectedCommand* resp =
-            new connector::stomp::commands::ConnectedCommand();
-        resp->setCorrelationId( connectCommand->getCommandId() );
-
-        if( connectCommand->getClientId() == NULL ) {
-            resp->setSessionId( UUID::randomUUID().toString() );
-        } else {
-            resp->setSessionId( connectCommand->getClientId() );
-        }
-
-        queue.push( resp );
-    }
+//    const connector::stomp::commands::ConnectCommand* connectCommand =
+//        dynamic_cast<const connector::stomp::commands::ConnectCommand*>( command );
+//
+//    if( connectCommand != NULL ) {
+//        connector::stomp::commands::ConnectedCommand* resp =
+//            new connector::stomp::commands::ConnectedCommand();
+//        resp->setCorrelationId( connectCommand->getCommandId() );
+//
+//        if( connectCommand->getClientId() == NULL ) {
+//            resp->setSessionId( UUID::randomUUID().toString() );
+//        } else {
+//            resp->setSessionId( connectCommand->getClientId() );
+//        }
+//
+//        queue.push( resp );
+//    }
 }

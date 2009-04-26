@@ -18,23 +18,32 @@
 #ifndef _ACTIVEMQ_WIREFORMAT_STOMP_STOMPRESPONSEBUILDER_H_
 #define _ACTIVEMQ_WIREFORMAT_STOMP_STOMPRESPONSEBUILDER_H_
 
-#include <activemq/transport/mock/MockTransport.h>
+#include <activemq/transport/mock/ResponseBuilder.h>
 #include <activemq/util/Config.h>
+#include <activemq/commands/Command.h>
+#include <activemq/commands/Response.h>
+#include <decaf/lang/Pointer.h>
+#include <decaf/util/StlQueue.h>
 
 namespace activemq{
 namespace wireformat{
 namespace stomp{
 
-    class AMQCPP_API StompResponseBuilder :
-        public transport::mock::MockTransport::ResponseBuilder{
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
+
+    class AMQCPP_API StompResponseBuilder : public transport::mock::ResponseBuilder{
     public:
 
         StompResponseBuilder() {}
         virtual ~StompResponseBuilder() {}
 
-        virtual commands::Response* buildResponse( const commands::Command* cmd );
+        virtual Pointer<Response> buildResponse( const Pointer<Command>& command );
+
         virtual void buildIncomingCommands(
-            const commands::Command* cmd, decaf::util::Queue<commands::Command*>& queue );
+            const Pointer<Command>& command,
+            decaf::util::StlQueue< Pointer<Command> >& queue ) = 0;
 
     };
 

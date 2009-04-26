@@ -19,17 +19,21 @@
 #define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHALER_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
-#include <activemq/wireformat/stomp/marshal/MarshalException.h>
+#include <decaf/io/IOException.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace wireformat{
 namespace stomp{
 namespace marshal{
 
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+
     /**
-     * Interface for all marshalers between Commands and stomp frames.
+     * Interface for all marshalers between Commands and Stomp frames.
      */
     class AMQCPP_API Marshaler {
     public:
@@ -38,26 +42,22 @@ namespace marshal{
         virtual ~Marshaler() {}
 
         /**
-         * Marshal a Stomp Frame to a Stomp Command, the frame is now
-         * owned by this Command, caller should not use the frame again.
-         * @param frame Frame to Marshal
-         * @return Newly Marshaled Stomp Message
-         * @throws MarshalException
+         * Marshal a Stomp Frame read in from the Transport to a Command object.
+         * @param frame Frame to Marshal.
+         * @return Newly Marshaled Command.
+         * @throws IOException
          */
-        virtual commands::Command* marshal( StompFrame* frame )
-            throw ( MarshalException );
+        virtual Pointer<Command> marshal( const Pointer<StompFrame>& frame )
+            throw ( decaf::io::IOException );
 
         /**
-         * Marshal a Stomp Command to a Stomp Frame, if the command that
-         * is past is not castable to a Stomp Command an Exception will
-         * be thrown
-         * @param command The Stomp Command to Marshal
-         * @return newly Marshaled Stomp Frame
-         * @throws MarshalException
+         * Marshal a Command to a Stomp Frame to write out to the Transport.
+         * @param command The Command to Marshal.
+         * @return newly Marshaled Stomp Frame.
+         * @throws IOException
          */
-        virtual const StompFrame& marshal(
-            commands::Command* command )
-                throw ( MarshalException );
+        virtual Pointer<StompFrame> marshal( const Pointer<Command>& command )
+            throw ( decaf::io::IOException );
 
     };
 

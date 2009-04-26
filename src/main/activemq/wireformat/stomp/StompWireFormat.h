@@ -23,10 +23,14 @@
 #include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/wireformat/stomp/marshal/Marshaler.h>
 #include <decaf/io/IOException.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace wireformat {
 namespace stomp {
+
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
 
     class AMQCPP_API StompWireFormat : public WireFormat {
     private:
@@ -52,7 +56,7 @@ namespace stomp {
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( commands::Command* command, decaf::io::DataOutputStream* out )
+        virtual void marshal( const Pointer<Command>& command, decaf::io::DataOutputStream* out )
             throw ( decaf::io::IOException );
 
         /**
@@ -61,7 +65,7 @@ namespace stomp {
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual commands::Command* unmarshal( decaf::io::DataInputStream* in )
+        virtual Pointer<Command> unmarshal( decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException );
 
         /**
@@ -93,8 +97,9 @@ namespace stomp {
          * @returns new instance of a WireFormatNegotiator.
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
-        virtual WireFormatNegotiator* createNegotiator( transport::Transport* transport )
-            throw( decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<transport::Transport> createNegotiator(
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException );
 
     private:
 
