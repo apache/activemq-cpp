@@ -15,12 +15,9 @@
  * limitations under the License.
  */
 
-#include "CommandConstants.h"
+#include "StompCommandConstants.h"
 #include <stdio.h>
 #include <string.h>
-
-#include <activemq/connector/stomp/StompTopic.h>
-#include <activemq/connector/stomp/StompQueue.h>
 
 using namespace std;
 using namespace activemq;
@@ -31,22 +28,22 @@ using namespace activemq::connector::stomp;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const char* CommandConstants::queuePrefix = "/queue/";
-const char* CommandConstants::topicPrefix = "/topic/";
+const char* StompCommandConstants::queuePrefix = "/queue/";
+const char* StompCommandConstants::topicPrefix = "/topic/";
 
 ////////////////////////////////////////////////////////////////////////////////
-string CommandConstants::StaticInitializer::stompHeaders[NUM_STOMP_HEADERS];
-string CommandConstants::StaticInitializer::commands[NUM_COMMANDS];
-string CommandConstants::StaticInitializer::ackModes[NUM_ACK_MODES];
-string CommandConstants::StaticInitializer::msgTypes[NUM_MSG_TYPES];
-map<std::string, CommandConstants::StompHeader> CommandConstants::StaticInitializer::stompHeaderMap;
-map<std::string, CommandConstants::CommandId> CommandConstants::StaticInitializer::commandMap;
-map<std::string, CommandConstants::AckMode> CommandConstants::StaticInitializer::ackModeMap;
-map<std::string, CommandConstants::MessageType> CommandConstants::StaticInitializer::msgTypeMap;
-CommandConstants::StaticInitializer CommandConstants::staticInits;
+string StompCommandConstants::StaticInitializer::stompHeaders[NUM_STOMP_HEADERS];
+string StompCommandConstants::StaticInitializer::commands[NUM_COMMANDS];
+string StompCommandConstants::StaticInitializer::ackModes[NUM_ACK_MODES];
+string StompCommandConstants::StaticInitializer::msgTypes[NUM_MSG_TYPES];
+map<std::string, StompCommandConstants::StompHeader> StompCommandConstants::StaticInitializer::stompHeaderMap;
+map<std::string, StompCommandConstants::CommandId> StompCommandConstants::StaticInitializer::commandMap;
+map<std::string, StompCommandConstants::AckMode> StompCommandConstants::StaticInitializer::ackModeMap;
+map<std::string, StompCommandConstants::MessageType> StompCommandConstants::StaticInitializer::msgTypeMap;
+StompCommandConstants::StaticInitializer StompCommandConstants::staticInits;
 
 ////////////////////////////////////////////////////////////////////////////////
-CommandConstants::StaticInitializer::StaticInitializer(){
+StompCommandConstants::StaticInitializer::StaticInitializer(){
 
     stompHeaders[HEADER_DESTINATION] = "destination";
     stompHeaders[HEADER_TRANSACTIONID] = "transaction";
@@ -120,7 +117,7 @@ CommandConstants::StaticInitializer::StaticInitializer(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CommandConstants::toDestination( const std::string& dest )
+cms::Destination* StompCommandConstants::toDestination( const std::string& dest )
     throw ( decaf::lang::exceptions::IllegalArgumentException )
 {
     std::size_t qpos = dest.find( queuePrefix );
@@ -133,7 +130,7 @@ cms::Destination* CommandConstants::toDestination( const std::string& dest )
     } else {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
-            "CommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
+            "StompCommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
     }
 }
 

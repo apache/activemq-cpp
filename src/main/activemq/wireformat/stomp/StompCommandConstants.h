@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_COMMANDS_COMMANDCONSTANTS_H_
-#define _ACTIVEMQ_WIREFORMAT_STOMP_COMMANDS_COMMANDCONSTANTS_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_STOMPCOMMANDCONSTANTS_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMP_STOMPCOMMANDCONSTANTS_H_
 
 #include <cms/Destination.h>
 #include <activemq/util/Config.h>
@@ -87,14 +87,13 @@ namespace commands{
             NUM_STOMP_HEADERS
         };
 
-        enum AckMode{
+        enum AckMode {
             ACK_CLIENT,
             ACK_AUTO,
             NUM_ACK_MODES
         };
 
-        enum MessageType
-        {
+        enum MessageType {
             TEXT,
             BYTES,
             NUM_MSG_TYPES
