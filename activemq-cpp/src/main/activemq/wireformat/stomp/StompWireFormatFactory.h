@@ -21,15 +21,18 @@
 #include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormatFactory.h>
 #include <activemq/wireformat/stomp/StompWireFormat.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace wireformat {
 namespace stomp {
 
+    using decaf::lang::Pointer;
+
     /**
      * Factory used to create the Stomp Wire Format instance.
      */
-    class StompWireFormatFactory : public WireFormatFactory {
+    class AMQCPP_API StompWireFormatFactory : public WireFormatFactory {
     public:
 
         StompWireFormatFactory() {}
@@ -40,7 +43,7 @@ namespace stomp {
          * properties from which it can obtain any optional settings
          * @param properties - the Properties for this WireFormat
          */
-        virtual StompWireFormat* createWireFormat( const decaf::util::Properties& properties )
+        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties )
             throw ( decaf::lang::exceptions::IllegalStateException );
 
     };

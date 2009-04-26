@@ -17,98 +17,80 @@
 
 #include <activemq/wireformat/stomp/marshal/Marshaler.h>
 
-#include <activemq/transport/Command.h>
-#include <activemq/connector/stomp/commands/CommandConstants.h>
-#include <activemq/connector/stomp/commands/AbstractCommand.h>
-
+#include <activemq/commands/Command.h>
+#include <activemq/wireformat/stomp/StompCommandConstants.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
-#include <activemq/wireformat/stomp/marshal/MarshalException.h>
 
-// Commands we can receive
-#include <activemq/connector/stomp/commands/ConnectedCommand.h>
-#include <activemq/connector/stomp/commands/ReceiptCommand.h>
-#include <activemq/connector/stomp/commands/ErrorCommand.h>
-
-// Message Commands we can receive
-#include <activemq/connector/stomp/commands/MessageCommand.h>
-#include <activemq/connector/stomp/commands/BytesMessageCommand.h>
-#include <activemq/connector/stomp/commands/TextMessageCommand.h>
+#include <activemq/commands/ActiveMQMessage.h>
+#include <activemq/commands/ActiveMQTextMessage.h>
+#include <activemq/commands/ActiveMQBytesMessage.h>
+#include <activemq/commands/Response.h>
+#include <activemq/commands/BrokerError.h>
 
 using namespace activemq;
 using namespace activemq::exceptions;
-using namespace activemq::transport;
-using namespace activemq::connector::stomp::commands;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
 using namespace activemq::wireformat::stomp::marshal;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* Marshaler::marshal( StompFrame* frame )
-    throw ( MarshalException ) {
+Pointer<Command> Marshaler::marshal( const Pointer<StompFrame>& frame )
+    throw ( decaf::io::IOException ) {
 
     try {
 
-        CommandConstants::CommandId commandId =
-            CommandConstants::toCommandId(frame->getCommand().c_str());
-        commands::Command* command = NULL;
+        StompCommandConstants::CommandId commandId =
+            StompCommandConstants::toCommandId( frame->getCommand().c_str() );
 
-        if(commandId == CommandConstants::CONNECTED){
-            command = new ConnectedCommand( frame );
-        }
-        else if(commandId == CommandConstants::ERROR_CMD){
-            command = new ErrorCommand( frame );
-        }
-        else if(commandId == CommandConstants::RECEIPT){
-            command = new ReceiptCommand( frame );
-        }
-        else if(commandId == CommandConstants::MESSAGE){
+        Pointer<Command> command;
 
-            if( !frame->getProperties().hasProperty(
-                    CommandConstants::toString(
-                        CommandConstants::HEADER_CONTENTLENGTH ) ) ) {
-                command = new TextMessageCommand( frame );
-            } else {
-                command = new BytesMessageCommand( frame );
-            }
+        if( commandId == StompCommandConstants::CONNECTED ){
+//            command = new ConnectedCommand( frame );
+        }
+        else if( commandId == StompCommandConstants::ERROR_CMD ){
+//            command = new ErrorCommand( frame );
+        }
+        else if( commandId == StompCommandConstants::RECEIPT ){
+//            command = new ReceiptCommand( frame );
+        }
+        else if( commandId == StompCommandConstants::MESSAGE ){
+
+//            if( !frame->getProperties().hasProperty(
+//                    CommandConstants::toString(
+//                        CommandConstants::HEADER_CONTENTLENGTH ) ) ) {
+//                command = new TextMessageCommand( frame );
+//            } else {
+//                command = new BytesMessageCommand( frame );
+//            }
         }
 
         // We either got a command or a response, but if we got neither
         // then complain, something went wrong.
-        if(command == NULL) {
-            throw MarshalException(
+        if( command == NULL ) {
+            throw decaf::io::IOException(
                 __FILE__, __LINE__,
                 "Marshaler::marshal - No Command Created from frame");
         }
 
         return command;
     }
-    AMQ_CATCH_RETHROW( MarshalException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, MarshalException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, MarshalException )
-    AMQ_CATCHALL_THROW( MarshalException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const StompFrame& Marshaler::marshal( commands::Command* command )
-    throw ( MarshalException ) {
+Pointer<StompFrame> Marshaler::marshal( const Pointer<Command>& command )
+    throw ( decaf::io::IOException ) {
 
     try{
 
-        Marshalable* marshalable =
-            dynamic_cast<Marshalable*>(command);
-
-        // Easy, just get the frame from the command
-        if( marshalable != NULL ) {
-            return marshalable->marshal();
-        } else {
-            throw MarshalException(
-                __FILE__, __LINE__,
-                "Marshaler::marshal - Invalid Command Type!");
-        }
+        return Pointer<StompFrame>();
     }
-    AMQ_CATCH_RETHROW( MarshalException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, MarshalException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, MarshalException )
-    AMQ_CATCHALL_THROW( MarshalException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
