@@ -27,9 +27,8 @@
 namespace activemq{
 namespace wireformat{
 namespace stomp{
-namespace commands{
 
-    class AMQCPP_API CommandConstants{
+    class AMQCPP_API StompCommandConstants{
     public:
 
         enum CommandId{
@@ -200,6 +199,6 @@ namespace commands{
         static StaticInitializer staticInits;
     };
 
-}}}}
+}}}
 
 #endif /*_ACTIVEMQ_WIREFORMAT_STOMP_COMMANDS_COMMANDCONSTANTS_H_*/

@@ -23,8 +23,6 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
-using namespace activemq::wireformat::stomp::commands;
-using namespace activemq::connector::stomp;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,18 +118,20 @@ StompCommandConstants::StaticInitializer::StaticInitializer(){
 cms::Destination* StompCommandConstants::toDestination( const std::string& dest )
     throw ( decaf::lang::exceptions::IllegalArgumentException )
 {
-    std::size_t qpos = dest.find( queuePrefix );
-    std::size_t tpos = dest.find( topicPrefix );
+//    std::size_t qpos = dest.find( queuePrefix );
+//    std::size_t tpos = dest.find( topicPrefix );
+//
+//    if( tpos == 0 ) {
+//        return new StompTopic(dest.substr(strlen(topicPrefix)));
+//    } else if( qpos == 0 ) {
+//        return new StompQueue(dest.substr(strlen(queuePrefix)));
+//    } else {
+//        throw IllegalArgumentException(
+//            __FILE__, __LINE__,
+//            "StompCommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
+//    }
 
-    if( tpos == 0 ) {
-        return new StompTopic(dest.substr(strlen(topicPrefix)));
-    } else if( qpos == 0 ) {
-        return new StompQueue(dest.substr(strlen(queuePrefix)));
-    } else {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "StompCommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
-    }
+    return NULL;
 }
 
 

@@ -18,7 +18,7 @@
 #include "StompWireFormat.h"
 
 #include <activemq/wireformat/stomp/StompFrame.h>
-#include <activemq/wireformat/stomp/commands/CommandConstants.h>
+#include <activemq/wireformat/stomp/StompCommandConstants.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/io/IOException.h>
@@ -28,7 +28,6 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
-using namespace activemq::wireformat::stomp::commands;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
@@ -43,7 +42,7 @@ StompWireFormat::~StompWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::marshal( commands::Command* command, decaf::io::DataOutputStream* out )
+void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataOutputStream* out )
     throw ( decaf::io::IOException ) {
 
     try{
@@ -55,15 +54,15 @@ void StompWireFormat::marshal( commands::Command* command, decaf::io::DataOutput
                 "output stream is NULL" );
         }
 
-        const StompFrame& frame = marshaler.marshal( command );
+        Pointer<StompFrame> frame = marshaler.marshal( command );
 
         // Write the command.
-        const string& cmdString = frame.getCommand();
+        const string& cmdString = frame->getCommand();
         out->write( (unsigned char*)cmdString.c_str(), 0, cmdString.length() );
         out->writeByte( '\n' );
 
         // Write all the headers.
-        vector< pair<string,string> > headers = frame.getProperties().toArray();
+        vector< pair<string,string> > headers = frame->getProperties().toArray();
         for( std::size_t ix=0; ix < headers.size(); ++ix ) {
             string& name = headers[ix].first;
             string& value = headers[ix].second;
@@ -78,15 +77,15 @@ void StompWireFormat::marshal( commands::Command* command, decaf::io::DataOutput
         out->writeByte( '\n' );
 
         // Write the body.
-        const std::vector<unsigned char>& body = frame.getBody();
+        const std::vector<unsigned char>& body = frame->getBody();
         if( body.size() > 0 ) {
             out->write( &body[0], 0, body.size() );
         }
 
-        if( ( frame.getBodyLength() == 0 ) ||
-            ( frame.getProperties().getProperty(
-                  CommandConstants::toString(
-                      CommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) ) {
+        if( ( frame->getBodyLength() == 0 ) ||
+            ( frame->getProperties().getProperty(
+                  StompCommandConstants::toString(
+                      StompCommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) ) {
 
             out->writeByte( '\0' );
         }
@@ -102,10 +101,10 @@ void StompWireFormat::marshal( commands::Command* command, decaf::io::DataOutput
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
+Pointer<Command> StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
     throw ( decaf::io::IOException ) {
 
-    auto_ptr<StompFrame> frame;
+    Pointer<StompFrame> frame;
 
     try{
 
@@ -121,8 +120,8 @@ commands::Command* StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
         // Read the body.
         readStompBody( *( frame.get() ), in );
 
-        // Return the Command, caller must delete it.
-        return marshaler.marshal( frame.release() );
+        // Return the Command.
+        return marshaler.marshal( frame );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
@@ -130,8 +129,9 @@ commands::Command* StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatNegotiator* StompWireFormat::createNegotiator( transport::Transport* transport )
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+Pointer<transport::Transport> StompWireFormat::createNegotiator(
+    const Pointer<transport::Transport>& transport AMQCPP_UNUSED )
+        throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
     throw UnsupportedOperationException( __FILE__, __LINE__,
         "No Negotiator is required to use this WireFormat." );
@@ -282,13 +282,13 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
         unsigned int content_length = 0;
 
         if(frame.getProperties().hasProperty(
-            commands::CommandConstants::toString(
-                commands::CommandConstants::HEADER_CONTENTLENGTH))) {
+            StompCommandConstants::toString(
+                StompCommandConstants::HEADER_CONTENTLENGTH ) ) ) {
 
             string length =
                 frame.getProperties().getProperty(
-                    commands::CommandConstants::toString(
-                        commands::CommandConstants::HEADER_CONTENTLENGTH));
+                    StompCommandConstants::toString(
+                        StompCommandConstants::HEADER_CONTENTLENGTH ) );
 
             content_length = (unsigned int)Integer::parseInt( length );
          }
@@ -327,7 +327,7 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
         } else {
 
             // Content length was either zero, or not set, so we read until the
-            // first null is encounted.
+            // first null is encountered.
             while( true ) {
 
                 char byte = in->readByte();
@@ -336,8 +336,7 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
 
                 content_length++;
 
-                if( byte != '\0' )
-                {
+                if( byte != '\0' ) {
                     continue;
                 }
 
