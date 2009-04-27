@@ -115,6 +115,13 @@ namespace commands{
         virtual void setType( unsigned char type );
 
         /**
+         * @return an answer of true to the isTransactionInfo() query.
+         */
+        virtual bool isTransactionInfo() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.

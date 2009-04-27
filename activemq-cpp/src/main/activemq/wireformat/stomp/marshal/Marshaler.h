@@ -59,6 +59,20 @@ namespace marshal{
         virtual Pointer<StompFrame> marshal( const Pointer<Command>& command )
             throw ( decaf::io::IOException );
 
+    private:
+
+        Pointer<Command> unmarshalMessage( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalReceipt( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalConnected( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalError( const Pointer<StompFrame>& frame );
+
+        Pointer<StompFrame> marshalMessage( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalAck( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalConnect( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalTransactionInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalShutdownInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalRemoveInfo( const Pointer<Command>& command );
+
     };
 
 }}}}

@@ -48,6 +48,8 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "ProducerAck" );
         commandsWithShortcuts.add( "MessageDispatchNotification" );
         commandsWithShortcuts.add( "ShutdownInfo" );
+        commandsWithShortcuts.add( "TransactionInfo" );
+        commandsWithShortcuts.add( "ConnectionInfo" );
     }
 
     /**
