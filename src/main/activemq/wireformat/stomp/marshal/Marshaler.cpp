@@ -28,6 +28,7 @@
 #include <activemq/commands/BrokerError.h>
 
 using namespace activemq;
+using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
@@ -46,34 +47,19 @@ Pointer<Command> Marshaler::marshal( const Pointer<StompFrame>& frame )
         Pointer<Command> command;
 
         if( commandId == StompCommandConstants::CONNECTED ){
-//            command = new ConnectedCommand( frame );
-        }
-        else if( commandId == StompCommandConstants::ERROR_CMD ){
-//            command = new ErrorCommand( frame );
-        }
-        else if( commandId == StompCommandConstants::RECEIPT ){
-//            command = new ReceiptCommand( frame );
-        }
-        else if( commandId == StompCommandConstants::MESSAGE ){
-
-//            if( !frame->getProperties().hasProperty(
-//                    CommandConstants::toString(
-//                        CommandConstants::HEADER_CONTENTLENGTH ) ) ) {
-//                command = new TextMessageCommand( frame );
-//            } else {
-//                command = new BytesMessageCommand( frame );
-//            }
+            return this->unmarshalConnected( frame );
+        } else if( commandId == StompCommandConstants::ERROR_CMD ){
+            return this->unmarshalError( frame );
+        } else if( commandId == StompCommandConstants::RECEIPT ){
+            return this->unmarshalReceipt( frame );
+        } else if( commandId == StompCommandConstants::MESSAGE ){
+            return this->unmarshalMessage( frame );
         }
 
-        // We either got a command or a response, but if we got neither
-        // then complain, something went wrong.
-        if( command == NULL ) {
-            throw decaf::io::IOException(
-                __FILE__, __LINE__,
-                "Marshaler::marshal - No Command Created from frame");
-        }
-
-        return command;
+        // We didn't seem to know what it was we got, so throw an exception.
+        throw decaf::io::IOException(
+            __FILE__, __LINE__,
+            "Marshaler::marshal - No Command Created from frame");
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
@@ -87,10 +73,94 @@ Pointer<StompFrame> Marshaler::marshal( const Pointer<Command>& command )
 
     try{
 
+        if( command->isMessage() ) {
+            return this->marshalMessage( command );
+        } else if( command->isRemoveInfo() ) {
+            return this->marshalRemoveInfo( command );
+        } else if( command->isShutdownInfo() ) {
+            return this->marshalShutdownInfo( command );
+        } else if( command->isMessageAck() ) {
+            return this->marshalAck( command );
+        }
+
+        // Ignoreing this command.
         return Pointer<StompFrame>();
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
     AMQ_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> Marshaler::unmarshalMessage( const Pointer<StompFrame>& frame ) {
+
+//    if( !frame->getProperties().hasProperty(
+//            CommandConstants::toString(
+//                CommandConstants::HEADER_CONTENTLENGTH ) ) ) {
+//        command = new TextMessageCommand( frame );
+//    } else {
+//        command = new BytesMessageCommand( frame );
+//    }
+
+    return Pointer<Command>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> Marshaler::unmarshalReceipt( const Pointer<StompFrame>& frame ){
+
+    return Pointer<Command>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> Marshaler::unmarshalConnected( const Pointer<StompFrame>& frame ) {
+
+    return Pointer<Command>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> Marshaler::unmarshalError( const Pointer<StompFrame>& frame ) {
+
+    Pointer<BrokerError> error( new BrokerError() );
+    error->setMessage(
+        frame->getProperties().getProperty(
+            StompCommandConstants::toString( StompCommandConstants::HEADER_MESSAGE ), "" ) );
+
+    return error;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalMessage( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalConnect( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalTransactionInfo( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalShutdownInfo( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> Marshaler::marshalRemoveInfo( const Pointer<Command>& command ) {
+
+    return Pointer<StompFrame>();
 }

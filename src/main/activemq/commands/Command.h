@@ -80,6 +80,7 @@ namespace commands{
          * Command is of a certain type.  These are the most commonly used Commands
          * and we save several casts and some ugly code by just adding these here.
          */
+        virtual bool isConnectionInfo() const = 0;
         virtual bool isBrokerInfo() const = 0;
         virtual bool isKeepAliveInfo() const = 0;
         virtual bool isMessage() const = 0;
@@ -90,6 +91,7 @@ namespace commands{
         virtual bool isResponse() const = 0;
         virtual bool isRemoveInfo() const = 0;
         virtual bool isShutdownInfo() const = 0;
+        virtual bool isTransactionInfo() const = 0;
         virtual bool isWireFormatInfo() const = 0;
 
     };

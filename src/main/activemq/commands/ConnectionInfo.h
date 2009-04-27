@@ -138,6 +138,13 @@ namespace commands{
         virtual void setClientMaster( bool clientMaster );
 
         /**
+         * @return an answer of true to the isConnectionInfo() query.
+         */
+        virtual bool isConnectionInfo() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.

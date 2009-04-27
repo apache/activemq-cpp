@@ -112,6 +112,9 @@ namespace commands{
             return BaseDataStructure::equals( value );
         }
 
+        virtual bool isConnectionInfo() const {
+            return false;
+        }
         virtual bool isBrokerInfo() const  {
             return false;
         }
@@ -140,6 +143,9 @@ namespace commands{
             return false;
         }
         virtual bool isShutdownInfo() const  {
+            return false;
+        }
+        virtual bool isTransactionInfo() const {
             return false;
         }
         virtual bool isWireFormatInfo() const  {
