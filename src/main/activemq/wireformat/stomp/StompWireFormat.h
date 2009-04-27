@@ -72,7 +72,7 @@ namespace stomp {
          * Set the Version
          * @param the version of the wire format
          */
-        virtual void setVersion( int version ) {}
+        virtual void setVersion( int version AMQCPP_UNUSED ) {}
 
         /**
          * Get the Version
@@ -108,7 +108,7 @@ namespace stomp {
          * @param reference to a Stomp Frame
          * @throws StompConnectorException
          */
-        void readStompCommandHeader( StompFrame& frame, decaf::io::DataInputStream* in )
+        void readStompCommandHeader( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException );
 
         /**
@@ -116,7 +116,7 @@ namespace stomp {
          * @param Frame to place data into
          * @throws StompConnectorException
          */
-        void readStompHeaders( StompFrame& frame, decaf::io::DataInputStream* in )
+        void readStompHeaders( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException );
 
         /**
@@ -124,13 +124,14 @@ namespace stomp {
          * @return number of bytes read, zero if there was a problem.
          * @throws StompConnectorException
          */
-        std::size_t readStompHeaderLine( decaf::io::DataInputStream* in ) throw ( decaf::io::IOException );
+        std::size_t readStompHeaderLine( decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
 
         /**
          * Reads the Stomp Body from the Wire and store it in the frame.
          * @param Stomp Frame to place data in
          */
-        void readStompBody( StompFrame& frame, decaf::io::DataInputStream* in )
+        void readStompBody( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException );
 
     };

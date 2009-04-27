@@ -165,7 +165,7 @@
                 <excludes>
                   <exclude>**/decaf/security/**\*.cpp</exclude>
                   <exclude>**/decaf/security_provider/**\*.cpp</exclude>
-                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+<!--                   <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude> -->
                 </excludes>
               </sources>
               <headers>
@@ -176,7 +176,7 @@
                 <excludes>
                   <exclude>**/decaf/security/**\*.h</exclude>
                   <exclude>**/decaf/security_provider/**\*.h</exclude>
-                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+<!--                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude> -->
                 </excludes>
               </headers>
             </configuration>

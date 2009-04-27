@@ -112,13 +112,13 @@ Pointer<Command> StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
         frame.reset( new StompFrame() );
 
         // Read the command header.
-        readStompCommandHeader( *( frame.get() ), in );
+        readStompCommandHeader( frame, in );
 
         // Read the headers.
-        readStompHeaders( *( frame.get() ), in );
+        readStompHeaders( frame, in );
 
         // Read the body.
-        readStompBody( *( frame.get() ), in );
+        readStompBody( frame, in );
 
         // Return the Command.
         return marshaler.marshal( frame );
@@ -138,7 +138,7 @@ Pointer<transport::Transport> StompWireFormat::createNegotiator(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompCommandHeader( StompFrame& frame, decaf::io::DataInputStream* in )
+void StompWireFormat::readStompCommandHeader( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
    throw ( decaf::io::IOException ) {
 
     try{
@@ -154,7 +154,7 @@ void StompWireFormat::readStompCommandHeader( StompFrame& frame, decaf::io::Data
             for( size_t ix = 0; ix < buffer.size()-1; ++ix ) {
 
                 // Find the first non whitespace character
-                if( !Character::isWhitespace(buffer[ix]) ){
+                if( !Character::isWhitespace( buffer[ix] ) ){
                     offset = (long long)ix;
                     break;
                 }
@@ -162,7 +162,7 @@ void StompWireFormat::readStompCommandHeader( StompFrame& frame, decaf::io::Data
 
             if( offset >= 0 ) {
                 // Set the command in the frame - copy the memory.
-                frame.setCommand( reinterpret_cast<char*>(&buffer[(size_t)offset]) );
+                frame->setCommand( reinterpret_cast<char*>( &buffer[(size_t)offset] ) );
                 break;
             }
         }
@@ -173,7 +173,7 @@ void StompWireFormat::readStompCommandHeader( StompFrame& frame, decaf::io::Data
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompHeaders( StompFrame& frame, decaf::io::DataInputStream* in )
+void StompWireFormat::readStompHeaders( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
     throw ( decaf::io::IOException ) {
 
     try{
@@ -211,11 +211,11 @@ void StompWireFormat::readStompHeaders( StompFrame& frame, decaf::io::DataInputS
                         // Null-terminate the key.
                         buffer[ix] = '\0';
 
-                        const char* key = reinterpret_cast<char*>(&buffer[0]);
-                        const char* value = reinterpret_cast<char*>(&buffer[ix+1]);
+                        const char* key = reinterpret_cast<char*>( &buffer[0] );
+                        const char* value = reinterpret_cast<char*>( &buffer[ix+1] );
 
                         // Assign the header key/value pair.
-                        frame.getProperties().setProperty(key, value);
+                        frame->getProperties().setProperty( key, value );
 
                         // Break out of the for loop.
                         break;
@@ -250,11 +250,9 @@ std::size_t StompWireFormat::readStompHeaderLine( decaf::io::DataInputStream* in
 
             // If we reached the line terminator, return the total number
             // of characters read.
-            if( buffer[count-1] == '\n' )
-            {
+            if( buffer[count-1] == '\n' ) {
                 // Overwrite the line feed with a null character.
                 buffer[count-1] = '\0';
-
                 return count;
             }
         }
@@ -271,7 +269,7 @@ std::size_t StompWireFormat::readStompHeaderLine( decaf::io::DataInputStream* in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStream* in )
+void StompWireFormat::readStompBody( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
    throw ( decaf::io::IOException ) {
 
     try{
@@ -281,12 +279,12 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
 
         unsigned int content_length = 0;
 
-        if(frame.getProperties().hasProperty(
+        if( frame->getProperties().hasProperty(
             StompCommandConstants::toString(
                 StompCommandConstants::HEADER_CONTENTLENGTH ) ) ) {
 
             string length =
-                frame.getProperties().getProperty(
+                frame->getProperties().getProperty(
                     StompCommandConstants::toString(
                         StompCommandConstants::HEADER_CONTENTLENGTH ) );
 
@@ -305,7 +303,7 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
             // Resize doesn't realloc the vector smaller if content_length
             // is less than capacity of the buffer, it just move the end
             // iterator.  Reserve adds the benefit that the mem is set to
-            // zero.  Over time as larger messages come in thsi will cause
+            // zero.  Over time as larger messages come in this will cause
             // us to adapt to that size so that future messages that are
             // around that size won't alloc any new memory.
 
@@ -346,7 +344,7 @@ void StompWireFormat::readStompBody( StompFrame& frame, decaf::io::DataInputStre
 
         if( content_length != 0 ) {
             // Set the body contents in the frame - copy the memory
-            frame.getBody() = buffer;
+            frame->getBody() = buffer;
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )

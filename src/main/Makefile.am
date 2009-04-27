@@ -304,6 +304,11 @@ cc_sources = \
     activemq/wireformat/openwire/utils/BooleanStream.cpp \
     activemq/wireformat/openwire/utils/HexTable.cpp \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.cpp \
+    activemq/wireformat/stomp/StompResponseBuilder.cpp \
+    activemq/wireformat/stomp/StompCommandConstants.cpp \
+    activemq/wireformat/stomp/marshal/Marshaler.cpp \
+    activemq/wireformat/stomp/StompWireFormatFactory.cpp \
+    activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     activemq/cmsutil/PooledSession.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
@@ -832,6 +837,12 @@ h_sources = \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h \
     activemq/wireformat/WireFormat.h \
     activemq/wireformat/WireFormatNegotiator.h \
+    activemq/wireformat/stomp/StompFrame.h \
+    activemq/wireformat/stomp/StompCommandConstants.h \
+    activemq/wireformat/stomp/StompResponseBuilder.h \
+    activemq/wireformat/stomp/StompWireFormatFactory.h \
+    activemq/wireformat/stomp/marshal/Marshaler.h \
+    activemq/wireformat/stomp/StompWireFormat.h \
     activemq/wireformat/WireFormatFactory.h \
     activemq/wireformat/MarshalAware.h \
     activemq/wireformat/WireFormatRegistry.h \
