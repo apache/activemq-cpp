@@ -33,6 +33,17 @@ namespace stomp{
      * to and from the broker.
      */
     class AMQCPP_API StompFrame{
+    private:
+
+        // String Name of this command.
+        std::string command;
+
+        // Properties of the Stomp Message
+        decaf::util::Properties properties;
+
+        // Byte data of Body.
+        std::vector<unsigned char> body;
+
     public:
 
         /**
@@ -84,6 +95,48 @@ namespace stomp{
         }
 
         /**
+         * Checks if the given property is present in the Frame.
+         *
+         * @param name - The name of the property to check for.
+         */
+        bool hasProperty( const std::string& name ) const {
+            return this->properties.hasProperty( name );
+        }
+
+        /**
+         * Gets a property from this Frame's properties and returns it, or the
+         * default value given.
+         *
+         * @param name - The name of the property to lookup
+         * @param fallback - The default value to return if this value isn't set
+         *
+         * @return string value of the property asked for.
+         */
+        std::string getProperty( const std::string& name, const std::string& fallback = "" ) const {
+            return this->properties.getProperty( name, fallback );
+        }
+
+        /**
+         * Gets and remove the property specified, if the property is not set, this method
+         * returns the empty string.
+         *
+         * @param name - the Name of the property to get and return.
+         */
+        std::string removeProperty( const std::string& name ) {
+            return this->properties.getProperty( name, "" );
+        }
+
+        /**
+         * Sets the property given to the value specified in this Frame's Properties
+         *
+         * @param name - Name of the property.
+         * @param value - Value to set the property to.
+         */
+        void setProperty( const std::string& name, const std::string& value ) {
+            this->properties.setProperty( name, value );
+        }
+
+        /**
          * Gets access to the header properties for this frame.
          * @return the Properties object owned by this Frame
          */
@@ -128,16 +181,6 @@ namespace stomp{
             std::copy( bytes, bytes + numBytes, iter );
         }
 
-    private:
-
-        // String Name of this command.
-        std::string command;
-
-        // Properties of the Stomp Message
-        decaf::util::Properties properties;
-
-        // Byte data of Body.
-        std::vector<unsigned char> body;
     };
 
 }}}

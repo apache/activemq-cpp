@@ -83,9 +83,7 @@ void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataO
         }
 
         if( ( frame->getBodyLength() == 0 ) ||
-            ( frame->getProperties().getProperty(
-                  StompCommandConstants::toString(
-                      StompCommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) ) {
+            ( frame->getProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) != "" ) ) {
 
             out->writeByte( '\0' );
         }
@@ -279,15 +277,8 @@ void StompWireFormat::readStompBody( Pointer<StompFrame>& frame, decaf::io::Data
 
         unsigned int content_length = 0;
 
-        if( frame->getProperties().hasProperty(
-            StompCommandConstants::toString(
-                StompCommandConstants::HEADER_CONTENTLENGTH ) ) ) {
-
-            string length =
-                frame->getProperties().getProperty(
-                    StompCommandConstants::toString(
-                        StompCommandConstants::HEADER_CONTENTLENGTH ) );
-
+        if( frame->hasProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) ) {
+            string length = frame->getProperty( StompCommandConstants::HEADER_CONTENTLENGTH );
             content_length = (unsigned int)Integer::parseInt( length );
          }
 

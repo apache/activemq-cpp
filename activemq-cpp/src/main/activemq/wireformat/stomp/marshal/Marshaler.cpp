@@ -26,6 +26,10 @@
 #include <activemq/commands/ActiveMQBytesMessage.h>
 #include <activemq/commands/Response.h>
 #include <activemq/commands/BrokerError.h>
+#include <activemq/commands/ExceptionResponse.h>
+
+#include <decaf/lang/Integer.h>
+#include <decaf/io/IOException.h>
 
 using namespace activemq;
 using namespace activemq::commands;
@@ -34,6 +38,7 @@ using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
 using namespace activemq::wireformat::stomp::marshal;
 using namespace decaf::lang;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> Marshaler::marshal( const Pointer<StompFrame>& frame )
@@ -41,10 +46,7 @@ Pointer<Command> Marshaler::marshal( const Pointer<StompFrame>& frame )
 
     try {
 
-        StompCommandConstants::CommandId commandId =
-            StompCommandConstants::toCommandId( frame->getCommand().c_str() );
-
-        Pointer<Command> command;
+        const std::string commandId = frame->getCommand();
 
         if( commandId == StompCommandConstants::CONNECTED ){
             return this->unmarshalConnected( frame );
@@ -81,9 +83,13 @@ Pointer<StompFrame> Marshaler::marshal( const Pointer<Command>& command )
             return this->marshalShutdownInfo( command );
         } else if( command->isMessageAck() ) {
             return this->marshalAck( command );
+        } else if( command->isConnectionInfo() ) {
+            return this->marshalConnectionInfo( command );
+        } else if( command->isTransactionInfo() ) {
+            return this->marshalTransactionInfo( command );
         }
 
-        // Ignoreing this command.
+        // Ignoring this command.
         return Pointer<StompFrame>();
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
@@ -115,18 +121,36 @@ Pointer<Command> Marshaler::unmarshalReceipt( const Pointer<StompFrame>& frame )
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> Marshaler::unmarshalConnected( const Pointer<StompFrame>& frame ) {
 
-    return Pointer<Command>();
+    Pointer<Response> response( new Response() );
+    if( frame->hasProperty( StompCommandConstants::HEADER_RESPONSEID ) ) {
+        response->setCorrelationId( Integer::parseInt(
+            frame->getProperty( StompCommandConstants::HEADER_RESPONSEID ) ) );
+    } else {
+        throw IOException(
+            __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
+    }
+
+    return response;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> Marshaler::unmarshalError( const Pointer<StompFrame>& frame ) {
 
+    Pointer<Command> result;
+
     Pointer<BrokerError> error( new BrokerError() );
     error->setMessage(
-        frame->getProperties().getProperty(
-            StompCommandConstants::toString( StompCommandConstants::HEADER_MESSAGE ), "" ) );
+        frame->removeProperty( StompCommandConstants::HEADER_MESSAGE ) );
 
-    return error;
+    if( frame->hasProperty( StompCommandConstants::HEADER_RECEIPTID ) ) {
+        Pointer<ExceptionResponse> errorResponse( new ExceptionResponse() );
+        errorResponse->setException( error );
+        errorResponse->setCorrelationId( Integer::parseInt(
+            frame->removeProperty( StompCommandConstants::HEADER_RECEIPTID ) ) );
+        return errorResponse;
+    } else {
+        return error;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +166,7 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<StompFrame> Marshaler::marshalConnect( const Pointer<Command>& command ) {
+Pointer<StompFrame> Marshaler::marshalConnectionInfo( const Pointer<Command>& command ) {
 
     return Pointer<StompFrame>();
 }
