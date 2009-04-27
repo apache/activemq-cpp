@@ -208,29 +208,14 @@ std::vector<std::string> System::getEnvArray() {
     return buffer;
 }
 
-#elif defined(_APPLE_)
-
-////////////////////////////////////////////////////////////////////////////////
-char*** _NSGetEnviron();
-
-////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> System::getEnvArray() {
-
-    std::vector<std::string> buffer;
-
-    char **environ = *_NSGetEnviron();
-
-    for( int i = 0; *(environ + i); i++ ){
-        buffer.push_back( environ[i] );
-    }
-
-    return buffer;
-}
-
 #else
 
-////////////////////////////////////////////////////////////////////////////////
-extern char** environ;
+#if defined(__APPLE__)
+   #include <crt_externs.h>
+   #define environ (*_NSGetEnviron())
+#else
+   extern char** environ;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> System::getEnvArray() {
@@ -245,3 +230,4 @@ std::vector<std::string> System::getEnvArray() {
 }
 
 #endif
+
