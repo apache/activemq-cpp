@@ -16,7 +16,6 @@
  */
 
 #include "StompCommandConstants.h"
-#include <stdio.h>
 #include <string.h>
 
 using namespace std;
@@ -26,112 +25,74 @@ using namespace activemq::wireformat::stomp;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const char* StompCommandConstants::queuePrefix = "/queue/";
-const char* StompCommandConstants::topicPrefix = "/topic/";
+// Stomp Command Ids
+const std::string StompCommandConstants::CONNECT = "CONNECT";
+const std::string StompCommandConstants::CONNECTED = "CONNECTED";
+const std::string StompCommandConstants::DISCONNECT = "DISCONNECT";
+const std::string StompCommandConstants::SUBSCRIBE = "SUBSCRIBE";
+const std::string StompCommandConstants::UNSUBSCRIBE = "UNSUBSCRIBE";
+const std::string StompCommandConstants::MESSAGE = "MESSAGE";
+const std::string StompCommandConstants::SEND = "SEND";
+const std::string StompCommandConstants::BEGIN = "BEGIN";
+const std::string StompCommandConstants::COMMIT = "COMMIT";
+const std::string StompCommandConstants::ABORT = "ABORT";
+const std::string StompCommandConstants::ACK = "ACK";
+const std::string StompCommandConstants::ERROR_CMD = "ERROR";
+const std::string StompCommandConstants::RECEIPT = "RECEIPT";
 
 ////////////////////////////////////////////////////////////////////////////////
-string StompCommandConstants::StaticInitializer::stompHeaders[NUM_STOMP_HEADERS];
-string StompCommandConstants::StaticInitializer::commands[NUM_COMMANDS];
-string StompCommandConstants::StaticInitializer::ackModes[NUM_ACK_MODES];
-string StompCommandConstants::StaticInitializer::msgTypes[NUM_MSG_TYPES];
-map<std::string, StompCommandConstants::StompHeader> StompCommandConstants::StaticInitializer::stompHeaderMap;
-map<std::string, StompCommandConstants::CommandId> StompCommandConstants::StaticInitializer::commandMap;
-map<std::string, StompCommandConstants::AckMode> StompCommandConstants::StaticInitializer::ackModeMap;
-map<std::string, StompCommandConstants::MessageType> StompCommandConstants::StaticInitializer::msgTypeMap;
-StompCommandConstants::StaticInitializer StompCommandConstants::staticInits;
+// Known Stomp Headers
+const std::string StompCommandConstants::HEADER_DESTINATION = "destination";
+const std::string StompCommandConstants::HEADER_TRANSACTIONID = "transaction";
+const std::string StompCommandConstants::HEADER_CONTENTLENGTH = "content-length";
+const std::string StompCommandConstants::HEADER_SESSIONID = "session";
+const std::string StompCommandConstants::HEADER_RECEIPT_REQUIRED = "receipt";
+const std::string StompCommandConstants::HEADER_RECEIPTID = "receipt-id";
+const std::string StompCommandConstants::HEADER_MESSAGEID = "message-id";
+const std::string StompCommandConstants::HEADER_ACK = "ack";
+const std::string StompCommandConstants::HEADER_LOGIN = "login";
+const std::string StompCommandConstants::HEADER_PASSWORD = "passcode";
+const std::string StompCommandConstants::HEADER_CLIENT_ID = "client-id";
+const std::string StompCommandConstants::HEADER_MESSAGE = "message";
+const std::string StompCommandConstants::HEADER_CORRELATIONID = "correlation-id";
+const std::string StompCommandConstants::HEADER_REQUESTID = "request-id";
+const std::string StompCommandConstants::HEADER_RESPONSEID = "response-id";
+const std::string StompCommandConstants::HEADER_EXPIRES = "expires";
+const std::string StompCommandConstants::HEADER_PERSISTENT = "persistent";
+const std::string StompCommandConstants::HEADER_REPLYTO = "reply-to";
+const std::string StompCommandConstants::HEADER_TYPE = "type";
+const std::string StompCommandConstants::HEADER_DISPATCH_ASYNC = "activemq.dispatchAsync";
+const std::string StompCommandConstants::HEADER_EXCLUSIVE = "activemq.exclusive";
+const std::string StompCommandConstants::HEADER_MAXPENDINGMSGLIMIT = "activemq.maximumPendingMessageLimit";
+const std::string StompCommandConstants::HEADER_NOLOCAL = "activemq.noLocal";
+const std::string StompCommandConstants::HEADER_PREFETCHSIZE = "activemq.prefetchSize";
+const std::string StompCommandConstants::HEADER_JMSPRIORITY = "priority";
+const std::string StompCommandConstants::HEADER_CONSUMERPRIORITY = "activemq.priority";
+const std::string StompCommandConstants::HEADER_RETROACTIVE = "activemq.retroactive";
+const std::string StompCommandConstants::HEADER_SUBSCRIPTIONNAME = "activemq.subcriptionName";
+const std::string StompCommandConstants::HEADER_TIMESTAMP = "timestamp";
+const std::string StompCommandConstants::HEADER_REDELIVERED = "redelivered";
+const std::string StompCommandConstants::HEADER_REDELIVERYCOUNT = "redelivery_count";
+const std::string StompCommandConstants::HEADER_SELECTOR = "selector";
+const std::string StompCommandConstants::HEADER_ID = "id";
+const std::string StompCommandConstants::HEADER_SUBSCRIPTION = "subscription";
+const std::string StompCommandConstants::HEADER_TRANSFORMATION = "transformation";
+const std::string StompCommandConstants::HEADER_TRANSFORMATION_ERROR = "transformation-error";
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandConstants::StaticInitializer::StaticInitializer(){
-
-    stompHeaders[HEADER_DESTINATION] = "destination";
-    stompHeaders[HEADER_TRANSACTIONID] = "transaction";
-    stompHeaders[HEADER_CONTENTLENGTH] = "content-length";
-    stompHeaders[HEADER_SESSIONID] = "session";
-    stompHeaders[HEADER_RECEIPTID] = "receipt-id";
-    stompHeaders[HEADER_RECEIPT_REQUIRED] = "receipt";
-    stompHeaders[HEADER_MESSAGEID] = "message-id";
-    stompHeaders[HEADER_ACK] = "ack";
-    stompHeaders[HEADER_LOGIN] = "login";
-    stompHeaders[HEADER_PASSWORD] = "passcode";
-    stompHeaders[HEADER_CLIENT_ID] = "client-id";
-    stompHeaders[HEADER_MESSAGE] = "message";
-    stompHeaders[HEADER_CORRELATIONID] = "correlation-id";
-    stompHeaders[HEADER_REQUESTID] = "request-id";
-    stompHeaders[HEADER_RESPONSEID] = "response-id";
-    stompHeaders[HEADER_EXPIRES] = "expires";
-    stompHeaders[HEADER_PERSISTENT] = "persistent";
-    stompHeaders[HEADER_JMSPRIORITY] = "priority";
-    stompHeaders[HEADER_CONSUMERPRIORITY] = "activemq.priority";
-    stompHeaders[HEADER_REPLYTO] = "reply-to";
-    stompHeaders[HEADER_TYPE] = "type";
-    stompHeaders[HEADER_SELECTOR] = "selector";
-    stompHeaders[HEADER_DISPATCH_ASYNC] = "activemq.dispatchAsync";
-    stompHeaders[HEADER_EXCLUSIVE] = "activemq.exclusive";
-    stompHeaders[HEADER_MAXPENDINGMSGLIMIT] = "activemq.maximumPendingMessageLimit";
-    stompHeaders[HEADER_NOLOCAL] = "activemq.noLocal";
-    stompHeaders[HEADER_PREFETCHSIZE] = "activemq.prefetchSize";
-    stompHeaders[HEADER_CONSUMERPRIORITY] = "activemq.priority";
-    stompHeaders[HEADER_RETROACTIVE] = "activemq.retroactive";
-    stompHeaders[HEADER_SUBSCRIPTIONNAME] = "activemq.subcriptionName";
-    stompHeaders[HEADER_TIMESTAMP] = "timestamp";
-    stompHeaders[HEADER_REDELIVERED] = "redelivered";
-    stompHeaders[HEADER_REDELIVERYCOUNT] = "redelivery_count";
-    stompHeaders[HEADER_SELECTOR] = "selector";
-    stompHeaders[HEADER_ID] = "id";
-    stompHeaders[HEADER_SUBSCRIPTION] = "subscription";
-    commands[CONNECT] = "CONNECT";
-    commands[CONNECTED] = "CONNECTED";
-    commands[DISCONNECT] = "DISCONNECT";
-    commands[SUBSCRIBE] = "SUBSCRIBE";
-    commands[UNSUBSCRIBE] = "UNSUBSCRIBE";
-    commands[MESSAGE] = "MESSAGE";
-    commands[SEND] = "SEND";
-    commands[BEGIN] = "BEGIN";
-    commands[COMMIT] = "COMMIT";
-    commands[ABORT] = "ABORT";
-    commands[ACK] = "ACK";
-    commands[ERROR_CMD] = "ERROR";
-    commands[RECEIPT] = "RECEIPT";
-    ackModes[ACK_CLIENT] = "client";
-    ackModes[ACK_AUTO] = "auto";
-    msgTypes[TEXT] = "text";
-    msgTypes[BYTES] = "bytes";
-
-    for( int ix=0; ix<NUM_STOMP_HEADERS; ++ix ){
-        stompHeaderMap[stompHeaders[ix]] = (StompHeader)ix;
-    }
-
-    for( int ix=0; ix<NUM_COMMANDS; ++ix ){
-        commandMap[commands[ix]] = (CommandId)ix;
-    }
-
-    for( int ix=0; ix<NUM_ACK_MODES; ++ix ){
-        ackModeMap[ackModes[ix]] = (AckMode)ix;
-    }
-
-    for( int ix=0; ix<NUM_MSG_TYPES; ++ix ){
-        msgTypeMap[msgTypes[ix]] = (MessageType)ix;
-    }
-}
+// Stomp Ack Modes
+const std::string StompCommandConstants::ACK_CLIENT = "client";
+const std::string StompCommandConstants::ACK_AUTO = "auto";
+const std::string StompCommandConstants::ACK_INDIVIDUAL = "client-individual";
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* StompCommandConstants::toDestination( const std::string& dest )
-    throw ( decaf::lang::exceptions::IllegalArgumentException )
-{
-//    std::size_t qpos = dest.find( queuePrefix );
-//    std::size_t tpos = dest.find( topicPrefix );
-//
-//    if( tpos == 0 ) {
-//        return new StompTopic(dest.substr(strlen(topicPrefix)));
-//    } else if( qpos == 0 ) {
-//        return new StompQueue(dest.substr(strlen(queuePrefix)));
-//    } else {
-//        throw IllegalArgumentException(
-//            __FILE__, __LINE__,
-//            "StompCommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
-//    }
+// Supported Stomp Message Types
+const std::string StompCommandConstants::TEXT = "text";
+const std::string StompCommandConstants::BYTES = "bytes";
 
-    return NULL;
-}
-
-
+////////////////////////////////////////////////////////////////////////////////
+// Prefix Id's for Topics and Queues
+const std::string StompCommandConstants::QUEUE_PREFIX = "/queue/";
+const std::string StompCommandConstants::TOPIC_PREFIX = "/topic/";
+const std::string StompCommandConstants::TEMPQUEUE_PREFIX = "/temp-queue/";
+const std::string StompCommandConstants::TEMPTOPIC_PREFIX = "/temp-topic/";
