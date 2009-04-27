@@ -31,172 +31,74 @@ namespace stomp{
     class AMQCPP_API StompCommandConstants{
     public:
 
-        enum CommandId{
-            CONNECT,
-            CONNECTED,
-            DISCONNECT,
-            SUBSCRIBE,
-            UNSUBSCRIBE,
-            MESSAGE,
-            SEND,
-            BEGIN,
-            COMMIT,
-            ABORT,
-            ACK,
-            ERROR_CMD,
-            RECEIPT,
-            NUM_COMMANDS
-        };
+        // Stomp Command Ids
+        static const std::string CONNECT;
+        static const std::string CONNECTED;
+        static const std::string DISCONNECT;
+        static const std::string SUBSCRIBE;
+        static const std::string UNSUBSCRIBE;
+        static const std::string MESSAGE;
+        static const std::string SEND;
+        static const std::string BEGIN;
+        static const std::string COMMIT;
+        static const std::string ABORT;
+        static const std::string ACK;
+        static const std::string ERROR_CMD;
+        static const std::string RECEIPT;
 
-        enum StompHeader{
-            HEADER_DESTINATION,
-            HEADER_TRANSACTIONID,
-            HEADER_CONTENTLENGTH,
-            HEADER_SESSIONID,
-            HEADER_RECEIPT_REQUIRED,
-            HEADER_RECEIPTID,
-            HEADER_MESSAGEID,
-            HEADER_ACK,
-            HEADER_LOGIN,
-            HEADER_PASSWORD,
-            HEADER_CLIENT_ID,
-            HEADER_MESSAGE,
-            HEADER_CORRELATIONID,
-            HEADER_REQUESTID,
-            HEADER_RESPONSEID,
-            HEADER_EXPIRES,
-            HEADER_PERSISTENT,
-            HEADER_REPLYTO,
-            HEADER_TYPE,
-            HEADER_DISPATCH_ASYNC,
-            HEADER_EXCLUSIVE,
-            HEADER_MAXPENDINGMSGLIMIT,
-            HEADER_NOLOCAL,
-            HEADER_PREFETCHSIZE,
-            HEADER_JMSPRIORITY,
-            HEADER_CONSUMERPRIORITY,
-            HEADER_RETROACTIVE,
-            HEADER_SUBSCRIPTIONNAME,
-            HEADER_TIMESTAMP,
-            HEADER_REDELIVERED,
-            HEADER_REDELIVERYCOUNT,
-            HEADER_SELECTOR,
-            HEADER_ID,
-            HEADER_SUBSCRIPTION,
-            NUM_STOMP_HEADERS
-        };
+        // Known Stomp Headers
+        static const std::string HEADER_DESTINATION;
+        static const std::string HEADER_TRANSACTIONID;
+        static const std::string HEADER_CONTENTLENGTH;
+        static const std::string HEADER_SESSIONID;
+        static const std::string HEADER_RECEIPT_REQUIRED;
+        static const std::string HEADER_RECEIPTID;
+        static const std::string HEADER_MESSAGEID;
+        static const std::string HEADER_ACK;
+        static const std::string HEADER_LOGIN;
+        static const std::string HEADER_PASSWORD;
+        static const std::string HEADER_CLIENT_ID;
+        static const std::string HEADER_MESSAGE;
+        static const std::string HEADER_CORRELATIONID;
+        static const std::string HEADER_REQUESTID;
+        static const std::string HEADER_RESPONSEID;
+        static const std::string HEADER_EXPIRES;
+        static const std::string HEADER_PERSISTENT;
+        static const std::string HEADER_REPLYTO;
+        static const std::string HEADER_TYPE;
+        static const std::string HEADER_DISPATCH_ASYNC;
+        static const std::string HEADER_EXCLUSIVE;
+        static const std::string HEADER_MAXPENDINGMSGLIMIT;
+        static const std::string HEADER_NOLOCAL;
+        static const std::string HEADER_PREFETCHSIZE;
+        static const std::string HEADER_JMSPRIORITY;
+        static const std::string HEADER_CONSUMERPRIORITY;
+        static const std::string HEADER_RETROACTIVE;
+        static const std::string HEADER_SUBSCRIPTIONNAME;
+        static const std::string HEADER_TIMESTAMP;
+        static const std::string HEADER_REDELIVERED;
+        static const std::string HEADER_REDELIVERYCOUNT;
+        static const std::string HEADER_SELECTOR;
+        static const std::string HEADER_ID;
+        static const std::string HEADER_SUBSCRIPTION;
+        static const std::string HEADER_TRANSFORMATION;
+        static const std::string HEADER_TRANSFORMATION_ERROR;
 
-        enum AckMode {
-            ACK_CLIENT,
-            ACK_AUTO,
-            NUM_ACK_MODES
-        };
+        // Stomp Ack Modes
+        static const std::string ACK_CLIENT;
+        static const std::string ACK_AUTO;
+        static const std::string ACK_INDIVIDUAL;
 
-        enum MessageType {
-            TEXT,
-            BYTES,
-            NUM_MSG_TYPES
-        };
+        // Supported Stomp Message Types
+        static const std::string TEXT;
+        static const std::string BYTES;
 
-        static const char* queuePrefix;
-        static const char* topicPrefix;
+        // Prefix Id's for Topics and Queues
+        static const std::string QUEUE_PREFIX;
+        static const std::string TOPIC_PREFIX;
+        static const std::string TEMPQUEUE_PREFIX;
+        static const std::string TEMPTOPIC_PREFIX;
 
-        static const std::string& toString( const CommandId cmd ){
-            return StaticInitializer::commands[cmd];
-        }
-
-        static CommandId toCommandId( const std::string& cmd ){
-            std::map<std::string, CommandId>::iterator iter =
-                StaticInitializer::commandMap.find(cmd);
-
-            if( iter == StaticInitializer::commandMap.end() ){
-                return NUM_COMMANDS;
-            }
-
-            return iter->second;
-        }
-
-        static bool isCommandId( const std::string& str ){
-            std::map<std::string, CommandId>::iterator iter =
-                StaticInitializer::commandMap.find(str);
-
-            return iter != StaticInitializer::commandMap.end();
-        }
-
-        static std::string toString( const StompHeader header ){
-            return StaticInitializer::stompHeaders[header];
-        }
-
-        static StompHeader toStompHeader( const std::string& header ){
-
-            std::map<std::string, StompHeader>::iterator iter =
-                StaticInitializer::stompHeaderMap.find(header);
-
-            if( iter == StaticInitializer::stompHeaderMap.end() ){
-                return NUM_STOMP_HEADERS;
-            }
-
-            return iter->second;
-        }
-
-        static bool isStompHeader( const std::string& str ){
-            std::map<std::string, StompHeader>::iterator iter =
-                StaticInitializer::stompHeaderMap.find(str);
-
-            return iter != StaticInitializer::stompHeaderMap.end();
-        }
-
-        static std::string toString( const AckMode mode ){
-            return StaticInitializer::ackModes[mode];
-        }
-
-        static AckMode toAckMode( const std::string& mode ){
-            std::map<std::string, AckMode>::iterator iter =
-                StaticInitializer::ackModeMap.find(mode);
-
-            if( iter == StaticInitializer::ackModeMap.end() ){
-                return NUM_ACK_MODES;
-            }
-
-            return iter->second;
-        }
-
-        static std::string toString( const MessageType type ){
-            return StaticInitializer::msgTypes[type];
-        }
-
-        static MessageType toMessageType( const std::string& type ){
-            std::map<std::string, MessageType>::iterator iter =
-                StaticInitializer::msgTypeMap.find(type);
-
-            if( iter == StaticInitializer::msgTypeMap.end() ){
-                return NUM_MSG_TYPES;
-            }
-
-            return iter->second;
-        }
-
-        static cms::Destination* toDestination( const std::string& dest )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
-
-        class StaticInitializer{
-        public:
-            StaticInitializer();
-            virtual ~StaticInitializer(){}
-
-            static std::string stompHeaders[NUM_STOMP_HEADERS];
-            static std::string commands[NUM_COMMANDS];
-            static std::string ackModes[NUM_ACK_MODES];
-            static std::string msgTypes[NUM_MSG_TYPES];
-            static std::map<std::string, StompHeader> stompHeaderMap;
-            static std::map<std::string, CommandId> commandMap;
-            static std::map<std::string, AckMode> ackModeMap;
-            static std::map<std::string, MessageType> msgTypeMap;
-        };
-
-    private:
-
-        static StaticInitializer staticInits;
     };
 
 }}}

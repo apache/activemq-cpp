@@ -68,7 +68,7 @@ namespace marshal{
 
         Pointer<StompFrame> marshalMessage( const Pointer<Command>& command );
         Pointer<StompFrame> marshalAck( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalConnect( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalConnectionInfo( const Pointer<Command>& command );
         Pointer<StompFrame> marshalTransactionInfo( const Pointer<Command>& command );
         Pointer<StompFrame> marshalShutdownInfo( const Pointer<Command>& command );
         Pointer<StompFrame> marshalRemoveInfo( const Pointer<Command>& command );
