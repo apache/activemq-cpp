@@ -46,10 +46,12 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "Message" );
         commandsWithShortcuts.add( "MessageAck" );
         commandsWithShortcuts.add( "ProducerAck" );
+        commandsWithShortcuts.add( "ProducerInfo" );
         commandsWithShortcuts.add( "MessageDispatchNotification" );
         commandsWithShortcuts.add( "ShutdownInfo" );
         commandsWithShortcuts.add( "TransactionInfo" );
         commandsWithShortcuts.add( "ConnectionInfo" );
+        commandsWithShortcuts.add( "ConsumerInfo" );
     }
 
     /**
