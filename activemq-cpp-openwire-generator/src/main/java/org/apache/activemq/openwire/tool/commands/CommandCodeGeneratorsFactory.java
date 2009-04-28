@@ -52,6 +52,8 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "TransactionInfo" );
         commandsWithShortcuts.add( "ConnectionInfo" );
         commandsWithShortcuts.add( "ConsumerInfo" );
+        commandsWithShortcuts.add( "RemoveSubscriptionInfo" );
+
     }
 
     /**
