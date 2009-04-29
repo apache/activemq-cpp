@@ -27,6 +27,7 @@
 #include <activemq/commands/BaseDataStructure.h>
 #include <activemq/util/ActiveMQProperties.h>
 #include <cms/Destination.h>
+#include <decaf/lang/Pointer.h>
 
 #include <vector>
 #include <string>
@@ -35,8 +36,10 @@
 namespace activemq{
 namespace commands{
 
+    using decaf::lang::Pointer;
+
     class AMQCPP_API ActiveMQDestination : public BaseDataStructure {
-    protected:
+    public:
 
         enum DESTINATION_TYPE_IDS {
             ACTIVEMQ_TOPIC = 1,
@@ -44,6 +47,8 @@ namespace commands{
             ACTIVEMQ_QUEUE = 3,
             ACTIVEMQ_TEMPORARY_QUEUE = 4
         };
+
+    protected:
 
         struct DestinationFilter{
             static const std::string ANY_CHILD;
@@ -78,6 +83,11 @@ namespace commands{
         static const std::string TEMP_PREFIX;
         static const std::string TEMP_POSTFIX;
         static const std::string COMPOSITE_SEPARATOR;
+
+        static const std::string QUEUE_QUALIFIED_PREFIX;
+        static const std::string TOPIC_QUALIFIED_PREFIX;
+        static const std::string TEMP_QUEUE_QUALIFED_PREFIX;
+        static const std::string TEMP_TOPIC_QUALIFED_PREFIX;
 
         // Cached transient data
         bool exclusive;
@@ -249,6 +259,16 @@ namespace commands{
          * @return the clientId or null if not a temporary destination
          */
         static std::string getClientId( const ActiveMQDestination* destination );
+
+        /**
+         * Creates a Destination given the String Name to use and a Type.
+         *
+         * @param type - The Type of Destination to Create
+         * @param name - The Name to use in the creation of the Destination
+         *
+         * @return Pointer to a new ActiveMQDestination instance.
+         */
+        static Pointer<ActiveMQDestination> createDestination( int type, const std::string& name );
 
     public:
 

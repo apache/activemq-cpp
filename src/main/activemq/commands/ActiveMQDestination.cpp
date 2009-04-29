@@ -18,6 +18,11 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/util/URISupport.h>
 
+#include <activemq/commands/ActiveMQTopic.h>
+#include <activemq/commands/ActiveMQQueue.h>
+#include <activemq/commands/ActiveMQTempTopic.h>
+#include <activemq/commands/ActiveMQTempQueue.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
@@ -39,6 +44,10 @@ const std::string ActiveMQDestination::TEMP_POSTFIX = "}TD}";
 const std::string ActiveMQDestination::COMPOSITE_SEPARATOR = ",";
 const std::string ActiveMQDestination::DestinationFilter::ANY_CHILD = ">";
 const std::string ActiveMQDestination::DestinationFilter::ANY_DESCENDENT = "*";
+const std::string ActiveMQDestination::QUEUE_QUALIFIED_PREFIX = "queue://";
+const std::string ActiveMQDestination::TOPIC_QUALIFIED_PREFIX = "topic://";
+const std::string ActiveMQDestination::TEMP_QUEUE_QUALIFED_PREFIX = "temp-queue://";
+const std::string ActiveMQDestination::TEMP_TOPIC_QUALIFED_PREFIX = "temp-topic://";
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination() {
@@ -159,4 +168,43 @@ std::string ActiveMQDestination::getClientId(
         }
     }
     return answer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ActiveMQDestination> ActiveMQDestination::createDestination( int type, const std::string& name ) {
+
+    Pointer<ActiveMQDestination> result;
+
+    if( name.find( QUEUE_QUALIFIED_PREFIX ) == 0 ) {
+        result.reset( new ActiveMQQueue( name.substr( QUEUE_QUALIFIED_PREFIX.length() ) ) );
+        return result;
+    } else if( name.find( TOPIC_QUALIFIED_PREFIX ) == 0 ) {
+        result.reset( new ActiveMQTopic( name.substr( TOPIC_QUALIFIED_PREFIX.length() ) ) );
+        return result;
+    } else if( name.find( TEMP_QUEUE_QUALIFED_PREFIX ) == 0 ) {
+        result.reset( new ActiveMQTempQueue( name.substr( TEMP_QUEUE_QUALIFED_PREFIX.length() ) ) );
+        return result;
+    } else if( name.find( TEMP_TOPIC_QUALIFED_PREFIX ) == 0 ) {
+        result.reset( new ActiveMQTempTopic( name.substr( TEMP_TOPIC_QUALIFED_PREFIX.length() ) ) );
+        return result;
+    }
+
+    switch( type ) {
+        case ActiveMQDestination::ACTIVEMQ_QUEUE:
+            result.reset( new ActiveMQQueue( name ) );
+            return result;
+        case ActiveMQDestination::ACTIVEMQ_TOPIC:
+            result.reset( new ActiveMQTopic( name ) );
+            return result;
+        case ActiveMQDestination::ACTIVEMQ_TEMPORARY_QUEUE:
+            result.reset( new ActiveMQTempQueue( name ) );
+            return result;
+        case ActiveMQDestination::ACTIVEMQ_TEMPORARY_TOPIC:
+            result.reset( new ActiveMQTempTopic( name ) );
+            return result;
+        default:
+            throw IllegalArgumentException(
+                __FILE__, __LINE__,
+                "Invalid default destination type: %d", type );
+    }
 }

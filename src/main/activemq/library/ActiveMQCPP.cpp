@@ -21,7 +21,7 @@
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
 
-//#include <activemq/wireformat/stomp/StompWireFormatFactory.h>
+#include <activemq/wireformat/stomp/StompWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/transport/mock/MockTransportFactory.h>
@@ -67,8 +67,8 @@ void ActiveMQCPP::registerWireFormats() {
 
     WireFormatRegistry::getInstance().registerFactory(
         "openwire", new wireformat::openwire::OpenWireFormatFactory() );
-//    WireFormatRegistry::getInstance().registerFactory(
-//        "stomp", new wireformat::stomp::StompWireFormatFactory() );
+    WireFormatRegistry::getInstance().registerFactory(
+        "stomp", new wireformat::stomp::StompWireFormatFactory() );
 
 }
 
