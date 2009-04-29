@@ -177,6 +177,13 @@ namespace commands{
         virtual void setNoRangeAcks( bool noRangeAcks );
 
         /**
+         * @return an answer of true to the isConsumerInfo() query.
+         */
+        virtual bool isConsumerInfo() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.

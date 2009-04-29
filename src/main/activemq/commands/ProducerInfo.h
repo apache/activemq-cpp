@@ -125,6 +125,13 @@ namespace commands{
         virtual void setWindowSize( int windowSize );
 
         /**
+         * @return an answer of true to the isProducerInfo() query.
+         */
+        virtual bool isProducerInfo() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.

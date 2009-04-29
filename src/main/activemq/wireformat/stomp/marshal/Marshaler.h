@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/Command.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/marshal/MarshalerHelper.h>
 #include <decaf/io/IOException.h>
 #include <decaf/lang/Pointer.h>
 
@@ -36,6 +37,10 @@ namespace marshal{
      * Interface for all marshalers between Commands and Stomp frames.
      */
     class AMQCPP_API Marshaler {
+    private:
+
+        MarshalerHelper helper;
+
     public:
 
         Marshaler() {}
@@ -72,6 +77,8 @@ namespace marshal{
         Pointer<StompFrame> marshalTransactionInfo( const Pointer<Command>& command );
         Pointer<StompFrame> marshalShutdownInfo( const Pointer<Command>& command );
         Pointer<StompFrame> marshalRemoveInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalConsumerInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalRemoveSubscriptionInfo( const Pointer<Command>& command );
 
     };
 
