@@ -115,6 +115,9 @@ namespace commands{
         virtual bool isConnectionInfo() const {
             return false;
         }
+        virtual bool isConsumerInfo() const {
+            return false;
+        }
         virtual bool isBrokerInfo() const  {
             return false;
         }
@@ -136,10 +139,16 @@ namespace commands{
         virtual bool isProducerAck() const  {
             return false;
         }
+        virtual bool isProducerInfo() const  {
+            return false;
+        }
         virtual bool isResponse() const {
             return false;
         }
         virtual bool isRemoveInfo() const {
+            return false;
+        }
+        virtual bool isRemoveSubscriptionInfo() const {
             return false;
         }
         virtual bool isShutdownInfo() const  {

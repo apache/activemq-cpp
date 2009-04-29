@@ -56,6 +56,12 @@ void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataO
 
         Pointer<StompFrame> frame = marshaler.marshal( command );
 
+        // Some commands just don't translate to Stomp Commands, we ignore them
+        // and hope that bad things don't happen.
+        if( frame == NULL ) {
+            return;
+        }
+
         // Write the command.
         const string& cmdString = frame->getCommand();
         out->write( (unsigned char*)cmdString.c_str(), 0, cmdString.length() );
