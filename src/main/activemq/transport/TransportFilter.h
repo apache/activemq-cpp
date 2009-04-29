@@ -157,10 +157,18 @@ namespace transport{
 
         /**
          * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport exceptions.
+         * @param listener the listener of transport events.
          */
         virtual void setTransportListener( TransportListener* listener ){
             this->listener = listener;
+        }
+
+        /**
+         * Gets the observer of asynchronous exceptions from this transport.
+         * @return The listener of transport events.
+         */
+        virtual TransportListener* getTransportListener() const {
+            return this->listener;
         }
 
         /**

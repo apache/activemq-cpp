@@ -153,6 +153,13 @@ void FailoverTransport::setTransportListener( TransportListener* listener ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+TransportListener* FailoverTransport::getTransportListener() const {
+    synchronized( &listenerMutex ) {
+        return this->transportListener;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string FailoverTransport::getRemoteAddress() const {
     synchronized( &reconnectMutex ) {
         if( connectedTransport != NULL ) {
