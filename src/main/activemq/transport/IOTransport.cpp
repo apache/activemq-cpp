@@ -127,7 +127,7 @@ void IOTransport::oneway( const Pointer<Command>& command )
 
         synchronized( outputStream ){
             // Write the command to the output stream.
-            this->wireFormat->marshal( command, this->outputStream );
+            this->wireFormat->marshal( command, this, this->outputStream );
             this->outputStream->flush();
         }
     }
@@ -220,7 +220,7 @@ void IOTransport::run(){
         while( !closed ){
 
             // Read the next command from the input stream.
-            Pointer<Command> command( wireFormat->unmarshal( this->inputStream ) );
+            Pointer<Command> command( wireFormat->unmarshal( this, this->inputStream ) );
 
             // Notify the listener.
             fire( command );

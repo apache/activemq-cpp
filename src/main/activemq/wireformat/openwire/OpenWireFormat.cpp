@@ -159,6 +159,7 @@ void OpenWireFormat::setPreferedWireFormatInfo(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
+                              const activemq::transport::Transport* transport,
                               decaf::io::DataOutputStream* dataOut )
     throw ( decaf::io::IOException ) {
 
@@ -234,7 +235,8 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<commands::Command> OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
+Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
+                                                      decaf::io::DataInputStream* dis )
     throw ( decaf::io::IOException ) {
 
     try {

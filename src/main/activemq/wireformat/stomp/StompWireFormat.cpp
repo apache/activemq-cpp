@@ -19,6 +19,7 @@
 
 #include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/wireformat/stomp/StompCommandConstants.h>
+#include <activemq/commands/Response.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/io/IOException.h>
@@ -26,6 +27,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::commands;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
 using namespace decaf;
@@ -42,7 +44,9 @@ StompWireFormat::~StompWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataOutputStream* out )
+void StompWireFormat::marshal( const Pointer<Command>& command,
+                               const activemq::transport::Transport* transport,
+                               decaf::io::DataOutputStream* out )
     throw ( decaf::io::IOException ) {
 
     try{
@@ -56,9 +60,20 @@ void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataO
 
         Pointer<StompFrame> frame = marshaler.marshal( command );
 
-        // Some commands just don't translate to Stomp Commands, we ignore them
-        // and hope that bad things don't happen.
+        // Some commands just don't translate to Stomp Commands, unless they require
+        // a response we can just ignore them.
         if( frame == NULL ) {
+
+            if( command->isResponseRequired() ) {
+                Pointer<Response> response( new Response() );
+                response->setCorrelationId( command->getCommandId() );
+
+                transport::TransportListener* listener = transport->getTransportListener();
+                if( listener != NULL ) {
+                    listener->onCommand( response );
+                }
+            }
+
             return;
         }
 
@@ -105,7 +120,8 @@ void StompWireFormat::marshal( const Pointer<Command>& command, decaf::io::DataO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
+Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transport* transport,
+                                             decaf::io::DataInputStream* in )
     throw ( decaf::io::IOException ) {
 
     Pointer<StompFrame> frame;

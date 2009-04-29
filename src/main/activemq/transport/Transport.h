@@ -113,6 +113,12 @@ namespace transport{
         virtual void setTransportListener( TransportListener* listener ) = 0;
 
         /**
+         * Gets the observer of asynchronous events from this transport.
+         * @return the listener of transport events.
+         */
+        virtual TransportListener* getTransportListener() const = 0;
+
+        /**
          * Narrows down a Chain of Transports to a specific Transport to allow a
          * higher level transport to skip intermediate Transports in certain
          * circumstances.

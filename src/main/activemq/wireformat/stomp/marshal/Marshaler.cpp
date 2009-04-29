@@ -106,14 +106,6 @@ Pointer<StompFrame> Marshaler::marshal( const Pointer<Command>& command )
             return this->marshalConsumerInfo( command );
         } else if( command->isRemoveSubscriptionInfo() ) {
             return this->marshalRemoveSubscriptionInfo( command );
-        } else if( command->isResponseRequired() ) {
-
-            // Send a fake Unsub command and ask for a receipt.
-            Pointer<StompFrame> frame( new StompFrame() );
-            frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
-            frame->setProperty( StompCommandConstants::HEADER_ID, "-1" );
-            frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
-                                Integer::toString( command->getCommandId() ) );
         }
 
         // Ignoring this command.
@@ -325,10 +317,16 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
     frame->setProperty( StompCommandConstants::HEADER_ID,
                         helper.convertConsumerId( info->getConsumerId() ) );
 
-    frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
-                        info->getSubscriptionName() );
-    frame->setProperty( StompCommandConstants::HEADER_SELECTOR,
-                        info->getSelector() );
+    if( info->getSubscriptionName() != "" ) {
+        frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
+                            info->getSubscriptionName() );
+    }
+
+    if( info->getSelector() != "" ) {
+        frame->setProperty( StompCommandConstants::HEADER_SELECTOR,
+                            info->getSelector() );
+    }
+
     frame->setProperty( StompCommandConstants::HEADER_ACK, "client" );
 
     if( info->isNoLocal() ) {

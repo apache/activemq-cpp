@@ -82,7 +82,8 @@ public:
         return Pointer<wireformat::WireFormatNegotiator>();
     }
 
-    virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* inputStream )
+    virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
+                                                  decaf::io::DataInputStream* inputStream )
         throw ( IOException ){
 
         try{
@@ -134,6 +135,7 @@ public:
     }
 
     virtual void marshal( const Pointer<commands::Command>& command,
+                          const activemq::transport::Transport* transport AMQCPP_UNUSED,
                           decaf::io::DataOutputStream* outputStream )
         throw (IOException)
     {

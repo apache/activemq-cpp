@@ -51,21 +51,30 @@ namespace stomp {
         virtual ~StompWireFormat();
 
         /**
-         * Stream based marshaling
+         * Stream based marshaling of a Command, this method blocks until the entire
+         * Command has been written out to the output stream.
+         *
          * @param command - The Command to Marshal
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( const Pointer<Command>& command, decaf::io::DataOutputStream* out )
+        virtual void marshal( const Pointer<commands::Command>& command,
+                              const activemq::transport::Transport* transport,
+                              decaf::io::DataOutputStream* out )
             throw ( decaf::io::IOException );
 
         /**
-         * Packet based un-marshaling
+         * Stream based un-marshaling, blocks on reads on the input stream until a complete
+         * command has been read and unmarshaled into the correct form.  Returns a Pointer
+         * to the newly unmarshaled Command.
+         *
+         * @param transport - Pointer to the transport that is making this request.
          * @param in - the input stream to read the command from.
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual Pointer<Command> unmarshal( decaf::io::DataInputStream* in )
+        virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
+                                                      decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException );
 
         /**
