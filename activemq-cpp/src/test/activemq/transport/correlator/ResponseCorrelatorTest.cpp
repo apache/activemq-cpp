@@ -112,6 +112,10 @@ namespace correlator{
             this->listener = listener;
         }
 
+        virtual TransportListener* getTransportListener() const {
+            return this->listener;
+        }
+
         virtual void start() throw( cms::CMSException ){
             close();
 

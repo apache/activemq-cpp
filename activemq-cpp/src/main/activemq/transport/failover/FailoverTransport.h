@@ -204,6 +204,12 @@ namespace failover {
         virtual void setTransportListener( TransportListener* listener );
 
         /**
+         * Gets the observer of asynchronous exceptions from this transport.
+         * @return The listener of transport events.
+         */
+        virtual TransportListener* getTransportListener() const;
+
+        /**
          * Is this Transport fault tolerant, meaning that it will reconnect to
          * a broker on disconnect.
          *
