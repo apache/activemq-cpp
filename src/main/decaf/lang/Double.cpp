@@ -18,6 +18,7 @@
 #include "Double.h"
 #include <decaf/lang/Long.h>
 #include <limits>
+#include <sstream>
 #include <string.h>
 
 using namespace std;
@@ -137,10 +138,22 @@ double Double::longBitsToDouble( long long bits ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Double::parseDouble( DECAF_UNUSED const std::string value )
+double Double::parseDouble( const std::string value )
     throw ( exceptions::NumberFormatException ) {
 
-    return 0; // TODO
+    // TODO - This is not going to parse the formats we say we do.
+    float result = 0.0;
+    istringstream stream( value );
+    stream >> result;
+
+    // Not everything got read, meaning there wasn't just a number here.
+    if( !stream.eof() ) {
+        throw exceptions::NumberFormatException(
+            __FILE__, __LINE__,
+            "Failed to parse a valid float from input string: %s", value.c_str() );
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -229,8 +242,13 @@ std::string Double::toHexString( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Double::toString( DECAF_UNUSED double value ) {
-    return ""; //TODO
+std::string Double::toString( double value ) {
+
+    // TODO - This is not going to output to the format we say we do.
+    ostringstream stream;
+    stream << value;
+
+    return stream.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

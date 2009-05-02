@@ -152,6 +152,14 @@ float Float::parseFloat( const std::string& value )
     float result = 0.0;
     istringstream stream( value );
     stream >> result;
+
+    // Not everything got read, meaning there wasn't just a number here.
+    if( !stream.eof() ) {
+        throw exceptions::NumberFormatException(
+            __FILE__, __LINE__,
+            "Failed to parse a valid float from input string: %s", value.c_str() );
+    }
+
     return result;
 }
 
