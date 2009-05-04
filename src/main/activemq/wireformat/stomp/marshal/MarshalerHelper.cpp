@@ -41,9 +41,11 @@ void MarshalerHelper::convertProperties( const Pointer<StompFrame>& frame,
 
     const std::string destination =
         frame->removeProperty( StompCommandConstants::HEADER_DESTINATION );
-
-    // Destination creation.
     message->setDestination( convertDestination( destination ) );
+
+    const std::string messageId =
+        frame->removeProperty( StompCommandConstants::HEADER_MESSAGEID );
+    message->setMessageId( convertMessageId( messageId ) );
 
     // the standard JMS headers
     message->setCorrelationId( StompCommandConstants::HEADER_CORRELATIONID );
@@ -134,8 +136,6 @@ void MarshalerHelper::convertProperties( const Pointer<Message>& message,
     std::vector<std::string>::const_iterator iter = keys.begin();
 
     for( ; iter != keys.end(); ++iter ) {
-
-        // TODO - This will fail if the type isn't string.
         frame->setProperty( *iter, message->getMessageProperties().getString( *iter ) );
     }
 }
