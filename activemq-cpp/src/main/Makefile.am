@@ -308,6 +308,7 @@ cc_sources = \
     activemq/wireformat/stomp/StompCommandConstants.cpp \
     activemq/wireformat/stomp/marshal/Marshaler.cpp \
     activemq/wireformat/stomp/marshal/MarshalerHelper.cpp \
+    activemq/wireformat/stomp/StompFrame.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
