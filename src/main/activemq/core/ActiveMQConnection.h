@@ -97,6 +97,12 @@ namespace core{
         AtomicBoolean closed;
 
         /**
+         * Indicates that this connection has been closed, it is no longer
+         * usable after this becomes true
+         */
+        AtomicBoolean closing;
+
+        /**
          * Map of message dispatchers indexed by consumer id.
          */
         DispatcherMap dispatchers;

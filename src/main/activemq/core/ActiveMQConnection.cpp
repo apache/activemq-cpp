@@ -222,6 +222,10 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
             return;
         }
 
+        // Indicates we are on the way out to squelch any exceptions getting
+        // passed on from the transport as it goes down.
+        this->closing.set( true );
+
         // Get the complete list of active sessions.
         std::vector<ActiveMQSession*> allSessions;
         synchronized( &activeSessions ) {
@@ -511,7 +515,7 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
     try {
 
         // We're disconnected - the asynchronous error is expected.
-        if( this->isClosed() ){
+        if( this->isClosed() || this->closing.get() ) {
             return;
         }
 
