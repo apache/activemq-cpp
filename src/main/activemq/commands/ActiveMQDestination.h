@@ -39,15 +39,6 @@ namespace commands{
     using decaf::lang::Pointer;
 
     class AMQCPP_API ActiveMQDestination : public BaseDataStructure {
-    public:
-
-        enum DESTINATION_TYPE_IDS {
-            ACTIVEMQ_TOPIC = 1,
-            ACTIVEMQ_TEMPORARY_TOPIC = 2,
-            ACTIVEMQ_QUEUE = 3,
-            ACTIVEMQ_TEMPORARY_QUEUE = 4
-        };
-
     protected:
 
         struct DestinationFilter{

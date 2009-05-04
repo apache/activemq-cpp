@@ -190,16 +190,16 @@ Pointer<ActiveMQDestination> ActiveMQDestination::createDestination( int type, c
     }
 
     switch( type ) {
-        case ActiveMQDestination::ACTIVEMQ_QUEUE:
+        case cms::Destination::QUEUE:
             result.reset( new ActiveMQQueue( name ) );
             return result;
-        case ActiveMQDestination::ACTIVEMQ_TOPIC:
+        case cms::Destination::TOPIC:
             result.reset( new ActiveMQTopic( name ) );
             return result;
-        case ActiveMQDestination::ACTIVEMQ_TEMPORARY_QUEUE:
+        case cms::Destination::TEMPORARY_QUEUE:
             result.reset( new ActiveMQTempQueue( name ) );
             return result;
-        case ActiveMQDestination::ACTIVEMQ_TEMPORARY_TOPIC:
+        case cms::Destination::TEMPORARY_TOPIC:
             result.reset( new ActiveMQTempTopic( name ) );
             return result;
         default:

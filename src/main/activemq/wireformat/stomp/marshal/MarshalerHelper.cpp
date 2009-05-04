@@ -149,9 +149,9 @@ std::string MarshalerHelper::convertDestination( const Pointer<ActiveMQDestinati
 
         switch( destination->getDestinationType() ) {
 
-            case ActiveMQDestination::ACTIVEMQ_TOPIC:
+            case cms::Destination::TOPIC:
                 return std::string( "/topic/" ) + destination->getPhysicalName();
-            case ActiveMQDestination::ACTIVEMQ_TEMPORARY_TOPIC:
+            case cms::Destination::TEMPORARY_TOPIC:
 
                 if( destination->getPhysicalName().find( "/remote-temp-topic/" ) == 0 ) {
                     return destination->getPhysicalName();
@@ -159,7 +159,7 @@ std::string MarshalerHelper::convertDestination( const Pointer<ActiveMQDestinati
                     return std::string( "/temp-topic/" ) + destination->getPhysicalName();
                 }
 
-            case ActiveMQDestination::ACTIVEMQ_TEMPORARY_QUEUE:
+            case cms::Destination::TEMPORARY_QUEUE:
 
                 if( destination->getPhysicalName().find( "/remote-temp-queue/" ) == 0 ) {
                     return destination->getPhysicalName();
@@ -185,20 +185,20 @@ Pointer<ActiveMQDestination> MarshalerHelper::convertDestination( const std::str
 
     if( destination.find( "/queue/" ) == 0 ) {
         dest = destination.substr( 7 );
-        type = ActiveMQDestination::ACTIVEMQ_QUEUE;
+        type = cms::Destination::QUEUE;
     } else if( destination.find( "/topic/" ) == 0 ) {
         dest = destination.substr( 7 );
-        type = ActiveMQDestination::ACTIVEMQ_TOPIC;
+        type = cms::Destination::TOPIC;
     } else if( destination.find( "/temp-topic/" ) == 0 ) {
         dest = destination.substr( 12 );
-        type = ActiveMQDestination::ACTIVEMQ_TEMPORARY_TOPIC;
+        type = cms::Destination::TEMPORARY_TOPIC;
     } else if( destination.find( "/temp-queue/" ) == 0 ) {
         dest = destination.substr( 12 );
-        type = ActiveMQDestination::ACTIVEMQ_TEMPORARY_QUEUE;
+        type = cms::Destination::TEMPORARY_QUEUE;
     } else if( destination.find( "/remote-temp-topic/" ) == 0 ) {
-        type = ActiveMQDestination::ACTIVEMQ_TEMPORARY_TOPIC;
+        type = cms::Destination::TEMPORARY_TOPIC;
     } else if( destination.find( "/remote-temp-queue/" ) == 0 ) {
-        type = ActiveMQDestination::ACTIVEMQ_TEMPORARY_QUEUE;
+        type = cms::Destination::TEMPORARY_QUEUE;
     }
 
     return ActiveMQDestination::createDestination( type, dest );
