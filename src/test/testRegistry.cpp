@@ -116,6 +116,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveValueNodeTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveListTest );
 #include <activemq/util/PrimitiveMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapTest );
+#include <activemq/util/PrimitiveValueConverterTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveValueConverterTest );
 #include <activemq/util/URISupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 #include <activemq/util/MemoryUsageTest.h>

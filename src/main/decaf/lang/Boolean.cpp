@@ -17,6 +17,8 @@
 
 #include "Boolean.h"
 #include <sstream>
+#include <apr.h>
+#include <apr_strings.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -94,11 +96,7 @@ Boolean Boolean::valueOf( bool value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Boolean::parseBoolean( const std::string& value ) {
-    bool ret = 0;
-    std::istringstream istream( value );
-    istream.clear();
-    istream >> std::boolalpha >> ret;
-    return ret;
+    return apr_strnatcasecmp( value.c_str(), "true" ) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -64,7 +64,7 @@ bool PrimitiveMap::getBool( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getBool();
+    return converter.convert<bool>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ unsigned char PrimitiveMap::getByte( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getByte();
+    return converter.convert<unsigned char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ char PrimitiveMap::getChar( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getChar();
+    return converter.convert<char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ short PrimitiveMap::getShort( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getShort();
+    return converter.convert<short>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ int PrimitiveMap::getInt( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getInt();
+    return converter.convert<int>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +145,7 @@ long long PrimitiveMap::getLong( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getLong();
+    return converter.convert<long long>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ double PrimitiveMap::getDouble( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getDouble();
+    return converter.convert<double>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ float PrimitiveMap::getFloat( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getFloat();
+    return converter.convert<float>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ string PrimitiveMap::getString( const string& key ) const
     throw( NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( key );
-    return node.getString();
+    return converter.convert<std::string>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
