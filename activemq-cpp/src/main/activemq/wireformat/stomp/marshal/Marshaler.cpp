@@ -28,7 +28,9 @@
 #include <activemq/commands/Response.h>
 #include <activemq/commands/BrokerError.h>
 #include <activemq/commands/MessageAck.h>
+#include <activemq/commands/MessageDispatch.h>
 #include <activemq/commands/ConnectionInfo.h>
+#include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ExceptionResponse.h>
 #include <activemq/commands/ShutdownInfo.h>
 #include <activemq/commands/RemoveInfo.h>
@@ -41,7 +43,10 @@
 #include <decaf/lang/exceptions/ClassCastException.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/io/IOException.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 using namespace activemq;
 using namespace activemq::core;
@@ -120,27 +125,35 @@ Pointer<StompFrame> Marshaler::marshal( const Pointer<Command>& command )
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> Marshaler::unmarshalMessage( const Pointer<StompFrame>& frame ) {
 
-    Pointer<Message> message;
+    Pointer<MessageDispatch> messageDispatch( new MessageDispatch() );
 
-    // Convert from the Frame to standard message properties.
-    helper.convertProperties( frame, message );
+    // We created a unique id when we registered the subscription for the consumer
+    // now extract it back to a consumer Id so the ActiveMQConnection can dispatch it
+    // correctly.
+    Pointer<ConsumerId> consumerId = helper.convertConsumerId(
+        frame->removeProperty( StompCommandConstants::HEADER_SUBSCRIPTION ) );
+    messageDispatch->setConsumerId( consumerId );
 
-    // Check for Content length, that tells us if its a Text or Bytes Message
-    if( frame->removeProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) != "" ) {
-        message.reset( new ActiveMQBytesMessage() );
+    if( frame->hasProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) ) {
+
+        Pointer<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
+        frame->removeProperty( StompCommandConstants::HEADER_CONTENTLENGTH );
+        helper.convertProperties( frame, message );
         message->setContent( frame->getBody() );
+        messageDispatch->setMessage( message );
+        messageDispatch->setDestination( message->getDestination() );
+
     } else {
-        Pointer<ActiveMQTextMessage> txtMessage( new ActiveMQTextMessage() );
 
-        if( frame->getBodyLength() > 0 ) {
-            std::string text( (char*)( &(frame->getBody()[0]) ), frame->getBodyLength() );
-            txtMessage->setText( text );
-        }
+        Pointer<ActiveMQTextMessage> message( new ActiveMQTextMessage() );
+        helper.convertProperties( frame, message );
+        message->setText( (char*)&(frame->getBody()[0]) );
+        messageDispatch->setMessage( message );
+        messageDispatch->setDestination( message->getDestination() );
 
-        message = txtMessage.dynamicCast<Message>();
     }
 
-    return Pointer<Command>();
+    return messageDispatch;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -201,6 +214,11 @@ Pointer<StompFrame> Marshaler::marshalMessage( const Pointer<Command>& command )
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::SEND );
 
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
     // Convert the standard headers to the Stomp Format.
     helper.convertProperties( message, frame );
 
@@ -208,13 +226,15 @@ Pointer<StompFrame> Marshaler::marshalMessage( const Pointer<Command>& command )
     try{
         Pointer<ActiveMQTextMessage> txtMessage = message.dynamicCast<ActiveMQTextMessage>();
         std::string text = txtMessage->getText();
-        frame->setBody( (unsigned char*)text.c_str(), text.length() );
+        frame->setBody( (unsigned char*)text.c_str(), text.length() + 1 );
         return frame;
     } catch( ClassCastException& ex ) {}
 
     try{
         Pointer<ActiveMQBytesMessage> bytesMessage = message.dynamicCast<ActiveMQBytesMessage>();
         frame->setBody( bytesMessage->getBodyBytes(), bytesMessage->getBodyLength() );
+        frame->setProperty( StompCommandConstants::HEADER_CONTENTLENGTH,
+                            Long::toString( bytesMessage->getBodyLength() ) );
         return frame;
     } catch( ClassCastException& ex ) {}
 
@@ -231,6 +251,12 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
 
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::ACK );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
     frame->setProperty( StompCommandConstants::HEADER_MESSAGEID,
                         helper.convertMessageId( ack->getLastMessageId() ) );
 
@@ -239,7 +265,7 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
                             helper.convertTransactionId( ack->getTransactionId() ) );
     }
 
-    return frame;
+    return Pointer<StompFrame>(); //frame;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -274,6 +300,11 @@ Pointer<StompFrame> Marshaler::marshalTransactionInfo( const Pointer<Command>& c
         frame->setCommand( StompCommandConstants::COMMIT );
     }
 
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
     frame->setProperty( StompCommandConstants::HEADER_TRANSACTIONID,
                         helper.convertTransactionId( info->getTransactionId() ) );
 
@@ -284,7 +315,13 @@ Pointer<StompFrame> Marshaler::marshalTransactionInfo( const Pointer<Command>& c
 Pointer<StompFrame> Marshaler::marshalShutdownInfo( const Pointer<Command>& command AMQCPP_UNUSED ) {
 
     Pointer<StompFrame> frame( new StompFrame() );
-    frame->setCommand( StompCommandConstants::CONNECT );
+    frame->setCommand( StompCommandConstants::DISCONNECT );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
     return frame;
 }
 
@@ -294,6 +331,11 @@ Pointer<StompFrame> Marshaler::marshalRemoveInfo( const Pointer<Command>& comman
     Pointer<RemoveInfo> info = command.dynamicCast<RemoveInfo>();
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
 
     try{
         Pointer<ConsumerId> id = info->getObjectId().dynamicCast<ConsumerId>();
@@ -312,8 +354,17 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::SUBSCRIBE );
 
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
     frame->setProperty( StompCommandConstants::HEADER_DESTINATION,
                         helper.convertDestination( info->getDestination() ) );
+
+    // This creates a unique Id for this consumer using the connection id, session id and
+    // the consumers's id value, when we get a message this Id will be embedded in the
+    // Message's "subscription" property.
     frame->setProperty( StompCommandConstants::HEADER_ID,
                         helper.convertConsumerId( info->getConsumerId() ) );
 
@@ -327,7 +378,7 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
                             info->getSelector() );
     }
 
-    frame->setProperty( StompCommandConstants::HEADER_ACK, "client" );
+    frame->setProperty( StompCommandConstants::HEADER_ACK, "auto" );
 
     if( info->isNoLocal() ) {
         frame->setProperty( StompCommandConstants::HEADER_NOLOCAL, "true" );
@@ -360,6 +411,11 @@ Pointer<StompFrame> Marshaler::marshalRemoveSubscriptionInfo( const Pointer<Comm
     Pointer<RemoveSubscriptionInfo> info = command.dynamicCast<RemoveSubscriptionInfo>();
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
 
     frame->setProperty( StompCommandConstants::HEADER_ID, info->getClientId() );
     frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
