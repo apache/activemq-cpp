@@ -408,6 +408,8 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<StompFrame> Marshaler::marshalRemoveSubscriptionInfo( const Pointer<Command>& command ) {
 
+    std::cout << "Marshalling a RemoveSubscriptionInfo command" << std::endl;
+
     Pointer<RemoveSubscriptionInfo> info = command.dynamicCast<RemoveSubscriptionInfo>();
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
