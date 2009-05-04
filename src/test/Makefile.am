@@ -96,6 +96,7 @@ cc_sources = \
     activemq/cmsutil/CmsTemplateTest.cpp \
     activemq/util/PrimitiveValueNodeTest.cpp \
     activemq/util/LongSequenceGeneratorTest.cpp \
+    activemq/util/PrimitiveValueConverterTest.cpp \
     activemq/util/PrimitiveMapTest.cpp \
     activemq/util/MemoryUsageTest.cpp \
     activemq/util/URISupportTest.cpp \
@@ -214,6 +215,7 @@ h_sources = \
     activemq/util/PrimitiveValueNodeTest.h \
     activemq/util/PrimitiveMapTest.h \
     activemq/util/PrimitiveListTest.h \
+    activemq/util/PrimitiveValueConverterTest.h \
     activemq/util/URISupportTest.h \
     activemq/util/LongSequenceGeneratorTest.h \
     activemq/util/MemoryUsageTest.h \

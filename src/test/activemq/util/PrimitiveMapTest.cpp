@@ -27,42 +27,42 @@ void PrimitiveMapTest::testValueNode(){
     PrimitiveValueNode node;
 
     node.setBool( true );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == true );
     node.setBool( false );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == false );
 
     node.setByte( 5 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::BYTE_TYPE );
     CPPUNIT_ASSERT( node.getByte() == 5 );
 
     node.setChar( 'a' );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::CHAR_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::CHAR_TYPE );
     CPPUNIT_ASSERT( node.getChar() == 'a' );
 
     node.setShort( 10 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::SHORT_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::SHORT_TYPE );
     CPPUNIT_ASSERT( node.getShort() == 10 );
 
     node.setInt( 10000 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::INTEGER_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::INTEGER_TYPE );
     CPPUNIT_ASSERT( node.getInt() == 10000 );
 
     node.setLong( 100000L );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::LONG_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::LONG_TYPE );
     CPPUNIT_ASSERT( node.getLong() == 100000L );
 
     node.setDouble( 2.3 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::DOUBLE_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::DOUBLE_TYPE );
     CPPUNIT_ASSERT( node.getDouble() == 2.3 );
 
     node.setFloat( 3.2f );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::FLOAT_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::FLOAT_TYPE );
     CPPUNIT_ASSERT( node.getFloat() == 3.2f );
 
     node.setString( "hello" );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::STRING_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::STRING_TYPE );
     CPPUNIT_ASSERT( node.getString() == "hello" );
 
     std::vector<unsigned char> byteArray;
@@ -72,7 +72,7 @@ void PrimitiveMapTest::testValueNode(){
     byteArray.push_back( 'd' );
 
     node.setByteArray( byteArray );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
     CPPUNIT_ASSERT( node.getByteArray() == byteArray );
 
     try{
@@ -82,7 +82,7 @@ void PrimitiveMapTest::testValueNode(){
     }
 
     node.clear();
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::NULL_TYPE );
+    CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::NULL_TYPE );
 }
 
 void PrimitiveMapTest::testSetGet(){
@@ -104,6 +104,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setByte( "byte", 1 );
     CPPUNIT_ASSERT( pmap.getByte("byte") == 1 );
+    CPPUNIT_ASSERT( pmap.getString("byte") == "1" );
 
     try{
         pmap.getChar( "char" );
@@ -111,6 +112,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setChar( "char", 'a' );
     CPPUNIT_ASSERT( pmap.getChar("char") == 'a' );
+    CPPUNIT_ASSERT( pmap.getString("char") == "a" );
 
     try{
         pmap.getShort( "short" );
@@ -118,6 +120,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setShort( "short", 2 );
     CPPUNIT_ASSERT( pmap.getShort("short") == 2 );
+    CPPUNIT_ASSERT( pmap.getString("short") == "2" );
 
     try{
         pmap.getInt( "int" );
@@ -125,6 +128,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setInt( "int", 3 );
     CPPUNIT_ASSERT( pmap.getInt("int") == 3 );
+    CPPUNIT_ASSERT( pmap.getString("int") == "3" );
 
     try{
         pmap.getLong( "long" );
@@ -132,6 +136,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setLong( "long", 4L );
     CPPUNIT_ASSERT( pmap.getLong("long") == 4L );
+    CPPUNIT_ASSERT( pmap.getString("long") == "4" );
 
     try{
         pmap.getDouble( "double" );
@@ -139,6 +144,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setDouble( "double", 2.3 );
     CPPUNIT_ASSERT( pmap.getDouble("double") == 2.3 );
+    CPPUNIT_ASSERT( pmap.getString("double") == "2.3" );
 
     try{
         pmap.getFloat( "float" );
@@ -146,6 +152,7 @@ void PrimitiveMapTest::testSetGet(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setFloat( "float", 3.2f );
     CPPUNIT_ASSERT( pmap.getFloat("float") == 3.2f );
+    CPPUNIT_ASSERT( pmap.getString("float") == "3.2" );
 
     try{
         pmap.getString( "string" );

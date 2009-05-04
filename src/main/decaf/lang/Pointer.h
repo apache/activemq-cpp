@@ -213,7 +213,7 @@ namespace lang {
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
         Pointer& operator= ( const Pointer& right ) throw() {
-            if( this == &right ) {
+            if( this == (void*)&right ) {
                 return *this;
             }
 
@@ -223,7 +223,7 @@ namespace lang {
         }
         template< typename T1, typename R1>
         Pointer& operator= ( const Pointer<T1, R1>& right ) throw() {
-            if( this == &right ) {
+            if( this == (void*)&right ) {
                 return *this;
             }
 
