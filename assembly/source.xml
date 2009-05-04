@@ -11,6 +11,7 @@
       <outputDirectory>/</outputDirectory>
       <filtered>false</filtered>
       <fileMode>0755</fileMode>
+      <lineEnding>keep</lineEnding>
     </file>
   </files>
   <fileSets>
@@ -25,18 +26,23 @@
         <include>*.ac</include>
         <include>*.am</include>
       </includes>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>src</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>doc</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>m4</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>vs2005-build</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
   </fileSets>
 </assembly>
