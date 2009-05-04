@@ -25,6 +25,7 @@
 #include <decaf/util/StlMap.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <activemq/util/PrimitiveValueNode.h>
+#include <activemq/util/PrimitiveValueConverter.h>
 
 namespace activemq{
 namespace util{
@@ -33,6 +34,10 @@ namespace util{
      * Map of named primitives.
      */
     class AMQCPP_API PrimitiveMap : public decaf::util::StlMap<std::string, PrimitiveValueNode> {
+    private:
+
+        PrimitiveValueConverter converter;
+
     public:
 
         /**

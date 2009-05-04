@@ -30,7 +30,7 @@ namespace util{
      * Class that wraps around a single value of one of the
      * many types.  Manages memory for complex types, such
      * as strings.  Note: the destructor was left non-virtual
-     * so no virtual table will be created.  This probaly isn't
+     * so no virtual table will be created.  This probably isn't
      * necessary, but will avoid needless memory allocation. Since
      * we'll never extend this class, not having a virtual
      * destructor isn't a concern.
@@ -41,7 +41,7 @@ namespace util{
         /**
          * Enumeration for the various primitive types.
          */
-        enum PrimitiveValueTypeEnum{
+        enum PrimitiveType{
             NULL_TYPE          = 0,
             BOOLEAN_TYPE       = 1,
             BYTE_TYPE          = 2,
@@ -80,7 +80,7 @@ namespace util{
 
     private:
 
-        PrimitiveValueTypeEnum valueType;
+        PrimitiveType valueType;
         PrimitiveValue value;
 
     public:
@@ -196,9 +196,9 @@ namespace util{
 
         /**
          * Gets the Value Type of this type wrapper.
-         * @return the PrimtiveValueTypeEnum value for this wrapper.
+         * @return the PrimitiveType value for this wrapper.
          */
-        PrimitiveValueTypeEnum getValueType() const { return valueType; }
+        PrimitiveType getType() const { return valueType; }
 
         /**
          * Gets the internal Primitive Value object from this wrapper.
@@ -212,7 +212,7 @@ namespace util{
          * Sets the internal PrimitiveVale object to the new value
          * along with the tag for the type that it consists of.
          */
-        void setValue( const PrimitiveValue& value, PrimitiveValueTypeEnum valueType );
+        void setValue( const PrimitiveValue& value, PrimitiveType valueType );
 
         /**
          * Clears the value from this wrapper converting it back to a blank
@@ -399,7 +399,7 @@ namespace util{
         void setList( const decaf::util::List<PrimitiveValueNode>& lvalue );
 
         /**
-         * Gets the Primtive List value of this Node.
+         * Gets the Primitive List value of this Node.
          * @return value contained at the given index
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.

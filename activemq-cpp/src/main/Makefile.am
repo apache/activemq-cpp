@@ -318,6 +318,7 @@ cc_sources = \
     activemq/cmsutil/CmsDestinationAccessor.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
     activemq/cmsutil/SessionPool.cpp \
+    activemq/util/PrimitiveValueConverter.cpp \
     activemq/util/URISupport.cpp \
     activemq/util/PrimitiveMap.cpp \
     activemq/util/PrimitiveValueNode.cpp \
@@ -866,6 +867,7 @@ h_sources = \
     activemq/util/MemoryUsage.h \
     activemq/util/PrimitiveValueNode.h \
     activemq/util/CompositeData.h \
+    activemq/util/PrimitiveValueConverter.h \
     activemq/util/Usage.h \
     activemq/util/LongSequenceGenerator.h \
     activemq/util/Config.h \
