@@ -160,47 +160,47 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
     try {
 
-        if( value.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE ) {
+        if( value.getType() == PrimitiveValueNode::BOOLEAN_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::BOOLEAN_TYPE );
             dataOut.writeBoolean( value.getBool() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::BYTE_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::BYTE_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::BYTE_TYPE );
             dataOut.writeByte( value.getByte() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::CHAR_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::CHAR_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::CHAR_TYPE );
             dataOut.writeChar( value.getChar() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::SHORT_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::SHORT_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::SHORT_TYPE );
             dataOut.writeShort( value.getShort() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::INTEGER_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::INTEGER_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::INTEGER_TYPE );
             dataOut.writeInt( value.getInt() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::LONG_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::LONG_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::LONG_TYPE );
             dataOut.writeLong( value.getLong() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::FLOAT_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::FLOAT_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::FLOAT_TYPE );
             dataOut.writeFloat( value.getFloat() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::DOUBLE_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::DOUBLE_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::DOUBLE_TYPE );
             dataOut.writeDouble( value.getDouble() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::BYTE_ARRAY_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::BYTE_ARRAY_TYPE );
 
@@ -209,7 +209,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             dataOut.writeInt( (int)data.size() );
             dataOut.write( data );
 
-        } else if( value.getValueType() == PrimitiveValueNode::STRING_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::STRING_TYPE ) {
 
             std::string data = value.getString();
 
@@ -222,12 +222,12 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                 dataOut.writeUTF( data );
             }
 
-        } else if( value.getValueType() == PrimitiveValueNode::LIST_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::LIST_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::LIST_TYPE );
             marshalPrimitiveList( dataOut, value.getList() );
 
-        } else if( value.getValueType() == PrimitiveValueNode::MAP_TYPE ) {
+        } else if( value.getType() == PrimitiveValueNode::MAP_TYPE ) {
 
             dataOut.writeByte( PrimitiveValueNode::MAP_TYPE );
             marshalPrimitiveMap( dataOut, value.getMap() );
