@@ -22,6 +22,7 @@
 #include <string.h>
 #include <map>
 #include <decaf/util/Properties.h>
+#include <decaf/io/OutputStream.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -61,23 +62,13 @@ namespace stomp{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual StompFrame* clone() const {
-            StompFrame* frame = new StompFrame();
-            frame->copy( this );
-            return frame;
-        }
+        StompFrame* clone() const;
 
         /**
          * Copies the contents of the passed Frame to this one
          * @param src - Frame to copy
          */
-        virtual void copy( const StompFrame* src ) {
-
-            this->setCommand( src->getCommand() );
-            this->properties.copy( &( src->getProperties() ) );
-            // Use the Vectors assignment operator.
-            this->body = src->getBody();
-        }
+        void copy( const StompFrame* src );
 
         /**
          * Sets the command for this stomp frame.
@@ -171,15 +162,14 @@ namespace stomp{
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
-        void setBody( const unsigned char* bytes, std::size_t numBytes ){
+        void setBody( const unsigned char* bytes, std::size_t numBytes );
 
-            // Remove old data
-            body.clear();
-
-            // Copy data to internal buffer.
-            std::back_insert_iterator< std::vector<unsigned char> > iter( body );
-            std::copy( bytes, bytes + numBytes, iter );
-        }
+        /**
+         * Writes this Frame to an OuputStream in the Stomp Frame Format.
+         *
+         * @param stream - The stream to write the Frame to.
+         */
+        void toStream( decaf::io::OutputStream* stream ) const;
 
     };
 

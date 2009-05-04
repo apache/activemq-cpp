@@ -77,42 +77,8 @@ void StompWireFormat::marshal( const Pointer<Command>& command,
             return;
         }
 
-        // Write the command.
-        const string& cmdString = frame->getCommand();
-        out->write( (unsigned char*)cmdString.c_str(), 0, cmdString.length() );
-        out->writeByte( '\n' );
-
-        // Write all the headers.
-        vector< pair<string,string> > headers = frame->getProperties().toArray();
-        for( std::size_t ix=0; ix < headers.size(); ++ix ) {
-            string& name = headers[ix].first;
-            string& value = headers[ix].second;
-
-            out->write( (unsigned char*)name.c_str(), 0, name.length() );
-            out->writeByte( ':' );
-            out->write( (unsigned char*)value.c_str(), 0, value.length() );
-            out->writeByte( '\n' );
-        }
-
-        // Finish the header section with a form feed.
-        out->writeByte( '\n' );
-
-        // Write the body.
-        const std::vector<unsigned char>& body = frame->getBody();
-        if( body.size() > 0 ) {
-            out->write( &body[0], 0, body.size() );
-        }
-
-        if( ( frame->getBodyLength() == 0 ) ||
-            ( frame->getProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) != "" ) ) {
-
-            out->writeByte( '\0' );
-        }
-
-        out->writeByte( '\n' );
-
-        // Flush the stream.
-        out->flush();
+        // Let the Frame write itself to the output stream
+        frame->toStream( out );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
