@@ -75,6 +75,7 @@ namespace stomp{
         static const std::string HEADER_CONSUMERPRIORITY;
         static const std::string HEADER_RETROACTIVE;
         static const std::string HEADER_SUBSCRIPTIONNAME;
+        static const std::string HEADER_OLDSUBSCRIPTIONNAME;
         static const std::string HEADER_TIMESTAMP;
         static const std::string HEADER_REDELIVERED;
         static const std::string HEADER_REDELIVERYCOUNT;
