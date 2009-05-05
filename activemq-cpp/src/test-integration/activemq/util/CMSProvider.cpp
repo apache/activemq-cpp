@@ -191,11 +191,8 @@ void CMSProvider::unsubscribe() {
         }
 
         if( this->consumer.get() && this->durable && this->topic ) {
-
-            if( this->brokerURL.find_first_of( "stomp", 0 ) == string::npos ) {
-                this->consumer->close();
-                this->session->unsubscribe( this->subscription );
-            }
+             this->consumer->close();
+             this->session->unsubscribe( this->subscription );
         }
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )

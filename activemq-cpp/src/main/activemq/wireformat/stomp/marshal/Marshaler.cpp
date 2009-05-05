@@ -189,18 +189,30 @@ Pointer<Command> Marshaler::unmarshalConnected( const Pointer<StompFrame>& frame
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> Marshaler::unmarshalError( const Pointer<StompFrame>& frame ) {
 
-    Pointer<Command> result;
-
     Pointer<BrokerError> error( new BrokerError() );
     error->setMessage(
         frame->removeProperty( StompCommandConstants::HEADER_MESSAGE ) );
 
     if( frame->hasProperty( StompCommandConstants::HEADER_RECEIPTID ) ) {
-        Pointer<ExceptionResponse> errorResponse( new ExceptionResponse() );
-        errorResponse->setException( error );
-        errorResponse->setCorrelationId( Integer::parseInt(
-            frame->removeProperty( StompCommandConstants::HEADER_RECEIPTID ) ) );
-        return errorResponse;
+
+        std::string responseId = frame->removeProperty( StompCommandConstants::HEADER_RECEIPTID );
+
+        // If we indicated that we don't care if the request failed then just create a
+        // response command to answer the request.
+        if( responseId.find( "ignore:" ) != std::string::npos ) {
+
+            Pointer<Response> response( new Response() );
+            response->setCorrelationId( Integer::parseInt( responseId.substr( 7 ) ) );
+            return response;
+
+        } else {
+
+            Pointer<ExceptionResponse> errorResponse( new ExceptionResponse() );
+            errorResponse->setException( error );
+            errorResponse->setCorrelationId( Integer::parseInt( responseId ) );
+            return errorResponse;
+        }
+
     } else {
         return error;
     }
@@ -371,6 +383,9 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
     if( info->getSubscriptionName() != "" ) {
         frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
                             info->getSubscriptionName() );
+        // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
+        frame->setProperty( StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME,
+                            info->getSubscriptionName() );
     }
 
     if( info->getSelector() != "" ) {
@@ -408,19 +423,21 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<StompFrame> Marshaler::marshalRemoveSubscriptionInfo( const Pointer<Command>& command ) {
 
-    std::cout << "Marshalling a RemoveSubscriptionInfo command" << std::endl;
-
     Pointer<RemoveSubscriptionInfo> info = command.dynamicCast<RemoveSubscriptionInfo>();
     Pointer<StompFrame> frame( new StompFrame() );
     frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
 
     if( command->isResponseRequired() ) {
         frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
-                            Integer::toString( command->getCommandId() ) );
+                            std::string( "ignore:" ) + Integer::toString( command->getCommandId() ) );
     }
 
     frame->setProperty( StompCommandConstants::HEADER_ID, info->getClientId() );
     frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
+                        info->getSubcriptionName() );
+
+    // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
+    frame->setProperty( StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME,
                         info->getSubcriptionName() );
 
     return frame;
