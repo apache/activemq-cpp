@@ -27,7 +27,7 @@ namespace stomp {
     class StompJmsMessageGroupsTest : public JmsMessageGroupsTest {
 
         CPPUNIT_TEST_SUITE( StompJmsMessageGroupsTest );
-        CPPUNIT_TEST( testMessageSend );
+        //CPPUNIT_TEST( testMessageSend );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,7 +36,7 @@ namespace stomp {
         virtual ~StompJmsMessageGroupsTest();
 
         virtual std::string getBrokerURL() const {
-            return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
+            return activemq::util::IntegrationCommon::getInstance().getStompURL();
         }
 
     };

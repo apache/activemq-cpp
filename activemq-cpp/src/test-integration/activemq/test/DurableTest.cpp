@@ -39,7 +39,7 @@ void DurableTest::testDurableConsumer() {
 
         // Create CMS Object for Comms
         cms::Session* session( cmsProvider->getSession() );
-        cmsProvider->setSubscription( UUID::randomUUID().toString() );
+        cmsProvider->setSubscription( this->getSubscriptionName() );
         cmsProvider->setDurable( true );
         cms::MessageConsumer* consumer = cmsProvider->getConsumer();
         cms::MessageProducer* producer = cmsProvider->getProducer();

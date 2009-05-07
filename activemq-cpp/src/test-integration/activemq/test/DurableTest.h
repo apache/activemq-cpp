@@ -36,6 +36,8 @@ namespace test{
 
         virtual void testDurableConsumer();
 
+        virtual std::string getSubscriptionName() const = 0;
+
     };
 
 }}

@@ -30,6 +30,8 @@ namespace stomp{
         CPPUNIT_TEST( testDurableConsumer );
         CPPUNIT_TEST_SUITE_END();
 
+        std::string subscriptionName;
+
     public:
 
         StompDurableTest();
@@ -37,6 +39,10 @@ namespace stomp{
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getStompURL();
+        }
+
+        virtual std::string getSubscriptionName() const {
+            return cmsProvider->getConnection()->getClientID();
         }
 
     };

@@ -161,8 +161,13 @@ Pointer<Command> Marshaler::unmarshalReceipt( const Pointer<StompFrame>& frame )
 
     Pointer<Response> response( new Response() );
     if( frame->hasProperty( StompCommandConstants::HEADER_RECEIPTID ) ) {
-        response->setCorrelationId( Integer::parseInt(
-            frame->getProperty( StompCommandConstants::HEADER_RECEIPTID ) ) );
+
+        std::string responseId = frame->getProperty( StompCommandConstants::HEADER_RECEIPTID );
+        if( responseId.find( "ignore:" ) == 0 ) {
+            responseId = responseId.substr( 7 );
+        }
+
+        response->setCorrelationId( Integer::parseInt( responseId ) );
     } else {
         throw IOException(
             __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
@@ -199,7 +204,7 @@ Pointer<Command> Marshaler::unmarshalError( const Pointer<StompFrame>& frame ) {
 
         // If we indicated that we don't care if the request failed then just create a
         // response command to answer the request.
-        if( responseId.find( "ignore:" ) != std::string::npos ) {
+        if( responseId.find( "ignore:" ) == 0 ) {
 
             Pointer<Response> response( new Response() );
             response->setCorrelationId( Integer::parseInt( responseId.substr( 7 ) ) );
@@ -266,7 +271,7 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
 
     if( command->isResponseRequired() ) {
         frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
-                            Integer::toString( command->getCommandId() ) );
+                            std::string( "ignore:" ) + Integer::toString( command->getCommandId() ) );
     }
 
     frame->setProperty( StompCommandConstants::HEADER_MESSAGEID,
@@ -277,7 +282,8 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
                             helper.convertTransactionId( ack->getTransactionId() ) );
     }
 
-    return Pointer<StompFrame>(); //frame;
+    //return Pointer<StompFrame>();
+    return frame;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,6 +298,9 @@ Pointer<StompFrame> Marshaler::marshalConnectionInfo( const Pointer<Command>& co
     frame->setProperty( StompCommandConstants::HEADER_PASSWORD, info->getPassword() );
     frame->setProperty( StompCommandConstants::HEADER_REQUESTID,
                         Integer::toString( info->getCommandId() ) );
+
+    // Store this for later.
+    this->clientId = info->getClientId();
 
     return frame;
 }
@@ -381,6 +390,15 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
                         helper.convertConsumerId( info->getConsumerId() ) );
 
     if( info->getSubscriptionName() != "" ) {
+
+        if( this->clientId != info->getSubscriptionName() ) {
+            throw UnsupportedOperationException(
+                __FILE__, __LINE__,
+                "Stomp Durable Subscriptions require that the ClientId and the Subscription "
+                "Name match, clientId = {%s} : subscription name = {%s}.",
+                this->clientId.c_str(), info->getSubscriptionName().c_str() );
+        }
+
         frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
                             info->getSubscriptionName() );
         // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
@@ -393,7 +411,7 @@ Pointer<StompFrame> Marshaler::marshalConsumerInfo( const Pointer<Command>& comm
                             info->getSelector() );
     }
 
-    frame->setProperty( StompCommandConstants::HEADER_ACK, "auto" );
+    frame->setProperty( StompCommandConstants::HEADER_ACK, "client" );
 
     if( info->isNoLocal() ) {
         frame->setProperty( StompCommandConstants::HEADER_NOLOCAL, "true" );
@@ -434,11 +452,11 @@ Pointer<StompFrame> Marshaler::marshalRemoveSubscriptionInfo( const Pointer<Comm
 
     frame->setProperty( StompCommandConstants::HEADER_ID, info->getClientId() );
     frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
-                        info->getSubcriptionName() );
+                        info->getClientId() );
 
     // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
     frame->setProperty( StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME,
-                        info->getSubcriptionName() );
+                        info->getClientId() );
 
     return frame;
 }

@@ -31,6 +31,15 @@ cc_sources = \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
     activemq/test/openwire/OpenwireDurableTest.cpp \
     activemq/test/SimpleTest.cpp \
+    activemq/test/stomp/StompExpirationTest.cpp \
+    activemq/test/stomp/StompSlowListenerTest.cpp \
+    activemq/test/stomp/StompSimpleTest.cpp \
+    activemq/test/stomp/StompCmsTemplateTest.cpp \
+    activemq/test/stomp/StompTransactionTest.cpp \
+    activemq/test/stomp/StompAsyncSenderTest.cpp \
+    activemq/test/stomp/StompJmsMessageGroupsTest.cpp \
+    activemq/test/stomp/StompDurableTest.cpp \
+    activemq/test/stomp/StompSimpleRollbackTest.cpp \
     activemq/test/AsyncSenderTest.cpp \
     activemq/test/TransactionTest.cpp \
     activemq/test/ExpirationTest.cpp \
@@ -58,6 +67,15 @@ h_sources = \
     activemq/test/JmsMessageGroupsTest.h \
     activemq/test/AsyncSenderTest.h \
     activemq/test/CMSTestFixture.h \
+    activemq/test/stomp/StompSlowListenerTest.h \
+    activemq/test/stomp/StompDurableTest.h \
+    activemq/test/stomp/StompSimpleRollbackTest.h \
+    activemq/test/stomp/StompCmsTemplateTest.h \
+    activemq/test/stomp/StompAsyncSenderTest.h \
+    activemq/test/stomp/StompTransactionTest.h \
+    activemq/test/stomp/StompJmsMessageGroupsTest.h \
+    activemq/test/stomp/StompSimpleTest.h \
+    activemq/test/stomp/StompExpirationTest.h \
     activemq/test/DurableTest.h \
     activemq/test/TransactionTest.h \
     activemq/test/ExpirationTest.h \
