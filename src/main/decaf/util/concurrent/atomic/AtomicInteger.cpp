@@ -36,12 +36,7 @@ AtomicInteger::AtomicInteger( int initialValue ) : value( initialValue ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::getAndSet( int newValue ) {
-    for(;;) {
-        int current = get();
-        if( compareAndSet( current, newValue ) ) {
-            return current;
-        }
-    }
+    return apr_atomic_xchg32( &this->value, newValue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,9 +51,7 @@ int AtomicInteger::getAndIncrement() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::getAndDecrement() {
-    int previous = (int)this->value;
-    apr_atomic_dec32( &this->value );
-    return previous;
+    return apr_atomic_dec32( &this->value ) + 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,20 +61,17 @@ int AtomicInteger::getAndAdd( int delta ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::incrementAndGet() {
-    apr_atomic_inc32( &this->value );
-    return this->value;
+    return apr_atomic_inc32( &this->value ) + 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::decrementAndGet() {
-    apr_atomic_dec32( &this->value );
-    return this->value;
+    return apr_atomic_dec32( &this->value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::addAndGet( int delta ) {
-    apr_atomic_add32( &this->value, delta );
-    return this->value;
+    return apr_atomic_add32( &this->value, delta ) + delta;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

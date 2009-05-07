@@ -36,6 +36,7 @@ namespace lang {
         CPPUNIT_TEST( testSTLContainers );
         CPPUNIT_TEST( testReturnByValue );
         CPPUNIT_TEST( testDynamicCast );
+        CPPUNIT_TEST( testThreadSafety );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -52,6 +53,7 @@ namespace lang {
         void testSTLContainers();
         void testReturnByValue();
         void testDynamicCast();
+        void testThreadSafety();
 
     };
 
