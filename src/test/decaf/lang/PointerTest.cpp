@@ -21,6 +21,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/exceptions/ClassCastException.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 
 #include <map>
 #include <string>
@@ -29,6 +30,7 @@ using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 class TestClassBase {
@@ -460,4 +462,104 @@ void PointerTest::testDynamicCast() {
         ptrTestClassA2 = nullPointer.dynamicCast<TestClassA>(),
         ClassCastException );
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+class Gate {
+private:
+
+    CountDownLatch * enter_latch;
+    CountDownLatch * leave_latch;
+    Mutex mutex;
+    bool closed;
+
+public:
+
+    Gate() : closed( true ) {}
+    virtual ~Gate() {}
+
+    void open( int count ) {
+        leave_latch = new CountDownLatch( count );
+        enter_latch = new CountDownLatch( count );
+        mutex.lock();
+        closed = false;
+        mutex.notifyAll();
+        mutex.unlock();
+    }
+
+    void enter() {
+        mutex.lock();
+        while( closed )
+            mutex.wait();
+        enter_latch->countDown();
+        if( enter_latch->await( 0 ) ) {
+            closed = true;
+        }
+        mutex.unlock();
+    }
+
+    void leave() {
+        leave_latch->countDown();
+    }
+
+    void close() {
+        leave_latch->await();
+        delete leave_latch;
+        delete enter_latch;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+class PointerTestThread: public Thread {
+private:
+
+    Gate *_gate;
+    Pointer<std::string> _s;
+
+public:
+
+    PointerTestThread( Gate *gate ) : _gate( gate ) {}
+    virtual ~PointerTestThread() {}
+
+    void setString( Pointer<std::string> s ) {
+        _s = s;
+    }
+
+    virtual void run() {
+        for( int j = 0; j < 1000; j++ ) {
+            _gate->enter();
+            _s.reset( NULL );
+            _gate->leave();
+        }
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void PointerTest::testThreadSafety() {
+
+    Pointer<PointerTestThread> thread[10];
+    Gate gate;
+
+    for( int i = 0; i < 10; i++ ) {
+        thread[i].reset( new PointerTestThread( &gate ) );
+        thread[i]->start();
+    }
+
+    for( int j = 0; j < 1000; j++ ) {
+        // Put this in its own scope so that the main thread frees the string
+        // before the threads.
+        {
+            Pointer<std::string> s( new std::string() );
+            for( int i = 0; i < 10; i++ )
+                thread[i]->setString( s );
+        }
+
+        // Signal the threads to free the string.
+        gate.open( 10 );
+        gate.close();
+    }
+
+    for( int i = 0; i < 10; i++ ) {
+        thread[i]->join();
+    }
 }
