@@ -34,7 +34,6 @@ int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED ) {
 
     activemq::library::ActiveMQCPP::initializeLibrary();
 
-    bool wasSuccessful = false;
     std::ofstream outputFile;
     bool useXMLOutputter = false;
     std::auto_ptr<CppUnit::TestListener> listener( new CppUnit::BriefTestProgressListener );

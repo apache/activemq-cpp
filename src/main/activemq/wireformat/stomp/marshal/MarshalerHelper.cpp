@@ -51,7 +51,7 @@ void MarshalerHelper::convertProperties( const Pointer<StompFrame>& frame,
     message->setCorrelationId( StompCommandConstants::HEADER_CORRELATIONID );
 
     if( frame->hasProperty( StompCommandConstants::HEADER_EXPIRES ) ) {
-        message->setExpiration( Integer::parseInt(
+        message->setExpiration( Long::parseLong(
             frame->removeProperty( StompCommandConstants::HEADER_EXPIRES ) ) );
     }
 
@@ -80,6 +80,19 @@ void MarshalerHelper::convertProperties( const Pointer<StompFrame>& frame,
         message->setTransactionId( convertTransactionId( transactionId ) );
     }
 
+    // Handle JMSX Properties.
+    if( frame->hasProperty( "JMSXDeliveryCount" ) ) {
+        message->setRedeliveryCounter( Integer::parseInt(
+            frame->removeProperty( "JMSXDeliveryCount" ) ) );
+    }
+    if( frame->hasProperty( "JMSXGroupID" ) ) {
+        message->setGroupID( frame->removeProperty( "JMSXGroupID" ) );
+    }
+    if( frame->hasProperty( "JMSXGroupSeq" ) ) {
+        message->setGroupSequence( Integer::parseInt(
+            frame->removeProperty( "JMSXGroupSeq" ) ) );
+    }
+
     // Copy the general headers over to the Message.
     std::vector< std::pair<std::string, std::string> > properties = frame->getProperties().toArray();
     std::vector< std::pair<std::string, std::string> >::const_iterator iter = properties.begin();
@@ -95,8 +108,6 @@ void MarshalerHelper::convertProperties( const Pointer<Message>& message,
 
     frame->setProperty( StompCommandConstants::HEADER_DESTINATION,
                         convertDestination( message->getDestination() ) );
-    frame->setProperty( StompCommandConstants::HEADER_MESSAGEID,
-                        convertMessageId( message->getMessageId() ) );
 
     if( message->getCorrelationId() != "" ) {
         frame->setProperty( StompCommandConstants::HEADER_CORRELATIONID,
@@ -105,6 +116,7 @@ void MarshalerHelper::convertProperties( const Pointer<Message>& message,
 
     frame->setProperty( StompCommandConstants::HEADER_EXPIRES,
                         Long::toString( message->getExpiration() ) );
+
     frame->setProperty( StompCommandConstants::HEADER_PERSISTENT,
                         Boolean::toString( message->isPersistent() ) );
 
@@ -130,6 +142,16 @@ void MarshalerHelper::convertProperties( const Pointer<Message>& message,
     if( message->getTransactionId() != NULL ) {
         frame->setProperty( StompCommandConstants::HEADER_TRANSACTIONID,
                             convertTransactionId( message->getTransactionId() ) );
+    }
+
+    // Handle JMSX Properties.
+    frame->setProperty( "JMSXDeliveryCount",
+                        Integer::toString( message->getRedeliveryCounter() ) );
+    frame->setProperty( "JMSXGroupSeq",
+                        Integer::toString( message->getGroupSequence() ) );
+
+    if( message->getGroupID() != "" ) {
+        frame->setProperty( "JMSXGroupID", message->getGroupID() );
     }
 
     std::vector<std::string> keys = message->getMessageProperties().keySet();
@@ -207,8 +229,8 @@ Pointer<ActiveMQDestination> MarshalerHelper::convertDestination( const std::str
 ////////////////////////////////////////////////////////////////////////////////
 std::string MarshalerHelper::convertMessageId( const Pointer<MessageId>& messageId ) {
 
-    std::string result = convertProducerId( messageId->getProducerId() ) + ":" +
-                         Long::toString( messageId->getProducerSequenceId() );
+    // The Stomp MessageId is always hidden solely in the Producer Id.
+    std::string result = convertProducerId( messageId->getProducerId() );
 
     return result;
 }
@@ -221,14 +243,9 @@ Pointer<MessageId> MarshalerHelper::convertMessageId( const std::string& message
     }
 
     Pointer<MessageId> id( new MessageId() );
-    StringTokenizer tokenizer( messageId, ":" );
 
-    id->setProducerId( convertProducerId( tokenizer.nextToken() ) );
-
-    while( tokenizer.hasMoreTokens() ){
-        std::string text = tokenizer.nextToken();
-        id->setProducerSequenceId( Long::parseLong( text ) );
-    }
+    id->setProducerId( convertProducerId( messageId ) );
+    id->setProducerSequenceId( this->messageIdGenerator.getNextSequenceId() );
 
     return id;
 }
@@ -269,9 +286,7 @@ Pointer<ConsumerId> MarshalerHelper::convertConsumerId( const std::string& consu
 ////////////////////////////////////////////////////////////////////////////////
 std::string MarshalerHelper::convertProducerId( const Pointer<ProducerId>& producerId ) {
 
-    return producerId->getConnectionId() + ":" +
-           Long::toString( producerId->getSessionId() ) + ":" +
-           Long::toString( producerId->getValue() );
+    return producerId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -282,19 +297,10 @@ Pointer<ProducerId> MarshalerHelper::convertProducerId( const std::string& produ
     }
 
     Pointer<ProducerId> id( new ProducerId() );
-    StringTokenizer tokenizer( producerId, ":" );
 
-    id->setConnectionId( tokenizer.nextToken() );
-
-    while( tokenizer.hasMoreTokens() ){
-        string text = tokenizer.nextToken();
-
-        if( tokenizer.hasMoreTokens() ) {
-            id->setSessionId( Long::parseLong( text ) );
-        } else {
-            id->setValue( Long::parseLong( text ) );
-        }
-    }
+    id->setConnectionId( producerId );
+    id->setSessionId( -1 );
+    id->setValue( -1 );
 
     return id;
 }

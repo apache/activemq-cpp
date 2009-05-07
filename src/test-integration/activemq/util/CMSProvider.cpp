@@ -63,35 +63,63 @@ CMSProvider::~CMSProvider() {
 void CMSProvider::close() throw( decaf::lang::Exception ) {
 
     if( this->consumer.get() != NULL ) {
-        this->consumer->close();
+        try{
+            this->consumer->close();
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
     if( this->producer.get() != NULL ) {
-        this->producer->close();
+        try{
+            this->producer->close();
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
     if( this->noDestProducer.get() != NULL ) {
-        this->noDestProducer->close();
+        try{
+            this->noDestProducer->close();
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
 
     if( this->destination.get() != NULL && !isDurable() ) {
-        this->destroyDestination( this->destination.get() );
+        try{
+            this->destroyDestination( this->destination.get() );
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
 
     this->destination.reset( NULL );
     this->tempDestination.reset( NULL );
 
     if( this->session.get() != NULL ) {
-        this->session->close();
+        try{
+            this->session->close();
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
 
     if( this->connection.get() != NULL ) {
-        this->connection->close();
+        try{
+            this->connection->close();
+        } catch( cms::CMSException& ex ) {
+            ex.printStackTrace();
+        }
     }
 
-    this->consumer.reset( NULL );
-    this->producer.reset( NULL );
-    this->noDestProducer.reset( NULL );
-    this->session.reset( NULL );
-    this->connection.reset( NULL );
+    try{
+        this->consumer.reset( NULL );
+        this->producer.reset( NULL );
+        this->noDestProducer.reset( NULL );
+        this->session.reset( NULL );
+        this->connection.reset( NULL );
+    } catch( cms::CMSException& ex ) {
+        ex.printStackTrace();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
