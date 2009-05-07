@@ -797,6 +797,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveValueConverter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveValueConverter.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\PrimitiveValueNode.cpp"
 					>
 				</File>
@@ -12236,6 +12244,70 @@
 						</File>
 						<File
 							RelativePath="..\src\main\activemq\wireformat\openwire\utils\OpenwireStringSupport.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="stomp"
+					>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompCommandConstants.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompCommandConstants.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompFrame.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompFrame.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompResponseBuilder.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompResponseBuilder.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompWireFormat.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompWireFormat.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompWireFormatFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompWireFormatFactory.h"
+						>
+					</File>
+					<Filter
+						Name="marshal"
+						>
+						<File
+							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\Marshaler.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\Marshaler.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\MarshalerHelper.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\MarshalerHelper.h"
 							>
 						</File>
 					</Filter>

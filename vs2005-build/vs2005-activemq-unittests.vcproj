@@ -871,6 +871,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\activemq\util\PrimitiveValueConverterTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\PrimitiveValueConverterTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\util\PrimitiveValueNodeTest.cpp"
 					>
 				</File>
