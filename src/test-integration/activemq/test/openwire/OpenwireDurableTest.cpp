@@ -17,9 +17,12 @@
 
 #include "OpenwireDurableTest.h"
 
+#include <decaf/util/UUID.h>
+
 using namespace activemq;
 using namespace activemq::test;
 using namespace activemq::test::openwire;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenwireDurableTest::OpenwireDurableTest() {
@@ -27,4 +30,9 @@ OpenwireDurableTest::OpenwireDurableTest() {
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenwireDurableTest::~OpenwireDurableTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string OpenwireDurableTest::getSubscriptionName() const {
+    return UUID::randomUUID().toString();
 }

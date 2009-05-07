@@ -85,11 +85,6 @@ void SimpleRollbackTest::testRollbacks() {
         session->rollback();
         Thread::sleep( 50 );
 
-        // TODO - Should we get anything here?
-        // Wait for the messages to get here
-        listener.asyncWaitForMessages( 5 );
-        //CPPUNIT_ASSERT( listener.getNumReceived() == 0 );
-
         listener.reset();
         txtMessage->setText( "SimpleTest - Message after Rollback" );
         producer->send( txtMessage.get() );
@@ -109,7 +104,8 @@ void SimpleRollbackTest::testRollbacks() {
         CPPUNIT_ASSERT( listener.getNumReceived() == 1 );
         session->commit();
 
-    } catch( ... ) {
-        CPPUNIT_ASSERT( false );
+    } catch( std::exception& ex ) {
+        std::cout << ex.what() << std::endl;
+        throw ex;
     }
 }

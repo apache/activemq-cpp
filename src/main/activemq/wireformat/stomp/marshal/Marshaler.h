@@ -41,6 +41,10 @@ namespace marshal{
 
         MarshalerHelper helper;
 
+        // Stored after we connect to use when validating that a durable subscribe
+        // and unsubscribe are set to use the client Id.
+        std::string clientId;
+
     public:
 
         Marshaler() {}

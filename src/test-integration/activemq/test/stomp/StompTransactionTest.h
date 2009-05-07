@@ -27,7 +27,7 @@ namespace stomp{
     class StompTransactionTest : public TransactionTest {
 
         CPPUNIT_TEST_SUITE( StompTransactionTest );
-//        CPPUNIT_TEST( testSendReceiveTransactedBatches );
+        CPPUNIT_TEST( testSendReceiveTransactedBatches );
         CPPUNIT_TEST( testSendRollback );
         CPPUNIT_TEST( testWithTTLSet );
 //        CPPUNIT_TEST( testSendSessionClose );

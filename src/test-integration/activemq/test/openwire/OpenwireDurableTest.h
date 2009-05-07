@@ -39,6 +39,8 @@ namespace openwire{
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
         }
 
+        virtual std::string getSubscriptionName() const;
+
     };
 
 }}}

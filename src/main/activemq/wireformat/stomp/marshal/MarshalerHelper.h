@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_MARSHALERHELPER_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/util/LongSequenceGenerator.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessageId.h>
@@ -47,6 +48,10 @@ namespace marshal {
      * @since 3.0
      */
     class MarshalerHelper {
+    private:
+
+        activemq::util::LongSequenceGenerator messageIdGenerator;
+
     public:
 
         MarshalerHelper() {}
