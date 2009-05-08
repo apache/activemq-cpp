@@ -74,6 +74,9 @@ void SimpleRollbackTest::testRollbacks() {
         unsigned int numReceived = listener.getNumReceived();
         CPPUNIT_ASSERT( numReceived == IntegrationCommon::defaultMsgCount );
 
+        session->commit();
+        Thread::sleep( 50 );
+
         for( unsigned int i = 0; i < 5; ++i ) {
             ostringstream lcStream;
             lcStream << "SimpleTest - Message #" << i << ends;
