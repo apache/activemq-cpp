@@ -102,18 +102,12 @@
                 <includes>
                   <includes>**\*.cpp</includes>
                 </includes>
-                <excludes>
-                  <exclude>**/activemq/test/stomp/**\*.cpp</exclude>
-                </excludes>
               </sources>
               <headers>
                 <directory>${basedir}/src/test-integration/</directory>
                 <includes>
                   <includes>**\*.h</includes>
                 </includes>
-                <excludes>
-                  <exclude>**/activemq/test/stomp/**\*.h</exclude>
-                </excludes>
               </headers>
             </configuration>
             <phase>generate-resources</phase>
@@ -165,7 +159,6 @@
                 <excludes>
                   <exclude>**/decaf/security/**\*.cpp</exclude>
                   <exclude>**/decaf/security_provider/**\*.cpp</exclude>
-<!--                   <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude> -->
                 </excludes>
               </sources>
               <headers>
@@ -176,7 +169,6 @@
                 <excludes>
                   <exclude>**/decaf/security/**\*.h</exclude>
                   <exclude>**/decaf/security_provider/**\*.h</exclude>
-<!--                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude> -->
                 </excludes>
               </headers>
             </configuration>
