@@ -44,12 +44,7 @@ bool AtomicBoolean::compareAndSet( bool expect, bool update ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AtomicBoolean::getAndSet( bool newValue ) {
-    for(;;) {
-        bool current = get();
-        if( compareAndSet( current, newValue ) ) {
-            return current;
-        }
-    }
+    return apr_atomic_xchg32( &this->value, newValue ) > 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
