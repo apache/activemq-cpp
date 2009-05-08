@@ -282,7 +282,6 @@ Pointer<StompFrame> Marshaler::marshalAck( const Pointer<Command>& command ) {
                             helper.convertTransactionId( ack->getTransactionId() ) );
     }
 
-    //return Pointer<StompFrame>();
     return frame;
 }
 

@@ -606,7 +606,7 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
         pendingAck->setTransactionId( this->transaction->getTransactionId() );
     }
 
-    if( ( 0.5 * this->consumerInfo->getPrefetchSize()) <= ( deliveredCounter - additionalWindowSize ) ) {
+    if( ( 0.5 * this->consumerInfo->getPrefetchSize() ) <= ( deliveredCounter - additionalWindowSize ) ) {
         session->oneway( pendingAck );
         pendingAck.reset( NULL );
         additionalWindowSize = deliveredCounter;
@@ -681,9 +681,8 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
             pendingAck.reset( NULL );
 
             // Adjust the counters
-            deliveredCounter -= (int)dispatchedMessages.size();
-            additionalWindowSize =
-                Math::max( 0, additionalWindowSize - (int)dispatchedMessages.size() );
+            deliveredCounter = Math::max( 0, deliveredCounter - dispatchedMessages.size());
+            additionalWindowSize = Math::max(0, additionalWindowSize - dispatchedMessages.size());
 
             if( !session->isTransacted() ) {
                 dispatchedMessages.clear();
