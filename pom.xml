@@ -106,10 +106,10 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>tools</artifactId>
-          <version>1.4.2</version>
-           <scope>system</scope>
-           <!-- Only a JDK of 1.5.0 B11 or greater seems to work. -->
-           <systemPath>/opt/local/jdk1.5.0_16/lib/tools.jar</systemPath>
+          <version>1.5</version>
+          <scope>system</scope>
+          <!-- Only a JDK of 1.5.0 B11 or greater seems to work. -->
+           <systemPath>/opt/local/jdk1.5/lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
     </profile>
@@ -142,6 +142,36 @@
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>source.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+          <finalName>activemq-cpp-2.2.6</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
