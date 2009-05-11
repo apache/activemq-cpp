@@ -9,10 +9,12 @@ for setting Max inactivity duration now works properly as well.
 
 Bug
 
+    * [AMQCPP-210] - ActiveMQ-CPP on Mac OS X and iPhone OS link error
     * [AMQCPP-232] - OpenWire encode and decode UTF8 incorrect
     * [AMQCPP-234] - URI class helpers are missing the DLLExport Macro
     * [AMQCPP-235] - UTF8 length marshalling bug in openwire readString and writeString.
     * [AMQCPP-236] - maxInactivityDuration of Wire-Format is not supported by ActiveMQ-CPP2.2.5
+    * [AMQCPP-242] - Segfault when destroying auto pointer managed objects
 
 Improvement
 
