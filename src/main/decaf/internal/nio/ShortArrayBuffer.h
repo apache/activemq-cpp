@@ -83,7 +83,7 @@ namespace nio{
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Create a ShortArrayBuffer that mirros this one, meaning it shares a
+         * Create a ShortArrayBuffer that mirrors this one, meaning it shares a
          * reference to this buffers ByteArrayPerspective and when changes
          * are made to that data it is reflected in both.
          * @param other - the ShortArrayBuffer this one is to mirror.

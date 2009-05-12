@@ -26,10 +26,10 @@ namespace nio{
 
     /**
      * This class extends ByteArray to create a reference counted byte array
-     * that can be held and used by several differen ByteBuffers and allow them
+     * that can be held and used by several different ByteBuffers and allow them
      * to know on destruction whose job it is to delete the perspective.
      * <p>
-     * Creating an instance of this class implicity takes a reference to it, so
+     * Creating an instance of this class implicitly takes a reference to it, so
      * a creator must return its ref before the count will be zero.
      */
     class DECAF_API ByteArrayPerspective : public util::ByteArrayAdapter {
