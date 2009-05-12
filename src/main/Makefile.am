@@ -88,7 +88,12 @@ cc_sources = \
     decaf/io/BufferedOutputStream.cpp \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/DataInputStream.cpp \
+    cms/MessageNotWriteableException.cpp \
     cms/CMSException.cpp \
+    cms/CMSSecurityException.cpp \
+    cms/MessageEOFException.cpp \
+    cms/MessageNotReadableException.cpp \
+    cms/MessageFormatException.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/InternalCommandListener.cpp \
@@ -593,8 +598,10 @@ h_sources = \
     cms/TextMessage.h \
     cms/Closeable.h \
     cms/BytesMessage.h \
+    cms/CMSSecurityException.h \
     cms/ObjectMessage.h \
     cms/QueueBrowser.h \
+    cms/MessageEOFException.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
     cms/Connection.h \
@@ -603,10 +610,12 @@ h_sources = \
     cms/Session.h \
     cms/ExceptionListener.h \
     cms/Stoppable.h \
+    cms/StreamMessage.h \
     cms/MessageConsumer.h \
     cms/DeliveryMode.h \
     cms/Config.h \
     cms/Destination.h \
+    cms/MessageNotReadableException.h \
     cms/CMSProperties.h \
     cms/TemporaryTopic.h \
     cms/Topic.h \
@@ -615,6 +624,8 @@ h_sources = \
     cms/Startable.h \
     cms/Queue.h \
     cms/MessageProducer.h \
+    cms/MessageFormatException.h \
+    cms/MessageNotWriteableException.h \
     activemq/transport/TransportListener.h \
     activemq/transport/TransportFilter.h \
     activemq/transport/CompositeTransport.h \

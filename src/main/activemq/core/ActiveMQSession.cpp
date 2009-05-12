@@ -525,6 +525,18 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::StreamMessage* ActiveMQSession::createStreamMessage()
+    throw ( cms::CMSException ) {
+
+    try{
+        // TODO
+        throw decaf::lang::exceptions::UnsupportedOperationException(
+            __FILE__, __LINE__, "StreamMessage Not Yet Implemented." );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* ActiveMQSession::createTextMessage()
     throw ( cms::CMSException ) {
 
