@@ -23,6 +23,7 @@
 #include <cms/TextMessage.h>
 #include <cms/BytesMessage.h>
 #include <cms/MapMessage.h>
+#include <cms/StreamMessage.h>
 #include <cms/MessageProducer.h>
 #include <cms/MessageConsumer.h>
 #include <cms/Topic.h>
@@ -288,6 +289,14 @@ namespace cms
             const unsigned char* bytes,
             std::size_t bytesSize )
                 throw ( CMSException) = 0;
+
+        /**
+         * Creates a new StreamMessage
+         *
+         * @throws CMSException
+         */
+        virtual StreamMessage* createStreamMessage()
+            throw ( CMSException ) = 0;
 
         /**
          * Creates a new TextMessage

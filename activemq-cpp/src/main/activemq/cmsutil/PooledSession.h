@@ -190,6 +190,11 @@ namespace cmsutil {
             return session->createBytesMessage( bytes, bytesSize );
         }
 
+        virtual cms::StreamMessage* createStreamMessage()
+            throw ( cms::CMSException ) {
+            return session->createStreamMessage();
+        }
+
         virtual cms::TextMessage* createTextMessage()
             throw ( cms::CMSException ) {
             return session->createTextMessage();

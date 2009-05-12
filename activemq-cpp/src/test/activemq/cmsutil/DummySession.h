@@ -112,6 +112,9 @@ namespace cmsutil {
             return NULL;
         }
 
+        virtual cms::StreamMessage* createStreamMessage()
+            throw ( cms::CMSException ){ return NULL; }
+
         virtual cms::TextMessage* createTextMessage()
             throw ( cms::CMSException ){ return NULL; }
 
