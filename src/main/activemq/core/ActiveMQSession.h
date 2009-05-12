@@ -23,6 +23,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/util/Usage.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
@@ -45,7 +46,6 @@ namespace core{
 
     using decaf::lang::Pointer;
 
-    class ActiveMQTransactionContext;
     class ActiveMQConnection;
     class ActiveMQConsumer;
     class ActiveMQMessage;

@@ -331,7 +331,7 @@ namespace core{
          * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        Pointer<MessageDispatch> dequeue( int timeout )
+        Pointer<MessageDispatch> dequeue( long long timeout )
             throw ( cms::CMSException );
 
         /**

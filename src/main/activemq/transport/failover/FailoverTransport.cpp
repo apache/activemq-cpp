@@ -157,6 +157,8 @@ TransportListener* FailoverTransport::getTransportListener() const {
     synchronized( &listenerMutex ) {
         return this->transportListener;
     }
+
+	return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
