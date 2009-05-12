@@ -17,6 +17,7 @@
 
 #include "ActiveMQExceptionTest.h"
 #include <activemq/exceptions/ExceptionDefines.h>
+#include <cms/MessageNotReadableException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
@@ -27,7 +28,19 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+    void testMethod() throw ( cms::CMSException ) {
+        throw cms::MessageNotReadableException( "TEST", NULL );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQExceptionTest::testMacros() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw a CMSException",
+        testMethod(),
+        cms::CMSException );
 
     try{
 

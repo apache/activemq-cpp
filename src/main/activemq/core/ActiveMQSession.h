@@ -318,11 +318,17 @@ namespace core{
                 throw ( cms::CMSException );
 
         /**
+         * Creates a new StreamMessage
+         * TODO - Throws UnsupportedOperation as this Message is not Implemented yet.
+         * @throws CMSException
+         */
+        virtual cms::StreamMessage* createStreamMessage() throw ( cms::CMSException );
+
+        /**
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual cms::TextMessage* createTextMessage()
-            throw ( cms::CMSException );
+        virtual cms::TextMessage* createTextMessage() throw ( cms::CMSException );
 
         /**
          * Creates a new TextMessage and set the text to the value given
