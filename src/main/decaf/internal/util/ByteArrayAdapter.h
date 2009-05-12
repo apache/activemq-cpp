@@ -29,12 +29,12 @@ namespace internal{
 namespace util{
 
     /**
-     * This class adapts primitve type arrays to a base byte array so that the
-     * classes can interoperate on the same base byte array without copying data.
+     * This class adapts primitive type arrays to a base byte array so that the
+     * classes can inter-operate on the same base byte array without copying data.
      * All the array types are mapped down to a byte array and methods are
-     * supplied for accesing the data in any of the primitve type forms.
+     * supplied for accessing the data in any of the primitive type forms.
      * <p>
-     * Methods in this class that do not return a specifc value return a
+     * Methods in this class that do not return a specific value return a
      * reference to this object so that calls can be chained.
      */
     class DECAF_API ByteArrayAdapter {
@@ -58,7 +58,7 @@ namespace util{
         // Size of the Buffer
         std::size_t capacity;
 
-        // Wether this object owns the buffer
+        // Whether this object owns the buffer
         bool own;
 
     public:
@@ -274,7 +274,7 @@ namespace util{
          * the specified length.  If the length is greater than the capacity of this
          * underlying byte array then an BufferUnderflowException is thrown.
          * @param buffer - the buffer to read data from this array into.
-         * @param offset - postition in this array to start reading from.
+         * @param offset - position in this array to start reading from.
          * @param length - the amount of data to read from this array.
          * @throws NullPointerException if buffer is null
          * @throws BufferUnderflowException if there is not enought data to read
@@ -286,11 +286,11 @@ namespace util{
 
         /**
          * Writes from the Byte array given, starting at the specified offset and writing
-         * the specified amoutn of data into this objects internal array..  If the length
+         * the specified amount of data into this objects internal array..  If the length
          * is greater than the capacity of this underlying byte array then an
          * BufferOverflowException is thrown.
          * @param buffer - the buffer to write get data written into this array.
-         * @param offset - postition in this array to start writing from.
+         * @param offset - position in this array to start writing from.
          * @param length - the amount of data to write to this array.
          * @throws NullPointerException if buffer is null
          * @throws BufferOverflowException if the amount of data to be written to this
@@ -302,7 +302,7 @@ namespace util{
 
         /**
          * Resizes the underlying array to the new given capacity, preserving all the
-         * Data that was previouly in the array, unless the resize is smaller than the
+         * Data that was previously in the array, unless the resize is smaller than the
          * current size in which case only the data that will fit into the new array is
          * preserved.
          * <p>
@@ -378,7 +378,7 @@ namespace util{
 
         /**
          * Reads four bytes at the given index and returns it. The index is a
-         * relative to the size of the type to be read, in otherwords when accessing
+         * relative to the size of the type to be read, in other words when accessing
          * the element in the array index * sizeof( type ) if the actual start index
          * of the type to be read.
          * @param index - the index in the Buffer where the bytes are to be read
@@ -401,7 +401,7 @@ namespace util{
 
         /**
          * Reads eight bytes at the given index and returns it.  The index is a
-         * relative to the size of the type to be read, in otherwords when accessing
+         * relative to the size of the type to be read, in other words when accessing
          * the element in the array index * sizeof( type ) if the actual start index
          * of the type to be read.
          * @param index - the index in the Buffer where the bytes are to be read
@@ -424,7 +424,7 @@ namespace util{
 
         /**
          * Reads four bytes at the given index and returns it.  The index is a
-         * relative to the size of the type to be read, in otherwords when accessing
+         * relative to the size of the type to be read, in other words when accessing
          * the element in the array index * sizeof( type ) if the actual start index
          * of the type to be read.
          * @param index - the index in the Buffer where the bytes are to be read
@@ -447,7 +447,7 @@ namespace util{
 
         /**
          * Reads two bytes at the given index and returns it. The index is a
-         * relative to the size of the type to be read, in otherwords when accessing
+         * relative to the size of the type to be read, in other words when accessing
          * the element in the array index * sizeof( type ) if the actual start index
          * of the type to be read.
          * @param index - the index in the Buffer where the bytes are to be read
@@ -470,7 +470,7 @@ namespace util{
 
         /**
          * Writes the given byte into this buffer at the given index. The index is a
-         * relative to the size of the type to be read, in otherwords when accessing
+         * relative to the size of the type to be read, in other words when accessing
          * the element in the array index * sizeof( type ) if the actual start index
          * of the type to be read.
          * @param index - position in the Buffer to write the data
@@ -485,7 +485,7 @@ namespace util{
         /**
          * Writes one byte containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
@@ -499,7 +499,7 @@ namespace util{
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
@@ -525,7 +525,7 @@ namespace util{
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
@@ -551,7 +551,7 @@ namespace util{
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
@@ -577,7 +577,7 @@ namespace util{
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
@@ -603,7 +603,7 @@ namespace util{
         /**
          * Writes two bytes containing the given value, into this buffer at the
          * given index. The index is a relative to the size of the type to be read,
-         * in otherwords when accessing the element in the array index * sizeof( type )
+         * in other words when accessing the element in the array index * sizeof( type )
          * if the actual start index of the type to be read.
          * @param index - position in the Buffer to write the data
          * @param value - the value to write.
