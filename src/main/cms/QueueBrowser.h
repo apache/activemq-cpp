@@ -22,6 +22,7 @@
 #include <cms/Config.h>
 #include <cms/Closeable.h>
 #include <cms/Queue.h>
+#include <cms/Message.h>
 #include <cms/CMSException.h>
 
 namespace cms{
@@ -54,7 +55,7 @@ namespace cms{
          * @returns an stl vector for browsing the messages.
          * @throws CMSException if an internal error occurs.
          */
-        virtual void std::vector<cms::Message*> getEnumeration() const throw ( cms::CMSException ) = 0;
+        virtual std::vector<cms::Message*> getEnumeration() const throw ( cms::CMSException ) = 0;
 
     };
 
