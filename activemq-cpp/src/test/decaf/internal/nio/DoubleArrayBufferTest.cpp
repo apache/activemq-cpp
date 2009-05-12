@@ -553,7 +553,7 @@ void DoubleArrayBufferTest::testToString() {
 
     std::string str = testBuffer1->toString();
     CPPUNIT_ASSERT( str.find("Double") != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->position() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->limit() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->capacity() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->position() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->limit() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->capacity() ) ) != string::npos );
 }

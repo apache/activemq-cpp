@@ -297,7 +297,7 @@ void ByteArrayAdapterTest::testPutChar() {
 
     std::size_t i = 0;
     for( ; ( testBuffer1.getCapacity() - i ) >= sizeof(char); i+=sizeof(char) ) {
-        testBuffer1.putChar( i, i + 99 );
+        testBuffer1.putChar( i, (char)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getChar( i ) == (char)(i + 99) );
     }
 
@@ -331,7 +331,7 @@ void ByteArrayAdapterTest::testPutInt() {
 
     std::size_t i = 0;
     for( ; i < testBuffer1.getIntCapacity(); ++i  ) {
-        testBuffer1.putInt( i, i + 99 );
+        testBuffer1.putInt( i, (int)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getInt( i ) == (int)(i + 99) );
     }
 
@@ -348,7 +348,7 @@ void ByteArrayAdapterTest::testPutShort() {
 
     std::size_t i = 0;
     for( ; i < testBuffer1.getShortCapacity(); ++i  ) {
-        testBuffer1.putShort( i, i + 99 );
+        testBuffer1.putShort( i, (short)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getShort( i ) == (short)(i + 99) );
     }
 
@@ -383,7 +383,7 @@ void ByteArrayAdapterTest::testPutFloat() {
 
     std::size_t i = 0;
     for( ; i < testBuffer1.getFloatCapacity(); ++i  ) {
-        testBuffer1.putFloat( i, i + 99.025 );
+        testBuffer1.putFloat( i, i + 99.025f );
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1.getFloat( i ) ) ==
                         Float::floatToIntBits( (float)(i + 99.025) ) );
     }
