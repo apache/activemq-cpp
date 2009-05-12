@@ -260,7 +260,7 @@ std::string ActiveMQConsumer::getMessageSelector() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( int timeout )
+decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeout )
     throw ( cms::CMSException ) {
 
     try {
@@ -681,8 +681,8 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
             pendingAck.reset( NULL );
 
             // Adjust the counters
-            deliveredCounter = Math::max( 0, deliveredCounter - dispatchedMessages.size());
-            additionalWindowSize = Math::max(0, additionalWindowSize - dispatchedMessages.size());
+            deliveredCounter = Math::max( 0, deliveredCounter - (int)dispatchedMessages.size());
+            additionalWindowSize = Math::max(0, additionalWindowSize - (int)dispatchedMessages.size());
 
             if( !session->isTransacted() ) {
                 dispatchedMessages.clear();

@@ -564,7 +564,7 @@ void ByteArrayBufferTest::testPutIndexed() {
 
     for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
-        ByteBuffer& ret = testBuffer1->put(i, i );
+        ByteBuffer& ret = testBuffer1->put( i, (unsigned char)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
@@ -612,9 +612,9 @@ void ByteArrayBufferTest::testToString() {
 
     std::string str = testBuffer1->toString();
     CPPUNIT_ASSERT( str.find( "Byte" ) == 0 || str.find( "byte" ) == 0 );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->position() ) ) > 0 );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->limit() ) ) > 0 );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->capacity() ) ) > 0 );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->position() ) ) > 0 );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->limit() ) ) > 0 );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->capacity() ) ) > 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1081,7 +1081,7 @@ void ByteArrayBufferTest::testPutInt() {
          i += sizeof( int ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putInt( i + 48 );
+        testBuffer1->putInt( (int)i + 48 );
         testBuffer1->reset();
         CPPUNIT_ASSERT( testBuffer1->getInt() == (int)( i + 48 ) );
     }
@@ -1109,7 +1109,7 @@ void ByteArrayBufferTest::testPutInt2() {
     for( ; ( testBuffer1->capacity() - i ) >= sizeof( int ); i += sizeof( int ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putInt( i, i + 99 );
+        testBuffer1->putInt( i, (int)i + 99 );
         testBuffer1->reset();
         CPPUNIT_ASSERT( testBuffer1->getInt( i ) == (int)(i + 99) );
     }
@@ -1182,7 +1182,7 @@ void ByteArrayBufferTest::testPutShort() {
          i += sizeof( short ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putShort( i + 48 );
+        testBuffer1->putShort( (short)( i + 48 ) );
         testBuffer1->reset();
         CPPUNIT_ASSERT( testBuffer1->getShort() == (short)( i + 48 ) );
     }
@@ -1210,7 +1210,7 @@ void ByteArrayBufferTest::testPutShort2() {
     for( ; ( testBuffer1->capacity() - i ) >= sizeof( short ); i += sizeof( short ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putShort( i, i + 99 );
+        testBuffer1->putShort( i, (short)(i + 99) );
         testBuffer1->reset();
         CPPUNIT_ASSERT( testBuffer1->getShort( i ) == (short)(i + 99) );
     }
