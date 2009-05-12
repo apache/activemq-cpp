@@ -982,7 +982,7 @@ void ByteArrayBufferTest::testPutLong() {
         testBuffer1->mark();
         testBuffer1->putLong( i + 48 );
         testBuffer1->reset();
-        CPPUNIT_ASSERT( testBuffer1->getLong() == ( i + 48 ) );
+        CPPUNIT_ASSERT( testBuffer1->getLong() == (long long)( i + 48 ) );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -1010,7 +1010,7 @@ void ByteArrayBufferTest::testPutLong2() {
         testBuffer1->mark();
         testBuffer1->putLong( i, i + 99 );
         testBuffer1->reset();
-        CPPUNIT_ASSERT( testBuffer1->getLong( i ) == i + 99 );
+        CPPUNIT_ASSERT( testBuffer1->getLong( i ) == (long long)( i + 99 ) );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
