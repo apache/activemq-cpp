@@ -32,12 +32,10 @@ using namespace activemq::wireformat::openwire::marshal;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMapMessage::ActiveMQMapMessage() :
     ActiveMQMessageTemplate<cms::MapMessage>() {
-    this->map = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMapMessage::~ActiveMQMapMessage() {
-    delete map;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,9 +52,9 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
         // Let the base class do its thing.
         ActiveMQMessageTemplate<cms::MapMessage>::beforeMarshal( wireFormat );
 
-        if( map != NULL && !map->isEmpty() ) {
+        if( map.get() != NULL && !map->isEmpty() ) {
             // Marshal as Content.
-            PrimitiveMapMarshaller::marshal( map, getContent() );
+            PrimitiveMapMarshaller::marshal( map.get(), getContent() );
         } else {
             clearBody();
         }
@@ -93,20 +91,19 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 
     try {
 
-        if( map == NULL ) {
+        if( map.get() == NULL ) {
 
             if( getContent().size() == 0 ){
-                map = new PrimitiveMap;
+                map.reset( new PrimitiveMap() );
             } else {
-                map = PrimitiveMapMarshaller::unmarshal( getContent() );
+                map.reset( PrimitiveMapMarshaller::unmarshal( getContent() ) );
             }
 
-            if( map == NULL ) {
+            if( map.get() == NULL ) {
                 throw NullPointerException(
-                    __FILE__,
-                    __LINE__,
+                    __FILE__, __LINE__,
                     "ActiveMQMapMessage::getMap() - All attempts to create a "
-                    "map have fialed." );
+                    "map have failed." );
             }
         }
     }
