@@ -30,6 +30,7 @@
 #include <cms/MapMessage.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
@@ -40,7 +41,7 @@ namespace commands{
     private:
 
         // Map Structure to hold unmarshaled Map Data
-        mutable util::PrimitiveMap* map;
+        mutable std::auto_ptr<util::PrimitiveMap> map;
 
     public:
 
@@ -84,8 +85,8 @@ namespace commands{
             const ActiveMQMapMessage* srcMap =
                 dynamic_cast< const ActiveMQMapMessage* >( src );
 
-            if( srcMap != NULL && srcMap->map != NULL ) {
-                this->map = new util::PrimitiveMap( *srcMap->map );
+            if( srcMap != NULL && srcMap->map.get() != NULL ) {
+                this->map.reset( new util::PrimitiveMap( *srcMap->map ) );
             }
         }
 
