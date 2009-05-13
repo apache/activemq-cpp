@@ -34,69 +34,73 @@ void PrimitiveListTest::testSetGet(){
 
     plist.add( true );
     CPPUNIT_ASSERT( plist.getBool(0) == true );
+    CPPUNIT_ASSERT( plist.getString(0) == "true" );
     plist.add( false );
     CPPUNIT_ASSERT( plist.getBool(1) == false );
+    CPPUNIT_ASSERT( plist.getString(1) == "false" );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getByte( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setByte( 0, 1 );
     CPPUNIT_ASSERT( plist.getByte(0) == 1 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getChar( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setChar( 0, 'a' );
     CPPUNIT_ASSERT( plist.getChar(0) == 'a' );
+    CPPUNIT_ASSERT( plist.getString(0) == "a" );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getShort( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setShort( 0, 2 );
     CPPUNIT_ASSERT( plist.getShort(0) == 2 );
+    CPPUNIT_ASSERT( plist.getInt(0) == 2 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
-        plist.getInt( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        "Should Throw UnsupportedOperationException",
+        plist.getByte( 0 ),
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setInt( 0, 3 );
     CPPUNIT_ASSERT( plist.getInt(0) == 3 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
-        plist.getLong( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        "Should Throw UnsupportedOperationException",
+        plist.getShort( 0 ),
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setLong( 0, 4L );
     CPPUNIT_ASSERT( plist.getLong(0) == 4L );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getDouble( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setDouble( 0, 2.3 );
     CPPUNIT_ASSERT( plist.getDouble(0) == 2.3 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getFloat( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setFloat( 0, 3.2f );
     CPPUNIT_ASSERT( plist.getFloat(0) == 3.2f );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
-        plist.getString( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        "Should Throw UnsupportedOperationException",
+        plist.getChar( 0 ),
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setString( 0, "hello" );
     CPPUNIT_ASSERT( plist.getString(0) == "hello" );
@@ -108,9 +112,9 @@ void PrimitiveListTest::testSetGet(){
     byteArray.push_back( 'd' );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getByteArray( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.setByteArray( 0, byteArray );
     CPPUNIT_ASSERT( plist.getByteArray(0) == byteArray );
@@ -146,9 +150,9 @@ void PrimitiveListTest::testAdd(){
     plist.add( byteArrayValue );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getInt( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw IndexOutOfBoundsException",
@@ -176,9 +180,9 @@ void PrimitiveListTest::testRemove(){
     plist.remove( 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw NoSuchElementException",
+        "Should Throw UnsupportedOperationException",
         plist.getInt( 0 ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     plist.remove( 0 );
     plist.remove( 0 );

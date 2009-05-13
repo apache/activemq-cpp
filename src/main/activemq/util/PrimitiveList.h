@@ -21,9 +21,11 @@
 #include <string>
 #include <vector>
 #include <decaf/util/StlList.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <stdio.h>
 #include <activemq/util/PrimitiveValueNode.h>
+#include <activemq/util/PrimitiveValueConverter.h>
 
 namespace activemq{
 namespace util{
@@ -32,16 +34,18 @@ namespace util{
      * List of primitives.
      */
     class AMQCPP_API PrimitiveList : public decaf::util::StlList<PrimitiveValueNode> {
+    private:
+
+        PrimitiveValueConverter converter;
+
     public:
 
         /**
-         * Default Constructor, creates an Empry list.
+         * Default Constructor, creates an Empty list.
          */
         PrimitiveList();
 
-        virtual ~PrimitiveList() {
-            clear();
-        }
+        virtual ~PrimitiveList();
 
         /**
          * Copy Constructor
@@ -67,12 +71,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual bool getBool( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -91,12 +95,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual unsigned char getByte( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -115,12 +119,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual char getChar( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -139,12 +143,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual short getShort( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -163,12 +167,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual int getInt( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -187,12 +191,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual long long getLong( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -211,12 +215,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual float getFloat( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -235,12 +239,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual double getDouble( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -259,12 +263,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual std::string getString( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -283,12 +287,12 @@ namespace util{
          * @param index - index to get value from
          * @return value contained at the given index
          * @throw IndexOutOfBoundsException if index is > size()
-         * @throw NoSuchElementException if the type at index is not of the
-         * type that this method is to return.
+         * @throw UnsupportedOperationException if the type at index is not of the
+         * type that this method is to return or can convert to.
          */
         virtual std::vector<unsigned char> getByteArray( std::size_t index ) const
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NoSuchElementException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
