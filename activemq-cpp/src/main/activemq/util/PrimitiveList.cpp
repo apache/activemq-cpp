@@ -41,6 +41,11 @@ PrimitiveList::PrimitiveList( const PrimitiveList& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+PrimitiveList::~PrimitiveList() {
+    clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string PrimitiveList::toString() const {
 
     ostringstream stream;
@@ -59,10 +64,10 @@ std::string PrimitiveList::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveList::getBool( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getBool();
+    return converter.convert<bool>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,10 +82,10 @@ void PrimitiveList::setBool( std::size_t index, bool value )
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char PrimitiveList::getByte( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getByte();
+    return converter.convert<unsigned char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,10 +100,10 @@ void PrimitiveList::setByte( std::size_t index, unsigned char value )
 
 ////////////////////////////////////////////////////////////////////////////////
 char PrimitiveList::getChar( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getChar();
+    return converter.convert<char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,10 +118,10 @@ void PrimitiveList::setChar( std::size_t index, char value )
 
 ////////////////////////////////////////////////////////////////////////////////
 short PrimitiveList::getShort( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getShort();
+    return converter.convert<short>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,10 +136,10 @@ void PrimitiveList::setShort( std::size_t index, short value )
 
 ////////////////////////////////////////////////////////////////////////////////
 int PrimitiveList::getInt( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getInt();
+    return converter.convert<int>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,10 +154,10 @@ void PrimitiveList::setInt( std::size_t index, int value )
 
 ////////////////////////////////////////////////////////////////////////////////
 long long PrimitiveList::getLong( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getLong();
+    return converter.convert<long long>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,10 +172,10 @@ void PrimitiveList::setLong( std::size_t index, long long value )
 
 ////////////////////////////////////////////////////////////////////////////////
 double PrimitiveList::getDouble( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getDouble();
+    return converter.convert<double>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,10 +190,10 @@ void PrimitiveList::setDouble( std::size_t index, double value )
 
 ////////////////////////////////////////////////////////////////////////////////
 float PrimitiveList::getFloat( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getFloat();
+    return converter.convert<float>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,10 +208,10 @@ void PrimitiveList::setFloat( std::size_t index, float value )
 
 ////////////////////////////////////////////////////////////////////////////////
 string PrimitiveList::getString( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ){
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
-    return node.getString();
+    return converter.convert<std::string>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,10 +226,10 @@ void PrimitiveList::setString( std::size_t index, const string& value )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> PrimitiveList::getByteArray( std::size_t index ) const
-    throw( IndexOutOfBoundsException, NoSuchElementException ) {
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ) {
 
     PrimitiveValueNode node = this->get( index );
-    return node.getByteArray();
+    return converter.convert< std::vector<unsigned char> >( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -45,7 +45,7 @@ namespace util{
          */
         PrimitiveMap();
 
-        virtual ~PrimitiveMap() {}
+        virtual ~PrimitiveMap();
 
         /**
          * Copy Constructor
@@ -73,11 +73,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual bool getBool( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -94,11 +96,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual unsigned char getByte( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -115,11 +119,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual char getChar( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -136,11 +142,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual short getShort( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -157,11 +165,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual int getInt( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -178,11 +188,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual long long getLong( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -199,11 +211,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual float getFloat( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -220,11 +234,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual double getDouble( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -241,11 +257,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual std::string getString( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -262,11 +280,13 @@ namespace util{
          *
          * @param key - the location to return the value from.
          * @returns the value at key in the type requested.
-         * @throw NoSuchElementException if key is not in the map or cannot
-         * be returned as the requested type.
+         * @throw NoSuchElementException if key is not in the map.
+         * @throw UnSupportedOperationException if the value cannot be converted
+         *                                      to the type this method returns
          */
         virtual std::vector<unsigned char> getByteArray( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at key to the specified type. Overwrites any data

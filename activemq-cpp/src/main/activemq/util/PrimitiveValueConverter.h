@@ -65,7 +65,6 @@ namespace util {
                 __FILE__, __LINE__, "Invalid Conversion" );
         }
 
-
     };
 
     template<>
@@ -94,6 +93,9 @@ namespace util {
         throw( decaf::lang::exceptions::UnsupportedOperationException );
     template<>
     std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
+        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    template<>
+    std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
         throw( decaf::lang::exceptions::UnsupportedOperationException );
 
 }}
