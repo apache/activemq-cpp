@@ -242,4 +242,18 @@ std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) 
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+template<>
+std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
+    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    switch( value.getType() ) {
+        case PrimitiveValueNode::BYTE_ARRAY_TYPE:
+            return value.getByteArray();
+        default:
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                 __FILE__, __LINE__, "Unsupported Type Conversion" );
+    }
+}
+
 }}
