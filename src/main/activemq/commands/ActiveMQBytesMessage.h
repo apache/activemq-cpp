@@ -79,36 +79,21 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQBytesMessage* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQBytesMessage* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageTemplate<cms::BytesMessage>::copyDataStructure( src );
-            this->reset();
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
-            stream << ActiveMQMessageTemplate<cms::BytesMessage>::toString();
-            stream << "End Class = ActiveMQBytesMessage" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -116,9 +101,7 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageTemplate<cms::BytesMessage>::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
     public:   // CMS Message
 
@@ -409,14 +392,7 @@ namespace commands{
          * Throws an exception if in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnlyBody() const throw ( cms::CMSException ){
-            if( !this->isReadOnlyBody() ){
-                throw exceptions::ActiveMQException(
-                    __FILE__, __LINE__,
-                    "message is in read-only mode and "
-                    "cannot be written to" ).convertToCMSException();
-            }
-        }
+        void checkWriteOnlyBody() const throw ( cms::CMSException );
 
     };
 

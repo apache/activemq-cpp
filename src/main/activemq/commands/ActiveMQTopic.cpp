@@ -37,3 +37,26 @@ ActiveMQTopic::~ActiveMQTopic() {
 unsigned char ActiveMQTopic::getDataStructureType() const {
     return ActiveMQTopic::ID_ACTIVEMQTOPIC;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQTopic* ActiveMQTopic::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQTopic> message( new ActiveMQTopic() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTopic::copyDataStructure( const DataStructure* src ) {
+    ActiveMQDestination::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQTopic::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQTopic" << std::endl;
+    stream << ActiveMQDestination::toString();
+    stream << "End Class = ActiveMQTopic" << std::endl;
+
+    return stream.str();
+}

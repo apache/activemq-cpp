@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "PrimitiveMapMarshaller.h"
+#include "PrimitiveTypesMarshaller.h"
 
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
@@ -37,9 +37,9 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshal( const activemq::util::PrimitiveMap* map,
+void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveMap* map,
                                       std::vector<unsigned char>& dest )
-                                        throw ( cms::CMSException ) {
+                                        throw ( decaf::lang::Exception ) {
 
     try {
 
@@ -49,48 +49,17 @@ void PrimitiveMapMarshaller::marshal( const activemq::util::PrimitiveMap* map,
         if( map == NULL ) {
             dataOut.writeInt( -1 );
         } else {
-            PrimitiveMapMarshaller::marshalPrimitiveMap( dataOut, *map );
+            PrimitiveTypesMarshaller::marshalPrimitiveMap( dataOut, *map );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
-    const std::vector<unsigned char>& src )
-        throw ( cms::CMSException ) {
-
-    try{
-
-        ByteArrayInputStream bytesIn( src );
-        DataInputStream dataIn( &bytesIn );
-
-        int size = dataIn.readInt();
-
-        if( size > 0 ) {
-            PrimitiveMap* map = new PrimitiveMap;
-
-            for( int i=0; i < size; i++ ) {
-                std::string key = dataIn.readUTF();
-                map->put( key, unmarshalPrimitive( dataIn ) );
-            }
-
-            return map;
-        }
-
-        return NULL;
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshal(
+void PrimitiveTypesMarshaller::unmarshal(
     activemq::util::PrimitiveMap* map,
-    const std::vector<unsigned char>& src ) throw ( cms::CMSException ) {
+    const std::vector<unsigned char>& src ) throw ( decaf::lang::Exception ) {
 
     try {
 
@@ -103,15 +72,55 @@ void PrimitiveMapMarshaller::unmarshal(
 
         ByteArrayInputStream bytesIn( src );
         DataInputStream dataIn( &bytesIn );
-        PrimitiveMapMarshaller::unmarshalPrimitiveMap( dataIn, *map );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *map );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshalPrimitiveMap(
+void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list,
+                                        std::vector<unsigned char>& dest )
+                                            throw ( decaf::lang::Exception ) {
+    try {
+
+        ByteArrayOutputStream bytesOut( dest );
+        DataOutputStream dataOut( &bytesOut );
+
+        if( list == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            PrimitiveTypesMarshaller::marshalPrimitiveList( dataOut, *list );
+        }
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::unmarshal( util::PrimitiveList* list,
+                                          const std::vector<unsigned char>& src )
+                                                throw ( decaf::lang::Exception ) {
+
+    try {
+
+        if( list == NULL || src.empty() ) {
+            return;
+        }
+
+        // Clear old data
+        list->clear();
+
+        ByteArrayInputStream bytesIn( src );
+        DataInputStream dataIn( &bytesIn );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *list );
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::marshalPrimitiveMap(
     decaf::io::DataOutputStream& dataOut,
     const decaf::util::Map<std::string, PrimitiveValueNode>& map )
         throw ( decaf::io::IOException ) {
@@ -136,7 +145,7 @@ void PrimitiveMapMarshaller::marshalPrimitiveMap(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshalPrimitiveList(
+void PrimitiveTypesMarshaller::marshalPrimitiveList(
     decaf::io::DataOutputStream& dataOut,
     const decaf::util::List<PrimitiveValueNode>& list )
         throw ( decaf::io::IOException ) {
@@ -154,7 +163,7 @@ void PrimitiveMapMarshaller::marshalPrimitiveList(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
+void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                                                const activemq::util::PrimitiveValueNode& value )
                                                     throw ( decaf::io::IOException ) {
 
@@ -245,7 +254,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
+void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
     decaf::io::DataInputStream& dataIn, PrimitiveMap& map )
         throw ( decaf::io::IOException ) {
 
@@ -266,7 +275,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshalPrimitiveList(
+void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
     decaf::util::StlList<PrimitiveValueNode>& list )
         throw ( decaf::io::IOException ) {
@@ -284,7 +293,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveList(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
+PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
     io::DataInputStream& dataIn ) throw ( decaf::io::IOException ) {
 
     try {
@@ -340,14 +349,14 @@ PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
             case PrimitiveValueNode::LIST_TYPE:
             {
                 PrimitiveList list;
-                PrimitiveMapMarshaller::unmarshalPrimitiveList( dataIn, list );
+                PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, list );
                 value.setList( list );
                 break;
             }
             case PrimitiveValueNode::MAP_TYPE:
             {
                 PrimitiveMap map;
-                PrimitiveMapMarshaller::unmarshalPrimitiveMap( dataIn, map );
+                PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, map );
                 value.setMap( map );
                 break;
             }
@@ -355,7 +364,7 @@ PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
                 throw IOException(
                     __FILE__,
                     __LINE__,
-                    "PrimitiveMapMarshaller::unmarshalPrimitive - "
+                    "PrimitiveTypesMarshaller::unmarshalPrimitive - "
                     "Unsupported data type: ");
         }
 

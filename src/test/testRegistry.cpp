@@ -40,11 +40,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
 #include <activemq/commands/ActiveMQBytesMessageTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
+#include <activemq/commands/ActiveMQStreamMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQStreamMessageTest );
 
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::BaseDataStreamMarshallerTest );
-#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::PrimitiveMapMarshallerTest );
+#include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshallerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::PrimitiveTypesMarshallerTest );
 
 #include <activemq/wireformat/openwire/utils/BooleanStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::BooleanStreamTest );

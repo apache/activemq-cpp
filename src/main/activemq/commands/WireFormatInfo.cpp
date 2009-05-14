@@ -18,7 +18,7 @@
 #include <activemq/commands/WireFormatInfo.h>
 
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -320,9 +320,8 @@ void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
     try{
 
         marshalledProperties.clear();
-        if( !properties.isEmpty() )
-        {
-            marshal::PrimitiveMapMarshaller::marshal(
+        if( !properties.isEmpty() ) {
+            marshal::PrimitiveTypesMarshaller::marshal(
                 &properties, marshalledProperties );
         }
     }
@@ -337,7 +336,7 @@ void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED )
 
     try{
 
-        marshal::PrimitiveMapMarshaller::unmarshal(
+        marshal::PrimitiveTypesMarshaller::unmarshal(
             &properties, marshalledProperties );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )

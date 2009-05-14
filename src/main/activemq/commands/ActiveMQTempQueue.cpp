@@ -43,3 +43,31 @@ ActiveMQTempQueue::~ActiveMQTempQueue() {
 unsigned char ActiveMQTempQueue::getDataStructureType() const {
     return ActiveMQTempQueue::ID_ACTIVEMQTEMPQUEUE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQTempQueue* ActiveMQTempQueue::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQTempQueue> message( new ActiveMQTempQueue() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempQueue::copyDataStructure( const DataStructure* src ) {
+    ActiveMQTempDestination::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQTempQueue::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQTempQueue" << std::endl;
+    stream << ActiveMQTempDestination::toString();
+    stream << "End Class = ActiveMQTempQueue" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTempQueue::equals( const DataStructure* value ) const {
+    return ActiveMQDestination::equals( value );
+}

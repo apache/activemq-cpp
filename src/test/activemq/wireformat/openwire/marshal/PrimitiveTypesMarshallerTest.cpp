@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include "PrimitiveMapMarshallerTest.h"
+#include "PrimitiveTypesMarshallerTest.h"
 
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/util/PrimitiveList.h>
-#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -31,7 +31,7 @@ using namespace activemq::wireformat::openwire;
 using namespace activemq::wireformat::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshallerTest::test() {
+void PrimitiveTypesMarshallerTest::test() {
 
     PrimitiveMap myMap;
 
@@ -66,10 +66,11 @@ void PrimitiveMapMarshallerTest::test() {
     std::vector<unsigned char> marshaled;
 
     // Turn it into some bytes
-    PrimitiveMapMarshaller::marshal( &myMap, marshaled );
+    PrimitiveTypesMarshaller::marshal( &myMap, marshaled );
 
     try {
-        this->unmarshaledMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+        this->unmarshaledMap = new PrimitiveMap();
+        PrimitiveTypesMarshaller::unmarshal( this->unmarshaledMap, marshaled );
     } catch(...) {
         CPPUNIT_ASSERT( false );
     }
@@ -89,7 +90,7 @@ void PrimitiveMapMarshallerTest::test() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshallerTest::testLists() {
+void PrimitiveTypesMarshallerTest::testLists() {
 
     PrimitiveMap myMap;
 
@@ -108,25 +109,23 @@ void PrimitiveMapMarshallerTest::testLists() {
     std::vector<unsigned char> marshaled;
 
     // Turn it into some bytes
-    PrimitiveMapMarshaller::marshal( &myMap, marshaled );
+    PrimitiveTypesMarshaller::marshal( &myMap, marshaled );
 
     // Try and get it back from those bytes.
-    PrimitiveMap* newMap = NULL;
+    std::auto_ptr<PrimitiveMap> newMap( new PrimitiveMap );
 
     try {
-        newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+        PrimitiveTypesMarshaller::unmarshal( newMap.get(), marshaled );
     } catch(...) {
         CPPUNIT_ASSERT( false );
     }
 
-    CPPUNIT_ASSERT( newMap != NULL );
+    CPPUNIT_ASSERT( newMap.get() != NULL );
     CPPUNIT_ASSERT( newMap->size() == 3 );
-
-    delete newMap;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshallerTest::testMaps() {
+void PrimitiveTypesMarshallerTest::testMaps() {
 
     PrimitiveMap myMap;
 
@@ -145,19 +144,17 @@ void PrimitiveMapMarshallerTest::testMaps() {
     std::vector<unsigned char> marshaled;
 
     // Turn it into some bytes
-    PrimitiveMapMarshaller::marshal( &myMap, marshaled );
+    PrimitiveTypesMarshaller::marshal( &myMap, marshaled );
 
     // Try and get it back from those bytes.
-    PrimitiveMap* newMap = NULL;
+    std::auto_ptr<PrimitiveMap> newMap( new PrimitiveMap );
 
     try {
-        newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+        PrimitiveTypesMarshaller::unmarshal( newMap.get(), marshaled );
     } catch(...) {
         CPPUNIT_ASSERT( false );
     }
 
-    CPPUNIT_ASSERT( newMap != NULL );
+    CPPUNIT_ASSERT( newMap.get() != NULL );
     CPPUNIT_ASSERT( newMap->size() == 3 );
-
-    delete newMap;
 }

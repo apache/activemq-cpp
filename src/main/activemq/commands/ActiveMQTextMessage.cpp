@@ -46,6 +46,34 @@ unsigned char ActiveMQTextMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQTextMessage* ActiveMQTextMessage::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQTextMessage> message( new ActiveMQTextMessage() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTextMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::TextMessage>::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQTextMessage::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQTextMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::TextMessage>::toString();
+    stream << "End Class = ActiveMQTextMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTextMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::TextMessage>::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
