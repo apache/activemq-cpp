@@ -30,3 +30,31 @@ ActiveMQMessage::ActiveMQMessage() :
 unsigned char ActiveMQMessage::getDataStructureType() const {
     return ActiveMQMessage::ID_ACTIVEMQMESSAGE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQMessage* ActiveMQMessage::cloneDataStructure() const {
+    ActiveMQMessage* message = new ActiveMQMessage();
+    message->copyDataStructure( this );
+    return message;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQMessage::toString() const{
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::Message>::toString();
+    stream << "Begin Class = ActiveMQMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::Message>::equals( value );
+}

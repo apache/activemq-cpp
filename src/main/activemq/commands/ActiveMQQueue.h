@@ -54,35 +54,21 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQQueue* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQQueue> message( new ActiveMQQueue() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQQueue* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQDestination::copyDataStructure( src );
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const {
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQQueue" << std::endl;
-            stream << ActiveMQDestination::toString();
-            stream << "End Class = ActiveMQQueue" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -90,9 +76,7 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQDestination::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
         /**
          * @returns the cms::Destination interface pointer that the

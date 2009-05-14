@@ -42,3 +42,30 @@ unsigned char ActiveMQTempTopic::getDataStructureType() const {
     return ActiveMQTempTopic::ID_ACTIVEMQTEMPTOPIC;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQTempTopic* ActiveMQTempTopic::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQTempTopic> message( new ActiveMQTempTopic() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempTopic::copyDataStructure( const DataStructure* src ) {
+    ActiveMQTempDestination::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQTempTopic::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQTempTopic" << std::endl;
+    stream << ActiveMQTempDestination::toString();
+    stream << "End Class = ActiveMQTempTopic" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
+    return ActiveMQDestination::equals( value );
+}

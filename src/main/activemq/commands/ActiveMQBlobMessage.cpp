@@ -33,3 +33,31 @@ ActiveMQBlobMessage::ActiveMQBlobMessage() :
 unsigned char ActiveMQBlobMessage::getDataStructureType() const {
     return ActiveMQBlobMessage::ID_ACTIVEMQBLOBMESSAGE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQBlobMessage* ActiveMQBlobMessage::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQBlobMessage> message( new ActiveMQBlobMessage() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBlobMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQBlobMessage::toString() const{
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQBlobMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::Message>::toString();
+    stream << "End Class = ActiveMQBlobMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQBlobMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::Message>::equals( value );
+}

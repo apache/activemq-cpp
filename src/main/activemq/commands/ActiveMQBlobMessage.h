@@ -59,35 +59,21 @@ namespace commands {
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQBlobMessage* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQBlobMessage> message( new ActiveMQBlobMessage() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQBlobMessage* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQBlobMessage" << std::endl;
-            stream << ActiveMQMessageTemplate<cms::Message>::toString();
-            stream << "End Class = ActiveMQBlobMessage" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -95,9 +81,7 @@ namespace commands {
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageTemplate<cms::Message>::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
     public:  // cms::Message
 

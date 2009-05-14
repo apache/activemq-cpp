@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLERTEST_H_
-#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLERTEST_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLERTEST_H_
+#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLERTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -27,9 +27,9 @@ namespace wireformat{
 namespace openwire{
 namespace marshal{
 
-    class PrimitiveMapMarshallerTest : public CppUnit::TestFixture {
+    class PrimitiveTypesMarshallerTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( PrimitiveMapMarshallerTest );
+        CPPUNIT_TEST_SUITE( PrimitiveTypesMarshallerTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST( testLists );
         CPPUNIT_TEST( testMaps );
@@ -41,8 +41,8 @@ namespace marshal{
 
     public:
 
-        PrimitiveMapMarshallerTest() {}
-        virtual ~PrimitiveMapMarshallerTest() {}
+        PrimitiveTypesMarshallerTest() {}
+        virtual ~PrimitiveTypesMarshallerTest() {}
 
         virtual void setUp() {
             this->unmarshaledMap = NULL;
@@ -61,4 +61,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLERTEST_H_*/
+#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLERTEST_H_*/

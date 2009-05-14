@@ -82,7 +82,7 @@ cc_sources = \
     activemq/transport/correlator/ResponseCorrelatorTest.cpp \
     activemq/transport/IOTransportTest.cpp \
     activemq/wireformat/openwire/OpenWireFormatTest.cpp \
-    activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/PrimitiveTypesMarshallerTest.cpp \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
     activemq/wireformat/openwire/utils/HexTableTest.cpp \
     activemq/wireformat/openwire/utils/OpenwireStringSupportTest.cpp \
@@ -121,6 +121,7 @@ cc_sources = \
     activemq/commands/ActiveMQDestinationTest2.cpp \
     activemq/commands/ActiveMQTempTopicTest.cpp \
     activemq/commands/ActiveMQTopicTest.cpp \
+    activemq/commands/ActiveMQStreamMessageTest.cpp \
     activemq/commands/ActiveMQMessageTest.cpp \
     activemq/commands/ActiveMQTempQueueTest.cpp \
     activemq/commands/ActiveMQBytesMessageTest.cpp \
@@ -192,8 +193,8 @@ h_sources = \
     activemq/transport/correlator/ResponseCorrelatorTest.h \
     activemq/transport/TransportRegistryTest.h \
     activemq/wireformat/openwire/OpenWireFormatTest.h \
-    activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.h \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/PrimitiveTypesMarshallerTest.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
     activemq/wireformat/openwire/utils/OpenwireStringSupportTest.h \
     activemq/wireformat/openwire/utils/HexTableTest.h \
@@ -232,6 +233,7 @@ h_sources = \
     activemq/core/ActiveMQConnectionTest.h \
     activemq/core/ActiveMQSessionTest.h \
     activemq/core/MessageDispatchChannelTest.h \
+    activemq/commands/ActiveMQStreamMessageTest.h \
     activemq/commands/ActiveMQTempTopicTest.h \
     activemq/commands/ActiveMQQueueTest.h \
     activemq/commands/ActiveMQBytesMessageTest.h \

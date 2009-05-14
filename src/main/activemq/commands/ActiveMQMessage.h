@@ -49,35 +49,21 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Clone this object and return a new instance that the
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQMessage* cloneDataStructure() const {
-            ActiveMQMessage* message = new ActiveMQMessage();
-            message->copyDataStructure( this );
-            return message;
-        }
+        virtual ActiveMQMessage* cloneDataStructure() const;
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQMessage" << std::endl;
-            stream << ActiveMQMessageTemplate<cms::Message>::toString();
-            stream << "Begin Class = ActiveMQMessage" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -85,9 +71,7 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageTemplate<cms::Message>::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
     public:  // cms::Message
 

@@ -37,6 +37,45 @@ unsigned char ActiveMQBytesMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQBytesMessage* ActiveMQBytesMessage::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::BytesMessage>::copyDataStructure( src );
+    this->reset();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQBytesMessage::toString() const{
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::BytesMessage>::toString();
+    stream << "End Class = ActiveMQBytesMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQBytesMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::BytesMessage>::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::checkWriteOnlyBody() const throw ( cms::CMSException ){
+    if( !this->isReadOnlyBody() ){
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "message is in read-only mode and "
+            "cannot be written to" ).convertToCMSException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
                                          std::size_t numBytes )
     throw( cms::CMSException ) {
@@ -194,9 +233,7 @@ float ActiveMQBytesMessage::readFloat() const throw ( cms::CMSException ) {
         checkWriteOnlyBody();
         return dataInputStream.readFloat();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
