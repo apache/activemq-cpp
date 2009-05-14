@@ -1041,11 +1041,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveMapMarshallerTest.cpp"
+							RelativePath="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshallerTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveMapMarshallerTest.h"
+							RelativePath="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshallerTest.h"
 							>
 						</File>
 						<Filter
@@ -10548,6 +10548,14 @@
 				</File>
 				<File
 					RelativePath="..\src\test\activemq\commands\ActiveMQQueueTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\commands\ActiveMQStreamMessageTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\commands\ActiveMQStreamMessageTest.h"
 					>
 				</File>
 				<File
