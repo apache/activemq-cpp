@@ -79,7 +79,7 @@ void PrimitiveTypesMarshaller::unmarshal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list,
+void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveList* list,
                                         std::vector<unsigned char>& dest )
                                             throw ( decaf::lang::Exception ) {
     try {
@@ -98,7 +98,7 @@ void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( util::PrimitiveList* list,
+void PrimitiveTypesMarshaller::unmarshal( activemq::util::PrimitiveList* list,
                                           const std::vector<unsigned char>& src )
                                                 throw ( decaf::lang::Exception ) {
 
