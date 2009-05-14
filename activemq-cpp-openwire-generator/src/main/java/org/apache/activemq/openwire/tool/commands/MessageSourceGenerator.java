@@ -25,7 +25,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         super.populateIncludeFilesSet();
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>");
-        includes.add("<activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>");
+        includes.add("<activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>");
     }
 
     protected void generateDefaultConstructorBody( PrintWriter out ) {
@@ -102,7 +102,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("");
         out.println("        marshalledProperties.clear();");
         out.println("        if( !properties.isEmpty() ) {");
-        out.println("            wireformat::openwire::marshal::PrimitiveMapMarshaller::marshal(");
+        out.println("            wireformat::openwire::marshal::PrimitiveTypesMarshaller::marshal(");
         out.println("                &properties, marshalledProperties );");
         out.println("        }");
         out.println("    }");
@@ -117,7 +117,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("");
         out.println("    try{");
         out.println("");
-        out.println("        wireformat::openwire::marshal::PrimitiveMapMarshaller::unmarshal(");
+        out.println("        wireformat::openwire::marshal::PrimitiveTypesMarshaller::unmarshal(");
         out.println("            &properties, marshalledProperties );");
         out.println("    }");
         out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )");
