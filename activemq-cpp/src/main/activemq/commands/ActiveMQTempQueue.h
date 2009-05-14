@@ -52,34 +52,20 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQTempQueue* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQTempQueue> message( new ActiveMQTempQueue() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQTempQueue* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQTempDestination::copyDataStructure( src );
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Converts the Destination Name into a String
          * @return string name
          */
-        virtual std::string toString() const {
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQTempQueue" << std::endl;
-            stream << ActiveMQTempDestination::toString();
-            stream << "End Class = ActiveMQTempQueue" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -87,9 +73,7 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQDestination::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
         /**
          * @returns the cms::Destination interface pointer that the

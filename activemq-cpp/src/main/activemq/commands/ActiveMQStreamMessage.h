@@ -24,6 +24,7 @@
 #endif
 
 #include <activemq/util/Config.h>
+#include <activemq/util/PrimitiveList.h>
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <cms/StreamMessage.h>
@@ -31,6 +32,7 @@
 #include <cms/MessageNotReadableException.h>
 #include <cms/MessageFormatException.h>
 #include <cms/MessageEOFException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <string>
 #include <memory>
 
@@ -39,6 +41,15 @@ namespace commands{
 
     class AMQCPP_API ActiveMQStreamMessage :
         public ActiveMQMessageTemplate< cms::StreamMessage > {
+    private:
+
+        // Map Structure to hold unmarshaled Map Data
+        mutable std::auto_ptr<util::PrimitiveList> list;
+
+        // When Message is readable this is the index of the next
+        // element to be read.
+        mutable std::size_t currentPos;
+
     public:
 
         const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;
@@ -55,36 +66,21 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQStreamMessage* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQStreamMessage> message( new ActiveMQStreamMessage() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQStreamMessage* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageTemplate<cms::StreamMessage>::copyDataStructure( src );
-            this->reset();
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQStreamMessage" << std::endl;
-            stream << ActiveMQMessageTemplate<cms::StreamMessage>::toString();
-            stream << "End Class = ActiveMQStreamMessage" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if
@@ -92,9 +88,7 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageTemplate<cms::StreamMessage>::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
         /**
          * Determine if this object is aware of marshaling and should have
@@ -361,14 +355,23 @@ namespace commands{
          * Throws an exception if in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnlyBody() const throw ( cms::CMSException ){
-            if( !this->isReadOnlyBody() ){
-                throw exceptions::ActiveMQException(
-                    __FILE__, __LINE__,
-                    "message is in read-only mode and "
-                    "cannot be written to" ).convertToCMSException();
-            }
-        }
+        void checkWriteOnlyBody() const throw( cms::CMSException );
+
+        /**
+         * Fetches a reference to this objects PrimitiveList, if one needs
+         * to be created or unmarshaled, this will perform the correct steps.
+         * @returns reference to a PrimtiveList.
+         */
+        util::PrimitiveList& getList()
+            throw ( decaf::lang::exceptions::NullPointerException );
+        const util::PrimitiveList& getList() const
+            throw ( decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Performs the unmarshal on the List if needed, otherwise just returns.
+         */
+        void checkListIsUnmarshalled() const
+            throw ( decaf::lang::exceptions::NullPointerException );
 
     };
 

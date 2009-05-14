@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
-#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLER_H_
+#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLER_H_
 
 #include <cms/CMSException.h>
 #include <activemq/util/Config.h>
@@ -38,11 +38,11 @@ namespace marshal{
      * map to the Openwire Format's expectation of what the map looks like
      * on the wire.
      */
-    class AMQCPP_API PrimitiveMapMarshaller {
+    class AMQCPP_API PrimitiveTypesMarshaller {
     public:
 
-        PrimitiveMapMarshaller() {}
-        virtual ~PrimitiveMapMarshaller() {}
+        PrimitiveTypesMarshaller() {}
+        virtual ~PrimitiveTypesMarshaller() {}
 
         /**
          * Static Marshal of a primitive map object
@@ -52,16 +52,7 @@ namespace marshal{
          */
         static void marshal( const util::PrimitiveMap* map,
                              std::vector<unsigned char>& dest )
-                                throw ( cms::CMSException );
-
-        /**
-         * Static Map Unmarshaler, takes an array of bytes and returns a
-         * new instance of a PrimitiveMap object.  Caller owns the pointer.
-         * @param reference to a byte array to read data from.
-         * @return newly create PrimitiveMap with unmarshaled data.
-         */
-        static util::PrimitiveMap* unmarshal( const std::vector<unsigned char>& src )
-            throw ( cms::CMSException );
+                                throw ( decaf::lang::Exception );
 
         /**
          * Static Map Unmarshaler, takes an array of bytes and returns a
@@ -71,7 +62,27 @@ namespace marshal{
          */
         static void unmarshal( util::PrimitiveMap* map,
                                const std::vector<unsigned char>& src )
-                                    throw ( cms::CMSException );
+                                    throw ( decaf::lang::Exception );
+
+        /**
+         * Static Marshal of a primitive map object
+         * @param Map to Marshal
+         * @param Reference to a byte array to house the data
+         * @throws CMSException
+         */
+        static void marshal( const util::PrimitiveList* list,
+                             std::vector<unsigned char>& dest )
+                                throw ( decaf::lang::Exception );
+
+        /**
+         * Static Map Unmarshaler, takes an array of bytes and returns a
+         * new instance of a PrimitiveMap object.  Caller owns the pointer.
+         * @param Map to Unmarshal into
+         * @param reference to a byte array to read data from.
+         */
+        static void unmarshal( util::PrimitiveList* list,
+                               const std::vector<unsigned char>& src )
+                                    throw ( decaf::lang::Exception );
 
     protected:
 
@@ -147,4 +158,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_*/
+#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_PRIMITIVETYPESMARSHALLER_H_*/

@@ -68,27 +68,14 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQMapMessage* cloneDataStructure() const {
-            ActiveMQMapMessage* message = new ActiveMQMapMessage();
-            message->copyDataStructure( this );
-            return message;
-        }
+        virtual ActiveMQMapMessage* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageTemplate<cms::MapMessage>::copyDataStructure( src );
-
-            const ActiveMQMapMessage* srcMap =
-                dynamic_cast< const ActiveMQMapMessage* >( src );
-
-            if( srcMap != NULL && srcMap->map.get() != NULL ) {
-                this->map.reset( new util::PrimitiveMap( *srcMap->map ) );
-            }
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Perform any processing needed before an marshal
@@ -102,25 +89,14 @@ namespace commands{
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQMapMessage" << std::endl;
-            stream << ActiveMQMessageTemplate<cms::MapMessage>::toString();
-            stream << "End Class = ActiveMQMapMessage" << std::endl;
-
-            return stream.str();
-        }
-
+        virtual std::string toString() const;
         /**
          * Compares the DataStructure passed in to this one, and returns if
          * they are equivalent.  Equivalent here means that they are of the
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageTemplate<cms::MapMessage>::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
     public:   // CMS Message
 

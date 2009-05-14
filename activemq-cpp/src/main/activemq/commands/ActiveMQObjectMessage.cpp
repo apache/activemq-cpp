@@ -29,3 +29,31 @@ ActiveMQObjectMessage::ActiveMQObjectMessage() :
 unsigned char ActiveMQObjectMessage::getDataStructureType() const {
     return ActiveMQObjectMessage::ID_ACTIVEMQOBJECTMESSAGE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQObjectMessage* ActiveMQObjectMessage::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQObjectMessage> message( new ActiveMQObjectMessage() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQObjectMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::ObjectMessage>::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQObjectMessage::toString() const{
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQObjectMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::ObjectMessage>::toString();
+    stream << "Begin Class = ActiveMQObjectMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQObjectMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::ObjectMessage>::equals( value );
+}

@@ -54,35 +54,21 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQTopic* cloneDataStructure() const {
-            std::auto_ptr<ActiveMQTopic> message( new ActiveMQTopic() );
-            message->copyDataStructure( this );
-            return message.release();
-        }
+        virtual ActiveMQTopic* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQDestination::copyDataStructure( src );
-        }
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const {
-            std::ostringstream stream;
-
-            stream << "Begin Class = ActiveMQTopic" << std::endl;
-            stream << ActiveMQDestination::toString();
-            stream << "End Class = ActiveMQTopic" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
         /**
          * Compares the DataStructure passed in to this one, and returns if

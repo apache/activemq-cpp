@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ActiveMQMapMessage.h>
-#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>
 
 using namespace std;
 using namespace decaf;
@@ -44,6 +44,41 @@ unsigned char ActiveMQMapMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQMapMessage* ActiveMQMapMessage::cloneDataStructure() const {
+    ActiveMQMapMessage* message = new ActiveMQMapMessage();
+    message->copyDataStructure( this );
+    return message;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::copyDataStructure( const DataStructure* src ) {
+    ActiveMQMessageTemplate<cms::MapMessage>::copyDataStructure( src );
+
+    const ActiveMQMapMessage* srcMap =
+        dynamic_cast< const ActiveMQMapMessage* >( src );
+
+    if( srcMap != NULL && srcMap->map.get() != NULL ) {
+        this->map.reset( new util::PrimitiveMap( *srcMap->map ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQMapMessage::toString() const{
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQMapMessage" << std::endl;
+    stream << ActiveMQMessageTemplate<cms::MapMessage>::toString();
+    stream << "End Class = ActiveMQMapMessage" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQMapMessage::equals( const DataStructure* value ) const {
+    return ActiveMQMessageTemplate<cms::MapMessage>::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
     throw ( decaf::io::IOException ) {
 
@@ -54,12 +89,14 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
 
         if( map.get() != NULL && !map->isEmpty() ) {
             // Marshal as Content.
-            PrimitiveMapMarshaller::marshal( map.get(), getContent() );
+            PrimitiveTypesMarshaller::marshal( map.get(), getContent() );
         } else {
             clearBody();
         }
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +107,9 @@ PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) {
         this->checkMapIsUnmarshalled();
         return *map;
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +121,9 @@ const PrimitiveMap& ActiveMQMapMessage::getMap() const
         this->checkMapIsUnmarshalled();
         return *map;
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,10 +134,10 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 
         if( map.get() == NULL ) {
 
-            if( getContent().size() == 0 ){
-                map.reset( new PrimitiveMap() );
-            } else {
-                map.reset( PrimitiveMapMarshaller::unmarshal( getContent() ) );
+            map.reset( new PrimitiveMap() );
+
+            if( getContent().size() != 0 ){
+                PrimitiveTypesMarshaller::unmarshal( map.get(), getContent() );
             }
 
             if( map.get() == NULL ) {
@@ -107,7 +148,9 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
             }
         }
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

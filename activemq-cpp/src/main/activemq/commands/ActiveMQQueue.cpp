@@ -33,3 +33,31 @@ ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
 unsigned char ActiveMQQueue::getDataStructureType() const {
     return ActiveMQQueue::ID_ACTIVEMQQUEUE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQQueue* ActiveMQQueue::cloneDataStructure() const {
+    std::auto_ptr<ActiveMQQueue> message( new ActiveMQQueue() );
+    message->copyDataStructure( this );
+    return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQQueue::copyDataStructure( const DataStructure* src ) {
+    ActiveMQDestination::copyDataStructure( src );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQQueue::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQQueue" << std::endl;
+    stream << ActiveMQDestination::toString();
+    stream << "End Class = ActiveMQQueue" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQQueue::equals( const DataStructure* value ) const {
+    return ActiveMQDestination::equals( value );
+}

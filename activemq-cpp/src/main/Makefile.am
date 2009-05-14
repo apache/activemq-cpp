@@ -178,7 +178,7 @@ cc_sources = \
     activemq/wireformat/openwire/marshal/v1/JournalTraceMarshaller.cpp \
     activemq/wireformat/openwire/marshal/v1/BrokerInfoMarshaller.cpp \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.cpp \
     activemq/wireformat/openwire/marshal/v2/BrokerIdMarshaller.cpp \
     activemq/wireformat/openwire/marshal/v2/FlushCommandMarshaller.cpp \
     activemq/wireformat/openwire/marshal/v2/WireFormatInfoMarshaller.cpp \
@@ -719,7 +719,6 @@ h_sources = \
     activemq/wireformat/openwire/marshal/v1/ActiveMQTempQueueMarshaller.h \
     activemq/wireformat/openwire/marshal/v1/ResponseMarshaller.h \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h \
-    activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h \
     activemq/wireformat/openwire/marshal/v2/NetworkBridgeFilterMarshaller.h \
     activemq/wireformat/openwire/marshal/v2/ActiveMQObjectMessageMarshaller.h \
     activemq/wireformat/openwire/marshal/v2/DataResponseMarshaller.h \
@@ -783,6 +782,7 @@ h_sources = \
     activemq/wireformat/openwire/marshal/v2/ActiveMQTempQueueMarshaller.h \
     activemq/wireformat/openwire/marshal/v2/ResponseMarshaller.h \
     activemq/wireformat/openwire/marshal/DataStreamMarshaller.h \
+    activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h \
     activemq/wireformat/openwire/marshal/v3/NetworkBridgeFilterMarshaller.h \
     activemq/wireformat/openwire/marshal/v3/ActiveMQObjectMessageMarshaller.h \
     activemq/wireformat/openwire/marshal/v3/DataResponseMarshaller.h \
