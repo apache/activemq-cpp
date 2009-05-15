@@ -45,6 +45,11 @@ namespace commands{
      *
      */
     class AMQCPP_API SessionInfo : public BaseCommand {
+    private:
+
+        // The ACK mode that the Session was created with
+        unsigned int ackMode;
+
     protected:
 
         Pointer<SessionId> sessionId;
@@ -99,6 +104,14 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        unsigned int getAckMode() const {
+            return this->ackMode;
+        }
+
+        void setAckMode( unsigned int mode ) {
+            this->ackMode = mode;
+        }
 
         virtual const Pointer<SessionId>& getSessionId() const;
         virtual Pointer<SessionId>& getSessionId();
