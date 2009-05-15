@@ -18,6 +18,7 @@
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
+#include <cms/Session.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -40,6 +41,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo::SessionInfo() {
 
+    this->ackMode = (unsigned int)cms::Session::AUTO_ACKNOWLEDGE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
