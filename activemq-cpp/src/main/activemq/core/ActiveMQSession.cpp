@@ -36,6 +36,7 @@
 #include <activemq/commands/ActiveMQBytesMessage.h>
 #include <activemq/commands/ActiveMQTextMessage.h>
 #include <activemq/commands/ActiveMQMapMessage.h>
+#include <activemq/commands/ActiveMQStreamMessage.h>
 #include <activemq/commands/ActiveMQTempTopic.h>
 #include <activemq/commands/ActiveMQTempQueue.h>
 #include <activemq/commands/MessagePull.h>
@@ -529,9 +530,9 @@ cms::StreamMessage* ActiveMQSession::createStreamMessage()
     throw ( cms::CMSException ) {
 
     try{
-        // TODO
-        throw decaf::lang::exceptions::UnsupportedOperationException(
-            __FILE__, __LINE__, "StreamMessage Not Yet Implemented." );
+
+        this->checkClosed();
+        return new commands::ActiveMQStreamMessage();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
