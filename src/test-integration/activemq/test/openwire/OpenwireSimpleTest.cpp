@@ -247,3 +247,68 @@ void OpenwireSimpleTest::testDestroyDestination() {
         CPPUNIT_ASSERT_MESSAGE( "CAUGHT EXCEPTION", false );
     } AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::tesstStreamMessage() {
+
+    try{
+
+        // Create CMS Object for Comms
+        cms::Session* session( cmsProvider->getSession() );
+        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+        cms::MessageProducer* producer = cmsProvider->getProducer();
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+        unsigned char byteValue = 'A';
+        char charValue = 'B';
+        bool booleanValue = true;
+        short shortValue = 2048;
+        int intValue = 655369;
+        long long longValue = 0xFFFFFFFF00000000ULL;
+        float floatValue = 45.6545f;
+        double doubleValue = 654564.654654;
+        std::string stringValue = "The test string";
+
+        auto_ptr<cms::StreamMessage> streamMessage( session->createStreamMessage() );
+
+        streamMessage->writeString( stringValue );
+        streamMessage->writeBoolean( booleanValue );
+        streamMessage->writeByte( byteValue );
+        streamMessage->writeChar( charValue );
+        streamMessage->writeShort( shortValue );
+        streamMessage->writeInt( intValue );
+        streamMessage->writeLong( longValue );
+        streamMessage->writeFloat( floatValue );
+        streamMessage->writeDouble( doubleValue );
+
+        std::vector<unsigned char> bytes;
+        std::vector<unsigned char> readBytes;
+        bytes.push_back( 65 );
+        bytes.push_back( 66 );
+        bytes.push_back( 67 );
+        bytes.push_back( 68 );
+        bytes.push_back( 69 );
+        streamMessage->writeBytes( bytes );
+
+        // Send some text messages
+        producer->send( streamMessage.get() );
+
+        auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+        CPPUNIT_ASSERT( message.get() != NULL );
+
+        cms::StreamMessage* rcvStreamMessage = dynamic_cast<StreamMessage*>( message.get() );
+        CPPUNIT_ASSERT( rcvStreamMessage != NULL );
+        CPPUNIT_ASSERT( rcvStreamMessage->readString() == stringValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readBoolean() == booleanValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readByte() == byteValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readChar() == charValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readShort() == shortValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readInt() == intValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readLong() == longValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readFloat() == floatValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readDouble() == doubleValue );
+        CPPUNIT_ASSERT( rcvStreamMessage->readBytes( readBytes ) == bytes.size() );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}

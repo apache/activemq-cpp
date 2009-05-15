@@ -41,6 +41,7 @@ namespace openwire{
         CPPUNIT_TEST( testMapMessageSendToQueue );
         CPPUNIT_TEST( testMapMessageSendToTopic );
         CPPUNIT_TEST( testDestroyDestination );
+        CPPUNIT_TEST( tesstStreamMessage );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -52,10 +53,11 @@ namespace openwire{
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
         }
 
-        virtual void testWithZeroConsumerPrefetch();
-        virtual void testMapMessageSendToQueue();
-        virtual void testMapMessageSendToTopic();
-        virtual void testDestroyDestination();
+        void testWithZeroConsumerPrefetch();
+        void testMapMessageSendToQueue();
+        void testMapMessageSendToTopic();
+        void tesstStreamMessage();
+        void testDestroyDestination();
 
     };
 
