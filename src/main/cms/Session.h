@@ -100,7 +100,14 @@ namespace cms
             /**
              * Messages will be consumed when the transaction commits.
              */
-            SESSION_TRANSACTED
+            SESSION_TRANSACTED,
+
+            /**
+             * Message will be acknowledged individually.  Normally the acks sent
+             * acknowledge the given message and all messages received before it, this
+             * mode only acknowledges one message.
+             */
+            INDIVIDUAL_ACKNOWLEDGE
 
         };
 
