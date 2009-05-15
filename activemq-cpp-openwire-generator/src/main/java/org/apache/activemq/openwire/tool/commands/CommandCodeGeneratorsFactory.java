@@ -77,6 +77,8 @@ public class CommandCodeGeneratorsFactory {
             generator = new ProducerIdHeaderGenerator();
         } else if( className.equals("SessionId") ) {
             generator = new SessionIdHeaderGenerator();
+        } else if( className.equals("SessionInfo") ) {
+            generator = new SessionInfoHeaderGenerator();
         } else {
             generator = new CommandHeaderGenerator();
         }
@@ -114,6 +116,8 @@ public class CommandCodeGeneratorsFactory {
             generator = new ProducerIdSourceGenerator();
         } else if( className.equals("SessionId") ) {
             generator = new SessionIdSourceGenerator();
+        } else if( className.equals("SessionInfo") ) {
+            generator = new SessionInfoSourceGenerator();
         } else {
             generator = new CommandSourceGenerator();
         }
