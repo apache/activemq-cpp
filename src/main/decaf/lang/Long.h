@@ -54,7 +54,7 @@ namespace lang{
 
         /**
          * @param value - the long long formated string to wrap
-         * @thorw NumberFormatException
+         * @throw NumberFormatException
          */
         Long( const std::string& value ) throw( exceptions::NumberFormatException );
 
@@ -368,7 +368,7 @@ namespace lang{
 
         /**
          * Converts the long to a String representation
-         * @param long to convert
+         * @param value The long to convert to a std::string.
          * @return string representation
          */
         static std::string toString( long long value );

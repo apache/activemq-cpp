@@ -224,16 +224,16 @@ namespace lang{
          * the second argument. The characters in the string must all be digits,
          * of the specified radix (as determined by whether
          * Character.digit(char, int) returns a nonnegative value) except that the
-         * first character may be an ASCII minus sign '-'  ('\u002D') to indicate
-         * a negative value. The resulting byte value is returned.
-         *
+         * first character may be an ASCII minus sign '-' to indicate a negative
+         * value. The resulting byte value is returned.
+         * <p>
          * An exception of type NumberFormatException is thrown if any of the
          * following situations occurs:
          *  * The first argument is null or is a string of length zero.
          *  * The radix is either smaller than Character.MIN_RADIX or larger than
          *    Character.MAX_RADIX.
          *  * Any character of the string is not a digit of the specified radix,
-         *    except that the first character may be a minus sign '-' ('\u002D')
+         *    except that the first character may be a minus sign '-'
          *    provided that the string is longer than length 1.
          *  * The value represented by the string is not a value of type short.
          *
@@ -248,10 +248,11 @@ namespace lang{
         /**
          * Parses the string argument as a signed decimal short. The characters
          * in the string must all be decimal digits, except that the first
-         * character may be an ASCII minus sign '-' ('\u002D') to indicate a
-         * negative value. The resulting short value is returned, exactly as if
-         * the argument and the radix 10 were given as arguments to the
-         * parseShort( const std::string, int ) method.
+         * character may be an ASCII minus sign '-' to indicate a negative value.
+         * The resulting short value is returned, exactly as if the argument and the
+         * radix 10 were given as arguments to the parseShort( const std::string, int )
+         * method.
+         *
          * @param s - String to convert to a short
          * @returns the converted short value
          * @throws NumberFormatException if the string is not a short.

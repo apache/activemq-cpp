@@ -60,13 +60,18 @@ namespace lang{
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The <code>Exception</code> instance to copy.
          */
         Exception( const Exception& ex ) throw();
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         *
+         * @param cause
+         *      Pointer to the exception that caused this one to
+         *      be thrown, the object is cloned caller retains ownership.
          */
         Exception( const std::exception* cause ) throw();
 
@@ -74,10 +79,10 @@ namespace lang{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         Exception( const char* file, const int lineNumber,
                    const char* msg, ... ) throw();
@@ -86,11 +91,11 @@ namespace lang{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         Exception( const char* file, const int lineNumber,
                    const std::exception* cause,
@@ -137,7 +142,7 @@ namespace lang{
         /**
          * Sets the cause for this exception.
          * @param msg the format string for the msg.
-         * @param variable - params to format into the string
+         * @param ... params to format into the string
          */
         virtual void setMessage( const char* msg, ... );
 
@@ -184,7 +189,7 @@ namespace lang{
 
         /**
          * Assignment operator.
-         * @param const reference to another Exception
+         * @param ex const reference to another Exception
          */
         virtual Exception& operator =( const Exception& ex );
 

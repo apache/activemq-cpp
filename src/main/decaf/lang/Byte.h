@@ -219,7 +219,7 @@ namespace lang{
          * the second argument. The characters in the string must all be digits,
          * of the specified radix (as determined by whether
          * Character.digit(char, int) returns a nonnegative value) except that the
-         * first character may be an ASCII minus sign '-'  ('\u002D') to indicate
+         * first character may be an ASCII minus sign '-' to indicate
          * a negative value. The resulting byte value is returned.
          *
          * An exception of type NumberFormatException is thrown if any of the
@@ -245,7 +245,7 @@ namespace lang{
         /**
          * Parses the string argument as a signed decimal unsigned char. The
          * characters in the string must all be decimal digits, except that the
-         * first character may be an ASCII minus sign '-' ('\u002D') to indicate a
+         * first character may be an ASCII minus sign '-' to indicate a
          * negative value. The resulting unsigned char value is returned, exactly as
          * if the argument and the radix 10 were given as arguments to the
          * parseByte( const std::string, int ) method.
@@ -259,7 +259,7 @@ namespace lang{
         /**
          * Returns a Character instance representing the specified char value.
          * @param value - the primitive char to wrap.
-         * @returns a new Charactor instance that wraps this value.
+         * @returns a new Character instance that wraps this value.
          */
         static Byte valueOf( unsigned char value ) {
             return Byte( value );

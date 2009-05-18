@@ -27,9 +27,10 @@ namespace exceptions{
      * Thrown when an error occurs that involves something in the run time
      * This could be a memory allocation exception or some other generally
      * unrecoverable exception.
+     *
+     * @since 1.0
      */
-    class DECAF_API RuntimeException : public Exception
-    {
+    class DECAF_API RuntimeException : public Exception {
     public:
 
         /**
@@ -39,20 +40,23 @@ namespace exceptions{
 
         /**
          * Conversion Constructor from some other ActiveMQException
-         * @param An exception that should become this type of Exception
+         *
+         * @param ex
+         *      The Exception whose data is to be copied into this one.
          */
         RuntimeException( const Exception& ex ) throw()
-        : Exception()
-        {
+        : Exception() {
             *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The Exception whose data is to be copied into this one.
          */
         RuntimeException( const RuntimeException& ex ) throw()
-        : Exception()
-        {
+        : Exception() {
             *(Exception*)this = ex;
         }
 
@@ -60,11 +64,11 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         RuntimeException( const char* file, const int lineNumber,
                           const std::exception* cause,
@@ -89,10 +93,10 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         RuntimeException( const char* file,
                           const int lineNumber,
@@ -111,6 +115,8 @@ namespace exceptions{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return an new Exception that is a copy of this one.
          */
         virtual RuntimeException* clone() const{
             return new RuntimeException( *this );
