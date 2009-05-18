@@ -29,7 +29,7 @@ namespace util {
 namespace concurrent {
 
     /**
-     * An object that executes submitted {@link Runnable} tasks. This
+     * An object that executes submitted {@link decaf.lang.Runnable} tasks. This
      * interface provides a way of decoupling task submission from the
      * mechanics of how each task will be run, including details of thread
      * use, scheduling, etc.  An <tt>Executor</tt> is normally used
@@ -76,10 +76,11 @@ namespace concurrent {
      * }</pre>
      *
      * The <tt>Executor</tt> implementations provided in this package
-     * implement {@link ExecutorService}, which is a more extensive
-     * interface.  The {@link ThreadPoolExecutor} class provides an
-     * extensible thread pool implementation. The {@link Executors} class
-     * provides convenient factory methods for these Executors.
+     * implement {@link decaf.util.concurrent.ExecutorService}, which is a more
+     * extensive interface.  The {@link decaf.util.concurrent.ThreadPoolExecutor}
+     * class provides an extensible thread pool implementation. The
+     * {@link decaf.util.concurrentExecutor} class provides convenient factory
+     * methods for these Executors.
      *
      * @since 1.0
      */

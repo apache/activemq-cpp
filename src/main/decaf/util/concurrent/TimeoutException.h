@@ -29,8 +29,7 @@ namespace concurrent{
      * many such operations it is possible to return a value that indicates timeout; when
      * that is not possible or desirable then TimeoutException should be declared and thrown.
      */
-    class DECAF_API TimeoutException : public decaf::lang::Exception
-    {
+    class DECAF_API TimeoutException : public decaf::lang::Exception {
     public:
 
         /**
@@ -40,27 +39,29 @@ namespace concurrent{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         * @param ex An exception that should become this type of Exception
          */
         TimeoutException( const decaf::lang::Exception& ex ) throw()
-        : decaf::lang::Exception()
-        {
+        : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The exception to copy from.
          */
         TimeoutException( const TimeoutException& ex ) throw()
-        : decaf::lang::Exception()
-        {
+        : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         * @param cause
+         *      Pointer to the exception that caused this one to
+         *      be thrown, the object is cloned caller retains ownership.
          */
         TimeoutException( const std::exception* cause )
             throw() : decaf::lang::Exception( cause ) {}
@@ -69,10 +70,10 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The string message to report
+         * @param ... list of primitives that are formatted into the message
          */
         TimeoutException( const char* file, const int lineNumber,
                           const char* msg, ... ) throw()
@@ -91,11 +92,11 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The string message to report
+         * @param ... list of primitives that are formatted into the message
          */
         TimeoutException( const char* file, const int lineNumber,
                           const std::exception* cause,
@@ -114,14 +115,13 @@ namespace concurrent{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return a new TimeoutException that is a copy of this one.
          */
         virtual TimeoutException* clone() const{
             return new TimeoutException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~TimeoutException() throw() {}
 
     };

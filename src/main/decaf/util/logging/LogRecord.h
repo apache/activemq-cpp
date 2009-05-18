@@ -26,8 +26,7 @@ namespace decaf{
 namespace util{
 namespace logging{
 
-    class DECAF_API LogRecord
-    {
+    class DECAF_API LogRecord {
     private:
 
         // Level of this Record
@@ -39,7 +38,7 @@ namespace logging{
         // Name of the File that originated the Log
         std::string sourceFile;
 
-        // Line in the source file where log occured
+        // Line in the source file where log occurred
         unsigned long sourceLine;
 
         // The message to Log.
@@ -101,7 +100,7 @@ namespace logging{
 
         /**
          * Sets the Source Log File Name
-         * @param loggerName the source loggers name
+         * @param sourceFile the source loggers name
          */
         void setSourceFile( const std::string& sourceFile ) {
             this->sourceFile = sourceFile;

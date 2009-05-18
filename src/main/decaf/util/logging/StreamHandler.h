@@ -22,7 +22,7 @@
 #include <decaf/util/logging/Formatter.h>
 #include <decaf/util/logging/Filter.h>
 #include <decaf/io/OutputStream.h>
-#include <decaf/kang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/Config.h>
@@ -59,24 +59,20 @@ namespace logging{
         /**
          * Create a StreamHandler, with no current output stream.
          */
-        StreamHandler( io::OutputStream* stream, Formatter* formatter )
-        {
+        StreamHandler( io::OutputStream* stream, Formatter* formatter ) {
             this->stream = stream;
             this->formatter = formatter;
             this->filter = NULL;
 
-           this->level = Level::Fatal;  // We take everything by default
+            this->level = Level::Fatal;  // We take everything by default
         }
 
-        /**
-         * Destructor
-         */
         virtual ~StreamHandler() {
             try {
                 this->close();
             }
-            AMQ_CATCH_NOTHROW( lang::Exception)
-            AMQ_CATCALL_NOTHROW()
+            DECAF_CATCH_NOTHROW( lang::Exception)
+            DECAF_CATCHALL_NOTHROW()
         }
 
         /**
@@ -106,7 +102,9 @@ namespace logging{
 
         /**
          * Publish the Log Record to this Handler
-         * @param The Log Record to Publish
+         *
+         * @param record
+         *      The <code>LogRecord</code> to Publish
          */
         virtual void publish( const LogRecord& record ) {
 
@@ -129,19 +127,20 @@ namespace logging{
                     }
                 }
             }
-            AMQ_CATCH_RETHROW( lang::Exception )
-            AMQ_CATCHALL_THROW( lang::Exception )
+            DECAF_CATCH_RETHROW( lang::Exception )
+            DECAF_CATCHALL_THROW( lang::Exception )
         }
 
         /**
          * Check if this Handler would actually log a given LogRecord.
          * <p>
-         * @param <code>LogRecord</code> to check
+         * @param record
+         *      <code>LogRecord</code> to check
          */
         virtual void isLoggable( const LogRecord& record ) {
 
             if( filter ) {
-                // Allow for some filtering to occurr
+                // Allow for some filtering to occur
                 return filter->isLoggable( record );
             }
 
@@ -152,7 +151,8 @@ namespace logging{
 
         /**
          * Sets the Filter that this Handler uses to filter Log Records
-         * @param <code>Filter</code> derived instance
+         * @param filter
+         *      <code>Filter</code> derived instance
          */
         virtual void setFilter( const Filter* filter ){
             this->filter = filter;
@@ -160,7 +160,7 @@ namespace logging{
 
         /**
          * Gets the Filter that this Handler uses to filter Log Records
-         * @param <code>Filter</code> derived instance
+         * @return <code>Filter</code> derived instance
          */
         virtual const Filter* getFilter(){
             return filter;
@@ -170,9 +170,11 @@ namespace logging{
          * Set the log level specifying which message levels will be logged
          * by this Handler.
          * <p>
-         * The intention is to allow developers to turn on voluminous logging,
+         * The intention is to allow developers to turn on verbose logging,
          * but to limit the messages that are sent to certain Handlers.
-         * @param Level enumeration value
+         *
+         * @param level
+         *      Level enumeration value
          */
         virtual void setLevel( Level level ){
             this->level = level;
@@ -181,7 +183,7 @@ namespace logging{
         /**
          * Get the log level specifying which message levels will be logged
          * by this Handler.
-         * @param Level enumeration value
+         * @return Currently set Level enumeration value
          */
         virtual Level getLevel(){
             return level;
@@ -189,7 +191,8 @@ namespace logging{
 
         /**
          * Sets the <code>Formatter</code> used by this Handler
-         * @param <code>Filter</code> derived instance
+         * @param formatter
+         *      <code>Formatter</code> derived instance
          */
         virtual void setFormatter( const Formatter* formatter ){
             this->formatter = formatter;
@@ -197,7 +200,7 @@ namespace logging{
 
         /**
          * Gets the <code>Formatter</code> used by this Handler
-         * @param <code>Filter</code> derived instance
+         * @return currently configured <code>Formatter</code> derived instance
          */
         virtual const Formatter* getFormatter(){
             return formatter;
@@ -205,9 +208,9 @@ namespace logging{
 
         /**
          * Gets the output Stream that this Handler is using
-         * @return OuputStream pointer
+         * @return OuputStream pointer used by this handler.
          */
-        virtual io::OutputStream* getOutputStream() const(
+        virtual io::OutputStream* getOutputStream() const{
             return stream;
         }
 

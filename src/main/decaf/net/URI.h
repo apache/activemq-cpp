@@ -147,7 +147,7 @@ namespace net{
         virtual bool operator<( const URI& value ) const;
 
         /**
-         * @eturns the decoded authority component of this URI.
+         * @returns the decoded authority component of this URI.
          */
         std::string getAuthority() const;
 
@@ -273,8 +273,8 @@ namespace net{
          * RFC 2396, section 5.2, step 6, sub-steps c through f; that is:
          *
          *  1. All "." segments are removed.
-         *  2. If a ".." segment is preceded by a non-".." segment then both of t
-         *     hese segments are removed. This step is repeated until it is no
+         *  2. If a ".." segment is preceded by a non-".." segment then both of
+         *     these segments are removed. This step is repeated until it is no
          *     longer applicable.
          *  3. If the path is relative, and if its first segment contains a colon
          *     character (':'), then a "." segment is prepended. This prevents a
@@ -434,22 +434,21 @@ namespace net{
         /*
          * Quote illegal chars for each component, but not the others
          *
-         * @param component java.lang.String the component to be converted @param
-         * legalset java.lang.String the legal character set allowed in the
-         * component s @return java.lang.String the converted string
+         * @param component the component to be converted
+         * @param legalset the legal character set allowed in the component strng
+         * @return the converted string
          */
         std::string quoteComponent( const std::string& component,
                                     const std::string& legalset );
 
         /*
-         * Encode unicode chars that are not part of US-ASCII char set into the
+         * Encode Unicode chars that are not part of US-ASCII char set into the
          * escaped form
          *
          * i.e. The Euro currency symbol is encoded as "%E2%82%AC".
          *
-         * @param component java.lang.String the component to be converted @param
-         * legalset java.lang.String the legal character set allowed in the
-         * component s @return java.lang.String the converted string
+         * @param src the string to be encoded
+         * @return the converted string
          */
         std::string encodeOthers( const std::string& src ) const;
 

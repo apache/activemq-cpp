@@ -26,16 +26,16 @@ namespace activemq {
 namespace cmsutil {
 
     /**
-     * Base class for {@link activemq.cms.CmsTemplate} and other
+     * Base class for {@link activemq.cmsutil.CmsTemplate} and other
      * CMS-accessing gateway helpers, defining common properties such as the
-     * CMS {@link ConnectionFactory} to operate on. The subclass
-     * {@link activemq.cms.CmsDestinationAccessor}
+     * CMS {@link cms.ConnectionFactory} to operate on. The subclass
+     * {@link activemq.cmsutil.CmsDestinationAccessor}
      * adds further, destination-related properties.
      *
      * <p>Not intended to be used directly.
      *
-     * @see activemq.cms.CmsDestinationAccessor
-     * @see activemq.cms.CmsTemplate
+     * @see activemq.cmsutil.CmsDestinationAccessor
+     * @see activemq.cmsutil.CmsTemplate
      */
     class AMQCPP_API CmsAccessor {
     private:
