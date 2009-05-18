@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef CMS_CONFIG_H
-#define CMS_CONFIG_H
+#ifndef _CMS_CONFIG_H_
+#define _CMS_CONFIG_H_
 
 #ifdef CMS_DLL
  #ifdef CMS_EXPORTS
@@ -32,4 +32,4 @@
  #endif
 #endif
 
-#endif /*CMS_CONFIG_H*/
+#endif /*_CMS_CONFIG_H_*/

@@ -511,7 +511,7 @@ void LongArrayBufferTest::testPutIndexed() {
     for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         LongBuffer& ret = testBuffer1->put(i, i );
-        CPPUNIT_ASSERT( testBuffer1->get(i) == i );
+        CPPUNIT_ASSERT( testBuffer1->get(i) == (long long)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
 

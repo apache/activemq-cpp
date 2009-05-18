@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-PartialCommand::PartialCommand() {
+PartialCommand::PartialCommand() : BaseDataStructure() {
 
     this->commandId = 0;
 }

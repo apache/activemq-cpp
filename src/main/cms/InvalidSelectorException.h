@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
-#define _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
+#ifndef _CMS_INVALIDSELECTOREXCEPTION_H_
+#define _CMS_INVALIDSELECTOREXCEPTION_H_
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
@@ -24,28 +24,29 @@
 namespace cms{
 
     /**
-     * This exception must be thrown when a CMS client attempts to write to a read-only message.
+     * This exception must be thrown when a CMS client attempts to give a provider a
+     * message selector with invalid syntax.
      *
      * @since 1.3
      */
-    class CMS_API MessageNotWriteableException : public CMSException {
+    class CMS_API InvalidSelectorException : public CMSException {
     public:
 
-        MessageNotWriteableException() throw();
+        InvalidSelectorException() throw();
 
-        MessageNotWriteableException( const MessageNotWriteableException& ex ) throw();
+        InvalidSelectorException( const InvalidSelectorException& ex ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause ) throw();
+        InvalidSelectorException( const std::string& message,
+                                  const std::exception* cause ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause,
-                                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+        InvalidSelectorException( const std::string& message,
+                                  const std::exception* cause,
+                                  const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
-        virtual ~MessageNotWriteableException() throw();
+        virtual ~InvalidSelectorException() throw();
 
     };
 
 }
 
-#endif /*_CMS_MESSAGENOTWRITEABLEEXCEPTION_H_*/
+#endif /*_CMS_INVALIDSELECTOREXCEPTION_H_*/

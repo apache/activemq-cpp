@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalQueueAck::JournalQueueAck() {
+JournalQueueAck::JournalQueueAck() : BaseDataStructure() {
 
 }
 

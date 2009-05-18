@@ -39,13 +39,13 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId::BrokerId() {
+BrokerId::BrokerId() : BaseDataStructure() {
 
     this->value = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId::BrokerId( const BrokerId& other ) {
+BrokerId::BrokerId( const BrokerId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

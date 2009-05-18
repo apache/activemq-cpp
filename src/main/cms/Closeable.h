@@ -14,33 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef CMS_CLOSEABLE_H
-#define CMS_CLOSEABLE_H
- 
+
+#ifndef _CMS_CLOSEABLE_H
+#define _CMS_CLOSEABLE_H
+
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
-    
+
     /**
      * Interface for a class that implements the close method.
+     *
+     * @since 1.0
      */
     class CMS_API Closeable{
-        
+
     public:
-    
-        virtual ~Closeable(){}
-        
+
+        virtual ~Closeable() {}
+
         /**
          * Closes this object and deallocates the appropriate resources.
          * The object is generally no longer usable after calling close.
-         * 
-         * @throws CMSException
+         *
+         * @throws CMSException - If an error occurs while the resource is being closed.
          */
         virtual void close() throw( CMSException ) = 0;
 
     };
 }
 
-#endif /*CMS_CLOSEABLE_H*/
+#endif /*_CMS_CLOSEABLE_H*/

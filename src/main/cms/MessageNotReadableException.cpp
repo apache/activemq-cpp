@@ -35,8 +35,8 @@ MessageNotReadableException::MessageNotReadableException( const std::string& mes
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotReadableException::MessageNotReadableException( const std::string& message,
-                                          const std::exception* cause,
-                                          const std::vector< std::pair< std::string, int> >& stackTrace )
+                                                          const std::exception* cause,
+                                                          const std::vector< std::pair< std::string, int> >& stackTrace )
     throw() : CMSException( message, cause, stackTrace ) {
 }
 

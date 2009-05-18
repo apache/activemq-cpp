@@ -86,6 +86,10 @@ namespace cmsutil {
             session->rollback();
         }
 
+        virtual void recover() throw( cms::CMSException ) {
+            session->recover();
+        }
+
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination )
                 throw ( cms::CMSException ) {
@@ -153,6 +157,12 @@ namespace cmsutil {
         virtual cms::MessageProducer* createCachedProducer( const cms::Destination* destination )
             throw ( cms::CMSException );
 
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue )
+            throw( cms::CMSException );
+
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
+            throw( cms::CMSException );
+
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {
             return session->createQueue( queueName );
@@ -210,11 +220,11 @@ namespace cmsutil {
             return session->createMapMessage();
         }
 
-        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const {
+        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const throw ( cms::CMSException ) {
             return session->getAcknowledgeMode();
         }
 
-        virtual bool isTransacted() const {
+        virtual bool isTransacted() const throw ( cms::CMSException ) {
             return session->isTransacted();
         }
 

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-NetworkBridgeFilter::NetworkBridgeFilter() {
+NetworkBridgeFilter::NetworkBridgeFilter() : BaseDataStructure() {
 
     this->networkTTL = 0;
 }

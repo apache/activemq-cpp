@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck::MessageAck() {
+MessageAck::MessageAck() : BaseCommand() {
 
     this->ackType = 0;
     this->messageCount = 0;

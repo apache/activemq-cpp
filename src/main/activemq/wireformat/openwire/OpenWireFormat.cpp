@@ -165,6 +165,11 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
 
     try {
 
+        if( transport == NULL ) {
+            throw decaf::io::IOException(
+                __FILE__, __LINE__, "Transport passed is NULL" );
+        }
+
         if( dataOut == NULL ) {
             throw decaf::io::IOException(
                 __FILE__, __LINE__, "DataOutputStream passed is NULL" );

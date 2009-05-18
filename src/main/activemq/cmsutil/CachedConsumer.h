@@ -60,11 +60,11 @@ namespace cmsutil {
             return consumer->receiveNoWait();
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) {
+        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
             consumer->setMessageListener( listener );
         }
 
-        virtual cms::MessageListener* getMessageListener() const {
+        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
             return consumer->getMessageListener();
         }
 

@@ -51,6 +51,8 @@ namespace cmsutil {
 
         virtual void rollback() throw ( cms::CMSException ) {}
 
+        virtual void recover() throw ( cms::CMSException ) {}
+
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination )
                 throw ( cms::CMSException ) {
@@ -82,6 +84,12 @@ namespace cmsutil {
 
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
             throw ( cms::CMSException ) { return new DummyProducer(messageContext, destination); }
+
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue )
+            throw( cms::CMSException ) { return NULL; }
+
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
+            throw( cms::CMSException ) { return NULL; }
 
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {
@@ -124,12 +132,17 @@ namespace cmsutil {
         virtual cms::MapMessage* createMapMessage()
             throw ( cms::CMSException ){ return NULL; }
 
-        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const { return mode; }
+        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const throw ( cms::CMSException ) {
+            return mode;
+        }
+
         virtual void setAcknowledgeMode(cms::Session::AcknowledgeMode mode) {
             this->mode = mode;
         }
 
-        virtual bool isTransacted() const{ return mode==cms::Session::SESSION_TRANSACTED; }
+        virtual bool isTransacted() const throw ( cms::CMSException ){
+            return mode==cms::Session::SESSION_TRANSACTED;
+        }
 
         virtual void unsubscribe( const std::string& name )
             throw ( cms::CMSException ){}

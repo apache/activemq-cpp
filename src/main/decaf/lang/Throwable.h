@@ -34,14 +34,14 @@ namespace lang{
      * library should extend from this or from the Exception class in order to ensure
      * that all Decaf Exceptions are interchangeable with the std::exception class.
      *
-     * Throwable can wrap another throwable as the cause if the error being thrown.
+     * Throwable can wrap another Throwable as the cause if the error being thrown.
      * The user can inspect the cause by calling <code>getCause</code>, the pointer
      * returned is the property of the Throwable instance and will be deleted when it
      * is deleted or goes out of scope.
      *
      * @since 1.0
      */
-    class DECAF_API Throwable : public virtual std::exception {
+    class DECAF_API Throwable : public std::exception {
     public:
 
         Throwable() throw() : std::exception() {}

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionInfo::ConnectionInfo() {
+ConnectionInfo::ConnectionInfo() : BaseCommand() {
 
     this->clientId = "";
     this->password = "";

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-KeepAliveInfo::KeepAliveInfo() {
+KeepAliveInfo::KeepAliveInfo() : BaseCommand() {
 
 }
 

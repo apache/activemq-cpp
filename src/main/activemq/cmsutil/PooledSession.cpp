@@ -57,6 +57,20 @@ void PooledSession::close() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue )
+    throw( cms::CMSException ) {
+
+    return session->createBrowser( queue );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector )
+    throw( cms::CMSException ) {
+
+    return session->createBrowser( queue, selector );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::MessageProducer* PooledSession::createCachedProducer(
         const cms::Destination* destination )
     throw ( cms::CMSException ) {

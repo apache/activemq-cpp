@@ -53,8 +53,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompAsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompCmsTemplateTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompDurableTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompExpirationTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompSimpleRollbackTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompSimpleTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompTransactionTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompSlowListenerTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompJmsMessageGroupsTest );
+
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompTransactionTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompSimpleRollbackTest );

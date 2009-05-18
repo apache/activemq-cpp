@@ -24,7 +24,8 @@ CMSSecurityException::CMSSecurityException() throw() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSSecurityException::CMSSecurityException( const CMSSecurityException& ex ) throw() : CMSException() {
+CMSSecurityException::CMSSecurityException( const CMSSecurityException& ex )
+    throw() : CMSException( ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

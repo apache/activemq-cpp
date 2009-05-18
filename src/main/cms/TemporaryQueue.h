@@ -26,25 +26,27 @@ namespace cms{
 
     /**
      * An interface encapsulating a provider-specific queue name.
+     *
+     * @since 1.0
      */
-    class CMS_API TemporaryQueue : public Destination
-    {
+    class CMS_API TemporaryQueue : public Destination {
     public:
 
         virtual ~TemporaryQueue() {}
 
         /**
          * Gets the name of this queue.
-         * 
+         *
          * @return The queue name.
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual std::string getQueueName() const
-            throw( CMSException ) = 0;
+        virtual std::string getQueueName() const throw( CMSException ) = 0;
 
         /**
          * Destroy's the Temp Destination at the Broker
-         * 
-         * @throws CMSException
+         *
+         * @throws CMSException - if an internal error occurs.
          */
         virtual void destroy() throw ( CMSException ) = 0;
 

@@ -23,24 +23,27 @@
 #include <cms/CMSException.h>
 
 namespace cms{
-    
+
     /**
      * An interface encapsulating a provider-specific topic name.
+     *
+     * @since 1.0
      */
     class CMS_API Topic : public Destination{
-        
     public:
-    
+
         virtual ~Topic() {}
-        
+
         /**
          * Gets the name of this topic.
-         * 
+         *
          * @return The topic name.
+         *
+         * @throws CMSException - If an internal error occurs.
          */
-        virtual std::string getTopicName() 
+        virtual std::string getTopicName()
             const throw( CMSException ) = 0;
-            
+
     };
 
 }

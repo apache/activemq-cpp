@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
-#define _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
+#ifndef _CMS_INVALIDDESTINATIONEXCEPTION_H_
+#define _CMS_INVALIDDESTINATIONEXCEPTION_H_
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
@@ -24,28 +24,29 @@
 namespace cms{
 
     /**
-     * This exception must be thrown when a CMS client attempts to write to a read-only message.
+     * This exception must be thrown when a destination either is not understood by a provider
+     * or is no longer valid.
      *
      * @since 1.3
      */
-    class CMS_API MessageNotWriteableException : public CMSException {
+    class CMS_API InvalidDestinationException : public CMSException {
     public:
 
-        MessageNotWriteableException() throw();
+        InvalidDestinationException() throw();
 
-        MessageNotWriteableException( const MessageNotWriteableException& ex ) throw();
+        InvalidDestinationException( const InvalidDestinationException& ex ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause ) throw();
+        InvalidDestinationException( const std::string& message,
+                                     const std::exception* cause ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause,
-                                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+        InvalidDestinationException( const std::string& message,
+                                     const std::exception* cause,
+                                     const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
-        virtual ~MessageNotWriteableException() throw();
+        virtual ~InvalidDestinationException() throw();
 
     };
 
 }
 
-#endif /*_CMS_MESSAGENOTWRITEABLEEXCEPTION_H_*/
+#endif /*_CMS_INVALIDDESTINATIONEXCEPTION_H_*/

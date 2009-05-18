@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "MarshalerHelper.h"
+#include "StompHelper.h"
 
 #include <activemq/wireformat/stomp/StompCommandConstants.h>
 #include <activemq/commands/LocalTransactionId.h>
@@ -30,13 +30,12 @@ using namespace activemq;
 using namespace activemq::commands;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
-using namespace activemq::wireformat::stomp::marshal;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-void MarshalerHelper::convertProperties( const Pointer<StompFrame>& frame,
+void StompHelper::convertProperties( const Pointer<StompFrame>& frame,
                                          const Pointer<Message>& message ) {
 
     const std::string destination =
@@ -103,7 +102,7 @@ void MarshalerHelper::convertProperties( const Pointer<StompFrame>& frame,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MarshalerHelper::convertProperties( const Pointer<Message>& message,
+void StompHelper::convertProperties( const Pointer<Message>& message,
                                          const Pointer<StompFrame>& frame ) {
 
     frame->setProperty( StompCommandConstants::HEADER_DESTINATION,
@@ -163,7 +162,7 @@ void MarshalerHelper::convertProperties( const Pointer<Message>& message,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshalerHelper::convertDestination( const Pointer<ActiveMQDestination>& destination ) {
+std::string StompHelper::convertDestination( const Pointer<ActiveMQDestination>& destination ) {
 
     if( destination == NULL ) {
         return "";
@@ -196,7 +195,7 @@ std::string MarshalerHelper::convertDestination( const Pointer<ActiveMQDestinati
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ActiveMQDestination> MarshalerHelper::convertDestination( const std::string& destination ) {
+Pointer<ActiveMQDestination> StompHelper::convertDestination( const std::string& destination ) {
 
     if( destination == "" ) {
         return Pointer<ActiveMQDestination>();
@@ -227,7 +226,7 @@ Pointer<ActiveMQDestination> MarshalerHelper::convertDestination( const std::str
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshalerHelper::convertMessageId( const Pointer<MessageId>& messageId ) {
+std::string StompHelper::convertMessageId( const Pointer<MessageId>& messageId ) {
 
     // The Stomp MessageId is always hidden solely in the Producer Id.
     std::string result = convertProducerId( messageId->getProducerId() );
@@ -236,7 +235,7 @@ std::string MarshalerHelper::convertMessageId( const Pointer<MessageId>& message
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<MessageId> MarshalerHelper::convertMessageId( const std::string& messageId ) {
+Pointer<MessageId> StompHelper::convertMessageId( const std::string& messageId ) {
 
     if( messageId == "" ) {
         return Pointer<MessageId>();
@@ -251,7 +250,7 @@ Pointer<MessageId> MarshalerHelper::convertMessageId( const std::string& message
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshalerHelper::convertConsumerId( const Pointer<ConsumerId>& consumerId ) {
+std::string StompHelper::convertConsumerId( const Pointer<ConsumerId>& consumerId ) {
 
     return consumerId->getConnectionId() + ":" +
            Long::toString( consumerId->getSessionId() ) + ":" +
@@ -259,7 +258,7 @@ std::string MarshalerHelper::convertConsumerId( const Pointer<ConsumerId>& consu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ConsumerId> MarshalerHelper::convertConsumerId( const std::string& consumerId ) {
+Pointer<ConsumerId> StompHelper::convertConsumerId( const std::string& consumerId ) {
 
     if( consumerId == "" ) {
         return Pointer<ConsumerId>();
@@ -284,13 +283,13 @@ Pointer<ConsumerId> MarshalerHelper::convertConsumerId( const std::string& consu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshalerHelper::convertProducerId( const Pointer<ProducerId>& producerId ) {
+std::string StompHelper::convertProducerId( const Pointer<ProducerId>& producerId ) {
 
     return producerId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ProducerId> MarshalerHelper::convertProducerId( const std::string& producerId ) {
+Pointer<ProducerId> StompHelper::convertProducerId( const std::string& producerId ) {
 
     if( producerId == "" ) {
         return Pointer<ProducerId>();
@@ -306,7 +305,7 @@ Pointer<ProducerId> MarshalerHelper::convertProducerId( const std::string& produ
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshalerHelper::convertTransactionId( const Pointer<TransactionId>& transactionId ) {
+std::string StompHelper::convertTransactionId( const Pointer<TransactionId>& transactionId ) {
 
     Pointer<LocalTransactionId> id = transactionId.dynamicCast<LocalTransactionId>();
     std::string result = id->getConnectionId()->getValue() + ":" + Long::toString( id->getValue() );
@@ -314,7 +313,7 @@ std::string MarshalerHelper::convertTransactionId( const Pointer<TransactionId>&
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<TransactionId> MarshalerHelper::convertTransactionId( const std::string& transactionId ) {
+Pointer<TransactionId> StompHelper::convertTransactionId( const std::string& transactionId ) {
 
     if( transactionId == "" ) {
         return Pointer<TransactionId>();

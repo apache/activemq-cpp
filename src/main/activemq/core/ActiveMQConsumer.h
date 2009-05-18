@@ -196,13 +196,13 @@ namespace core{
          * Sets the MessageListener that this class will send notifs on
          * @param listener MessageListener interface pointer
          */
-        virtual void setMessageListener( cms::MessageListener* listener );
+        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException );
 
         /**
          * Gets the MessageListener that this class will send notifs on
          * @param MessageListener interface pointer
          */
-        virtual cms::MessageListener* getMessageListener() const {
+        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
             return this->listener;
         }
 

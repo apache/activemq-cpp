@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
-#include <activemq/wireformat/stomp/marshal/Marshaler.h>
+#include <activemq/wireformat/stomp/StompHelper.h>
 #include <decaf/io/IOException.h>
 #include <decaf/lang/Pointer.h>
 
@@ -36,14 +36,13 @@ namespace stomp {
     private:
 
         /**
-         * Vector Object used to buffer data
+         * Performs conversions for stomp types and canonical types.
          */
-        std::vector<unsigned char> buffer;
+        StompHelper helper;
 
-        /**
-         * Marshaler of Stomp Commands
-         */
-        marshal::Marshaler marshaler;
+        // Stored after we connect to use when validating that a durable subscribe
+        // and unsubscribe are set to use the client Id.
+        std::string clientId;
 
     public:
 
@@ -112,36 +111,19 @@ namespace stomp {
 
     private:
 
-        /**
-         * Read the Stomp Command from the Frame
-         * @param reference to a Stomp Frame
-         * @throws StompConnectorException
-         */
-        void readStompCommandHeader( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+        Pointer<Command> unmarshalMessage( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalReceipt( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalConnected( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalError( const Pointer<StompFrame>& frame );
 
-        /**
-         * Read all the Stomp Headers for the incoming Frame
-         * @param Frame to place data into
-         * @throws StompConnectorException
-         */
-        void readStompHeaders( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
-
-        /**
-         * Reads a Stomp Header line and stores it in the buffer object
-         * @return number of bytes read, zero if there was a problem.
-         * @throws StompConnectorException
-         */
-        std::size_t readStompHeaderLine( decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
-
-        /**
-         * Reads the Stomp Body from the Wire and store it in the frame.
-         * @param Stomp Frame to place data in
-         */
-        void readStompBody( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+        Pointer<StompFrame> marshalMessage( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalAck( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalConnectionInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalTransactionInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalShutdownInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalRemoveInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalConsumerInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalRemoveSubscriptionInfo( const Pointer<Command>& command );
 
     };
 

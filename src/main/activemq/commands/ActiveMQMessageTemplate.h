@@ -61,7 +61,7 @@ namespace commands {
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
-        virtual void clearBody() {
+        virtual void clearBody() throw( cms::CMSException ) {
             this->setContent( std::vector<unsigned char>() );
             this->setReadOnlyBody( false );
         }
@@ -70,7 +70,7 @@ namespace commands {
          * Clears the message properties.  Does not clear the body or
          * header values.
          */
-        virtual void clearProperties() {
+        virtual void clearProperties() throw( cms::CMSException ) {
             this->getMessageProperties().clear();
             this->setReadOnlyProperties( false );
         }
@@ -80,7 +80,7 @@ namespace commands {
          * @return The complete set of property names currently in this
          * message.
          */
-        virtual std::vector<std::string> getPropertyNames() const {
+        virtual std::vector<std::string> getPropertyNames() const throw( cms::CMSException ) {
             return getMessageProperties().keySet();
         }
 
@@ -89,7 +89,7 @@ namespace commands {
          * @param name The name of the property to look up.
          * @return True if the property exists in this message.
          */
-        virtual bool propertyExists( const std::string& name ) const {
+        virtual bool propertyExists( const std::string& name ) const throw( cms::CMSException ) {
             return getMessageProperties().containsKey( name );
         }
 
@@ -353,7 +353,7 @@ namespace commands {
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationID() const {
+        virtual std::string getCMSCorrelationID() const throw( cms::CMSException ) {
             return this->getCorrelationId();
         }
 
@@ -361,7 +361,7 @@ namespace commands {
          * Sets the Correlation Id used by this message
          * @param correlationId - String representing the correlation id.
          */
-        virtual void setCMSCorrelationID( const std::string& correlationId ) {
+        virtual void setCMSCorrelationID( const std::string& correlationId ) throw( cms::CMSException ) {
             this->setCorrelationId( correlationId );
         }
 
@@ -369,7 +369,7 @@ namespace commands {
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode() const {
+        virtual int getCMSDeliveryMode() const throw( cms::CMSException ) {
             return this->isPersistent();
         }
 
@@ -377,7 +377,7 @@ namespace commands {
          * Sets the DeliveryMode for this message
          * @param mode - DeliveryMode enumerated value.
          */
-        virtual void setCMSDeliveryMode( int mode ) {
+        virtual void setCMSDeliveryMode( int mode ) throw( cms::CMSException ) {
             this->setPersistent( mode == (int)cms::DeliveryMode::PERSISTENT );
         }
 
@@ -385,7 +385,7 @@ namespace commands {
          * Gets the Destination for this Message, returns a
          * @return Destination object
          */
-        virtual const cms::Destination* getCMSDestination() const {
+        virtual const cms::Destination* getCMSDestination() const throw( cms::CMSException ) {
             return dynamic_cast<const cms::Destination*>( this->getDestination().get() );
         }
 
@@ -393,7 +393,8 @@ namespace commands {
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
-        virtual void setCMSDestination( const cms::Destination* destination ) {
+        virtual void setCMSDestination( const cms::Destination* destination )
+            throw( cms::CMSException ) {
 
             if( destination != NULL ) {
                 this->setDestination(
@@ -408,7 +409,7 @@ namespace commands {
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long long getCMSExpiration() const {
+        virtual long long getCMSExpiration() const throw( cms::CMSException ) {
             return this->getExpiration();
         }
 
@@ -416,7 +417,7 @@ namespace commands {
          * Sets the Expiration Time for this message
          * @param expireTime - time value
          */
-        virtual void setCMSExpiration( long long expireTime ) {
+        virtual void setCMSExpiration( long long expireTime ) throw( cms::CMSException ) {
             this->setExpiration( expireTime );
         }
 
@@ -424,7 +425,7 @@ namespace commands {
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageID() const {
+        virtual std::string getCMSMessageID() const throw( cms::CMSException ) {
             return wireformat::openwire::marshal::BaseDataStreamMarshaller::toString( this->getMessageId().get() );
         }
 
@@ -432,13 +433,13 @@ namespace commands {
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
-        virtual void setCMSMessageID( const std::string& id AMQCPP_UNUSED) {}
+        virtual void setCMSMessageID( const std::string& id AMQCPP_UNUSED ) throw( cms::CMSException )  {}
 
         /**
          * Gets the Priority Value for this Message
          * @return priority value
          */
-        virtual int getCMSPriority() const {
+        virtual int getCMSPriority() const throw( cms::CMSException ) {
             return this->getPriority();
         }
 
@@ -446,7 +447,7 @@ namespace commands {
          * Sets the Priority Value for this message
          * @param priority - priority value for this message
          */
-        virtual void setCMSPriority( int priority ) {
+        virtual void setCMSPriority( int priority ) throw( cms::CMSException ) {
             this->setPriority( priority );
         }
 
@@ -454,7 +455,7 @@ namespace commands {
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
          */
-        virtual bool getCMSRedelivered() const {
+        virtual bool getCMSRedelivered() const throw( cms::CMSException ) {
             return this->getRedeliveryCounter() != 0;
         }
 
@@ -462,13 +463,13 @@ namespace commands {
          * Sets the Redelivered Flag for this message
          * @param redelivered - boolean redelivered value
          */
-        virtual void setCMSRedelivered( bool redelivered AMQCPP_UNUSED) {}
+        virtual void setCMSRedelivered( bool redelivered AMQCPP_UNUSED ) throw( cms::CMSException )  {}
 
         /**
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const cms::Destination* getCMSReplyTo() const {
+        virtual const cms::Destination* getCMSReplyTo() const throw( cms::CMSException ) {
             return dynamic_cast< const cms::Destination* >(
                 this->getReplyTo().get() );
         }
@@ -477,7 +478,7 @@ namespace commands {
          * Sets the CMS Reply To Address for this message
          * @param id - Reply To value
          */
-        virtual void setCMSReplyTo( const cms::Destination* destination ) {
+        virtual void setCMSReplyTo( const cms::Destination* destination ) throw( cms::CMSException ) {
 
             if( destination != NULL ) {
                 this->setReplyTo(
@@ -492,7 +493,7 @@ namespace commands {
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimestamp() const {
+        virtual long long getCMSTimestamp() const throw( cms::CMSException ) {
             return this->getTimestamp();
         }
 
@@ -500,7 +501,7 @@ namespace commands {
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
          */
-        virtual void setCMSTimestamp( long long timeStamp ) {
+        virtual void setCMSTimestamp( long long timeStamp ) throw( cms::CMSException ) {
             this->setTimestamp( timeStamp );
         }
 
@@ -508,7 +509,7 @@ namespace commands {
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSType() const {
+        virtual std::string getCMSType() const throw( cms::CMSException ) {
             return this->getType();
         }
 
@@ -516,7 +517,7 @@ namespace commands {
          * Sets the CMS Message Type for this message
          * @param type - message type value string
          */
-        virtual void setCMSType( const std::string& type ) {
+        virtual void setCMSType( const std::string& type ) throw( cms::CMSException ) {
             this->setType( type );
         }
 

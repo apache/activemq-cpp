@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerAck::ProducerAck() {
+ProducerAck::ProducerAck() : BaseCommand() {
 
     this->size = 0;
 }

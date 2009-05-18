@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DataResponse::DataResponse() {
+DataResponse::DataResponse() : Response() {
 
 }
 

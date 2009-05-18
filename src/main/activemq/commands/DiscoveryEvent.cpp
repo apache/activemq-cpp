@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DiscoveryEvent::DiscoveryEvent() {
+DiscoveryEvent::DiscoveryEvent() : BaseDataStructure() {
 
     this->serviceName = "";
     this->brokerName = "";

@@ -57,8 +57,8 @@ unsigned char StandardInputStream::read() throw ( decaf::io::IOException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int StandardInputStream::read( unsigned char* buffer,
-                               std::size_t offset,
-                               std::size_t bufferSize )
+                               std::size_t offset DECAF_UNUSED,
+                               std::size_t bufferSize DECAF_UNUSED )
     throw ( decaf::io::IOException, decaf::lang::exceptions::NullPointerException ) {
 
     if( buffer == NULL ) {
@@ -71,7 +71,7 @@ int StandardInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::skip( std::size_t num )
+std::size_t StandardInputStream::skip( std::size_t num DECAF_UNUSED )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::UnsupportedOperationException ) {
 

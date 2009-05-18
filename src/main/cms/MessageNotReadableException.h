@@ -21,13 +21,12 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms {
+namespace cms{
 
     /**
-     * This exception must be thrown when an unexpected end of stream has been
-     * reached when a StreamMessage or BytesMessage is being read.
+     * This exception must be thrown when a CMS client attempts to read a write-only message.
      *
-     * @since 1.2
+     * @since 1.3
      */
     class CMS_API MessageNotReadableException : public CMSException {
     public:
