@@ -335,9 +335,9 @@ namespace lang{
         //static double rint( double value );
 
         /**
-         * Returns the smaller of two <code>short</code> values. That is,
-         * the result the argument closer to the value of
-         * <code>Short::MIN_VALUE</code>.  If the arguments have the same
+         * Returns the smaller of two short values. That is, the result is
+         * the argument closer to the value of
+         * <code>decaf.lang.Short::MIN_VALUE</code>.  If the arguments have the same
          * value, the result is that same value.
          * @param a - an argument.
          * @param b - another argument.
@@ -666,7 +666,7 @@ namespace lang{
          *  o If the argument is zero, then the result is a zero with the same sign as
          *    the argument.
          *
-         * @param the value to raise e^x - 1
+         * @param value - the value to raise e^x - 1
          * @returns the value ex - 1.
          */
         //static double expm1( double value );

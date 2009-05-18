@@ -137,26 +137,36 @@ namespace lang{
     public:  // Statics
 
         /**
+         * @param value
+         *      The bool value to convert to a <code>Boolean</code> instance.
+         *
          * @returns a Boolean instance of the primitive boolean value
          */
         static Boolean valueOf( bool value );
 
         /**
+         * @param value
+         *      The std::string value to convert to a <code>Boolean</code> instance.
+         *
          * @returns a Boolean instance of the string value
          */
         static Boolean valueOf( const std::string& value );
 
         /**
          * Parses the String passed and extracts an bool.
-         * @param String to parse
+         *
+         * @param value
+         *      The std::string value to parse
          * @return bool value
          */
         static bool parseBoolean( const std::string& value );
 
         /**
-         * Converts the bool to a String representation
-         * @param bool to convert
-         * @return string representation
+         * Converts the bool to a String representation.
+         *
+         * @param value The bool value to convert.
+         *
+         * @return std::string representation of the bool value passed.
          */
         static std::string toString( bool value );
 

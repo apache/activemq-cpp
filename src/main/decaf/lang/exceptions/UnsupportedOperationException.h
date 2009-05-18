@@ -24,10 +24,12 @@ namespace lang{
 namespace exceptions{
 
     /*
-     * Thrown when an unsupported method is called.
+     * Thrown when an unsupported method is called or an operation cannot be performed
+     * because it was not implemented.
+     *
+     * @since 1.0
      */
-    class DECAF_API UnsupportedOperationException : public lang::Exception
-    {
+    class DECAF_API UnsupportedOperationException : public lang::Exception {
     public:
 
         /**
@@ -37,20 +39,19 @@ namespace exceptions{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         * @param ex An exception that should become this type of Exception
          */
         UnsupportedOperationException( const Exception& ex ) throw()
-        : Exception()
-        {
+        : Exception() {
             *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
+         * @param ex An exception that should become this type of Exception
          */
         UnsupportedOperationException( const UnsupportedOperationException& ex ) throw()
-        : Exception()
-        {
+        : Exception() {
             *(Exception*)this = ex;
         }
 
@@ -58,11 +59,11 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         UnsupportedOperationException( const char* file, const int lineNumber,
                                const std::exception* cause,
@@ -88,10 +89,10 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         UnsupportedOperationException( const char* file,
                                        const int lineNumber,
@@ -110,6 +111,8 @@ namespace exceptions{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return an new Exception instance that is a copy of this one.
          */
         virtual UnsupportedOperationException* clone() const{
             return new UnsupportedOperationException( *this );

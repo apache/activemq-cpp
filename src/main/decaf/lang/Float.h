@@ -51,23 +51,23 @@ namespace lang{
         /** Constant for Positive Infinity */
         static const float POSITIVE_INFINITY;
 
-        /** Constant for Negative Infinitiy */
+        /** Constant for Negative Infinity */
         static const float NEGATIVE_INFINITY;
 
     public:
 
         /**
-         * @param value - the primitve type to wrap
+         * @param value - the primitive type to wrap
          */
         Float( float value );
 
         /**
-         * @param value - the primitve type to wrap
+         * @param value - the primitive type to wrap
          */
         Float( double value );
 
         /**
-         * @param value - the string to convert to a primitve type to wrap
+         * @param value - the string to convert to a primitive type to wrap
          */
         Float( const std::string& value ) throw( exceptions::NumberFormatException );
 
@@ -78,7 +78,7 @@ namespace lang{
          * @param f - the Float instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const Float& f ) const;
@@ -268,7 +268,8 @@ namespace lang{
          * In all cases, the result is an integer that, when given to the
          * intBitsToFloat(int) method, will produce a floating-point value the same
          * as the argument to floatToRawIntBits.
-         * @param the float to convert to a raw int
+         * @param value
+         *      The float to convert to a raw int.
          * @returns the raw int value of the float
          */
         static int floatToRawIntBits( float value );
