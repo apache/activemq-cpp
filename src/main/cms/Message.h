@@ -29,7 +29,7 @@ namespace cms{
      * Root of all messages.  As in JMS, a message is comprised of 3 parts:
      * CMS-specific headers, user-defined properties, and the body.
      *
-     * <B>Message Properties<B>
+     * <B>Message Properties</B>
      *
      * Message properties support the following conversion table. The marked cases
      * must be supported. The unmarked cases must throw a CMSException. The
