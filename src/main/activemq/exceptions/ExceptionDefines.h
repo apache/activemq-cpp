@@ -18,7 +18,7 @@
 #define _ACTIVEMQ_EXCEPTIONS_EXCEPTIONDEFINES_H_
 
 /**
- * Macro for catching and rethrowing an exception of
+ * Macro for catching and re-throwing an exception of
  * a given type.
  * @param type The type of the exception to throw
  * (e.g. ActiveMQException ).
@@ -30,7 +30,7 @@
     }
 
 /**
- * Macro for catching an exception of one type and then rethrowing
+ * Macro for catching an exception of one type and then re-throwing
  * as another type.
  * @param sourceType the type of the exception to be caught.
  * @param targetType the type of the exception to be thrown.
@@ -65,7 +65,7 @@
     }
 
 /**
- * Macro for catching and rethrowing an exception of
+ * Macro for catching and re-throwing an exception of
  * a given type.
  * @param type The type of the exception to throw
  * (e.g. ActiveMQException ).
@@ -76,10 +76,10 @@
     }
 
 /**
- * Macro for catching an exception of one type and then rethrowing
- * as another type.
- * @param sourceType the type of the exception to be caught.
- * @param targetType the type of the exception to be thrown.
+ * Macro for catching an exception of one type and then re-throwing
+ * as a Basic CMSException, good for cases where the method isn't specific
+ * about what CMS Exceptions are thrown, bad if you need to throw an
+ * exception of MessageNotReadableException for instance.
  */
 #define AMQ_CATCH_ALL_THROW_CMSEXCEPTION() \
     catch( cms::CMSException& ex ){ \

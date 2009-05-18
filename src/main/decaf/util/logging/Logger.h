@@ -33,8 +33,7 @@ namespace logging{
     class Handler;
     class Filter;
 
-    class DECAF_API Logger
-    {
+    class DECAF_API Logger {
     private:
 
         // The name of this Logger
@@ -89,7 +88,7 @@ namespace logging{
          * that essentially act as default handlers for all loggers.
          *
          * @param handler A Logging Handler
-         * #throws IllegalArgumentException
+         * @throws IllegalArgumentException
          */
         virtual void addHandler( Handler* handler )
             throw ( lang::exceptions::IllegalArgumentException );
@@ -274,7 +273,7 @@ namespace logging{
          * Handler objects.
          * @param file the file name where the log was generated
          * @param line the line number where the log was generated
-         * @param fnctionName name of the function that logged this
+         * @param functionName name of the function that logged this
          * @param message the message to log
          */
         virtual void fatal( const std::string& file,
@@ -290,11 +289,11 @@ namespace logging{
          * Handler objects.
          * @param file the file name where the log was generated
          * @param line the line number where the log was generated
-         * @param fnctionName name of the function that logged this
+         * @param functionName name of the function that logged this
          * @param message the message to log
         virtual void throwing( const std::string& file,
                                const int line,
-                               const std::string fnctionName,
+                               const std::string functionName,
                                const std::string& message );
          */
 
@@ -337,7 +336,7 @@ namespace logging{
          * @param level the Level to log at
          * @param file the message to log
          * @param line the line in the file
-         * @param variable length arguement to format the message string.
+         * @param ... variable length argument to format the message string.
          */
         virtual void log( Level level,
                           const std::string& file,
@@ -353,9 +352,10 @@ namespace logging{
          * property, rather than the LogRecord parameters property. Thus is
          * it processed specially by output Formatters and is not treated
          * as a formatting parameter to the LogRecord message property.
-         * @param level the Level to log at
-         * @param file File that the message was logged in
+         * @param level the Level to log at.
+         * @param file File that the message was logged in.
          * @param line the line number where the message was logged at.
+         * @param message the message to log.
          * @param ex the Exception to log
          */
         virtual void log( Level level,

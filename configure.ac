@@ -20,7 +20,7 @@ AC_PREREQ(2.61)
 ## --------------------------------
 ## Initialization macros.
 ## --------------------------------
-AC_INIT(activemq-cpp, 1, dev@activemq.apache.org)
+AC_INIT(activemq-cpp, 3.0, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 
@@ -28,7 +28,7 @@ AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 ## Define the Version variables
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
-ACTIVEMQ_VERSION=3.0-RC0
+ACTIVEMQ_VERSION=3.0-RC2
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
 ##
