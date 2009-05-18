@@ -24,45 +24,44 @@
 
 #include <decaf/lang/Exception.h>
 
-namespace activemq{
-namespace connector{
+namespace decaf{
+namespace security_provider{
 
     /**
      * Lookup Map for Connector Factories.  Use the Connector name to
      * find the associated factory.  This class does not take ownership
      * of the stored factories, they must be deallocated somewhere.
      */
-    class SecurityProviderMap
-    {
+    class SecurityProviderMap {
     private:
-   
+
         /**
          * Map of Factories
          */
         std::map< std::string, SecurityProvider* > providerMap;
-                
+
         /**
          * Hidden Contrustor, prevents instantiation
          */
         SecurityProviderMap() {};
-      
+
         /**
          * Hidden Destructor.
          */
         virtual ~SecurityProviderMap() {};
- 
+
         /**
          * Hidden Copy Constructore
          */
         SecurityProviderMap( const ConnectorFactoryMap& factoryMap );
-      
+
         /**
          * Hidden Assignment operator
          */
         SecurityProviderMap operator=( const ConnectorFactoryMap& factoryMap );
-        
+
     public:
-      
+
         /**
          * Gets a singleton instance of this class.
          */
@@ -70,41 +69,41 @@ namespace connector{
 
         /**
          * Registers a new provider with this map
-         * 
-         * @param name 
+         *
+         * @param name
          *      A name to associate the provider with
-         * @param provider 
+         * @param provider
          *      the provider object to store in the map.
         */
-        void registerSecurityProvider( const std::string& name, 
+        void registerSecurityProvider( const std::string& name,
                                        SecurityProvider* provider );
-      
+
         /**
          * Unregisters a provider from this map
-         * 
-         * @param name 
+         *
+         * @param name
          *      the name of the provider to remove
          */
         void unregisterSecurityProvider( const std::string& name );
 
         /**
          * Lookup the named provider in the Map
-         * 
-         * @param name 
+         *
+         * @param name
          *      the provider name to lookup
          * @return the provider assciated with the name, or NULL
          */
         SecurityProvider* lookup( const std::string& name );
-      
+
         /**
          * Fetch a list of provider names that this Map contains
-         * 
-         * @param providers 
+         *
+         * @param providers
          *      A vector object to receive the list
          * @returns count of providers.
          */
         std::size_t getSecurityProviderNames( std::vector< std::string >& providers );
-      
+
     };
 
 }}
