@@ -50,7 +50,8 @@ namespace lang {
          * Swaps this instance's reference counter with the one given, this allows
          * for copy-and-swap semantics of this object.
          *
-         * @param the value to swap with this one's
+         * @param other
+         *      The value to swap with this one's.
          */
         void swap( AtomicRefCounter& other ) {
             std::swap( this->counter, other.counter );

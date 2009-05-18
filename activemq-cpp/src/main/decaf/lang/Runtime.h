@@ -41,7 +41,7 @@ namespace lang {
          * to the application at startup.
          *
          * @param argc - The number of args passed
-         * @param args - Array of char* values passed to the Process on start.
+         * @param argv - Array of char* values passed to the Process on start.
          *
          * @throws runtime_error if the library is already initialized or an
          *         error occurs during initialization.

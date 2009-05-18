@@ -26,6 +26,8 @@ namespace exceptions{
     /*
      * Thrown from an operation that attempts to access some element that does
      * not exist.
+     *
+     * @since 1.0
      */
     class DECAF_API NoSuchElementException : public Exception
     {
@@ -38,7 +40,9 @@ namespace exceptions{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         *
+         * @param ex
+         *      The Exception whose data is to be copied into this one.
          */
         NoSuchElementException( const Exception& ex ) throw()
         : Exception()
@@ -48,6 +52,9 @@ namespace exceptions{
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The Exception whose data is to be copied into this one.
          */
         NoSuchElementException( const NoSuchElementException& ex ) throw()
         : Exception()
@@ -59,11 +66,11 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         NoSuchElementException( const char* file, const int lineNumber,
                                 const std::exception* cause,
@@ -88,10 +95,10 @@ namespace exceptions{
          * Constructor - Initializes the file name and line number where
          * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         NoSuchElementException( const char* file,
                                 const int lineNumber,
@@ -110,6 +117,8 @@ namespace exceptions{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return an new Exception instance that is a copy of this one.
          */
         virtual NoSuchElementException* clone() const{
             return new NoSuchElementException(*this);

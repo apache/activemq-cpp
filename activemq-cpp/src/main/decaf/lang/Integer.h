@@ -49,12 +49,14 @@ namespace lang{
     public:
 
         /**
-         * @param the primitive value to wrap
+         * @param value
+         *      The primitive value to wrap in an <code>Integer</code> instance.
          */
         Integer( int value );
 
         /**
-         * @param the base 10 encoded string to decode to sn int and wrap.
+         * @param value
+         *      The base 10 encoded string to decode to an <code>Integer</code> and wrap.
          * @throws NumberFormatException
          */
         Integer( const std::string& value ) throw( exceptions::NumberFormatException );
@@ -66,7 +68,7 @@ namespace lang{
          * @param i - the Integer instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const Integer& i ) const;
@@ -103,7 +105,7 @@ namespace lang{
          * @param i - the Integer instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const int& i ) const;
@@ -136,7 +138,7 @@ namespace lang{
         }
 
         /**
-         * @returns this Interger Object as a String Representation
+         * @returns this <code>Integer</code> Object as a String Representation
          */
         std::string toString() const;
 
@@ -238,8 +240,8 @@ namespace lang{
          *  * The radix is either smaller than Character.MIN_RADIX or larger than
          *    Character.MAX_RADIX.
          *  * Any character of the string is not a digit of the specified radix,
-         *    except that the first character may be a minus sign '-' ('\u002D')
-         *    provided that the string is longer than length 1.
+         *    except that the first character may be a minus sign '-' provided
+         *    that the string is longer than length 1.
          *  * The value represented by the string is not a value of type int.
          *
          * @param s - the String containing the int representation to be parsed
@@ -253,7 +255,7 @@ namespace lang{
         /**
          * Parses the string argument as a signed decimal int. The characters
          * in the string must all be decimal digits, except that the first
-         * character may be an ASCII minus sign '-' ('\u002D') to indicate a
+         * character may be an ASCII minus sign '-' to indicate a
          * negative value. The resulting int value is returned, exactly as if
          * the argument and the radix 10 were given as arguments to the
          * parseInteger( const std::string, int ) method.
@@ -307,13 +309,14 @@ namespace lang{
          * referred to as the population count.
          * @param value - the int to count
          * @return the number of one-bits in the two's complement binary
-         * representation of the specified int value.
+         *         representation of the specified int value.
          */
         static int bitCount( int value );
 
         /**
          * Converts the int to a String representation
-         * @param int to convert
+         * @param value
+         *      The int to convert to a <code>std::string</code> instance.
          * @return string representation
          */
         static std::string toString( int value );
@@ -387,15 +390,17 @@ namespace lang{
         /**
          * Returns a string representation of the integer argument as an unsigned
          * integer in base 2.
-         *
+         * <p>
          * The unsigned integer value is the argument plus 2^32 if the argument is
          * negative; otherwise it is equal to the argument. This value is converted
          * to a string of ASCII digits in binary (base 2) with no extra leading 0s.
          * If the unsigned magnitude is zero, it is represented by a single zero
-         * character '0' ('\u0030'); otherwise, the first character of the
-         * representation of the unsigned magnitude will not be the zero character.
-         * The characters '0' ('\u0030') and '1' ('\u0031') are used as binary
+         * character '0'; otherwise, the first character of the representation
+         * of the unsigned magnitude will not be the zero character.
+         * <p>
+         * The characters '0' and '1' are used as binary
          * digits.
+         *
          * @param value - the int to be translated to a binary string
          * @returns the unsigned int value as a binary string
          */
