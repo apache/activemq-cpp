@@ -79,6 +79,11 @@ namespace core{
         bool closed;
 
         /**
+         * Indicates that a close is in progress.
+         */
+        bool closing;
+
+        /**
          * Map of message dispatchers indexed by consumer id.
          */
         decaf::util::Map< long long, Dispatcher* > dispatchers;

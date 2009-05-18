@@ -38,6 +38,7 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData) {
     this->connectionData = connectionData;
     this->started = false;
     this->closed = false;
+    this->closing = false;
     this->exceptionListener = NULL;
 
     // Register for messages and exceptions from the connector.
@@ -131,6 +132,8 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
         if( closed ) {
             return;
         }
+
+        this->closing = true;
 
         // Get the complete list of active sessions.
         std::vector<ActiveMQSession*> allSessions;
@@ -257,7 +260,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::onException( const CMSException& ex ){
 
-    if( exceptionListener != NULL ){
+    if( exceptionListener != NULL && !closing ){
         exceptionListener->onException( ex );
     }
 }
