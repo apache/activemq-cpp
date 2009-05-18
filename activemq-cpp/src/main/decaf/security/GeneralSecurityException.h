@@ -28,8 +28,7 @@ namespace security{
      * that provides type safety for all the security-related exception classes
      * that extend from it.
      */
-    class DECAF_API GeneralSecurityException : public GeneralSecurityException
-    {
+    class DECAF_API GeneralSecurityException : public Exception {
     public:
 
         /**
@@ -63,11 +62,11 @@ namespace security{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param message The Message string to report
+         * @param ... list of primitives that are formatted into the message
          */
         GeneralSecurityException( const char* file, const int lineNumber,
                                   const std::exception* cause,
@@ -103,8 +102,8 @@ namespace security{
          *      list of primitives that are formatted into the message
          */
         GeneralSecurityException( const char* file,
-                               const int lineNumber,
-                               const char* msg, ...) throw()
+                                  const int lineNumber,
+                                  const char* msg, ...) throw()
         : Exception()
         {
             va_list vargs;

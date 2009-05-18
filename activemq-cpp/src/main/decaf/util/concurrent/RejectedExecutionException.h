@@ -26,8 +26,7 @@ namespace concurrent{
     /*
      * Exception thrown by an Executor when a task cannot be accepted for execution.
      */
-    class DECAF_API RejectedExecutionException : public decaf::lang::Exception
-    {
+    class DECAF_API RejectedExecutionException : public decaf::lang::Exception {
     public:
 
         /**
@@ -37,11 +36,12 @@ namespace concurrent{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         *
+         * @param ex
+         *      An exception that should become this type of Exception
          */
         RejectedExecutionException( const Exception& ex ) throw()
-        : decaf::lang::Exception()
-        {
+        : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
 
@@ -49,8 +49,7 @@ namespace concurrent{
          * Copy Constructor
          */
         RejectedExecutionException( const RejectedExecutionException& ex ) throw()
-        : decaf::lang::Exception()
-        {
+        : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
 
@@ -66,15 +65,14 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The lie number where the exception occurred.
+         * @param msg The Message to report
+         * @param ... list of primitives that are formatted into the message
          */
         RejectedExecutionException( const char* file, const int lineNumber,
                                     const char* msg, ... ) throw()
-            : decaf::lang::Exception()
-        {
+        : decaf::lang::Exception() {
 
             va_list vargs;
             va_start( vargs, msg );
@@ -88,17 +86,17 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The lie number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The Message to report
+         * @param ... list of primitives that are formatted into the message
          */
         RejectedExecutionException( const char* file, const int lineNumber,
                                     const std::exception* cause,
                                     const char* msg, ... ) throw()
-            : decaf::lang::Exception( cause )
-        {
+        : decaf::lang::Exception( cause ) {
+
             va_list vargs ;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -111,14 +109,13 @@ namespace concurrent{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return A new instance this exception type with a copy the current state.
          */
         virtual RejectedExecutionException* clone() const{
             return new RejectedExecutionException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~RejectedExecutionException() throw() {}
 
     };
