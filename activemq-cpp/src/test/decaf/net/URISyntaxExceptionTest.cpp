@@ -38,5 +38,5 @@ void URISyntaxExceptionTest::test() {
     URISyntaxException e2( __FILE__, __LINE__, "str", "problem");
     CPPUNIT_ASSERT_MESSAGE("returned incorrect reason", e2.getReason() == "problem" );
     CPPUNIT_ASSERT_MESSAGE("returned incorrect input", e2.getInput() == "str" );
-    CPPUNIT_ASSERT_MESSAGE("returned incorrect index", -1 == e2.getIndex());
+    CPPUNIT_ASSERT_MESSAGE("returned incorrect index", -1 == (int)e2.getIndex());
 }

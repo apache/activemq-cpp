@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _CMS_MESSAGEEOFEXCEPTION_H_
-#define _CMS_MESSAGEEOFEXCEPTION_H_
+#ifndef _CMS_ILLEGALSTATEEXCEPTION_H_
+#define _CMS_ILLEGALSTATEEXCEPTION_H_
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
@@ -24,24 +24,26 @@
 namespace cms{
 
     /**
-     * This exception must be thrown when an unexpected end of stream has been
-     * reached when a StreamMessage or BytesMessage is being read.
+     * This exception is thrown when a method is invoked at an illegal or inappropriate
+     * time or if the provider is not in an appropriate state for the requested operation.
+     * For example, this exception must be thrown if Session.commit is called on a
+     * non-transacted session.
      *
      * @since 1.3
      */
-    class CMS_API MessageEOFException : public CMSException {
+    class CMS_API IllegalStateException : public CMSException {
     public:
 
-        MessageEOFException() throw();
+        IllegalStateException() throw();
 
-        MessageEOFException( const MessageEOFException& ex ) throw();
+        IllegalStateException( const IllegalStateException& ex ) throw();
 
-        MessageEOFException( const std::string& message,
-                             const std::exception* cause ) throw();
+        IllegalStateException( const std::string& message,
+                               const std::exception* cause ) throw();
 
-        MessageEOFException( const std::string& message,
-                             const std::exception* cause,
-                             const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+        IllegalStateException( const std::string& message,
+                               const std::exception* cause,
+                               const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
         virtual ~MessageEOFException() throw();
 
@@ -49,4 +51,4 @@ namespace cms{
 
 }
 
-#endif /*_CMS_MESSAGEEOFEXCEPTION_H_*/
+#endif /*_CMS_ILLEGALSTATEEXCEPTION_H_*/

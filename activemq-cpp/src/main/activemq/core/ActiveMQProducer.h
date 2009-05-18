@@ -150,7 +150,7 @@ namespace core{
          * Sets the delivery mode for this Producer
          * @param The DeliveryMode
          */
-        virtual void setDeliveryMode( int mode ) {
+        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ){
             this->defaultDeliveryMode = mode;
         }
 
@@ -158,7 +158,7 @@ namespace core{
          * Gets the delivery mode for this Producer
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const {
+        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
             return this->defaultDeliveryMode;
         }
 
@@ -166,7 +166,7 @@ namespace core{
          * Sets if Message Ids are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID( bool value ) {
+        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
             this->disableMessageId = value;
         }
 
@@ -174,7 +174,7 @@ namespace core{
          * Sets if Message Ids are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageID() const {
+        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
             return this->disableMessageId;
         }
 
@@ -182,7 +182,7 @@ namespace core{
          * Sets if Message Time Stamps are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp( bool value ) {
+        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
             this->disableTimestamps = value;
         }
 
@@ -190,7 +190,7 @@ namespace core{
          * Sets if Message Time Stamps are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const {
+        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
             return this->disableTimestamps;
         }
 
@@ -198,7 +198,7 @@ namespace core{
          * Sets the Priority that this Producers sends messages at
          * @param int value for Priority level
          */
-        virtual void setPriority( int priority ) {
+        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
             this->defaultPriority = priority;
         }
 
@@ -206,7 +206,7 @@ namespace core{
          * Gets the Priority level that this producer sends messages at
          * @return int based priority level
          */
-        virtual int getPriority() const {
+        virtual int getPriority() const throw ( cms::CMSException ) {
             return this->defaultPriority;
         }
 
@@ -214,7 +214,7 @@ namespace core{
          * Sets the Time to Live that this Producers sends messages with
          * @param time The new default time to live value in milliseconds.
          */
-        virtual void setTimeToLive( long long time ) {
+        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
             this->defaultTimeToLive = time;
         }
 
@@ -222,7 +222,7 @@ namespace core{
          * Gets the Time to Live that this producer sends messages with
          * @return The default time to live value in milliseconds.
          */
-        virtual long long getTimeToLive() const {
+        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
             return this->defaultTimeToLive;
         }
 
@@ -230,7 +230,7 @@ namespace core{
          * Sets the Send Timeout that this Producers sends messages with
          * @param time The new default send timeout value in milliseconds.
          */
-        virtual void setSendTimeout( long long time ) {
+        virtual void setSendTimeout( long long time ) throw ( cms::CMSException ) {
             this->sendTimeout = time;
         }
 
@@ -238,7 +238,7 @@ namespace core{
          * Gets the Send Timeout that this producer sends messages with
          * @return The default send timeout value in milliseconds.
          */
-        virtual long long getSendTimeout() const {
+        virtual long long getSendTimeout() const throw ( cms::CMSException ) {
             return this->sendTimeout;
         }
 

@@ -202,6 +202,18 @@ void ActiveMQSession::rollback() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::recover() throw( cms::CMSException ) {
+
+    try{
+
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "Recover Method is not yet supported." );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::clearMessagesInProgress() {
 
     if( this->executor.get() != NULL ) {
@@ -412,6 +424,33 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue AMQCPP_UNUSED )
+    throw( cms::CMSException ) {
+
+    try{
+
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "createBrowser Method is not yet supported." );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue AMQCPP_UNUSED,
+                                                   const std::string& selector AMQCPP_UNUSED )
+    throw( cms::CMSException ) {
+
+    try{
+
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "createBrowser Method is not yet supported." );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
     throw ( cms::CMSException ) {
 
@@ -576,12 +615,12 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const {
+cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const throw ( cms::CMSException ) {
     return this->ackMode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQSession::isTransacted() const {
+bool ActiveMQSession::isTransacted() const throw ( cms::CMSException ) {
     return this->ackMode == Session::SESSION_TRANSACTED;
 }
 

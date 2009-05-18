@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagePull::MessagePull() {
+MessagePull::MessagePull() : BaseCommand() {
 
     this->timeout = 0;
     this->correlationId = "";

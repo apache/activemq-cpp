@@ -27,23 +27,28 @@ namespace cms{
      * If a CMS provider detects a serious problem, it notifies the client
      * application through an <code>ExceptionListener</code> that is registered
      * with the <code>Connection</code>.
+     *
+     * An exception listener allows a client to be notified of a problem asynchronously.
+     * Some connections only consume messages, so they would have no other way to learn
+     * that their connection has failed.
+     *
+     * @since 1.0
      */
-    class CMS_API ExceptionListener
-    {
+    class CMS_API ExceptionListener {
     public:
-   
+
         virtual ~ExceptionListener() {}
-   
+
         /**
          * Called when an exception occurs.  Once notified of an exception
          * the caller should no longer use the resource that generated the
          * exception.
-         * 
+         *
          * @param ex
          *      Exception Object that occurred.
          */
         virtual void onException( const cms::CMSException& ex ) = 0;
-      
+
     };
 
 }

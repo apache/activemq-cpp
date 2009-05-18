@@ -39,14 +39,14 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId() {
+MessageId::MessageId() : BaseDataStructure() {
 
     this->producerSequenceId = 0;
     this->brokerSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const MessageId& other ) {
+MessageId::MessageId( const MessageId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

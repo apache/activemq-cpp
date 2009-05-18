@@ -407,7 +407,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
+void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
 
     try{
 
@@ -444,9 +444,7 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

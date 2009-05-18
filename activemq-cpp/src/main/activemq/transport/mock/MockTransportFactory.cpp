@@ -18,7 +18,6 @@
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <activemq/transport/logging/LoggingTransport.h>
-//#include <activemq/wireformat/stomp/StompResponseBuilder.h>
 #include <activemq/wireformat/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
@@ -110,10 +109,12 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
 
         Pointer<ResponseBuilder> builder;
 
-        if( wireFormatName == "stomp" ) {
-//            builder.reset( new wireformat::stomp::StompResponseBuilder() );
-        } else if( wireFormatName == "openwire" ) {
+        if( wireFormatName == "openwire" || wireFormatName == "stomp" ) {
             builder.reset( new wireformat::openwire::OpenWireResponseBuilder() );
+        } else {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "No Response Builder known for this Wireformat, can't create a Mock." );
         }
 
         Pointer<MockTransport> transport( new MockTransport( wireFormat, builder ) );

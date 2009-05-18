@@ -90,7 +90,7 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* ActiveMQBytesMessage::getBodyBytes() const {
+const unsigned char* ActiveMQBytesMessage::getBodyBytes() const throw ( cms::CMSException ) {
 
     try{
 
@@ -104,7 +104,7 @@ const unsigned char* ActiveMQBytesMessage::getBodyBytes() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::getBodyLength() const {
+std::size_t ActiveMQBytesMessage::getBodyLength() const throw ( cms::CMSException ) {
 
     try{
         return getContent().size();

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,39 +15,31 @@
  * limitations under the License.
  */
 
-#include "AtomicBoolean.h"
+#include "InvalidSelectorException.h"
 
-#include <decaf/lang/Boolean.h>
-#include <apr_atomic.h>
-
-using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::util;
-using namespace decaf::util::concurrent;
-using namespace decaf::util::concurrent::atomic;
+using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicBoolean::AtomicBoolean() : value(0) {
+InvalidSelectorException::InvalidSelectorException() throw() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicBoolean::AtomicBoolean( bool initialValue ) {
-    this->value = initialValue ? 1 : 0;
+InvalidSelectorException::InvalidSelectorException( const InvalidSelectorException& ex )
+    throw() : CMSException( ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AtomicBoolean::compareAndSet( bool expect, bool update ) {
-    unsigned int upd = update ? 1 : 0;
-    unsigned int exp = expect ? 1 : 0;
-    return apr_atomic_cas32( &this->value, upd, exp ) == exp;
+InvalidSelectorException::InvalidSelectorException( const std::string& message, const std::exception* cause )
+    throw() : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AtomicBoolean::getAndSet( bool newValue ) {
-    return apr_atomic_xchg32( &this->value, newValue ) > 0 ? true : false;
+InvalidSelectorException::InvalidSelectorException( const std::string& message,
+                                                    const std::exception* cause,
+                                                    const std::vector< std::pair< std::string, int> >& stackTrace )
+    throw() : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string AtomicBoolean::toString() const {
-    return Boolean::toString( this->value ? true : false );
+InvalidSelectorException::~InvalidSelectorException() throw() {
 }

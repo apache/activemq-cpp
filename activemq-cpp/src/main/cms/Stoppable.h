@@ -14,30 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef CMS_STOPPABLE_H
-#define CMS_STOPPABLE_H
+
+#ifndef _CMS_STOPPABLE_H
+#define _CMS_STOPPABLE_H
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
-    
+
     /**
      * Interface for a class that implements the stop method.
+     *
+     * @since 1.0
      */
     class CMS_API Stoppable{
-        
     public:
-    
-        virtual ~Stoppable(){}
-        
+
+        virtual ~Stoppable() {}
+
         /**
          * Stops this service.
+         *
+         * @throws CMSException - if an internal error occurs whle stopping the Service.
          */
         virtual void stop() throw( CMSException ) = 0;
-        
+
     };
 }
 
-#endif /*CMS_STOPPABLE_H*/
+#endif /*_CMS_STOPPABLE_H*/

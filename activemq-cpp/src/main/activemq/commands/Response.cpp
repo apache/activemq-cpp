@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Response::Response() {
+Response::Response() : BaseCommand() {
 
     this->correlationId = 0;
 }

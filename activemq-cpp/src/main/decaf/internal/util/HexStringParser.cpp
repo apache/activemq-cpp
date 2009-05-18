@@ -293,7 +293,7 @@ int HexStringParser::getOffset(
 
     //If the Integer part is a zero number.
     int i;
-    for( i = 0; (std::size_t)i < strDecimalPart.length() && strDecimalPart.at(i) == '0'; i++ );
+    for( i = 0; (std::size_t)i < strDecimalPart.length() && strDecimalPart.at(i) == '0'; i++ ) {};
 
     if( (std::size_t)i == strDecimalPart.length() ) {
         return 0;

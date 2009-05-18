@@ -24,11 +24,14 @@
 namespace cms{
 
     /**
-     * Place holder for interaction with JMS systems that support Java 
+     * Place holder for interaction with JMS systems that support Java, the C++
+     * client is not responsible for deserializing the contained Object.
+     *
      * serialized <code>ObjectMessage</code>s.
+     *
+     * @since 1.0
      */
-    class CMS_API ObjectMessage : public Message
-    {
+    class CMS_API ObjectMessage : public Message {
     public:
 
         virtual ~ObjectMessage() {}

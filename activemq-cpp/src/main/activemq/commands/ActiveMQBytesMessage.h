@@ -118,7 +118,7 @@ namespace commands{
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
-        virtual void clearBody(){
+        virtual void clearBody() throw( cms::CMSException ) {
 
             // Invoke base class's version.
             ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
@@ -144,13 +144,13 @@ namespace commands{
          * to expect.
          * @return const pointer to a byte buffer
          */
-        virtual const unsigned char* getBodyBytes() const;
+        virtual const unsigned char* getBodyBytes() const throw( cms::CMSException );
 
         /**
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual std::size_t getBodyLength() const;
+        virtual std::size_t getBodyLength() const throw( cms::CMSException );
 
         /**
          * Puts the message body in read-only mode and repositions the stream

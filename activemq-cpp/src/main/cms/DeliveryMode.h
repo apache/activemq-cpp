@@ -20,21 +20,21 @@
 
 #include <cms/Config.h>
 
-namespace cms
-{
+namespace cms{
 
     /**
      * This is an Abstract class whose purpose is to provide a container
-     * for the delivery mode enumeration for CMS messages.  
+     * for the delivery mode enumeration for CMS messages.
+     *
+     * @since 1.0
      */
-    class CMS_API DeliveryMode
-    {
+    class CMS_API DeliveryMode {
     public:
-    
+
         virtual ~DeliveryMode() {}
-        
+
         /**
-         * Enumeration values for Message Delivery Mode   
+         * Enumeration values for Message Delivery Mode
          */
         static const int PERSISTENT = 0;
         static const int NON_PERSISTENT = 1;

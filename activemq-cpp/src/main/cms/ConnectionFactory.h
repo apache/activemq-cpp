@@ -23,8 +23,7 @@
 
 #include <string>
 
-namespace cms
-{
+namespace cms{
 
     /**
      * Defines the interface for a factory that creates connection objects, the Connection
@@ -36,8 +35,7 @@ namespace cms
      *
      * @since 1.0
      */
-    class CMS_API ConnectionFactory
-    {
+    class CMS_API ConnectionFactory {
     public:
 
         virtual ~ConnectionFactory() {}
@@ -77,7 +75,7 @@ namespace cms
          * Creates a connection with the specified user identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
-         * called.  The username and password values passed here do not
+         * called.  The user name and password values passed here do not
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.

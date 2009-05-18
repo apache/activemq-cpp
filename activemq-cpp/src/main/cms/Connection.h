@@ -43,7 +43,7 @@ namespace cms{
      *  - It supports an optional ExceptionListener object.
      *
      * Because the creation of a connection involves setting up authentication and communication,
-     * a connection is a relatively heavyweight object. Most clients will do all their messaging
+     * a connection is a relatively heavy-weight object. Most clients will do all their messaging
      * with a single connection. Other more advanced applications may use several connections.
      * The CMS API does not architect a reason for using multiple connections; however, there
      * may be operational reasons for doing so.

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerInfo::BrokerInfo() {
+BrokerInfo::BrokerInfo() : BaseCommand() {
 
     this->brokerURL = "";
     this->brokerName = "";

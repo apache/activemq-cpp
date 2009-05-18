@@ -39,13 +39,13 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalTransactionId::LocalTransactionId() {
+LocalTransactionId::LocalTransactionId() : TransactionId() {
 
     this->value = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalTransactionId::LocalTransactionId( const LocalTransactionId& other ) {
+LocalTransactionId::LocalTransactionId( const LocalTransactionId& other ) : TransactionId() {
     this->copyDataStructure( &other );
 }
 

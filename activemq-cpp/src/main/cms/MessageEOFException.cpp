@@ -24,7 +24,7 @@ MessageEOFException::MessageEOFException() throw() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageEOFException::MessageEOFException( const MessageEOFException& ex ) throw() : CMSException() {
+MessageEOFException::MessageEOFException( const MessageEOFException& ex ) throw() : CMSException( ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

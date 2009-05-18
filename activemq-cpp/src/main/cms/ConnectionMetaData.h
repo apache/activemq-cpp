@@ -21,10 +21,12 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms {
+namespace cms{
 
     /**
      * A ConnectionMetaData object provides information describing the Connection object.
+     *
+     * @since 1.3
      */
     class CMS_API ConnectionMetaData {
     public:

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveSubscriptionInfo::RemoveSubscriptionInfo() {
+RemoveSubscriptionInfo::RemoveSubscriptionInfo() : BaseCommand() {
 
     this->subcriptionName = "";
     this->clientId = "";

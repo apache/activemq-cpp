@@ -39,13 +39,13 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId() {
+XATransactionId::XATransactionId() : TransactionId() {
 
     this->formatId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId( const XATransactionId& other ) {
+XATransactionId::XATransactionId( const XATransactionId& other ) : TransactionId() {
     this->copyDataStructure( &other );
 }
 

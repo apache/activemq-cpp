@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatch::MessageDispatch() {
+MessageDispatch::MessageDispatch() : BaseCommand() {
 
     this->redeliveryCounter = 0;
 }

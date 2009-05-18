@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionControl::ConnectionControl() {
+ConnectionControl::ConnectionControl() : BaseCommand() {
 
     this->close = false;
     this->exit = false;

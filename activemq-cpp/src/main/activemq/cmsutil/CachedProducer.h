@@ -74,43 +74,43 @@ namespace cmsutil {
             producer->send( destination, message, deliveryMode, priority, timeToLive );
         }
 
-        virtual void setDeliveryMode( int mode ) {
+        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ) {
             producer->setDeliveryMode( mode );
         }
 
-        virtual int getDeliveryMode() const {
+        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
             return producer->getDeliveryMode();
         }
 
-        virtual void setDisableMessageID( bool value ) {
+        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
             producer->setDisableMessageID( value );
         }
 
-        virtual bool getDisableMessageID() const {
+        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
             return producer->getDisableMessageID();
         }
 
-        virtual void setDisableMessageTimeStamp( bool value ) {
+        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
             producer->setDisableMessageTimeStamp( value );
         }
 
-        virtual bool getDisableMessageTimeStamp() const {
+        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
             return producer->getDisableMessageTimeStamp();
         }
 
-        virtual void setPriority( int priority ) {
+        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
             producer->setPriority( priority );
         }
 
-        virtual int getPriority() const {
+        virtual int getPriority() const throw ( cms::CMSException ) {
             return producer->getPriority();
         }
 
-        virtual void setTimeToLive( long long time ) {
+        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
             producer->setTimeToLive( time );
         }
 
-        virtual long long getTimeToLive() const {
+        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
             return producer->getTimeToLive();
         }
 

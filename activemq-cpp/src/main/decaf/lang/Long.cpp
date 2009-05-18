@@ -286,12 +286,12 @@ long long Long::reverse( long long value ) {
     unsigned long long uvalue = (unsigned long long)value;
 
     // From Hacker's Delight, 7-1, Figure 7-1
-    uvalue = ( uvalue & 0x5555555555555555ULL ) << 1 | (uvalue >> 1) &
-             0x5555555555555555ULL;
-    uvalue = ( uvalue & 0x3333333333333333ULL ) << 2 | (uvalue >> 2) &
-             0x3333333333333333ULL;
-    uvalue = ( uvalue & 0x0F0F0F0F0F0F0F0FULL ) << 4 | (uvalue >> 4) &
-             0x0F0F0F0F0F0F0F0FULL;
+    uvalue = ( ( uvalue & 0x5555555555555555ULL ) << 1 ) | ( (uvalue >> 1) &
+             0x5555555555555555ULL );
+    uvalue = ( ( uvalue & 0x3333333333333333ULL ) << 2 ) | ( (uvalue >> 2) &
+             0x3333333333333333ULL );
+    uvalue = ( ( uvalue & 0x0F0F0F0F0F0F0F0FULL ) << 4 ) | ( (uvalue >> 4) &
+             0x0F0F0F0F0F0F0F0FULL );
 
     return reverseBytes( uvalue );
 }

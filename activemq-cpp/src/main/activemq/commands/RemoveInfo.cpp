@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveInfo::RemoveInfo() {
+RemoveInfo::RemoveInfo() : BaseCommand() {
 
 }
 

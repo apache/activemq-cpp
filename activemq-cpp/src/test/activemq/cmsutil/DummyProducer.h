@@ -24,7 +24,7 @@
 namespace activemq {
 namespace cmsutil {
 
-    class DummyProducer : public cms::MessageProducer {  
+    class DummyProducer : public cms::MessageProducer {
     private:
         const cms::Destination* dest;
         int deliveryMode;
@@ -33,7 +33,7 @@ namespace cmsutil {
         int priority;
         long long ttl;
         MessageContext* messageContext;
-        
+
     public:
 
         DummyProducer(MessageContext* messageContext, const cms::Destination* dest) {
@@ -46,14 +46,14 @@ namespace cmsutil {
             this->messageContext = messageContext;
         }
         virtual ~DummyProducer() {}
-              
+
         virtual void close() throw( cms::CMSException ){}
-        
+
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
          * Uses default values for deliveryMode, priority, and time to live.
-         * 
+         *
          * @param message
          *      The message to be sent.
          * @throws cms::CMSException
@@ -65,28 +65,28 @@ namespace cmsutil {
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * 
+         *
          * @param message
          *      The message to be sent.
-         * @param deliveryMode 
+         * @param deliveryMode
          *      The delivery mode to be used.
-         * @param priority 
+         * @param priority
          *      The priority for this message.
-         * @param timeToLive 
+         * @param timeToLive
          *      The time to live value for this message in milliseconds.
          * @throws cms::CMSException
          */
-        virtual void send( cms::Message* message, int deliveryMode, int priority, 
+        virtual void send( cms::Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( cms::CMSException ){
-            
+
             send(dest, message, deliveryMode, priority, timeToLive);
         }
-            
+
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
          * Uses default values for deliveryMode, priority, and time to live.
-         * 
+         *
          * @param destination
          *      The destination on which to send the message
          * @param message
@@ -97,65 +97,65 @@ namespace cmsutil {
                            cms::Message* message ) throw ( cms::CMSException ){
             send(dest, message, deliveryMode, priority, ttl);
         }
-                           
+
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * 
+         *
          * @param destination
          *      The destination on which to send the message
          * @param message
          *      The message to be sent.
          * @param deliveryMode
          *      The delivery mode to be used.
-         * @param priority 
+         * @param priority
          *      The priority for this message.
-         * @param timeToLive 
+         * @param timeToLive
          *      The time to live value for this message in milliseconds.
          * @throws cms::CMSException
-         */     
+         */
         virtual void send( const cms::Destination* destination,
-            cms::Message* message, int deliveryMode, int priority, 
+            cms::Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( cms::CMSException ){
-            
+
             messageContext->send(destination, message, deliveryMode, priority, timeToLive);
         }
-            
-        /** 
+
+        /**
          * Sets the delivery mode for this Producer
-         * 
+         *
          * @param mode
          *      The DeliveryMode
          */
-        virtual void setDeliveryMode( int mode ) {
+        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ) {
             this->deliveryMode = mode;
         }
-      
-        /** 
+
+        /**
          * Gets the delivery mode for this Producer
-         * 
+         *
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const {
+        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
             return deliveryMode;
         }
-      
+
         /**
          * Sets if Message Ids are disbled for this Producer
-         * 
+         *
          * @param value
          *      boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID( bool value ) {
+        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
             disableMessageId = value;
         }
-      
+
         /**
          * Gets if Message Ids are disbled for this Producer
-         * 
+         *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageID() const {
+        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
             return disableMessageId;
         }
 
@@ -163,61 +163,61 @@ namespace cmsutil {
          * Sets if Message Time Stamps are disbled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp( bool value ) {
+        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
             disableMessageTimestamp = value;
         }
-      
+
         /**
          * Gets if Message Time Stamps are disbled for this Producer
-         * 
+         *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const {
+        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
             return disableMessageTimestamp;
         }
-      
+
         /**
          * Sets the Priority that this Producers sends messages at
-         * 
+         *
          * @param priority
          *      int value for Priority level
          */
-        virtual void setPriority( int priority ) {
+        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
             this->priority = priority;
         }
-      
+
         /**
          * Gets the Priority level that this producer sends messages at
-         * 
+         *
          * @return int based priority level
          */
-        virtual int getPriority() const {
+        virtual int getPriority() const throw ( cms::CMSException ) {
             return priority;
         }
-      
+
         /**
          * Sets the Time to Live that this Producers sends messages with.  This
          * value will be used if the time to live is not specified via the
          * send method.
-         * 
+         *
          * @param time
          *      default time to live value in milliseconds
          */
-        virtual void setTimeToLive( long long time ) {
+        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
             ttl = time;
         }
-      
+
         /**
          * Gets the Time to Live that this producer sends messages with
-         * 
+         *
          * @return Time to live value in milliseconds
          */
-        virtual long long getTimeToLive() const {
+        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
             return ttl;
         }
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_CMSUTIL_DUMMYPRODUCER_H_*/
