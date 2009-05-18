@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _CMS_MESSAGEPRODUCER_H_
 #define _CMS_MESSAGEPRODUCER_H_
 
@@ -25,173 +25,200 @@
 #include <cms/CMSException.h>
 #include <cms/DeliveryMode.h>
 
-namespace cms
-{
-    /** 
-     * A client uses a <code>MessageProducer</code> object to send messages to 
-     * a destination. A <code>MessageProducer</code> object is created by 
-     * passing a <code>Destination</code> object to a message-producer creation 
+namespace cms{
+
+    /**
+     * A client uses a <code>MessageProducer</code> object to send messages to
+     * a destination. A <code>MessageProducer</code> object is created by
+     * passing a <code>Destination</code> object to a message-producer creation
      * method supplied by a session.<br>
      * <br>
-     * A client also has the option of creating a message producer without 
-     * supplying a destination. In this case, a destination must be provided 
-     * with every send operation. A typical use for this kind of message 
-     * producer is to send replies to requests using the request's CMSReplyTo 
+     * A client also has the option of creating a message producer without
+     * supplying a destination. In this case, a destination must be provided
+     * with every send operation. A typical use for this kind of message
+     * producer is to send replies to requests using the request's CMSReplyTo
      * destination.<br>
      * <br>
-     * A client can specify a default delivery mode, priority, and time to live 
-     * for messages sent by a message producer. It can also specify the 
+     * A client can specify a default delivery mode, priority, and time to live
+     * for messages sent by a message producer. It can also specify the
      * delivery mode, priority, and time to live for an individual message.<br>
      * <br>
-     * A client can specify a time-to-live value in milliseconds for each 
-     * message it sends. This value defines a message expiration time that is 
-     * the sum of the message's time-to-live and the GMT when it is sent (for 
-     * transacted sends, this is the time the client sends the message, not the 
-     * time the transaction is committed). 
+     * A client can specify a time-to-live value in milliseconds for each
+     * message it sends. This value defines a message expiration time that is
+     * the sum of the message's time-to-live and the GMT when it is sent (for
+     * transacted sends, this is the time the client sends the message, not the
+     * time the transaction is committed).
+     *
+     * @since 1.0
      */
-    class CMS_API MessageProducer : public Closeable
-    {
+    class CMS_API MessageProducer : public Closeable {
     public:
 
         virtual ~MessageProducer() {}
-      
+
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
          * Uses default values for deliveryMode, priority, and time to live.
-         * 
+         *
          * @param message
          *      The message to be sent.
-         * @throws CMSException
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void send( Message* message ) throw ( CMSException ) = 0;             
+        virtual void send( Message* message ) throw ( CMSException ) = 0;
 
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * 
+         *
          * @param message
          *      The message to be sent.
-         * @param deliveryMode 
+         * @param deliveryMode
          *      The delivery mode to be used.
-         * @param priority 
+         * @param priority
          *      The priority for this message.
-         * @param timeToLive 
+         * @param timeToLive
          *      The time to live value for this message in milliseconds.
-         * @throws CMSException
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void send( Message* message, int deliveryMode, int priority, 
+        virtual void send( Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( CMSException ) = 0;
-            
+
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
          * Uses default values for deliveryMode, priority, and time to live.
-         * 
+         *
          * @param destination
          *      The destination on which to send the message
          * @param message
          *      the message to be sent.
-         * @throws CMSException
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void send( const Destination* destination,
-                           Message* message ) throw ( CMSException ) = 0;
-                           
+        virtual void send( const Destination* destination, Message* message )
+            throw ( CMSException ) = 0;
+
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * 
+         *
          * @param destination
          *      The destination on which to send the message
          * @param message
          *      The message to be sent.
          * @param deliveryMode
          *      The delivery mode to be used.
-         * @param priority 
+         * @param priority
          *      The priority for this message.
-         * @param timeToLive 
+         * @param timeToLive
          *      The time to live value for this message in milliseconds.
-         * @throws CMSException
-         */     
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
         virtual void send( const Destination* destination,
-            Message* message, int deliveryMode, int priority, 
+            Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( CMSException ) = 0;
-            
-        /** 
-         * Sets the delivery mode for this Producer
-         * 
-         * @param mode
-         *      The DeliveryMode
-         */
-        virtual void setDeliveryMode( int mode ) = 0;
-      
-        /** 
-         * Gets the delivery mode for this Producer
-         * 
-         * @return The DeliveryMode
-         */
-        virtual int getDeliveryMode() const = 0;
-      
-        /**
-         * Sets if Message Ids are disbled for this Producer
-         * 
-         * @param value
-         *      boolean indicating enable / disable (true / false)
-         */
-        virtual void setDisableMessageID( bool value ) = 0;
-      
-        /**
-         * Gets if Message Ids are disbled for this Producer
-         * 
-         * @return boolean indicating enable / disable (true / false)
-         */
-        virtual bool getDisableMessageID() const = 0;
 
         /**
-         * Sets if Message Time Stamps are disbled for this Producer
-         * @param value - boolean indicating enable / disable (true / false)
+         * Sets the delivery mode for this Producer
+         *
+         * @param mode
+         *      The DeliveryMode
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void setDisableMessageTimeStamp( bool value ) = 0;
-      
+        virtual void setDeliveryMode( int mode ) throw ( CMSException ) = 0;
+
         /**
-         * Gets if Message Time Stamps are disbled for this Producer
-         * 
-         * @return boolean indicating enable / disable (true / false)
+         * Gets the delivery mode for this Producer
+         *
+         * @return The DeliveryMode
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual bool getDisableMessageTimeStamp() const = 0;
-      
+        virtual int getDeliveryMode() const throw ( CMSException ) = 0;
+
+        /**
+         * Sets if Message Ids are disabled for this Producer
+         *
+         * @param value
+         *      boolean indicating enable / disable (true / false)
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
+        virtual void setDisableMessageID( bool value ) throw ( CMSException ) = 0;
+
+        /**
+         * Gets if Message Ids are disabled for this Producer
+         *
+         * @return boolean indicating enable / disable (true / false)
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
+        virtual bool getDisableMessageID() const throw ( CMSException ) = 0;
+
+        /**
+         * Sets if Message Time Stamps are disabled for this Producer
+         * @param value - boolean indicating enable / disable (true / false)
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
+        virtual void setDisableMessageTimeStamp( bool value )
+            throw ( CMSException ) = 0;
+
+        /**
+         * Gets if Message Time Stamps are disabled for this Producer
+         *
+         * @return boolean indicating enable / disable (true / false)
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
+        virtual bool getDisableMessageTimeStamp() const
+            throw ( CMSException ) = 0;
+
         /**
          * Sets the Priority that this Producers sends messages at
-         * 
+         *
          * @param priority
          *      int value for Priority level
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void setPriority( int priority ) = 0;
-      
+        virtual void setPriority( int priority ) throw ( CMSException ) = 0;
+
         /**
          * Gets the Priority level that this producer sends messages at
-         * 
+         *
          * @return int based priority level
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual int getPriority() const = 0;
-      
+        virtual int getPriority() const throw ( CMSException ) = 0;
+
         /**
          * Sets the Time to Live that this Producers sends messages with.  This
          * value will be used if the time to live is not specified via the
          * send method.
-         * 
+         *
          * @param time
          *      default time to live value in milliseconds
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual void setTimeToLive( long long time ) = 0;
-      
+        virtual void setTimeToLive( long long time ) throw ( CMSException ) = 0;
+
         /**
          * Gets the Time to Live that this producer sends messages with
-         * 
+         *
          * @return Time to live value in milliseconds
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual long long getTimeToLive() const = 0;
-      
+        virtual long long getTimeToLive() const throw ( CMSException ) = 0;
+
     };
 
 }

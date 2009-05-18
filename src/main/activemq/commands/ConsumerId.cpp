@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId::ConsumerId() {
+ConsumerId::ConsumerId() : BaseDataStructure() {
 
     this->connectionId = "";
     this->sessionId = 0;
@@ -47,7 +47,7 @@ ConsumerId::ConsumerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId::ConsumerId( const ConsumerId& other ) {
+ConsumerId::ConsumerId( const ConsumerId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

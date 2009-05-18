@@ -26,5 +26,5 @@ URL::URL() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL( const std::string& url ) {
+URL::URL( const std::string& url DECAF_UNUSED ) {
 }

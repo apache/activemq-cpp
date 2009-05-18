@@ -98,9 +98,9 @@ void ActiveMQExceptionTest::testMacros() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQExceptionTest::testMessage0(){
-    char* text = "This is a test";
-      ActiveMQException ex( __FILE__, __LINE__, text );
-      CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
+    const char* text = "This is a test";
+    ActiveMQException ex( __FILE__, __LINE__, text );
+    CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

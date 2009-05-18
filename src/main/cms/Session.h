@@ -28,12 +28,12 @@
 #include <cms/MessageConsumer.h>
 #include <cms/Topic.h>
 #include <cms/Queue.h>
+#include <cms/QueueBrowser.h>
 #include <cms/TemporaryTopic.h>
 #include <cms/TemporaryQueue.h>
 #include <cms/CMSException.h>
 
-namespace cms
-{
+namespace cms{
 
     /**
      * A Session object is a single-threaded context for producing and consuming
@@ -64,13 +64,25 @@ namespace cms
      * If a client desires to have one thread produce messages while others consume
      * them, the client should use a separate session for its producing thread.
      *
+     * Certain rules apply to a session's <code>close</code> method and are detailed
+     * below.
+     *
+     *  - There is no need to close the producers and consumers of a closed session.
+     *  - The close call will block until a receive call or message listener in progress
+     *    has completed. A blocked message consumer receive call returns null when this
+     *    session is closed.
+     *  - Closing a transacted session must roll back the transaction in progress.
+     *  - The close method is the only Session method that can be called concurrently.
+     *  - Invoking any other Session method on a closed session must throw an
+     *    IllegalStateException. Closing a closed session must not throw  any exceptions.
+     *
      * @since 1.0
      */
     class CMS_API Session : public Closeable {
     public:
 
-        enum AcknowledgeMode
-        {
+        enum AcknowledgeMode {
+
             /**
              * With this acknowledgment mode, the session automatically
              * acknowledges a client's receipt of a message either when
@@ -119,7 +131,7 @@ namespace cms
          * Closes this session as well as any active child consumers or
          * producers.
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual void close() throw( CMSException ) = 0;
 
@@ -127,7 +139,8 @@ namespace cms
          * Commits all messages done in this transaction and releases any
          * locks currently held.
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
+         * @throws IllegalStateException - if the method is not called by a transacted session.
          */
         virtual void commit() throw ( CMSException ) = 0;
 
@@ -135,9 +148,32 @@ namespace cms
          * Rolls back all messages done in this transaction and releases any
          * locks currently held.
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
+         * @throws IllegalStateException - if the method is not called by a transacted session.
          */
         virtual void rollback() throw ( CMSException ) = 0;
+
+        /**
+         * Stops message delivery in this session, and restarts message delivery with the
+         * oldest unacknowledged message.
+         *
+         * All consumers deliver messages in a serial order. Acknowledging a received message
+         * automatically acknowledges all messages that have been delivered to the client.
+         *
+         * Restarting a session causes it to take the following actions:
+         *
+         *  - Stop message delivery
+         *  - Mark all messages that might have been delivered but not acknowledged
+         *    as "redelivered"
+         *  - Restart the delivery sequence including all unacknowledged messages that had
+         *    been previously delivered.  Redelivered messages do not have to be delivered in
+         *    exactly their original delivery order.
+         *
+         * @throws CMSException - if the CMS provider fails to stop and restart message
+         *                        delivery due to some internal error.
+         * @throws IllegalStateException - if the method is called by a transacted session.
+         */
+        virtual void recover() throw( CMSException ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination.
@@ -146,11 +182,12 @@ namespace cms
          *      the Destination that this consumer receiving messages for.
          * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageConsumer* createConsumer(
-            const Destination* destination )
-                throw ( CMSException ) = 0;
+        virtual MessageConsumer* createConsumer( const Destination* destination )
+            throw ( CMSException ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination, using a
@@ -162,7 +199,10 @@ namespace cms
          *      the Message Selector to use
          * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if an invalid destination is specified.
+         * @throws InvalidSelectorException - if the message selector is invalid.
          */
         virtual MessageConsumer* createConsumer(
             const Destination* destination,
@@ -183,7 +223,10 @@ namespace cms
          *      for NoLocal is not specified if the destination is a queue.
          * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if an invalid destination is specified.
+         * @throws InvalidSelectorException - if the message selector is invalid.
          */
         virtual MessageConsumer* createConsumer(
             const Destination* destination,
@@ -192,8 +235,10 @@ namespace cms
                 throw ( CMSException ) = 0;
 
         /**
-         * Creates a durable subscriber to the specified topic, using a
-         * message selector
+         * Creates a durable subscriber to the specified topic, using a Message
+         * selector.  Sessions that create durable consumers must use the same client Id
+         * as was used the last time the subscription was created in order to receive
+         * all messages that were delivered while the client was offline.
          *
          * @param destination
          *      the topic to subscribe to
@@ -207,7 +252,10 @@ namespace cms
          *      for NoLocal is not specified if the destination is a queue.
          * @return pointer to a new durable MessageConsumer that is owned by
          *         the caller ( caller deletes )
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if an invalid destination is specified.
+         * @throws InvalidSelectorException - if the message selector is invalid.
          */
         virtual MessageConsumer* createDurableConsumer(
             const Topic* destination,
@@ -223,10 +271,40 @@ namespace cms
          * @param destination
          *      the Destination to send on
          * @return New MessageProducer that is owned by the caller.
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if an invalid destination is specified.
          */
         virtual MessageProducer* createProducer( const Destination* destination )
             throw ( CMSException ) = 0;
+
+        /**
+         * Creates a new QueueBrowser to peek at Messages on the given Queue.
+         *
+         * @param queue
+         *      the Queue to browse
+         * @return New QueueBrowser that is owned by the caller.
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if the destination given is invalid.
+         */
+        virtual QueueBrowser* createBrowser( const cms::Queue* queue )
+            throw( CMSException ) = 0;
+
+        /**
+         * Creates a new QueueBrowser to peek at Messages on the given Queue.
+         *
+         * @param queue
+         *      the Queue to browse
+         * @param selector
+         *      the Message selector to filter which messages are browsed.
+         * @return New QueueBrowser that is owned by the caller.
+         *
+         * @throws CMSException - If an internal error occurs.
+         * @throws InvalidDestinationException - if the destination given is invalid.
+         */
+        virtual QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
+            throw( CMSException ) = 0;
 
         /**
          * Creates a queue identity given a Queue name.
@@ -234,7 +312,8 @@ namespace cms
          * @param queueName
          *      the name of the new Queue
          * @return new Queue pointer that is owned by the caller.
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual Queue* createQueue( const std::string& queueName )
             throw ( CMSException ) = 0;
@@ -245,7 +324,8 @@ namespace cms
          * @param topicName
          *      the name of the new Topic
          * @return new Topic pointer that is owned by the caller.
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual Topic* createTopic( const std::string& topicName )
             throw ( CMSException ) = 0;
@@ -254,7 +334,8 @@ namespace cms
          * Creates a TemporaryQueue object.
          *
          * @return new TemporaryQueue pointer that is owned by the caller.
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual TemporaryQueue* createTemporaryQueue()
             throw ( CMSException ) = 0;
@@ -262,7 +343,7 @@ namespace cms
         /**
          * Creates a TemporaryTopic object.
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual TemporaryTopic* createTemporaryTopic()
             throw ( CMSException ) = 0;
@@ -270,7 +351,7 @@ namespace cms
         /**
          * Creates a new Message
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual Message* createMessage()
             throw ( CMSException ) = 0;
@@ -278,7 +359,7 @@ namespace cms
         /**
          * Creates a BytesMessage
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual BytesMessage* createBytesMessage()
             throw ( CMSException) = 0;
@@ -290,7 +371,8 @@ namespace cms
          *      an array of bytes to set in the message
          * @param bytesSize
          *      the size of the bytes array, or number of bytes to use
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual BytesMessage* createBytesMessage(
             const unsigned char* bytes,
@@ -300,7 +382,7 @@ namespace cms
         /**
          * Creates a new StreamMessage
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual StreamMessage* createStreamMessage()
             throw ( CMSException ) = 0;
@@ -308,7 +390,7 @@ namespace cms
         /**
          * Creates a new TextMessage
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual TextMessage* createTextMessage()
             throw ( CMSException ) = 0;
@@ -318,7 +400,8 @@ namespace cms
          *
          * @param text
          *      the initial text for the message
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual TextMessage* createTextMessage( const std::string& text )
             throw ( CMSException ) = 0;
@@ -326,7 +409,7 @@ namespace cms
         /**
          * Creates a new MapMessage
          *
-         * @throws CMSException
+         * @throws CMSException - If an internal error occurs.
          */
         virtual MapMessage* createMapMessage()
             throw ( CMSException ) = 0;
@@ -335,15 +418,20 @@ namespace cms
          * Returns the acknowledgment mode of the session.
          *
          * @return the Sessions Acknowledge Mode
+         *
+         * @throws CMSException - If an internal error occurs.
          */
-        virtual AcknowledgeMode getAcknowledgeMode() const = 0;
+        virtual AcknowledgeMode getAcknowledgeMode() const
+            throw ( CMSException ) = 0;
 
         /**
          * Gets if the Sessions is a Transacted Session
          *
          * @return transacted true - false.
+         *
+         * @throws CMSException - If an internal error occurs.
          */
-        virtual bool isTransacted() const = 0;
+        virtual bool isTransacted() const throw ( CMSException ) = 0;
 
         /**
          * Unsubscribes a durable subscription that has been created by a
@@ -358,7 +446,8 @@ namespace cms
          *
          * @param name
          *      The name used to identify this subscription
-         * @throws CMSException
+         *
+         * @throws CMSException - If an internal error occurs.
          */
         virtual void unsubscribe( const std::string& name )
             throw ( CMSException ) = 0;

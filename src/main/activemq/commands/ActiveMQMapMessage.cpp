@@ -154,7 +154,7 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> ActiveMQMapMessage::getMapNames() const {
+std::vector<std::string> ActiveMQMapMessage::getMapNames() const throw ( cms::CMSException ) {
 
     try{
         return getMap().keySet();
@@ -163,7 +163,7 @@ std::vector<std::string> ActiveMQMapMessage::getMapNames() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQMapMessage::itemExists( const std::string& name ) const {
+bool ActiveMQMapMessage::itemExists( const std::string& name ) const throw ( cms::CMSException ) {
 
     try{
         return getMap().containsKey( name );

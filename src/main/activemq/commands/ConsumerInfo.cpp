@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo::ConsumerInfo() {
+ConsumerInfo::ConsumerInfo() : BaseCommand() {
 
     this->browser = false;
     this->prefetchSize = 0;

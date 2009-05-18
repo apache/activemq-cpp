@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_MARSHALERHELPER_H_
-#define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_MARSHALERHELPER_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_STOMPHELPER_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_STOMPHELPER_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/util/LongSequenceGenerator.h>
@@ -32,7 +32,6 @@
 namespace activemq {
 namespace wireformat {
 namespace stomp {
-namespace marshal {
 
     using decaf::lang::Pointer;
     using activemq::commands::Message;
@@ -47,15 +46,15 @@ namespace marshal {
      *
      * @since 3.0
      */
-    class MarshalerHelper {
+    class StompHelper {
     private:
 
         activemq::util::LongSequenceGenerator messageIdGenerator;
 
     public:
 
-        MarshalerHelper() {}
-        virtual ~MarshalerHelper() {}
+        StompHelper() {}
+        virtual ~StompHelper() {}
 
         /**
          * Converts the Headers in a Stomp Frame into Headers in the given Message
@@ -157,6 +156,6 @@ namespace marshal {
 
     };
 
-}}}}
+}}}
 
-#endif /* _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_MARSHALERHELPER_H_ */
+#endif /* _ACTIVEMQ_WIREFORMAT_STOMP_MARSHAL_STOMPHELPER_H_ */

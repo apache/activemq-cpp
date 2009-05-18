@@ -22,7 +22,8 @@
 #include <string.h>
 #include <map>
 #include <decaf/util/Properties.h>
-#include <decaf/io/OutputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/DataInputStream.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -165,11 +166,61 @@ namespace stomp{
         void setBody( const unsigned char* bytes, std::size_t numBytes );
 
         /**
-         * Writes this Frame to an OuputStream in the Stomp Frame Format.
+         * Writes this Frame to an OuputStream in the Stomp Wire Format.
          *
          * @param stream - The stream to write the Frame to.
+         *
+         * @throw IOException if an error occurs while reading the Frame.
          */
-        void toStream( decaf::io::OutputStream* stream ) const;
+        void toStream( decaf::io::DataOutputStream* stream ) const
+            throw ( decaf::io::IOException );
+
+        /**
+         * Reads a Stop Frame from a DataInputStream in the Stomp Wire format.
+         *
+         * @param stream - The stream to read the Frame from.
+         *
+         * @throw IOException if an error occurs while writing the Frame.
+         */
+        void fromStream( decaf::io::DataInputStream* stream )
+            throw ( decaf::io::IOException );
+
+    private:
+
+        /**
+         * Read the Stomp Command from the Frame
+         * @param in - The stream to read the Frame from.
+         * @throws IOException
+         */
+        void readCommandHeader( decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Read all the Stomp Headers for the incoming Frame
+         * @param in - The stream to read the Frame from.
+         * @throws IOException
+         */
+        void readHeaders( decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Reads a Stomp Header line and stores it in the buffer object
+         * @param buffer - reference to a memory buffer to store the read line in.
+         * @param in - The stream to read the Frame from.
+         * @return number of bytes read, zero if there was a problem.
+         * @throws IOException
+         */
+        std::size_t readHeaderLine( std::vector<unsigned char>& buffer,
+                                    decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Reads the Stomp Body from the Wire and store it in the frame.
+         * @param in - The stream to read the Frame from.
+         * @throws IOException
+         */
+        void readBody( decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
 
     };
 

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SubscriptionInfo::SubscriptionInfo() {
+SubscriptionInfo::SubscriptionInfo() : BaseDataStructure() {
 
     this->clientId = "";
     this->selector = "";

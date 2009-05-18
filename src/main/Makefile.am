@@ -89,10 +89,13 @@ cc_sources = \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/DataInputStream.cpp \
     cms/MessageNotWriteableException.cpp \
+    cms/InvalidSelectorException.cpp \
+    cms/InvalidDestinationException.cpp \
     cms/CMSException.cpp \
     cms/CMSSecurityException.cpp \
     cms/MessageEOFException.cpp \
     cms/MessageNotReadableException.cpp \
+    cms/InvalidClientIdException.cpp \
     cms/MessageFormatException.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/mock/MockTransport.cpp \
@@ -309,10 +312,8 @@ cc_sources = \
     activemq/wireformat/openwire/utils/BooleanStream.cpp \
     activemq/wireformat/openwire/utils/HexTable.cpp \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.cpp \
-    activemq/wireformat/stomp/StompResponseBuilder.cpp \
     activemq/wireformat/stomp/StompCommandConstants.cpp \
-    activemq/wireformat/stomp/marshal/Marshaler.cpp \
-    activemq/wireformat/stomp/marshal/MarshalerHelper.cpp \
+    activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/stomp/StompFrame.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
@@ -603,11 +604,14 @@ h_sources = \
     cms/QueueBrowser.h \
     cms/MessageEOFException.h \
     cms/TemporaryQueue.h \
+    cms/InvalidSelectorException.h \
     cms/MapMessage.h \
     cms/Connection.h \
     cms/ConnectionMetaData.h \
     cms/Message.h \
+    cms/InvalidDestinationException.h \
     cms/Session.h \
+    cms/InvalidClientIdException.h \
     cms/ExceptionListener.h \
     cms/Stoppable.h \
     cms/StreamMessage.h \
@@ -853,10 +857,8 @@ h_sources = \
     activemq/wireformat/WireFormatNegotiator.h \
     activemq/wireformat/stomp/StompFrame.h \
     activemq/wireformat/stomp/StompCommandConstants.h \
-    activemq/wireformat/stomp/StompResponseBuilder.h \
     activemq/wireformat/stomp/StompWireFormatFactory.h \
-    activemq/wireformat/stomp/marshal/Marshaler.h \
-    activemq/wireformat/stomp/marshal/MarshalerHelper.h \
+    activemq/wireformat/stomp/StompHelper.h \
     activemq/wireformat/stomp/StompWireFormat.h \
     activemq/wireformat/WireFormatFactory.h \
     activemq/wireformat/MarshalAware.h \

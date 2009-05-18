@@ -21,14 +21,14 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms {
+namespace cms{
 
     /**
      * This exception must be thrown when a provider rejects a user name/password submitted
      * by a client. It may also be thrown for any case where a security restriction prevents
      * a method from completing.
      *
-     * @since 1.2
+     * @since 1.3
      */
     class CMS_API CMSSecurityException : public CMSException {
     public:

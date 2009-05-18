@@ -19,15 +19,40 @@
 
 #include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/wireformat/stomp/StompCommandConstants.h>
+#include <activemq/core/ActiveMQConstants.h>
 #include <activemq/commands/Response.h>
+#include <activemq/commands/ActiveMQMessage.h>
+#include <activemq/commands/ActiveMQTextMessage.h>
+#include <activemq/commands/ActiveMQBytesMessage.h>
+#include <activemq/commands/Response.h>
+#include <activemq/commands/BrokerError.h>
+#include <activemq/commands/MessageAck.h>
+#include <activemq/commands/MessageDispatch.h>
+#include <activemq/commands/ConnectionInfo.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/ExceptionResponse.h>
+#include <activemq/commands/ShutdownInfo.h>
+#include <activemq/commands/RemoveInfo.h>
+#include <activemq/commands/TransactionInfo.h>
+#include <activemq/commands/LocalTransactionId.h>
+#include <activemq/commands/ProducerInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/RemoveSubscriptionInfo.h>
+
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Long.h>
+#include <decaf/lang/exceptions/ClassCastException.h>
 #include <decaf/io/IOException.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataOutputStream.h>
 #include <memory>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::commands;
+using namespace activemq::core;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::stomp;
 using namespace decaf;
@@ -58,7 +83,25 @@ void StompWireFormat::marshal( const Pointer<Command>& command,
                 "output stream is NULL" );
         }
 
-        Pointer<StompFrame> frame = marshaler.marshal( command );
+        Pointer<StompFrame> frame;
+
+        if( command->isMessage() ) {
+            frame = this->marshalMessage( command );
+        } else if( command->isRemoveInfo() ) {
+            frame = this->marshalRemoveInfo( command );
+        } else if( command->isShutdownInfo() ) {
+            frame = this->marshalShutdownInfo( command );
+        } else if( command->isMessageAck() ) {
+            frame = this->marshalAck( command );
+        } else if( command->isConnectionInfo() ) {
+            frame = this->marshalConnectionInfo( command );
+        } else if( command->isTransactionInfo() ) {
+            frame = this->marshalTransactionInfo( command );
+        } else if( command->isConsumerInfo() ) {
+            frame = this->marshalConsumerInfo( command );
+        } else if( command->isRemoveSubscriptionInfo() ) {
+            frame = this->marshalRemoveSubscriptionInfo( command );
+        }
 
         // Some commands just don't translate to Stomp Commands, unless they require
         // a response we can just ignore them.
@@ -90,6 +133,16 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
                                              decaf::io::DataInputStream* in )
     throw ( decaf::io::IOException ) {
 
+    if( transport == NULL ) {
+        throw decaf::io::IOException(
+            __FILE__, __LINE__, "Transport passed is NULL" );
+    }
+
+    if( in == NULL ) {
+        throw decaf::io::IOException(
+            __FILE__, __LINE__, "DataInputStream passed is NULL" );
+    }
+
     Pointer<StompFrame> frame;
 
     try{
@@ -98,16 +151,25 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
         frame.reset( new StompFrame() );
 
         // Read the command header.
-        readStompCommandHeader( frame, in );
-
-        // Read the headers.
-        readStompHeaders( frame, in );
-
-        // Read the body.
-        readStompBody( frame, in );
+        frame->fromStream( in );
 
         // Return the Command.
-        return marshaler.marshal( frame );
+        const std::string commandId = frame->getCommand();
+
+        if( commandId == StompCommandConstants::CONNECTED ){
+            return this->unmarshalConnected( frame );
+        } else if( commandId == StompCommandConstants::ERROR_CMD ){
+            return this->unmarshalError( frame );
+        } else if( commandId == StompCommandConstants::RECEIPT ){
+            return this->unmarshalReceipt( frame );
+        } else if( commandId == StompCommandConstants::MESSAGE ){
+            return this->unmarshalMessage( frame );
+        }
+
+        // We didn't seem to know what it was we got, so throw an exception.
+        throw decaf::io::IOException(
+            __FILE__, __LINE__,
+            "StompWireFormat::marshal - No Command Created from frame" );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
@@ -124,209 +186,341 @@ Pointer<transport::Transport> StompWireFormat::createNegotiator(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompCommandHeader( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-   throw ( decaf::io::IOException ) {
+Pointer<Command> StompWireFormat::unmarshalMessage( const Pointer<StompFrame>& frame ) {
 
-    try{
+    Pointer<MessageDispatch> messageDispatch( new MessageDispatch() );
 
-        while( true ) {
+    // We created a unique id when we registered the subscription for the consumer
+    // now extract it back to a consumer Id so the ActiveMQConnection can dispatch it
+    // correctly.
+    Pointer<ConsumerId> consumerId = helper.convertConsumerId(
+        frame->removeProperty( StompCommandConstants::HEADER_SUBSCRIPTION ) );
+    messageDispatch->setConsumerId( consumerId );
 
-            // The command header is formatted
-            // just like any other stomp header.
-            readStompHeaderLine( in );
+    if( frame->hasProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) ) {
 
-            // Ignore all white space before the command.
-            long long offset = -1;
-            for( size_t ix = 0; ix < buffer.size()-1; ++ix ) {
+        Pointer<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
+        frame->removeProperty( StompCommandConstants::HEADER_CONTENTLENGTH );
+        helper.convertProperties( frame, message );
+        message->setContent( frame->getBody() );
+        messageDispatch->setMessage( message );
+        messageDispatch->setDestination( message->getDestination() );
 
-                // Find the first non whitespace character
-                if( !Character::isWhitespace( buffer[ix] ) ){
-                    offset = (long long)ix;
-                    break;
-                }
-            }
+    } else {
 
-            if( offset >= 0 ) {
-                // Set the command in the frame - copy the memory.
-                frame->setCommand( reinterpret_cast<char*>( &buffer[(size_t)offset] ) );
-                break;
-            }
-        }
+        Pointer<ActiveMQTextMessage> message( new ActiveMQTextMessage() );
+        helper.convertProperties( frame, message );
+        message->setText( (char*)&(frame->getBody()[0]) );
+        messageDispatch->setMessage( message );
+        messageDispatch->setDestination( message->getDestination() );
+
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+
+    return messageDispatch;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompHeaders( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-    throw ( decaf::io::IOException ) {
+Pointer<Command> StompWireFormat::unmarshalReceipt( const Pointer<StompFrame>& frame ){
 
-    try{
+    Pointer<Response> response( new Response() );
+    if( frame->hasProperty( StompCommandConstants::HEADER_RECEIPTID ) ) {
 
-        // Read the command;
-        bool endOfHeaders = false;
-
-        while( !endOfHeaders ) {
-
-            // Read in the next header line.
-            std::size_t numChars = readStompHeaderLine( in );
-
-            if( numChars == 0 ) {
-
-                // should never get here
-                throw decaf::io::IOException(
-                    __FILE__, __LINE__,
-                    "StompWireFormat::readStompHeaders: no characters read" );
-            }
-
-            // Check for an empty line to demark the end of the header section.
-            // if its not the end then we have a header to process, so parse it.
-            if( numChars == 1 && buffer[0] == '\0' ) {
-
-                endOfHeaders = true;
-
-            } else {
-
-                // Search through this line to separate the key/value pair.
-                for( size_t ix = 0; ix < buffer.size(); ++ix ) {
-
-                    // If found the key/value separator...
-                    if( buffer[ix] == ':' ) {
-
-                        // Null-terminate the key.
-                        buffer[ix] = '\0';
-
-                        const char* key = reinterpret_cast<char*>( &buffer[0] );
-                        const char* value = reinterpret_cast<char*>( &buffer[ix+1] );
-
-                        // Assign the header key/value pair.
-                        frame->getProperties().setProperty( key, value );
-
-                        // Break out of the for loop.
-                        break;
-                    }
-                }
-            }
+        std::string responseId = frame->getProperty( StompCommandConstants::HEADER_RECEIPTID );
+        if( responseId.find( "ignore:" ) == 0 ) {
+            responseId = responseId.substr( 7 );
         }
+
+        response->setCorrelationId( Integer::parseInt( responseId ) );
+    } else {
+        throw IOException(
+            __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+
+    return response;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StompWireFormat::readStompHeaderLine( decaf::io::DataInputStream* in )
-    throw ( decaf::io::IOException ) {
+Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame ) {
 
-    try{
-
-        // Clear any data from the buffer.
-        buffer.clear();
-
-        std::size_t count = 0;
-
-        while( true ) {
-
-            // Read the next char from the stream.
-            buffer.push_back( in->readByte() );
-
-            // Increment the position pointer.
-            count++;
-
-            // If we reached the line terminator, return the total number
-            // of characters read.
-            if( buffer[count-1] == '\n' ) {
-                // Overwrite the line feed with a null character.
-                buffer[count-1] = '\0';
-                return count;
-            }
-        }
-
-        // If we get here something bad must have happened.
-        throw decaf::io::IOException(
-            __FILE__, __LINE__,
-            "StompWireFormat::readStompHeaderLine: "
-            "Unrecoverable, error condition");
+    Pointer<Response> response( new Response() );
+    if( frame->hasProperty( StompCommandConstants::HEADER_RESPONSEID ) ) {
+        response->setCorrelationId( Integer::parseInt(
+            frame->getProperty( StompCommandConstants::HEADER_RESPONSEID ) ) );
+    } else {
+        throw IOException(
+            __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+
+    return response;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::readStompBody( Pointer<StompFrame>& frame, decaf::io::DataInputStream* in )
-   throw ( decaf::io::IOException ) {
+Pointer<Command> StompWireFormat::unmarshalError( const Pointer<StompFrame>& frame ) {
 
-    try{
+    Pointer<BrokerError> error( new BrokerError() );
+    error->setMessage(
+        frame->removeProperty( StompCommandConstants::HEADER_MESSAGE ) );
 
-        // Clear any data from the buffer.
-        buffer.clear();
+    if( frame->hasProperty( StompCommandConstants::HEADER_RECEIPTID ) ) {
 
-        unsigned int content_length = 0;
+        std::string responseId = frame->removeProperty( StompCommandConstants::HEADER_RECEIPTID );
 
-        if( frame->hasProperty( StompCommandConstants::HEADER_CONTENTLENGTH ) ) {
-            string length = frame->getProperty( StompCommandConstants::HEADER_CONTENTLENGTH );
-            content_length = (unsigned int)Integer::parseInt( length );
-         }
+        // If we indicated that we don't care if the request failed then just create a
+        // response command to answer the request.
+        if( responseId.find( "ignore:" ) == 0 ) {
 
-         if( content_length != 0 ) {
-            // For this case its assumed that content length indicates how
-            // much to read.  We reserve space in the buffer for it to
-            // minimize the number of reallocs that might occur.  We are
-            // assuming that content length doesn't count the trailing null
-            // that indicates the end of frame.  The reserve won't do anything
-            // if the buffer already has that much capacity.  The resize call
-            // basically sets the end iterator to the correct location since
-            // this is a char vector and we already reserve enough space.
-            // Resize doesn't realloc the vector smaller if content_length
-            // is less than capacity of the buffer, it just move the end
-            // iterator.  Reserve adds the benefit that the mem is set to
-            // zero.  Over time as larger messages come in this will cause
-            // us to adapt to that size so that future messages that are
-            // around that size won't alloc any new memory.
-
-            buffer.reserve( (std::size_t)content_length );
-            buffer.resize( (std::size_t)content_length );
-
-            // Read the Content Length now
-            in->read( &buffer[0], 0, content_length );
-
-            // Content Length read, now pop the end terminator off (\0\n).
-            if( in->readByte() != '\0' ) {
-
-                throw decaf::io::IOException(
-                    __FILE__, __LINE__,
-                    "StompWireFormat::readStompBody: "
-                    "Read Content Length, and no trailing null");
-            }
+            Pointer<Response> response( new Response() );
+            response->setCorrelationId( Integer::parseInt( responseId.substr( 7 ) ) );
+            return response;
 
         } else {
 
-            // Content length was either zero, or not set, so we read until the
-            // first null is encountered.
-            while( true ) {
-
-                char byte = in->readByte();
-
-                buffer.push_back(byte);
-
-                content_length++;
-
-                if( byte != '\0' ) {
-                    continue;
-                }
-
-                break;  // Read null and newline we are done.
-            }
+            Pointer<ExceptionResponse> errorResponse( new ExceptionResponse() );
+            errorResponse->setException( error );
+            errorResponse->setCorrelationId( Integer::parseInt( responseId ) );
+            return errorResponse;
         }
 
-        if( content_length != 0 ) {
-            // Set the body contents in the frame - copy the memory
-            frame->getBody() = buffer;
-        }
+    } else {
+        return error;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalMessage( const Pointer<Command>& command ) {
+
+    Pointer<Message> message = command.dynamicCast<Message>();
+
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::SEND );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
+    // Convert the standard headers to the Stomp Format.
+    helper.convertProperties( message, frame );
+
+    // Convert the Content
+    try{
+        Pointer<ActiveMQTextMessage> txtMessage = message.dynamicCast<ActiveMQTextMessage>();
+        std::string text = txtMessage->getText();
+        frame->setBody( (unsigned char*)text.c_str(), text.length() + 1 );
+        return frame;
+    } catch( ClassCastException& ex ) {}
+
+    try{
+        Pointer<ActiveMQBytesMessage> bytesMessage = message.dynamicCast<ActiveMQBytesMessage>();
+        frame->setBody( bytesMessage->getBodyBytes(), bytesMessage->getBodyLength() );
+        frame->setProperty( StompCommandConstants::HEADER_CONTENTLENGTH,
+                            Long::toString( bytesMessage->getBodyLength() ) );
+        return frame;
+    } catch( ClassCastException& ex ) {}
+
+    throw UnsupportedOperationException(
+        __FILE__, __LINE__,
+        "Stomp StompWireFormat can't marshal message of type: %s",
+        typeid( message.get() ).name() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalAck( const Pointer<Command>& command ) {
+
+    Pointer<MessageAck> ack = command.dynamicCast<MessageAck>();
+
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::ACK );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            std::string( "ignore:" ) + Integer::toString( command->getCommandId() ) );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_MESSAGEID,
+                        helper.convertMessageId( ack->getLastMessageId() ) );
+
+    if( ack->getTransactionId() != NULL ) {
+        frame->setProperty( StompCommandConstants::HEADER_TRANSACTIONID,
+                            helper.convertTransactionId( ack->getTransactionId() ) );
+    }
+
+    return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalConnectionInfo( const Pointer<Command>& command ) {
+
+    Pointer<ConnectionInfo> info = command.dynamicCast<ConnectionInfo>();
+
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::CONNECT );
+    frame->setProperty( StompCommandConstants::HEADER_CLIENT_ID, info->getClientId() );
+    frame->setProperty( StompCommandConstants::HEADER_LOGIN, info->getUserName() );
+    frame->setProperty( StompCommandConstants::HEADER_PASSWORD, info->getPassword() );
+    frame->setProperty( StompCommandConstants::HEADER_REQUESTID,
+                        Integer::toString( info->getCommandId() ) );
+
+    // Store this for later.
+    this->clientId = info->getClientId();
+
+    return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalTransactionInfo( const Pointer<Command>& command ) {
+
+    Pointer<TransactionInfo> info = command.dynamicCast<TransactionInfo>();
+    Pointer<LocalTransactionId> id = info->getTransactionId().dynamicCast<LocalTransactionId>();
+
+    Pointer<StompFrame> frame( new StompFrame() );
+
+    if( info->getType() == ActiveMQConstants::TRANSACTION_STATE_BEGIN ) {
+        frame->setCommand( StompCommandConstants::BEGIN );
+    } else if( info->getType() == ActiveMQConstants::TRANSACTION_STATE_ROLLBACK ) {
+        frame->setCommand( StompCommandConstants::ABORT );
+    } else if( info->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE ) {
+        frame->setCommand( StompCommandConstants::COMMIT );
+    }
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_TRANSACTIONID,
+                        helper.convertTransactionId( info->getTransactionId() ) );
+
+    return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalShutdownInfo( const Pointer<Command>& command AMQCPP_UNUSED ) {
+
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::DISCONNECT );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
+    return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalRemoveInfo( const Pointer<Command>& command ) {
+
+    Pointer<RemoveInfo> info = command.dynamicCast<RemoveInfo>();
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
+    try{
+        Pointer<ConsumerId> id = info->getObjectId().dynamicCast<ConsumerId>();
+        frame->setProperty( StompCommandConstants::HEADER_ID, helper.convertConsumerId( id ) );
+        return frame;
+    } catch( ClassCastException& ex ) {}
+
+    return Pointer<StompFrame>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalConsumerInfo( const Pointer<Command>& command ) {
+
+    Pointer<ConsumerInfo> info = command.dynamicCast<ConsumerInfo>();
+
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::SUBSCRIBE );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            Integer::toString( command->getCommandId() ) );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_DESTINATION,
+                        helper.convertDestination( info->getDestination() ) );
+
+    // This creates a unique Id for this consumer using the connection id, session id and
+    // the consumers's id value, when we get a message this Id will be embedded in the
+    // Message's "subscription" property.
+    frame->setProperty( StompCommandConstants::HEADER_ID,
+                        helper.convertConsumerId( info->getConsumerId() ) );
+
+    if( info->getSubscriptionName() != "" ) {
+
+        if( this->clientId != info->getSubscriptionName() ) {
+            throw UnsupportedOperationException(
+                __FILE__, __LINE__,
+                "Stomp Durable Subscriptions require that the ClientId and the Subscription "
+                "Name match, clientId = {%s} : subscription name = {%s}.",
+                this->clientId.c_str(), info->getSubscriptionName().c_str() );
+        }
+
+        frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
+                            info->getSubscriptionName() );
+        // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
+        frame->setProperty( StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME,
+                            info->getSubscriptionName() );
+    }
+
+    if( info->getSelector() != "" ) {
+        frame->setProperty( StompCommandConstants::HEADER_SELECTOR,
+                            info->getSelector() );
+    }
+
+    // TODO - This should eventually check the session to see what its mode really is.
+    //        This will work for now but in order to add individual ack we need to check.
+    frame->setProperty( StompCommandConstants::HEADER_ACK, "client" );
+
+    if( info->isNoLocal() ) {
+        frame->setProperty( StompCommandConstants::HEADER_NOLOCAL, "true" );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_DISPATCH_ASYNC,
+                        Boolean::toString( info->isDispatchAsync() ) );
+
+    if( info->isExclusive() ) {
+        frame->setProperty( StompCommandConstants::HEADER_EXCLUSIVE, "true" );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_MAXPENDINGMSGLIMIT,
+                        Integer::toString( info->getMaximumPendingMessageLimit() ) );
+    frame->setProperty( StompCommandConstants::HEADER_PREFETCHSIZE,
+                        Integer::toString( info->getPrefetchSize() ) );
+    frame->setProperty( StompCommandConstants::HEADER_CONSUMERPRIORITY,
+                        Integer::toString( info->getPriority() ) );
+
+    if( info->isRetroactive() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RETROACTIVE, "true" );
+    }
+
+    return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<StompFrame> StompWireFormat::marshalRemoveSubscriptionInfo( const Pointer<Command>& command ) {
+
+    Pointer<RemoveSubscriptionInfo> info = command.dynamicCast<RemoveSubscriptionInfo>();
+    Pointer<StompFrame> frame( new StompFrame() );
+    frame->setCommand( StompCommandConstants::UNSUBSCRIBE );
+
+    if( command->isResponseRequired() ) {
+        frame->setProperty( StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                            std::string( "ignore:" ) + Integer::toString( command->getCommandId() ) );
+    }
+
+    frame->setProperty( StompCommandConstants::HEADER_ID, info->getClientId() );
+    frame->setProperty( StompCommandConstants::HEADER_SUBSCRIPTIONNAME,
+                        info->getClientId() );
+
+    // Older Brokers had an misspelled property name, this ensure we can talk to them as well.
+    frame->setProperty( StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME,
+                        info->getClientId() );
+
+    return frame;
 }

@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatchNotification::MessageDispatchNotification() {
+MessageDispatchNotification::MessageDispatchNotification() : BaseCommand() {
 
     this->deliverySequenceId = 0;
 }

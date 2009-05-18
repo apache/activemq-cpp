@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerControl::ConsumerControl() {
+ConsumerControl::ConsumerControl() : BaseCommand() {
 
     this->close = false;
     this->prefetch = 0;

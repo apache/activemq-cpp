@@ -306,8 +306,6 @@ CharBuffer* CharArrayBuffer::slice() const {
 CharSequence* CharArrayBuffer::subSequence( std::size_t start, std::size_t end ) const
     throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
-    CharArrayBuffer* buffer = NULL;
-
     try{
 
         if( start > end ) {

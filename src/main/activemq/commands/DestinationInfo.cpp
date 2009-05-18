@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DestinationInfo::DestinationInfo() {
+DestinationInfo::DestinationInfo() : BaseCommand() {
 
     this->operationType = 0;
     this->timeout = 0;

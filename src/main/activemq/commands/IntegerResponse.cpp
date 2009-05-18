@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegerResponse::IntegerResponse() {
+IntegerResponse::IntegerResponse() : Response() {
 
     this->result = 0;
 }

@@ -24,14 +24,14 @@
 namespace activemq {
 namespace cmsutil {
 
-    class DummyConsumer : public cms::MessageConsumer {  
+    class DummyConsumer : public cms::MessageConsumer {
     private:
         std::string selector;
         cms::MessageListener* listener;
         MessageContext* messageContext;
         const cms::Destination* dest;
         bool noLocal;
-        
+
     public:
 
         DummyConsumer(MessageContext* messageContext, const cms::Destination* dest, const std::string& selector, bool noLocal) {
@@ -42,7 +42,7 @@ namespace cmsutil {
             this->listener = NULL;
         }
         virtual ~DummyConsumer() {}
-              
+
         virtual void close() throw( cms::CMSException ){}
 
         virtual cms::Message* receive() throw ( cms::CMSException ) {
@@ -57,21 +57,21 @@ namespace cmsutil {
             return messageContext->receive(dest, selector, noLocal, -1);
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) {
+        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
             this->listener = listener;
         }
 
-        virtual cms::MessageListener* getMessageListener() const {
+        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
             return listener;
         }
 
-        virtual std::string getMessageSelector() const 
+        virtual std::string getMessageSelector() const
             throw ( cms::CMSException ) {
             return selector;
         }
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_*/

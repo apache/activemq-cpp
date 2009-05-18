@@ -42,14 +42,14 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId() {
+SessionId::SessionId() : BaseDataStructure() {
 
     this->connectionId = "";
     this->value = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const SessionId& other ) {
+SessionId::SessionId( const SessionId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

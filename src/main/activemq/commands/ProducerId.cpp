@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId() {
+ProducerId::ProducerId() : BaseDataStructure() {
 
     this->connectionId = "";
     this->value = 0;
@@ -47,7 +47,7 @@ ProducerId::ProducerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId( const ProducerId& other ) {
+ProducerId::ProducerId( const ProducerId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

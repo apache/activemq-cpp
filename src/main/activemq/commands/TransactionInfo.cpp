@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionInfo::TransactionInfo() {
+TransactionInfo::TransactionInfo() : BaseCommand() {
 
     this->type = 0;
 }

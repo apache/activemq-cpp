@@ -35,15 +35,16 @@ namespace cms{
 
         /**
          * Gets the name of this topic.
-         * 
+         *
          * @return The topic name.
+         *
+         * @throws CMSException - if an internal error occurs.
          */
-        virtual std::string getTopicName()
-            const throw( CMSException ) = 0;
+        virtual std::string getTopicName() const throw( CMSException ) = 0;
 
         /**
          * Destroy's the Temp Destination at the Broker
-         * 
+         *
          * @throws CMSException
          */
         virtual void destroy() throw ( CMSException ) = 0;

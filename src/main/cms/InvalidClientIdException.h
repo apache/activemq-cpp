@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
-#define _CMS_MESSAGENOTWRITEABLEEXCEPTION_H_
+#ifndef _CMS_INVALICLIENTIDEXCEPTION_H_
+#define _CMS_INVALICLIENTIDEXCEPTION_H_
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
@@ -24,28 +24,29 @@
 namespace cms{
 
     /**
-     * This exception must be thrown when a CMS client attempts to write to a read-only message.
+     * This exception must be thrown when a client attempts to set a connection's
+     * client ID to a value that is rejected by a provider.
      *
      * @since 1.3
      */
-    class CMS_API MessageNotWriteableException : public CMSException {
+    class CMS_API InvalidClientIdException : public CMSException {
     public:
 
-        MessageNotWriteableException() throw();
+        InvalidClientIdException() throw();
 
-        MessageNotWriteableException( const MessageNotWriteableException& ex ) throw();
+        InvalidClientIdException( const InvalidClientIdException& ex ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause ) throw();
+        InvalidClientIdException( const std::string& message,
+                                  const std::exception* cause ) throw();
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause,
-                                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+        InvalidClientIdException( const std::string& message,
+                                  const std::exception* cause,
+                                  const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
-        virtual ~MessageNotWriteableException() throw();
+        virtual ~InvalidClientIdException() throw();
 
     };
 
 }
 
-#endif /*_CMS_MESSAGENOTWRITEABLEEXCEPTION_H_*/
+#endif /*_CMS_INVALICLIENTIDEXCEPTION_H_*/

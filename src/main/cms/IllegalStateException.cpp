@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,27 +15,31 @@
  * limitations under the License.
  */
 
-#include "IntegrationCommon.h"
+#include "IllegalStateException.h"
 
-using namespace activemq;
-using namespace util;
-
-////////////////////////////////////////////////////////////////////////////////
-const int IntegrationCommon::defaultDelay = 1000;
-const unsigned int IntegrationCommon::defaultMsgCount = 2000;
-bool IntegrationCommon::debug = false;
+using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegrationCommon::IntegrationCommon() {
-
-    this->urlCommon = "tcp://localhost:";
-    this->stompURL = this->urlCommon + "61613?wireFormat=stomp";
-    this->openwireURL = this->urlCommon + "61616?wireFormat=openwire";
+IllegalStateException::IllegalStateException() throw() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegrationCommon& IntegrationCommon::getInstance() {
-    static IntegrationCommon instance;
+IllegalStateException::IllegalStateException( const IllegalStateException& ex )
+    throw() : CMSException( ex ) {
+}
 
-    return instance;
+////////////////////////////////////////////////////////////////////////////////
+IllegalStateException::IllegalStateException( const std::string& message, const std::exception* cause )
+    throw() : CMSException( message, cause ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IllegalStateException::IllegalStateException( const std::string& message,
+                                              const std::exception* cause,
+                                              const std::vector< std::pair< std::string, int> >& stackTrace )
+    throw() : CMSException( message, cause, stackTrace ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IllegalStateException::~IllegalStateException() throw() {
 }

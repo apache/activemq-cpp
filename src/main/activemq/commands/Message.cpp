@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Message::Message() {
+Message::Message() : BaseCommand() {
 
     this->ackHandler = NULL;
     this->readOnlyBody = false;

@@ -14,30 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef CMS_STARTABLE_H
-#define CMS_STARTABLE_H
+
+#ifndef _CMS_STARTABLE_H
+#define _CMS_STARTABLE_H
 
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
-    
+
     /**
      * Interface for a class that implements the start method.
+     *
+     * @since 1.0
      */
-    class CMS_API Startable{
-        
+    class CMS_API Startable {
     public:
-    
-        virtual ~Startable(){}
-        
+
+        virtual ~Startable() {}
+
         /**
          * Starts the service.
+         *
+         * @throws CMSException if an internal error occurs while starting.
          */
         virtual void start() throw( CMSException ) = 0;
-        
+
     };
 }
 
-#endif /*CMS_STARTABLE_H*/
+#endif /*_CMS_STARTABLE_H*/

@@ -28,6 +28,8 @@ namespace cms{
     /**
      * Interface for a Java-like properties object.  This is essentially
      * a map of key-value string pairs.
+     *
+     * @since 1.1
      */
     class CMS_API CMSProperties {
     public:
@@ -36,15 +38,15 @@ namespace cms{
 
         /**
          * Returns true if the properties object is empty
-         * 
+         *
          * @return true if empty
          */
         virtual bool isEmpty() const = 0;
 
         /**
          * Looks up the value for the given property.
-         * 
-         * @param name 
+         *
+         * @param name
          *      The name of the property to be looked up.
          * @return the value of the property with the given name, if it
          *         exists.  If it does not exist, returns NULL.
@@ -53,10 +55,10 @@ namespace cms{
 
         /**
          * Looks up the value for the given property.
-         * 
-         * @param name 
+         *
+         * @param name
          *      the name of the property to be looked up.
-         * @param defaultValue 
+         * @param defaultValue
          *      The value to be returned if the given property does not exist.
          * @return The value of the property specified by <code>name</code>, if it
          *         exists, otherwise the <code>defaultValue</code>.
@@ -68,10 +70,10 @@ namespace cms{
         /**
          * Sets the value for a given property.  If the property already
          * exists, overwrites the value.
-         * 
-         * @param name 
+         *
+         * @param name
          *      The name of the value to be written.
-         * @param value 
+         * @param value
          *      The value to be written.
          */
         virtual void setProperty(
@@ -80,8 +82,8 @@ namespace cms{
 
         /**
          * Check to see if the Property exists in the set
-         * 
-         * @param name 
+         *
+         * @param name
          *      the name of the property to check
          * @return true if property exists, false otherwise.
          */
@@ -89,8 +91,8 @@ namespace cms{
 
         /**
          * Removes the property with the given name.
-         * 
-         * @param name 
+         *
+         * @param name
          *      the name of the property to be removed.s
          */
         virtual void remove( const std::string& name ) = 0;
@@ -98,7 +100,7 @@ namespace cms{
         /**
          * Method that serializes the contents of the property map to
          * an arryay.
-         * 
+         *
          * @return list of pairs where the first is the name and the second
          *         is the value.
          */
@@ -106,15 +108,15 @@ namespace cms{
 
         /**
          * Copies the contents of the given properties object to this one.
-         * 
-         * @param source 
+         *
+         * @param source
          *      The source properties object.
          */
         virtual void copy( const CMSProperties* source ) = 0;
 
         /**
          * Clones this object.
-         * 
+         *
          * @returns a replica of this object.
          */
         virtual CMSProperties* clone() const = 0;
@@ -127,7 +129,7 @@ namespace cms{
         /**
          * Formats the contents of the Properties Object into a string
          * that can be logged, etc.
-         * 
+         *
          * @returns string value of this object.
          */
         virtual std::string toString() const = 0;

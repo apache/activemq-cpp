@@ -23,37 +23,46 @@
 #include <cms/CMSException.h>
 
 namespace cms{
-    
+
     /**
      * Interface for a text message.
+     *
+     * @since 1.0
      */
     class CMS_API TextMessage : public Message{
-
     public:
 
         virtual ~TextMessage(){}
 
         /**
          * Gets the message character buffer.
-         * 
+         *
          * @return The message character buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
          */
         virtual std::string getText() const throw( CMSException ) = 0;
 
         /**
          * Sets the message contents, does not take ownership of the passed
          * char*, but copies it instead.
-         * 
-         * @param msg 
+         *
+         * @param msg
          *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
         virtual void setText( const char* msg ) throw( CMSException ) = 0;
 
         /**
          * Sets the message contents
-         * 
-         * @param msg 
+         *
+         * @param msg
          *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
         virtual void setText( const std::string& msg ) throw( CMSException ) = 0;
 

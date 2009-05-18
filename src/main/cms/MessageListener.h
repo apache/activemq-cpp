@@ -21,37 +21,39 @@
 #include <cms/Config.h>
 
 namespace cms{
-    
+
     class Message;
-    
+
     /**
-     * A <code>MessageListener</code> object is used to receive asynchronously 
+     * A <code>MessageListener</code> object is used to receive asynchronously
      * delivered messages.
+     *
+     * @since 1.0
      */
     class CMS_API MessageListener{
     public:
-    
+
         virtual ~MessageListener(){}
-        
+
         /**
          * Called asynchronously when a new message is received, the message
-         * reference can be to any othe Message types. a dynamic cast is used
+         * reference can be to any of the Message types. a dynamic cast is used
          * to find out what type of message this is.  The lifetime of this
          * object is only guaranteed to be for life of the onMessage function
-         * after this returns the message may no longer exists.  User should
-         * copy the data or clone the message if they wish to keep something
-         * around about this message.
-         * 
+         * after this callback returns the message may no longer exists.  Users should
+         * copy the data or clone the message if they wish to retain information that
+         * was contained in this Message.
+         *
          * It is considered a programming error for this method to throw an
          * exception.
-         * 
+         *
          * @param message
          *      Message object const pointer recipient does not own.
          */
         virtual void onMessage( const Message* message ) = 0;
 
     };
-    
+
 }
 
 #endif /*_CMS_MESSAGELISTENER_H_*/

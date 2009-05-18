@@ -55,7 +55,7 @@ namespace cms {
      *    |----------------------------------------------------------------------
      *
      *
-     * @since 1.2
+     * @since 1.3
      */
     class CMS_API StreamMessage : public Message {
     public:

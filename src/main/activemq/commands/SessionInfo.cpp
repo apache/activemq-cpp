@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionInfo::SessionInfo() {
+SessionInfo::SessionInfo() : BaseCommand() {
 
     this->ackMode = (unsigned int)cms::Session::AUTO_ACKNOWLEDGE;
 }

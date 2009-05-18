@@ -118,14 +118,15 @@ namespace commands{
          *         name of an item in the MapMessage
          * @throws CMSException
          */
-        virtual std::vector<std::string> getMapNames() const;
+        virtual std::vector<std::string> getMapNames() const throw( cms::CMSException );
 
         /**
          * Indicates whether an item exists in this MapMessage object.
          * @param name - String name of the Object in question
          * @return boolean value indicating if the name is in the map
+         * @throws CMSException
          */
-        virtual bool itemExists( const std::string& name ) const;
+        virtual bool itemExists( const std::string& name ) const throw( cms::CMSException );
 
         /**
          * Returns the Boolean value of the Specified name

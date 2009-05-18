@@ -121,7 +121,7 @@ namespace commands{
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
-        virtual void clearBody(){
+        virtual void clearBody() throw( cms::CMSException ) {
 
             // Invoke base class's version.
             ActiveMQMessageTemplate<cms::StreamMessage>::clearBody();

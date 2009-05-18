@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionError::ConnectionError() {
+ConnectionError::ConnectionError() : BaseCommand() {
 
 }
 

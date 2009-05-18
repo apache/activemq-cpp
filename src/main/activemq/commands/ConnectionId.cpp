@@ -42,13 +42,13 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId() {
+ConnectionId::ConnectionId() : BaseDataStructure() {
 
     this->value = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ConnectionId& other ) {
+ConnectionId::ConnectionId( const ConnectionId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
 }
 

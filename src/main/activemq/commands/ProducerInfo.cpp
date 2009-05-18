@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerInfo::ProducerInfo() {
+ProducerInfo::ProducerInfo() : BaseCommand() {
 
     this->dispatchAsync = false;
     this->windowSize = 0;

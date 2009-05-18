@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms {
+namespace cms{
 
     /**
      * This exception must be thrown when a CMS client attempts to use a data type not
@@ -30,7 +30,7 @@ namespace cms {
      * For example, this exception must be thrown if StreamMessage.readShort is used to read
      * a boolean value.
      *
-     * @since 1.2
+     * @since 1.3
      */
     class CMS_API MessageFormatException : public CMSException {
     public:

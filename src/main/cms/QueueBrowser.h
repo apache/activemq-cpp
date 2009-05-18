@@ -19,6 +19,7 @@
 #define _CMS_QUEUEBROWSER_H_
 
 #include <vector>
+#include <string>
 #include <cms/Config.h>
 #include <cms/Closeable.h>
 #include <cms/Queue.h>
@@ -30,6 +31,8 @@ namespace cms{
     /**
      * This class implements in interface for browsing the messages in a Queue
      * without removing them.
+     *
+     * @since 1.1
      */
     class CMS_API QueueBrowser : public Closeable {
     public:
@@ -38,6 +41,7 @@ namespace cms{
 
         /**
          * @returns the Queue that this browser is listening on.
+         *
          * @throws CMSException if an internal error occurs.
          */
         virtual const Queue* getQueue() const throw ( cms::CMSException ) = 0;
@@ -45,17 +49,23 @@ namespace cms{
         /**
          * @returns the MessageSelector that is used on when this browser was
          * created or empty string if no selector was present.
+         *
          * @throws CMSException if an internal error occurs.
          */
-        virtual std::string getMessageSelector() const throw ( cms::CMSExceptio ) = 0;
+        virtual std::string getMessageSelector() const throw ( cms::CMSException ) = 0;
 
         /**
          * Gets an enumeration for browsing the current queue messages in the
-         * order they would be received.
-         * @returns an stl vector for browsing the messages.
+         * order they would be received.  The enumeration returned is a static view
+         * of the Queue and is not updated as new Messages arrive, the client should
+         * refresh its enumeration by calling this method again.
+         *
+         * @returns an STL vector for browsing the messages.
+         *
          * @throws CMSException if an internal error occurs.
          */
-        virtual std::vector<cms::Message*> getEnumeration() const throw ( cms::CMSException ) = 0;
+        virtual std::vector<const cms::Message*> getEnumeration() const
+            throw ( cms::CMSException ) = 0;
 
     };
 
