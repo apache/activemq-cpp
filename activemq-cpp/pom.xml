@@ -33,7 +33,7 @@
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP Library</name>
   <description>The ActiveMQ-CPP Library</description>
-  <version>3.0-RC1</version>
+  <version>3.0-RC2</version>
 
   <dependencies>
     <dependency>
@@ -198,7 +198,7 @@
       </plugin>
     </plugins>
   </build>
-
+  <!--
   <profiles>
     <profile>
       <id>Unix Make</id>
@@ -265,5 +265,5 @@
       </build>
     </profile>
   </profiles>
-
+  -->
 </project>
