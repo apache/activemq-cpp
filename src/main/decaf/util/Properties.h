@@ -29,6 +29,8 @@ namespace util{
 
     /**
      * Java-like properties class for mapping string names to string values.
+     *
+     * @since 1.0
      */
     class DECAF_API Properties{
     private:
@@ -37,15 +39,15 @@ namespace util{
 
     public:
 
-        virtual ~Properties(){}
+        Properties();
+
+        virtual ~Properties();
 
         /**
          * Returns true if the properties object is empty
          * @return true if empty
          */
-        virtual bool isEmpty() const {
-            return properties.empty();
-        }
+        virtual bool isEmpty() const;
 
         /**
          * Looks up the value for the given property.
@@ -53,17 +55,7 @@ namespace util{
          * @return the value of the property with the given name, if it
          * exists.  If it does not exist, returns NULL.
          */
-        virtual const char* getProperty( const std::string& name ) const{
-
-            std::map< std::string, std::string >::const_iterator iter =
-            properties.find( name );
-            if( iter == properties.end() ){
-                return NULL;
-            }
-
-            return iter->second.c_str();
-        }
-
+        virtual const char* getProperty( const std::string& name ) const;
         /**
          * Looks up the value for the given property.
          * @param name the name of the property to be looked up.
@@ -73,16 +65,7 @@ namespace util{
          * exists, otherwise the <code>defaultValue</code>.
          */
         virtual std::string getProperty( const std::string& name,
-                                         const std::string& defaultValue ) const {
-
-            std::map< std::string, std::string >::const_iterator iter =
-            properties.find( name );
-            if( iter == properties.end() ){
-                return defaultValue;
-            }
-
-            return iter->second;
-        }
+                                         const std::string& defaultValue ) const;
 
         /**
          * Sets the value for a given property.  If the property already
@@ -91,100 +74,51 @@ namespace util{
          * @param value The value to be written.
          */
         virtual void setProperty( const std::string& name,
-                                  const std::string& value ){
-            properties[name] = value;
-            //properties.insert( std::make_pair( name, value ) );
-        }
-
+                                  const std::string& value );
         /**
          * Check to see if the Property exists in the set
          * @param name - property name to check for in this properties set.
          * @return true if property exists, false otherwise.
          */
-        virtual bool hasProperty( const std::string& name ) const
-        {
-            if(properties.find(name) != properties.end())
-            {
-                return true;
-            }
-
-            return false;
-        }
+        virtual bool hasProperty( const std::string& name ) const;
 
         /**
          * Removes the property with the given name.
          * @param name the name of the property to remove.
          */
-        virtual void remove( const std::string& name ){
-            properties.erase( name );
-        }
+        virtual void remove( const std::string& name );
 
         /**
          * Method that serializes the contents of the property map to
-         * an arryay.
+         * an array.
          * @return list of pairs where the first is the name and the second
          * is the value.
          */
-        virtual std::vector< std::pair< std::string, std::string > > toArray() const{
-
-            // Create a vector big enough to hold all the elements in the map.
-            std::vector< std::pair<std::string, std::string> > vec(
-                    properties.begin(), properties.end() );
-
-            return vec;
-        }
+        virtual std::vector< std::pair< std::string, std::string > > toArray() const;
 
         /**
          * Copies the contents of the given properties object to this one.
          * @param source The source properties object.
          */
-        virtual void copy( const Properties* source ){
-
-            clear();
-            this->properties = source->properties;
-        }
+        virtual void copy( const Properties* source );
 
         /**
          * Clones this object.
          * @returns a replica of this object.
          */
-        virtual Properties* clone() const{
-
-            Properties* props = new Properties();
-
-            props->properties = properties;
-
-            return props;
-        }
+        virtual Properties* clone() const;
 
         /**
          * Clears all properties from the map.
          */
-        virtual void clear(){
-            properties.clear();
-        }
+        virtual void clear();
 
         /**
          * Formats the contents of the Properties Object into a string
          * that can be logged, etc.
          * @returns string value of this object.
          */
-        virtual std::string toString() const {
-
-            std::ostringstream stream;
-            std::map< std::string, std::string >::const_iterator iter;
-
-            stream << "Begin Class activemq::util::Properties:" << std::endl;
-
-            for( iter = properties.begin(); iter != properties.end(); ++iter ){
-                stream << " properties[" << iter->first << "] = "
-                       << iter->second << std::endl;
-            }
-
-            stream << "End Class activemq::util::Properties:" << std::endl;
-
-            return stream.str();
-        }
+        virtual std::string toString() const;
 
     };
 
