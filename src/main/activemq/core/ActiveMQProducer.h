@@ -103,7 +103,7 @@ namespace core{
 
         /**
          * Sends the message to the default producer destination.
-         * @param a Message Object Pointer
+         * @param message A Message Object Pointer for the Message to send.
          * @throws CMSException
          */
         virtual void send( cms::Message* message ) throw ( cms::CMSException );
@@ -111,8 +111,8 @@ namespace core{
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * @param message - a Message Object Pointer
-         * @param deliverMode The delivery mode to be used.
+         * @param message A Message Object Pointer
+         * @param deliveryMode The delivery mode to be used.
          * @param priority The priority for this message.
          * @param timeToLive The time to live value for this message in
          * milliseconds.
@@ -124,7 +124,8 @@ namespace core{
 
         /**
          * Sends the message to the designated destination.
-         * @param a Message Object Pointer
+         * @param destination The CMS Destination that defines where the message is sent.
+         * @param message A Message Object Pointer
          * @throws CMSException
          */
         virtual void send( const cms::Destination* destination,
@@ -135,7 +136,7 @@ namespace core{
          * not take ownership of the message, caller must still destroy it.
          * @param destination - a Message Object Pointer
          * @param message - a Message Object Pointer
-         * @param deliverMode The delivery mode to be used.
+         * @param deliveryMode The delivery mode to be used.
          * @param priority The priority for this message.
          * @param timeToLive The time to live value for this message in
          * milliseconds.
@@ -148,7 +149,7 @@ namespace core{
 
         /**
          * Sets the delivery mode for this Producer
-         * @param The DeliveryMode
+         * @param mode - The DeliveryMode to use for Message sends.
          */
         virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ){
             this->defaultDeliveryMode = mode;
@@ -164,15 +165,15 @@ namespace core{
 
         /**
          * Sets if Message Ids are disabled for this Producer
-         * @param boolean indicating enable / disable (true / false)
+         * @param value - boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
             this->disableMessageId = value;
         }
 
         /**
-         * Sets if Message Ids are disabled for this Producer
-         * @param boolean indicating enable / disable (true / false)
+         * Gets if Message Ids are disabled for this Producer
+         * @return a boolean indicating state enable / disable (true / false) for MessageIds.
          */
         virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
             return this->disableMessageId;
@@ -180,15 +181,15 @@ namespace core{
 
         /**
          * Sets if Message Time Stamps are disabled for this Producer
-         * @param boolean indicating enable / disable (true / false)
+         * @param value - boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
             this->disableTimestamps = value;
         }
 
         /**
-         * Sets if Message Time Stamps are disabled for this Producer
-         * @param boolean indicating enable / disable (true / false)
+         * Gets if Message Time Stamps are disabled for this Producer
+         * @returns boolean indicating state of enable / disable (true / false)
          */
         virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
             return this->disableTimestamps;
@@ -196,7 +197,7 @@ namespace core{
 
         /**
          * Sets the Priority that this Producers sends messages at
-         * @param int value for Priority level
+         * @param priority int value for Priority level
          */
         virtual void setPriority( int priority ) throw ( cms::CMSException ) {
             this->defaultPriority = priority;
