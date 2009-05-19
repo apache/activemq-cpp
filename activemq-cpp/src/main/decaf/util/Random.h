@@ -26,8 +26,34 @@
 namespace decaf{
 namespace util{
 
-    class DECAF_API Random
-    {
+    /**
+     * Random Value Generator which is used to generate a stream of pseudorandom numbers.
+     * <p>
+     * The algorithms implemented by class Random use a protected utility method that
+     * on each invocation can supply up to 32 pseudorandomly generated bits.
+     *
+     * @since 1.0
+     */
+    class DECAF_API Random {
+    private:
+
+        static unsigned long long multiplier;
+
+        /**
+         * The boolean value indicating if the second Gaussian number is available.
+         */
+        bool haveNextNextGaussian;
+
+        /**
+         * It is associated with the internal state of this generator.
+         */
+        unsigned long long seed;
+
+        /**
+         * The second Gaussian generated number.
+         */
+        double nextNextGaussian;
+
     public:
 
         /**
@@ -172,26 +198,7 @@ namespace util{
          * @see #nextGaussian
          * @see #nextLong
          */
-        int next( int bits );
-
-    private:
-
-        static unsigned long long multiplier;
-
-        /**
-         * The boolean value indicating if the second Gaussian number is available.
-         */
-        bool haveNextNextGaussian;
-
-        /**
-         * It is associated with the internal state of this generator.
-         */
-        unsigned long long seed;
-
-        /**
-         * The second Gaussian generated number.
-         */
-        double nextNextGaussian;
+        virtual int next( int bits );
 
     };
 
