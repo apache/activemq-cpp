@@ -112,6 +112,9 @@ namespace core {
          * most common properties for a connection are pulled from the
          * properties instance or are set to defaults.
          *
+         * @param transport
+         *        The Transport that this Connection will use for sending Commands
+         *        to the Broker.
          * @param properties
          *        The URI configured properties for this connection.
          */

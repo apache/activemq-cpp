@@ -137,7 +137,7 @@ namespace core{
         /**
          * Constructor
          *
-         * @param transprot
+         * @param transport
          *        The Transport requested for this connection to the Broker.
          * @param properties
          *        The Properties that were defined for this connection
@@ -342,7 +342,6 @@ namespace core{
 
         /**
          * Event handler for an exception from a command transport.
-         * @param source The source of the exception
          * @param ex The exception.
          */
         virtual void onException( const decaf::lang::Exception& ex );
@@ -385,7 +384,7 @@ namespace core{
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( Pointer<commands::Command>, unsigned int timeout = 0 )
+        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
