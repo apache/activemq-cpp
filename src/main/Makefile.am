@@ -28,6 +28,7 @@ cc_sources = \
     decaf/lang/Long.cpp \
     decaf/lang/Character.cpp \
     decaf/lang/Thread.cpp \
+    decaf/util/Properties.cpp \
     decaf/util/StringTokenizer.cpp \
     decaf/util/Random.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
