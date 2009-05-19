@@ -224,7 +224,7 @@ namespace core{
 
         /**
          * Creates a MessageConsumer for the specified destination.
-         * @param the Destination that this consumer receiving messages for.
+         * @param destination - The Destination that this consumer receiving messages for.
          * @throws CMSException
          */
         virtual cms::MessageConsumer* createConsumer(
@@ -234,8 +234,8 @@ namespace core{
         /**
          * Creates a MessageConsumer for the specified destination, using a
          * message selector.
-         * @param the Destination that this consumer receiving messages for.
-         * @param the Message Selector string to use for this destination
+         * @param destination - The Destination that this consumer receiving messages for.
+         * @param selector - The Message Selector string to use for this destination
          * @throws CMSException
          */
         virtual cms::MessageConsumer* createConsumer(
@@ -245,9 +245,9 @@ namespace core{
         /**
          * Creates a MessageConsumer for the specified destination, using a
          * message selector.
-         * @param the Destination that this consumer receiving messages for.
-         * @param the Message Selector string to use for this destination
-         * @param if true, and the destination is a topic, inhibits the
+         * @param destination - The Destination that this consumer receiving messages for.
+         * @param selector - The Message Selector string to use for this destination
+         * @param noLocal - if true, and the destination is a topic, inhibits the
          *        delivery of messages published by its own connection. The
          *        behavior for NoLocal is not specified if the destination is
          *        a queue.
@@ -262,9 +262,13 @@ namespace core{
         /**
          * Creates a durable subscriber to the specified topic, using a
          * message selector
-         * @param the topic to subscribe to
-         * @param name used to identify the subscription
-         * @param only messages matching the selector are received
+         * @param destination - the topic to subscribe to
+         * @param name - The name used to identify the subscription
+         * @param selector - only messages matching the selector are received
+         * @param noLocal - if true, and the destination is a topic, inhibits the
+         *        delivery of messages published by its own connection. The
+         *        behavior for NoLocal is not specified if the destination is
+         *        a queue.
          * @throws CMSException
          */
         virtual cms::MessageConsumer* createDurableConsumer(
@@ -277,7 +281,7 @@ namespace core{
         /**
          * Creates a MessageProducer to send messages to the specified
          * destination.
-         * @param the Destination to publish on
+         * @param destination - the Destination to publish on
          * @throws CMSException
          */
         virtual cms::MessageProducer* createProducer(
@@ -314,7 +318,7 @@ namespace core{
 
         /**
          * Creates a queue identity given a Queue name.
-         * @param the name of the new Queue
+         * @param queueName - the name of the new Queue
          * @throws CMSException
          */
         virtual cms::Queue* createQueue( const std::string& queueName )
@@ -322,7 +326,7 @@ namespace core{
 
         /**
          * Creates a topic identity given a Queue name.
-         * @param the name of the new Topic
+         * @param topicName - the name of the new Topic
          * @throws CMSException
          */
         virtual cms::Topic* createTopic( const std::string& topicName )
@@ -351,15 +355,20 @@ namespace core{
 
         /**
          * Creates a BytesMessage
+         *
+         * @return a newly created BytesMessage.
          * @throws CMSException
          */
         virtual cms::BytesMessage* createBytesMessage()
             throw ( cms::CMSException );
 
         /**
-         * Creates a BytesMessage and sets the payload to the passed value
-         * @param an array of bytes to set in the message
-         * @param the size of the bytes array, or number of bytes to use
+         * Creates a BytesMessage and sets the pay-load to the passed value
+         *
+         * @param bytes - an array of bytes to set in the message
+         * @param bytesSize - the size of the bytes array, or number of bytes to use
+         * @return a newly created BytesMessage.
+         *
          * @throws CMSException
          */
         virtual cms::BytesMessage* createBytesMessage(
@@ -369,27 +378,33 @@ namespace core{
 
         /**
          * Creates a new StreamMessage
-         * TODO - Throws UnsupportedOperation as this Message is not Implemented yet.
+         *
+         * @returns a newly created StreamMessage.
          * @throws CMSException
          */
         virtual cms::StreamMessage* createStreamMessage() throw ( cms::CMSException );
 
         /**
          * Creates a new TextMessage
+         * @returns a newly created TextMessage.
          * @throws CMSException
          */
         virtual cms::TextMessage* createTextMessage() throw ( cms::CMSException );
 
         /**
          * Creates a new TextMessage and set the text to the value given
-         * @param the initial text for the message
+         *
+         * @param text - The initial text for the message
+         * @returns a newly created TextMessage with the given Text set in the Message body.
          * @throws CMSException
          */
         virtual cms::TextMessage* createTextMessage( const std::string& text )
             throw ( cms::CMSException );
 
         /**
-         * Creates a new TextMessage
+         * Creates a new MapMessage
+         *
+         * @returns a newly created MapMessage.
          * @throws CMSException
          */
         virtual cms::MapMessage* createMapMessage()
@@ -434,7 +449,7 @@ namespace core{
          *
          * @param message
          *        The message to send to the broker.
-         * @param prducer
+         * @param producer
          *        The sending Producer
          * @param usage
          *        Pointer to a Usage tracker which if set will be increased by the size
@@ -504,7 +519,9 @@ namespace core{
         /**
          * Dispose of a Consumer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
-         * @param consumerId - the Id of the Consumer to dispose.
+         *
+         * @param id - the Id of the Consumer to dispose.
+         * @throw ActiveMQException if an internal error occurs.
          */
         void disposeOf( decaf::lang::Pointer<commands::ConsumerId> id )
             throw ( activemq::exceptions::ActiveMQException );
@@ -512,7 +529,9 @@ namespace core{
         /**
          * Dispose of a Producer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
-         * @param consumerId - the Id of the Producer to dispose.
+         *
+         * @param id - the Id of the Producer to dispose.
+         * @throw ActiveMQException if an internal error occurs.
          */
         void disposeOf( decaf::lang::Pointer<commands::ProducerId> id )
             throw ( activemq::exceptions::ActiveMQException );

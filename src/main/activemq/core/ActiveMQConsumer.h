@@ -199,8 +199,8 @@ namespace core{
         virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException );
 
         /**
-         * Gets the MessageListener that this class will send notifs on
-         * @param MessageListener interface pointer
+         * Gets the MessageListener that this class will send events to.
+         * @return the currently registered MessageListener interface pointer.
          */
         virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
             return this->listener;
@@ -336,14 +336,14 @@ namespace core{
 
         /**
          * Pre-consume processing
-         * @param message - the message being consumed.
+         * @param dispatch - the message being consumed.
          */
         void beforeMessageIsConsumed(
             const Pointer<commands::MessageDispatch>& dispatch );
 
         /**
          * Post-consume processing
-         * @param message - the consumed message
+         * @param dispatch - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
         void afterMessageIsConsumed(
