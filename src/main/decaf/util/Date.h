@@ -26,9 +26,10 @@ namespace util{
     /**
      * Wrapper class around a time value in milliseconds.  This
      * class is comparable to Java's java.util.Date class.
+     *
+     * @since 1.0
      */
-    class DECAF_API Date
-    {
+    class DECAF_API Date {
     private:
 
         /**
@@ -41,26 +42,21 @@ namespace util{
         /**
          * Default constructor - sets time to now.
          */
-        Date(){
-            time = getCurrentTimeMilliseconds();
-        }
+        Date();
 
         /**
          * Constructs the date with a given time value.
          * @param milliseconds The time in milliseconds;
          */
-        Date( long long milliseconds ){
-            this->time = milliseconds;
-        }
+        Date( long long milliseconds );
 
         /**
          * Copy constructor.
+         * @param source The Date instance to copy into this one.
          */
-        Date( const Date& source ){
-            (*this) = source;
-        }
+        Date( const Date& source );
 
-        virtual ~Date(){}
+        virtual ~Date();
 
         /**
          * Gets the underlying time.
