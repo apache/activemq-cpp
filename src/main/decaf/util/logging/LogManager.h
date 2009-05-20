@@ -146,7 +146,7 @@ namespace logging{
          * its loggers.  Once set a properties change event is fired.
          * @param properties Pointer to read the configuration from
          */
-        virtual void setProperties( const util::Properties* properties );
+        virtual void setProperties( const util::Properties& properties );
 
         /**
          * Gets a reference to the Logging Properties used by this

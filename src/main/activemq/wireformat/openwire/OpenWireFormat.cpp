@@ -56,7 +56,7 @@ const unsigned char OpenWireFormat::NULL_TYPE = 0;
 OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 
     // Copy config data
-    this->properties.copy( &properties );
+    this->properties = properties;
 
     // Fill in that DataStreamMarshallers collection
     this->dataMarshallers.resize( 256 );
