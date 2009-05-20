@@ -18,36 +18,71 @@
 #ifndef _DECAF_UTIL_PROPERTIES_H_
 #define _DECAF_UTIL_PROPERTIES_H_
 
-#include <map>
+#include <memory>
 #include <vector>
 #include <string>
-#include <sstream>
 #include <decaf/util/Config.h>
+#include <decaf/io/InputStream.h>
+#include <decaf/io/OutputStream.h>
+#include <decaf/io/Reader.h>
+#include <decaf/io/Writer.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/io/IOException.h>
 
 namespace decaf{
 namespace util{
 
+    class PropertiesInternal;
+
     /**
      * Java-like properties class for mapping string names to string values.
+     * <p>
+     * The Properties list contains a key value pair of properties that can be loaded and
+     * stored to a stream.  Each Properties instance can contain an internal Properties list
+     * that contains default values for keys not found in the Properties List.
+     * <p>
+     * The Properties list if a Thread Safe class, it can be shared amongst objects in
+     * multiple threads without the need for additional synchronization.
      *
      * @since 1.0
      */
     class DECAF_API Properties{
     private:
 
-        std::map< std::string, std::string > properties;
+        std::auto_ptr<PropertiesInternal> internal;
+
+    protected:
+
+        /**
+         * Default list used to answer for any keys not found in the properties list, can
+         * be filled in by another implementation of this class.
+         */
+        std::auto_ptr<Properties> defaults;
 
     public:
 
         Properties();
 
+        Properties( const Properties& src );
+
         virtual ~Properties();
+
+        /**
+         * Assignment Operator
+         *
+         * @param src
+         *      The Properties list to copy to this List.
+         *
+         * @return a reference to this List for use in chaining.
+         */
+        Properties& operator= ( const Properties& src );
 
         /**
          * Returns true if the properties object is empty
          * @return true if empty
          */
-        virtual bool isEmpty() const;
+        bool isEmpty() const;
 
         /**
          * Looks up the value for the given property.
@@ -55,7 +90,8 @@ namespace util{
          * @return the value of the property with the given name, if it
          * exists.  If it does not exist, returns NULL.
          */
-        virtual const char* getProperty( const std::string& name ) const;
+        const char* getProperty( const std::string& name ) const;
+
         /**
          * Looks up the value for the given property.
          * @param name the name of the property to be looked up.
@@ -64,8 +100,8 @@ namespace util{
          * @return The value of the property specified by <code>name</code>, if it
          * exists, otherwise the <code>defaultValue</code>.
          */
-        virtual std::string getProperty( const std::string& name,
-                                         const std::string& defaultValue ) const;
+        std::string getProperty( const std::string& name,
+                                 const std::string& defaultValue ) const;
 
         /**
          * Sets the value for a given property.  If the property already
@@ -73,20 +109,21 @@ namespace util{
          * @param name The name of the value to be written.
          * @param value The value to be written.
          */
-        virtual void setProperty( const std::string& name,
-                                  const std::string& value );
+        void setProperty( const std::string& name,
+                          const std::string& value );
+
         /**
          * Check to see if the Property exists in the set
          * @param name - property name to check for in this properties set.
          * @return true if property exists, false otherwise.
          */
-        virtual bool hasProperty( const std::string& name ) const;
+        bool hasProperty( const std::string& name ) const;
 
         /**
          * Removes the property with the given name.
          * @param name the name of the property to remove.
          */
-        virtual void remove( const std::string& name );
+        void remove( const std::string& name );
 
         /**
          * Method that serializes the contents of the property map to
@@ -94,31 +131,230 @@ namespace util{
          * @return list of pairs where the first is the name and the second
          * is the value.
          */
-        virtual std::vector< std::pair< std::string, std::string > > toArray() const;
+        std::vector< std::pair< std::string, std::string > > toArray() const;
 
         /**
-         * Copies the contents of the given properties object to this one.
-         * @param source The source properties object.
+         * Copies the contents of the given properties object to this one, if the
+         * given Properties instance in NULL then this List is not modified.
+         *
+         * @param source
+         *      The source properties object.
          */
-        virtual void copy( const Properties* source );
+        void copy( const Properties& source );
 
         /**
          * Clones this object.
+         *
          * @returns a replica of this object.
          */
-        virtual Properties* clone() const;
+        Properties* clone() const;
 
         /**
          * Clears all properties from the map.
          */
-        virtual void clear();
+        void clear();
 
         /**
          * Formats the contents of the Properties Object into a string
          * that can be logged, etc.
          * @returns string value of this object.
          */
-        virtual std::string toString() const;
+        std::string toString() const;
+
+        /**
+         * Reads a property list (key and element pairs) from the input byte stream. The
+         * input stream is in a simple line-oriented format as specified in load(Reader) and
+         * is assumed to use the ISO 8859-1 character encoding.
+         *
+         * This method does not close the stream upon its return.
+         *
+         * @param stream
+         *      The stream to read the properties data from.
+         *
+         * @throw IOException if there is an error while reading from the stream.
+         * @throw IllegalArgumentException if malformed data is found while reading the properties.
+         * @throw NullPointerException if the passed stream is Null.
+         */
+        void load( decaf::io::InputStream* stream )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Reads a property list (key and element pairs) from the input character stream in a
+         * simple line-oriented format.
+         * <p>
+         * Properties are processed in terms of lines. There are two kinds of line, natural lines
+         * and logical lines. A natural line is defined as a line of characters that is terminated
+         * either by a set of line terminator characters (\n or \r or \r\n) or by the end of the
+         * stream. A natural line may be either a blank line, a comment line, or hold all or some
+         * of a key-element pair. A logical line holds all the data of a key-element pair, which
+         * may be spread out across several adjacent natural lines by escaping the line terminator
+         * sequence with a backslash character \. Note that a comment line cannot be extended in
+         * this manner; every natural line that is a comment must have its own comment indicator,
+         * as described below. Lines are read from input until the end of the stream is reached.
+         * <p>
+         * A natural line that contains only white space characters is considered blank and is
+         * ignored. A comment line has an ASCII '#' or '!' as its first non-white space character;
+         * comment lines are also ignored and do not encode key-element information. In addition
+         * to line terminators, this format considers the characters space (' '), tab ('\t'),
+         * and form feed ('\f') to be white space.
+         * <p>
+         * If a logical line is spread across several natural lines, the backslash escaping the
+         * line terminator sequence, the line terminator sequence, and any white space at the
+         * start of the following line have no affect on the key or element values. The remainder
+         * of the discussion of key and element parsing (when loading) will assume all the
+         * characters constituting the key and element appear on a single natural line after line
+         * continuation characters have been removed. Note that it is not sufficient to only
+         * examine the character preceding a line terminator sequence to decide if the line
+         * terminator is escaped; there must be an odd number of contiguous backslashes for the
+         * line terminator to be escaped. Since the input is processed from left to right, a
+         * non-zero even number of 2n contiguous backslashes before a line terminator (or
+         * elsewhere) encodes n backslashes after escape processing.
+         * <p>
+         * The key contains all of the characters in the line starting with the first non-white
+         * space character and up to, but not including, the first unescaped '=', ':', or white
+         * space character other than a line terminator. All of these key termination characters
+         * may be included in the key by escaping them with a preceding backslash character; for
+         * example,
+         *
+         *    \:\=
+         *
+         * would be the two-character key ":=". Line terminator characters can be included using
+         * \r and \n escape sequences. Any white space after the key is skipped; if the first
+         * non-white space character after the key is '=' or ':', then it is ignored and any white
+         * space characters after it are also skipped. All remaining characters on the line become
+         * part of the associated element string; if there are no remaining characters, the element
+         * is the empty string "". Once the raw character sequences constituting the key and
+         * element are identified, escape processing is performed as described above.
+         * <p>
+         * As an example, each of the following three lines specifies the key "Truth" and the
+         * associated element value "Beauty":
+         * <p>
+         *     Truth = Beauty
+         *             Truth:Beauty
+         *         Truth                  :Beauty
+         * <p>
+         * As another example, the following three lines specify a single property:
+         * <p>
+         * fruits                           apple, banana, pear, \
+         *                                  cantaloupe, watermelon, \
+         *                                  kiwi, mango
+         * <p>
+         * The key is "fruits" and the associated element is:
+         *     "apple, banana, pear, cantaloupe, watermelon, kiwi, mango"
+         * <p>
+         * Note that a space appears before each \ so that a space will appear after each comma
+         * in the final result; the \, line terminator, and leading white space on the continuation
+         * line are merely discarded and are not replaced by one or more other characters.
+         * <p>
+         * As a third example, the line:
+         *
+         *   cheeses
+         *
+         * specifies that the key is "cheeses" and the associated element is the empty string "".
+         * <p>
+         * Characters in keys and elements can be represented in escape sequences similar to those
+         * used for character and string literals (see §3.3 and §3.10.6 of the Java Language
+         * Specification). The differences from the character escape sequences and Unicode escapes
+         * used for characters and strings are:
+         *
+         *   - Octal escapes are not recognized.
+         *   - The character sequence \b does not represent a backspace character.
+         *   - The method does not treat a backslash character, \, before a non-valid escape
+         *     character as an error; the backslash is silently dropped. For example, in a C++
+         *     string the sequence "\z" would cause a compile time error. In contrast, this
+         *     method silently drops the backslash. Therefore, this method treats the two
+         *     character sequence "\b" as equivalent to the single character 'b'.
+         *   - Escapes are not necessary for single and double quotes; however, by the rule above,
+         *     single and double quote characters preceded by a backslash still yield single and
+         *     double quote characters, respectively.
+         *
+         * This method does not close the Reader upon its return.
+         *
+         * @param reader
+         *      The Reader that provides an character stream as input.
+         *
+         * @throw IOException if there is an error while reading from the stream.
+         * @throw IllegalArgumentException if malformed data is found while reading the properties.
+         * @throw NullPointerException if the passed stream is Null.
+         */
+        void load( decaf::io::Reader* reader )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Writes this property list (key and element pairs) in this Properties table to the
+         * output stream in a format suitable for loading into a Properties table using the
+         * load(InputStream) method.
+         * <p>
+         * Properties from the defaults table of this Properties table (if any) are not
+         * written out by this method.
+         * <p>
+         * This method outputs the comments, properties keys and values in the same format
+         * as specified in store(Writer), with the following differences:
+         *
+         *   - The stream is written using the ISO 8859-1 character encoding.
+         *   - Characters not in Latin-1 in the comments are written as \uxxxx for their
+         *     appropriate unicode hexadecimal value xxxx.
+         *   - Characters less than \u0020 and characters greater than \u007E in property keys
+         *     or values are written as \uxxxx for the appropriate hexadecimal value xxxx.
+         *
+         * After the entries have been written, the output stream is flushed. The output stream
+         * remains open after this method returns.
+         *
+         * @param out
+         *      The OutputStream instance to write the properties to.
+         * @param comment
+         *      A description of these properties that is written to the output stream.
+         *
+         * @throw IOException if there is an error while writing from the stream.
+         * @throw NullPointerException if the passed stream is Null.
+         */
+        void store( decaf::io::OutputStream* out, const std::string& comments )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Writes this property list (key and element pairs) in this Properties table to the output
+         * character stream in a format that can be read by the load(Reader) method.
+         * <p>
+         * Properties from the defaults table of this Properties table (if any) are not written
+         * out by this method.
+         * <p>
+         * If the comments argument is not empty, then an ASCII # character, the comments string,
+         * and a line separator are first written to the output stream. Thus, the comments can
+         * serve as an identifying comment. Any one of a line feed ('\n'), a carriage return ('\r'),
+         * or a carriage return followed immediately by a line feed in comments is replaced by a
+         * line separator generated by the Writer and if the next character in comments is not
+         * character # or character ! then an ASCII # is written out after that line separator.
+         * <p>
+         * Next, a comment line is always written, consisting of an ASCII # character, the current
+         * date and time (as if produced by the toString method of Date for the current time), and
+         * a line separator as generated by the Writer.
+         * <p>
+         * Then every entry in this Properties table is written out, one per line. For each entry
+         * the key string is written, then an ASCII =, then the associated element string. For the
+         * key, all space characters are written with a preceding \ character. For the element,
+         * leading space characters, but not embedded or trailing space characters, are written
+         * with a preceding \ character. The key and element characters #, !, =, and : are written
+         * with a preceding backslash to ensure that they are properly loaded.
+         * <p>
+         * After the entries have been written, the output stream is flushed. The output stream
+         * remains open after this method returns.
+         *
+         * @param writer
+         *      The Writer instance to use to output the properties.
+         * @param comments
+         *      A description of these properties that is written before writing the properties.
+         *
+         * @throw IOException if there is an error while writing from the stream.
+         * @throw NullPointerException if the passed stream is Null.
+         */
+        void store( decaf::io::Writer* writer, const std::string& comments )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
 
     };
 

@@ -97,6 +97,7 @@ cc_sources = \
     cms/MessageEOFException.cpp \
     cms/MessageNotReadableException.cpp \
     cms/InvalidClientIdException.cpp \
+    cms/IllegalStateException.cpp \
     cms/MessageFormatException.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/mock/MockTransport.cpp \
@@ -314,10 +315,10 @@ cc_sources = \
     activemq/wireformat/openwire/utils/HexTable.cpp \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.cpp \
     activemq/wireformat/stomp/StompCommandConstants.cpp \
-    activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/stomp/StompFrame.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
+    activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     activemq/cmsutil/PooledSession.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
@@ -326,6 +327,7 @@ cc_sources = \
     activemq/cmsutil/CmsDestinationAccessor.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
     activemq/cmsutil/SessionPool.cpp \
+    activemq/util/ActiveMQProperties.cpp \
     activemq/util/PrimitiveValueConverter.cpp \
     activemq/util/URISupport.cpp \
     activemq/util/PrimitiveMap.cpp \
@@ -606,6 +608,7 @@ h_sources = \
     cms/MessageEOFException.h \
     cms/TemporaryQueue.h \
     cms/InvalidSelectorException.h \
+    cms/IllegalStateException.h \
     cms/MapMessage.h \
     cms/Connection.h \
     cms/ConnectionMetaData.h \

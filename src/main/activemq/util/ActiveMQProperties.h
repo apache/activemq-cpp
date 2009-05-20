@@ -31,6 +31,8 @@ namespace util{
     /**
      * Implementation of the CMSProperties interface that
      * delegates to a decaf::util::Properties object.
+     *
+     * @since 2.0
      */
     class AMQCPP_API ActiveMQProperties : public cms::CMSProperties {
     private:
@@ -39,18 +41,18 @@ namespace util{
 
     public:
 
-        virtual ~ActiveMQProperties(){}
+        virtual ~ActiveMQProperties();
 
         virtual decaf::util::Properties& getProperties() {
-            return properties;
+            return this->properties;
         }
 
         virtual const decaf::util::Properties& getProperties() const {
-            return properties;
+            return this->properties;
         }
 
         virtual void setProperties( decaf::util::Properties& props ) {
-            properties.copy( &props );
+            this->properties = props;
         }
 
         /**
@@ -126,30 +128,13 @@ namespace util{
          * Copies the contents of the given properties object to this one.
          * @param source The source properties object.
          */
-        virtual void copy( const CMSProperties* source ){
-
-            properties.clear();
-
-            std::vector< std::pair< std::string, std::string > > vec =
-                source->toArray();
-
-            for( unsigned int ix=0; ix<vec.size(); ++ix ){
-                properties.setProperty(vec[ix].first, vec[ix].second );
-            }
-        }
+        virtual void copy( const CMSProperties* source );
 
         /**
          * Clones this object.
          * @returns a replica of this object.
          */
-        virtual CMSProperties* clone() const{
-
-            ActiveMQProperties* props = new ActiveMQProperties();
-
-            props->properties.copy(&properties);
-
-            return props;
-        }
+        virtual CMSProperties* clone() const;
 
         /**
          * Clears all properties from the map.

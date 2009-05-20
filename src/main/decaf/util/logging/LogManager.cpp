@@ -39,10 +39,10 @@ LogManager::~LogManager()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::setProperties( const Properties* properties )
+void LogManager::setProperties( const Properties& properties )
 {
     // Copy the properties
-    this->properties.copy(properties);
+    this->properties = properties;
 
     // Update the configuration of the loggers.
     // TODO

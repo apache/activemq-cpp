@@ -15,49 +15,38 @@
  * limitations under the License.
  */
 
-#include "PropertiesBenchmark.h"
-
-#include <decaf/lang/Integer.h>
+#include "ActiveMQProperties.h"
 
 using namespace std;
-using namespace decaf;
+using namespace activemq;
+using namespace activemq::util;
 using namespace decaf::util;
-using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-PropertiesBenchmark::PropertiesBenchmark() {
+ActiveMQProperties::~ActiveMQProperties() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PropertiesBenchmark::run() {
+void ActiveMQProperties::copy( const CMSProperties* source ){
 
-    int numRuns = 250;
-    std::string result = "";
-    bool hasIt = false;
-    Properties copy;
-
-    for( int i = 0; i < numRuns; ++i ) {
-        properties.setProperty( "test", "value" );
-        hasIt = properties.hasProperty( "test" );
-        result = properties.getProperty( "test" );
-        properties.remove( "test" );
+    if( source == NULL ) {
+        return;
     }
 
-    std::vector< std::pair< std::string, std::string > > array;
+    properties.clear();
 
-    std::string prefix = "test";
-    for( int i = 0; i < numRuns; ++i ) {
-        properties.setProperty(
-            prefix + Integer::toString(i), prefix + Integer::toString(i) );
+    std::vector< std::pair< std::string, std::string > > vec =
+        source->toArray();
+
+    for( unsigned int ix=0; ix<vec.size(); ++ix ){
+        properties.setProperty(vec[ix].first, vec[ix].second );
     }
+}
 
-    for( int i = 0; i < numRuns; ++i ) {
-        array = properties.toArray();
-    }
+////////////////////////////////////////////////////////////////////////////////
+cms::CMSProperties* ActiveMQProperties::clone() const{
 
-    for( int i = 0; i < numRuns; ++i ) {
-        copy.copy( properties );
-        copy.clear();
-    }
-
+    ActiveMQProperties* props = new ActiveMQProperties();
+    props->copy( this );
+    return props;
 }

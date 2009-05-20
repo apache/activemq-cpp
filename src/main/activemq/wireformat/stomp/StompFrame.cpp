@@ -47,8 +47,7 @@ StompFrame* StompFrame::clone() const {
 void StompFrame::copy( const StompFrame* src ) {
 
     this->setCommand( src->getCommand() );
-    this->properties.copy( &( src->getProperties() ) );
-    // Use the Vectors assignment operator.
+    this->properties = src->getProperties();
     this->body = src->getBody();
 }
 
