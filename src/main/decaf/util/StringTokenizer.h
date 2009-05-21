@@ -55,9 +55,9 @@ namespace util{
          * Note that if delim is "", this constructor does not throw an
          * exception. However, trying to invoke other methods on the resulting
          * StringTokenizer may result in an Exception.
-         * @param string to tokenize
-         * @param String containing the delimiters
-         * @param boolean indicating if the delimiters are returned as tokens
+         * @param str - The string to tokenize
+         * @param delim - String containing the delimiters
+         * @param returnDelims - boolean indicating if the delimiters are returned as tokens
          */
         StringTokenizer( const std::string& str,
                          const std::string& delim = " \t\n\r\f",
@@ -83,7 +83,7 @@ namespace util{
         /**
          * Returns the next token from this string tokenizer.
          * @return string value of next token
-         * @thorws NoSuchElementException
+         * @throws NoSuchElementException
          */
         virtual std::string nextToken()
             throw ( lang::exceptions::NoSuchElementException );
@@ -96,7 +96,7 @@ namespace util{
          * position is returned. The current position is advanced beyond the
          * recognized token. The new delimiter set remains the default after
          * this call.
-         * @param string containing the new set of delimiters
+         * @param delim - string containing the new set of delimiters
          * @return next string in the token list
          * @throw NoSuchElementException
          */
@@ -106,7 +106,7 @@ namespace util{
         /**
          * Grab all remaining tokens in the String and return them
          * in the vector that is passed in by reference.
-         * @param vector to place token strings in
+         * @param array - vector to place token strings in
          * @return number of string placed into the vector
          */
         virtual unsigned int toArray( std::vector< std::string >& array );
@@ -122,9 +122,9 @@ namespace util{
          * is using to tokenizer the string.  If set to "", no change is made
          * If set the return Delims will set if this Tokenizer will return
          * delimiters as tokens. Defaults to false.
-         * @param New String to tokenize or "", defaults to ""
-         * @param New Delimiter String to use or "", defaults to ""
-         * @param Should the Tokenizer return delimiters as Tokens, default false
+         * @param str - New String to tokenize or "", defaults to ""
+         * @param delim - New Delimiter String to use or "", defaults to ""
+         * @param returnDelims - Should the Tokenizer return delimiters as Tokens, default false
          */
         virtual void reset( const std::string& str = "",
                             const std::string& delim = "",

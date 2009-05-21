@@ -95,8 +95,12 @@ namespace failover {
 
         /**
          * Event handler for an exception from a command transport.
-         * @param source The source of the exception
-         * @param ex The exception.
+         * <p>
+         * The BackupTransport closes its internal Transport when an exception is
+         * received and returns the URI to the pool of URIs to attempt connections to.
+         *
+         * @param ex
+         *      The exception that was passed to this listener to handle.
          */
         virtual void onException( const decaf::lang::Exception& ex );
 

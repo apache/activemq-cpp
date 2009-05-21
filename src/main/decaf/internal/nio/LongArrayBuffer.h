@@ -51,7 +51,7 @@ namespace nio{
          * @param capacity - size of the array, this is the limit we read and write to.
          * @param readOnly - should this buffer be read-only, default as false
          */
-        LongArrayBuffer( std::size_t capactiy, bool readOnly = false );
+        LongArrayBuffer( std::size_t capacity, bool readOnly = false );
 
         /**
          * Creates a LongArrayBuffer object that wraps the given array.  If the own flag
@@ -63,7 +63,7 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          */
         LongArrayBuffer( long long* array, std::size_t offset,
-                        std::size_t capacity, bool readOnly = false )
+                         std::size_t capacity, bool readOnly = false )
             throw( decaf::lang::exceptions::NullPointerException );
 
         /**
@@ -74,12 +74,11 @@ namespace nio{
          * @param offset - the offset into array where the buffer starts
          * @param capacity - the length of the array we are wrapping or limit.
          * @param readOnly - is this a readOnly buffer.
-         * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
         LongArrayBuffer( ByteArrayPerspective& array,
-                        std::size_t offset, std::size_t capacity,
-                        bool readOnly = false )
+                         std::size_t offset, std::size_t capacity,
+                         bool readOnly = false )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
@@ -87,7 +86,6 @@ namespace nio{
          * reference to this buffers ByteArrayPerspective and when changes
          * are made to that data it is reflected in both.
          * @param other - the LongArrayBuffer this one is to mirror.
-         * @param readOnly - should this buffer be read-only, default as false
          */
         LongArrayBuffer( const LongArrayBuffer& other );
 

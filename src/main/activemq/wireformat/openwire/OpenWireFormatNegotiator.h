@@ -69,7 +69,6 @@ namespace openwire{
          * Constructor - Initializes this object around another Transport
          * @param wireFormat - The WireFormat object we use to negotiate
          * @param next - The next transport in the chain
-         * @param own - do we own the Transport pointer.
          */
         OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
                                   const Pointer<transport::Transport>& next );
@@ -80,7 +79,7 @@ namespace openwire{
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode outbound data.
+         * know how to encode out-bound data.
          * @param command the command to be sent.
          * @throws IOException if an exception occurs during writing of
          * the command.
@@ -94,7 +93,7 @@ namespace openwire{
         /**
          * Sends the given request to the server and waits for the response.
          * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode outbound data.
+         * know how to encode out-bound data.
          * @param command The request to send.
          * @return the response from the server.
          * @throws IOException if an error occurs with the request.
@@ -106,7 +105,7 @@ namespace openwire{
         /**
          * Sends the given request to the server and waits for the response.
          * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode outbound data.
+         * know how to encode out-bound data.
          * @param command The request to send.
          * @param timeout The time to wait for the response.
          * @return the response from the server.

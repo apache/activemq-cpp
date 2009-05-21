@@ -47,6 +47,8 @@ namespace concurrent{
 
         /**
          * Copy Constructor
+         *
+         * @param ex - The Exception to copy in this new instance.
          */
         RejectedExecutionException( const RejectedExecutionException& ex ) throw()
         : decaf::lang::Exception() {
@@ -65,10 +67,10 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file The file name where exception occurs
-         * @param lineNumber The lie number where the exception occurred.
-         * @param msg The Message to report
-         * @param ... list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param msg - The message to report
+         * @param ... - list of primitives that are formatted into the message
          */
         RejectedExecutionException( const char* file, const int lineNumber,
                                     const char* msg, ... ) throw()
@@ -86,11 +88,11 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file The file name where exception occurs
-         * @param lineNumber The lie number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param msg The Message to report
-         * @param ... list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param cause - The exception that was the cause for this one to be thrown.
+         * @param msg - The message to report
+         * @param ... - list of primitives that are formatted into the message
          */
         RejectedExecutionException( const char* file, const int lineNumber,
                                     const std::exception* cause,

@@ -26,8 +26,9 @@ namespace decaf{
 namespace io{
 
     /*
-     * Writer interface for an object that wraps around an output
-     * stream
+     * Writer interface for an object that wraps around an output stream.
+     *
+     * @since 1.0
      */
     class DECAF_API Writer {
     public:
@@ -36,7 +37,8 @@ namespace io{
 
         /**
          * Sets the target output stream.
-         * @param Outputstream to use
+         * @param os
+         *      The provided Outputstream to use to write to.
          */
         virtual void setOutputStream( OutputStream* os ) = 0;
 
@@ -62,6 +64,7 @@ namespace io{
           * @throws IOException thrown if an error occurs.
           */
          virtual void writeByte( unsigned char v ) throw( IOException ) = 0;
+
     };
 
 }}

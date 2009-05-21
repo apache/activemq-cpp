@@ -304,10 +304,11 @@ namespace util {
          * @return true if an element was removed as a result of this call
          *
          * @throw UnsupportedOperationException
-         *        if the remove operation is not supported by this collection
-         * @throw IllegalArgumentException.
+         *        if the remove operation is not supported by this collection.
+         * @throw IllegalArgumentException
+         *        If the value is not a valid entry for this Collection.
          */
-        virtual bool remove( const E& value DECAF_UNUSED )
+        virtual bool remove( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
                     lang::exceptions::IllegalArgumentException ) {
 

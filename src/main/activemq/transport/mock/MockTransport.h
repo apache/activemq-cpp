@@ -106,7 +106,7 @@ namespace mock{
                    decaf::lang::exceptions::UnsupportedOperationException);
 
 
-        virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
@@ -122,7 +122,9 @@ namespace mock{
 
         /**
          * Sets the WireFormat instance to use.
-         * @param WireFormat the object used to encode / decode commands.
+         *
+         * @param wireFormat
+         *      WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
@@ -156,7 +158,9 @@ namespace mock{
         /**
          * Fires a Exception back through this transport to its registered
          * ExceptionListener if there is one.
-         * @param command - Command to send to the Listener.
+         *
+         * @param ex
+         *      The Exception that will be passed on the the Transport listener.
          */
         virtual void fireException( const exceptions::ActiveMQException& ex ){
             if( listener != NULL ){

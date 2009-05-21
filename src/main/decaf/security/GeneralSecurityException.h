@@ -18,6 +18,7 @@
 #ifndef _DECAF_SECURITY_GENERALSECURITYEXCEPTION_H_
 #define _DECAF_SECURITY_GENERALSECURITYEXCEPTION_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/lang/Exception.h>
 
 namespace decaf{
@@ -65,7 +66,7 @@ namespace security{
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message The Message string to report
+         * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
         GeneralSecurityException( const char* file, const int lineNumber,

@@ -96,13 +96,14 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sets the WireFormat instance to use.
-         * @param WireFormat the object used to encode / decode commands.
+         * @param wireFormat
+         *      The WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) = 0;
 

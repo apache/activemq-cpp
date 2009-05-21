@@ -53,8 +53,8 @@ namespace transport{
         /**
          * Event handler for an exception from a command transport.
          *
-         * @param source The source of the exception
-         * @param ex The exception.
+         * @param ex
+         *      The exception being propagated to this listener to handle.
          */
         virtual void onException( const decaf::lang::Exception& ex ) = 0;
 

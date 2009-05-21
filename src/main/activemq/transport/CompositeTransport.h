@@ -46,8 +46,8 @@ namespace transport {
          * Add a URI to the list of URI's that will represent the set of Transports
          * that this Transport is a composite of.
          *
-         * @param uri
-         *        The new URI to add to the set this composite maintains.
+         * @param uris
+         *        The new URI set to add to the set this composite maintains.
          */
         virtual void addURI( const List<URI>& uris ) = 0;
 
@@ -57,8 +57,8 @@ namespace transport {
          * has created a connected Transport should result in that Transport being
          * disposed of.
          *
-         * @param uri
-         *        The new URI to remove to the set this composite maintains.
+         * @param uris
+         *        The new URI set to remove to the set this composite maintains.
          */
         virtual void removeURI( const List<URI>& uris ) = 0;
 

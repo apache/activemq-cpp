@@ -43,12 +43,13 @@ namespace net {
 
         /**
          * Setup the URIHelper with values assigned to the various fields that
-         * are used in the validation process.  The defaults are overriden by
-         * these values
-         * @param unreserved - characters not reserved for use
-         * @param punct - allowable punctuation symbols
-         * @param reserved - characters not allowed for general use in the URI
-         * @param someLegel - characters that are legal in certian cases
+         * are used in the validation process.  The defaults are overridden by
+         * these values.
+         *
+         * @param unreserved - characters not reserved for use.
+         * @param punct - allowable punctuation symbols.
+         * @param reserved - characters not allowed for general use in the URI.
+         * @param someLegal - characters that are legal in certain cases.
          * @param allLegal - characters that are always legal.
          */
         URIHelper( const std::string& unreserved,
@@ -77,7 +78,7 @@ namespace net {
         /**
          * Validate the schema portin of the URI.
          * @param uri - the URI to check.
-         * @param schema - the schema section of the URI.
+         * @param scheme - the schema section of the URI.
          * @param index - index in uri where schema starts.
          * @throw URISyntaxException if the fragment has errors.
          */
@@ -163,6 +164,7 @@ namespace net {
          * Check the supplied user info for validity.
          * @param uri - the uri to parse.
          * @param userinfo - supplied user info
+         * @param index - index into the URI string where the data is located.
          * @return true if valid
          * @throw URISyntaxException if an error occurs
          */
@@ -172,9 +174,9 @@ namespace net {
         /**
          * distinguish between IPv4, IPv6, domain name and validate it based on
          * its type
-         * @param forceServer
-         * @param host - Host string to validate
-         * @return true if the host value if a valid domain name
+         * @param forceServer - true if the forceServer mode should be active.
+         * @param host - Host string to validate.
+         * @return true if the host value if a valid domain name.
          * @throws URISyntaxException if the host is invalid and forceServer is true.
          */
         bool isValidHost( bool forceServer, const std::string& host )

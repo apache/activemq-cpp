@@ -247,7 +247,9 @@ namespace commands{
 
         /**
          * Sets the value of the marshalledProperties field
-         * @param magic - const std::vector<char>
+         * @param marshalledProperties
+         *      The Byte Array vector that contains the marshaled form of the Message
+         *      properties, this is the data sent over the wire.
          */
         void setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties ) {
             this->marshalledProperties = marshalledProperties;
@@ -260,6 +262,11 @@ namespace commands{
         virtual const util::PrimitiveMap& getProperties() const {
             return properties;
         }
+
+        /**
+         * Gets the Properties for this Command
+         * @return the Properties object for this Command.
+         */
         virtual util::PrimitiveMap& getProperties() {
             return properties;
         }

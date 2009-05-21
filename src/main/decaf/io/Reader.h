@@ -26,8 +26,10 @@ namespace decaf{
 namespace io{
 
     /*
-     * Reader interface that wraps around an input stream and provides
-     * an interface for extracting the data from the input stream.
+     * Reader interface that wraps around an input stream and provides an interface
+     * for extracting the data from the input stream.
+     *
+     * @since 1.0
      */
     class DECAF_API Reader {
     public:

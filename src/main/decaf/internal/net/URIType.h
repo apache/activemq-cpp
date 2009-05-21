@@ -192,7 +192,7 @@ namespace net {
 
         /**
          * Sets the Path part of the URI.
-         * @paran path - Path part string.
+         * @param path - Path part string.
          */
         void setPath( const std::string& path ) {
             this->path = path;
@@ -280,7 +280,7 @@ namespace net {
 
         /**
          * Gets if the URI is valid, meaning that the source has been set and
-         * parsed and all relevant data fields have been set..
+         * parsed and all relevant data fields have been set.
          * @returns true if the URIType contains valid data.
          */
         bool isValid() const {
@@ -289,7 +289,7 @@ namespace net {
 
         /**
          * Sets if the URI is valid, meaning that the source has been set and
-         * parsed and all relevant data fields have been set..
+         * parsed and all relevant data fields have been set.
          * @param valid - true if the URIType contains valid data.
          */
         void setValid( bool valid ) {

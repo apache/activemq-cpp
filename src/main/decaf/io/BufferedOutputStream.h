@@ -56,17 +56,26 @@ namespace io{
 
         /**
          * Constructor.
-         * @param stream the target output stream.
+         *
+         * @param stream
+         *      The target output stream.
+         * @param own
+         *      Indicates if this class owns the stream pointer.
          */
         BufferedOutputStream( OutputStream* stream, bool own = false );
 
         /**
-         * Constructor
-         * @param stream the target output stream.
-         * @param bufSize the size for the internal buffer.
+         * Constructor.
+         *
+         * @param stream
+         *      The target output stream.
+         * @param bufferSize
+         *      The size for the internal buffer.
+         * @param own
+         *      Indicates if this class owns the stream pointer.
          */
         BufferedOutputStream( OutputStream* stream,
-                              std::size_t bufSize,
+                              std::size_t bufferSize,
                               bool own = false )
             throw ( lang::exceptions::IllegalArgumentException );
 
@@ -90,7 +99,7 @@ namespace io{
         /**
          * Writes an array of bytes to the output stream.
          * @param buffer The array of bytes to write.
-         * @param offset, the position to start writing in buffer.
+         * @param offset the position to start writing in buffer.
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          * @throws NullPointerException thrown if buffer is Null.
@@ -116,8 +125,10 @@ namespace io{
 
         /**
          * Initializes the internal structures.
+         * @param bufferSize
+         *      How large to make the initial buffer when creating it.
          */
-        void init( std::size_t bufSize );
+        void init( std::size_t bufferSize );
 
         /**
          * Writes the contents of the buffer to the output stream.

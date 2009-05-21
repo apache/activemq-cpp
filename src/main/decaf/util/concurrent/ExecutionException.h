@@ -28,8 +28,7 @@ namespace concurrent{
      * throwing an exception. This exception can be inspected using the Throwable.getCause()
      * method.
      */
-    class DECAF_API ExecutionException : public decaf::lang::Exception
-    {
+    class DECAF_API ExecutionException : public decaf::lang::Exception {
     public:
 
         /**
@@ -39,7 +38,7 @@ namespace concurrent{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         * @param ex - An exception that should become this type of Exception
          */
         ExecutionException( const decaf::lang::Exception& ex ) throw()
         : decaf::lang::Exception()
@@ -49,6 +48,8 @@ namespace concurrent{
 
         /**
          * Copy Constructor
+         *
+         * @param ex - The Exception to copy in this new instance.
          */
         ExecutionException( const ExecutionException& ex ) throw()
         : decaf::lang::Exception()
@@ -58,6 +59,7 @@ namespace concurrent{
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
@@ -68,10 +70,10 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param msg - The message to report
+         * @param ...  - The list of primitives that are formatted into the message
          */
         ExecutionException( const char* file, const int lineNumber,
                             const char* msg, ... ) throw()
@@ -90,11 +92,11 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param cause - The exception that was the cause for this one to be thrown.
+         * @param msg - The message to report
+         * @param ... - list of primitives that are formatted into the message
          */
         ExecutionException( const char* file, const int lineNumber,
                             const std::exception* cause,
@@ -113,14 +115,13 @@ namespace concurrent{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @returns a new instance of an exception that is a clone of this one.
          */
         virtual ExecutionException* clone() const{
             return new ExecutionException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~ExecutionException() throw() {}
 
     };

@@ -18,6 +18,7 @@
 #ifndef _DECAF_SECURITY_CERT_CERTIFICATENOTYETVALIDEXCEPTION_H_
 #define _DECAF_SECURITY_CERT_CERTIFICATENOTYETVALIDEXCEPTION_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/security/cert/CertificateException.h>
 
 namespace decaf{
@@ -25,8 +26,8 @@ namespace security{
 namespace cert{
 
     /*
-     * Certificate is not yet valid exception. This is thrown whenever the 
-     * current Date or the specified Date  is before the notBefore 
+     * Certificate is not yet valid exception. This is thrown whenever the
+     * current Date or the specified Date  is before the notBefore
      * date/time in the Certificate validity period.
      */
     class DECAF_API CertificateNotYetValidException : public CertificateException
@@ -64,8 +65,8 @@ namespace cert{
          * Constructor - Initializes the file name and line number where
          * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * 
-         * @param file 
+         *
+         * @param file
          *      name where exception occurs
          * @param lineNumber
          *      line number where the exception occurred.
@@ -91,7 +92,7 @@ namespace cert{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
-         * 
+         *
          * @return A deep copy of this exception.
          */
         virtual CertificateNotYetValidException* clone() const{

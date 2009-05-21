@@ -99,6 +99,10 @@ namespace commands{
          * Compares the DataStructure passed in to this one, and returns if
          * they are equivalent.  Equivalent here means that they are of the
          * same type, and that each element of the objects are the same.
+         *
+         * @param value
+         *      The Command to compare to this one.
+         *
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
@@ -130,8 +134,11 @@ namespace commands{
 
         /**
          * sets the bytes given to the message body.
-         * @param Byte Buffer to copy
-         * @param Number of bytes in Buffer to copy
+         *
+         * @param buffer
+         *      Byte Buffer to copy.
+         * @param numBytes
+         *      Number of bytes in Buffer to copy.
          * @throws CMSException
          */
         virtual void setBodyBytes( const unsigned char* buffer,
@@ -214,7 +221,7 @@ namespace commands{
         /**
          * Writes a byte array to the bytes message stream using the vector
          * size as the number of bytes to write.
-         * @param value - bytes to write to the stream
+         * @param value - bytes to write to the stream.
          * @throws CMSException
          */
         virtual void writeBytes(
@@ -237,7 +244,7 @@ namespace commands{
          * array value, then an IndexOutOfBoundsException is thrown. No bytes
          * will be read from the stream for this exception case.
          *
-         * @param value - the buffer into which the data is read
+         * @param buffer - the buffer into which the data is read
          * @param length - the number of bytes to read; must be less than or
          *                 equal to value.length
          * @returns the total number of bytes read into the buffer, or -1 if

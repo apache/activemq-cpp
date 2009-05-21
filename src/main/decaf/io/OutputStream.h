@@ -55,7 +55,7 @@ namespace io{
         /**
          * Writes an array of bytes to the output stream.
          * @param buffer The array of bytes to write.
-         * @param offset, the position to start writing in buffer.
+         * @param offset the position to start writing in buffer.
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          * @throws NullPointerException thrown if buffer is Null.

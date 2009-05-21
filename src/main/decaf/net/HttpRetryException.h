@@ -34,7 +34,7 @@ namespace net{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         * @param ex An exception that should become this type of Exception
          */
         HttpRetryException( const Exception& ex ) throw()
         : io::IOException()
@@ -44,6 +44,7 @@ namespace net{
 
         /**
          * Copy Constructor
+         * @param ex An exception that should become this type of Exception
          */
         HttpRetryException( const HttpRetryException& ex ) throw()
         : io::IOException()
@@ -55,11 +56,11 @@ namespace net{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         HttpRetryException( const char* file, const int lineNumber,
                             const std::exception* cause,
@@ -86,10 +87,10 @@ namespace net{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         HttpRetryException( const char* file, const int lineNumber,
                             const char* msg, ... ) throw ()
@@ -107,14 +108,13 @@ namespace net{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return a new Exception instance that is a copy of this Exception object.
          */
         virtual HttpRetryException* clone() const {
             return new HttpRetryException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~HttpRetryException() throw() {}
 
     };

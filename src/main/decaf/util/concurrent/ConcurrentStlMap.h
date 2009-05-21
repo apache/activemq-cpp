@@ -39,6 +39,8 @@ namespace concurrent{
      * implementations synchronizes all methods such that any call to this class
      * will block if another thread is already holding a lock, much like the
      * Java HashTable.
+     *
+     * @since 1.0
      */
     template <typename K, typename V, typename COMPARATOR = std::less<K> >
     class ConcurrentStlMap : public ConcurrentMap<K, V, COMPARATOR> {
@@ -207,6 +209,10 @@ namespace concurrent{
             throw lang::exceptions::NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
+
+        /**
+         * {@inheritDoc}
+         */
         virtual const V& get( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) {
 
@@ -244,6 +250,10 @@ namespace concurrent{
                 this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
             }
         }
+
+        /**
+         * {@inheritDoc}
+         */
         virtual void putAll( const Map<K,V,COMPARATOR>& other )
             throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
 
@@ -279,7 +289,6 @@ namespace concurrent{
 
             return result;
         }
-
 
         /**
          * {@inheritDoc}

@@ -299,10 +299,7 @@ namespace commands{
          * Returns true if this destination represents a collection of
          * destinations; allowing a set of destinations to be published to or
          * subscribed from in one CMS operation.
-         * <p/>
-         * If this destination is a composite then you can call
-         * {@link #getChildDestinations()}
-         * to return the list of child destinations.
+         *
          * @return true if this destination represents a collection of child
          *         destinations.
          */
@@ -319,7 +316,7 @@ namespace commands{
         }
 
         /**
-         * @returns a reference (const) to the options properties for this Dest.
+         * @returns a reference (const) to the options properties for this Destination.
          */
         const activemq::util::ActiveMQProperties& getOptions() const {
             return options;

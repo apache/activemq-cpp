@@ -212,7 +212,9 @@ namespace io{
          * If a stream instance reports that marks are supported then the stream
          * will ensure that the same bytes can be read again after the reset method
          * is called so long the readLimit is not reached.
-         * @param readLimit - max bytes read before marked position is invalid.
+         *
+         * @param readLimit
+         *      The max bytes read before marked position is invalid.
          */
         virtual void mark( int readLimit ) {
             try {
@@ -280,62 +282,26 @@ namespace io{
 
     public:  // Synchronizable
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
-        /**
-         * Unlocks the object.
-         * @throws Exception
-         */
         virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs the time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws Exception
-         */
         virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
             mutex.wait(millisecs);
         }
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
