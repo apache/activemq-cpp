@@ -27,6 +27,14 @@ namespace cms{
     /**
      * Interface for a text message.
      *
+     * A TextMessage can contain any Text based pay load such as an XML Document or
+     * other Text based document.
+     *
+     * Like all Messages, a TextMessage is received in Read-Only mode, any attempt to write
+     * to the Message will result in a MessageNotWritableException being thrown until the
+     * <code>clearBody</code> method is called which will erase the contents and place the
+     * message back in a read / write mode.
+     *
      * @since 1.0
      */
     class CMS_API TextMessage : public Message{

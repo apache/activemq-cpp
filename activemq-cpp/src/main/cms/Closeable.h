@@ -26,6 +26,10 @@ namespace cms{
     /**
      * Interface for a class that implements the close method.
      *
+     * A class that implements this interface should release all resources upon the close
+     * call and should throw an exception from any methods that require those resources
+     * after they have been closed.
+     *
      * @since 1.0
      */
     class CMS_API Closeable{

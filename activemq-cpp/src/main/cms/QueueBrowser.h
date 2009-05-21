@@ -31,6 +31,11 @@ namespace cms{
     /**
      * This class implements in interface for browsing the messages in a Queue
      * without removing them.
+     * <p>
+     * The <code>getEnumeration</code> method of this class returns a static snapshot of
+     * the Queue at the time the method is called.  Since new Message's can be arriving and
+     * old Message's could expire the client should periodically refresh its view by calling
+     * <code>getEnumeration</code> again.
      *
      * @since 1.1
      */

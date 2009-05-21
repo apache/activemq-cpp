@@ -27,21 +27,21 @@ namespace cms{
 
     /**
      * A client uses a <code>MessageConsumer</code> to received messages
-     * from a destination.<br>
-     * <br>
+     * from a destination.
+     *
      * A client may either synchronously receive a message consumer's messages
-     * or have the consumer asynchronously deliver them as they arrive. <br>
-     * <br>
+     * or have the consumer asynchronously deliver them as they arrive.
+     *
      * For synchronous receipt, a client can request the next message from a
      * message consumer using one of its <code>receive</code> methods. There are
      * several variations of <code>receive</code> that allow a client to poll or
-     * wait for the next message.<br>
-     * <br>
+     * wait for the next message.
+     *
      * For asynchronous delivery, a client can register a
      * <code>MessageListener</code> object with a message consumer. As messages
      * arrive at the message consumer, it delivers them by calling the
      * <code>MessageListener</code>'s <code>onMessage</code> method.
-     * <br>
+     *
      * When the MessageConsumer's close method is called the method can block while
      * an asynchronous message delivery is in progress or until a <code>receive</code>
      * operation completes.  A blocked consumer in a <code>receive</code> call will

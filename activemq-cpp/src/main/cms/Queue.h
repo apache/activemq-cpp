@@ -27,6 +27,11 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific queue name.
      *
+     * Messages sent to a Queue are sent to a Single Subscriber on that Queue Destination.
+     * This allows for Queues to be used as load balances implementing a SEDA based architecture.
+     * The length of time that a Provider will store a Message in a Queue is not defined by
+     * the CMS API, consult your Provider documentation for this information.
+     *
      * @since 1.0
      */
     class CMS_API Queue : public Destination{
