@@ -85,6 +85,11 @@ namespace util{
         bool isEmpty() const;
 
         /**
+         * @return The number of Properties in this Properties Object.
+         */
+        std::size_t size() const;
+
+        /**
          * Looks up the value for the given property.
          * @param name The name of the property to be looked up.
          * @return the value of the property with the given name, if it
