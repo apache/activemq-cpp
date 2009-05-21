@@ -46,6 +46,7 @@ namespace cms{
      *
      * A value written as the row type can be read as the column type.
      *
+     * <PRE>
      *  |        | boolean byte short char int long float double String byte[]
      *  |----------------------------------------------------------------------
      *  |boolean |    X                                            X
@@ -59,6 +60,7 @@ namespace cms{
      *  |String  |    X     X     X         X   X     X     X      X
      *  |byte[]  |                                                        X
      *  |----------------------------------------------------------------------
+     * </PRE>
      *
      * @since 1.0
      */

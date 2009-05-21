@@ -26,6 +26,11 @@ namespace cms{
     /**
      * Interface for a class that implements the start method.
      *
+     * An object that implements the Startable interface implies that until its start
+     * method is called it will be considered to be in a closed or stopped state and will
+     * throw an Exception to indicate that it is not in an started state if one of its
+     * methods is called.
+     *
      * @since 1.0
      */
     class CMS_API Startable {

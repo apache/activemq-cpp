@@ -25,10 +25,18 @@
 namespace cms{
 
     /**
-     * An interface encapsulating a provider-specific topic name.
+     * Defines a Temporary Topic based Destination.
+     *
+     * A TemporaryTopic is a special type of Topic Destination that can only be consumed
+     * from the Connection which created it.  TemporaryTopics are most commonly used as the
+     * reply to address for Message's that implement the request response pattern.
+     *
+     * A TemporaryTopic is guaranteed to exist at the Provider only for the lifetime of the
+     * Connection that created it.
+     *
+     * @since 1.0
      */
-    class CMS_API TemporaryTopic : public Destination
-    {
+    class CMS_API TemporaryTopic : public Destination {
     public:
 
         virtual ~TemporaryTopic() {}
@@ -43,7 +51,7 @@ namespace cms{
         virtual std::string getTopicName() const throw( CMSException ) = 0;
 
         /**
-         * Destroy's the Temp Destination at the Broker
+         * Destroy's the Temporary Destination at the Provider
          *
          * @throws CMSException
          */

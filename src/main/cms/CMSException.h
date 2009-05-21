@@ -28,21 +28,30 @@
 
 namespace cms{
 
-	class CMSExceptionData;
+    class CMSExceptionData;
 
     /**
-     * This class represents an error that has occurred in cms, providers
+     * CMS API Exception that is the base for all exceptions thrown from CMS
+     * classes.
+     * <p>
+     * This class represents an error that has occurred in CMS, providers
      * can wrap provider specific exceptions in this class by setting the
      * cause to an instance of a provider specific exception provided it
      * can be cast to an std::exception.
+     * <p>
+     * Since the contained cause exception is of type std::exception and the
+     * C++ exception class has no clone or copy method defined the contained
+     * exception can only be owned by one instance of an CMSException.  To that
+     * end the class hands off the exception to each successive copy so care must
+     * be taken when handling CMSException instances.
      *
      * @since 1.0
      */
     class CMS_API CMSException : public std::exception {
     private:
 
-    	// The actual data that defines this exception.
-    	CMSExceptionData* data;
+        // The actual data that defines this exception.
+        CMSExceptionData* data;
 
     public:
 

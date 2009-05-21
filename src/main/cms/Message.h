@@ -29,6 +29,27 @@ namespace cms{
      * Root of all messages.  As in JMS, a message is comprised of 3 parts:
      * CMS-specific headers, user-defined properties, and the body.
      *
+     * <B>Message Bodies</B>
+     *
+     * The CMS API defines four types of message bodies, each type is contained within its
+     * own Message Interface definition.
+     *
+     *   - Stream - A StreamMessage object's message body contains a stream of primitive values
+     *              in the C++ language. It is filled and read sequentially.  Unlike the
+     *              BytesMessage type the values written to a StreamMessage retain information
+     *              on their type and rules for type conversion are enforced when reading back
+     *              the values from the Message Body.
+     *   - Map - A MapMessage object's message body contains a set of name-value pairs, where
+     *           names are std::string objects, and values are C++ primitives. The entries can
+     *           be accessed sequentially or randomly by name.  The MapMessage makes no garuntee
+     *           on the order of the elements within the Message body.
+     *   - Text - A TextMessage object's message body contains a std::string object. This message
+     *            type can be used to transport plain-text messages, and XML messages.
+     *   - Bytes - A BytesMessage object's message body contains a stream of uninterpreted bytes.
+     *             This message type is for literally encoding a body to match an existing message
+     *             format. In many cases, it is possible to use one of the other body types,
+     *             which are easier to use.
+     *
      * <B>Message Properties</B>
      *
      * Message properties support the following conversion table. The marked cases
@@ -39,6 +60,7 @@ namespace cms{
      *
      * A value written as the row type can be read as the column type.
      *
+     * <PRE>
      *    |        | boolean byte short int long float double String
      *    |----------------------------------------------------------
      *    |boolean |    X                                       X
@@ -50,6 +72,7 @@ namespace cms{
      *    |double  |                                     X      X
      *    |String  |    X     X     X    X   X     X     X      X
      *    |----------------------------------------------------------
+     * </PRE>
      *
      * When a Message is delivered its properties are considered to be in a read-only
      * mode and cannot be changed.  Attempting to change the value of a delivered

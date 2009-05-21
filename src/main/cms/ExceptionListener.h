@@ -27,10 +27,10 @@ namespace cms{
      * If a CMS provider detects a serious problem, it notifies the client
      * application through an <code>ExceptionListener</code> that is registered
      * with the <code>Connection</code>.
-     *
+     * <p>
      * An exception listener allows a client to be notified of a problem asynchronously.
-     * Some connections only consume messages, so they would have no other way to learn
-     * that their connection has failed.
+     * Some connections only consume messages via the asynchronous event mechanism so
+     * they would have no other way to learn that their connection has failed.
      *
      * @since 1.0
      */
