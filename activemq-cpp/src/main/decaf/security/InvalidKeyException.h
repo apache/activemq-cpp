@@ -27,8 +27,7 @@ namespace security{
      * This is the exception for invalid Keys (invalid encoding, wrong length,
      * uninitialized, etc).
      */
-    class DECAF_API InvalidKeyException : public KeyException
-    {
+    class DECAF_API InvalidKeyException : public KeyException {
     public:
 
         /**
@@ -62,11 +61,11 @@ namespace security{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         InvalidKeyException( const char* file, const int lineNumber,
                              const std::exception* cause,

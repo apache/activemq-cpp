@@ -101,7 +101,7 @@ namespace commands{
 
         /**
          * Perform any processing needed before an marshal
-         * @param wireformat - the OpenWireFormat object in use.
+         * @param wireFormat - the OpenWireFormat object in use.
          */
         virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
             throw ( decaf::io::IOException );
@@ -214,7 +214,7 @@ namespace commands{
          * array value, then an IndexOutOfBoundsException is thrown. No bytes
          * will be read from the stream for this exception case.
          *
-         * @param value - the buffer into which the data is read
+         * @param buffer - the buffer into which the data is read
          * @param length - the number of bytes to read; must be less than or
          *                 equal to value.length
          * @returns the total number of bytes read into the buffer, or -1 if

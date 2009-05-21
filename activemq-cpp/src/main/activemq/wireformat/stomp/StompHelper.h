@@ -109,7 +109,7 @@ namespace stomp {
         /**
          * Converts a ConsumerId instance to a Stomp ConsumerId String.
          *
-         * @param ConsumerId - the Consumer instance to convert.
+         * @param consumerId - the Consumer instance to convert.
          * @return a Stomp Consumer Id String.
          */
         std::string convertConsumerId( const Pointer<ConsumerId>& consumerId );
@@ -117,7 +117,7 @@ namespace stomp {
         /**
          * Converts a Stomp ConsumerId string to a ConsumerId
          *
-         * @param ConsumerId - the String Consumer Id to convert.
+         * @param consumerId - the String Consumer Id to convert.
          * @return Pointer to a new ConsumerId.
          */
         Pointer<ConsumerId> convertConsumerId( const std::string& consumerId );

@@ -58,7 +58,10 @@ namespace util{
          * Parse the Query portion of a URI String and return a Simple
          * Properties object containing the parameter names as keys, and
          * the parameter values and values of the Properties.
-         * @param query. the query string to parse.
+         *
+         * @param query
+         *      The query string to parse and extract the encoded properties.
+         *
          * @returns Properties object with the parsed output.
          *
          * @throw IllegalArgumentException if the Query string is not well formed.

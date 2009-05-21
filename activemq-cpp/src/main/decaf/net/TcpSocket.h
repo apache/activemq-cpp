@@ -79,9 +79,7 @@ namespace net{
         TcpSocket( SocketHandle socketHandle );
 
         /**
-         * Destruct.
-         * Releases the socket handle but not
-         * gracefully shut down the connection.
+         * Releases the socket handle but not gracefully shut down the connection.
          */
         virtual ~TcpSocket();
 
@@ -99,19 +97,18 @@ namespace net{
          * @param host The host of the server to connect to.
          * @param port The port of the server to connect to.
          * @param timeout of socket in microseconds
-         * @throws IOException Thrown if a failure occurred in the connect.
+         * @throws SocketException Thrown if a failure occurred in the connect.
          */
-        void connect( const char* host, int port, int timeout) throw( SocketException );
+        void connect( const char* host, int port, int timeout ) throw( SocketException );
 
         /**
          * Connects to the specified destination. Closes this socket if
          * connected to another destination.
          * @param host The host of the server to connect to.
          * @param port The port of the server to connect to.
-         * @throws IOException Thrown if a failure occurred in the connect.
+         * @throws SocketException Thrown if a failure occurred in the connect.
          */
-        virtual void connect( const char* host, int port ) throw(SocketException)
-        {
+        virtual void connect( const char* host, int port ) throw( SocketException ) {
             connect(host,port,-1);
         }
 
@@ -221,7 +218,7 @@ namespace net{
 
         /**
          * Closes this object and deallocates the appropriate resources.
-         * @throws CMSException
+         * @throws Exception
          */
         virtual void close() throw( lang::Exception );
 
@@ -230,14 +227,14 @@ namespace net{
         /**
          * Gets the Status of the TCP_NODELAY param for this socket as a Bool
          * @returns true if TCP_NODELAY is enabled
-         * @throws CMSException
+         * @throws Exception
          */
         virtual bool getTcpNoDelay() const throw ( lang::Exception );
 
         /**
          * Sets the Status of the TCP_NODELAY param for this socket as a Bool
          * @param value - true if TCP_NODELAY is to be enabled
-         * @throws CMSException
+         * @throws Exception
          */
         virtual void setTcpNoDelay( bool value ) throw ( lang::Exception );
 

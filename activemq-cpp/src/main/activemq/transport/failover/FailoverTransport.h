@@ -193,7 +193,8 @@ namespace failover {
 
         /**
          * Sets the WireFormat instance to use.
-         * @param WireFormat the object used to encode / decode commands.
+         * @param wireFormat
+         *      The WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 

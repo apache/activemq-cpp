@@ -53,8 +53,13 @@ namespace stomp {
          * Stream based marshaling of a Command, this method blocks until the entire
          * Command has been written out to the output stream.
          *
-         * @param command - The Command to Marshal
-         * @param out - the output stream to write the command to.
+         * @param command
+         *      The Command to Marshal to the output stream.
+         * @param transport
+         *      The Transport that initiated this marshal call.
+         * @param out
+         *      The output stream to write the command to.
+         *
          * @throws IOException
          */
         virtual void marshal( const Pointer<commands::Command>& command,

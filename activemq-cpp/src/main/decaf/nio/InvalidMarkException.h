@@ -34,7 +34,9 @@ namespace nio{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         *
+         * @param ex
+         *      The Exception whose state data is to be copied into this Exception.
          */
         InvalidMarkException( const lang::Exception& ex ) throw()
         : lang::exceptions::IllegalStateException() {
@@ -43,6 +45,9 @@ namespace nio{
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The Exception whose state data is to be copied into this Exception.
          */
         InvalidMarkException( const InvalidMarkException& ex ) throw()
         : lang::exceptions::IllegalStateException() {
@@ -53,11 +58,11 @@ namespace nio{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         InvalidMarkException( const char* file, const int lineNumber,
                               const std::exception* cause,
@@ -84,10 +89,10 @@ namespace nio{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         InvalidMarkException( const char* file, const int lineNumber,
                               const char* msg, ... ) throw ()
@@ -105,14 +110,13 @@ namespace nio{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return A new Exception instance that is a copy of this Exception.
          */
         virtual InvalidMarkException* clone() const {
             return new InvalidMarkException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~InvalidMarkException() throw() {}
 
     };

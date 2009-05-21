@@ -18,33 +18,35 @@
 #ifndef _DECAF_SECURITY_PRINCIPAL_H_
 #define _DECAF_SECURITY_PRINCIPAL_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf {
 namespace security {
 
     /**
-     * Base interface for a principal, which can represent an individual or 
+     * Base interface for a principal, which can represent an individual or
      * organization.
      */
-    class Principal {        
+    class DECAF_API Principal {
     public:
-        
+
         virtual ~Principal() {}
-        
+
         /**
          * Compares two principals to see if they are the same.
-         * 
+         *
          * @param another
          *      A principal to be tested for equality to this one.
          * @return true if the given principal is equivalent to this one.
          */
         virtual bool equals( const Principal& another ) const = 0;
-        
+
         /**
          * Provides the name of this principal.
-         * 
+         *
          * @return the name of this principal.
          */
-        virtual std::string getName() const = 0;        
+        virtual std::string getName() const = 0;
     };
 }}
 

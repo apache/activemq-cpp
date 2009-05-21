@@ -73,7 +73,6 @@ namespace tcp{
          * Constructor
          * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
-         * @param own indicates if this transport owns the next.
          */
         TcpTransport( const decaf::util::Properties& properties,
                       const Pointer<Transport>& next );
@@ -83,7 +82,6 @@ namespace tcp{
          * @param uri - The URI containing the host to connect to.
          * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
-         * @param own indicates if this transport owns the next.
          */
         TcpTransport( const decaf::net::URI& uri,
                       const decaf::util::Properties& properties,

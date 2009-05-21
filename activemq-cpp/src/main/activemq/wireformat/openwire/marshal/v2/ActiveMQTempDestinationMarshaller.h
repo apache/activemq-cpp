@@ -53,11 +53,14 @@ namespace v2{
         virtual ~ActiveMQTempDestinationMarshaller() {}
 
         /**
-         * Un-marshal an object instance from the data input stream
-         * @param wireFormat - describes the wire format of the broker
-         * @param o - Object to be un-marshaled
-         * @param dataIn - BinaryReader that provides that data
-         * @param bs - BooleanStream
+         * Un-marshal an object instance from the data input stream.
+         *
+         * @param wireFormat - describes the wire format of the broker.
+         * @param dataStructure - Object to be un-marshaled.
+         * @param dataIn - BinaryReader that provides that data.
+         * @param bs - BooleanStream stream used to unpack bits from the wire.
+         *
+         * @throws IOException if an error occurs during the unmarshal.
          */
         virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
@@ -66,10 +69,13 @@ namespace v2{
 
         /**
          * Write the booleans that this object uses to a BooleanStream
+         *
          * @param wireFormat - describes the wire format of the broker
-         * @param o - Object to be marshaled
-         * @param bs - BooleanStream
-         * @returns int
+         * @param dataStructure - Object to be marshaled
+         * @param bs - BooleanStream stream used to pack bits from the wire.
+         * @returns int value indicating the size of the marshaled object.
+         *
+         * @throws IOException if an error occurs during the marshal.
          */
         virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
@@ -77,10 +83,13 @@ namespace v2{
 
         /**
          * Write a object instance to data output stream
+         *
          * @param wireFormat - describes the wire format of the broker
-         * @param o - Object to be marshaled
+         * @param dataStructure - Object to be marshaled
          * @param dataOut - BinaryReader that provides that data sink
-         * @param bs - BooleanStream
+         * @param bs - BooleanStream stream used to pack bits from the wire.
+         *
+         * @throws IOException if an error occurs during the marshal.
          */
         virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
@@ -89,9 +98,12 @@ namespace v2{
 
         /**
          * Un-marshal an object instance from the data input stream
+         *
          * @param wireFormat - describes the wire format of the broker
-         * @param o - Object to be marshaled
+         * @param dataStructure - Object to be marshaled
          * @param dataIn - BinaryReader that provides that data source
+         *
+         * @throws IOException if an error occurs during the unmarshal.
          */
         virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
@@ -99,9 +111,12 @@ namespace v2{
 
         /**
          * Write a object instance to data output stream
+         *
          * @param wireFormat - describs the wire format of the broker
-         * @param o - Object to be marshaled
+         * @param dataStructure - Object to be marshaled
          * @param dataOut - BinaryWriter that provides that data sink
+         *
+         * @throws IOException if an error occurs during the marshal.
          */
         virtual void looseMarshal( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,

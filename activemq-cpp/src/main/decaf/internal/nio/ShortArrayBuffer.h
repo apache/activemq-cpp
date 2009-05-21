@@ -51,7 +51,7 @@ namespace nio{
          * @param capacity - size of the array, this is the limit we read and write to.
          * @param readOnly - should this buffer be read-only, default as false
          */
-        ShortArrayBuffer( std::size_t capactiy, bool readOnly = false );
+        ShortArrayBuffer( std::size_t capacity, bool readOnly = false );
 
         /**
          * Creates a ShortArrayBuffer object that wraps the given array.  If the own flag
@@ -63,7 +63,7 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          */
         ShortArrayBuffer( short* array, std::size_t offset,
-                        std::size_t capacity, bool readOnly = false )
+                          std::size_t capacity, bool readOnly = false )
             throw( decaf::lang::exceptions::NullPointerException );
 
         /**
@@ -71,15 +71,14 @@ namespace nio{
          * start at the given offset.  The capacity and limit of the new ShortArrayBuffer
          * will be that of the remaining capacity of the passed buffer.
          * @param array - the ByteArrayPerspective to wrap
-         * @param offset - the offset into array where the buffer starts
+         * @param offset - the position that is this buffers start pos.
          * @param capacity - the length of the array we are wrapping or limit.
          * @param readOnly - is this a readOnly buffer.
-         * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
         ShortArrayBuffer( ByteArrayPerspective& array,
-                        std::size_t offset, std::size_t capacity,
-                        bool readOnly = false )
+                          std::size_t offset, std::size_t capacity,
+                          bool readOnly = false )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
@@ -87,7 +86,6 @@ namespace nio{
          * reference to this buffers ByteArrayPerspective and when changes
          * are made to that data it is reflected in both.
          * @param other - the ShortArrayBuffer this one is to mirror.
-         * @param readOnly - should this buffer be read-only, default as false
          */
         ShortArrayBuffer( const ShortArrayBuffer& other );
 

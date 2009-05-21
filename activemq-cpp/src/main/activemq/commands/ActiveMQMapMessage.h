@@ -79,7 +79,7 @@ namespace commands{
 
         /**
          * Perform any processing needed before an marshal
-         * @param wireformat - the OpenWireFormat object in use.
+         * @param wireFormat - the OpenWireFormat object in use.
          */
         virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
             throw ( decaf::io::IOException );

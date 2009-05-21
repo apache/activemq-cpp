@@ -56,7 +56,7 @@ namespace io{
          * Creates a DataInputStream that uses the specified underlying
          * InputStream.
          * @param inputStream the InputStream instance to wrap.
-         * @param own, indicates if this class owns the wrapped string
+         * @param own indicates if this class owns the wrapped string
          * defaults to false.
          */
         DataInputStream( InputStream* inputStream, bool own = false );

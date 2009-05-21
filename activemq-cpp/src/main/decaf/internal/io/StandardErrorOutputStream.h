@@ -65,9 +65,14 @@ namespace io{
 
         /**
          * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param offset, the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
+         *
+         * @param buffer
+         *      The array of bytes to write.
+         * @param offset
+         *      The position to start writing in buffer.
+         * @param len
+         *      The number of bytes from the buffer to be written.
+         *
          * @throws decaf::io::IOException thrown if an error occurs.
          * @throws NullPointerException if buffer is null.
          */
@@ -92,62 +97,22 @@ namespace io{
 
     public:
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void lock() throw( decaf::lang::Exception ){
             mutex.lock();
         }
 
-        /**
-         * Unlocks the object.
-         * @throws Exception
-         */
-        virtual void unlock() throw( decaf::lang::Exception ){
-            mutex.unlock();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void wait() throw( decaf::lang::Exception ){
             mutex.wait();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param time in milliseconds to wait, or WAIT_INIFINITE
-         * @throws Exception
-         */
         virtual void wait( unsigned long millisecs ) throw( decaf::lang::Exception ){
             mutex.wait( millisecs );
         }
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void notify() throw( decaf::lang::Exception ){
             mutex.notify();
         }
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws Exception
-         */
         virtual void notifyAll() throw( decaf::lang::Exception ){
             mutex.notifyAll();
         }

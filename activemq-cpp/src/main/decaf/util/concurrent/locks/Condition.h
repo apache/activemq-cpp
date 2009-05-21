@@ -318,7 +318,7 @@ namespace locks {
             throw( decaf::lang::exceptions::InterruptedException,
                    decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
-        /**
+        /*
          * Causes the current thread to wait until it is signalled or interrupted, or the
          * specified deadline elapses.
          * <p>

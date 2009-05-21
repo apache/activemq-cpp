@@ -50,10 +50,14 @@ namespace net{
         virtual ~SocketFactory() {}
 
         /**
-         * Creates and returns a Socket dervied Object based on the values
+         * Creates and returns a Socket derived Object based on the values
          * defined in the Properties Object that is passed in.
-         * @param the URI for the Socket Connection.
-         * @param properties a IProperties pointer.
+         *
+         * @param uri
+         *      the URI for the Socket Connection.
+         * @param properties
+         *      A Properties object that contains configuration details.
+         *
          * @throws SocketException.
          */
         static Socket* createSocket( const std::string& uri,

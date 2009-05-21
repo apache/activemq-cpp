@@ -312,7 +312,7 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::OutputStream* out, const std::string& comments )
+        void store( decaf::io::OutputStream* out, const std::string& comment )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException );
 
