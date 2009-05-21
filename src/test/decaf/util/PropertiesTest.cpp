@@ -77,8 +77,8 @@ void PropertiesTest::testAssign() {
 ////////////////////////////////////////////////////////////////////////////////
 void PropertiesTest::testCopy() {
 
-    Properties properties2;
     Properties properties1;
+    Properties properties2;
 
     properties1.setProperty( "A", "A" );
     properties1.setProperty( "B", "B" );
@@ -159,4 +159,32 @@ void PropertiesTest::testClear() {
 
     CPPUNIT_ASSERT( properties1.size() == 0 );
     CPPUNIT_ASSERT( properties1.isEmpty() == true );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testEquals() {
+
+    Properties properties1;
+    Properties properties2;
+
+    properties1.setProperty( "A", "A" );
+    properties1.setProperty( "B", "B" );
+    properties1.setProperty( "C", "C" );
+    properties1.setProperty( "D", "D" );
+
+    CPPUNIT_ASSERT( properties2.hasProperty( "A" ) == false );
+    CPPUNIT_ASSERT( properties2.hasProperty( "B" ) == false );
+    CPPUNIT_ASSERT( properties2.hasProperty( "C" ) == false );
+    CPPUNIT_ASSERT( properties2.hasProperty( "D" ) == false );
+
+    CPPUNIT_ASSERT( !properties2.equals( properties1 ) );
+
+    properties2.copy( properties1 );
+
+    CPPUNIT_ASSERT( properties2.hasProperty( "A" ) == true );
+    CPPUNIT_ASSERT( properties2.hasProperty( "B" ) == true );
+    CPPUNIT_ASSERT( properties2.hasProperty( "C" ) == true );
+    CPPUNIT_ASSERT( properties2.hasProperty( "D" ) == true );
+
+    CPPUNIT_ASSERT( properties2.equals( properties1 ) );
 }

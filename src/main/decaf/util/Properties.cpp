@@ -199,6 +199,11 @@ void Properties::clear(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Properties::equals( const Properties& source ) const {
+    return this->internal->properties.equals( source.internal->properties );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string Properties::toString() const {
 
     std::ostringstream stream;
