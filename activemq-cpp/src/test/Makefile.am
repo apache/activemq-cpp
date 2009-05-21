@@ -45,6 +45,7 @@ cc_sources = \
     decaf/util/ListTest.cpp \
     decaf/util/StlMapTest.cpp \
     decaf/util/SetTest.cpp \
+    decaf/util/PropertiesTest.cpp \
     decaf/util/UUIDTest.cpp \
     decaf/internal/util/ByteArrayAdapterTest.cpp \
     decaf/internal/nio/ShortArrayBufferTest.cpp \
@@ -156,6 +157,7 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicIntegerTest.h \
     decaf/util/concurrent/TimeUnitTest.h \
     decaf/util/DateTest.h \
+    decaf/util/PropertiesTest.h \
     decaf/util/Endian.h \
     decaf/util/SetTest.h \
     decaf/util/RandomTest.h \
