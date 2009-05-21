@@ -38,6 +38,8 @@ namespace util{
      * Note: Great care must be exercised if mutable objects are used as set elements.
      * The behavior of a set is not specified if the value of an object is changed in a
      * manner that affects equals comparisons while the object is an element in the set.
+     *
+     * @since 1.0
      */
     template <typename E>
     class Set : public decaf::util::AbstractCollection<E> {

@@ -145,15 +145,17 @@ namespace util{
          * operation is in progress. (Note that this will occur if the specified collection
          * is this list, and it's nonempty.)
          *
-         * @param index index at which to insert the first element from the specified collection
-         * @param c collection containing elements to be added to this list
+         * @param index
+         *      The index at which to insert the first element from the specified collection
+         * @param source
+         *      The Collection containing elements to be added to this list
          *
          * @return true if this list changed as a result of the call
          *
          * @throw IndexOutOfBoundsException - if the index is greater than size
          * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual bool addAll( std::size_t index, const Collection<E>& c )
+        virtual bool addAll( std::size_t index, const Collection<E>& source )
             throw ( decaf::lang::exceptions::UnsupportedOperationException,
                     decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 

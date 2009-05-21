@@ -32,8 +32,8 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V, typename COMPARATOR = std::less<K> > 
-	class Map : public concurrent::Synchronizable {
+    template <typename K, typename V, typename COMPARATOR = std::less<K> >
+    class Map : public concurrent::Synchronizable {
     public:
 
         class Entry {
@@ -120,10 +120,21 @@ namespace util{
          * @param key The search key.
          * @return A reference to the value for the given key.
          *
-         * @throws NoSuchElementException
+         * @throws NoSuchElementException if the key requests doesn't exist in the Map.
          */
         virtual V& get( const K& key )
             throw( lang::exceptions::NoSuchElementException ) = 0;
+
+        /**
+         * Gets the value mapped to the specified key in the Map.  If there is no
+         * element in the map whose key is equivalent to the key provided then a
+         * NoSuchElementException is thrown.
+         *
+         * @param key The search key.
+         * @return A {const} reference to the value for the given key.
+         *
+         * @throws NoSuchElementException if the key requests doesn't exist in the Map.
+         */
         virtual const V& get( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) = 0;
 
@@ -139,8 +150,12 @@ namespace util{
 
         /**
          * Stores a copy of the Mappings contained in the other Map in this one.
-         * @param key The target key.
-         * @param value The value to be set.
+         *
+         * @param other
+         *      A Map instance whose elements are to all be inserted in this Map.
+         *
+         * @throws UnsupportedOperationException
+         *      If the implementing class does not support the putAll operation.
          */
         virtual void putAll( const Map<K,V,COMPARATOR>& other )
             throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
@@ -169,7 +184,7 @@ namespace util{
          * Iterator.remove, Set.remove, removeAll, retainAll and clear operations. It does not
          * support the add or addAll operations.
          */
-
+        // TODO
 
         /**
          * @return the entire set of keys in this map as a std::vector.

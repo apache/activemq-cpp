@@ -104,16 +104,20 @@ namespace marshal {
         /**
          * Allows an external source to add marshalers to this object for
          * types that may be marshaled or unmarhsaled.
-         * @param marshaller - the Marshaller to add to the collection.
+         * @param marshaler - the Marshaler to add to the collection.
          */
-        void addMarshaller( marshal::DataStreamMarshaller* marshaller );
+        void addMarshaller( marshal::DataStreamMarshaller* marshaler );
 
         /**
          * Stream based marshaling of a Command, this method blocks until the entire
          * Command has been written out to the output stream.
          *
-         * @param command - The Command to Marshal
-         * @param out - the output stream to write the command to.
+         * @param command
+         *      The Command to Marshal.
+         * @param transport
+         *      The Transport instance that called this method.
+         * @param out
+         *      The output stream to write the command to.
          * @throws IOException
          */
         virtual void marshal( const Pointer<commands::Command>& command,
@@ -123,8 +127,8 @@ namespace marshal {
 
         /**
          * Stream based un-marshaling, blocks on reads on the input stream until a complete
-         * command has been read and unmarshaled into the correct form.  Returns a Pointer
-         * to the newly unmarshaled Command.
+         * command has been read and un-marshaled into the correct form.  Returns a Pointer
+         * to the newly un-marshaled Command.
          *
          * @param transport - Pointer to the transport that is making this request.
          * @param in - the input stream to read the command from.
@@ -147,7 +151,7 @@ namespace marshal {
             throw ( decaf::io::IOException );
 
         /**
-         * Utility method that will Tight marshall some internally nested object
+         * Utility method that will Tight marshal some internally nested object
          * that implements the DataStructure interface.  Writes the data to the
          * Data Output Stream provided.
          * @param o - DataStructure object
@@ -164,7 +168,7 @@ namespace marshal {
          * Utility method used to Unmarshal a Nested DataStructure type object
          * from the given DataInputStream.  The DataStructure instance that is
          * returned is now the property of the caller.
-         * @param ds - DataInputStream to read from
+         * @param dis - DataInputStream to read from
          * @param bs - BooleanStream to read from
          * @returns Newly allocated DataStructure Object
          * @throws IOException if an error occurs.
@@ -175,7 +179,7 @@ namespace marshal {
 
         /**
          * Utility method to unmarshal an DataStructure object from an
-         * DataInputStream using the Loose Unmarshalling format.  Will read
+         * DataInputStream using the Loose Unmarshaling format.  Will read
          * the Data and construct a new DataStructure based Object, the
          * pointer to the Object returned is now owned by the caller.
          * @param dis - the DataInputStream to read the data from
@@ -183,7 +187,7 @@ namespace marshal {
          * @throws IOException if an error occurs.
          */
         commands::DataStructure* looseUnmarshalNestedObject(
-            decaf::io::DataInputStream* dis)
+            decaf::io::DataInputStream* dis )
                 throw ( decaf::io::IOException );
 
         /**
@@ -202,7 +206,7 @@ namespace marshal {
          * Called to re-negotiate the settings for the WireFormatInfo, these
          * determine how the client and broker communicate.
          * @param info - The new Wireformat Info settings
-         * @throws IllegalStateException is the params can't be negotiated.
+         * @throws IllegalStateException is wire format can't be negotiated.
          */
         void renegotiateWireFormat( const commands::WireFormatInfo& info )
             throw ( decaf::lang::exceptions::IllegalStateException );
@@ -232,7 +236,7 @@ namespace marshal {
 
         /**
          * Sets if the stackTraceEnabled flag is on
-         * @param stackTraceEnabled - ture to turn flag is on
+         * @param stackTraceEnabled - true to turn flag is on
          */
         void setStackTraceEnabled( bool stackTraceEnabled ) {
             this->stackTraceEnabled = stackTraceEnabled;
@@ -248,7 +252,7 @@ namespace marshal {
 
         /**
          * Sets if the tcpNoDelayEnabled flag is on
-         * @param tcpNoDelayEnabled - ture to turn flag is on
+         * @param tcpNoDelayEnabled - true to turn flag is on
          */
         void setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
             this->tcpNoDelayEnabled = tcpNoDelayEnabled;
@@ -278,7 +282,7 @@ namespace marshal {
 
         /**
          * Sets if the cacheEnabled flag is on
-         * @param cacheEnabled - ture to turn flag is on
+         * @param cacheEnabled - true to turn flag is on
          */
         void setCacheEnabled( bool cacheEnabled ) {
             this->cacheEnabled = cacheEnabled;
@@ -310,7 +314,7 @@ namespace marshal {
 
         /**
          * Sets if the tightEncodingEnabled flag is on
-         * @param tightEncodingEnabled - ture to turn flag is on
+         * @param tightEncodingEnabled - true to turn flag is on
          */
         void setTightEncodingEnabled( bool tightEncodingEnabled ) {
             this->tightEncodingEnabled = tightEncodingEnabled;
@@ -326,7 +330,7 @@ namespace marshal {
 
         /**
          * Sets if the sizePrefixDisabled flag is on
-         * @param sizePrefixDisabled - ture to turn flag is on
+         * @param sizePrefixDisabled - true to turn flag is on
          */
         void setSizePrefixDisabled( bool sizePrefixDisabled ) {
             this->sizePrefixDisabled = sizePrefixDisabled;

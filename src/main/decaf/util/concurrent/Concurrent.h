@@ -26,12 +26,12 @@ namespace concurrent{
 
 /**
  * The synchronized macro defines a mechanism for snycronizing
- * a scetion of code.  The macro must be passed an object that
+ * a section of code.  The macro must be passed an object that
  * implements the Syncronizable interface.
  *
  * The macro works by creating a for loop that will loop exactly
  * once, creating a Lock object that is scoped to the loop.  Once
- * the loop conpletes and exits the Lock object goes out of scope
+ * the loop completes and exits the Lock object goes out of scope
  * releasing the lock on object W.  For added safety the if else
  * is used because not all compiles restrict the lifetime of
  * loop variables to the loop, they will however restrict them
@@ -39,7 +39,7 @@ namespace concurrent{
  *
  * The macro would be used as follows.
  *
- * <Syncronizable> X;
+ * Syncronizable X;
  *
  * somefunction()
  * {

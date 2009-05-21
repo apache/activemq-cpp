@@ -49,19 +49,24 @@ namespace util{
 
         /**
          * Copy Constructor
-         * @param map - the Decaf Map of PrimitiveValueNodes to copy
+         *
+         * @param source
+         *      The Decaf Library Map instance whose elements will be copied into this Map.
          */
-        PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& src );
+        PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& source );
 
         /**
          * Copy Constructor
-         * @param map - the PrimitiveMap to copy
+         *
+         * @param source
+         *      The PrimitiveMap whose elements will be copied into this Map.
          */
-        PrimitiveMap( const PrimitiveMap& src );
+        PrimitiveMap( const PrimitiveMap& source );
 
         /**
          * Converts the contents into a formatted string that can be output
          * in a Log File or other debugging tool.
+         *
          * @returns formatted String of all elements in the map.
          */
         std::string toString() const;

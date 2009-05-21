@@ -511,11 +511,12 @@ namespace cmsutil {
          * Executes the given action and provides it with a CMS Session and
          * producer
          *
-         * @param dest
+         * @param destinationName
          *          the name of the destination to send messages to
          *          (to internally be resolved to an actual destination)
          * @param action
          *          the action to perform
+         *
          * @throws cms::CMSException thrown if an error occurs.
          */
         virtual void execute( const std::string& destinationName,

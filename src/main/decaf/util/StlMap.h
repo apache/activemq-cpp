@@ -32,6 +32,8 @@ namespace util{
      * Map template that wraps around a std::map to provide
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
+     *
+     * @since 1.0
      */
     template <typename K, typename V, typename COMPARATOR = std::less<K> >
     class StlMap : public Map<K, V, COMPARATOR> {
@@ -74,6 +76,9 @@ namespace util{
             return this->valueMap == source.valueMap;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         virtual bool equals( const Map<K,V,COMPARATOR>& source ) const {
             std::vector<K> keys = source.keySet();
 
@@ -99,6 +104,9 @@ namespace util{
             this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         virtual void copy( const Map<K,V,COMPARATOR>& source ) {
             this->clear();
             this->putAll( source );
@@ -168,6 +176,10 @@ namespace util{
 
             return iter->second;
         }
+
+        /**
+         * {@inheritDoc}
+         */
         virtual const V& get( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) {
 
@@ -198,6 +210,10 @@ namespace util{
 
             this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
         }
+
+        /**
+         * {@inheritDoc}
+         */
         virtual void putAll( const Map<K,V,COMPARATOR>& other )
             throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
 

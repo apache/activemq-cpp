@@ -61,7 +61,7 @@ namespace mock{
          * transport instances.
          *
          * @param location - URI location to connect to.
-         * @param wireformat - the assigned WireFormat for the new Transport.
+         * @param wireFormat - the assigned WireFormat for the new Transport.
          * @param properties - Properties to apply to the transport.
          *
          * @return Pointer to a new Transport instance.

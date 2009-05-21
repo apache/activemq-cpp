@@ -116,7 +116,7 @@ namespace nio{
          * @param capacity - size of the array, this is the limit we read and write to.
          * @param readOnly - should this buffer be read-only, default as false
          */
-        ByteArrayBuffer( std::size_t capactiy, bool readOnly = false );
+        ByteArrayBuffer( std::size_t capacity, bool readOnly = false );
 
         /**
          * Creates a ByteArrayBuffer object that wraps the given array.  If the own flag
@@ -139,7 +139,6 @@ namespace nio{
          * @param offset - the offset into array where the buffer starts
          * @param length - the length of the array we are wrapping or limit.
          * @param readOnly - is this a readOnly buffer.
-         * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
         ByteArrayBuffer( ByteArrayPerspective& array,
@@ -152,7 +151,6 @@ namespace nio{
          * reference to this buffers ByteArrayPerspective and when changes
          * are made to that data it is reflected in both.
          * @param other - the ByteArrayBuffer this one is to mirror.
-         * @param readOnly - should this buffer be read-only, default as false
          */
         ByteArrayBuffer( const ByteArrayBuffer& other );
 

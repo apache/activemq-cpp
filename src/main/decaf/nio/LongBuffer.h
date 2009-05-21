@@ -193,7 +193,7 @@ namespace nio{
          * array, starting at the current position of this buffer and at the given offset
          * in the array. The position of this buffer is then incremented by length.
          * <p>
-         * @param buffer - polong longer to an allocated buffer to fill
+         * @param buffer - long longer to an allocated buffer to fill
          * @param offset - position in the buffer to start filling
          * @param length - amount of data to put in the passed buffer
          * @returns a reference to this Buffer
@@ -259,7 +259,7 @@ namespace nio{
         /**
          * This method transfers the entire content of the given source long longs array long longo
          * this buffer.  This is the same as calling put( &buffer[0], 0, buffer.size()
-         * @pparam buffer - The buffer whose contents are copied to this LongBuffer
+         * @param buffer - The buffer whose contents are copied to this LongBuffer
          * @returns a reference to this buffer
          * @throws BufferOverflowException - If there is insufficient space in this buffer
          * @throws ReadOnlyBufferException - If this buffer is read-only
@@ -359,7 +359,7 @@ namespace nio{
          * buffer's capacity will be array.length, its position will be offset, its limit
          * will be offset + length, and its mark will be undefined. Its backing array
          * will be the given array, and its array offset will be zero.
-         * @param buffer - The array that will back the new buffer
+         * @param array - The array that will back the new buffer
          * @param offset - The offset of the subarray to be used
          * @param length - The length of the subarray to be used
          * @returns a new LongBuffer that is backed by buffer, caller owns.

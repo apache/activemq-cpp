@@ -55,11 +55,11 @@ namespace io{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         IOException( const char* file, const int lineNumber,
                      const std::exception* cause,
@@ -82,9 +82,10 @@ namespace io{
 
         /**
          * Constructor
-         * @param file name of the file were the exception occurred.
-         * @param lineNumber line where the exception occurred
-         * @param msg the message that was generated
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         IOException( const char* file, const int lineNumber,
                      const char* msg, ... ) throw()
@@ -101,6 +102,8 @@ namespace io{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @return a new instance of an Exception that is a copy of this instance.
          */
         virtual IOException* clone() const {
             return new IOException( *this );

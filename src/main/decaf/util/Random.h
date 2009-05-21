@@ -118,7 +118,7 @@ namespace util{
          * Pseudo-randomly generates (approximately) a normally
          * distributed <code>double</code> value with mean 0.0 and a
          * standard deviation value of <code>1.0</code> using the <i>polar
-         * method<i> of G. E. P. Box, M.  E. Muller, and G. Marsaglia, as
+         * method</i> of G. E. P. Box, M.  E. Muller, and G. Marsaglia, as
          * described by Donald E. Knuth in <i>The Art of Computer
          * Programming, Volume 2: Seminumerical Algorithms</i>, section
          * 3.4.1, subsection C, algorithm P

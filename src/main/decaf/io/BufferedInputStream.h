@@ -88,8 +88,8 @@ namespace io{
         virtual ~BufferedInputStream();
 
         /**
-         * Indcates the number of bytes avaialable.
-         * @return the sum of the amount of data avalable
+         * Indicates the number of bytes available.
+         * @return the sum of the amount of data available
          * in the buffer and the data available on the target
          * input stream.
          */
@@ -160,7 +160,9 @@ namespace io{
          * If a stream instance reports that marks are supported then the stream
          * will ensure that the same bytes can be read again after the reset method
          * is called so long the readLimit is not reached.
-         * @param readLimit - max bytes read before marked position is invalid.
+         *
+         * @param readLimit
+         *      max bytes read before marked position is invalid.
          */
         virtual void mark( int readLimit ) {
             this->markLimit = readLimit;
@@ -208,7 +210,8 @@ namespace io{
 
         /**
          * Initializes the internal structures.
-         * @param size of buffer to allocate
+         * @param bufferSize
+         *      size of buffer to allocate
          */
         void init( std::size_t bufferSize );
 
@@ -231,12 +234,12 @@ namespace io{
         /**
          * Returns the current tail position of the buffer.
          */
-        unsigned char* getTail(){
+        unsigned char* getTail() {
             return buffer + tail;
         }
 
         /**
-         * Initializes the head and tail indicies to the beginning
+         * Initializes the head and tail indices to the beginning
          * of the buffer.
          */
         void clear(){
@@ -244,7 +247,7 @@ namespace io{
         }
 
         /**
-         * Inidicates whether or not the buffer is empty.
+         * Indicates whether or not the buffer is empty.
          */
         bool isEmpty() const{
             return head == tail;

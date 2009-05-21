@@ -43,10 +43,10 @@ namespace net{
          * <p>
          * e.g. "A+B+C %24%25" -> "A B C $%"
          *
-         * @param s - string The encoded string.
+         * @param value - string The encoded string.
          * @return The decoded version as a string.
          */
-        static std::string decode( const std::string& src );
+        static std::string decode( const std::string& value );
 
     };
 

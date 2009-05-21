@@ -50,10 +50,10 @@ namespace net{
          * <p>
          * In addition, spaces are substituted by '+'
          *
-         * @param s - the string to be converted
+         * @param value - the string to be converted
          * @returns the converted string
          */
-        static std::string encode( const std::string& src );
+        static std::string encode( const std::string& value );
 
     };
 

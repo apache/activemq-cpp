@@ -38,9 +38,12 @@ namespace io{
 
         /**
          * Constructor.
-         * @param outputStream the OutputStream to wrap
-         * @param own If true, this object will control the lifetime of the
-         * output stream that it encapsulates.
+         *
+         * @param next
+         *      The OutputStream to wrap an write logs to.
+         * @param own
+         *      If true, this object will control the lifetime of the
+         *      output stream that it encapsulates.
          */
         LoggingOutputStream( OutputStream* next, bool own = false );
 

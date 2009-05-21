@@ -27,8 +27,7 @@ namespace concurrent{
      * Exception indicating that the result of a value-producing task, such as a
      * FutureTask, cannot be retrieved because the task was canceled.
      */
-    class DECAF_API CancellationException : public decaf::lang::Exception
-    {
+    class DECAF_API CancellationException : public decaf::lang::Exception {
     public:
 
         /**
@@ -38,7 +37,8 @@ namespace concurrent{
 
         /**
          * Conversion Constructor from some other Exception
-         * @param An exception that should become this type of Exception
+         *
+         * @param ex An exception that should become this type of Exception
          */
         CancellationException( const decaf::lang::Exception& ex ) throw()
         : decaf::lang::Exception()
@@ -48,6 +48,8 @@ namespace concurrent{
 
         /**
          * Copy Constructor
+         *
+         * @param ex - The Exception to copy in this new instance.
          */
         CancellationException( const CancellationException& ex ) throw()
         : decaf::lang::Exception()
@@ -67,10 +69,10 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param msg - The message to report
+         * @param ... - list of primitives that are formatted into the message
          */
         CancellationException( const char* file, const int lineNumber,
                                const char* msg, ... ) throw()
@@ -89,11 +91,11 @@ namespace concurrent{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param file - The file name where exception occurs
+         * @param lineNumber - The line number where the exception occurred.
+         * @param cause - The exception that was the cause for this one to be thrown.
+         * @param msg - The message to report
+         * @param ... - list of primitives that are formatted into the message
          */
         CancellationException( const char* file, const int lineNumber,
                                 const std::exception* cause,
@@ -112,14 +114,13 @@ namespace concurrent{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @returns a new instance of an exception that is a clone of this one.
          */
         virtual CancellationException* clone() const{
             return new CancellationException( *this );
         }
 
-        /**
-         * Destructor
-         */
         virtual ~CancellationException() throw() {}
 
     };

@@ -18,6 +18,7 @@
 #ifndef _DECAF_SECURITY_SIGNATUREEXCEPTION_H_
 #define _DECAF_SECURITY_SIGNATUREEXCEPTION_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/security/GeneralSecurityException.h>
 
 namespace decaf{
@@ -61,11 +62,11 @@ namespace security{
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
+         * @param file The file name where exception occurs
+         * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * @param msg The message to report
+         * @param ... list of primitives that are formatted into the message
          */
         SignatureException( const char* file, const int lineNumber,
                           const std::exception* cause,

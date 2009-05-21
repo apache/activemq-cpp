@@ -45,10 +45,14 @@ namespace marshal{
         virtual ~PrimitiveTypesMarshaller() {}
 
         /**
-         * Static Marshal of a primitive map object
-         * @param Map to Marshal
-         * @param Reference to a byte array to house the data
-         * @throws CMSException
+         * Static Marshal of a primitive map object.
+         *
+         * @param map
+         *      Map to Marshal.
+         * @param dest
+         *      Reference to a byte array to house the data.
+         *
+         * @throws Exception
          */
         static void marshal( const util::PrimitiveMap* map,
                              std::vector<unsigned char>& dest )
@@ -57,18 +61,27 @@ namespace marshal{
         /**
          * Static Map Unmarshaler, takes an array of bytes and returns a
          * new instance of a PrimitiveMap object.  Caller owns the pointer.
-         * @param Map to Unmarshal into
-         * @param reference to a byte array to read data from.
+         *
+         * @param map
+         *      Map to Unmarshal into
+         * @param src
+         *      Reference to a byte array to read data from.
+         *
+         * @throws Exception
          */
         static void unmarshal( util::PrimitiveMap* map,
                                const std::vector<unsigned char>& src )
                                     throw ( decaf::lang::Exception );
 
         /**
-         * Static Marshal of a primitive map object
-         * @param Map to Marshal
-         * @param Reference to a byte array to house the data
-         * @throws CMSException
+         * Static Marshal of a primitive map object.
+         *
+         * @param list
+         *      The list object to Marshal
+         * @param dest
+         *      Reference to a byte array to house the data
+         *
+         * @throws Exception
          */
         static void marshal( const util::PrimitiveList* list,
                              std::vector<unsigned char>& dest )
@@ -77,8 +90,13 @@ namespace marshal{
         /**
          * Static Map Unmarshaler, takes an array of bytes and returns a
          * new instance of a PrimitiveMap object.  Caller owns the pointer.
-         * @param Map to Unmarshal into
-         * @param reference to a byte array to read data from.
+         *
+         * @param list
+         *      The list object to Un-marshal
+         * @param src
+         *      Reference to a byte array to read data from.
+         *
+         * @throws Exception
          */
         static void unmarshal( util::PrimitiveList* list,
                                const std::vector<unsigned char>& src )

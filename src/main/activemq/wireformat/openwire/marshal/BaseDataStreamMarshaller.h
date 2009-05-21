@@ -32,7 +32,9 @@ namespace marshal{
 
     /**
      * Base class for all Marshallers that marshal DataStructures to and
-     * from the wire using the OpenWire protocal.
+     * from the wire using the OpenWire protocol.
+     *
+     * @since 2.0
      */
     class AMQCPP_API BaseDataStreamMarshaller : public DataStreamMarshaller {
     private:
@@ -57,7 +59,7 @@ namespace marshal{
                                        throw ( decaf::io::IOException ) { return 0; }
 
         /**
-         * Tight Marhsal to the given stream
+         * Tight Marshal to the given stream
          * @param format - The OpenwireFormat properties
          * @param command -  the object to Marshal
          * @param ds - the DataOutputStream to Marshal to
@@ -71,11 +73,11 @@ namespace marshal{
                                         throw ( decaf::io::IOException ) {}
 
         /**
-         * Tight Un-marhsal to the given stream
+         * Tight Un-Marshal to the given stream
          * @param format - The OpenwireFormat properties
          * @param command -  the object to Un-Marshal
          * @param dis - the DataInputStream to Un-Marshal from
-         * @param bs - boolean stream to unmarshal from.
+         * @param bs - boolean stream to Un-Marshal from.
          * @throws IOException if an error occurs.
          */
         virtual void tightUnmarshal( OpenWireFormat* format AMQCPP_UNUSED,
@@ -85,7 +87,7 @@ namespace marshal{
                                         throw ( decaf::io::IOException ) {}
 
         /**
-         * Tight Marhsal to the given stream
+         * Tight Marshal to the given stream
          * @param format - The OpenwireFormat properties
          * @param command -  the object to Marshal
          * @param ds - DataOutputStream to marshal to
@@ -97,7 +99,7 @@ namespace marshal{
                                        throw ( decaf::io::IOException ) {}
 
         /**
-         * Loose Un-marhsal to the given stream
+         * Loose Un-Marshal to the given stream
          * @param format - The OpenwireFormat properties
          * @param command -  the object to Un-Marshal
          * @param dis - the DataInputStream to Un-Marshal from
@@ -143,9 +145,9 @@ namespace marshal{
     protected:
 
         /**
-         * Tight Unmarshall the cached object
+         * Tight Unmarshal the cached object
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
+         * @param dataIn - stream to read marshaled form from
          * @param bs - boolean stream to marshal to.
          * @returns pointer to a new DataStructure Object
          * @throws IOException if an error occurs.
@@ -156,8 +158,8 @@ namespace marshal{
             utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * BooleanStream returning the size of the data marshalled
+         * Tightly marshals the passed DataStructure based object to the passed
+         * BooleanStream returning the size of the data marshaled
          * @param wireFormat - The OpenwireFormat properties
          * @param data - DataStructure Object Pointer to marshal
          * @param bs - boolean stream to marshal to.
@@ -170,12 +172,12 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Tightly marshalls the passed DataStructure based object to the passed
+         * Tightly marshals the passed DataStructure based object to the passed
          * streams returning nothing
          * @param wireFormat - The OpenwireFormat properties
          * @param data - DataStructure Object Pointer to marshal
          * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
+         * @param dataOut - stream to write marshaled data to
          * @throws IOException if an error occurs.
          */
         virtual void tightMarshalCachedObject2( OpenWireFormat* wireFormat,
@@ -185,12 +187,11 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Loosely marshalls the passed DataStructure based object to the passed
+         * Loosely marshals the passed DataStructure based object to the passed
          * stream returning nothing
          * @param wireFormat - The OpenwireFormat properties
          * @param data - DataStructure Object Pointer to marshal
-         * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
+         * @param dataOut - stream to write marshaled data to
          * @throws IOException if an error occurs.
          */
         virtual void looseMarshalCachedObject( OpenWireFormat* wireFormat,
@@ -199,9 +200,9 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Loose Unmarshall the cached object
+         * Loose Unmarshal the cached object
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
+         * @param dataIn - stream to read marshaled form from
          * @returns pointer to a new DataStructure Object
          * @throws IOException if an error occurs.
          */
@@ -210,8 +211,8 @@ namespace marshal{
             decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * BooleanStream returning the size of the data marshalled
+         * Tightly marshals the passed DataStructure based object to the passed
+         * BooleanStream returning the size of the data marshaled
          * @param wireFormat - The OpenwireFormat properties
          * @param object - DataStructure Object Pointer to marshal
          * @param bs - boolean stream to marshal to.
@@ -224,12 +225,12 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Tightly marshalls the passed DataStructure based object to the passed
+         * Tightly marshals the passed DataStructure based object to the passed
          * streams returning nothing
          * @param wireFormat - The OpenwireFormat properties
          * @param object - DataStructure Object Pointer to marshal
          * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
+         * @param dataOut - stream to write marshaled data to
          * @throws IOException if an error occurs.
          */
         virtual void tightMarshalNestedObject2( OpenWireFormat* wireFormat,
@@ -239,9 +240,9 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Tight Unmarshall the nested object
+         * Tight Unmarshal the nested object
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
+         * @param dataIn - stream to read marshaled form from
          * @param bs - boolean stream to marshal to.
          * @returns pointer to a new DataStructure Object
          * @throws IOException if an error occurs.
@@ -252,9 +253,9 @@ namespace marshal{
             utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
-         * Loose Unmarshall the nested object
+         * Loose Unmarshal the nested object
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
+         * @param dataIn - stream to read marshaled form from
          * @returns pointer to a new DataStructure Object
          * @throws IOException if an error occurs.
          */
@@ -266,7 +267,7 @@ namespace marshal{
          * Loose marshall the nested object
          * @param wireFormat - The OpenwireFormat properties
          * @param object - DataStructure Object Pointer to marshal
-         * @param dataOut - stream to write marshalled data to
+         * @param dataOut - stream to write marshaled data to
          * @throws IOException if an error occurs.
          */
         virtual void looseMarshalNestedObject( OpenWireFormat* wireFormat,
@@ -275,10 +276,10 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Performs Tight Unmarshalling of String Objects
+         * Performs Tight Unmarshaling of String Objects
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.
-         * @returns the unmarshalled string.
+         * @returns the unmarshaled string.
          * @throws IOException if an error occurs.
          */
         virtual std::string tightUnmarshalString( decaf::io::DataInputStream* dataIn,
@@ -287,10 +288,10 @@ namespace marshal{
 
         /**
          * Tight Marshals the String to a Booleans Stream Object, returns
-         * the marshalled size.
+         * the marshaled size.
          * @param value - string to marshal
          * @param bs - BooleanStream to use.
-         * @returns size of marshalled string.
+         * @returns size of marshaled string.
          * @throws IOException if an error occurs.
          */
         virtual int tightMarshalString1( const std::string& value,
@@ -312,7 +313,7 @@ namespace marshal{
         /**
          * Loose Marshal the String to the DataOuputStream passed
          * @param value - string to marshal
-         * @param dataOut - stream to write marshalled form to
+         * @param dataOut - stream to write marshaled form to
          * @throws IOException if an error occurs.
          */
         virtual void looseMarshalString( const std::string value,
@@ -321,8 +322,8 @@ namespace marshal{
 
         /**
          * Loose Un-Marshal the String to the DataOuputStream passed
-         * @param dataIn - stream to read marshalled form from
-         * @return the unmarshalled string
+         * @param dataIn - stream to read marshaled form from
+         * @return the unmarshaled string
          * @throws IOException if an error occurs.
          */
         virtual std::string looseUnmarshalString( decaf::io::DataInputStream* dataIn )
@@ -345,7 +346,7 @@ namespace marshal{
          * Tightly marshal the long long to the Streams passed.
          * @param wireFormat - The OpenwireFormat properties
          * @param value - long long to marshal
-         * @param dataOut - stream to write marshalled form to
+         * @param dataOut - stream to write marshaled form to
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
@@ -358,9 +359,9 @@ namespace marshal{
         /**
          * Tight marshal the long long type.
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
+         * @param dataIn - stream to read marshaled form from
          * @param bs - boolean stream to marshal to.
-         * @returns the unmarshalled long long
+         * @returns the unmarshaled long long
          * @throws IOException if an error occurs.
          */
         virtual long long tightUnmarshalLong( OpenWireFormat* wireFormat,
@@ -383,8 +384,8 @@ namespace marshal{
         /**
          * Loose marshal the long long type.
          * @param wireFormat - The OpenwireFormat properties
-         * @param dataIn - stream to read marshalled form from
-         * @returns the unmarshalled long long
+         * @param dataIn - stream to read marshaled form from
+         * @returns the unmarshaled long long
          * @throws IOException if an error occurs.
          */
         virtual long long looseUnmarshalLong( OpenWireFormat* wireFormat,
@@ -395,7 +396,7 @@ namespace marshal{
          * Tight Unmarshal an array of char
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.
-         * @returns the unmarshalled vector of chars.
+         * @returns the unmarshaled vector of chars.
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalByteArray(
@@ -417,7 +418,7 @@ namespace marshal{
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.
          * @param size - size of the const array to unmarshal
-         * @returns the unmarshalled vector of chars.
+         * @returns the unmarshaled vector of chars.
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalConstByteArray(
@@ -429,14 +430,12 @@ namespace marshal{
          * Tight Unmarshal a fixed size array from that data input stream
          * and return an stl vector of char as the resultant.
          * @param dataIn - the DataInputStream to Un-Marshal from
-         * @param bs - boolean stream to unmarshal from.
          * @param size - size of the const array to unmarshal
-         * @returns the unmarshalled vector of chars.
+         * @returns the unmarshaled vector of chars.
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalConstByteArray(
-            decaf::io::DataInputStream* dataIn,
-            int size ) throw ( decaf::io::IOException );
+            decaf::io::DataInputStream* dataIn, int size ) throw ( decaf::io::IOException );
 
         /**
          * Tight Unarshall the Error object
@@ -452,7 +451,7 @@ namespace marshal{
             utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
-         * Tight Marshall the Error object
+         * Tight Marshal the Error object
          * @param wireFormat - The OpenwireFormat properties
          * @param data - Error to Marshal
          * @param bs - boolean stream to marshal to.
@@ -465,7 +464,7 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Tight Marshall the Error object
+         * Tight Marshal the Error object
          * @param wireFormat - The OpenwireFormat properties
          * @param data - Error to Marshal
          * @param dataOut - stream to write marshalled data to
@@ -479,7 +478,7 @@ namespace marshal{
                                                     throw ( decaf::io::IOException );
 
         /**
-         * Loose Unarshall the Error object
+         * Loose Unarshal the Error object
          * @param wireFormat - The OpenwireFormat properties
          * @param dataIn - stream to read marshalled form from
          * @returns pointer to a new DataStructure Object
@@ -490,7 +489,7 @@ namespace marshal{
             decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
-         * Tight Marshall the Error object
+         * Tight Marshal the Error object
          * @param wireFormat - The OpenwireFormat properties
          * @param data - Error to Marshal
          * @param dataOut - stream to write marshalled data to

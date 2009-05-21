@@ -26,26 +26,30 @@ namespace concurrent{
 
     class PooledThread;
 
-    class DECAF_API PooledThreadListener
-    {
+    /**
+     * Abstract Listener Interface for users of <code>ThreadPool</code>.
+     *
+     * The implementor of this class receives events related to the execution and termination
+     * of threads running in the ThreadPool.
+     *
+     * @since 1.0
+     */
+    class DECAF_API PooledThreadListener {
     public:
 
-        /**
-         * Destructor
-         */
         virtual ~PooledThreadListener() {}
 
         /**
          * Called by a pooled thread when it is about to begin
          * executing a new task.
-         * @param Pointer to the Pooled Thread that is making this call
+         * @param thread - Pointer to the Pooled Thread that is making this call
          */
         virtual void onTaskStarted( PooledThread* thread ) = 0;
 
         /**
          * Called by a pooled thread when it has completed a task
          * and is going back to waiting for another task to run
-         * @param Pointer the the Pooled Thread that is making this call.
+         * @param thread - Pointer the the Pooled Thread that is making this call.
          */
         virtual void onTaskCompleted( PooledThread* thread ) = 0;
 
@@ -54,8 +58,8 @@ namespace concurrent{
          * while running a user task, after receiving this notification
          * the callee should assume that the PooledThread is now no longer
          * running.
-         * @param Pointer to the Pooled Thread that is making this call
-         * @param The Exception that occured.
+         * @param thread - Pointer to the Pooled Thread that is making this call
+         * @param ex - The Exception that occurred.
          */
         virtual void onTaskException( PooledThread* thread,
                                       lang::Exception& ex) = 0;

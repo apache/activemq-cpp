@@ -51,8 +51,13 @@ namespace wireformat{
          * Stream based marshaling of a Command, this method blocks until the entire
          * Command has been written out to the output stream.
          *
-         * @param command - The Command to Marshal
-         * @param out - the output stream to write the command to.
+         * @param command
+         *      The Command to Marshal
+         * @param transport
+         *      The Transport that called this method.
+         * @param out
+         *      The output stream to write the command to.
+         *
          * @throws IOException
          */
         virtual void marshal( const Pointer<commands::Command>& command,
@@ -76,7 +81,9 @@ namespace wireformat{
 
         /**
          * Set the Version
-         * @param the version of the wire format
+         *
+         * @param version
+         *      the version of the wire format
          */
         virtual void setVersion( int version ) = 0;
 

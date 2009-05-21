@@ -84,7 +84,6 @@ namespace transport{
         /**
          * Constructor.
          * @param next - the next Transport in the chain
-         * @param own - true if this filter owns the next and should delete it
          */
         TransportFilter( const Pointer<Transport>& next );
 
@@ -100,8 +99,8 @@ namespace transport{
 
         /**
          * Event handler for an exception from a command transport.
-         * @param source The source of the exception
-         * @param ex The exception.
+         * @param ex
+         *      The exception to handle.
          */
         virtual void onException( const decaf::lang::Exception& ex );
 
@@ -173,7 +172,8 @@ namespace transport{
 
         /**
          * Sets the WireFormat instance to use.
-         * @param WireFormat the object used to encode / decode commands.
+         * @param wireFormat
+         *      The WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
             next->setWireFormat( wireFormat );

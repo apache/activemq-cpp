@@ -44,22 +44,33 @@ namespace exceptions{
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The Exception whose internal data is copied into this instance.
          */
         ActiveMQException( const ActiveMQException& ex ) throw();
 
         /**
          * Copy Constructor
+         *
+         * @param ex
+         *      The Exception whose internal data is copied into this instance.
          */
         ActiveMQException( const decaf::lang::Exception& ex ) throw();
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
-         * optional list of arguments to parse into the message
-         * @param file name where exception occurs
-         * @param line number where the exception occurred.
-         * @param message to report
-         * @param list of primitives that are formatted into the message
+         * this message occurred.  Sets the message to report, using an
+         * optional list of arguments to parse into the message.
+         *
+         * @param file
+         *      The file name where exception occurs.
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param msg
+         *      The message to report.
+         * @param ...
+         *      The list of primitives that are formatted into the message.
          */
         ActiveMQException( const char* file, const int lineNumber,
                            const char* msg, ... ) throw();
@@ -70,12 +81,14 @@ namespace exceptions{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
          * @return Copy of this Exception object
          */
         virtual ActiveMQException* clone() const;
 
         /**
          * Converts this exception to a new CMSException
+         *
          * @return a CMSException with the data from this exception
          */
         virtual cms::CMSException convertToCMSException() const;

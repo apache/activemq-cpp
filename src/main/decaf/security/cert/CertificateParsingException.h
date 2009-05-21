@@ -18,6 +18,7 @@
 #ifndef _DECAF_SECURITY_CERT_CERTIFICATEPARSINGEXCEPTION_H_
 #define _DECAF_SECURITY_CERT_CERTIFICATEPARSINGEXCEPTION_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/security/cert/CertificateException.h>
 
 namespace decaf{
@@ -25,8 +26,8 @@ namespace security{
 namespace cert{
 
     /*
-     * Certificate Parsing Exception. This is thrown whenever an invalid 
-     * DER-encoded certificate is parsed or unsupported DER features are found 
+     * Certificate Parsing Exception. This is thrown whenever an invalid
+     * DER-encoded certificate is parsed or unsupported DER features are found
      * in the Certificate.
      */
     class DECAF_API CertificateParsingException : public CertificateException
@@ -64,8 +65,8 @@ namespace cert{
          * Constructor - Initializes the file name and line number where
          * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
-         * 
-         * @param file 
+         *
+         * @param file
          *      name where exception occurs
          * @param lineNumber
          *      line number where the exception occurred.
@@ -91,7 +92,7 @@ namespace cert{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
-         * 
+         *
          * @return A deep copy of this exception.
          */
         virtual CertificateParsingException* clone() const{

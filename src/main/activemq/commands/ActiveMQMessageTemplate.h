@@ -352,6 +352,7 @@ namespace commands {
         /**
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
+         * @throw CMSException
          */
         virtual std::string getCMSCorrelationID() const throw( cms::CMSException ) {
             return this->getCorrelationId();
@@ -360,6 +361,7 @@ namespace commands {
         /**
          * Sets the Correlation Id used by this message
          * @param correlationId - String representing the correlation id.
+         * @throw CMSException
          */
         virtual void setCMSCorrelationID( const std::string& correlationId ) throw( cms::CMSException ) {
             this->setCorrelationId( correlationId );
@@ -368,6 +370,7 @@ namespace commands {
         /**
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
+         * @throw CMSException
          */
         virtual int getCMSDeliveryMode() const throw( cms::CMSException ) {
             return this->isPersistent();
@@ -376,6 +379,7 @@ namespace commands {
         /**
          * Sets the DeliveryMode for this message
          * @param mode - DeliveryMode enumerated value.
+         * @throw CMSException
          */
         virtual void setCMSDeliveryMode( int mode ) throw( cms::CMSException ) {
             this->setPersistent( mode == (int)cms::DeliveryMode::PERSISTENT );
@@ -384,6 +388,7 @@ namespace commands {
         /**
          * Gets the Destination for this Message, returns a
          * @return Destination object
+         * @throw CMSException
          */
         virtual const cms::Destination* getCMSDestination() const throw( cms::CMSException ) {
             return dynamic_cast<const cms::Destination*>( this->getDestination().get() );
@@ -392,6 +397,7 @@ namespace commands {
         /**
          * Sets the Destination for this message
          * @param destination - Destination Object
+         * @throw CMSException
          */
         virtual void setCMSDestination( const cms::Destination* destination )
             throw( cms::CMSException ) {
@@ -408,6 +414,7 @@ namespace commands {
         /**
          * Gets the Expiration Time for this Message
          * @return time value
+         * @throw CMSException
          */
         virtual long long getCMSExpiration() const throw( cms::CMSException ) {
             return this->getExpiration();
@@ -416,6 +423,7 @@ namespace commands {
         /**
          * Sets the Expiration Time for this message
          * @param expireTime - time value
+         * @throw CMSException
          */
         virtual void setCMSExpiration( long long expireTime ) throw( cms::CMSException ) {
             this->setExpiration( expireTime );
@@ -424,6 +432,7 @@ namespace commands {
         /**
          * Gets the CMS Message Id for this Message
          * @return time value
+         * @throw CMSException
          */
         virtual std::string getCMSMessageID() const throw( cms::CMSException ) {
             return wireformat::openwire::marshal::BaseDataStreamMarshaller::toString( this->getMessageId().get() );
@@ -432,12 +441,16 @@ namespace commands {
         /**
          * Sets the CMS Message Id for this message
          * @param id - time value
+         * @throw CMSException
          */
-        virtual void setCMSMessageID( const std::string& id AMQCPP_UNUSED ) throw( cms::CMSException )  {}
+        virtual void setCMSMessageID( const std::string& id AMQCPP_UNUSED )
+            throw( cms::CMSException ) {
+        }
 
         /**
          * Gets the Priority Value for this Message
          * @return priority value
+         * @throw CMSException
          */
         virtual int getCMSPriority() const throw( cms::CMSException ) {
             return this->getPriority();
@@ -446,6 +459,7 @@ namespace commands {
         /**
          * Sets the Priority Value for this message
          * @param priority - priority value for this message
+         * @throw CMSException
          */
         virtual void setCMSPriority( int priority ) throw( cms::CMSException ) {
             this->setPriority( priority );
@@ -454,6 +468,7 @@ namespace commands {
         /**
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
+         * @throw CMSException
          */
         virtual bool getCMSRedelivered() const throw( cms::CMSException ) {
             return this->getRedeliveryCounter() != 0;
@@ -462,12 +477,14 @@ namespace commands {
         /**
          * Sets the Redelivered Flag for this message
          * @param redelivered - boolean redelivered value
+         * @throw CMSException
          */
         virtual void setCMSRedelivered( bool redelivered AMQCPP_UNUSED ) throw( cms::CMSException )  {}
 
         /**
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
+         * @throw CMSException
          */
         virtual const cms::Destination* getCMSReplyTo() const throw( cms::CMSException ) {
             return dynamic_cast< const cms::Destination* >(
@@ -476,7 +493,11 @@ namespace commands {
 
         /**
          * Sets the CMS Reply To Address for this message
-         * @param id - Reply To value
+         *
+         * @param destination
+         *      Pointer to the CMS Destination that is the Reply-To value.
+         *
+         * @throw CMSException
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) throw( cms::CMSException ) {
 
@@ -492,6 +513,7 @@ namespace commands {
         /**
          * Gets the Time Stamp for this Message
          * @return time stamp value
+         * @throw CMSException
          */
         virtual long long getCMSTimestamp() const throw( cms::CMSException ) {
             return this->getTimestamp();
@@ -500,6 +522,7 @@ namespace commands {
         /**
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
+         * @throw CMSException
          */
         virtual void setCMSTimestamp( long long timeStamp ) throw( cms::CMSException ) {
             this->setTimestamp( timeStamp );
@@ -508,6 +531,7 @@ namespace commands {
         /**
          * Gets the CMS Message Type for this Message
          * @return type value
+         * @throw CMSException
          */
         virtual std::string getCMSType() const throw( cms::CMSException ) {
             return this->getType();
@@ -516,6 +540,7 @@ namespace commands {
         /**
          * Sets the CMS Message Type for this message
          * @param type - message type value string
+         * @throw CMSException
          */
         virtual void setCMSType( const std::string& type ) throw( cms::CMSException ) {
             this->setType( type );

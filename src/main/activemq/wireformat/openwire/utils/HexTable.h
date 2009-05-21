@@ -41,10 +41,14 @@ namespace utils{
         virtual ~HexTable() {}
 
         /**
-         * Index operator for this Table, will throw an exeption if the
+         * Index operator for this Table, will throw an exception if the
          * index requested is out of bounds for this table.
-         * @param int - index to fetch
-         * @returns string contianing the hex value if the index
+         *
+         * @param index
+         *      The index of the value in the table to fetch.
+         *
+         * @returns string containing the hex value if the index
+         *
          * @throws IndexOutOfBoundsException
          */
         virtual const std::string& operator[]( std::size_t index )
@@ -54,7 +58,7 @@ namespace utils{
 
         /**
          * Returns the max size of this Table.
-         * @returns int size value
+         * @returns an integer size value
          */
         virtual std::size_t size() const{
             return table.size();

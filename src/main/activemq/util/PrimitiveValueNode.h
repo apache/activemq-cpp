@@ -171,20 +171,20 @@ namespace util{
 
         /**
          * Copy constructor
-         * @param another node to copy.
+         * @param node
+         *      The instance of another node to copy to this one.
          */
         PrimitiveValueNode( const PrimitiveValueNode& node );
 
-        /**
-         * Destructor, clears the data before destruction to free any data
-         * in the PrimitiveValue union.
-         */
         ~PrimitiveValueNode(){
             clear();
         }
 
         /**
          * Assignment operator, copies the data from the other node.
+         *
+         * @param node
+         *      The instance of another node to copy to this one.
          */
         PrimitiveValueNode& operator =( const PrimitiveValueNode& node );
 
@@ -211,6 +211,11 @@ namespace util{
         /**
          * Sets the internal PrimitiveVale object to the new value
          * along with the tag for the type that it consists of.
+         *
+         * @param value
+         *      The value to set as the value contained in this Node.
+         * @param valueType
+         *      The type of the value being set into this one.
          */
         void setValue( const PrimitiveValue& value, PrimitiveType valueType );
 
@@ -226,7 +231,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setBool( bool lvalue );
+        void setBool( bool value );
 
         /**
          * Gets the Boolean value of this Node.
@@ -243,7 +248,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setByte( unsigned char lvalue );
+        void setByte( unsigned char value );
 
         /**
          * Gets the Byte value of this Node.
@@ -260,7 +265,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setChar( char lvalue );
+        void setChar( char value );
 
         /**
          * Gets the Character value of this Node.
@@ -277,7 +282,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setShort( short lvalue );
+        void setShort( short value );
 
         /**
          * Gets the Short value of this Node.
@@ -294,7 +299,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setInt( int lvalue );
+        void setInt( int value );
 
         /**
          * Gets the Integer value of this Node.
@@ -311,7 +316,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setLong( long long lvalue );
+        void setLong( long long value );
 
         /**
          * Gets the Long value of this Node.
@@ -328,7 +333,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setFloat( float lvalue );
+        void setFloat( float value );
 
         /**
          * Gets the Float value of this Node.
@@ -345,7 +350,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setDouble( double lvalue );
+        void setDouble( double value );
 
         /**
          * Gets the Double value of this Node.
@@ -362,7 +367,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setString( const std::string& lvalue );
+        void setString( const std::string& value );
 
         /**
          * Gets the String value of this Node.
@@ -379,7 +384,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setByteArray( const std::vector<unsigned char>& lvalue );
+        void setByteArray( const std::vector<unsigned char>& value );
 
         /**
          * Gets the Byte Array value of this Node.
@@ -396,7 +401,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setList( const decaf::util::List<PrimitiveValueNode>& lvalue );
+        void setList( const decaf::util::List<PrimitiveValueNode>& value );
 
         /**
          * Gets the Primitive List value of this Node.
@@ -413,7 +418,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setMap( const decaf::util::Map<std::string, PrimitiveValueNode>& lvalue );
+        void setMap( const decaf::util::Map<std::string, PrimitiveValueNode>& value );
 
         /**
          * Gets the Primitive Map value of this Node.
