@@ -36,7 +36,7 @@ namespace cms{
      * typically not used, since the inclusion of properties may affect the format.
      *
      * The primitive types can be written explicitly using methods for each type.  Because the
-     * C++ language is more limited when dealing with primtive types the JMS equivalent generic
+     * C++ language is more limited when dealing with primitive types the JMS equivalent generic
      * read and write methods that take Java objects cannot be provided in the CMS API.
      *
      * When the message is first created, and when clearBody is called, the body of the message

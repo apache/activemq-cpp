@@ -99,7 +99,7 @@ namespace cms{
 
         /**
          * Method that serializes the contents of the property map to
-         * an arryay.
+         * an array.
          *
          * @return list of pairs where the first is the name and the second
          *         is the value.

@@ -27,6 +27,10 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific topic name.
      *
+     * A Topic is a Publish / Subscribe type Destination.  All Messages sent to a Topic are
+     * broadcast to all Subscribers of that Topic unless the Subscriber defines a Message
+     * selector that filters out that Message.
+     *
      * @since 1.0
      */
     class CMS_API Topic : public Destination{

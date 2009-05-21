@@ -40,7 +40,7 @@ namespace cms{
          * reference can be to any of the Message types. a dynamic cast is used
          * to find out what type of message this is.  The lifetime of this
          * object is only guaranteed to be for life of the onMessage function
-         * after this callback returns the message may no longer exists.  Users should
+         * after this call-back returns the message may no longer exists.  Users should
          * copy the data or clone the message if they wish to retain information that
          * was contained in this Message.
          *
@@ -48,7 +48,7 @@ namespace cms{
          * exception.
          *
          * @param message
-         *      Message object const pointer recipient does not own.
+         *      Message object {const} pointer recipient does not own.
          */
         virtual void onMessage( const Message* message ) = 0;
 

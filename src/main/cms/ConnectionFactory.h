@@ -46,8 +46,10 @@ namespace cms{
          * delivered until the Connection.start method is explicitly
          * called.
          *
-         * @return Pointer to a connection object, caller owns the pointer
-         * @throws CMSException
+         * @return A pointer to a connection object, caller owns the pointer and
+         *         is responsible for closing the connection and deleting the instance.
+         *
+         * @throws CMSException if an internal error occurs while creating the Connection.
          */
         virtual Connection* createConnection() throw ( CMSException ) = 0;
 
@@ -61,11 +63,13 @@ namespace cms{
          * were set in the Constructor.
          *
          * @param username
-         *      to authenticate with
+         *      The user name used to authenticate with the Provider.
          * @param password
-         *      to authenticate with
-         * @returns a Connection Pointer
-         * @throws CMSException
+         *      The password used to authenticate with the Provider.
+         *
+         * @return A pointer to a connection object, caller owns the pointer and
+         *         is responsible for closing the connection and deleting the instance.
+         * @throws CMSException if an internal error occurs while creating the Connection.
          */
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password )
@@ -81,14 +85,16 @@ namespace cms{
          * were set in the Constructor.
          *
          * @param username
-         *      to authenticate with
+         *      The user name used to authenticate with the Provider.
          * @param password
-         *      to authenticate with
+         *      The password used to authenticate with the Provider.
          * @param clientId
-         *      to assign to connection if "" then a random client Id is
-         *      created for this connection.
-         * @returns a Connection Pointer
-         * @throws CMSException
+         *      The Client Id assigned to connection.  If the id is the empty string ("")
+         *      then a random client Id is created for this connection.
+         *
+         * @return A pointer to a connection object, caller owns the pointer and
+         *         is responsible for closing the connection and deleting the instance.
+         * @throws CMSException if an internal error occurs while creating the Connection.
          */
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password,
@@ -104,10 +110,13 @@ namespace cms{
          * use this method to remain abstracted from the specific CMS implementation
          * being used.
          *
-         * @param brokerURI - the address to use to connect to the broker.
+         * @param brokerURI
+         *      The remote address to use to connect to the Provider.
          *
-         * @returns Provider specific ConnectionFactory
-         * @throws CMSException if and error occurs.
+         * @return A pointer to a provider specific implementation of the ConnectionFactory
+         *         interface, the caller is responsible for deleting this resource.
+         *
+         * @throws CMSException if an internal error occurs while creating the ConnectionFactory.
          */
         static ConnectionFactory* createCMSConnectionFactory( const std::string& brokerURI )
             throw ( cms::CMSException );

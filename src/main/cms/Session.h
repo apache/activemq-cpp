@@ -76,6 +76,22 @@ namespace cms{
      *  - Invoking any other Session method on a closed session must throw an
      *    IllegalStateException. Closing a closed session must not throw  any exceptions.
      *
+     * <B>Transacted Sessions</B>
+     *
+     * When a Session is created it can be set to operate in a Transaction based mode.  Each
+     * Session then operates in a single transaction for all Producers and Consumers of that
+     * Session.  Messages sent and received within a Transaction are grouped into an atomic
+     * unit that is committed or rolled back together.
+     *
+     * For a MessageProducer this implies that all messages sent by the producer are not sent
+     * to the Provider unit the commit call is made.  Rolling back the Transaction results in
+     * all produced Messages being dropped.
+     *
+     * For a MessageConsumer this implies that all received messages are not Acknowledged until
+     * the Commit call is made.  Rolling back the Transaction results in all Consumed Message
+     * being redelivered to the client, the Provider may allow configuration that limits the
+     * Maximum number of redeliveries for a Message.
+     *
      * @since 1.0
      */
     class CMS_API Session : public Closeable {

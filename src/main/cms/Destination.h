@@ -27,7 +27,11 @@ namespace cms{
 
     /**
      * A Destination object encapsulates a provider-specific address.
-     *
+     * <p>
+     * There is no standard definition of a Destination address, each provider can
+     * provide its own definition and there can be configuration data attached to the
+     * Destination address.
+     * <p>
      * All CMS Destination objects support concurrent use.
      *
      * @since 1.0
@@ -54,17 +58,6 @@ namespace cms{
         virtual DestinationType getDestinationType() const = 0;
 
         /**
-         * Converts the Destination to a String value representing the
-         * Provider specific name for this destination.  This name must
-         * uniquely identify a particular destination.  For example, a topic
-         * and a queue both named "FOO" must not have equivalent provider
-         * strings.
-         *
-         * @return Provider specific Name
-         */
-        virtual std::string toProviderString() const = 0;
-
-        /**
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
          *
@@ -73,7 +66,7 @@ namespace cms{
         virtual cms::Destination* clone() const = 0;
 
         /**
-         * Copies the contents of the given Destinastion object to this one.
+         * Copies the contents of the given Destination object to this one.
          *
          * @param source
          *      The source Destination object.
@@ -85,7 +78,7 @@ namespace cms{
          * that was specified.  This is a deviation from the JMS spec
          * but necessary due to C++ restrictions.
          *
-         * @return const reference to a properties object.
+         * @return A {const} reference to a CMSProperties object.
          */
         virtual const CMSProperties& getCMSProperties() const = 0;
 

@@ -25,7 +25,14 @@
 namespace cms{
 
     /**
-     * An interface encapsulating a provider-specific queue name.
+     * Defines a Temporary Queue based Destination.
+     *
+     * A TemporaryQueue is a special type of Queue Destination that can only be consumed
+     * from the Connection which created it.  TemporaryQueues are most commonly used as the
+     * reply to address for Message's that implement the request response pattern.
+     *
+     * A TemporaryQueue is guaranteed to exist at the Provider only for the lifetime of the
+     * Connection that created it.
      *
      * @since 1.0
      */
@@ -44,7 +51,7 @@ namespace cms{
         virtual std::string getQueueName() const throw( CMSException ) = 0;
 
         /**
-         * Destroy's the Temp Destination at the Broker
+         * Destroy's the Temporary Destination at the Provider.
          *
          * @throws CMSException - if an internal error occurs.
          */

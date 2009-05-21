@@ -93,16 +93,6 @@ namespace commands{
         }
 
         /**
-         * Converts the Destination to a String value representing the
-         * Provider specific name fot this destination, which is not
-         * necessarily equal to the User Supplied name of the Destination
-         * @return Provider specific Name
-         */
-        virtual std::string toProviderString() const {
-            return this->getPhysicalName();
-        }
-
-        /**
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
          * @returns cloned copy of this object

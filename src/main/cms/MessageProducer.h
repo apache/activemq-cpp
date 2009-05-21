@@ -29,20 +29,20 @@ namespace cms{
 
     /**
      * A client uses a <code>MessageProducer</code> object to send messages to
-     * a destination. A <code>MessageProducer</code> object is created by
+     * a Destination. A <code>MessageProducer</code> object is created by
      * passing a <code>Destination</code> object to a message-producer creation
-     * method supplied by a session.<br>
-     * <br>
+     * method supplied by a session.
+     *
      * A client also has the option of creating a message producer without
-     * supplying a destination. In this case, a destination must be provided
+     * supplying a destination. In this case, a Destination must be provided
      * with every send operation. A typical use for this kind of message
      * producer is to send replies to requests using the request's CMSReplyTo
-     * destination.<br>
-     * <br>
+     * destination.
+     *
      * A client can specify a default delivery mode, priority, and time to live
      * for messages sent by a message producer. It can also specify the
      * delivery mode, priority, and time to live for an individual message.<br>
-     * <br>
+     *
      * A client can specify a time-to-live value in milliseconds for each
      * message it sends. This value defines a message expiration time that is
      * the sum of the message's time-to-live and the GMT when it is sent (for

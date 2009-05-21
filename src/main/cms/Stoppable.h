@@ -26,6 +26,11 @@ namespace cms{
     /**
      * Interface for a class that implements the stop method.
      *
+     * An object that implements this interface implies that it will halt all operations
+     * that result in events being propagated to external users, internally the Object
+     * can continue to process data but not events will be generated to clients and methods
+     * that return data will not return valid results until the object is started again.
+     *
      * @since 1.0
      */
     class CMS_API Stoppable{
@@ -36,7 +41,7 @@ namespace cms{
         /**
          * Stops this service.
          *
-         * @throws CMSException - if an internal error occurs whle stopping the Service.
+         * @throws CMSException - if an internal error occurs while stopping the Service.
          */
         virtual void stop() throw( CMSException ) = 0;
 
