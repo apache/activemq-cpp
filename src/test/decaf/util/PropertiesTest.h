@@ -33,6 +33,7 @@ namespace util {
         CPPUNIT_TEST( testClone );
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testEquals );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,6 +48,7 @@ namespace util {
         void testClone();
         void testRemove();
         void testClear();
+        void testEquals();
 
     };
 
