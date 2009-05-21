@@ -21,7 +21,7 @@
 #include <sstream>
 #include <decaf/util/Date.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/StlMap.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -36,8 +36,7 @@ namespace util{
     class PropertiesInternal{
     public:
 
-        std::map< std::string, std::string > properties;
-        decaf::util::concurrent::Mutex mutex;
+        decaf::util::StlMap< std::string, std::string > properties;
 
     };
 
@@ -51,7 +50,7 @@ Properties::Properties() {
 ////////////////////////////////////////////////////////////////////////////////
 Properties::Properties( const Properties& src ) {
     this->internal.reset( new PropertiesInternal() );
-    this->internal->properties = src.internal->properties;
+    this->internal->properties.copy( src.internal->properties );
 
     if( src.defaults.get() != NULL ) {
         this->defaults.reset( src.defaults->clone() );
@@ -63,47 +62,43 @@ Properties::~Properties() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties& Properties::operator= ( const Properties& src ) {
+Properties& Properties::operator= ( const Properties& source ) {
 
-    if( this == &src ) {
+    if( this == &source ) {
         return *this;
     }
 
-    synchronized( &( internal->mutex ) ) {
-        this->internal.reset( new PropertiesInternal() );
-
-        synchronized( &( src.internal->mutex ) ) {
-            this->internal->properties = src.internal->properties;
-        }
-
-        if( src.defaults.get() != NULL ) {
-            this->defaults.reset( src.defaults->clone() );
-        }
-    }
+    this->copy( source );
 
     return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Properties::isEmpty() const {
-    synchronized( &( internal->mutex ) ) {
-        return internal->properties.empty();
+    synchronized( &( internal->properties ) ) {
+        return internal->properties.isEmpty();
     }
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::size_t Properties::size() const {
+
+    synchronized( &( internal->properties ) ) {
+        return internal->properties.size();
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const char* Properties::getProperty( const std::string& name ) const{
 
-    synchronized( &( internal->mutex ) ) {
-        std::map< std::string, std::string >::const_iterator iter =
-            internal->properties.find( name );
-        if( iter == internal->properties.end() ){
-            return NULL;
+    synchronized( &( internal->properties ) ) {
+        if( this->internal->properties.containsKey( name ) ) {
+            return this->internal->properties.get( name ).c_str();
         }
-
-        return iter->second.c_str();
     }
 
     return NULL;
@@ -113,11 +108,9 @@ const char* Properties::getProperty( const std::string& name ) const{
 std::string Properties::getProperty( const std::string& name,
                                      const std::string& defaultValue ) const {
 
-    synchronized( &( internal->mutex ) ) {
-        std::map< std::string, std::string >::const_iterator iter =
-            internal->properties.find( name );
-        if( iter != internal->properties.end() ){
-            return iter->second;
+    synchronized( &( internal->properties ) ) {
+        if( this->internal->properties.containsKey( name ) ) {
+            return this->internal->properties.get( name );
         }
     }
 
@@ -128,18 +121,16 @@ std::string Properties::getProperty( const std::string& name,
 void Properties::setProperty( const std::string& name,
                               const std::string& value ){
 
-    synchronized( &( internal->mutex ) ) {
-        internal->properties[name] = value;
+    synchronized( &( internal->properties ) ) {
+        internal->properties.put( name, value );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Properties::hasProperty( const std::string& name ) const {
 
-    synchronized( &( internal->mutex ) ) {
-        if( internal->properties.find(name) != internal->properties.end() ) {
-            return true;
-        }
+    synchronized( &( internal->properties ) ) {
+        return this->internal->properties.containsKey( name );
     }
 
     return false;
@@ -147,8 +138,10 @@ bool Properties::hasProperty( const std::string& name ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Properties::remove( const std::string& name ){
-    synchronized( &( internal->mutex ) ) {
-        internal->properties.erase( name );
+    synchronized( &( internal->properties ) ) {
+        if( this->internal->properties.containsKey( name ) ) {
+            this->internal->properties.remove( name );
+        }
     }
 }
 
@@ -157,8 +150,14 @@ std::vector< std::pair< std::string, std::string > > Properties::toArray() const
 
     std::vector< std::pair<std::string, std::string> > result;
 
-    synchronized( &( internal->mutex ) ) {
-        result.assign( internal->properties.begin(), internal->properties.end() );
+    synchronized( &( internal->properties ) ) {
+        std::vector<std::string> keys = this->internal->properties.keySet();
+        std::vector<std::string>::const_iterator iter = keys.begin();
+
+        for( ; iter != keys.end(); ++iter ) {
+            result.push_back(
+                std::make_pair( *iter, this->internal->properties.get( *iter ) ) );
+        }
     }
 
     return result;
@@ -171,8 +170,15 @@ void Properties::copy( const Properties& source ){
         return;
     }
 
-    synchronized( &( internal->mutex ) ) {
-        *this = source;
+    synchronized( &( this->internal->properties ) ) {
+
+        synchronized( &( source.internal->properties ) ) {
+            this->internal->properties.copy( source.internal->properties );
+
+            if( source.defaults.get() != NULL ) {
+                this->defaults.reset( source.defaults->clone() );
+            }
+        }
     }
 }
 
@@ -180,17 +186,15 @@ void Properties::copy( const Properties& source ){
 Properties* Properties::clone() const{
 
     Properties* props = new Properties();
-
-    *props = *this;
-
+    props->internal->properties.copy( this->internal->properties );
     return props;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Properties::clear(){
 
-    synchronized( &( internal->mutex ) ) {
-        internal->properties.clear();
+    synchronized( &( internal->properties ) ) {
+        this->internal->properties.clear();
     }
 }
 
@@ -202,10 +206,13 @@ std::string Properties::toString() const {
 
     stream << "Begin Class decaf::util::Properties:" << std::endl;
 
-    synchronized( &( internal->mutex ) ) {
-        for( iter = internal->properties.begin(); iter != internal->properties.end(); ++iter ){
-            stream << " property[" << iter->first << "] = "
-                   << iter->second << std::endl;
+    synchronized( &( internal->properties ) ) {
+        std::vector<std::string> keys = this->internal->properties.keySet();
+        std::vector<std::string>::const_iterator iter = keys.begin();
+
+        for( iter = keys.begin(); iter != keys.end(); ++iter ){
+            stream << " property[" << *iter << "] = "
+                   << this->internal->properties.get( *iter ) << std::endl;
         }
     }
 
