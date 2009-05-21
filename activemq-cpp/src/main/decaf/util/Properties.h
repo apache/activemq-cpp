@@ -160,6 +160,20 @@ namespace util{
         void clear();
 
         /**
+         * Test whether two Properties objects are equivalent.  Two Properties
+         * Objects are considered equivalent when they each contain the same number
+         * of elements and each key / value pair contained within the two are equal.
+         *
+         * This comparison does not check the contents of the Defaults instance.
+         *
+         * @param source
+         *      The Properties object to compare this instance to.
+         *
+         * @return true if the contents of the two Properties objects are the same.
+         */
+        bool equals( const Properties& source ) const;
+
+        /**
          * Formats the contents of the Properties Object into a string
          * that can be logged, etc.
          * @returns string value of this object.
