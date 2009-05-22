@@ -797,6 +797,10 @@
 				Name="util"
 				>
 				<File
+					RelativePath="..\src\main\activemq\util\ActiveMQProperties.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\ActiveMQProperties.h"
 					>
 				</File>
@@ -12316,11 +12320,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\activemq\wireformat\stomp\StompResponseBuilder.cpp"
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompHelper.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\activemq\wireformat\stomp\StompResponseBuilder.h"
+						RelativePath="..\src\main\activemq\wireformat\stomp\StompHelper.h"
 						>
 					</File>
 					<File
@@ -12339,26 +12343,6 @@
 						RelativePath="..\src\main\activemq\wireformat\stomp\StompWireFormatFactory.h"
 						>
 					</File>
-					<Filter
-						Name="marshal"
-						>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\Marshaler.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\Marshaler.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\MarshalerHelper.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\stomp\marshal\MarshalerHelper.h"
-							>
-						</File>
-					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -13394,6 +13378,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\util\Map.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Properties.cpp"
 					>
 				</File>
 				<File
