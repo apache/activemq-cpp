@@ -815,6 +815,14 @@
 						RelativePath="..\src\test-integration\activemq\test\TransactionTest.h"
 						>
 					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\VirtualTopicTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\VirtualTopicTest.h"
+						>
+					</File>
 					<Filter
 						Name="openwire"
 						>
@@ -896,6 +904,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.h"
 							>
 						</File>
 					</Filter>
