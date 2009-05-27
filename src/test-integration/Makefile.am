@@ -23,6 +23,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
     activemq/test/openwire/OpenwireTempDestinationTest.cpp \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
+    activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
     activemq/test/openwire/OpenwireSimpleTest.cpp \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
     activemq/test/openwire/OpenwireSlowListenerTest.cpp \
@@ -40,6 +41,7 @@ cc_sources = \
     activemq/test/stomp/StompJmsMessageGroupsTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
     activemq/test/stomp/StompSimpleRollbackTest.cpp \
+    activemq/test/VirtualTopicTest.cpp \
     activemq/test/AsyncSenderTest.cpp \
     activemq/test/TransactionTest.cpp \
     activemq/test/ExpirationTest.cpp \
@@ -56,6 +58,7 @@ h_sources = \
     util/teamcity/TeamCityProgressListener.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireTransactionTest.h \
+    activemq/test/openwire/OpenwireVirtualTopicTest.h \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
@@ -65,6 +68,7 @@ h_sources = \
     activemq/test/openwire/OpenwireSlowListenerTest.h \
     activemq/test/openwire/OpenwireExpirationTest.h \
     activemq/test/JmsMessageGroupsTest.h \
+    activemq/test/VirtualTopicTest.h \
     activemq/test/AsyncSenderTest.h \
     activemq/test/CMSTestFixture.h \
     activemq/test/stomp/StompSlowListenerTest.h \

@@ -624,13 +624,14 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 
         if( !dispatchedMessages.empty() ) {
 
-            Pointer<Message> message = dispatchedMessages.front()->getMessage();
+            Pointer<MessageDispatch> dispatched = dispatchedMessages.front();
+
             Pointer<MessageAck> ack( new MessageAck() );
             ack->setAckType( type );
-            ack->setConsumerId( this->consumerInfo->getConsumerId() );
-            ack->setDestination( message->getDestination() );
+            ack->setConsumerId( dispatched->getConsumerId() );
+            ack->setDestination( dispatched->getDestination() );
             ack->setMessageCount( (int)dispatchedMessages.size() );
-            ack->setLastMessageId( message->getMessageId() );
+            ack->setLastMessageId( dispatched->getMessage()->getMessageId() );
             ack->setFirstMessageId( dispatchedMessages.back()->getMessage()->getMessageId() );
 
             return ack;
@@ -710,8 +711,8 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
             }
 
             // Only increase the redelivery delay after the first redelivery..
-            Pointer<Message> lastMsg = dispatchedMessages.front()->getMessage();
-            const int currentRedeliveryCount = lastMsg->getRedeliveryCounter();
+            Pointer<MessageDispatch> lastMsg = dispatchedMessages.front();
+            const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
                 redeliveryDelay = transaction->getRedeliveryDelay();
             }
@@ -735,7 +736,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                 ack->setConsumerId( this->consumerInfo->getConsumerId() );
                 ack->setDestination( lastMsg->getDestination() );
                 ack->setMessageCount( (int)dispatchedMessages.size() );
-                ack->setLastMessageId( lastMsg->getMessageId() );
+                ack->setLastMessageId( lastMsg->getMessage()->getMessageId() );
                 ack->setFirstMessageId( firstMsgId );
 
                 session->oneway( ack );
@@ -753,7 +754,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                     ack->setConsumerId( this->consumerInfo->getConsumerId() );
                     ack->setDestination( lastMsg->getDestination() );
                     ack->setMessageCount( (int)dispatchedMessages.size() );
-                    ack->setLastMessageId( lastMsg->getMessageId() );
+                    ack->setLastMessageId( lastMsg->getMessage()->getMessageId() );
                     ack->setFirstMessageId( firstMsgId );
 
                     session->oneway( ack );
