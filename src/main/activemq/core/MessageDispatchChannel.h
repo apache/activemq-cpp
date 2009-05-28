@@ -143,55 +143,26 @@ namespace core {
 
     public:
 
-        /**
-         * Locks the object.
-         */
         virtual void lock() throw( decaf::lang::Exception ){
             channel.lock();
         }
 
-        /**
-         * Unlocks the object.
-         */
         virtual void unlock() throw( decaf::lang::Exception ){
             channel.unlock();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         */
         virtual void wait() throw( decaf::lang::Exception ){
             channel.wait();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
         virtual void wait( unsigned long millisecs ) throw( decaf::lang::Exception ) {
             channel.wait( millisecs );
         }
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
         virtual void notify() throw( decaf::lang::Exception ){
             channel.notify();
         }
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
         virtual void notifyAll() throw( decaf::lang::Exception ){
             channel.notifyAll();
         }
