@@ -16,11 +16,11 @@ Visual Studio product.
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.60
+autoconf    >= 2.61
 automake    >= 1.10
 libtool     >= 1.5.24
 APR         >= 1.3*
-APR-Util    >= 1.3*
+APR-Util    >= 1.3* or higher
 CPPUnit     >= 1.10.2*
 libuuid     >= ?*
 
@@ -94,7 +94,7 @@ the following software installed:
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.60
+autoconf    >= 2.61
 automake    >= 1.10
 libtool     >= 1.5.24
 
@@ -105,29 +105,6 @@ using /usr/sbin/update-alternatives.
 
 2 Building on Unix/Linux/OS X
 --------------------------------------------------------------------------
-
-This assumes you have all of the project dependencies installed.  We're
-now ready to create the configure script.  To do this, run:
-
-  ./autogen.sh
-
-This should be run the first time and any time you change configure.ac or
-any of the Makefile.am files.
-
-    -----------------------------------------------------------------------
-    |MacOS X Note:                                                        |
-    | Make sure to set the LIBTOOLIZE environment variable to point to    |
-    | /usr/bin/glibtoolize for the build to complete successfully. Below  |
-    | is an example:                                                      |
-    |                                                                     |
-    | $ export LIBTOOLIZE=/usr/bin/glibtoolize                            |
-    |                                                                     |
-    | If you do not use this environment variable you will encounter an   |
-    | error stating:                                                      |
-    |                                                                     |
-    | Can't exec "libtoolize": No such file or directory at               |
-    | /opt/local/share/autoconf/Autom4te/FileUtils.pm line 290...         |
-    -----------------------------------------------------------------------
 
     -----------------------------------------------------------------------
     |Solaris 10 Note:  CppUnit might not build until you correct the file |
@@ -160,6 +137,31 @@ install the code into the system directories, run:
 
 You will have to become the superuser in order to be able to install the
 files.
+
+** A Note For ActiveMQ-CPP Developers **
+
+If you need to make any changes to the configure.ac or any of the included
+m4 files then you need to regenerate the configure script.
+
+  ./autogen.sh
+
+This should be run the first time and any time you change configure.ac or
+any of the Makefile.am files.
+
+    -----------------------------------------------------------------------
+    |MacOS X Note:                                                        |
+    | Make sure to set the LIBTOOLIZE environment variable to point to    |
+    | /usr/bin/glibtoolize for the build to complete successfully. Below  |
+    | is an example:                                                      |
+    |                                                                     |
+    | $ export LIBTOOLIZE=/usr/bin/glibtoolize                            |
+    |                                                                     |
+    | If you do not use this environment variable you will encounter an   |
+    | error stating:                                                      |
+    |                                                                     |
+    | Can't exec "libtoolize": No such file or directory at               |
+    | /opt/local/share/autoconf/Autom4te/FileUtils.pm line 290...         |
+    -----------------------------------------------------------------------
 
 3 Doxygen
 --------------------------------------------------------------------------
