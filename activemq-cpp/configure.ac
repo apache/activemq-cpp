@@ -28,7 +28,7 @@ AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 ## Define the Version variables
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
-ACTIVEMQ_VERSION=3.0-RC2
+ACTIVEMQ_VERSION=3.0-RC3
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
 ##
