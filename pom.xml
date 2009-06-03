@@ -198,7 +198,7 @@
       </plugin>
     </plugins>
   </build>
-  <!--
+
   <profiles>
     <profile>
       <id>Unix Make</id>
@@ -215,18 +215,57 @@
             <version>1.1</version>
             <executions>
               <execution>
+                <id>Configure</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>configure</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Compile</id>
                 <phase>compile</phase>
                 <goals>
                   <goal>exec</goal>
                 </goals>
+                <configuration>
+                  <arguments>
+                    <argument>compile</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>test</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Clean</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                </configuration>
               </execution>
             </executions>
             <configuration>
-              <executable>make</executable>
-              <workingDirectory>${basedir}/build</workingDirectory>
-              <arguments>
-                <argument>check</argument>
-              </arguments>
+              <executable>build.sh</executable>
+              <workingDirectory>${basedir}</workingDirectory>
             </configuration>
           </plugin>
         </plugins>
@@ -265,5 +304,5 @@
       </build>
     </profile>
   </profiles>
-  -->
+
 </project>
