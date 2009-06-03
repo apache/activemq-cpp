@@ -13,10 +13,18 @@
       <fileMode>0755</fileMode>
       <lineEnding>keep</lineEnding>
     </file>
+    <file>
+      <source>configure</source>
+      <outputDirectory>/</outputDirectory>
+      <filtered>false</filtered>
+      <fileMode>0755</fileMode>
+      <lineEnding>keep</lineEnding>
+    </file>
   </files>
   <fileSets>
     <fileSet>
       <includes>
+        <include>aclocal.m4</include>
         <include>KEYS</include>
         <include>doxygen.cfg</include>
         <include>activemq-cpp.pc.in</include>
@@ -25,15 +33,19 @@
         <include>*.win</include>
         <include>*.ac</include>
         <include>*.am</include>
+        <include>*.in</include>
       </includes>
       <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>src</directory>
       <excludes>
-        <exclude>**/Makefile.in</exclude>
         <exclude>**/Makefile.maven</exclude>
       </excludes>
+      <lineEnding>keep</lineEnding>
+    </fileSet>
+    <fileSet>
+      <directory>config</directory>
       <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>

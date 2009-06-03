@@ -18,14 +18,16 @@ Bug
     * [AMQCPP-227] - Mutex class allows for double free in APR pools under certain circumstances
     * [AMQCPP-232] - OpenWire encode and decode UTF8 incorrect
     * [AMQCPP-234] - URI class helpers are missing the DLLExport Macro
-    * [AMQCPP-235] - UTF8 length marshalling bug in openwire readString and writeString.
+    * [AMQCPP-235] - UTF8 length marshaling bug in openwire readString and writeString.
     * [AMQCPP-236] - maxInactivityDuration of Wire-Format is not supported by ActiveMQ-CPP2.2.5
+    * [AMQCPP-243] - Error when acknowledging messages that are sent to Virtual Topic subscribers
 
 Improvement
 
     * [AMQCPP-100] - Implement a Failover Transport
-    * [AMQCPP-233] - Update Windows Builds Files to use ENV vars to find dependancies
+    * [AMQCPP-233] - Update Windows Builds Files to use ENV vars to find dependencies
     * [AMQCPP-237] - Create 64bit configurations in the VC2005 build projects
+    * [AMQCPP-244] - Provide the configure script in the distribution
 
 New Feature
 

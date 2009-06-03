@@ -33,7 +33,7 @@
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP Library</name>
   <description>The ActiveMQ-CPP Library</description>
-  <version>3.0-RC2</version>
+  <version>3.0-RC3</version>
 
   <dependencies>
     <dependency>
