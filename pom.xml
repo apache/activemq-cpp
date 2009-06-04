@@ -264,7 +264,7 @@
               </execution>
             </executions>
             <configuration>
-              <executable>build.sh</executable>
+              <executable>${basedir}/build.sh</executable>
               <workingDirectory>${basedir}</workingDirectory>
             </configuration>
           </plugin>
