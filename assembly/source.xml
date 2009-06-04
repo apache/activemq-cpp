@@ -47,6 +47,7 @@
     <fileSet>
       <directory>config</directory>
       <lineEnding>keep</lineEnding>
+      <fileMode>0755</fileMode>
     </fileSet>
     <fileSet>
       <directory>doc</directory>
