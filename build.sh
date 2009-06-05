@@ -63,7 +63,7 @@ run_Configure() {
         AMQCPP_DISABLE_STATIC=false;
     fi
 
-#    ./autogen.sh
+    ./autogen.sh
 
     local args
 
@@ -96,7 +96,7 @@ run_Configure() {
     fi
 
     if $AMQCPP_DISABLE_SHARED && $AMQCPP_DISABLE_STATIC ; then
-        echo "AMQCPP_DISABLE_SHARED and $AMQCPP_DISABLE_STATIC can't both be set to true."
+        echo "ERROR: AMQCPP_DISABLE_SHARED and AMQCPP_DISABLE_STATIC can't both be set to true."
         exit 1
     fi
 
@@ -109,7 +109,6 @@ run_Configure() {
     fi
 
     pushd $AMQCPP_BUILD_DIR
-    echo "../configure $args"
     ../configure $args
     popd
     exit
