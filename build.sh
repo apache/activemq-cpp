@@ -27,8 +27,8 @@ if [ -f "$HOME/.activemqcpprc" ] ; then
 fi
 
 # This is where we run all the build steps, configure, make, etc.
-if [ -n builddir ] ; then
-   builddir="./build"
+if [ -z "$AMQCPP_BUILD_DIR" ] ; then
+   AMQCPP_BUILD_DIR="$PWD/build"
 fi
 
 check_Configure() {
@@ -40,7 +40,7 @@ check_Configure() {
         # even if we have a configure script, if the template has been updated we should
         # run it again to account for the changes, which also means we need to run a autogen
         # to create the actual script and associated autoconf artifacts.
-        if [ "./configure.ac" -ot "./configure" ] && [ -d $builddir ] ; then
+        if [ "./configure.ac" -ot "./configure" ] && [ -d $AMQCPP_BUILD_DIR ] ; then
             runconfigure=false
         else
             runconfigure=true
@@ -48,33 +48,81 @@ check_Configure() {
 
     fi
 
-    if [ "true" = $runconfigure ] ; then
+    if [ "x$runconfigure" -ne x ] ; then
         run_Configure
     fi
 
 }
 
 run_Configure() {
-    ./autogen.sh
 
-    if ! [ -d $builddir ] ; then
-        mkdir -p $builddir
+    if [ -z "$AMQCPP_DISABLE_SHARED" ] ; then
+        AMQCPP_DISABLE_SHARED=false;
+    fi
+    if [ -z "$AMQCPP_DISABLE_STATIC" ] ; then
+        AMQCPP_DISABLE_STATIC=false;
     fi
 
-    pushd $builddir
-    ../configure
+#    ./autogen.sh
+
+    local args
+
+    if ! [ -d "$AMQCPP_BUILD_DIR" ] ; then
+        mkdir -p $AMQCPP_BUILD_DIR
+    fi
+
+    if [ -n "$AMQCPP_INSTALL_PREFIX" ] ; then
+        args="$args --prefix=$AMQCPP_INSTALL_PREFIX"
+    fi
+
+    if [ -n "$AMQCPP_LIBDIR" ] ; then
+        args="$args --libdir=$AMQCPP_LIBDIR"
+    fi
+
+    if [ -n "$AMQCPP_APR_DIST" ] ; then
+        args="$args --with-apr=$AMQCPP_APR_DIST"
+    fi
+
+    if [ -n "$AMQCPP_APU_DIST" ] ; then
+        args="$args --with-aprutil=$AMQCPP_APU_DIST"
+    fi
+
+    if [ -n "$AMQCPP_CPPUNIT_DIST" ] ; then
+        args="$args --with-cppunit=$AMQCPP_CPPUNIT_DIST"
+    fi
+
+    if [ -n "$AMQCPP_CPPUNIT_EXECDIR" ] ; then
+        args="$args --with-cppunit-exec=$AMQCPP_CPPUNIT_EXECDIR"
+    fi
+
+    if $AMQCPP_DISABLE_SHARED && $AMQCPP_DISABLE_STATIC ; then
+        echo "AMQCPP_DISABLE_SHARED and $AMQCPP_DISABLE_STATIC can't both be set to true."
+        exit 1
+    fi
+
+    if $AMQCPP_DISABLE_SHARED ; then
+        args="$args --enable-shared=no"
+    fi
+
+    if $AMQCPP_DISABLE_STATIC ; then
+        args="$args --enable-static=no"
+    fi
+
+    pushd $AMQCPP_BUILD_DIR
+    echo "../configure $args"
+    ../configure $args
     popd
     exit
 }
 
 run_Clean() {
-    rm -rf $builddir
+    rm -rf $AMQCPP_BUILD_DIR
     exit
 }
 
 run_Make() {
     check_Configure
-    pushd $builddir
+    pushd $AMQCPP_BUILD_DIR
     make
     popd
     exit
@@ -82,7 +130,7 @@ run_Make() {
 
 run_Check() {
     check_Configure
-    pushd $builddir
+    pushd $AMQCPP_BUILD_DIR
     make check
     popd
     exit
@@ -90,7 +138,7 @@ run_Check() {
 
 run_Doxygen() {
     check_Configure
-    pushd $builddir
+    pushd $AMQCPP_BUILD_DIR
     make doxygen-run
     popd
     exit
