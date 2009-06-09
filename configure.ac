@@ -17,18 +17,18 @@
 
 AC_PREREQ(2.61)
 
-## -----------------------------------------------------------------------------
+## --------------------------------
 ## Initialization macros.
-## -----------------------------------------------------------------------------
-AC_INIT(activemq-c, 1, dev@activemq.apache.org)
+## --------------------------------
+AC_INIT(activemq-cpp, 3.0, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_SRCDIR(src/main/c/ActiveMQConnection.c)
+AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 
-## -----------------------------------------------------------------------------
+## -----------------------------------------------
 ## Define the Version variables
-## -----------------------------------------------------------------------------
-ACTIVEMQ_LIBRARY_NAME=activemq-c
-ACTIVEMQ_VERSION=1.0
+## -----------------------------------------------
+ACTIVEMQ_LIBRARY_NAME=activemq-cpp
+ACTIVEMQ_VERSION=3.0
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
 ##
@@ -44,7 +44,7 @@ ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 ## REVISION: a change in the REVISION number is made for any other type of change
 ##  that does not justify a change to MINOR or MAJOR
 ##
-ACTIVEMQ_LIBRARY_VERSION=1:0:0
+ACTIVEMQ_LIBRARY_VERSION=10:0:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
@@ -60,9 +60,9 @@ AM_CONFIG_HEADER(config.h)
 # Gives us access to the host_os environment variable
 AC_CANONICAL_HOST
 
-## -----------------------------------------------------------------------------
+## -----------------------------------------------
 ## Checks for programs.
-## -----------------------------------------------------------------------------
+## -----------------------------------------------
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -191,7 +191,7 @@ else
    AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
 fi
 
-AMQ_TEST_LIBS="../main/libactivemq-c.la $DECAF_LIBS"
+AMQ_TEST_LIBS="../main/libactivemq-cpp.la $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
@@ -214,26 +214,26 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(activemq-c, doxygen.cfg, doc)
+DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
 
-## -----------------------------------------------------------------------------
+## -----------------------------------------------------
 ## configuration
 ## Generates Makefile's, configuration files and scripts
-## -----------------------------------------------------------------------------
+## -----------------------------------------------------
 
-AC_OUTPUT_COMMANDS([chmod +x activemqc-1-config],[])
+AC_OUTPUT_COMMANDS([chmod +x activemqcpp-config],[])
 
 AC_CONFIG_FILES(Makefile)
-AC_CONFIG_FILES(activemq-c.pc)
+AC_CONFIG_FILES(activemq-cpp.pc)
 AC_CONFIG_FILES(src/main/Makefile)
 AC_CONFIG_FILES(src/examples/Makefile)
-AC_CONFIG_FILES(activemqc-1-config)
+AC_CONFIG_FILES(activemqcpp-config)
 
 if test x$cppunit = xyes
 then
-  AC_CONFIG_FILES(src/test/c/Makefile)
-  AC_CONFIG_FILES(src/test-integration/c/Makefile)
-  AC_CONFIG_FILES(src/test-benchmarks/c/Makefile)
+  AC_CONFIG_FILES(src/test/Makefile)
+  AC_CONFIG_FILES(src/test-integration/Makefile)
+  AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
 AC_OUTPUT

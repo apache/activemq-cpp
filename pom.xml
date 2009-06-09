@@ -16,119 +16,289 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
 
-  <parent>
-    <groupId>org.apache</groupId>
-    <artifactId>apache</artifactId>
-    <version>4</version>
-  </parent>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.apache.activemq</groupId>
-  <artifactId>activemq-cpp-parent</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <parent>
+    <groupId>org.apache.activemq</groupId>
+    <artifactId>activemq-cpp-parent</artifactId>
+    <version>3.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>activemq-cpp-library</artifactId>
   <packaging>pom</packaging>
-  <name>ActiveMQ-CPP</name>
-  <prerequisites>
-    <maven>2.0.8</maven>
-  </prerequisites>
+  <name>ActiveMQ-CPP Library</name>
+  <description>The ActiveMQ-CPP Library</description>
+  <version>3.0</version>
 
-  <organization>
-    <name>Apache Software Foundation</name>
-    <url>http://www.apache.org/</url>
-  </organization>
-
-  <url>http://activemq.apache.org/cms</url>
-
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <mailingLists>
-    <mailingList>
-      <name>Development List</name>
-      <subscribe>activemq-dev@geronimo.apache.org</subscribe>
-      <unsubscribe>activemq-dev@geronimo.apache.org</unsubscribe>
-      <post>activemq-dev@geronimo.apache.org</post>
-    </mailingList>
-  </mailingLists>
-
-  <properties>
-    <activemq-version>5.2.0</activemq-version>
-    <siteId>activemq-${activemq-version}</siteId>
-    <projectName>Apache ActiveMQ-CPP</projectName>
-    <annogen-version>0.1.0</annogen-version>
-    <ant-version>1.6.2</ant-version>
-    <xstream-version>1.3.1</xstream-version>
-    <activemq-core-dir>${ACTIVEMQ_SRC_HOME}/activemq-core/</activemq-core-dir>
-    <activemq-cpp-openwire-generator-version>2.0</activemq-cpp-openwire-generator-version>
-  </properties>
-
-  <modules>
-    <module>maven-cpptools-plugin</module>
-    <module>activemq-cpp-openwire-generator</module>
-    <module>activemq-cpp</module>
-  </modules>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk/</url>
-  </scm>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-cpp-openwire-generator</artifactId>
-        <version>${activemq-cpp-openwire-generator-version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-cpp-openwire-generator</artifactId>
+      <version>${activemq-cpp-openwire-generator-version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-2</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+    <plugins>
+      <!-- Used to generate the openwire commands and marshalers -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <tasks>
+            <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
+            <generate maxVersion="3" source="${activemq-core-dir}" target="${basedir}"/>
+          </tasks>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-cpp-openwire-generator</artifactId>
+            <version>${activemq-cpp-openwire-generator-version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.activemq.maven</groupId>
+        <artifactId>maven-cpptools-plugin</artifactId>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <id>Benchmarks-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-benchmarks/</outputDirectory>
+              <template>${basedir}/src/test-benchmarks/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Integration-Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-integration/</outputDirectory>
+              <template>${basedir}/src/test-integration/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test/</outputDirectory>
+              <template>${basedir}/src/test/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.cpp</exclude>
+                </excludes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.h</exclude>
+                </excludes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Main-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/</outputDirectory>
+              <template>${basedir}/src/main/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/main/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/decaf/security/**\*.cpp</exclude>
+                  <exclude>**/decaf/security_provider/**\*.cpp</exclude>
+                </excludes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/main/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/decaf/security/**\*.h</exclude>
+                  <exclude>**/decaf/security_provider/**\*.h</exclude>
+                </excludes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly/source.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>Unix Make</id>
+      <activation>
+        <os>
+          <family>Unix</family>
+        </os>
+      </activation>
       <build>
         <plugins>
-          <!-- We want to sign the artifact, the POM, and all attached artifacts -->
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <inherited>true</inherited>
-            <configuration>
-              <passphrase>${gpg.passphrase}</passphrase>
-            </configuration>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1</version>
             <executions>
               <execution>
+                <id>Configure</id>
+                <phase>generate-resources</phase>
                 <goals>
-                  <goal>sign</goal>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>configure</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Compile</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>compile</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>test</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Clean</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>${basedir}/build.sh</executable>
+              <workingDirectory>${basedir}</workingDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>Windows Make</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <executable>nmake</executable>
+              <workingDirectory>${basedir}/build</workingDirectory>
+              <arguments>
+                <argument>-f Makefile.win</argument>
+              </arguments>
+            </configuration>
           </plugin>
         </plugins>
       </build>
