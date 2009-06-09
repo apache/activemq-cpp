@@ -86,6 +86,12 @@ Many of the Unix type OS'es currently shipping include APR 1.2.x and
 APR-Util 1.2.x, this implies that you will need to build and install APR from
 the source download at Apache.
 
+On Mac you can use MacPorts to install a version of APR and APR-Util that
+works with ActiveMQ-CPP.  At the time of this writing the MacPorts versions
+were APR 1.3.3 and APR-Util 1.3.4 respectively.  See the MacPorts website for
+instructions on how to install the MacPorts utility and on using it to install
+the APR libraries.
+
 1.4 GNU Build System (for building on Unix/Linux/OS X)
 --------------------------------------------------------------------------
 
