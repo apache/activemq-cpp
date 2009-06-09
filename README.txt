@@ -93,7 +93,7 @@ the source download at Apache.
     | source, you will need to specify the location of the APR libraries  |
     | to the configure script. This is easy to do and only requires one   |
     | extra option for compilation. An example of this is shown below     |
-    | using the standard location for these libraries as intalled by      |
+    | using the standard location for these libraries as installed by     |
     | MacPorts:                                                           |
     |                                                                     |
     | $ ./configure \                                                     |
