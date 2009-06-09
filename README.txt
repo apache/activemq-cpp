@@ -86,6 +86,28 @@ Many of the Unix type OS'es currently shipping include APR 1.2.x and
 APR-Util 1.2.x, this implies that you will need to build and install APR from
 the source download at Apache.
 
+    -----------------------------------------------------------------------
+    |MacOS X Note:                                                        |
+    | If you have installed APR and APR-Util via MacPorts                 |
+    | (http://www.macports.org/) and you are building ActiveMQ-CPP from   |
+    | source, you will need to specify the location of the APR libraries  |
+    | to the configure script. This is easy to do and only requires one   |
+    | extra option for compilation. An example of this is shown below     |
+    | using the standard location for these libraries as intalled by      |
+    | MacPorts:                                                           |
+    |                                                                     |
+    | $ ./configure \                                                     |
+    | --with-apr=/opt/local/var/macports/software/apr/1.3.3_0/opt/local/  |
+    |                                                                     |
+    | Please notice that this is simply a single option to the            |
+    | configure script that has been broken into two lines by escaping    |
+    | the newline character to fit the formatting of this file.           |
+    |                                                                     |
+    | If you have manually compiled and installed the APR libraries into  |
+    | a custom location, then you will need to point to that location     |
+    | using the argument above.                                           |
+    -----------------------------------------------------------------------
+
 1.4 GNU Build System (for building on Unix/Linux/OS X)
 --------------------------------------------------------------------------
 
