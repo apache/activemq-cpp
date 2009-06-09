@@ -28,7 +28,7 @@
 
   <groupId>org.apache.activemq</groupId>
   <artifactId>activemq-cpp-parent</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <version>3.0</version>
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP</name>
   <prerequisites>
@@ -53,9 +53,9 @@
   <mailingLists>
     <mailingList>
       <name>Development List</name>
-      <subscribe>activemq-dev@geronimo.apache.org</subscribe>
-      <unsubscribe>activemq-dev@geronimo.apache.org</unsubscribe>
-      <post>activemq-dev@geronimo.apache.org</post>
+      <subscribe>dev-subscribe@activemq.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@activemq.apache.org</unsubscribe>
+      <post>dev@activemq.apache.org</post>
     </mailingList>
   </mailingLists>
 
