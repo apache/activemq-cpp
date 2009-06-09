@@ -1,7 +1,8 @@
 <assembly>
-  <id>source</id>
+  <id>src</id>
   <formats>
     <format>tar.gz</format>
+    <format>tar.bz2</format>
     <format>zip</format>
   </formats>
   <files>
@@ -10,32 +11,55 @@
       <outputDirectory>/</outputDirectory>
       <filtered>false</filtered>
       <fileMode>0755</fileMode>
+      <lineEnding>keep</lineEnding>
+    </file>
+    <file>
+      <source>configure</source>
+      <outputDirectory>/</outputDirectory>
+      <filtered>false</filtered>
+      <fileMode>0755</fileMode>
+      <lineEnding>keep</lineEnding>
     </file>
   </files>
   <fileSets>
     <fileSet>
       <includes>
+        <include>aclocal.m4</include>
         <include>KEYS</include>
         <include>doxygen.cfg</include>
-        <include>activemq-c.pc.in</include>
-        <include>activemqc-1-config.in</include>
+        <include>activemq-cpp.pc.in</include>
+        <include>activemqcpp-config.in</include>
         <include>*.txt</include>
         <include>*.win</include>
         <include>*.ac</include>
         <include>*.am</include>
+        <include>*.in</include>
       </includes>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>src</directory>
+      <excludes>
+        <exclude>**/Makefile.maven</exclude>
+      </excludes>
+      <lineEnding>keep</lineEnding>
+    </fileSet>
+    <fileSet>
+      <directory>config</directory>
+      <lineEnding>keep</lineEnding>
+      <fileMode>0755</fileMode>
     </fileSet>
     <fileSet>
       <directory>doc</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>m4</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
       <directory>vs2005-build</directory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
   </fileSets>
 </assembly>
