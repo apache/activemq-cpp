@@ -73,8 +73,8 @@
         <configuration>
           <downloadSources>true</downloadSources>
           <downloadJavadocs>true</downloadJavadocs>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
       </plugin>
       <plugin>
@@ -87,7 +87,7 @@
           </links>
           <linksource>true</linksource>
           <maxmemory>900m</maxmemory>
-          <source>1.6</source>
+          <source>1.5</source>
         </configuration>
       </plugin>
       <plugin>
