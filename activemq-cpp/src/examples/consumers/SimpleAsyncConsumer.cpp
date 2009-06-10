@@ -213,13 +213,13 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
     std::string brokerURI =
-        "tcp://127.0.0.1:61616"
-        "?wireFormat=openwire"
+        "failover:(tcp://127.0.0.1:61616"
+//        "?wireFormat=openwire"
 //        "&connection.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
-        ;
+        ")";
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to
