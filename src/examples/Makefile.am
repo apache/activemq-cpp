@@ -47,3 +47,19 @@ noinst_PROGRAMS += chat
 chat_SOURCES = $(chat_sources)
 chat_LDADD= $(AMQ_TEST_LIBS)
 chat_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Advisory Producer Example
+advisory_producer_sources = advisories/AdvisoryProducer.cpp \
+                            advisories/AdvisoryProducerMain.cpp
+noinst_PROGRAMS += advisory_producer 
+advisory_producer_SOURCES = $(advisory_producer_sources)
+advisory_producer_LDADD= $(AMQ_TEST_LIBS)
+advisory_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Advisory Consumer Example
+advisory_consumer_sources = advisories/AdvisoryConsumer.cpp \
+                            advisories/AdvisoryConsumerMain.cpp
+noinst_PROGRAMS += advisory_consumer
+advisory_consumer_SOURCES = $(advisory_consumer_sources)
+advisory_consumer_LDADD= $(AMQ_TEST_LIBS)
+advisory_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
