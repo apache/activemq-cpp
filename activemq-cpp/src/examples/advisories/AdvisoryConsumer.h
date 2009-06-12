@@ -30,6 +30,15 @@ namespace activemqcpp {
 namespace examples {
 namespace advisories {
 
+    /**
+     * A simple Consumer that compliements the AdvisoryProducer example.  This
+     * consumer listens on the Topic that the Producer is waiting to publish on
+     * and will display the count of Producers that are active on the Topic
+     * any time that it sees an advisory message indicating a consumer has
+     * stopped or started.
+     *
+     * @since 3.0
+     */
     class AdvisoryConsumer : public cms::Closeable,
                              public cms::MessageListener {
      private:
