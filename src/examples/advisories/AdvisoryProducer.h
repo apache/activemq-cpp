@@ -33,6 +33,14 @@ namespace activemqcpp {
 namespace examples {
 namespace advisories {
 
+    /**
+     * A sample Producer that will only send Messages on its Topic when it has
+     * received an advisory indicating that there is an active MessageConsumer
+     * on the Topic.  Once another message comes in indicating that there is no
+     * longer a consumer then this Producer stops producing again.
+     *
+     * @since 3.0
+     */
     class AdvisoryProducer : public decaf::lang::Runnable,
                              public cms::MessageListener {
     private:
