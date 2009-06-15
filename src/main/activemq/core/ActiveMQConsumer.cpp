@@ -547,7 +547,7 @@ void ActiveMQConsumer::deliverAcks()
             } else if( pendingAck != NULL &&
                        pendingAck->getAckType() == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
 
-                ack = pendingAck;
+                ack.swap( pendingAck );
             }
 
             if( ack != NULL ) {
