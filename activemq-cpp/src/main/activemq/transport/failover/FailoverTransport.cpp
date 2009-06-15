@@ -158,7 +158,7 @@ TransportListener* FailoverTransport::getTransportListener() const {
         return this->transportListener;
     }
 
-	return NULL;
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,6 +250,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
                             }
                         }
                     } catch( Exception& ex ) {
+                        ex.setMark( __FILE__, __LINE__ );
                         error.reset( ex.clone() );
                         break;
                     }
@@ -259,6 +260,8 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
                         transport->oneway( command );
                         stateTracker.trackBack( command );
                     } catch( IOException& e ) {
+
+                        e.setMark( __FILE__, __LINE__ );
 
                         // If the command was not tracked.. we will retry in
                         // this method
@@ -278,6 +281,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
 
                     return;
                 } catch( IOException& e ) {
+                    e.setMark( __FILE__, __LINE__ );
                     handleTransportFailure( e );
                 }
             }
@@ -520,6 +524,9 @@ bool FailoverTransport::iterate() {
 
                 try {
 
+                    std::cout << "FailoverTransport: Attempting Connection to "
+                              << uri.toString() << std::endl;
+
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
@@ -529,6 +536,7 @@ bool FailoverTransport::iterate() {
                     }
 
                 } catch( Exception& e ) {
+                    e.setMark( __FILE__, __LINE__ );
                     transport.reset( NULL );
                     failures.add( uri );
                     failure.reset( e.clone() );

@@ -569,12 +569,11 @@ Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInf
             if( connectionId != NULL ) {
                 Pointer<ConnectionState> cs = connectionStates.get( connectionId );
                 if( cs != NULL ) {
+                    cs->addTransactionState( info->getTransactionId() );
                     Pointer<TransactionState> transactionState =
                         cs->getTransactionState( info->getTransactionId() );
-                    if( transactionState != NULL ) {
-                        transactionState->addCommand(
-                            Pointer<Command>( info->cloneDataStructure() ) );
-                    }
+                    transactionState->addCommand(
+                        Pointer<Command>( info->cloneDataStructure() ) );
                 }
             }
 
