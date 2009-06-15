@@ -525,9 +525,6 @@ bool FailoverTransport::iterate() {
 
                 try {
 
-                    std::cout << "FailoverTransport: Attempting Connection to "
-                              << uri.toString() << std::endl;
-
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
