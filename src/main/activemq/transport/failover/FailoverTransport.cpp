@@ -190,6 +190,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
 
                 if( command->isRemoveInfo() ) {
                     // Simulate response to RemoveInfo command
+                    stateTracker.track( command );
                     Pointer<Response> response( new Response() );
                     response->setCorrelationId( command->getCommandId() );
                     myTransportListener->onCommand( response );
