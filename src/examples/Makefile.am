@@ -63,3 +63,18 @@ noinst_PROGRAMS += advisory_consumer
 advisory_consumer_SOURCES = $(advisory_consumer_sources)
 advisory_consumer_LDADD= $(AMQ_TEST_LIBS)
 advisory_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Temp Destination Advisory Consumer Example
+tempdest_advisory_consumer_sources = advisories/TempDestinationAdvisoryConsumer.cpp \
+                                     advisories/TempDestinationAdvisoryConsumerMain.cpp
+noinst_PROGRAMS += tempdest_advisory_consumer
+tempdest_advisory_consumer_SOURCES = $(tempdest_advisory_consumer_sources)
+tempdest_advisory_consumer_LDADD= $(AMQ_TEST_LIBS)
+tempdest_advisory_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Temp Destination Advisory Producer Example
+tempdest_advisory_producer_sources = advisories/TempDestinationAdvisoryProducerMain.cpp
+noinst_PROGRAMS += tempdest_advisory_producer
+tempdest_advisory_producer_SOURCES = $(tempdest_advisory_producer_sources)
+tempdest_advisory_producer_LDADD= $(AMQ_TEST_LIBS)
+tempdest_advisory_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
