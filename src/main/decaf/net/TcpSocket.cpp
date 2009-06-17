@@ -99,12 +99,13 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
 
         // Create the actual socket.
         checkResult( apr_socket_create(
-            &socketHandle, socketAddress->family, SOCK_STREAM, APR_PROTO_TCP, apr_pool.getAprPool() ) );
+            &socketHandle, socketAddress->family, SOCK_STREAM,
+            APR_PROTO_TCP, apr_pool.getAprPool() ) );
 
         // To make blocking-with-timeout sockets, we have to set it to
         // 'APR_SO_NONBLOCK==1(on) and timeout>0'. On Unix, we have no
         // problem to specify 'APR_SO_NONBLOCK==0(off) and timeout>0'.
-        // Unfortunatelly, we have a problem on Windows. Setting the
+        // Unfortunately, we have a problem on Windows. Setting the
         // mode to 'APR_SO_NONBLOCK==0(off) and timeout>0' causes
         // blocking-with-system-timeout sockets on Windows.
         //
@@ -116,7 +117,7 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (timeout>0)?1:0 );
         apr_socket_timeout_set( socketHandle, timeout );
 
-        // Connect to the broker.
+        // try to Connect to the provided address.
         checkResult(apr_socket_connect( socketHandle, socketAddress ));
 
         // Now that we are connected, we want to go back to blocking.
