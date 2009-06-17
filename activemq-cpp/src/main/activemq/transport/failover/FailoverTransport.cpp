@@ -430,6 +430,8 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
     if( transport != NULL ) {
 
+        //std::cout << "Failover: Connection to has been unexpectedly terminated." << std::endl;
+
         if( this->disposedListener != NULL ) {
             transport->setTransportListener( disposedListener.get() );
         }
@@ -509,7 +511,21 @@ bool FailoverTransport::iterate() {
                         }
 
                     } catch( Exception& e ) {
-                        transport.reset( NULL );
+
+                        if( transport != NULL ) {
+                            if( this->disposedListener != NULL ) {
+                                transport->setTransportListener( disposedListener.get() );
+                            }
+
+                            // Hand off to the close task so it gets done in a different thread
+                            // this prevents a deadlock from occurring if the Transport happens
+                            // to call back through our onException method or locks in some other
+                            // way.
+                            closeTask->add( transport );
+                            taskRunner->wakeup();
+                            transport.reset( NULL );
+                        }
+
                         this->uris->addURI( uri );
                     }
                 }
@@ -525,6 +541,9 @@ bool FailoverTransport::iterate() {
 
                 try {
 
+                    //std::cout << "Failover: Attempting to connect to: "
+                    //          << uri.toString() << std::endl;
+
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
@@ -535,7 +554,23 @@ bool FailoverTransport::iterate() {
 
                 } catch( Exception& e ) {
                     e.setMark( __FILE__, __LINE__ );
-                    transport.reset( NULL );
+                    //std::cout << "Failover: Failed while attempting to connect to: "
+                    //          << uri.toString() << std::endl;
+
+                    if( transport != NULL ) {
+                        if( this->disposedListener != NULL ) {
+                            transport->setTransportListener( disposedListener.get() );
+                        }
+
+                        // Hand off to the close task so it gets done in a different thread
+                        // this prevents a deadlock from occurring if the Transport happens
+                        // to call back through our onException method or locks in some other
+                        // way.
+                        closeTask->add( transport );
+                        taskRunner->wakeup();
+                        transport.reset( NULL );
+                    }
+
                     failures.add( uri );
                     failure.reset( e.clone() );
                 }
@@ -564,6 +599,9 @@ bool FailoverTransport::iterate() {
                 if( transportListener != NULL ) {
                     transportListener->transportResumed();
                 }
+
+                //std::cout << "Failover: Successfully connected to Broker at: "
+                //          << connectedTransportURI->toString() << std::endl;
 
                 return false;
             }
@@ -603,6 +641,8 @@ bool FailoverTransport::iterate() {
     if( !closed ) {
 
         synchronized( &sleepMutex ) {
+            //std::cout << "Failover: Trying again in "
+            //          << reconnectDelay << "Milliseconds." << std::endl;
             sleepMutex.wait( (unsigned int)reconnectDelay );
         }
 
