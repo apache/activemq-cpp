@@ -432,6 +432,9 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue AMQCP
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "createBrowser Method is not yet supported." );
+
+        // Fix for not so intelligent Sun Compiler
+        return NULL;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -446,6 +449,9 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue AMQCP
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "createBrowser Method is not yet supported." );
+
+        // Fix for not so intelligent Sun Compiler
+        return NULL;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
