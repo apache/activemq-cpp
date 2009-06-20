@@ -19,12 +19,22 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
 
-  <groupId>org.apache.activemq</groupId>
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>4</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>activemqcpp-openwire-generator</artifactId>
+
+  <groupId>org.apache.activemq</groupId>
+  <artifactId>activemq-cpp-library</artifactId>
   <packaging>jar</packaging>
-  <name>ActiveMQ-CPP Openwire Generator</name>
-  <version>1.0</version>
+  <name>ActiveMQ-CPP Library</name>
+  <description>C++ Client Library for Apache ActiveMQ</description>
+  <version>2.2.6-SNAPSHOT</version>
+  <prerequisites>
+    <maven>2.0.8</maven>
+  </prerequisites>
 
   <organization>
     <name>Apache Software Foundation</name>
@@ -39,12 +49,34 @@
     </license>
   </licenses>
 
+  <url>http://activemq.apache.org/cms</url>
+
+  <distributionManagement>
+    <repository>
+      <id>release.apache.org</id>
+      <name>ActiveMQ-CPP Release Repository</name>
+      <url>file://${basedir}/target/deploy/release</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>snapshot.apache.org</id>
+      <name>ActiveMQ-CPP Snapshot Repository</name>
+      <url>file://${basedir}/target/deploy/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk/</url>
+  </scm>
+
   <mailingLists>
     <mailingList>
       <name>Development List</name>
-      <subscribe>activemq-dev@geronimo.apache.org</subscribe>
-      <unsubscribe>activemq-dev@geronimo.apache.org</unsubscribe>
-      <post>activemq-dev@geronimo.apache.org</post>
+      <subscribe>dev-subscribe@activemq.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@activemq.apache.org</unsubscribe>
+      <post>dev@activemq.apache.org</post>
     </mailingList>
   </mailingLists>
 
@@ -113,6 +145,38 @@
         </dependency>
       </dependencies>
     </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <inherited>true</inherited>
+            <configuration>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- We want to deploy the artifact to a staging location for perusal -->
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>
@@ -130,8 +194,8 @@
           <dependencies>
             <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemqcpp-openwire-generator</artifactId>
-            <version>1.0</version>
+            <artifactId>activemq-cpp-library</artifactId>
+            <version>${version}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -150,7 +214,6 @@
             <descriptor>source.xml</descriptor>
           </descriptors>
           <tarLongFileMode>gnu</tarLongFileMode>
-          <finalName>activemq-cpp-2.2.6</finalName>
         </configuration>
         <executions>
           <execution>
@@ -161,19 +224,22 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <configuration>
+            <useReleaseProfile>false</useReleaseProfile>
+            <preparationGoals>clean install</preparationGoals>
+            <goals>deploy</goals>
+            <arguments>-Prelease,deploy</arguments>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
   <properties>
