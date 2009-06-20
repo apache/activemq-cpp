@@ -16,8 +16,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
     <groupId>org.apache</groupId>
@@ -31,7 +30,7 @@
   <packaging>jar</packaging>
   <name>ActiveMQ-CPP Library</name>
   <description>C++ Client Library for Apache ActiveMQ</description>
-  <version>2.2.6-SNAPSHOT</version>
+  <version>2.2.6</version>
   <prerequisites>
     <maven>2.0.8</maven>
   </prerequisites>
@@ -66,9 +65,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk/</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/tags/activemq-cpp-library-2.2.6</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/tags/activemq-cpp-library-2.2.6</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/tags/activemq-cpp-library-2.2.6</url>
   </scm>
 
   <mailingLists>
@@ -187,8 +186,8 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <configuration>
         <tasks>
-          <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <generate version="3" source="${activemq-core-dir}" target="${basedir}"/>
+          <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask" />
+          <generate version="3" source="${activemq-core-dir}" target="${basedir}" />
         </tasks>
         </configuration>
           <dependencies>
