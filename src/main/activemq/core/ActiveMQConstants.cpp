@@ -47,7 +47,7 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
 
     uriParams[CONNECTION_CLOSETIMEOUT] = "connection.closeTimeout";
     uriParams[CONNECTION_SENDTIMEOUT] = "connection.sendTimeout";
-    uriParams[CONNECTION_PRODUCERWINDOWSIZE] = "connection.producerWidowSize";
+    uriParams[CONNECTION_PRODUCERWINDOWSIZE] = "connection.producerWindowSize";
     uriParams[CONNECTION_ALWAYSSYNCSEND] = "connection.alwaysSyncSend";
     uriParams[CONNECTION_USEASYNCSEND] = "connection.useAsyncSend";
     uriParams[PARAM_USERNAME] = "username";
