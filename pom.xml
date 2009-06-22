@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>4</version>
+    <version>6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -31,8 +31,9 @@
   <name>ActiveMQ-CPP Library</name>
   <description>C++ Client Library for Apache ActiveMQ</description>
   <version>2.2.7-SNAPSHOT</version>
+  <inceptionYear>2007</inceptionYear>
   <prerequisites>
-    <maven>2.0.8</maven>
+    <maven>2.0.9</maven>
   </prerequisites>
 
   <organization>
@@ -54,14 +55,8 @@
     <repository>
       <id>release.apache.org</id>
       <name>ActiveMQ-CPP Release Repository</name>
-      <url>file://${basedir}/target/deploy/release</url>
+      <url>file://${basedir}/target</url>
     </repository>
-    <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>snapshot.apache.org</id>
-      <name>ActiveMQ-CPP Snapshot Repository</name>
-      <url>file://${basedir}/target/deploy/snapshot</url>
-    </snapshotRepository>
   </distributionManagement>
 
   <scm>
@@ -159,6 +154,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-9</version>
         <configuration>
           <useReleaseProfile>false</useReleaseProfile>
           <preparationGoals>clean install</preparationGoals>
