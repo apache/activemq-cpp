@@ -49,7 +49,7 @@ cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( cons
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionFactory::ActiveMQConnectionFactory() {
 
-    brokerURL = "tcp://localhost:61616";
+    brokerURL = "failover:(tcp://localhost:61616)";
     this->username = "";
     this->password = "";
 }
