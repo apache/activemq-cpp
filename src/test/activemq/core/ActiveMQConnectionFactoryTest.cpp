@@ -23,6 +23,8 @@
 #include <decaf/lang/Thread.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/core/ActiveMQSession.h>
+#include <activemq/core/ActiveMQProducer.h>
 #include <memory>
 
 using namespace std;
@@ -131,19 +133,16 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
-        cms::Connection* connection =
-            connectionFactory.createConnection();
-        CPPUNIT_ASSERT( connection != NULL );
+        std::auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection() );
+        CPPUNIT_ASSERT( connection.get() != NULL );
 
         ActiveMQConnection* amqConnection =
-            dynamic_cast< ActiveMQConnection* >( connection );
+            dynamic_cast< ActiveMQConnection* >( connection.get() );
         CPPUNIT_ASSERT( amqConnection != NULL );
         CPPUNIT_ASSERT( username == amqConnection->getUsername() );
         CPPUNIT_ASSERT( password == amqConnection->getPassword() );
         CPPUNIT_ASSERT( clientId == amqConnection->getClientId() );
-
-        // Free the allocated connection object.
-        delete connection;
 
         return;
     }
@@ -169,4 +168,37 @@ void ActiveMQConnectionFactoryTest::testExceptionOnCreate() {
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::testCreateWithURIOptions()
+{
+    try
+    {
+        std::string URI = std::string() +
+            "mock://127.0.0.1:23232?connection.producerWindowSize=65536";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        std::auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection() );
+        CPPUNIT_ASSERT( connection.get() != NULL );
+
+        ActiveMQConnection* amqConnection =
+            dynamic_cast< ActiveMQConnection* >( connection.get() );
+
+        std::auto_ptr<ActiveMQSession> session( dynamic_cast<ActiveMQSession*>(
+            amqConnection->createSession() ) );
+
+        std::auto_ptr<ActiveMQProducer> producer( dynamic_cast<ActiveMQProducer*>(
+            session->createProducer( NULL ) ) );
+
+        CPPUNIT_ASSERT( producer->getProducerInfo().getWindowSize() == 65536 );
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
 }
