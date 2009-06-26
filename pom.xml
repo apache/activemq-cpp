@@ -26,11 +26,11 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.apache.activemq</groupId>
+  <groupId>org.apache.activemq-cpp</groupId>
   <artifactId>activemq-cpp-parent</artifactId>
   <version>3.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ActiveMQ-CPP</name>
+  <name>ActiveMQ-CPP Project</name>
   <inceptionYear>2007</inceptionYear>
   <prerequisites>
     <maven>2.0.9</maven>
@@ -77,7 +77,6 @@
     <module>activemq-cpp</module>
   </modules>
 
-  <!--
   <distributionManagement>
     <repository>
       <id>release.apache.org</id>
@@ -90,7 +89,6 @@
       <url>file://${basedir}/target</url>
     </snapshotRepository>
   </distributionManagement>
-  -->
 
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
@@ -101,7 +99,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.apache.activemq</groupId>
+        <groupId>org.apache.activemq-cpp</groupId>
         <artifactId>activemq-cpp-openwire-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
