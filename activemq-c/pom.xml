@@ -23,10 +23,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.apache.activemq</groupId>
+    <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-parent</artifactId>
     <version>3.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>activemq-c-library</artifactId>
@@ -37,7 +36,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.activemq.maven</groupId>
+        <groupId>org.apache.activemq-cpp</groupId>
         <artifactId>maven-cpptools-plugin</artifactId>
         <inherited>false</inherited>
         <executions>

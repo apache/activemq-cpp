@@ -24,6 +24,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -109,6 +110,8 @@ public class MakefileMojo extends AbstractToolingMojo {
     private String replaceMarker( String marker, String line, NativeSources sources ) {
 
         List<File> files = sources.getFiles();
+
+        Collections.sort( files );
 
         int pos = 0;
 

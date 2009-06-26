@@ -16,80 +16,80 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-    main.cpp \
-    util/teamcity/TeamCityProgressListener.cpp \
     TestRegistry.cpp \
+    activemq/test/AsyncSenderTest.cpp \
+    activemq/test/CmsTemplateTest.cpp \
     activemq/test/DurableTest.cpp \
+    activemq/test/ExpirationTest.cpp \
+    activemq/test/JmsMessageGroupsTest.cpp \
+    activemq/test/SimpleRollbackTest.cpp \
+    activemq/test/SimpleTest.cpp \
+    activemq/test/SlowListenerTest.cpp \
+    activemq/test/TransactionTest.cpp \
+    activemq/test/VirtualTopicTest.cpp \
+    activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
+    activemq/test/openwire/OpenwireDurableTest.cpp \
+    activemq/test/openwire/OpenwireExpirationTest.cpp \
+    activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
+    activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
+    activemq/test/openwire/OpenwireSimpleTest.cpp \
+    activemq/test/openwire/OpenwireSlowListenerTest.cpp \
     activemq/test/openwire/OpenwireTempDestinationTest.cpp \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
-    activemq/test/openwire/OpenwireSimpleTest.cpp \
-    activemq/test/openwire/OpenwireExpirationTest.cpp \
-    activemq/test/openwire/OpenwireSlowListenerTest.cpp \
-    activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
-    activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
-    activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
-    activemq/test/openwire/OpenwireDurableTest.cpp \
-    activemq/test/SimpleTest.cpp \
-    activemq/test/stomp/StompExpirationTest.cpp \
-    activemq/test/stomp/StompSlowListenerTest.cpp \
-    activemq/test/stomp/StompSimpleTest.cpp \
-    activemq/test/stomp/StompCmsTemplateTest.cpp \
-    activemq/test/stomp/StompTransactionTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
-    activemq/test/stomp/StompJmsMessageGroupsTest.cpp \
+    activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
+    activemq/test/stomp/StompExpirationTest.cpp \
+    activemq/test/stomp/StompJmsMessageGroupsTest.cpp \
     activemq/test/stomp/StompSimpleRollbackTest.cpp \
-    activemq/test/VirtualTopicTest.cpp \
-    activemq/test/AsyncSenderTest.cpp \
-    activemq/test/TransactionTest.cpp \
-    activemq/test/ExpirationTest.cpp \
-    activemq/test/SimpleRollbackTest.cpp \
-    activemq/test/JmsMessageGroupsTest.cpp \
-    activemq/test/CmsTemplateTest.cpp \
-    activemq/test/SlowListenerTest.cpp \
+    activemq/test/stomp/StompSimpleTest.cpp \
+    activemq/test/stomp/StompSlowListenerTest.cpp \
+    activemq/test/stomp/StompTransactionTest.cpp \
+    activemq/util/CMSListener.cpp \
     activemq/util/CMSProvider.cpp \
     activemq/util/IntegrationCommon.cpp \
-    activemq/util/CMSListener.cpp
+    main.cpp \
+    util/teamcity/TeamCityProgressListener.cpp
 
 
 h_sources = \
-    util/teamcity/TeamCityProgressListener.h \
-    activemq/test/openwire/OpenwireAsyncSenderTest.h \
-    activemq/test/openwire/OpenwireTransactionTest.h \
-    activemq/test/openwire/OpenwireVirtualTopicTest.h \
-    activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
-    activemq/test/openwire/OpenwireCmsTemplateTest.h \
-    activemq/test/openwire/OpenwireSimpleRollbackTest.h \
-    activemq/test/openwire/OpenwireDurableTest.h \
-    activemq/test/openwire/OpenwireSimpleTest.h \
-    activemq/test/openwire/OpenwireTempDestinationTest.h \
-    activemq/test/openwire/OpenwireSlowListenerTest.h \
-    activemq/test/openwire/OpenwireExpirationTest.h \
-    activemq/test/JmsMessageGroupsTest.h \
-    activemq/test/VirtualTopicTest.h \
     activemq/test/AsyncSenderTest.h \
     activemq/test/CMSTestFixture.h \
-    activemq/test/stomp/StompSlowListenerTest.h \
-    activemq/test/stomp/StompDurableTest.h \
-    activemq/test/stomp/StompSimpleRollbackTest.h \
-    activemq/test/stomp/StompCmsTemplateTest.h \
-    activemq/test/stomp/StompAsyncSenderTest.h \
-    activemq/test/stomp/StompTransactionTest.h \
-    activemq/test/stomp/StompJmsMessageGroupsTest.h \
-    activemq/test/stomp/StompSimpleTest.h \
-    activemq/test/stomp/StompExpirationTest.h \
-    activemq/test/DurableTest.h \
-    activemq/test/TransactionTest.h \
-    activemq/test/ExpirationTest.h \
     activemq/test/CmsTemplateTest.h \
-    activemq/test/SlowListenerTest.h \
+    activemq/test/DurableTest.h \
+    activemq/test/ExpirationTest.h \
+    activemq/test/JmsMessageGroupsTest.h \
     activemq/test/SimpleRollbackTest.h \
     activemq/test/SimpleTest.h \
+    activemq/test/SlowListenerTest.h \
+    activemq/test/TransactionTest.h \
+    activemq/test/VirtualTopicTest.h \
+    activemq/test/openwire/OpenwireAsyncSenderTest.h \
+    activemq/test/openwire/OpenwireCmsTemplateTest.h \
+    activemq/test/openwire/OpenwireDurableTest.h \
+    activemq/test/openwire/OpenwireExpirationTest.h \
+    activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
+    activemq/test/openwire/OpenwireSimpleRollbackTest.h \
+    activemq/test/openwire/OpenwireSimpleTest.h \
+    activemq/test/openwire/OpenwireSlowListenerTest.h \
+    activemq/test/openwire/OpenwireTempDestinationTest.h \
+    activemq/test/openwire/OpenwireTransactionTest.h \
+    activemq/test/openwire/OpenwireVirtualTopicTest.h \
+    activemq/test/stomp/StompAsyncSenderTest.h \
+    activemq/test/stomp/StompCmsTemplateTest.h \
+    activemq/test/stomp/StompDurableTest.h \
+    activemq/test/stomp/StompExpirationTest.h \
+    activemq/test/stomp/StompJmsMessageGroupsTest.h \
+    activemq/test/stomp/StompSimpleRollbackTest.h \
+    activemq/test/stomp/StompSimpleTest.h \
+    activemq/test/stomp/StompSlowListenerTest.h \
+    activemq/test/stomp/StompTransactionTest.h \
+    activemq/util/CMSListener.h \
     activemq/util/CMSProvider.h \
     activemq/util/IntegrationCommon.h \
-    activemq/util/CMSListener.h
+    util/teamcity/TeamCityProgressListener.h
 
 
 ## Compile this as part of make check

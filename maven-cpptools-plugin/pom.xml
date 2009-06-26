@@ -23,13 +23,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.apache.activemq</groupId>
+    <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-parent</artifactId>
     <version>3.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.apache.activemq</groupId>
   <artifactId>maven-cpptools-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>CPP Maven Project Tools Plugin</name>
