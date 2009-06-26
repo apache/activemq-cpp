@@ -183,6 +183,9 @@ Pointer<transport::Transport> StompWireFormat::createNegotiator(
 
     throw UnsupportedOperationException( __FILE__, __LINE__,
         "No Negotiator is required to use this WireFormat." );
+
+    // Apparently HP's aCC compiler is even dumber than Sun's
+    return Pointer<transport::Transport>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
