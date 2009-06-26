@@ -21,12 +21,18 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.activemq.maven</groupId>
+
+  <parent>
+    <groupId>org.apache.activemq</groupId>
+    <artifactId>activemq-cpp-parent</artifactId>
+    <version>3.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.apache.activemq</groupId>
   <artifactId>maven-cpptools-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>CPP Tools Plugin</name>
-  <url>http://maven.apache.org</url>
+  <name>CPP Maven Project Tools Plugin</name>
 
   <dependencies>
     <dependency>
@@ -83,7 +89,7 @@
         <version>2.4</version>
         <configuration>
           <links>
-            <link>http://java.sun.com/j2se/1.6.0/docs/api/</link>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
           </links>
           <linksource>true</linksource>
           <maxmemory>900m</maxmemory>

@@ -32,7 +32,6 @@
   <packaging>jar</packaging>
   <name>ActiveMQ-CPP Openwire Generator</name>
   <description>The ActiveMQ-CPP Openwire Command Generator</description>
-  <version>2.0</version>
 
   <dependencies>
     <dependency>
