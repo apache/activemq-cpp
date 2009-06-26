@@ -77,6 +77,7 @@
     <module>activemq-cpp</module>
   </modules>
 
+  <!--
   <distributionManagement>
     <repository>
       <id>release.apache.org</id>
@@ -89,6 +90,7 @@
       <url>file://${basedir}/target</url>
     </snapshotRepository>
   </distributionManagement>
+  -->
 
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
