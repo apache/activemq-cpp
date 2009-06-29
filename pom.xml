@@ -81,12 +81,12 @@
     <repository>
       <id>release.apache.org</id>
       <name>ActiveMQ-CPP Release Repository</name>
-      <url>file://${basedir}/target</url>
+      <url>file:///home/tabish/dev/maven2/repo/release</url>
     </repository>
     <snapshotRepository>
       <id>snapshots.apache.org</id>
       <name>ActiveMQ-CPP Snapshots Repository</name>
-      <url>file://${basedir}/target</url>
+      <url>file:///home/tabish/dev/maven2/repo/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
