@@ -1,4 +1,27 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.0.1                               ==
+=========================================================================
+
+This is a bugfix build that corrects a few issues that have been found since
+the 3.0 release, mainly in the area of Failover.
+
+Bug
+
+    * [AMQCPP-246] - Failover transport doesn't detect network failures
+    * [AMQCPP-247] - Exception thrown while using failover and Transacted sessions.
+    * [AMQCPP-248] - Failover Transport can deadlock when the connection fails
+                     during restore of previous state.
+    * [AMQCPP-249] - activemq/core/ActiveMQSession.cpp fails to compile on Solaris 10
+                     with Sun Studio Compiler
+    * [AMQCPP-252] - Can't set Producer Window Size from connection URI
+
+Improvement
+
+    * [AMQCPP-245] - Add docs to README file regarding the use of APR from MacPorts
+    * [AMQCPP-251] - default to use failover:tcp://localhost:8080 by default so we use
+                     reconnection out of the box
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.0                                 ==
 =========================================================================
 
