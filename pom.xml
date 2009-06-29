@@ -129,6 +129,7 @@
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
             <preparationGoals>clean install</preparationGoals>
+    	    <arguments>-Prelease</arguments>
             <goals>deploy</goals>
           </configuration>
         </plugin>
