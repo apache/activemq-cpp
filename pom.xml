@@ -27,7 +27,7 @@
 
   <groupId>org.apache.activemq-cpp</groupId>
   <artifactId>activemq-cpp-parent</artifactId>
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP Project</name>
   <inceptionYear>2007</inceptionYear>
@@ -128,7 +128,7 @@
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
             <preparationGoals>clean install</preparationGoals>
-    	    <arguments>-Prelease</arguments>
+            <arguments>-Prelease</arguments>
             <goals>deploy</goals>
           </configuration>
         </plugin>
