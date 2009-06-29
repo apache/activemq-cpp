@@ -35,7 +35,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.activemq</groupId>
+      <groupId>org.apache.activemq-cpp</groupId>
       <artifactId>activemq-cpp-openwire-generator</artifactId>
       <version>${project.version}</version>
     </dependency>
