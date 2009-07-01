@@ -26,6 +26,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>");
         includes.add("<activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>");
+        includes.add("<decaf/lang/System.h>");
     }
 
     protected void generateDefaultConstructorBody( PrintWriter out ) {
@@ -83,6 +84,17 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         super.generateAdditionalMethods(out);
 
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool Message::isExpired() const {");
+        out.println("    long long expireTime = this->getExpiration();");
+        out.println("    long long currentTime = decaf::lang::System::currentTimeMillis();");
+        out.println("    if( expireTime > 0 && currentTime > expireTime ) {");
+        out.println("        return true;");
+        out.println("    }");
+        out.println("    return false;");
+        out.println("}");
+        out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("unsigned int Message::getSize() const {");
         out.println("");

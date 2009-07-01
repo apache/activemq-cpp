@@ -27,7 +27,6 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
 
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/util/PrimitiveMap.h>");
-        includes.add("<decaf/util/Date.h>");
     }
 
     protected void generateNamespaceWrapper( PrintWriter out ) {
@@ -124,14 +123,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * Expiration time has elapsed.");
         out.println("         * @returns true if message is expired.");
         out.println("         */");
-        out.println("        virtual bool isExpired() const {");
-        out.println("            long long expireTime = this->getExpiration();");
-        out.println("            long long currentTime = decaf::util::Date::getCurrentTimeMilliseconds();");
-        out.println("            if( expireTime > 0 && currentTime > expireTime ) {");
-        out.println("                return true;");
-        out.println("            }");
-        out.println("            return false;");
-        out.println("        }");
+        out.println("        virtual bool isExpired() const;");
         out.println("");
         out.println("        /**");
         out.println("         * Gets a reference to the Message's Properties object, allows the derived");
