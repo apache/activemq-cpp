@@ -20,6 +20,7 @@
 #include <activemq/state/CommandVisitor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>
+#include <decaf/lang/System.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -800,6 +801,17 @@ decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::Command
 
     return visitor->processMessage( this );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool Message::isExpired() const {
+    long long expireTime = this->getExpiration();
+    long long currentTime = decaf::lang::System::currentTimeMillis();
+    if( expireTime > 0 && currentTime > expireTime ) {
+        return true;
+    }
+    return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Message::getSize() const {
 

@@ -21,7 +21,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/util/Date.h>
+#include <decaf/lang/System.h>
 
 using namespace std;
 using namespace activemq;
@@ -159,7 +159,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
         long long expiration = 0LL;
 
         if( !disableTimestamps ) {
-            long long timeStamp = Date::getCurrentTimeMilliseconds();
+            long long timeStamp = System::currentTimeMillis();
             message->setCMSTimestamp( timeStamp );
             if( timeToLive > 0LL ) {
                 expiration = timeToLive + timeStamp;

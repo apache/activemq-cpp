@@ -17,7 +17,7 @@
 
 #include "Random.h"
 
-#include <decaf/util/Date.h>
+#include <decaf/lang/System.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -27,38 +27,37 @@ unsigned long long Random::multiplier = 0x5deece66dLL;
 
 ////////////////////////////////////////////////////////////////////////////////
 Random::Random() {
-    setSeed(Date::getCurrentTimeMilliseconds());
+    setSeed( System::currentTimeMillis() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Random::Random( unsigned long long seed ) {
-    setSeed(seed);
+    setSeed( seed );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Random::nextBoolean() {
-    return next(1) != 0;
+    return next( 1 ) != 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Random::nextBytes( std::vector<unsigned char>& buf ) {
     int rand = 0;
     std::size_t count = 0, loop = 0;
-    while (count < buf.size()) {
-        if (loop == 0) {
+    while( count < buf.size() ) {
+        if( loop == 0 ) {
             rand = nextInt();
             loop = 3;
         } else {
             loop--;
         }
-        buf[count++] = (unsigned char) rand;
+        buf[count++] = (unsigned char)rand;
         rand >>= 8;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double Random::nextDouble() {
-    // was: return ((((long long) next(26) << 27) + next(27)) / (double) (1L << 53));
     long long divisor = 1LL;
     divisor <<= 31;
     divisor <<= 22;
@@ -67,12 +66,13 @@ double Random::nextDouble() {
 
 ////////////////////////////////////////////////////////////////////////////////
 float Random::nextFloat() {
-    return (next(24) / 16777216.0f);
+    return ( next(24) / 16777216.0f );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double Random::nextGaussian() {
-    if (haveNextNextGaussian) {
+
+    if( haveNextNextGaussian ) {
         // if X1 has been returned, return the second Gaussian
         haveNextNextGaussian = false;
         return nextNextGaussian;
@@ -84,8 +84,8 @@ double Random::nextGaussian() {
         v1 = 2 * nextDouble() - 1;
         v2 = 2 * nextDouble() - 1;
         s = v1 * v1 + v2 * v2;
-    } while (s >= 1);
-    double norm = std::sqrt(-2 * std::log(s) / s);
+    } while( s >= 1 );
+    double norm = std::sqrt( -2 * std::log(s) / s );
     // should that not be norm instead of multiplier ?
     nextNextGaussian = v2 * norm;
     haveNextNextGaussian = true;
@@ -95,47 +95,53 @@ double Random::nextGaussian() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int Random::nextInt() {
-    return next(32);
+    return next( 32 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Random::nextInt( int n ) throw( exceptions::IllegalArgumentException ) {
-    if (n > 0) {
-        if ((n & -n) == n) {
-            return (int) ((n * (long long) next(31)) >> 31);
+
+    if( n > 0 ) {
+
+        if( ( n & -n ) == n ) {
+            return (int)( ( n * (long long)next( 31 ) ) >> 31 );
         }
+
         int bits, val;
+
         do {
-            bits = next(31);
+            bits = next( 31 );
             val = bits % n;
-        } while (bits - val + (n - 1) < 0);
+        } while( bits - val + ( n - 1 ) < 0 );
+
         return val;
     }
-    throw exceptions::IllegalArgumentException();
+
+    throw exceptions::IllegalArgumentException(
+        __FILE__, __LINE__,
+        "Value passed cannot be less than or equal to zero." );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Random::nextLong() {
-    return ((long long) next(32) << 32) + next(32);
+    return ( (long long) next(32) << 32 ) + next(32);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Random::setSeed( unsigned long long seed ) {
-    // was this->seed = (seed ^ multiplier) & ((1L << 48) - 1);
     unsigned long long mask = 1ULL;
     mask <<= 31;
     mask <<= 17;
-    this->seed = (seed ^ multiplier) & (mask - 1);
+    this->seed = ( seed ^ multiplier ) & ( mask - 1 );
     haveNextNextGaussian = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Random::next( int bits ) {
-    // was: seed = (seed * multiplier + 0xbL) & ((1L << 48) - 1);
     long long mask = 1L;
     mask <<= 31;
     mask <<= 17;
-    seed = (seed * multiplier + 0xbL) & (mask - 1);
+    seed = ( seed * multiplier + 0xbL ) & ( mask - 1 );
     // was: return (int) (seed >>> (48 - bits));
-    return (int) (seed >> (48 - bits));
+    return (int)( seed >> (48 - bits) );
 }

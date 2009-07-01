@@ -34,7 +34,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/Date.h>
 #include <string>
 #include <vector>
 
@@ -214,14 +213,7 @@ namespace commands{
          * Expiration time has elapsed.
          * @returns true if message is expired.
          */
-        virtual bool isExpired() const {
-            long long expireTime = this->getExpiration();
-            long long currentTime = decaf::util::Date::getCurrentTimeMilliseconds();
-            if( expireTime > 0 && currentTime > expireTime ) {
-                return true;
-            }
-            return false;
-        }
+        virtual bool isExpired() const;
 
         /**
          * Gets a reference to the Message's Properties object, allows the derived

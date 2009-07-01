@@ -18,17 +18,17 @@
 #include <decaf/util/Date.h>
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-
-#include <apr_time.h>
+#include <decaf/lang/System.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Date::Date(){
-    time = getCurrentTimeMilliseconds();
+    time = System::currentTimeMillis();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +46,54 @@ Date::~Date() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Date::getCurrentTimeMilliseconds(){
-    return apr_time_now() / 1000;
+long long Date::getTime() const{
+    return time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Date::setTime( long long milliseconds ){
+    this->time = milliseconds;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Date::after( const Date& when ) const {
+    return time > when.time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Date::before( const Date& when ) const {
+    return time < when.time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Date& Date::operator= ( const Date& source ) {
+    this->time = source.time;
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Date::equals( const Date& when ) const {
+    return time == when.time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Date::compareTo( const Date& value ) const {
+
+    if( this->time < value.time ) {
+        return -1;
+    } else if( this->time > value.time ) {
+        return 1;
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Date::operator==( const Date& value ) const {
+    return ( this->time == value.time );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Date::operator<( const Date& value ) const {
+    return ( this->time < value.time );
 }

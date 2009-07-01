@@ -254,7 +254,7 @@ h_sources = \
 ## include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
 
 ## Compile this as part of make check
-check_PROGRAMS = activemq-test
+## check_PROGRAMS = activemq-test
 
 ## Also run the tests as part of make check
 TESTS = $(check_PROGRAMS)

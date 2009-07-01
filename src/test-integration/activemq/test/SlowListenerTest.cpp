@@ -19,8 +19,8 @@
 
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/Date.h>
 #include <decaf/util/StlSet.h>
+#include <decaf/lang/System.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -113,13 +113,13 @@ void SlowListenerTest::testSlowListener() {
 void SlowListenerTest::waitForMessages(
     unsigned int count, long long maxWaitTime, SlowListener* l ) {
 
-    long long startTime = Date::getCurrentTimeMilliseconds();
+    long long startTime = System::currentTimeMillis();
 
     synchronized( &( l->threadIds ) ) {
 
         while( l->count < count ) {
 
-            long long curTime = Date::getCurrentTimeMilliseconds();
+            long long curTime = System::currentTimeMillis();
             if( ( curTime - startTime ) >= maxWaitTime ) {
                 return;
             }
