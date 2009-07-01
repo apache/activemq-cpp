@@ -24,17 +24,20 @@
 namespace decaf{
 namespace util{
 
-    class DateTest : public CppUnit::TestFixture
-    {
+    class DateTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( DateTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testToString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
+
         DateTest(){};
         virtual ~DateTest(){};
 
         void test();
+        void testToString();
 
     };
 
