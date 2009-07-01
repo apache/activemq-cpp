@@ -23,6 +23,7 @@ AC_PREREQ(2.61)
 AC_INIT(activemq-cpp, 3.1.0, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
+AC_CONFIG_MACRO_DIR([m4])
 
 ## -----------------------------------------------
 ## Define the Version variables
