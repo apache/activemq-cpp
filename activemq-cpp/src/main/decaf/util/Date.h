@@ -19,6 +19,7 @@
 #define _DECAF_UTIL_DATE_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/Comparable.h>
 
 namespace decaf{
 namespace util{
@@ -29,7 +30,7 @@ namespace util{
      *
      * @since 1.0
      */
-    class DECAF_API Date {
+    class DECAF_API Date : public lang::Comparable<Date> {
     private:
 
         /**
@@ -40,7 +41,8 @@ namespace util{
     public:
 
         /**
-         * Default constructor - sets time to now.
+         * Default constructor - sets time to the current System time, rounded to the
+         * nearest millisecond.
          */
         Date();
 
@@ -56,69 +58,81 @@ namespace util{
          */
         Date( const Date& source );
 
+        /**
+         * Assigns the value of one Date object to another.
+         *
+         * @param value
+         *      The value to be copied into this Date object.
+         *
+         * @return reference to this object with the newly assigned value.
+         */
+        Date& operator= ( const Date& value );
+
         virtual ~Date();
 
         /**
          * Gets the underlying time.
          * @return The underlying time value in milliseconds.
          */
-        long long getTime() const{
-            return time;
-        }
+        long long getTime() const;
 
         /**
          * Sets the underlying time.
          * @param milliseconds The underlying time value in
          * milliseconds.
          */
-        void setTime( long long milliseconds ){
-            this->time = milliseconds;
-        }
+        void setTime( long long milliseconds );
 
         /**
-         * Determines wether or not this date falls after the
+         * Determines whether or not this date falls after the
          * specified time.
          * @param when The date to compare
          * @return true if this date falls after when.
          */
-        bool after( Date& when ) const{
-            return time > when.time;
-        }
+        bool after( const Date& when ) const;
 
         /**
-         * Determines wether or not this date falls before the
+         * Determines whether or not this date falls before the
          * specified time.
          * @param when The date to compare
          * @return true if this date falls before when.
          */
-        bool before( Date& when ) const{
-            return time < when.time;
-        }
+        bool before( const Date& when ) const;
+
+    public:  // Comparable
 
         /**
-         * Determines wether or not this date is equal to the
-         * specified time.
-         * @param when The date to compare
-         * @return true if this date is equal to when.
+         * Compares this Data object to the one given.
+         *
+         * @param value
+         *      The Date value to compare to this one.
+         *
+         * @returns zero if the Date values are equal, a value less than zero if this
+         *          Data value is earlier than argument value, and a value greater than
+         *          zero if this Date object is later than the argument Date value.
          */
-        bool equals( Date& when ) const{
-            return time == when.time;
-        }
+        virtual int compareTo( const Date& value ) const;
 
         /**
-         * Assignment operator.
+         * @return true if this value is considered equal to the passed value.
          */
-        Date& operator =( const Date& source ){
-            this->time = source.time;
-            return *this;
-        }
+        virtual bool equals( const Date& value ) const;
 
         /**
-         * Returns the current time in milliseconds.  Comparable
-         * to Java's System.currentTimeMillis method.
-         * @return The current time in milliseconds.
+         * Compares equality between this object and the one passed.
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
          */
-        static long long getCurrentTimeMilliseconds();
+        virtual bool operator==( const Date& value ) const;
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const Date& value ) const;
+
     };
 
 }}

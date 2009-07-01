@@ -17,11 +17,11 @@
 
 #include "PerformanceTimer.h"
 
-#include <decaf/util/Date.h>
+#include <decaf/lang/System.h>
 
 using namespace std;
 using namespace benchmark;
-using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 PerformanceTimer::PerformanceTimer(){
@@ -34,13 +34,13 @@ PerformanceTimer::~PerformanceTimer(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void PerformanceTimer::start(){
-    this->startTime = Date::getCurrentTimeMilliseconds();
+    this->startTime = System::currentTimeMillis();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PerformanceTimer::stop(){
 
-    this->endTime = Date::getCurrentTimeMilliseconds();
+    this->endTime = System::currentTimeMillis();
     times.push_back( endTime - startTime );
     numberOfRuns++;
 }

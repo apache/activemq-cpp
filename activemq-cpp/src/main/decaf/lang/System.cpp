@@ -26,6 +26,7 @@
 #include <apr.h>
 #include <apr_errno.h>
 #include <apr_env.h>
+#include <apr_time.h>
 
 #if APR_HAVE_UNISTD_H
 #include <unistd.h>
@@ -123,7 +124,7 @@ void System::setenv( const std::string& name, const std::string& value )
 
 ////////////////////////////////////////////////////////////////////////////////
 long long System::currentTimeMillis() {
-    return Date::getCurrentTimeMilliseconds();
+    return apr_time_now() / 1000;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

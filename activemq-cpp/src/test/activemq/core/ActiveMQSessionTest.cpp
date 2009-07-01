@@ -30,7 +30,7 @@
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/Date.h>
+#include <decaf/lang/System.h>
 #include <decaf/lang/Pointer.h>
 
 using namespace std;
@@ -555,7 +555,7 @@ void ActiveMQSessionTest::testExpiration() {
     injectTextMessage( "This is a Test 1" ,
                        *topic1,
                        consumer1->getConsumerId(),
-                       decaf::util::Date::getCurrentTimeMilliseconds(),
+                       decaf::lang::System::currentTimeMillis(),
                        50 );
 
     msgListener1.asyncWaitForMessages( 1 );
@@ -565,7 +565,7 @@ void ActiveMQSessionTest::testExpiration() {
     injectTextMessage( "This is a Test 2" ,
                        *topic2,
                        consumer2->getConsumerId(),
-                       decaf::util::Date::getCurrentTimeMilliseconds() - 100,
+                       decaf::lang::System::currentTimeMillis() - 100,
                        1 );
 
     msgListener2.asyncWaitForMessages( 1 );

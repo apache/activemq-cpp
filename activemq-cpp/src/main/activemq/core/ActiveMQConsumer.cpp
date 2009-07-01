@@ -270,7 +270,7 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
         // Calculate the deadline
         long long deadline = 0;
         if( timeout > 0 ) {
-            deadline = Date::getCurrentTimeMilliseconds() + timeout;
+            deadline = System::currentTimeMillis() + timeout;
         }
 
         // Loop until the time is up or we get a non-expired message

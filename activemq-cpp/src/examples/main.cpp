@@ -22,7 +22,7 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/lang/Integer.h>
-#include <decaf/util/Date.h>
+#include <decaf/lang/System.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Config.h>
 #include <cms/Connection.h>
@@ -375,7 +375,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     bool sessionTransacted = false;
     int numMessages = 2000;
 
-    long long startTime = Date::getCurrentTimeMilliseconds();
+    long long startTime = System::currentTimeMillis();
 
     HelloWorldProducer producer( brokerURI, numMessages, useTopics );
     HelloWorldConsumer consumer( brokerURI, numMessages, useTopics, sessionTransacted );
@@ -395,7 +395,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     producerThread.join();
     consumerThread.join();
 
-    long long endTime = Date::getCurrentTimeMilliseconds();
+    long long endTime = System::currentTimeMillis();
     double totalTime = (endTime - startTime) / 1000.0;
 
     std::cout << "Time to completion = " << totalTime << " seconds." << std::endl;
