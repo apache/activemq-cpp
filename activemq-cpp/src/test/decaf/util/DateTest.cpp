@@ -25,7 +25,8 @@ using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
 
-void DateTest::test(){
+////////////////////////////////////////////////////////////////////////////////
+void DateTest::test() {
 
     Date date1;
     CPPUNIT_ASSERT( date1.getTime() != 0 );
@@ -38,5 +39,27 @@ void DateTest::test(){
     CPPUNIT_ASSERT( date1.after(date2) == false );
 
     Date date3 = date1;
+
+    // Test Comparable interface
     CPPUNIT_ASSERT( date1.equals( date3 ) == true );
+    CPPUNIT_ASSERT( date3.equals( date1 ) == true );
+    CPPUNIT_ASSERT( date1.equals( date2 ) == false );
+    CPPUNIT_ASSERT( date1.compareTo( date2 ) < 0 );
+    CPPUNIT_ASSERT( date2.compareTo( date1 ) > 0 );
+    CPPUNIT_ASSERT( date1.compareTo( date3 ) == 0 );
+    CPPUNIT_ASSERT( date3.compareTo( date1 ) == 0 );
+    CPPUNIT_ASSERT( date1 < date2 );
+    CPPUNIT_ASSERT( !( date2 < date1 ) );
+    CPPUNIT_ASSERT( !( date1 < date3 ) );
+    CPPUNIT_ASSERT( date3 == date1 );
+    CPPUNIT_ASSERT( date1 == date3 );
+    CPPUNIT_ASSERT( !( date1 == date2 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DateTest::testToString() {
+
+    Date now;
+    CPPUNIT_ASSERT( now.toString() != "" );
+    CPPUNIT_ASSERT( now.toString().size() >= 20 );
 }

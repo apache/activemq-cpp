@@ -97,3 +97,26 @@ bool Date::operator==( const Date& value ) const {
 bool Date::operator<( const Date& value ) const {
     return ( this->time < value.time );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Date::toString() const {
+
+    apr_time_exp_t exploded;
+    char buffer[80] = {0};
+    apr_size_t resultSize = 0;
+
+    // dow mon dd hh:mm:ss zzz yyyy
+    static char format[] = "%a %b %d %T %Z %Y";
+
+    // Explode time to local time.
+    if( apr_time_exp_lt( &exploded, this->time ) != APR_SUCCESS ) {
+        return "";
+    }
+
+    // Now format the exploded time into our desired format.
+    if( apr_strftime( &buffer[0], &resultSize, sizeof(buffer) / sizeof(char), format, &exploded ) != APR_SUCCESS ) {
+        return "";
+    }
+
+    return &buffer[0];
+}
