@@ -125,6 +125,14 @@ in separate packages. If you have multiple versions of autoconf or automake
 installed on your system, you may have to configure the versions to use
 using /usr/sbin/update-alternatives.
 
+    -----------------------------------------------------------------------
+    |Ubuntu Note:                                                         |
+    |                                                                     |
+    |In order to build you will need the Build Essentials Package         |
+    |                                                                     |
+    | sudo apt-get install build-essential                                |
+    -----------------------------------------------------------------------
+
 2 Building on Unix/Linux/OS X
 --------------------------------------------------------------------------
 
