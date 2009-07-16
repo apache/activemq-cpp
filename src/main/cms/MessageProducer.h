@@ -118,9 +118,9 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void send( const Destination* destination,
-            Message* message, int deliveryMode, int priority,
-            long long timeToLive) throw ( CMSException ) = 0;
+        virtual void send( const Destination* destination, Message* message,
+                           int deliveryMode, int priority, long long timeToLive )
+            throw ( CMSException ) = 0;
 
         /**
          * Sets the delivery mode for this Producer
