@@ -51,11 +51,15 @@ namespace concurrent {
 
         /**
          * Constructs a new Thread. Implementations may also initialize priority, name,
-         * daemon status, ThreadGroup, etc.
+         * daemon status, ThreadGroup, etc.  The pointer passed is still owned by the caller
+         * and is not deleted by the Thread object.  The caller owns the returned Thread
+         * object and must delete it when finished.
          *
-         * @param r - a runnable to be executed by new thread instance
+         * @param r
+         *      A pointer to a Runnable instance to be executed by new Thread instance returned.
          *
-         * @returns constructed thread, or null if the request to create a thread is rejected
+         * @returns constructed thread, or NULL if the request to create a thread is rejected
+         *          the caller owns the returned pointer.
          */
         virtual Thread* newThread( Runnable* r ) = 0;
 
