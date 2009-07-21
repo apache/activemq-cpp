@@ -78,6 +78,7 @@ cc_sources = \
     decaf/internal/nio/LongArrayBufferTest.cpp \
     decaf/internal/nio/ShortArrayBufferTest.cpp \
     decaf/internal/util/ByteArrayAdapterTest.cpp \
+    decaf/internal/util/TimerTaskHeapTest.cpp \
     decaf/io/BufferedInputStreamTest.cpp \
     decaf/io/BufferedOutputStreamTest.cpp \
     decaf/io/ByteArrayInputStreamTest.cpp \
@@ -109,12 +110,14 @@ cc_sources = \
     decaf/util/DateTest.cpp \
     decaf/util/Endian.cpp \
     decaf/util/ListTest.cpp \
+    decaf/util/PriorityQueueTest.cpp \
     decaf/util/PropertiesTest.cpp \
     decaf/util/QueueTest.cpp \
     decaf/util/RandomTest.cpp \
     decaf/util/SetTest.cpp \
     decaf/util/StlMapTest.cpp \
     decaf/util/StringTokenizerTest.cpp \
+    decaf/util/TimerTest.cpp \
     decaf/util/UUIDTest.cpp \
     decaf/util/concurrent/ConcurrentStlMapTest.cpp \
     decaf/util/concurrent/CountDownLatchTest.cpp \
@@ -200,6 +203,7 @@ h_sources = \
     decaf/internal/nio/LongArrayBufferTest.h \
     decaf/internal/nio/ShortArrayBufferTest.h \
     decaf/internal/util/ByteArrayAdapterTest.h \
+    decaf/internal/util/TimerTaskHeapTest.h \
     decaf/io/BufferedInputStreamTest.h \
     decaf/io/BufferedOutputStreamTest.h \
     decaf/io/ByteArrayInputStreamTest.h \
@@ -231,12 +235,14 @@ h_sources = \
     decaf/util/DateTest.h \
     decaf/util/Endian.h \
     decaf/util/ListTest.h \
+    decaf/util/PriorityQueueTest.h \
     decaf/util/PropertiesTest.h \
     decaf/util/QueueTest.h \
     decaf/util/RandomTest.h \
     decaf/util/SetTest.h \
     decaf/util/StlMapTest.h \
     decaf/util/StringTokenizerTest.h \
+    decaf/util/TimerTest.h \
     decaf/util/UUIDTest.h \
     decaf/util/concurrent/ConcurrentStlMapTest.h \
     decaf/util/concurrent/CountDownLatchTest.h \
@@ -254,10 +260,10 @@ h_sources = \
 ## include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
 
 ## Compile this as part of make check
-## check_PROGRAMS = activemq-test
+check_PROGRAMS = activemq-test
 
 ## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
+## TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options

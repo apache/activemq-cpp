@@ -155,8 +155,12 @@ namespace core {
             channel.wait();
         }
 
-        virtual void wait( unsigned long millisecs ) throw( decaf::lang::Exception ) {
+        virtual void wait( long long millisecs ) throw( decaf::lang::Exception ) {
             channel.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos ) throw( decaf::lang::Exception ) {
+            channel.wait( millisecs, nanos );
         }
 
         virtual void notify() throw( decaf::lang::Exception ){

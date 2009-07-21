@@ -25,6 +25,8 @@ namespace concurrent{
 
     /*
      * Exception thrown by an Executor when a task cannot be accepted for execution.
+     *
+     * @since 1.0
      */
     class DECAF_API RejectedExecutionException : public decaf::lang::Exception {
     public:

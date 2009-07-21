@@ -157,7 +157,7 @@ namespace io {
             mutex.wait();
         }
 
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
+        virtual void wait( long long millisecs ) throw( lang::Exception ){
             mutex.wait( millisecs );
         }
 

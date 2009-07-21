@@ -47,11 +47,11 @@ namespace util{
             Entry() {}
             virtual ~Entry() {}
 
-            const K& getKey() const = 0;
+            virtual const K& getKey() const = 0;
 
-            const V& getValue() const = 0;
+            virtual const V& getValue() const = 0;
 
-            void setValue( const V& value ) = 0;
+            virtual void setValue( const V& value ) = 0;
 
         };
 

@@ -63,58 +63,22 @@ namespace concurrent{
 
     public:
 
-        /**
-         * Constructor - creates and initializes the mutex.
-         */
         Mutex();
 
-        /**
-         * Destructor - destroys the mutex object.
-         */
         virtual ~Mutex();
 
-        /**
-         * Locks the object.
-         * @throws ActiveMQException
-         */
         virtual void lock() throw( lang::Exception );
 
-        /**
-         * Unlocks the object.
-         * @throws ActiveMQException
-         */
         virtual void unlock() throw( lang::Exception );
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.
-         * @throws ActiveMQException
-         */
         virtual void wait() throw( lang::Exception );
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs the time in milliseconds to wait.
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs )
-            throw( lang::Exception );
+        virtual void wait( long long millisecs ) throw( lang::Exception );
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.
-         * @throws ActiveMQException
-         */
+        virtual void wait( long long millisecs, int nanos ) throw( lang::Exception );
+
         virtual void notify() throw( lang::Exception );
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.
-         * @throws ActiveMQException
-         */
         virtual void notifyAll() throw( lang::Exception );
 
     private:

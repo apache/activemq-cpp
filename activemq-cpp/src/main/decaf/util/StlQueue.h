@@ -56,8 +56,8 @@ namespace util{
      * polling loop to ensure that you don't get stuck there.
      */
 
-    template <typename T> 
-	class StlQueue : public concurrent::Synchronizable {
+    template <typename T>
+    class StlQueue : public concurrent::Synchronizable {
     private:
 
         // The real queue
@@ -247,57 +247,32 @@ namespace util{
             target.queue.insert( target.queue.end(), queue.rbegin(), queue.rend() );
         }
 
-        /**
-         * Locks the object.
-         */
+    public:  // Synchronizable
+
         virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
-        /**
-         * Unlocks the object.
-         */
         virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         */
         virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs )
-            throw( lang::Exception ) {
-
-            mutex.wait(millisecs);
+        virtual void wait( long long millisecs ) throw( lang::Exception ) {
+            mutex.wait( millisecs );
         }
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
+        virtual void wait( long long millisecs, int nanos ) throw( lang::Exception ) {
+            mutex.wait( millisecs, nanos );
+        }
+
         virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
         virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }

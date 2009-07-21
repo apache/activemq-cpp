@@ -25,9 +25,9 @@ namespace util{
 namespace concurrent{
 
 /**
- * The synchronized macro defines a mechanism for snycronizing
+ * The synchronized macro defines a mechanism for synchronizing
  * a section of code.  The macro must be passed an object that
- * implements the Syncronizable interface.
+ * implements the Synchronizable interface.
  *
  * The macro works by creating a for loop that will loop exactly
  * once, creating a Lock object that is scoped to the loop.  Once
@@ -39,13 +39,13 @@ namespace concurrent{
  *
  * The macro would be used as follows.
  *
- * Syncronizable X;
+ * Synchronizable X;
  *
  * somefunction()
  * {
- *    syncronized(X)
+ *    synchronized(X)
  *    {
- *       // Do something that needs syncronizing.
+ *       // Do something that needs synchronizing.
  *    }
  * }
  */

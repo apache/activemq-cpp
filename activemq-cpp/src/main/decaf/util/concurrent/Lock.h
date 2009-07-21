@@ -29,10 +29,10 @@ namespace concurrent{
     /**
      * A wrapper class around a given synchronization mechanism that
      * provides automatic release upon destruction.
-     * @author  Nathan Mittler
+     *
+     * @since 1.0
      */
-    class Lock
-    {
+    class Lock {
     private:
 
         /**
@@ -46,6 +46,11 @@ namespace concurrent{
          */
         Synchronizable* syncObject;
 
+    private:
+
+        Lock( const Lock& src );
+        Lock& operator= ( const Lock& src );
+
     public:
 
         /**
@@ -55,14 +60,13 @@ namespace concurrent{
          * @param   intiallyLocked  If true, the object will automatically
          * be locked.
          */
-        Lock( Synchronizable* object, const bool intiallyLocked = true )
-        {
+        Lock( Synchronizable* object, const bool intiallyLocked = true ) {
+
             try{
                 syncObject = object;
                 locked = false;
 
-                if( intiallyLocked )
-                {
+                if( intiallyLocked ) {
                     lock();
                 }
             }
@@ -73,12 +77,11 @@ namespace concurrent{
         /**
          * Destructor - Unlocks the object if it is locked.
          */
-        virtual ~Lock()
-        {
+        virtual ~Lock() {
             try{
-                if( locked )
-                {
-                  syncObject->unlock();
+
+                if( locked ) {
+                    syncObject->unlock();
                 }
             }
             DECAF_CATCH_RETHROW( lang::Exception )
@@ -88,8 +91,7 @@ namespace concurrent{
         /**
          * Locks the object.
          */
-        void lock()
-        {
+        void lock() {
             try{
                 syncObject->lock();
                 locked = true;
@@ -99,13 +101,13 @@ namespace concurrent{
         }
 
         /**
-         * Unlocks the object.
+         * Unlocks the object if it is already locked, otherwise a call to this method has
+         * no effect.
          */
-        void unlock()
-        {
+        void unlock() {
+
             try{
-                 if(locked)
-                 {
+                 if( locked ) {
                      syncObject->unlock();
                      locked = false;
                  }

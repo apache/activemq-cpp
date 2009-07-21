@@ -96,7 +96,7 @@ namespace io {
             mutex.wait();
         }
 
-        virtual void wait( unsigned long millisecs ) throw( decaf::lang::Exception ){
+        virtual void wait( long long millisecs ) throw( decaf::lang::Exception ){
             mutex.wait( millisecs );
         }
 

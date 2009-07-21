@@ -157,18 +157,21 @@ namespace io{
 
             virtual bool markSupported() const{ return false; }
 
-            virtual void lock() throw(lang::Exception){
+            virtual void lock() throw( lang::Exception ) {
             }
-            virtual void unlock() throw(lang::Exception){
+            virtual void unlock() throw( lang::Exception ) {
             }
-            virtual void wait() throw(lang::Exception){
+            virtual void wait() throw( lang::Exception ) {
             }
-            virtual void wait(unsigned long millisecs DECAF_UNUSED) throw(lang::Exception){
+            virtual void wait( long long millisecs DECAF_UNUSED ) throw( lang::Exception ) {
             }
-            virtual void notify() throw(lang::Exception){
+            virtual void wait( long long millisecs DECAF_UNUSED, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
             }
-            virtual void notifyAll() throw(lang::Exception){
+            virtual void notify() throw( lang::Exception ) {
             }
+            virtual void notifyAll() throw( lang::Exception ) {
+            }
+
         };
 
     };

@@ -36,8 +36,7 @@ namespace io{
      * FilterInputStream  may further override some of these methods and may
      * also provide additional methods and fields.
      */
-    class DECAF_API FilterInputStream : public InputStream
-    {
+    class DECAF_API FilterInputStream : public InputStream {
     protected:
 
         // The input stream to wrap
@@ -294,8 +293,12 @@ namespace io{
             mutex.wait();
         }
 
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
-            mutex.wait(millisecs);
+        virtual void wait( long long millisecs ) throw( lang::Exception ){
+            mutex.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos ) throw( lang::Exception ) {
+            mutex.wait( millisecs, nanos );
         }
 
         virtual void notify() throw( lang::Exception ){

@@ -83,8 +83,7 @@ void Mutex::wait() throw( lang::Exception ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( unsigned long millisecs )
-    throw( lang::Exception ) {
+void Mutex::wait( long long millisecs ) throw( lang::Exception ) {
 
     if( !isLockOwner() ) {
         throw lang::Exception(
@@ -129,6 +128,12 @@ void Mutex::wait( unsigned long millisecs )
     // restore the owner
     this->lock_owner = lock_owner;
     this->lock_count = lock_count;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Mutex::wait( long long millisecs, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
+    // For now delegate to the single arg version.
+    this->wait( millisecs );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

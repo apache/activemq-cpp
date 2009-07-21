@@ -120,6 +120,7 @@ cc_sources = \
     activemq/transport/failover/FailoverTransportFactory.cpp \
     activemq/transport/failover/FailoverTransportListener.cpp \
     activemq/transport/failover/URIPool.cpp \
+    activemq/transport/inactivity/InactivityMonitor.cpp \
     activemq/transport/logging/LoggingTransport.cpp \
     activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransport.cpp \
@@ -365,6 +366,8 @@ cc_sources = \
     decaf/internal/nio/ShortArrayBuffer.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
+    decaf/internal/util/TimerTaskHeap.cpp \
+    decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/BufferedInputStream.cpp \
     decaf/io/BufferedOutputStream.cpp \
@@ -407,6 +410,8 @@ cc_sources = \
     decaf/util/Properties.cpp \
     decaf/util/Random.cpp \
     decaf/util/StringTokenizer.cpp \
+    decaf/util/Timer.cpp \
+    decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
     decaf/util/concurrent/Mutex.cpp \
@@ -556,6 +561,7 @@ h_sources = \
     activemq/transport/failover/FailoverTransportFactory.h \
     activemq/transport/failover/FailoverTransportListener.h \
     activemq/transport/failover/URIPool.h \
+    activemq/transport/inactivity/InactivityMonitor.h \
     activemq/transport/logging/LoggingTransport.h \
     activemq/transport/mock/InternalCommandListener.h \
     activemq/transport/mock/MockTransport.h \
@@ -836,6 +842,8 @@ h_sources = \
     decaf/internal/nio/ShortArrayBuffer.h \
     decaf/internal/util/ByteArrayAdapter.h \
     decaf/internal/util/HexStringParser.h \
+    decaf/internal/util/TimerTaskHeap.h \
+    decaf/internal/util/concurrent/SynchronizableImpl.h \
     decaf/io/BlockingByteArrayInputStream.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/BufferedOutputStream.h \
@@ -938,6 +946,7 @@ h_sources = \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
     decaf/util/Map.h \
+    decaf/util/PriorityQueue.h \
     decaf/util/Properties.h \
     decaf/util/Queue.h \
     decaf/util/Random.h \
@@ -947,7 +956,10 @@ h_sources = \
     decaf/util/StlQueue.h \
     decaf/util/StlSet.h \
     decaf/util/StringTokenizer.h \
+    decaf/util/Timer.h \
+    decaf/util/TimerTask.h \
     decaf/util/UUID.h \
+    decaf/util/comparators/Less.h \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/CancellationException.h \
@@ -958,6 +970,7 @@ h_sources = \
     decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/ExecutionException.h \
     decaf/util/concurrent/Executor.h \
+    decaf/util/concurrent/ExecutorService.h \
     decaf/util/concurrent/Future.h \
     decaf/util/concurrent/Lock.h \
     decaf/util/concurrent/Mutex.h \
