@@ -32,9 +32,82 @@ TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::onException( const decaf::lang::Exception& ex ) {
+void TransportFilter::onCommand( const Pointer<Command>& command ){
+    fire( command );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::onException( const decaf::lang::Exception& ex ) {
     fire( ex );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::fire( const decaf::lang::Exception& ex ){
+
+    if( listener != NULL ){
+        try{
+            listener->onException( ex );
+        }catch( ... ){}
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::fire( const Pointer<Command>& command ){
+    try{
+        if( listener != NULL ){
+            listener->onCommand( command );
+        }
+    }catch( ... ){}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::transportInterrupted() {
+    try{
+        if( listener != NULL ){
+            listener->transportInterrupted();
+        }
+    }catch( ... ){}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::transportResumed() {
+    try{
+        if( listener != NULL ){
+            listener->transportResumed();
+        }
+    }catch( ... ){}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::start() throw( cms::CMSException ) {
+
+    if( listener == NULL ){
+        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+            "exceptionListener is invalid" );
+    }
+
+    // Start the delegate transport object.
+    next->start();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::close() throw( cms::CMSException ) {
+
+    if( next != NULL ) {
+        next->close();
+        next.reset( NULL );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Transport* TransportFilter::narrow( const std::type_info& typeId ) {
+    if( typeid( *this ) == typeId ) {
+        return this;
+    } else if( this->next != NULL ) {
+        return this->next->narrow( typeId );
+    }
+
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
