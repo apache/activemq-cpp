@@ -43,6 +43,8 @@ namespace util{
      * Certain methods in the Queue interface return a special value instead of throwing
      * an exception if there is no element in the Queue to return, this special value
      * can be obtained by calling the Queue method <code>getEmptyMarker</code>.
+     *
+     * @since 1.0
      */
     template <typename E>
     class Queue : public decaf::util::AbstractCollection<E> {

@@ -25,6 +25,15 @@ namespace decaf {
 namespace util {
 namespace concurrent {
 
+    /**
+     * A task that returns a result and may throw an exception. Implementors define a single method with no
+     * arguments called call.  This interface differs from the Runnable interface in that a Callable object
+     * can return a result and is allowed to throw an exceptions from its call method.
+     *
+     * The Executors class contains utility methods to convert from other common forms to Callable classes.
+     *
+     * @since 1.0
+     */
     template<typename V>
     class DECAF_API Callable {
     public:

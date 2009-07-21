@@ -135,6 +135,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::WireFormatRegistryTest );
 
 #include <decaf/internal/util/ByteArrayAdapterTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::ByteArrayAdapterTest );
+#include <decaf/internal/util/TimerTaskHeapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::TimerTaskHeapTest );
+
 #include <decaf/internal/nio/ByteArrayPerspectiveTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::nio::ByteArrayPerspectiveTest );
 #include <decaf/internal/nio/ByteArrayBufferTest.h>
@@ -255,3 +258,5 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::RandomTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
 #include <decaf/util/StringTokenizerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StringTokenizerTest );
+#include <decaf/util/TimerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::TimerTest );

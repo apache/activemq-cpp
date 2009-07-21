@@ -470,8 +470,12 @@ namespace concurrent{
             mutex.wait();
         }
 
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ) {
-            mutex.wait(millisecs);
+        virtual void wait( long long millisecs ) throw( lang::Exception ) {
+            mutex.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos ) throw( lang::Exception ) {
+            mutex.wait( millisecs, nanos );
         }
 
         virtual void notify() throw( lang::Exception ) {
