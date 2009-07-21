@@ -34,9 +34,10 @@ namespace transport{
     using activemq::commands::Response;
 
     /**
-     * A filter on the transport layer.  Transport
-     * filters implement the Transport interface and
-     * optionally delegate calls to another Transport object.
+     * A filter on the transport layer.  Transport filters implement the Transport
+     * interface and optionally delegate calls to another Transport object.
+     *
+     * @since 1.0
      */
     class AMQCPP_API TransportFilter : public Transport,
                                        public TransportListener {
@@ -55,29 +56,16 @@ namespace transport{
     protected:
 
         /**
-         * Notify the exception listener
+         * Notify the listener of the thrown Exception.
          * @param ex - the exception to send to listeners
          */
-        void fire( const decaf::lang::Exception& ex ){
-
-            if( listener != NULL ){
-                try{
-                    listener->onException( ex );
-                }catch( ... ){}
-            }
-        }
+        void fire( const decaf::lang::Exception& ex );
 
         /**
-         * Notify the command listener.
+         * Notify the listener of the new incoming Command.
          * @param command - the command to send to the listener
          */
-        void fire( const Pointer<Command>& command ){
-            try{
-                if( listener != NULL ){
-                    listener->onCommand( command );
-                }
-            }catch( ... ){}
-        }
+        void fire( const Pointer<Command>& command );
 
     public:
 
@@ -93,9 +81,7 @@ namespace transport{
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( const Pointer<Command>& command ){
-            fire( command );
-        }
+        virtual void onCommand( const Pointer<Command>& command );
 
         /**
          * Event handler for an exception from a command transport.
@@ -107,12 +93,12 @@ namespace transport{
         /**
          * The transport has suffered an interruption from which it hopes to recover
          */
-        virtual void transportInterrupted() {}
+        virtual void transportInterrupted();
 
         /**
          * The transport has resumed after an interruption
          */
-        virtual void transportResumed() {}
+        virtual void transportResumed();
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
@@ -188,16 +174,7 @@ namespace transport{
          * @throws CMSException if an error occurs or if this transport
          * has already been closed.
          */
-        virtual void start() throw( cms::CMSException ) {
-
-            if( listener == NULL ){
-                throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                    "exceptionListener is invalid" );
-            }
-
-            // Start the delegate transport object.
-            next->start();
-        }
+        virtual void start() throw( cms::CMSException );
 
         /**
          * Stops the polling thread and closes the streams.  This can
@@ -205,12 +182,7 @@ namespace transport{
          * this object has been closed, it cannot be restarted.
          * @throws CMSException if errors occur.
          */
-        virtual void close() throw( cms::CMSException ){
-            if( next != NULL ) {
-                next->close();
-                next.reset( NULL );
-            }
-        }
+        virtual void close() throw( cms::CMSException );
 
         /**
          * Narrows down a Chain of Transports to a specific Transport to allow a
@@ -221,15 +193,7 @@ namespace transport{
          *
          * @return the requested Object. or NULL if its not in this chain.
          */
-        virtual Transport* narrow( const std::type_info& typeId ) {
-            if( typeid( *this ) == typeId ) {
-                return this;
-            } else if( this->next != NULL ) {
-                return this->next->narrow( typeId );
-            }
-
-            return NULL;
-        }
+        virtual Transport* narrow( const std::type_info& typeId );
 
         /**
          * Is this Transport fault tolerant, meaning that it will reconnect to
