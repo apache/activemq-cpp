@@ -436,7 +436,7 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
             Pointer<MessageDispatch> dispatch = command.dynamicCast<MessageDispatch>();
 
-            // Check fo an empty Message, shouldn't ever happen but who knows.
+            // Check for an empty Message, shouldn't ever happen but who knows.
             if( dispatch->getMessage() == NULL ) {
                 throw ActiveMQException(
                     __FILE__, __LINE__,
