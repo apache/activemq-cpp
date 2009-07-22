@@ -56,7 +56,6 @@ private:
     unsigned int numMessages;
     std::string brokerURI;
     std::string destURI;
-    unsigned int connectRetries;
 
 public:
 
@@ -75,19 +74,10 @@ public:
         this->brokerURI = brokerURI;
         this->destURI = destURI;
         this->clientAck = clientAck;
-        this->connectRetries = 0;
     }
 
     virtual ~SimpleProducer(){
         cleanup();
-    }
-
-    void setConnectRetries( unsigned int retries ) {
-        this->connectRetries = retries;
-    }
-
-    unsigned int getConnectRetries() const {
-        return this->connectRetries;
     }
 
     virtual void run() {
@@ -96,20 +86,14 @@ public:
             auto_ptr<ActiveMQConnectionFactory> connectionFactory(
                 new ActiveMQConnectionFactory( brokerURI ) );
 
-            unsigned int retries = this->connectRetries;
-            do{
-                // Create a Connection
-                try{
-                    connection = connectionFactory->createConnection();
-                    connection->start();
-                } catch( CMSException& e ) {
-                    e.printStackTrace();
-
-                    if( retries == 0 ) {
-                        return;
-                    }
-                }
-            } while( retries-- != 0 );
+            // Create a Connection
+            try{
+                connection = connectionFactory->createConnection();
+                connection->start();
+            } catch( CMSException& e ) {
+                e.printStackTrace();
+                throw e;
+            }
 
             // Create a Session
             if( clientAck ) {
@@ -238,20 +222,8 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     bool useTopics = false;
 
-    // Pass an integer value to the producer for retry
-    unsigned int connectRetries = 0;
-
-    if( argc > 1 ) {
-        try {
-            connectRetries = decaf::lang::Integer::parseInt( argv[1] );
-        } catch( decaf::lang::exceptions::NumberFormatException& ex ) {
-            connectRetries = 0;
-        }
-    }
-
     // Create the producer and run it.
     SimpleProducer producer( brokerURI, numMessages, destURI, useTopics );
-    producer.setConnectRetries( connectRetries );
     producer.run();
 
     std::cout << "-----------------------------------------------------\n";
