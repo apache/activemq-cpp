@@ -31,7 +31,6 @@ using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
-using namespace activemq::commands;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -99,7 +98,7 @@ void ActiveMQTransactionContext::begin()
             // Create the Id
             Pointer<LocalTransactionId> id( new LocalTransactionId() );
             id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
-            id->setValue( this->getNextTransactionId() );
+            id->setValue( this->connection->getNextLocalTransactionId() );
 
             // Create and Populate the Info Command.
             Pointer<TransactionInfo> transactionInfo( new TransactionInfo() );
@@ -228,4 +227,29 @@ void ActiveMQTransactionContext::afterRollback() {
             iter->next()->afterRollback();
         }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const Pointer<TransactionId>& ActiveMQTransactionContext::getTransactionId() const {
+    if( this->transactionId == NULL ) {
+        throw decaf::lang::exceptions::InvalidStateException(
+            __FILE__, __LINE__, "Transaction Not Started." );
+    }
+
+    return transactionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTransactionContext::isInTransaction() const {
+    return this->transactionId != NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQTransactionContext::getMaximumRedeliveries() const {
+    return this->maximumRedeliveries;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQTransactionContext::getRedeliveryDelay() const {
+    return this->redeliveryDelay;
 }

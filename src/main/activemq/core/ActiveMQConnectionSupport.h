@@ -105,6 +105,11 @@ namespace core {
          */
         util::LongSequenceGenerator tempDestinationIds;
 
+        /**
+         * Next Local Transaction Id
+         */
+        util::LongSequenceGenerator localTransactionIds;
+
     public:
 
         /**
@@ -302,6 +307,14 @@ namespace core {
          */
         long long getNextTempDestinationId() {
             return this->tempDestinationIds.getNextSequenceId();
+        }
+
+        /**
+         * Get the Next Temporary Destination Id
+         * @return the next id in the sequence.
+         */
+        long long getNextLocalTransactionId() {
+            return this->localTransactionIds.getNextSequenceId();
         }
 
         /**

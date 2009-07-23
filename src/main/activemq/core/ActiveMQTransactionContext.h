@@ -52,6 +52,12 @@ namespace core{
      * transaction.maxRedeliveryCount
      *   Max number of times a message can be re-delivered, if the session is
      *   rolled back more than this many time, the message is dropped.
+     *
+     * transaction.redeliveryDelay
+     *   Time in Milliseconds between message redelivery for rolled back
+     *   transactions.
+     *
+     * @since 2.0
      */
     class AMQCPP_API ActiveMQTransactionContext {
     private:
@@ -68,9 +74,6 @@ namespace core{
         // List of Registered Synchronizations
         decaf::util::StlSet< Pointer<Synchronization> > synchronizations;
 
-        // Next available Transaction Id
-        util::LongSequenceGenerator transactionIds;
-
         // Maximum number of time to redeliver a message when a Transaction is
         // rolled back.
         int maximumRedeliveries;
@@ -82,8 +85,11 @@ namespace core{
 
         /**
          * Constructor
-         * @param session - the session that contains this transaction
-         * @param properties - configuration parameters for this object
+         *
+         * @param session
+         *      The session that contains this transaction
+         * @param properties
+         *      Configuration parameters for this object
          */
         ActiveMQTransactionContext( ActiveMQSession* session,
                                     const decaf::util::Properties& properties );
@@ -126,37 +132,30 @@ namespace core{
          * @return TransactionInfo
          * @throw InvalidStateException if a Transaction is not in progress.
          */
-        virtual const decaf::lang::Pointer<commands::TransactionId>& getTransactionId() const {
-            if( this->transactionId == NULL ) {
-                throw decaf::lang::exceptions::InvalidStateException(
-                    __FILE__, __LINE__, "Transaction Not Started." );
-            }
-
-            return transactionId;
-        }
+        virtual const decaf::lang::Pointer<commands::TransactionId>& getTransactionId() const;
 
         /**
          * Checks to see if there is currently a Transaction in progress returns
          * false if not, true otherwise.
+         *
          * @return true if a transaction is in progress.
          */
-        virtual bool isInTransaction() const {
-            return this->transactionId != NULL;
-        }
+        virtual bool isInTransaction() const;
 
-        int getMaximumRedeliveries() const {
-            return this->maximumRedeliveries;
-        }
+        /**
+         * @returns The Maximum number of time the client will attempt to redeliver a
+         * message from a rolled back transaction before marking the message as not
+         * consumed by this client.
+         */
+        virtual int getMaximumRedeliveries() const;
 
-        long long getRedeliveryDelay() const {
-            return this->redeliveryDelay;
-        }
+        /**
+         * @returns The time in Milliseconds that this client is configured to wait in
+         * between redelivery attempts for a Message in a rolled back transaction.
+         */
+        virtual long long getRedeliveryDelay() const;
 
     private:
-
-        long long getNextTransactionId() {
-            return this->transactionIds.getNextSequenceId();
-        }
 
         void beforeEnd();
         void afterCommit();
