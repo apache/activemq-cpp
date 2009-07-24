@@ -134,7 +134,7 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->session = session;
     this->transaction = transaction;
     this->consumerInfo = consumerInfo;
-    this->lastDeliveredSequenceId = 0;
+    this->lastDeliveredSequenceId = -1;
     this->synchronizationRegistered = false;
     this->additionalWindowSize = 0;
     this->redeliveryDelay = 0;
@@ -212,10 +212,6 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
                 deliverAcks();
             }
 
-            // Remove this Consumer from the Connections set of Dispatchers and then
-            // remove it from the Broker.
-            this->session->disposeOf( this->consumerInfo->getConsumerId() );
-
             this->started.set( false );
 
             // Identifies any errors encountered during shutdown.
@@ -235,6 +231,10 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
 
             // Stop and Wakeup all sync consumers.
             unconsumedMessages.close();
+
+            // Remove this Consumer from the Connections set of Dispatchers and then
+            // remove it from the Broker.
+            this->session->disposeOf( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
 
             // If we encountered an error, propagate it.
             if( haveException ){

@@ -40,6 +40,7 @@
 #include <activemq/commands/ActiveMQTempTopic.h>
 #include <activemq/commands/ActiveMQTempQueue.h>
 #include <activemq/commands/MessagePull.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/commands/ProducerInfo.h>
 #include <activemq/commands/TransactionInfo.h>
 #include <activemq/commands/RemoveSubscriptionInfo.h>
@@ -47,6 +48,7 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
+#include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -77,6 +79,7 @@ ActiveMQSession::ActiveMQSession( const Pointer<SessionInfo>& sessionInfo,
     this->connection = connection;
     this->closed = false;
     this->ackMode = ackMode;
+    this->lastDeliveredSequenceId = -1;
 
     // Create a Transaction object only if the session is transacted
     if( this->isTransacted() ) {
@@ -152,7 +155,10 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         }
 
         // Remove this session from the Broker.
-        this->connection->disposeOf( this->sessionInfo->getSessionId() );
+        Pointer<RemoveInfo> info( new RemoveInfo() );
+        info->setObjectId( this->sessionInfo->getSessionId() );
+        info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
+        this->connection->oneway( info );
 
         // Remove this sessions from the connector
         this->connection->removeSession( this );
@@ -1027,7 +1033,7 @@ void ActiveMQSession::checkClosed() const throw( activemq::exceptions::ActiveMQE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::disposeOf( Pointer<ConsumerId> id )
+void ActiveMQSession::disposeOf( Pointer<ConsumerId> id, long long lastDeliveredSequenceId )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -1041,7 +1047,15 @@ void ActiveMQSession::disposeOf( Pointer<ConsumerId> id )
                 // Remove this Id both from the Sessions Map of Consumers and from
                 // the Connection.
                 this->connection->removeDispatcher( id );
-                this->connection->disposeOf( id );
+
+                // Remove at the Broker Side.
+                Pointer<RemoveInfo> info( new RemoveInfo );
+                info->setObjectId( id );
+                info->setLastDeliveredSequenceId( lastDeliveredSequenceId );
+                this->connection->oneway( info );
+                this->lastDeliveredSequenceId =
+                    Math::max( this->lastDeliveredSequenceId, lastDeliveredSequenceId );
+
                 this->consumers.remove( id );
             }
         }
@@ -1064,7 +1078,12 @@ void ActiveMQSession::disposeOf( Pointer<ProducerId> id )
             if( this->producers.containsKey( id ) ) {
 
                 this->connection->removeProducer( id );
-                this->connection->disposeOf( id );
+
+                // Remove at the Broker Side.
+                Pointer<RemoveInfo> info( new RemoveInfo );
+                info->setObjectId( id );
+                this->connection->oneway( info );
+
                 this->producers.remove( id );
             }
         }

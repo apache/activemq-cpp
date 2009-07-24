@@ -332,7 +332,9 @@ void ActiveMQConnection::disconnect() throw ( activemq::exceptions::ActiveMQExce
     try{
 
         // Remove our ConnectionId from the Broker
-        disposeOf( connectionInfo->getConnectionId(), this->getCloseTimeout() );
+        Pointer<RemoveInfo> command( new RemoveInfo() );
+        command->setObjectId( this->connectionInfo->getConnectionId() );
+        this->syncRequest( command, this->getCloseTimeout() );
 
         // Send the disconnect command to the broker.
         Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
@@ -583,35 +585,6 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disposeOf( const Pointer<DataStructure>& objectId )
-    throw ( ActiveMQException ) {
-
-    try{
-        Pointer<RemoveInfo> command( new RemoveInfo() );
-        command->setObjectId( objectId );
-        oneway( command );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disposeOf( const Pointer<DataStructure>& objectId,
-                                    unsigned int timeout )
-    throw ( ActiveMQException ) {
-
-    try{
-        Pointer<RemoveInfo> command( new RemoveInfo() );
-        command->setObjectId( objectId );
-        this->syncRequest( command, timeout );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

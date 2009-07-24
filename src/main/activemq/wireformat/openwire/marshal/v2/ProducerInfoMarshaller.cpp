@@ -76,7 +76,6 @@ void ProducerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStr
             info->getBrokerPath().clear();
         }
         info->setDispatchAsync( bs->readBoolean() );
-        info->setWindowSize( dataIn->readInt() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -97,7 +96,7 @@ int ProducerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruc
         rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
         bs->writeBoolean( info->isDispatchAsync() );
 
-        return rc + 4;
+        return rc + 0;
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -117,7 +116,6 @@ void ProducerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
         tightMarshalCachedObject2( wireFormat, info->getDestination().get(), dataOut, bs );
         tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
         bs->readBoolean();
-        dataOut->writeInt( info->getWindowSize() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -149,7 +147,6 @@ void ProducerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStr
             info->getBrokerPath().clear();
         }
         info->setDispatchAsync( dataIn->readBoolean() );
-        info->setWindowSize( dataIn->readInt() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -169,7 +166,6 @@ void ProducerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruc
         looseMarshalCachedObject( wireFormat, info->getDestination().get(), dataOut );
         looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
         dataOut->writeBoolean( info->isDispatchAsync() );
-        dataOut->writeInt( info->getWindowSize() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

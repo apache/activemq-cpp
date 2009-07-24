@@ -48,6 +48,7 @@ namespace commands{
     protected:
 
         Pointer<DataStructure> objectId;
+        long long lastDeliveredSequenceId;
 
     public:
 
@@ -103,6 +104,9 @@ namespace commands{
         virtual const Pointer<DataStructure>& getObjectId() const;
         virtual Pointer<DataStructure>& getObjectId();
         virtual void setObjectId( const Pointer<DataStructure>& objectId );
+
+        virtual long long getLastDeliveredSequenceId() const;
+        virtual void setLastDeliveredSequenceId( long long lastDeliveredSequenceId );
 
         /**
          * @return an answer of true to the isRemoveInfo() query.

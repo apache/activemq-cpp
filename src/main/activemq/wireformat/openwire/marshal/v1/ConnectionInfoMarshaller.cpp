@@ -78,7 +78,6 @@ void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
         }
         info->setBrokerMasterConnector( bs->readBoolean() );
         info->setManageable( bs->readBoolean() );
-        info->setClientMaster( bs->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -101,7 +100,6 @@ int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
         rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
         bs->writeBoolean( info->isBrokerMasterConnector() );
         bs->writeBoolean( info->isManageable() );
-        bs->writeBoolean( info->isClientMaster() );
 
         return rc + 0;
     }
@@ -124,7 +122,6 @@ void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
         tightMarshalString2( info->getPassword(), dataOut, bs );
         tightMarshalString2( info->getUserName(), dataOut, bs );
         tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
-        bs->readBoolean();
         bs->readBoolean();
         bs->readBoolean();
     }
@@ -160,7 +157,6 @@ void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataS
         }
         info->setBrokerMasterConnector( dataIn->readBoolean() );
         info->setManageable( dataIn->readBoolean() );
-        info->setClientMaster( dataIn->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -183,7 +179,6 @@ void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
         looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
         dataOut->writeBoolean( info->isBrokerMasterConnector() );
         dataOut->writeBoolean( info->isManageable() );
-        dataOut->writeBoolean( info->isClientMaster() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

@@ -81,8 +81,6 @@ void BrokerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
         info->setDuplexConnection( bs->readBoolean() );
         info->setNetworkConnection( bs->readBoolean() );
         info->setConnectionId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
-        info->setBrokerUploadUrl( tightUnmarshalString( dataIn, bs ) );
-        info->setNetworkProperties( tightUnmarshalString( dataIn, bs ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -108,8 +106,6 @@ int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructu
         bs->writeBoolean( info->isDuplexConnection() );
         bs->writeBoolean( info->isNetworkConnection() );
         rc += tightMarshalLong1( wireFormat, info->getConnectionId(), bs );
-        rc += tightMarshalString1( info->getBrokerUploadUrl(), bs );
-        rc += tightMarshalString1( info->getNetworkProperties(), bs );
 
         return rc + 0;
     }
@@ -137,8 +133,6 @@ void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
         bs->readBoolean();
         bs->readBoolean();
         tightMarshalLong2( wireFormat, info->getConnectionId(), dataOut, bs );
-        tightMarshalString2( info->getBrokerUploadUrl(), dataOut, bs );
-        tightMarshalString2( info->getNetworkProperties(), dataOut, bs );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -175,8 +169,6 @@ void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStruc
         info->setDuplexConnection( dataIn->readBoolean() );
         info->setNetworkConnection( dataIn->readBoolean() );
         info->setConnectionId( looseUnmarshalLong( wireFormat, dataIn ) );
-        info->setBrokerUploadUrl( looseUnmarshalString( dataIn ) );
-        info->setNetworkProperties( looseUnmarshalString( dataIn ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -202,8 +194,6 @@ void BrokerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructu
         dataOut->writeBoolean( info->isDuplexConnection() );
         dataOut->writeBoolean( info->isNetworkConnection() );
         looseMarshalLong( wireFormat, info->getConnectionId(), dataOut );
-        looseMarshalString( info->getBrokerUploadUrl(), dataOut );
-        looseMarshalString( info->getNetworkProperties(), dataOut );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

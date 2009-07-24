@@ -64,9 +64,6 @@ void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
         info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >(
             tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
         info->setTimeout( tightUnmarshalLong( wireFormat, dataIn, bs ) );
-        info->setCorrelationId( tightUnmarshalString( dataIn, bs ) );
-        info->setMessageId( Pointer<MessageId>( dynamic_cast< MessageId* >(
-            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -85,8 +82,6 @@ int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruct
         rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId().get(), bs );
         rc += tightMarshalCachedObject1( wireFormat, info->getDestination().get(), bs );
         rc += tightMarshalLong1( wireFormat, info->getTimeout(), bs );
-        rc += tightMarshalString1( info->getCorrelationId(), bs );
-        rc += tightMarshalNestedObject1( wireFormat, info->getMessageId().get(), bs );
 
         return rc + 0;
     }
@@ -107,8 +102,6 @@ void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
         tightMarshalCachedObject2( wireFormat, info->getConsumerId().get(), dataOut, bs );
         tightMarshalCachedObject2( wireFormat, info->getDestination().get(), dataOut, bs );
         tightMarshalLong2( wireFormat, info->getTimeout(), dataOut, bs );
-        tightMarshalString2( info->getCorrelationId(), dataOut, bs );
-        tightMarshalNestedObject2( wireFormat, info->getMessageId().get(), dataOut, bs );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -128,9 +121,6 @@ void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStru
         info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >( 
             looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
         info->setTimeout( looseUnmarshalLong( wireFormat, dataIn ) );
-        info->setCorrelationId( looseUnmarshalString( dataIn ) );
-        info->setMessageId( Pointer<MessageId>( dynamic_cast< MessageId* >( 
-            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -149,8 +139,6 @@ void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruct
         looseMarshalCachedObject( wireFormat, info->getConsumerId().get(), dataOut );
         looseMarshalCachedObject( wireFormat, info->getDestination().get(), dataOut );
         looseMarshalLong( wireFormat, info->getTimeout(), dataOut );
-        looseMarshalString( info->getCorrelationId(), dataOut );
-        looseMarshalNestedObject( wireFormat, info->getMessageId().get(), dataOut );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

@@ -40,6 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 RemoveInfo::RemoveInfo() : BaseCommand() {
 
+    this->lastDeliveredSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +77,7 @@ void RemoveInfo::copyDataStructure( const DataStructure* src ) {
     BaseCommand::copyDataStructure( src );
 
     this->setObjectId( srcPtr->getObjectId() );
+    this->setLastDeliveredSequenceId( srcPtr->getLastDeliveredSequenceId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +98,7 @@ std::string RemoveInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
+    stream << " Value of LastDeliveredSequenceId = " << this->getLastDeliveredSequenceId() << std::endl;
     stream << BaseCommand::toString();
     stream << "End Class = RemoveInfo" << std::endl;
 
@@ -122,6 +125,9 @@ bool RemoveInfo::equals( const DataStructure* value ) const {
     } else if( valuePtr->getObjectId() != NULL ) {
         return false;
     }
+    if( this->getLastDeliveredSequenceId() != valuePtr->getLastDeliveredSequenceId() ) {
+        return false;
+    }
     if( !BaseCommand::equals( value ) ) {
         return false;
     }
@@ -141,6 +147,16 @@ decaf::lang::Pointer<DataStructure>& RemoveInfo::getObjectId() {
 ////////////////////////////////////////////////////////////////////////////////
 void RemoveInfo::setObjectId( const decaf::lang::Pointer<DataStructure>& objectId ) {
     this->objectId = objectId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long RemoveInfo::getLastDeliveredSequenceId() const {
+    return lastDeliveredSequenceId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void RemoveInfo::setLastDeliveredSequenceId( long long lastDeliveredSequenceId ) {
+    this->lastDeliveredSequenceId = lastDeliveredSequenceId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

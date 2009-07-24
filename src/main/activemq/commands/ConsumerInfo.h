@@ -67,6 +67,7 @@ namespace commands{
         bool networkSubscription;
         bool optimizedAcknowledge;
         bool noRangeAcks;
+        std::vector< decaf::lang::Pointer<ConsumerId> > networkConsumerPath;
 
     public:
 
@@ -175,6 +176,10 @@ namespace commands{
 
         virtual bool isNoRangeAcks() const;
         virtual void setNoRangeAcks( bool noRangeAcks );
+
+        virtual const std::vector< decaf::lang::Pointer<ConsumerId> >& getNetworkConsumerPath() const;
+        virtual std::vector< decaf::lang::Pointer<ConsumerId> >& getNetworkConsumerPath();
+        virtual void setNetworkConsumerPath( const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath );
 
         /**
          * @return an answer of true to the isConsumerInfo() query.
