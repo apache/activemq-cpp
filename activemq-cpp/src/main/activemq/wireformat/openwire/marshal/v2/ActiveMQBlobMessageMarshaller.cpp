@@ -57,11 +57,6 @@ void ActiveMQBlobMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, 
 
         MessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-        ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-        info->setRemoteBlobUrl( tightUnmarshalString( dataIn, bs ) );
-        info->setMimeType( tightUnmarshalString( dataIn, bs ) );
-        info->setDeletedByBroker( bs->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -73,13 +68,7 @@ int ActiveMQBlobMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Da
 
     try {
 
-        ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-
         int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalString1( info->getRemoteBlobUrl(), bs );
-        rc += tightMarshalString1( info->getMimeType(), bs );
-        bs->writeBoolean( info->isDeletedByBroker() );
 
         return rc + 0;
     }
@@ -95,11 +84,6 @@ void ActiveMQBlobMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 
         MessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
-        ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-        tightMarshalString2( info->getRemoteBlobUrl(), dataOut, bs );
-        tightMarshalString2( info->getMimeType(), dataOut, bs );
-        bs->readBoolean();
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -112,11 +96,6 @@ void ActiveMQBlobMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, 
     try {
 
         MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-        ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-        info->setRemoteBlobUrl( looseUnmarshalString( dataIn ) );
-        info->setMimeType( looseUnmarshalString( dataIn ) );
-        info->setDeletedByBroker( dataIn->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -128,13 +107,8 @@ void ActiveMQBlobMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, Da
 
     try {
 
-        ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
         MessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-        looseMarshalString( info->getRemoteBlobUrl(), dataOut );
-        looseMarshalString( info->getMimeType(), dataOut );
-        dataOut->writeBoolean( info->isDeletedByBroker() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

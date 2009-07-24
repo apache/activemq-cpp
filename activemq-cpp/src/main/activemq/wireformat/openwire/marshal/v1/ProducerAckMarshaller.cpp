@@ -57,11 +57,6 @@ void ProducerAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
 
         BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-        ProducerAck* info =
-            dynamic_cast<ProducerAck*>( dataStructure );
-        info->setProducerId( Pointer<ProducerId>( dynamic_cast< ProducerId* >(
-            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setSize( dataIn->readInt() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -73,13 +68,9 @@ int ProducerAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruct
 
     try {
 
-        ProducerAck* info =
-            dynamic_cast<ProducerAck*>( dataStructure );
-
         int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalNestedObject1( wireFormat, info->getProducerId().get(), bs );
 
-        return rc + 4;
+        return rc + 0;
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -93,10 +84,6 @@ void ProducerAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 
         BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
-        ProducerAck* info =
-            dynamic_cast<ProducerAck*>( dataStructure );
-        tightMarshalNestedObject2( wireFormat, info->getProducerId().get(), dataOut, bs );
-        dataOut->writeInt( info->getSize() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -109,11 +96,6 @@ void ProducerAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStru
     try {
 
         BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-        ProducerAck* info =
-            dynamic_cast<ProducerAck*>( dataStructure );
-        info->setProducerId( Pointer<ProducerId>( dynamic_cast< ProducerId* >( 
-            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
-        info->setSize( dataIn->readInt() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -125,12 +107,8 @@ void ProducerAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruct
 
     try {
 
-        ProducerAck* info =
-            dynamic_cast<ProducerAck*>( dataStructure );
         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-        looseMarshalNestedObject( wireFormat, info->getProducerId().get(), dataOut );
-        dataOut->writeInt( info->getSize() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

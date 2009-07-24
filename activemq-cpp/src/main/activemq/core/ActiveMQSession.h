@@ -123,6 +123,11 @@ namespace core{
          */
         util::LongSequenceGenerator consumerIds;
 
+        /**
+         * Last Delivered Sequence Id
+         */
+        long long lastDeliveredSequenceId;
+
     public:
 
         ActiveMQSession( const Pointer<commands::SessionInfo>& sessionInfo,
@@ -497,6 +502,25 @@ namespace core{
         }
 
         /**
+         * Gets the currently set Last Delivered Sequence Id
+         *
+         * @returns long long containing the sequence id of the last delivered Message.
+         */
+        long long getLastDeliveredSequenceId() const {
+            return this->lastDeliveredSequenceId;
+        }
+
+        /**
+         * Sets the value of the Last Delivered Sequence Id
+         *
+         * @param value
+         *      The new value to assign to the Last Delivered Sequence Id property.
+         */
+        void setLastDeliveredSequenceId( long long value ) {
+            this->lastDeliveredSequenceId = value;
+        }
+
+        /**
          * Sends a oneway message.
          * @param command The message to send.
          * @throws ActiveMQException if not currently connected, or
@@ -520,10 +544,15 @@ namespace core{
          * Dispose of a Consumer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
          *
-         * @param id - the Id of the Consumer to dispose.
+         * @param id
+         *      The Id of the Consumer to dispose.
+         *
+         * @param lastDeliveredSequenceId
+         *      The Broker Sequence Id of the last message the Consumer delivered.
+         *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void disposeOf( decaf::lang::Pointer<commands::ConsumerId> id )
+        void disposeOf( decaf::lang::Pointer<commands::ConsumerId> id, long long lastDeliveredSequenceId )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**

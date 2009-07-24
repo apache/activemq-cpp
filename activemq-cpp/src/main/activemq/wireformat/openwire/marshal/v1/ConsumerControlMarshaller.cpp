@@ -63,9 +63,6 @@ void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
         info->setConsumerId( Pointer<ConsumerId>( dynamic_cast< ConsumerId* >(
             tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
         info->setPrefetch( dataIn->readInt() );
-        info->setFlush( bs->readBoolean() );
-        info->setStart( bs->readBoolean() );
-        info->setStop( bs->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -83,9 +80,6 @@ int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
         int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
         bs->writeBoolean( info->isClose() );
         rc += tightMarshalNestedObject1( wireFormat, info->getConsumerId().get(), bs );
-        bs->writeBoolean( info->isFlush() );
-        bs->writeBoolean( info->isStart() );
-        bs->writeBoolean( info->isStop() );
 
         return rc + 4;
     }
@@ -106,9 +100,6 @@ void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
         bs->readBoolean();
         tightMarshalNestedObject2( wireFormat, info->getConsumerId().get(), dataOut, bs );
         dataOut->writeInt( info->getPrefetch() );
-        bs->readBoolean();
-        bs->readBoolean();
-        bs->readBoolean();
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -127,9 +118,6 @@ void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Data
         info->setConsumerId( Pointer<ConsumerId>( dynamic_cast< ConsumerId* >( 
             looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
         info->setPrefetch( dataIn->readInt() );
-        info->setFlush( dataIn->readBoolean() );
-        info->setStart( dataIn->readBoolean() );
-        info->setStop( dataIn->readBoolean() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -148,9 +136,6 @@ void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
         dataOut->writeBoolean( info->isClose() );
         looseMarshalNestedObject( wireFormat, info->getConsumerId().get(), dataOut );
         dataOut->writeInt( info->getPrefetch() );
-        dataOut->writeBoolean( info->isFlush() );
-        dataOut->writeBoolean( info->isStart() );
-        dataOut->writeBoolean( info->isStop() );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

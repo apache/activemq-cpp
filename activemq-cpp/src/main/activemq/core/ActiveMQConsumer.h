@@ -316,6 +316,25 @@ namespace core{
          */
         void clearMessagesInProgress();
 
+        /**
+         * Gets the currently set Last Delivered Sequence Id
+         *
+         * @returns long long containing the sequence id of the last delivered Message.
+         */
+        long long getLastDeliveredSequenceId() const {
+            return this->lastDeliveredSequenceId;
+        }
+
+        /**
+         * Sets the value of the Last Delivered Sequence Id
+         *
+         * @param value
+         *      The new value to assign to the Last Delivered Sequence Id property.
+         */
+        void setLastDeliveredSequenceId( long long value ) {
+            this->lastDeliveredSequenceId = value;
+        }
+
     protected:
 
         /**

@@ -105,6 +105,7 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
     this->setNetworkSubscription( srcPtr->isNetworkSubscription() );
     this->setOptimizedAcknowledge( srcPtr->isOptimizedAcknowledge() );
     this->setNoRangeAcks( srcPtr->isNoRangeAcks() );
+    this->setNetworkConsumerPath( srcPtr->getNetworkConsumerPath() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,6 +159,14 @@ std::string ConsumerInfo::toString() const {
     stream << " Value of NetworkSubscription = " << this->isNetworkSubscription() << std::endl;
     stream << " Value of OptimizedAcknowledge = " << this->isOptimizedAcknowledge() << std::endl;
     stream << " Value of NoRangeAcks = " << this->isNoRangeAcks() << std::endl;
+    for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
+        stream << " Value of NetworkConsumerPath[" << inetworkConsumerPath << "] is Below:" << std::endl;
+        if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+            stream << this->getNetworkConsumerPath()[inetworkConsumerPath]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
     stream << BaseCommand::toString();
     stream << "End Class = ConsumerInfo" << std::endl;
 
@@ -245,6 +254,15 @@ bool ConsumerInfo::equals( const DataStructure* value ) const {
     }
     if( this->isNoRangeAcks() != valuePtr->isNoRangeAcks() ) {
         return false;
+    }
+    for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
+        if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+            if( !this->getNetworkConsumerPath()[inetworkConsumerPath]->equals( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath].get() ) ) {
+                return false;
+            }
+        } else if( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+            return false;
+        }
     }
     if( !BaseCommand::equals( value ) ) {
         return false;
@@ -450,6 +468,21 @@ bool ConsumerInfo::isNoRangeAcks() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ConsumerInfo::setNoRangeAcks( bool noRangeAcks ) {
     this->noRangeAcks = noRangeAcks;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::vector< decaf::lang::Pointer<ConsumerId> >& ConsumerInfo::getNetworkConsumerPath() const {
+    return networkConsumerPath;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector< decaf::lang::Pointer<ConsumerId> >& ConsumerInfo::getNetworkConsumerPath() {
+    return networkConsumerPath;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerInfo::setNetworkConsumerPath( const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath ) {
+    this->networkConsumerPath = networkConsumerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
