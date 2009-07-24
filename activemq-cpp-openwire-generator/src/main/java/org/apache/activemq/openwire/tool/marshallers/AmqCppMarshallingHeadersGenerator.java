@@ -18,29 +18,82 @@
 package org.apache.activemq.openwire.tool.marshallers;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.activemq.openwire.tool.JavaMarshallingGenerator;
+import org.apache.activemq.openwire.tool.MultiSourceGenerator;
+import org.codehaus.jam.JAnnotation;
+import org.codehaus.jam.JAnnotationValue;
 import org.codehaus.jam.JClass;
+import org.codehaus.jam.JProperty;
 
 /**
  *
  * @version $Revision: 381410 $
  */
-public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator {
+public class AmqCppMarshallingHeadersGenerator extends MultiSourceGenerator {
 
     protected String targetDir="./src/main";
+    protected List<JClass> concreteClasses = new ArrayList<JClass>();
+    protected File factoryFile;
+    protected String factoryFileName = "MarshallerFactory";
+    protected String indent = "    ";
+
+    /**
+     * Overrides the base class init since we don't mark any marshaller classes as
+     * being manually maintained.
+     */
+    protected void initialiseManuallyMaintainedClasses() {
+    }
+
+    /**
+     * Returns all the valid properties available on the current class. Overrides the
+     * method in {@link MultiSourceGenerator} to add filtering on the Openwire Version
+     * number so that we can rerun this tool for older versions and produce an exact
+     * match to what was previously generated.
+     *
+     * @return List of Properties valid for the current {@link JClass} and Openwire version.
+     */
+    public List<JProperty> getProperties() {
+        List<JProperty> answer = new ArrayList<JProperty>();
+        JProperty[] properties = jclass.getDeclaredProperties();
+        for (int i = 0; i < properties.length; i++) {
+            JProperty property = properties[i];
+            if (isValidProperty(property)) {
+
+                JAnnotation annotation = property.getAnnotation("openwire:property");
+                JAnnotationValue version = annotation.getValue("version");
+
+                if( version.asInt() <= this.getOpenwireVersion() ) {
+                    answer.add(property);
+                }
+            }
+        }
+        return answer;
+    }
 
     public Object run() {
         filePostFix = getFilePostFix();
         if (destDir == null) {
             destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/v"+getOpenwireVersion());
         }
-        return super.run();
+        Object answer = super.run();
+        processFactory();
+        return answer;
     }
 
     protected void processClass(JClass jclass) {
-        super.processClass( jclass );
+        super.processClass(jclass);
+
+        if (!jclass.isAbstract()) {
+            concreteClasses.add(jclass);
+        }
+    }
+
+    protected String getClassName(JClass jclass) {
+        return super.getClassName(jclass) + "Marshaller";
     }
 
     protected String getBaseClassName(JClass jclass) {
@@ -60,9 +113,17 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             answer = "MessageMarshaller";
         }
 
-        // We didn't map it, so let the base class handle it.
+        // We didn't map it directly so we turn it into something generic.
         if( answer.equals( jclass.getSimpleName() ) ) {
-            answer = super.getBaseClassName(jclass);
+            answer = "BaseDataStreamMarshaller";
+            JClass superclass = jclass.getSuperclass();
+            if (superclass != null) {
+                String superName = superclass.getSimpleName();
+                if (!superName.equals("Object") && !superName.equals("JNDIBaseStorable") && !superName.equals("DataStructureSupport")) {
+                    answer = superName + "Marshaller";
+                }
+            }
+            return answer;
         }
 
         return answer;
@@ -298,6 +359,23 @@ out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersi
 out.println("");
         }
 
+    protected void processFactory() {
+        if (factoryFile == null) {
+            factoryFile = new File(destDir, factoryFileName + filePostFix);
+        }
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new FileWriter(factoryFile));
+            generateFactory(out);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
 out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
@@ -336,6 +414,14 @@ out.println("");
 out.println("}}}}}");
 out.println("");
 out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
+    }
+
+    public List<JClass> getConcreteClasses() {
+        return concreteClasses;
+    }
+
+    public void setConcreteClasses(List<JClass> concreteClasses) {
+        this.concreteClasses = concreteClasses;
     }
 
     public String getTargetDir() {

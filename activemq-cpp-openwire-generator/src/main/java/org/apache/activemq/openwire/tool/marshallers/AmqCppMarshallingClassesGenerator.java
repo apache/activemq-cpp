@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -56,9 +55,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             return true;
         }
 
-        List properties = getProperties();
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            JProperty property = (JProperty) iter.next();
+        for ( JProperty property : getProperties() ) {
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
 
@@ -87,9 +84,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             return true;
         }
 
-        List properties = getProperties();
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            JProperty property = (JProperty) iter.next();
+        for ( JProperty property : getProperties() ) {
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
 
@@ -107,12 +102,26 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
     // This section is for the tight wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
 
+    protected void generateTightUnmarshalBody(PrintWriter out) {
+        for ( JProperty property : getProperties() ) {
+            JAnnotation annotation = property.getAnnotation("openwire:property");
+            JAnnotationValue size = annotation.getValue("size");
+            JClass propertyType = property.getType();
+            String propertyTypeName = propertyType.getSimpleName();
+
+            if (propertyType.isArrayType() && !propertyTypeName.equals("byte[]")) {
+                generateTightUnmarshalBodyForArrayProperty(out, property, size);
+            } else {
+                generateTightUnmarshalBodyForProperty(out, property, size);
+            }
+        }
+    }
+
     protected void generateTightUnmarshalBodyForProperty(PrintWriter out, JProperty property, JAnnotationValue size) {
 
         String setter = property.getSetter().getSimpleName();
         String type = property.getType().getSimpleName();
         String nativeType = toCppType(property.getType());
-        String propertyName = property.getType().getSimpleName();
 
         if( type.equals("boolean") ) {
             out.println("        info->" + setter + "( bs->readBoolean() );");
@@ -188,10 +197,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
     }
 
     protected int generateTightMarshal1Body(PrintWriter out) {
-        List properties = getProperties();
         int baseSize = 0;
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            JProperty property = (JProperty) iter.next();
+        for ( JProperty property : getProperties() ) {
             JAnnotation annotation = property.getAnnotation("openwire:property");
             JAnnotationValue size = annotation.getValue("size");
             JClass propertyType = property.getType();
@@ -253,10 +260,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
     }
 
     protected void generateTightMarshal2Body(PrintWriter out) {
-        List properties = getProperties();
+
         int count = 0;
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            JProperty property = (JProperty) iter.next();
+
+        for ( JProperty property : getProperties() ) {
+
             JAnnotation annotation = property.getAnnotation("openwire:property");
             JAnnotationValue size = annotation.getValue("size");
             JClass propertyType = property.getType();
@@ -322,9 +330,25 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
     // This section is for the loose wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
 
+    protected void generateLooseUnmarshalBody(PrintWriter out) {
+
+        for ( JProperty property : getProperties() ) {
+
+            JAnnotation annotation = property.getAnnotation("openwire:property");
+            JAnnotationValue size = annotation.getValue("size");
+            JClass propertyType = property.getType();
+            String propertyTypeName = propertyType.getSimpleName();
+
+            if (propertyType.isArrayType() && !propertyTypeName.equals("byte[]")) {
+                generateLooseUnmarshalBodyForArrayProperty(out, property, size);
+            } else {
+                generateLooseUnmarshalBodyForProperty(out, property, size);
+            }
+        }
+    }
+
     protected void generateLooseUnmarshalBodyForProperty(PrintWriter out, JProperty property, JAnnotationValue size) {
 
-        String propertyName = property.getSimpleName();
         String type = property.getType().getSimpleName();
         String nativeType = toCppType(property.getType());
         String setter = property.getSetter().getSimpleName();
@@ -375,7 +399,6 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
     protected void generateLooseUnmarshalBodyForArrayProperty(PrintWriter out, JProperty property, JAnnotationValue size) {
         JClass propertyType = property.getType();
         String arrayType = propertyType.getArrayComponentType().getSimpleName();
-        String propertyName = property.getSimpleName();
         String setter = property.getSetter().getSimpleName();
         String getter = property.getGetter().getSimpleName();
 
@@ -406,9 +429,9 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
 
     protected void generateLooseMarshalBody(PrintWriter out) {
-        List properties = getProperties();
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            JProperty property = (JProperty) iter.next();
+
+        for ( JProperty property : getProperties() ) {
+
             JAnnotation annotation = property.getAnnotation("openwire:property");
             JAnnotationValue size = annotation.getValue("size");
             JClass propertyType = property.getType();
@@ -524,7 +547,7 @@ out.println("");
 out.println("        "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
 out.println("");
 
-    List properties = getProperties();
+    List<JProperty> properties = getProperties();
     boolean marshallerAware = isMarshallerAware();
     if( !properties.isEmpty() || marshallerAware ) {
 
@@ -673,18 +696,15 @@ out.println("");
 
 out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/MarshallerFactory.h>");
 
-    List list = new ArrayList(getConcreteClasses());
-    Collections.sort(list, new Comparator(){
-        public int compare(Object o1, Object o2) {
-            JClass c1 = (JClass) o1;
-            JClass c2 = (JClass) o2;
-            return c1.getSimpleName().compareTo(c2.getSimpleName());
-    }});
+        List<JClass> list = new ArrayList<JClass>(getConcreteClasses());
+        Collections.sort(list, new Comparator<JClass>(){
+            public int compare(JClass c1, JClass c2) {
+                return c1.getSimpleName().compareTo(c2.getSimpleName());
+        }});
 
-    for (Iterator iter = list.iterator(); iter.hasNext();) {
-        JClass jclass = (JClass) iter.next();
+        for ( JClass jclass : list ) {
 out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+jclass.getSimpleName()+"Marshaller.h>");
-    }
+        }
 
 out.println("");
 out.println("/*");
@@ -708,10 +728,9 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("void MarshallerFactory::configure( OpenWireFormat* format ) {");
 out.println("");
 
-    for (Iterator iter = list.iterator(); iter.hasNext();) {
-        JClass jclass = (JClass) iter.next();
+        for ( JClass jclass : list ) {
 out.println("    format->addMarshaller( new "+jclass.getSimpleName()+"Marshaller() );");
-}
+        }
 
 out.println("}");
 out.println("");
