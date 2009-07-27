@@ -60,7 +60,7 @@
   </mailingLists>
 
   <properties>
-    <activemq-version>5.2.0</activemq-version>
+    <activemq-version>5.3-SNAPSHOT</activemq-version>
     <siteId>activemq-cpp-${activemq-version}</siteId>
     <projectName>Apache ActiveMQ-CPP</projectName>
     <annogen-version>0.1.0</annogen-version>
@@ -90,9 +90,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.0.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.0.x</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/branches/activemq-cpp-3.0.x</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk</url>
   </scm>
 
   <dependencyManagement>
@@ -120,6 +120,39 @@
           <configuration>
             <tarLongFileMode>gnu</tarLongFileMode>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>rat-maven-plugin</artifactId>
+          <version>1.0-alpha-3</version>
+          <configuration>
+            <excludeSubProjects>false</excludeSubProjects>
+            <excludes>
+              <exclude>KEYS</exclude>
+              <exclude>**/configure</exclude>
+              <exclude>**/doxygen.cfg</exclude>
+              <exclude>**/*.prefs</exclude>
+              <exclude>**/.classpath</exclude>
+              <exclude>**/.project</exclude>
+              <exclude>**/.cproject</exclude>
+              <exclude>**/.metadata/**/*</exclude>
+              <exclude>**/vs2005-build/**/*</exclude>
+              <exclude>**/m4/**/*</exclude>
+              <exclude>**/config/**/*</exclude>
+              <exclude>**/build/**/*</exclude>
+              <exclude>**/target/**/*</exclude>
+              <exclude>**/autom4te.cache/**/*</exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <id>AMQCPP-RAT-CHECK</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
