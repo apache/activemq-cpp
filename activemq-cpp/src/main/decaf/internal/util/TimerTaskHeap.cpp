@@ -70,8 +70,8 @@ void TimerTaskHeap::remove( std::size_t pos ) {
 ////////////////////////////////////////////////////////////////////////////////
 void TimerTaskHeap::upHeap() {
 
-    int current = heap.size() - 1;
-    int parent = ( current - 1 ) / 2;
+	std::size_t current = heap.size() - 1;
+	std::size_t parent = ( current - 1 ) / 2;
 
     while( heap[current]->when < heap[parent]->when) {
 
