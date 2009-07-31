@@ -46,6 +46,8 @@ namespace lang {
             this->counter->incrementAndGet();
         }
 
+    protected:
+
         /**
          * Swaps this instance's reference counter with the one given, this allows
          * for copy-and-swap semantics of this object.
@@ -171,7 +173,7 @@ namespace lang {
         }
 
         virtual ~Pointer() throw() {
-            if( this->release() == true ) {
+            if( REFCOUNTER::release() == true ) {
                 delete this->value;
             }
         }
@@ -186,6 +188,23 @@ namespace lang {
          */
         void reset( T* value ) {
             Pointer( value ).swap( *this );
+        }
+
+        /**
+         * Releases the Pointer held and resets the internal pointer value to Null.  This method
+         * is not guaranteed to be safe if the Pointer is held by more than one object or this
+         * method is called from more than one thread.
+         *
+         * @param value - The new value to contain.
+         *
+         * @returns The pointer instance that was held by this Pointer object, the pointer is
+         *          no longer owned by this Pointer and won't be freed when this Pointer goes
+         *          out of scope.
+         */
+        T* release() {
+            T* temp = this->value;
+            this->value = NULL;
+            return temp;
         }
 
         /**
