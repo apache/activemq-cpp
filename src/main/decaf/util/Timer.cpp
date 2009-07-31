@@ -173,7 +173,7 @@ namespace util{
             }
         }
 
-        int purge() {
+        std::size_t purge() {
 
             std::size_t result = 0;
             synchronized( this ) {
