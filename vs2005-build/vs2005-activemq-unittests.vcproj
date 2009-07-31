@@ -10721,6 +10721,14 @@
 						RelativePath="..\src\test\decaf\internal\util\ByteArrayAdapterTest.h"
 						>
 					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\util\TimerTaskHeapTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\util\TimerTaskHeapTest.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="net"
@@ -11060,6 +11068,14 @@
 				</File>
 				<File
 					RelativePath="..\src\test\decaf\util\StringTokenizerTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\TimerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\TimerTest.h"
 					>
 				</File>
 				<File
