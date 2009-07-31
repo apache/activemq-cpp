@@ -20,6 +20,7 @@
 #include <string>
 
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
@@ -1402,7 +1403,7 @@ void TimerTest::testScheduleAtFixedRate_TimerTask_Long_Long() {
     }
     long long lastDelta = report.lastDelta;
     CPPUNIT_ASSERT_MESSAGE( "Fixed Rate Schedule should catch up, but is off by " +
-                            Integer::toString( lastDelta ) + " ms",
+                            Long::toString( lastDelta ) + " ms",
                             lastDelta < 300 );
     t->cancel();
 }
@@ -1477,7 +1478,7 @@ void TimerTest::testScheduleAtFixedRate_TimerTask_Long_Long2() {
     }
     long long lastDelta = report.lastDelta;
     CPPUNIT_ASSERT_MESSAGE( "Fixed Rate Schedule should catch up, but is off by " +
-                            Integer::toString( lastDelta ) + " ms",
+                            Long::toString( lastDelta ) + " ms",
                             lastDelta < 300 );
     t->cancel();
 }
@@ -1589,7 +1590,7 @@ void TimerTest::testScheduleAtFixedRate_TimerTask_Date_Long() {
     }
     long long lastDelta = report.lastDelta;
     CPPUNIT_ASSERT_MESSAGE( std::string( "Fixed Rate Schedule should catch up, but is off by " ) +
-                            Integer::toString( lastDelta ) + " ms",
+                            Long::toString( lastDelta ) + " ms",
                             lastDelta < 300 );
     t->cancel();
 }
@@ -1695,7 +1696,7 @@ void TimerTest::testScheduleAtFixedRate_TimerTask_Date_Long2() {
     }
     long long lastDelta = report.lastDelta;
     CPPUNIT_ASSERT_MESSAGE( std::string( "Fixed Rate Schedule should catch up, but is off by " ) +
-                            Integer::toString( lastDelta ) + " ms",
+                            Long::toString( lastDelta ) + " ms",
                             lastDelta < 300 );
     t->cancel();
 }
