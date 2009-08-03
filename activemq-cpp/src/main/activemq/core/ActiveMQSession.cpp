@@ -154,14 +154,14 @@ void ActiveMQSession::close() throw ( cms::CMSException )
             }
         }
 
+        // Remove this sessions from the connection
+        this->connection->removeSession( this );
+
         // Remove this session from the Broker.
         Pointer<RemoveInfo> info( new RemoveInfo() );
         info->setObjectId( this->sessionInfo->getSessionId() );
         info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
         this->connection->oneway( info );
-
-        // Remove this sessions from the connector
-        this->connection->removeSession( this );
 
         // Now indicate that this session is closed.
         closed = true;
@@ -1047,16 +1047,9 @@ void ActiveMQSession::disposeOf( Pointer<ConsumerId> id, long long lastDelivered
                 // Remove this Id both from the Sessions Map of Consumers and from
                 // the Connection.
                 this->connection->removeDispatcher( id );
-
-                // Remove at the Broker Side.
-                Pointer<RemoveInfo> info( new RemoveInfo );
-                info->setObjectId( id );
-                info->setLastDeliveredSequenceId( lastDeliveredSequenceId );
-                this->connection->oneway( info );
+                this->consumers.remove( id );
                 this->lastDeliveredSequenceId =
                     Math::max( this->lastDeliveredSequenceId, lastDeliveredSequenceId );
-
-                this->consumers.remove( id );
             }
         }
     }
@@ -1078,12 +1071,6 @@ void ActiveMQSession::disposeOf( Pointer<ProducerId> id )
             if( this->producers.containsKey( id ) ) {
 
                 this->connection->removeProducer( id );
-
-                // Remove at the Broker Side.
-                Pointer<RemoveInfo> info( new RemoveInfo );
-                info->setObjectId( id );
-                this->connection->oneway( info );
-
                 this->producers.remove( id );
             }
         }

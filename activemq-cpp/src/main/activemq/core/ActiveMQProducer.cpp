@@ -18,6 +18,7 @@
 
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -26,6 +27,7 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::util;
 using namespace decaf::lang;
@@ -74,6 +76,13 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
             this->session->disposeOf( this->producerInfo->getProducerId() );
             this->closed = true;
+
+            // Remove at the Broker Side, if this fails the producer has already
+            // been removed from the session and connection objects so its safe
+            // for an exception to be thrown.
+            Pointer<RemoveInfo> info( new RemoveInfo );
+            info->setObjectId( this->producerInfo->getProducerId() );
+            this->session->oneway( info );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

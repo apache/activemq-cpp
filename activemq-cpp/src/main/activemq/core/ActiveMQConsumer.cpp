@@ -26,6 +26,7 @@
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessageAck.h>
 #include <activemq/commands/MessagePull.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/commands/TransactionInfo.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/ActiveMQConnection.h>
@@ -232,9 +233,16 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
             // Stop and Wakeup all sync consumers.
             unconsumedMessages.close();
 
-            // Remove this Consumer from the Connections set of Dispatchers and then
-            // remove it from the Broker.
+            // Remove this Consumer from the Connections set of Dispatchers
             this->session->disposeOf( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
+
+            // Remove at the Broker Side, consumer has been removed from the local
+            // Session and Connection objects so if the remote call to remove throws
+            // it is okay to propagate to the client.
+            Pointer<RemoveInfo> info( new RemoveInfo );
+            info->setObjectId( this->consumerInfo->getConsumerId() );
+            info->setLastDeliveredSequenceId( lastDeliveredSequenceId );
+            this->session->oneway( info );
 
             // If we encountered an error, propagate it.
             if( haveException ){
