@@ -25,80 +25,65 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQProducer.h>
+#include <activemq/commands/ActiveMQTextMessage.h>
+#include <activemq/transport/TransportListener.h>
 #include <memory>
 
 using namespace std;
+using namespace decaf::lang;
 using namespace activemq;
 using namespace activemq::core;
-
-//////////////////////////////////////////////////////////////////////////////////
-//void ActiveMQConnectionFactoryTest::test1WithStomp()
-//{
-//    try
-//    {
-//        std::string URI =
-//            "mock://127.0.0.1:23232?wireFormat=stomp";
-//
-//        ActiveMQConnectionFactory connectionFactory( URI );
-//
-//        cms::Connection* connection =
-//            connectionFactory.createConnection();
-//
-//        CPPUNIT_ASSERT( connection != NULL );
-//
-//        delete connection;
-//
-//        return;
-//    }
-//    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
-//    AMQ_CATCHALL_NOTHROW( )
-//
-//    CPPUNIT_ASSERT( false );
-//}
-//
-//////////////////////////////////////////////////////////////////////////////////
-//void ActiveMQConnectionFactoryTest::test2WithStomp()
-//{
-//    try
-//    {
-//        std::string URI = std::string() +
-//            "mock://127.0.0.1:23232?wireFormat=stomp&"
-//            "username=" + username + "&password=" + password +
-//            "&client-id=" + clientId;
-//
-//        ActiveMQConnectionFactory connectionFactory( URI );
-//
-//        cms::Connection* connection =
-//            connectionFactory.createConnection();
-//        CPPUNIT_ASSERT( connection != NULL );
-//
-//        ActiveMQConnection* amqConnection =
-//            dynamic_cast< ActiveMQConnection* >( connection );
-//        CPPUNIT_ASSERT( amqConnection != NULL );
-//
-//        connector::Connector* connector =
-//            dynamic_cast< connector::Connector* >(
-//            amqConnection->getConnectionData()->getConnector() );
-//        CPPUNIT_ASSERT( connector != NULL );
-//
-//        CPPUNIT_ASSERT( username == connector->getUsername() );
-//        CPPUNIT_ASSERT( password == connector->getPassword() );
-//        CPPUNIT_ASSERT( clientId == connector->getClientId() );
-//
-//        // Free the allocated connection object.
-//        delete connection;
-//
-//        return;
-//    }
-//    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
-//    AMQ_CATCHALL_NOTHROW( )
-//
-//    CPPUNIT_ASSERT( false );
-//}
+using namespace activemq::commands;
+using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactoryTest::test1WithOpenWire()
-{
+namespace activemq{
+namespace core{
+
+    class MyTransportListener : public TransportListener {
+    private:
+
+        bool interrupted;
+        bool resumed;
+
+    public:
+
+        MyTransportListener() {
+            this->interrupted = false;
+            this->resumed = true;
+        }
+
+        bool isInterrupted() const {
+            return this->interrupted;
+        }
+
+        bool isResumed() const {
+            return this->resumed;
+        }
+
+        virtual void onCommand( const Pointer<Command>& command ) {
+
+        }
+
+        virtual void onException( const decaf::lang::Exception& ex ) {
+
+        }
+
+        virtual void transportInterrupted() {
+            this->interrupted = true;
+        }
+
+        virtual void transportResumed() {
+            this->resumed = true;
+        }
+
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::test1WithOpenWire() {
+
     try
     {
         std::string URI =
@@ -201,4 +186,41 @@ void ActiveMQConnectionFactoryTest::testCreateWithURIOptions()
     AMQ_CATCHALL_NOTHROW( )
 
     CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::testTransportListener() {
+
+    std::string URI = "failover://(mock://localhost:61616?failOnSendMessage=true,"
+                      "mock://localhost:61618)?randomize=false";
+
+    MyTransportListener listener;
+
+    ActiveMQConnectionFactory connectionFactory( URI );
+
+    std::auto_ptr<cms::Connection> connection(
+        connectionFactory.createConnection() );
+    CPPUNIT_ASSERT( connection.get() != NULL );
+
+    ActiveMQConnection* amqConnection =
+        dynamic_cast< ActiveMQConnection* >( connection.get() );
+
+    amqConnection->addTransportListener( & listener );
+
+    std::auto_ptr<ActiveMQSession> session( dynamic_cast<ActiveMQSession*>(
+        amqConnection->createSession() ) );
+
+    std::auto_ptr<cms::Destination> destination( session->createTopic( "TEST" ) );
+
+    std::auto_ptr<ActiveMQProducer> producer( dynamic_cast<ActiveMQProducer*>(
+        session->createProducer( destination.get() ) ) );
+
+    std::auto_ptr<cms::TextMessage> message( session->createTextMessage() );
+    producer->send( message.get() );
+
+    Thread::sleep( 2000 );
+
+    CPPUNIT_ASSERT( listener.isInterrupted() );
+    CPPUNIT_ASSERT( listener.isResumed() );
+
 }
