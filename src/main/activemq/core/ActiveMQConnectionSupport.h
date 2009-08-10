@@ -317,11 +317,6 @@ namespace core {
             return this->localTransactionIds.getNextSequenceId();
         }
 
-        /**
-         * The transport has resumed after an interruption
-         */
-        virtual void transportResumed() {}
-
     };
 
 }}

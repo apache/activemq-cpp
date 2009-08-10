@@ -31,6 +31,7 @@
 #include <activemq/commands/LocalTransactionId.h>
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/transport/TransportListener.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlSet.h>
@@ -116,6 +117,11 @@ namespace core{
          * Maintain the set of all active sessions.
          */
         decaf::util::StlSet<ActiveMQSession*> activeSessions;
+
+        /**
+         * Maintain the set of all active sessions.
+         */
+        decaf::util::StlSet<transport::TransportListener*> transportListeners;
 
         /**
          * the registered exception listener
@@ -334,6 +340,29 @@ namespace core{
     public: // TransportListener
 
         /**
+         * Adds a transport listener so that a client can be notified of events in
+         * the underlying transport, client's are always notified after the event has
+         * been processed by the Connection class.  Client's should ensure that the
+         * registered listener does not block or take a long amount of time to execute
+         * in order to not degrade performance of this Connection.
+         *
+         * @param transportListener
+         *      The TransportListener instance to add to this Connection's set of listeners
+         *      to notify of Transport events.
+         */
+        void addTransportListener( transport::TransportListener* transportListener );
+
+        /**
+         * Removes a registered TransportListener from the Connection's set of Transport
+         * listeners, this listener will no longer receive any Transport related events.  The
+         * caller is responsible for freeing the listener in all cases.
+         *
+         * @param transportListener
+         *      The pointer to the TransportListener to remove from the set of listeners.
+         */
+        void removeTransportListener( transport::TransportListener* transportListener );
+
+        /**
          * Event handler for the receipt of a non-response command from the
          * transport.
          * @param command the received command object.
@@ -350,6 +379,11 @@ namespace core{
          * The transport has suffered an interruption from which it hopes to recover
          */
         virtual void transportInterrupted();
+
+        /**
+         * The transport has resumed after an interruption
+         */
+        virtual void transportResumed();
 
     public:
 

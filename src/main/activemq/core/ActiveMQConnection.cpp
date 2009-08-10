@@ -505,6 +505,17 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
         } else {
             //LOGDECAF_WARN( logger, "Received an unknown command" );
         }
+
+        synchronized( &transportListeners ) {
+
+            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+            while( iter->hasNext() ) {
+                try{
+                    iter->next()->onCommand( command );
+                } catch(...) {}
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -523,6 +534,17 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 
         // Inform the user of the error.
         fire( exceptions::ActiveMQException( ex ) );
+
+        synchronized( &transportListeners ) {
+
+            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+            while( iter->hasNext() ) {
+                try{
+                    iter->next()->onException( ex );
+                } catch(...) {}
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -536,6 +558,32 @@ void ActiveMQConnection::transportInterrupted() {
 
         while( iter->hasNext() ) {
             iter->next()->clearMessagesInProgress();
+        }
+    }
+
+    synchronized( &transportListeners ) {
+
+        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->transportInterrupted();
+            } catch(...) {}
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::transportResumed() {
+
+    synchronized( &transportListeners ) {
+
+        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->transportResumed();
+            } catch(...) {}
         }
     }
 }
@@ -624,4 +672,30 @@ const ConnectionId& ActiveMQConnection::getConnectionId() const
     enforceConnected();
 
     return *( this->connectionInfo->getConnectionId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::addTransportListener( TransportListener* transportListener ) {
+
+    if( transportListener == NULL ) {
+        return;
+    }
+
+    // Add this listener from the set of active TransportListeners
+    synchronized( &transportListeners ) {
+        transportListeners.add( transportListener );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeTransportListener( TransportListener* transportListener ) {
+
+    if( transportListener == NULL ) {
+        return;
+    }
+
+    // Remove this listener from the set of active TransportListeners
+    synchronized( &transportListeners ) {
+        transportListeners.remove( transportListener );
+    }
 }
