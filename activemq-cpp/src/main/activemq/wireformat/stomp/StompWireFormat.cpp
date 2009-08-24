@@ -156,6 +156,22 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
         // Return the Command.
         const std::string commandId = frame->getCommand();
 
+        class Finally {
+        private:
+
+            decaf::util::concurrent::atomic::AtomicBoolean* state;
+
+        public:
+
+            Finally( decaf::util::concurrent::atomic::AtomicBoolean* state ) : state( state ) {
+                state->set( true );
+            }
+
+            ~Finally() {
+                state->set( false );
+            }
+        } finalizer( &( this->receiving ) );
+
         if( commandId == StompCommandConstants::CONNECTED ){
             return this->unmarshalConnected( frame );
         } else if( commandId == StompCommandConstants::ERROR_CMD ){

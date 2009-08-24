@@ -25,6 +25,7 @@
 #include <activemq/wireformat/openwire/utils/BooleanStream.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <memory>
@@ -61,6 +62,9 @@ namespace marshal {
 
         // Uniquely Generated ID, initialize in the Ctor
         std::string id;
+
+        // Indicates when we are in the doUnmarshal call
+        decaf::util::concurrent::atomic::AtomicBoolean receiving;
 
         // WireFormat Data
         int version;
@@ -271,6 +275,15 @@ namespace marshal {
          * @param version - int that identifies the version
          */
         void setVersion( int version ) throw ( decaf::lang::exceptions::IllegalArgumentException );
+
+        /**
+         * Is there a Message being unmarshaled?
+         *
+         * @return true while in the doUnmarshal method.
+         */
+        virtual bool inReceive() const {
+            return this->receiving.get();
+        }
 
         /**
          * Checks if the cacheEnabled flag is on

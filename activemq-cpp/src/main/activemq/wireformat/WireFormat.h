@@ -101,6 +101,17 @@ namespace wireformat{
         virtual bool hasNegotiator() const = 0;
 
         /**
+         * Indicates if the WireFromat object is in the process of receiving a message.  This
+         * is useful for monitoring inactivity and the WireFormat is processing a large message
+         * which takes longer than some configured timeout to unmarshal, the inactivity monitor
+         * can query the WireFormat instance to determine if its busy or not and not mark the
+         * connection as inactive if so.
+         *
+         * @returns true if the WireFormat object is unmarshaling a message.
+         */
+        virtual bool inReceive() const = 0;
+
+        /**
          * If the Transport Provides a Negotiator this method will create and return
          * a new instance of the Negotiator.
          *
