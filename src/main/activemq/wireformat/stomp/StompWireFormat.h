@@ -22,6 +22,7 @@
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/wireformat/stomp/StompHelper.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/io/IOException.h>
 #include <decaf/lang/Pointer.h>
 
@@ -43,6 +44,9 @@ namespace stomp {
         // Stored after we connect to use when validating that a durable subscribe
         // and unsubscribe are set to use the client Id.
         std::string clientId;
+
+        // Indicates when we are in the doUnmarshal call
+        decaf::util::concurrent::atomic::AtomicBoolean receiving;
 
     public:
 
@@ -93,6 +97,15 @@ namespace stomp {
          */
         virtual int getVersion() const {
             return 1;
+        }
+
+        /**
+         * Is there a Message being unmarshaled?
+         *
+         * @return true while in the doUnmarshal method.
+         */
+        virtual bool inReceive() const {
+            return this->receiving.get();
         }
 
         /**

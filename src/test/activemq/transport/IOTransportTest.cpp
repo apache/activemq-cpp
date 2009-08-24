@@ -73,6 +73,8 @@ public:
 
     virtual int getVersion() const { return 0; }
 
+    virtual bool inReceive() const { return false; }
+
     virtual bool hasNegotiator() const { return false; }
 
     virtual Pointer<Transport> createNegotiator(

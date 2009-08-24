@@ -292,6 +292,22 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
 
     try {
 
+        class Finally {
+        private:
+
+            decaf::util::concurrent::atomic::AtomicBoolean* state;
+
+        public:
+
+            Finally( decaf::util::concurrent::atomic::AtomicBoolean* state ) : state( state ) {
+                state->set( true );
+            }
+
+            ~Finally() {
+                state->set( false );
+            }
+        } finalizer( &( this->receiving ) );
+
         unsigned char dataType = dis->readByte();
 
         if( dataType != NULL_TYPE ) {
