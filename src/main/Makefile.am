@@ -121,6 +121,8 @@ cc_sources = \
     activemq/transport/failover/FailoverTransportListener.cpp \
     activemq/transport/failover/URIPool.cpp \
     activemq/transport/inactivity/InactivityMonitor.cpp \
+    activemq/transport/inactivity/ReadChecker.cpp \
+    activemq/transport/inactivity/WriteChecker.cpp \
     activemq/transport/logging/LoggingTransport.cpp \
     activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransport.cpp \
@@ -686,6 +688,8 @@ h_sources = \
     activemq/transport/failover/FailoverTransportListener.h \
     activemq/transport/failover/URIPool.h \
     activemq/transport/inactivity/InactivityMonitor.h \
+    activemq/transport/inactivity/ReadChecker.h \
+    activemq/transport/inactivity/WriteChecker.h \
     activemq/transport/logging/LoggingTransport.h \
     activemq/transport/mock/InternalCommandListener.h \
     activemq/transport/mock/MockTransport.h \

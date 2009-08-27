@@ -40,9 +40,11 @@ namespace util{
      * operation of the method is allowed. BlockingQueue interface defines such
      * methods.
      *
-     * Certain methods in the Queue interface return a special value instead of throwing
-     * an exception if there is no element in the Queue to return, this special value
-     * can be obtained by calling the Queue method <code>getEmptyMarker</code>.
+     * Unlike the Java Queue interface the methods of this class cannot return null
+     * to indicate that a Queue is empty since null has no meaning for elements that
+     * are class or struct types and a comparison between null and a primitive type
+     * is not a meaningful check for an empty queue.  Methods that would have returned
+     * null in Java throw the NoSuchElementException instead.
      *
      * @since 1.0
      */
@@ -51,17 +53,6 @@ namespace util{
     public:
 
         virtual ~Queue() {}
-
-        /**
-         * Returns a reference to the Marker value that is returned from methods that
-         * do not throw an exception when there is no element in the Queue to return.
-         * The empty marker is usually an instance of the contained element initialized
-         * using the default constructor (if its a Class) or the default value for the
-         * primitive type.
-         *
-         * @return a value that indicates that the Queue is empty.
-         */
-        virtual const E& getEmptyMarker() const = 0;
 
         /**
          * Inserts the specified element into the queue provided that the condition
@@ -73,23 +64,29 @@ namespace util{
          *        the specified element to insert into the queue.
          *
          * @return true if the operation succeeds and false if it fails.
+         *
+         * @throw NullPointerException if the Queue implementation does not allow Null values to
+         *        be inserted into the Queue.
          */
-        virtual bool offer( const E& value ) = 0;
+        virtual bool offer( const E& value ) throw( decaf::lang::exceptions::NullPointerException ) = 0;
 
         /**
          * Gets and removes the element in the head of the queue, or returns null if
          * there is no element in the queue.
          *
-         * @return the element in the head of the queue or null if there is no
-         *         element in the queue.
+         * @return the element in the head of the queue.
+         *
+         * @throws NoSuchElementException
+         *         if there is no element in the queue.
          */
-        virtual E poll() = 0;
+        virtual E poll() throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Gets and removes the element in the head of the queue. Throws a
          * NoSuchElementException if there is no element in the queue.
          *
          * @return the element in the head of the queue.
+         *
          * @throws NoSuchElementException
          *         if there is no element in the queue.
          */
@@ -98,16 +95,20 @@ namespace util{
         /**
          * Gets but not removes the element in the head of the queue.
          *
-         * @return the element in the head of the queue or null if there is no
-         *         element in the queue.
+         * @return the element in the head of the queue.
+         *
+         * @throws NoSuchElementException
+         *         if there is no element in the queue.
          */
-        virtual const E& peek() const = 0;
+        virtual const E& peek() const
+            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Gets but not removes the element in the head of the queue. Throws a
          * NoSuchElementException if there is no element in the queue.
          *
          * @return the element in the head of the queue.
+         *
          * @throws NoSuchElementException
          *         if there is no element in the queue.
          */

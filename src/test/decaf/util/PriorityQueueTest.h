@@ -28,14 +28,54 @@ namespace util {
 
         CPPUNIT_TEST_SUITE( PriorityQueueTest );
         CPPUNIT_TEST( testConstructor_1 );
+        CPPUNIT_TEST( testConstructor_2 );
+        CPPUNIT_TEST( testConstructor_3 );
+        CPPUNIT_TEST( testAssignment );
+        CPPUNIT_TEST( testSize );
+        CPPUNIT_TEST( testOfferString );
+        CPPUNIT_TEST( testPoll );
+        CPPUNIT_TEST( testPollEmpty );
+        CPPUNIT_TEST( testPeek );
+        CPPUNIT_TEST( testPeekEmpty );
+        CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testAdd );
+        CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testRemoveUsingComparator );
+        CPPUNIT_TEST( testRemoveNotExists );
+        CPPUNIT_TEST( testComparator );
+        CPPUNIT_TEST( testIterator );
+        CPPUNIT_TEST( testIteratorEmpty );
+        CPPUNIT_TEST( testIteratorOutOfBounds );
+        CPPUNIT_TEST( testIteratorRemove );
+        CPPUNIT_TEST( testIteratorRemoveIllegalState );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        PriorityQueueTest();
-        virtual ~PriorityQueueTest();
+        PriorityQueueTest() {}
+        virtual ~PriorityQueueTest() {}
 
         void testConstructor_1();
+        void testConstructor_2();
+        void testConstructor_3();
+        void testAssignment();
+        void testSize();
+        void testOfferString();
+        void testPoll();
+        void testPollEmpty();
+        void testPeek();
+        void testPeekEmpty();
+        void testClear();
+        void testAdd();
+        void testRemove();
+        void testRemoveUsingComparator();
+        void testRemoveNotExists();
+        void testComparator();
+        void testIterator();
+        void testIteratorEmpty();
+        void testIteratorOutOfBounds();
+        void testIteratorRemove();
+        void testIteratorRemoveIllegalState();
 
     };
 
