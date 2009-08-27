@@ -33,8 +33,7 @@ namespace util {
 
     /**
      * This class provides skeletal implementations of some Queue  operations.
-     * Methods add, remove, and element are based on offer, poll, and peek, respectively
-     * but throw exceptions instead of indicating failure via false or null returns.
+     * Methods add, remove, and element are based on offer, poll, and peek, respectively.
      *
      * A Queue implementation that extends this class must minimally define a method Queue.
      * offer(E) which does not permit insertion of null elements, along with methods Queue.
@@ -46,13 +45,9 @@ namespace util {
      */
     template< typename E >
     class AbstractQueue : public decaf::util::Queue<E> {
-    private:
-
-        E emptyMarker;
-
     public:
 
-        AbstractQueue() : emptyMarker() {}
+        AbstractQueue() : Queue<E>() {}
 
         virtual ~AbstractQueue() {}
 
@@ -72,7 +67,8 @@ namespace util {
          */
         virtual bool add( const E& value )
             throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException ) {
+                    decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::IllegalStateException ) {
 
             if( offer( value ) ) {
                 return true;
@@ -100,7 +96,8 @@ namespace util {
          */
         virtual bool addAll( const Collection<E>& collection )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) {
 
             if( this == &collection ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -121,14 +118,7 @@ namespace util {
          * @throws NoSuchElementException if the queue is empty.
          */
         virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
-
-            E result = this->poll();
-            if( result == this->getEmptyMarker() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__, "Queue is empty." );
-            }
-
-            return result;
+            return this->poll();
         }
 
         /**
@@ -143,13 +133,7 @@ namespace util {
         virtual const E& element() const
             throw( decaf::lang::exceptions::NoSuchElementException ) {
 
-            const E& result = this->peek();
-            if( result == this->getEmptyMarker() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__, "Queue is empty." );
-            }
-
-            return result;
+            return this->peek();
         }
 
         /**
@@ -159,10 +143,13 @@ namespace util {
          */
         virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
 
-            E result;
+            if( this->isEmpty() ) {
+                return;
+            }
+
             do {
-                result = this->poll();
-            } while( result != this->getEmptyMarker() );
+                this->poll();
+            } while( !this->isEmpty() );
         }
 
     };

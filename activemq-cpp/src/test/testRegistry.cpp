@@ -260,3 +260,5 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StringTokenizerTest );
 #include <decaf/util/TimerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::TimerTest );
+#include <decaf/util/PriorityQueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::PriorityQueueTest );
