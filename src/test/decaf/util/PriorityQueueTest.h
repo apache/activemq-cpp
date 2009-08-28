@@ -39,6 +39,7 @@ namespace util {
         CPPUNIT_TEST( testPeekEmpty );
         CPPUNIT_TEST( testClear );
         CPPUNIT_TEST( testAdd );
+        CPPUNIT_TEST( testAddAll );
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testRemoveUsingComparator );
         CPPUNIT_TEST( testRemoveNotExists );
@@ -67,6 +68,7 @@ namespace util {
         void testPeekEmpty();
         void testClear();
         void testAdd();
+        void testAddAll();
         void testRemove();
         void testRemoveUsingComparator();
         void testRemoveNotExists();
