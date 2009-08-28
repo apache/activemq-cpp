@@ -41,10 +41,13 @@ namespace util{
      * methods.
      *
      * Unlike the Java Queue interface the methods of this class cannot return null
-     * to indicate that a Queue is empty since null has no meaning for elements that
-     * are class or struct types and a comparison between null and a primitive type
-     * is not a meaningful check for an empty queue.  Methods that would have returned
-     * null in Java throw the NoSuchElementException instead.
+     * to indicate that a Queue is empty since null has no meaning for elements such
+     * as classes, structs and primitive types and cannot be used in a meaningful way
+     * to check for an empty queue.  Methods that would have returned null in the
+     * Java Queue interface have been altered to return a boolean value indicating if
+     * the operation succeeded and take single argument that is a reference to the
+     * location where the returned value is to be assigned.  This implies that elements
+     * in the Queue must be <em>assignable</em> in order to utilize these methods.
      *
      * @since 1.0
      */
@@ -71,15 +74,18 @@ namespace util{
         virtual bool offer( const E& value ) throw( decaf::lang::exceptions::NullPointerException ) = 0;
 
         /**
-         * Gets and removes the element in the head of the queue, or returns null if
-         * there is no element in the queue.
+         * Gets and removes the element in the head of the queue.  If the operation succeeds the
+         * value of the element at the head of the Queue is assigned to the result parameter and
+         * the method returns true.  If the operation fails the method returns false and the value
+         * of the result parameter is undefined.
          *
-         * @return the element in the head of the queue.
+         * @param result
+         *        Reference to an instance of the contained type to assigned the removed value to.
          *
-         * @throws NoSuchElementException
-         *         if there is no element in the queue.
+         * @return true if the element at the head of the queue was removed and assigned to the
+         *         result parameter.
          */
-        virtual E poll() throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
+        virtual bool poll( E& result ) = 0;
 
         /**
          * Gets and removes the element in the head of the queue. Throws a
@@ -93,15 +99,16 @@ namespace util{
         virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
-         * Gets but not removes the element in the head of the queue.
+         * Gets but not removes the element in the head of the queue.  The result if successful is
+         * assigned to the result parameter.
          *
-         * @return the element in the head of the queue.
+         * @param result
+         *        Reference to an instance of the contained type to assigned the removed value to.
          *
-         * @throws NoSuchElementException
-         *         if there is no element in the queue.
+         * @return true if the element at the head of the queue was removed and assigned to the
+         *         result parameter.
          */
-        virtual const E& peek() const
-            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
+        virtual bool peek( E& result ) const = 0;
 
         /**
          * Gets but not removes the element in the head of the queue. Throws a
@@ -112,7 +119,7 @@ namespace util{
          * @throws NoSuchElementException
          *         if there is no element in the queue.
          */
-        virtual const E& element() const
+        virtual E element() const
             throw( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
     };

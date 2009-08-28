@@ -118,7 +118,14 @@ namespace util {
          * @throws NoSuchElementException if the queue is empty.
          */
         virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
-            return this->poll();
+
+            E result;
+            if( this->poll( result ) == true ) {
+                return result;
+            }
+
+            throw decaf::lang::exceptions::NoSuchElementException(
+                __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
         /**
@@ -130,10 +137,16 @@ namespace util {
          * @return the element in the head of the queue.
          * @throws NoSuchElementException if the queue is empty.
          */
-        virtual const E& element() const
+        virtual E element() const
             throw( decaf::lang::exceptions::NoSuchElementException ) {
 
-            return this->peek();
+            E result;
+            if( this->peek( result ) == true ) {
+                return result;
+            }
+
+            throw decaf::lang::exceptions::NoSuchElementException(
+                __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
         /**
@@ -147,9 +160,12 @@ namespace util {
                 return;
             }
 
+            E result;
+            bool successful = true;
+
             do {
-                this->poll();
-            } while( !this->isEmpty() );
+                successful = this->poll( result );
+            } while( successful );
         }
 
     };

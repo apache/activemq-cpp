@@ -153,13 +153,14 @@ void PriorityQueueTest::testOfferString() {
 
     std::string sortedArray[] = { "AA", "AAAA", "AAAAA", "AAAAAAAA" };
     for( int i = 0; i < 4; i++ ) {
-        CPPUNIT_ASSERT( sortedArray[i] == queue.poll() );
+        CPPUNIT_ASSERT( sortedArray[i] == queue.remove() );
     }
 
+    std::string result;
     CPPUNIT_ASSERT( 0 == queue.size() );
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw a NoSuchElementException",
-        queue.poll(),
+        queue.remove(),
         decaf::lang::exceptions::NoSuchElementException );
 }
 
@@ -174,25 +175,23 @@ void PriorityQueueTest::testPoll() {
         intQueue.offer( array[i] );
     }
 
+    int result = 0;
     for( int i = 0; i < 5; i++ ) {
-        CPPUNIT_ASSERT( sorted[i] == intQueue.poll() );
+        CPPUNIT_ASSERT( intQueue.poll( result ) );
+        CPPUNIT_ASSERT( sorted[i] == result );
     }
 
     CPPUNIT_ASSERT( 0 == intQueue.size() );
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw a NoSuchElementException",
-        intQueue.poll(),
-        decaf::lang::exceptions::NoSuchElementException );
+    CPPUNIT_ASSERT( intQueue.poll( result ) == false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PriorityQueueTest::testPollEmpty() {
+
+    double result;
     PriorityQueue<double> queue;
     CPPUNIT_ASSERT( 0 == queue.size() );
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw a NoSuchElementException",
-        queue.poll(),
-        decaf::lang::exceptions::NoSuchElementException );
+    CPPUNIT_ASSERT( queue.poll( result ) == false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,18 +205,22 @@ void PriorityQueueTest::testPeek() {
         integerQueue.add( array[i] );
     }
 
-    CPPUNIT_ASSERT( sorted[0] == integerQueue.peek() );
-    CPPUNIT_ASSERT( sorted[0] == integerQueue.peek() );
+    int result = 0;
+
+    CPPUNIT_ASSERT( integerQueue.peek( result ) == true );
+    CPPUNIT_ASSERT( sorted[0] == result );
+
+    CPPUNIT_ASSERT( integerQueue.peek( result ) == true );
+    CPPUNIT_ASSERT( sorted[0] == result );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PriorityQueueTest::testPeekEmpty() {
+
+    float result;
     PriorityQueue<float> queue;
     CPPUNIT_ASSERT( 0 == queue.size() );
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw a NoSuchElementException",
-        queue.poll(),
-        decaf::lang::exceptions::NoSuchElementException );
+    CPPUNIT_ASSERT( queue.peek( result ) == false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,7 +251,31 @@ void PriorityQueueTest::testAdd() {
     CPPUNIT_ASSERT( 5 == integerQueue.size() );
 
     for( int i = 0; i < 5; i++ ) {
-        CPPUNIT_ASSERT( sorted[i] == integerQueue.poll() );
+        CPPUNIT_ASSERT( sorted[i] == integerQueue.remove() );
+    }
+
+    CPPUNIT_ASSERT( 0 == integerQueue.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PriorityQueueTest::testAddAll() {
+    PriorityQueue<int> integerQueue;
+
+    StlList<int> list;
+    list.add( 2 );
+    list.add( 45 );
+    list.add( 7 );
+    list.add( -12 );
+    list.add( 9 );
+
+    int sorted[] = { -12, 2, 7, 9, 45 };
+
+    integerQueue.addAll( list );
+
+    CPPUNIT_ASSERT( 5 == integerQueue.size() );
+
+    for( int i = 0; i < 5; i++ ) {
+        CPPUNIT_ASSERT( sorted[i] == integerQueue.remove() );
     }
 
     CPPUNIT_ASSERT( 0 == integerQueue.size() );
@@ -269,8 +296,10 @@ void PriorityQueueTest::testRemove() {
 
     int sorted[] = { -12, 2, 7, 9, 10, 17, 23, 39, 45, 1118 };
 
+    int result = 0;
     for( int i = 0; i < 10; i++ ) {
-        CPPUNIT_ASSERT( sorted[i] == integerQueue.poll() );
+        CPPUNIT_ASSERT( integerQueue.poll( result ) );
+        CPPUNIT_ASSERT( sorted[i] == result );
     }
 
     CPPUNIT_ASSERT( 0 == integerQueue.size() );
@@ -413,9 +442,11 @@ void PriorityQueueTest::testIteratorRemove() {
         newArray.push_back( iter->next() );
     }
 
+    int result;
     std::sort( newArray.begin(), newArray.end() );
     for( std::size_t i = 0; i < intQueue.size(); i++ ) {
-        CPPUNIT_ASSERT( newArray[i] == intQueue.poll() );
+        CPPUNIT_ASSERT( intQueue.poll( result ) );
+        CPPUNIT_ASSERT( newArray[i] == result );
     }
 
     const PriorityQueue<int> constQueue( intQueue );

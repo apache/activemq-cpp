@@ -261,26 +261,37 @@ namespace util {
             return true;
         }
 
-        virtual E poll() throw( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual bool poll( E& result ) {
 
             if( Queue<E>::isEmpty() ) {
-                throw lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__, "Queue is empty" );
+                return false;
             }
 
-            E result = elements[0];
+            result = elements[0];
             removeAt( 0 );
-            return result;
+            return true;
         }
 
-        virtual const E& peek() const throw( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual bool peek( E& result ) const {
 
             if( Queue<E>::isEmpty() ) {
-                throw lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__, "Queue is empty" );
+                return false;
             }
 
-            return elements[0];
+            result = elements[0];
+            return true;
+        }
+
+        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
+
+            if( !Queue<E>::isEmpty() ) {
+                E result = elements[0];
+                removeAt( 0 );
+                return result;
+            }
+
+            throw decaf::lang::exceptions::NoSuchElementException(
+                __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
         virtual bool remove( const E& value )
