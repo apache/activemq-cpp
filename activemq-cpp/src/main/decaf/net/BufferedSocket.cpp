@@ -112,7 +112,7 @@ void BufferedSocket::connect( const char* host, int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedSocket::close() throw( lang::Exception ) {
+void BufferedSocket::close() throw( decaf::io::IOException ) {
 
     try {
 
@@ -137,7 +137,7 @@ void BufferedSocket::close() throw( lang::Exception ) {
             } catch( lang::Exception& ex ){ /* Absorb */ }
         }
     }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

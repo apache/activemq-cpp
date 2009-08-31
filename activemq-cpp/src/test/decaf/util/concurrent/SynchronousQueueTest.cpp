@@ -15,33 +15,15 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_IO_CLOSEABLE_H_
-#define _DECAF_IO_CLOSEABLE_H_
+#include "SynchronousQueueTest.h"
 
-#include <decaf/util/Config.h>
-#include <decaf/io/IOException.h>
+using namespace std;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
 
-namespace decaf{
-namespace io{
+///////////////////////////////////////////////////////////////////////////////
+void SynchronousQueueTest::testConstructor_1() {
 
-    /**
-     * Interface for a class that implements the close method.
-     */
-    class DECAF_API Closeable {
-    public:
-
-        virtual ~Closeable(){}
-
-        /**
-         * Closes this object and deallocates the appropriate resources.
-         * The object is generally no longer usable after calling close.
-         *
-         * @throws IOException if an error occurs while closing.
-         */
-        virtual void close() throw( io::IOException ) = 0;
-
-    };
-
-}}
-
-#endif /*_DECAF_IO_CLOSEABLE_H_*/
+}

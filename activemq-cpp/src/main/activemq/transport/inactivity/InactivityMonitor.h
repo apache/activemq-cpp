@@ -95,7 +95,7 @@ namespace inactivity {
 
         virtual ~InactivityMonitor();
 
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( decaf::io::IOException );
 
         virtual void onException( const decaf::lang::Exception& ex );
 

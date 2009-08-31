@@ -30,8 +30,7 @@ namespace net{
      * object and provides Buffered input and Output Streams to improce
      * the efficiency of the reads and writes.
      */
-    class DECAF_API BufferedSocket : public Socket
-    {
+    class DECAF_API BufferedSocket : public Socket {
     private:
 
         // Socket that this class wraps to provide buffering
@@ -79,9 +78,9 @@ namespace net{
 
         /**
          * Closes this object and deallocates the appropriate resources.
-         * @throws CMSException
+         * @throws IOException
          */
-        virtual void close() throw( lang::Exception );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Indicates whether or not this socket is connected to a destination.

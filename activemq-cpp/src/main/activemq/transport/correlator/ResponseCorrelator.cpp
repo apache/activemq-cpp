@@ -203,7 +203,7 @@ void ResponseCorrelator::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::start() throw( cms::CMSException ) {
+void ResponseCorrelator::start() throw( decaf::io::IOException ) {
 
     try{
 
@@ -215,13 +215,11 @@ void ResponseCorrelator::start() throw( cms::CMSException ) {
         }
 
         if( listener == NULL ){
-            throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                "exceptionListener is invalid" );
+            throw IOException( __FILE__, __LINE__, "exceptionListener is invalid" );
         }
 
         if( next == NULL ){
-            throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                "next transport is NULL" );
+            throw IOException( __FILE__, __LINE__, "next transport is NULL" );
         }
 
         // Start the delegate transport object.
@@ -230,13 +228,13 @@ void ResponseCorrelator::start() throw( cms::CMSException ) {
         // Mark it as open.
         closed = false;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::close() throw( cms::CMSException ){
+void ResponseCorrelator::close() throw( decaf::io::IOException ){
 
     try{
 
@@ -254,9 +252,9 @@ void ResponseCorrelator::close() throw( cms::CMSException ){
 
         closed = true;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

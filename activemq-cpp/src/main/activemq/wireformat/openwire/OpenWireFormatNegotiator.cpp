@@ -31,6 +31,7 @@ using namespace activemq::transport;
 using namespace activemq::commands;
 using namespace decaf::util::concurrent;
 using namespace decaf::io;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +184,7 @@ void OpenWireFormatNegotiator::onTransportException(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
+void OpenWireFormatNegotiator::start() throw( IOException ){
 
     /**
      * We're already started.
@@ -193,24 +194,21 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
     }
 
     if( listener == NULL ){
-        throw exceptions::ActiveMQException(
+        throw IOException(
             __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - "
-            "TransportListener is invalid" );
+            "OpenWireFormatNegotiator::start - TransportListener is invalid" );
     }
 
     if( next == NULL ){
-        throw exceptions::ActiveMQException(
+        throw IOException(
             __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - "
-            "next transport is NULL" );
+            "OpenWireFormatNegotiator::start - next transport is NULL" );
     }
 
     if( openWireFormat == NULL ){
-        throw exceptions::ActiveMQException(
+        throw IOException(
             __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - "
-            "openWireFormat is NULL" );
+            "OpenWireFormatNegotiator::start - openWireFormat is NULL" );
     }
 
     // Start the delegate transport object.
@@ -236,12 +234,12 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
             // Mark the latch
             wireInfoSentDownLatch.countDown();
 
-        } catch( ActiveMQException& ex ) {
+        } catch( decaf::lang::Exception& ex ) {
 
             // Mark the latch
             wireInfoSentDownLatch.countDown();
             ex.setMark( __FILE__, __LINE__ );
-            throw ex;
+            throw;
         }
     }
 
@@ -250,12 +248,18 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::close() throw( cms::CMSException ){
+void OpenWireFormatNegotiator::close() throw( IOException ){
 
-    if( !closed && next != NULL ){
-        next->close();
+    try{
+
+        if( !closed && next != NULL ){
+            next->close();
+        }
+
+        closed = true;
     }
-
-    closed = true;
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 

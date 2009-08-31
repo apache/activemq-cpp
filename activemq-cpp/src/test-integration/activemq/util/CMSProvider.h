@@ -64,7 +64,7 @@ namespace util {
 
         virtual ~CMSProvider();
 
-        virtual void close() throw( decaf::lang::Exception );
+        virtual void close() throw( decaf::io::IOException );
 
         std::string getBrokerURL() const {
             return this->brokerURL;

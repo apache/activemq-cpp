@@ -198,7 +198,7 @@ namespace io{
          * stream, it then destroys the output stream if it is the owner.
          * @throws Exception
          */
-        virtual void close() throw ( lang::Exception ) {
+        virtual void close() throw ( io::IOException ) {
             try {
                 if( !closed && outputStream != NULL ) {
                     outputStream->flush();

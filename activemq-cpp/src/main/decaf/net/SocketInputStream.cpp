@@ -64,7 +64,7 @@ SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket ) {
 SocketInputStream::~SocketInputStream(){}
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketInputStream::close() throw( lang::Exception ){
+void SocketInputStream::close() throw( decaf::io::IOException ){
     this->closed = true;
 }
 

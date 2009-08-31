@@ -26,6 +26,79 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
+namespace decaf{
+namespace io{
+
+    class MyOutputStream : public OutputStream{
+    private:
+        char buffer[100];
+        std::size_t pos;
+    public:
+
+        MyOutputStream(){
+            pos = 0;
+            memset( buffer, 0, 100 );
+        }
+        virtual ~MyOutputStream(){}
+
+        const char* getBuffer() const{ return buffer; }
+
+        virtual void write( unsigned char c ) throw (IOException){
+            if( pos >= 100 ){
+                throw IOException();
+            }
+
+            buffer[pos++] = c;
+        }
+
+        virtual void write( const std::vector<unsigned char>& buffer )
+            throw ( IOException ) {
+
+            if( buffer.empty() ){
+                return;
+            }
+
+            this->write( &buffer[0], 0, buffer.size() );
+        }
+
+        virtual void write( const unsigned char* buffer,
+                            std::size_t offset,
+                            std::size_t len ) throw (IOException){
+
+            if( (pos + len) > 100 ){
+                throw IOException();
+            }
+
+            memcpy( this->buffer + pos, buffer+offset, len );
+
+            pos += len;
+        }
+
+        virtual void flush() throw (IOException){
+        }
+
+        virtual void close() throw(IOException){
+            // do nothing.
+        }
+
+        virtual void lock() throw( lang::Exception ) {
+        }
+        virtual void unlock() throw( lang::Exception ) {
+        }
+        virtual void wait() throw( lang::Exception ) {
+        }
+        virtual void wait( long long millisecs DECAF_UNUSED ) throw( lang::Exception ) {
+        }
+        virtual void wait( long long millisecs DECAF_UNUSED, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
+        }
+        virtual void notify() throw( lang::Exception ) {
+        }
+        virtual void notifyAll() throw( lang::Exception ) {
+        }
+    };
+
+}}
+
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStreamTest::testConstructor1() {
 

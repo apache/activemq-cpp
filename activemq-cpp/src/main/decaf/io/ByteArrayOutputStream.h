@@ -130,9 +130,9 @@ namespace io{
 
         /**
          * Invokes close on the target output stream.
-         * @throws CMSException
+         * @throws IOException
          */
-        void close() throw( lang::Exception ){ /* do nothing */ }
+        void close() throw( io::IOException ){ /* do nothing */ }
 
         /**
          * Converts the bytes in the buffer into a standard C++ string

@@ -60,7 +60,7 @@ CMSProvider::~CMSProvider() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSProvider::close() throw( decaf::lang::Exception ) {
+void CMSProvider::close() throw( decaf::io::IOException ) {
 
     if( this->consumer.get() != NULL ) {
         try{

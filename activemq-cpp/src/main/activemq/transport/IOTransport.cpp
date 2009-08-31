@@ -137,13 +137,13 @@ void IOTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::start() throw( cms::CMSException ){
+void IOTransport::start() throw( decaf::io::IOException ){
 
     try{
 
         // Can't restart a closed transport.
         if( closed ){
-            throw ActiveMQException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "IOTransport::start() - transport is already closed - cannot restart" );
         }
@@ -155,7 +155,7 @@ void IOTransport::start() throw( cms::CMSException ){
 
         // Make sure all variables that we need have been set.
         if( inputStream == NULL || outputStream == NULL || wireFormat.get() == NULL ){
-            throw ActiveMQException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "IOTransport::start() - "
                 "IO streams and wireFormat instances must be set before calling start" );
@@ -165,13 +165,23 @@ void IOTransport::start() throw( cms::CMSException ){
         thread.reset( new Thread( this ) );
         thread->start();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::close() throw( cms::CMSException ){
+void IOTransport::stop() throw( decaf::io::IOException ){
+
+    try{
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::close() throw( decaf::io::IOException ){
 
     try{
 
@@ -207,9 +217,9 @@ void IOTransport::close() throw( cms::CMSException ){
         // Clear the WireFormat so we can't use it anymore
         this->wireFormat.reset( NULL );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

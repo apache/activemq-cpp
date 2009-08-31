@@ -160,7 +160,7 @@ namespace io{
          * method of the underlying stream
          * @throws Exception
          */
-        virtual void close() throw ( lang::Exception ) {
+        virtual void close() throw ( io::IOException ) {
             try {
                 if( !closed && inputStream != NULL ) {
                     inputStream->close();

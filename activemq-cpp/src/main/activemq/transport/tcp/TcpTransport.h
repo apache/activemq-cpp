@@ -91,9 +91,9 @@ namespace tcp{
 
         /**
          * Delegates to the superclass and then closes the socket.
-         * @throws CMSException if errors occur.
+         * @throws IOException if errors occur.
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Is this Transport fault tolerant, meaning that it will reconnect to

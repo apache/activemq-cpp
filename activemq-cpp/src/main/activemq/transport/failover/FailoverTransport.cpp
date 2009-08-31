@@ -318,7 +318,7 @@ Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AM
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::start() throw( cms::CMSException ) {
+void FailoverTransport::start() throw( IOException ) {
 
     try{
 
@@ -340,44 +340,60 @@ void FailoverTransport::start() throw( cms::CMSException ) {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::close() throw( cms::CMSException ) {
+void FailoverTransport::stop() throw( IOException ) {
 
-    Pointer<Transport> transportToStop;
+    try{
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
 
-    synchronized( &reconnectMutex ) {
-        if (!started) {
-            return;
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::close() throw( IOException ) {
+
+    try{
+
+        Pointer<Transport> transportToStop;
+
+        synchronized( &reconnectMutex ) {
+            if (!started) {
+                return;
+            }
+
+            started = false;
+            closed = true;
+            connected = false;
+
+            backups->setEnabled( false );
+            requestMap.clear();
+
+            if( connectedTransport != NULL ) {
+                transportToStop.swap( connectedTransport );
+            }
+
+            reconnectMutex.notifyAll();
         }
 
-        started = false;
-        closed = true;
-        connected = false;
-
-        backups->setEnabled( false );
-        requestMap.clear();
-
-        if( connectedTransport != NULL ) {
-            transportToStop.swap( connectedTransport );
+        synchronized( &sleepMutex ) {
+            sleepMutex.notifyAll();
         }
 
-        reconnectMutex.notifyAll();
-    }
+        taskRunner->shutdown( 2000 );
 
-    synchronized( &sleepMutex ) {
-        sleepMutex.notifyAll();
+        if( transportToStop != NULL ) {
+            transportToStop->close();
+        }
     }
-
-    taskRunner->shutdown( 2000 );
-
-    if( transportToStop != NULL ) {
-        transportToStop->close();
-    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

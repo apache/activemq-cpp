@@ -79,11 +79,10 @@ void TransportFilter::transportResumed() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::start() throw( cms::CMSException ) {
+void TransportFilter::start() throw( decaf::io::IOException ) {
 
     if( listener == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
-            "exceptionListener is invalid" );
+        throw decaf::io::IOException( __FILE__, __LINE__, "exceptionListener is invalid" );
     }
 
     // Start the delegate transport object.
@@ -91,7 +90,12 @@ void TransportFilter::start() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::close() throw( cms::CMSException ) {
+void TransportFilter::stop() throw( decaf::io::IOException ) {
+    next->stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::close() throw( decaf::io::IOException ) {
 
     if( next != NULL ) {
         next->close();
