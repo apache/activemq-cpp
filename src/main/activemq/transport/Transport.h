@@ -28,8 +28,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/Command.h>
 #include <activemq/commands/Response.h>
-#include <cms/Startable.h>
-#include <cms/Closeable.h>
 #include <typeinfo>
 
 namespace activemq{
