@@ -64,9 +64,9 @@ namespace logging{
          * <p>
          * Override the StreamHandler close to flush the Std Err stream
          * but doesn't close.
-         * @throw CMSException
+         * @throw IOException
          */
-        virtual void close() throw ( cms::CMSException )
+        virtual void close() throw ( IOException )
         {
             if( getOutputStream() ) {
                 getOutputStream->flush();

@@ -51,7 +51,7 @@ namespace concurrent{
 
         /**
          * Waits for the Count to be zero, and then returns
-         * @throws CMSException
+         * @throws Exception
          */
         virtual void await() throw ( lang::Exception );
 

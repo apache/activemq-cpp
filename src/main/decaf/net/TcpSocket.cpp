@@ -141,7 +141,7 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::close() throw( lang::Exception ) {
+void TcpSocket::close() throw( decaf::io::IOException ) {
 
     try{
         // Destroy the input stream.
@@ -162,8 +162,9 @@ void TcpSocket::close() throw( lang::Exception ) {
             socketHandle = INVALID_SOCKET_HANDLE;
         }
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

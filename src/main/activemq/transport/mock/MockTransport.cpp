@@ -48,6 +48,9 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
     this->failOnReceiveMessage = false;
     this->numReceivedMessageBeforeFail = 0;
     this->numReceivedMessages = 0;
+    this->failOnStart = false;
+    this->failOnStop = false;
+    this->failOnClose = false;
 
     // Configure the Internal Listener this is the Fake Broker.
     this->internalListener.setTransport( this );
@@ -139,4 +142,28 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command,
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MockTransport::start() throw( decaf::io::IOException ) {
+
+    if( this->failOnStart ) {
+        throw IOException( __FILE__, __LINE__, "Failed to Start MockTransport." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MockTransport::stop() throw( decaf::io::IOException ) {
+
+    if( this->failOnStop ) {
+        throw IOException( __FILE__, __LINE__, "Failed to Stop MockTransport." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MockTransport::close() throw( decaf::io::IOException ) {
+
+    if( this->failOnClose ) {
+        throw IOException( __FILE__, __LINE__, "Failed to Close MockTransport." );
+    }
 }

@@ -116,7 +116,7 @@ namespace correlator{
             return this->listener;
         }
 
-        virtual void start() throw( cms::CMSException ){
+        virtual void start() throw( decaf::io::IOException ){
             close();
 
             done = false;
@@ -124,7 +124,10 @@ namespace correlator{
             thread->start();
         }
 
-        virtual void close() throw( cms::CMSException ){
+        virtual void stop() throw( decaf::io::IOException ){
+        }
+
+        virtual void close() throw( decaf::io::IOException ){
 
             done = true;
 

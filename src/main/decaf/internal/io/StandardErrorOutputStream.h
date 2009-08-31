@@ -89,9 +89,9 @@ namespace io{
 
         /**
          * Invokes close on the target output stream.
-         * throws CMSException if an error occurs
+         * throws IOException if an error occurs
          */
-        virtual void close() throw( decaf::lang::Exception ){
+        virtual void close() throw( decaf::io::IOException ){
             this->flush();
         }
 

@@ -123,7 +123,7 @@ namespace io{
          * Closes the target input stream.
          * @throws IOException if an error occurs.
          */
-        virtual void close() throw ( lang::Exception );
+        virtual void close() throw ( io::IOException );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The

@@ -39,7 +39,7 @@ SocketOutputStream::~SocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::close() throw( lang::Exception ) {
+void SocketOutputStream::close() throw( decaf::io::IOException ) {
     this->closed = true;
 }
 

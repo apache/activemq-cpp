@@ -15,43 +15,38 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_IO_FILTERINPUTSTREAMTEST_H_
-#define _DECAF_IO_FILTERINPUTSTREAMTEST_H_
+#ifndef _DECAF_UTIL_CONCURRENT_SYNCHRONOUSQUEUETEST_H_
+#define _DECAF_UTIL_CONCURRENT_SYNCHRONOUSQUEUETEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/lang/Exception.h>
-#include <decaf/io/FilterInputStream.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Random.h>
+#include <time.h>
 
-namespace decaf{
-namespace io{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
-    class FilterInputStreamTest : public CppUnit::TestFixture {
+    class SynchronousQueueTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( FilterInputStreamTest );
-        CPPUNIT_TEST( testAvailable );
-        CPPUNIT_TEST( testClose );
-        CPPUNIT_TEST( testRead );
-        CPPUNIT_TEST( testRead2 );
-        CPPUNIT_TEST( testRead3 );
-        CPPUNIT_TEST( testSkip );
+        CPPUNIT_TEST_SUITE( SynchronousQueueTest );
+        CPPUNIT_TEST( testConstructor_1 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        FilterInputStreamTest() {}
-        virtual ~FilterInputStreamTest() {}
+        SynchronousQueueTest() {}
+        virtual ~SynchronousQueueTest() {}
 
-        void testAvailable();
-        void testClose();
-        void testRead();
-        void testRead2();
-        void testRead3();
-        void testSkip();
+        void testConstructor_1();
 
     };
 
-}}
+}}}
 
-#endif /*_DECAF_IO_FILTERINPUTSTREAMTEST_H_*/
+#endif /* _DECAF_UTIL_CONCURRENT_SYNCHRONOUSQUEUETEST_H_ */

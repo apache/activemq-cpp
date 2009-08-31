@@ -82,9 +82,9 @@ namespace logging{
          * After close has been called this Handler  should no longer be used.
          * Method calls may either be silently ignored or may throw runtime
          * exceptions.
-         * @throw CMSException
+         * @throw IOException
          */
-        virtual void close() throw ( cms::CMSException ) {
+        virtual void close() throw ( decaf::io::IOException ) {
             if( stream ) {
                 stream.flush();
                 stream.close();

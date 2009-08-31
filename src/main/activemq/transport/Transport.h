@@ -21,6 +21,7 @@
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/IOException.h>
+#include <decaf/io/Closeable.h>
 #include <decaf/net/URI.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -54,11 +55,25 @@ namespace transport{
      * object when created so that they can turn the built in Commands to /
      * from the required wire format encoding.
      */
-    class AMQCPP_API Transport : public cms::Startable,
-                                 public cms::Closeable {
+    class AMQCPP_API Transport : public decaf::io::Closeable {
     public:
 
         virtual ~Transport() {}
+
+        /**
+         * Starts the Transport, the send methods of a Transport will throw an exception
+         * if used before the Transport is started.
+         *
+         * @throw IOException if and error occurs while starting the Transport.
+         */
+        virtual void start() throw( decaf::io::IOException ) = 0;
+
+        /**
+         * Stops the Transport.
+         *
+         * @throw IOException if an error occurs while stopping the transport.
+         */
+        virtual void stop() throw( decaf::io::IOException ) = 0;
 
         /**
          * Sends a one-way command.  Does not wait for any response from the

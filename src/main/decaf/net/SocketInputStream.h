@@ -86,9 +86,9 @@ namespace net{
         /**
          * Close - does nothing.  It is the responsibility of the owner
          * of the socket object to close it.
-         * @throws CMSException
+         * @throws IOException
          */
-        virtual void close() throw( lang::Exception );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Not supported.

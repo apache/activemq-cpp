@@ -122,12 +122,14 @@ InactivityMonitor::~InactivityMonitor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::close() throw( cms::CMSException ) {
+void InactivityMonitor::close() throw( decaf::io::IOException ) {
     try{
         stopMonitorThreads();
         TransportFilter::close();
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -60,7 +60,7 @@ namespace io {
          * @param buffer The array of bytes to write.
          * @param offset, the position to start writing in buffer.
          * @param len The number of bytes from the buffer to be written.
-         * @throws decaf::io::IOException thrown if an error occurs.
+         * @throws IOException thrown if an error occurs.
          * @throws NullPointerException if buffer is null.
          */
         virtual void write( const unsigned char* buffer,
@@ -70,15 +70,15 @@ namespace io {
 
         /**
          * Invokes flush on the target output stream.
-         * throws decaf::io::IOException if an error occurs
+         * throws IOException if an error occurs
          */
         virtual void flush() throw ( decaf::io::IOException );
 
         /**
          * Invokes close on the target output stream.
-         * throws CMSException if an error occurs
+         * throws IOException if an error occurs
          */
-        virtual void close() throw( decaf::lang::Exception ){
+        virtual void close() throw( decaf::io::IOException ){
             this->flush();
         }
 

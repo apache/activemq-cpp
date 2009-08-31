@@ -122,6 +122,7 @@ cc_sources = \
     decaf/util/concurrent/ConcurrentStlMapTest.cpp \
     decaf/util/concurrent/CountDownLatchTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
+    decaf/util/concurrent/SynchronousQueueTest.cpp \
     decaf/util/concurrent/ThreadPoolTest.cpp \
     decaf/util/concurrent/TimeUnitTest.cpp \
     decaf/util/concurrent/atomic/AtomicBooleanTest.cpp \
@@ -247,6 +248,7 @@ h_sources = \
     decaf/util/concurrent/ConcurrentStlMapTest.h \
     decaf/util/concurrent/CountDownLatchTest.h \
     decaf/util/concurrent/MutexTest.h \
+    decaf/util/concurrent/SynchronousQueueTest.h \
     decaf/util/concurrent/ThreadPoolTest.h \
     decaf/util/concurrent/TimeUnitTest.h \
     decaf/util/concurrent/atomic/AtomicBooleanTest.h \

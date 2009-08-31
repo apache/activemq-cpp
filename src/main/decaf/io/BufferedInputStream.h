@@ -219,7 +219,7 @@ namespace io{
          * Populates the buffer with as much data as possible
          * from the target input stream.
          * @returns total bytes read, or -1 if EOF.
-         * @throws CMSException
+         * @throws IOException
          */
         int bufferData() throw ( IOException );
 

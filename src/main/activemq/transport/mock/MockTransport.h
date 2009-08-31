@@ -77,6 +77,10 @@ namespace mock{
         int numReceivedMessageBeforeFail;
         int numReceivedMessages;
 
+        bool failOnStart;
+        bool failOnStop;
+        bool failOnClose;
+
     public:
 
         MockTransport( const Pointer<wireformat::WireFormat>& wireFormat,
@@ -168,9 +172,11 @@ namespace mock{
             }
         }
 
-        // No Impl needed for this Transport.
-        virtual void start() throw (cms::CMSException){}
-        virtual void close() throw (cms::CMSException){}
+        virtual void start() throw( decaf::io::IOException );
+
+        virtual void stop() throw( decaf::io::IOException );
+
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Narrows down a Chain of Transports to a specific Transport to allow a
@@ -280,6 +286,30 @@ namespace mock{
 
         void setNumReceivedMessages( int value ) {
             this->numReceivedMessages = value;
+        }
+
+        bool isFailOnStart() const {
+            return this->failOnReceiveMessage;
+        }
+
+        void setFailOnStart( bool value ) {
+            this->failOnReceiveMessage = value;
+        }
+
+        bool isFailOnStop() const {
+            return this->failOnStop;
+        }
+
+        void setFailOnStop( bool value ) {
+            this->failOnStop = value;
+        }
+
+        bool isFailOnClose() const {
+            return this->failOnClose;
+        }
+
+        void setFailOnClose( bool value ) {
+            this->failOnClose = value;
         }
 
     };

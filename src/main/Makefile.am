@@ -1212,6 +1212,7 @@ h_sources = \
     decaf/util/TimerTask.h \
     decaf/util/UUID.h \
     decaf/util/comparators/Less.h \
+    decaf/util/concurrent/BlockingQueue.h \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/CancellationException.h \
@@ -1229,7 +1230,9 @@ h_sources = \
     decaf/util/concurrent/PooledThread.h \
     decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/RejectedExecutionException.h \
+    decaf/util/concurrent/RejectedExecutionHandler.h \
     decaf/util/concurrent/Synchronizable.h \
+    decaf/util/concurrent/SynchronousQueue.h \
     decaf/util/concurrent/TaskListener.h \
     decaf/util/concurrent/ThreadFactory.h \
     decaf/util/concurrent/ThreadPool.h \

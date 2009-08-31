@@ -251,7 +251,9 @@ namespace util {
             this->_size = 0;
         }
 
-        virtual bool offer( const E& value ) throw( decaf::lang::exceptions::NullPointerException ) {
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             // TODO - Check for Null and throw exception
 

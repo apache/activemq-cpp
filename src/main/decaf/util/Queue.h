@@ -70,8 +70,12 @@ namespace util{
          *
          * @throw NullPointerException if the Queue implementation does not allow Null values to
          *        be inserted into the Queue.
+         * @throws IllegalArgumentException if some property of the specified
+         *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& value ) throw( decaf::lang::exceptions::NullPointerException ) = 0;
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Gets and removes the element in the head of the queue.  If the operation succeeds the

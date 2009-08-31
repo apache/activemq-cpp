@@ -65,7 +65,7 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BlockingByteArrayInputStream::close() throw ( lang::Exception ){
+void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 
     synchronized( this ){
 

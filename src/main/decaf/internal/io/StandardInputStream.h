@@ -61,8 +61,8 @@ namespace io {
          *
          * @return The number of bytes read.
          *
-         * @throws decaf::io::IOException thrown if an error occurs.
-         * @throws decaf::lang::exceptions::NullPointerException if buffer is null.
+         * @throws IOException thrown if an error occurs.
+         * @throws NullPointerException if buffer is null.
          */
         virtual int read( unsigned char* buffer,
                           std::size_t offset,
@@ -71,9 +71,9 @@ namespace io {
 
         /**
          * Closes the target input stream.
-         * @throws decaf::io::IOException thrown if an error occurs.
+         * @throws IOException thrown if an error occurs.
          */
-        virtual void close() throw( lang::Exception ) {}
+        virtual void close() throw( decaf::io::IOException ) {}
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -90,8 +90,8 @@ namespace io {
          * @param num - the number of bytes to skip
          * @returns total bytes skipped
          *
-         * @throws decaf::io::IOException if an error occurs
-         * @throws decaf::lang::exceptions::UnsupportedOperationException
+         * @throws IOException if an error occurs
+         * @throws UnsupportedOperationException
          *         If skip is not supported.
          */
         virtual std::size_t skip( std::size_t num )

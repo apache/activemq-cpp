@@ -69,7 +69,7 @@ TcpTransport::~TcpTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() throw( cms::CMSException ) {
+void TcpTransport::close() throw( decaf::io::IOException ) {
 
     try {
 
@@ -83,9 +83,9 @@ void TcpTransport::close() throw( cms::CMSException ) {
         // Invoke the paren't close first.
         TransportFilter::close();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

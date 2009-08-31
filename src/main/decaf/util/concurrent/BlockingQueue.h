@@ -30,11 +30,11 @@ namespace concurrent {
      * the queue to become non-empty when retrieving an element, and wait for space
      * to become available in the queue when storing an element.
      *
-     * <p><tt>BlockingQueue</tt> methods come in three forms, with different ways of
+     * <p><tt>BlockingQueue</tt> methods come in four forms, with different ways of
      * handling operations that cannot be satisfied immediately, but may be satisfied
      * at some point in the future:
      * one throws an exception, the second returns a special value (either
-     * <tt>null</tt> or <tt>false</tt>, depending on the operation), the third
+     * <tt>true</tt> or <tt>false</tt>, depending on the operation), the third
      * blocks the current thread indefinitely until the operation can succeed,
      * and the fourth blocks for only a given maximum time limit before giving
      * up.  These methods are summarized in the following table:
@@ -71,11 +71,10 @@ namespace concurrent {
      *  </tr>
      * </table>
      *
-     * <p>A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may
-     * have a <tt>remainingCapacity</tt> beyond which no additional elements can
-     * be <tt>put</tt> without blocking.  A <tt>BlockingQueue</tt> without any
-     * intrinsic capacity constraints always reports a remaining capacity of
-     * <tt>Integer::MAX_VALUE</tt>.
+     * <p>A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may have
+     * a <tt>remainingCapacity</tt> beyond which no additional elements can be <tt>put</tt>
+     * without blocking.  A <tt>BlockingQueue</tt> without any intrinsic capacity
+     * constraints always reports a remaining capacity of <tt>Integer::MAX_VALUE</tt>.
      *
      * <p> <tt>BlockingQueue</tt> implementations are designed to be used primarily for
      * producer-consumer queues, but additionally support {@link decaf.util.Collection}
@@ -167,24 +166,22 @@ namespace concurrent {
         }
 
         /**
-         * Inserts the specified element into this queue if it is possible to do
-         * so immediately without violating capacity restrictions, returning
-         * <tt>true</tt> upon success and throwing an
-         * <tt>IllegalStateException</tt> if no space is currently available.
-         * When using a capacity-restricted queue, it is generally preferable to
-         * use {@link #offer(Object) offer}.
+         * Inserts the specified element into this queue if it is possible to do so immediately
+         * without violating capacity restrictions, returning <tt>true</tt> upon success and
+         * throwing an <tt>IllegalStateException</tt> if no space is currently available.
+         * When using a capacity-restricted queue, it is generally preferable to use
+         * {@link #offer(Object) offer}.
          *
          * @param e the element to add
          * @return <tt>true</tt> (as specified by {@link Collection#add})
          * @throws IllegalStateException if the element cannot be added at this
          *         time due to capacity restrictions
-         * @throws ClassCastException if the class of the specified element
-         *         prevents it from being added to this queue
-         * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool add(E e);
+        virtual bool add( const E& e )
+            throw( lang::exceptions::IllegalStateException,
+                   lang::exceptions::IllegalArgumentException );
 
         /**
          * Inserts the specified element into this queue if it is possible to do
@@ -197,31 +194,32 @@ namespace concurrent {
          * @param e the element to add
          * @return <tt>true</tt> if the element was added to this queue, else
          *         <tt>false</tt>
-         * @throws ClassCastException if the class of the specified element
-         *         prevents it from being added to this queue
          * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer(E e);
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
-         * Inserts the specified element into this queue, waiting if necessary
-         * for space to become available.
+         * Inserts the specified element into this queue, waiting if necessary for space
+         * to become available.
          *
-         * @param e the element to add
+         * @param value the element to add
          * @throws InterruptedException if interrupted while waiting
-         * @throws ClassCastException if the class of the specified element
-         *         prevents it from being added to this queue
          * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual void put(E e) throws InterruptedException;
+        virtual void put( const E& value )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
-         * Inserts the specified element into this queue, waiting up to the
-         * specified wait time if necessary for space to become available.
+         * Inserts the specified element into this queue, waiting up to the specified wait
+         * time if necessary for space to become available.
          *
          * @param e the element to add
          * @param timeout how long to wait before giving up, in units of
@@ -231,43 +229,44 @@ namespace concurrent {
          * @return <tt>true</tt> if successful, or <tt>false</tt> if
          *         the specified waiting time elapses before space is available
          * @throws InterruptedException if interrupted while waiting
-         * @throws ClassCastException if the class of the specified element
-         *         prevents it from being added to this queue
          * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer(E e, long timeout, TimeUnit unit)
-            throws InterruptedException;
+        virtual bool offer( const E& e, long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
-         * Retrieves and removes the head of this queue, waiting if necessary
-         * until an element becomes available.
+         * Retrieves and removes the head of this queue, waiting if necessary until an
+         * element becomes available.
          *
          * @return the head of this queue
          * @throws InterruptedException if interrupted while waiting
          */
-        virtual E take() throws InterruptedException;
+        virtual E take() throw( decaf::lang::exceptions::InterruptedException ) = 0;
 
         /**
-         * Retrieves and removes the head of this queue, waiting up to the
-         * specified wait time if necessary for an element to become available.
+         * Retrieves and removes the head of this queue, waiting up to the specified
+         * wait time if necessary for an element to become available.
          *
-         * @param timeout how long to wait before giving up, in units of
-         *        <tt>unit</tt>
+         * @param result the referenced value that will be assigned the value
+         *        retrieved from the Queue.  Undefined if this methods returned false.
+         * @param timeout how long to wait before giving up, in units of <tt>unit</tt>
          * @param unit a <tt>TimeUnit</tt> determining how to interpret the
-         *        <tt>timeout</tt> parameter
-         * @return the head of this queue, or <tt>null</tt> if the
-         *         specified waiting time elapses before an element is available
+         *        <tt>timeout</tt> parameter.
+         * @return <tt>true</tt> if successful or <tt>false</tt> if the specified
+         *         waiting time elapses before an element is available.
          * @throws InterruptedException if interrupted while waiting
          */
-        virtual E poll(long timeout, TimeUnit unit)
-            throws InterruptedException;
+        virtual bool poll( E& result, long long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException ) = 0;
 
         /**
          * Returns the number of additional elements that this queue can ideally
          * (in the absence of memory or resource constraints) accept without
-         * blocking, or <tt>Integer.MAX_VALUE</tt> if there is no intrinsic
+         * blocking, or <tt>Integer::MAX_VALUE</tt> if there is no intrinsic
          * limit.
          *
          * <p>Note that you <em>cannot</em> always tell if an attempt to insert
@@ -277,7 +276,7 @@ namespace concurrent {
          *
          * @return the remaining capacity
          */
-        virtual int remainingCapacity();
+        virtual int remainingCapacity() = 0;
 
         /**
          * Removes a single instance of the specified element from this queue,
@@ -287,13 +286,13 @@ namespace concurrent {
          * Returns <tt>true</tt> if this queue contained the specified element
          * (or equivalently, if this queue changed as a result of the call).
          *
-         * @param o element to be removed from this queue, if present
+         * @param value element to be removed from this queue, if present
          * @return <tt>true</tt> if this queue changed as a result of the call
-         * @throws ClassCastException if the class of the specified element
-         *         is incompatible with this queue (optional)
+         *
          * @throws NullPointerException if the specified element is null (optional)
          */
-        virtual bool remove(Object o);
+        virtual bool remove( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException ) = 0;
 
         /**
          * Returns <tt>true</tt> if this queue contains the specified element.
@@ -302,36 +301,32 @@ namespace concurrent {
          *
          * @param o object to be checked for containment in this queue
          * @return <tt>true</tt> if this queue contains the specified element
-         * @throws ClassCastException if the class of the specified element
-         *         is incompatible with this queue (optional)
          * @throws NullPointerException if the specified element is null (optional)
          */
-        virtual bool contains(Object o);
+        virtual bool contains( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException ) = 0;
 
         /**
-         * Removes all available elements from this queue and adds them
-         * to the given collection.  This operation may be more
-         * efficient than repeatedly polling this queue.  A failure
-         * encountered while attempting to add elements to
-         * collection <tt>c</tt> may result in elements being in neither,
-         * either or both collections when the associated exception is
-         * thrown.  Attempts to drain a queue to itself result in
-         * <tt>IllegalArgumentException</tt>. Further, the behavior of
-         * this operation is undefined if the specified collection is
-         * modified while the operation is in progress.
+         * Removes all available elements from this queue and adds them to the given
+         * collection.  This operation may be more efficient than repeatedly polling
+         * this queue.  A failure encountered while attempting to add elements to
+         * collection <tt>c</tt> may result in elements being in neither, either or
+         * both collections when the associated exception is thrown.  Attempts to
+         * drain a queue to itself result in <tt>IllegalArgumentException</tt>.
+         * Further, the behavior of this operation is undefined if the specified
+         * collection is modified while the operation is in progress.
          *
          * @param c the collection to transfer elements into
          * @return the number of elements transferred
          * @throws UnsupportedOperationException if addition of elements
          *         is not supported by the specified collection
-         * @throws ClassCastException if the class of an element of this queue
-         *         prevents it from being added to the specified collection
-         * @throws NullPointerException if the specified collection is null
          * @throws IllegalArgumentException if the specified collection is this
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual int drainTo(Collection<? super E> c);
+        virtual int drainTo( Collection<E>& c )
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Removes at most the given number of available elements from
@@ -349,14 +344,13 @@ namespace concurrent {
          * @return the number of elements transferred
          * @throws UnsupportedOperationException if addition of elements
          *         is not supported by the specified collection
-         * @throws ClassCastException if the class of an element of this queue
-         *         prevents it from being added to the specified collection
-         * @throws NullPointerException if the specified collection is null
          * @throws IllegalArgumentException if the specified collection is this
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual int drainTo( Collection<E> c, int maxElements ) = 0;
+        virtual int drainTo( Collection<E>& c, int maxElements )
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
     };
 

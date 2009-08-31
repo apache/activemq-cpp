@@ -202,15 +202,23 @@ namespace transport{
          * @throws CMSException if an error occurs or if this transport
          * has already been closed.
          */
-        virtual void start() throw( cms::CMSException );
+        virtual void start() throw( decaf::io::IOException );
+
+        /**
+         * Stops the Transport, terminating any threads and stopping all read
+         * and write operations.
+         *
+         * @throw IOException if an error occurs while stopping the Transport.
+         */
+        virtual void stop() throw( decaf::io::IOException );
 
         /**
          * Stops the polling thread and closes the streams.  This can
          * be called explicitly, but is also called in the destructor. Once
          * this object has been closed, it cannot be restarted.
-         * @throws CMSException if errors occur.
+         * @throws IOException if errors occur.
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Runs the polling thread.

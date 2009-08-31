@@ -77,7 +77,7 @@ void BufferedOutputStream::init( std::size_t bufSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::close() throw( lang::Exception ){
+void BufferedOutputStream::close() throw( io::IOException ){
 
     // let parent close the inputStream
     FilterOutputStream::close();

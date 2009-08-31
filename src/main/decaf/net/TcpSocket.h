@@ -218,9 +218,9 @@ namespace net{
 
         /**
          * Closes this object and deallocates the appropriate resources.
-         * @throws Exception
+         * @throws IOException
          */
-        virtual void close() throw( lang::Exception );
+        virtual void close() throw( decaf::io::IOException );
 
     public:
 

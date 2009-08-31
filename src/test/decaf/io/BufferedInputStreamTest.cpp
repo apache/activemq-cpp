@@ -26,6 +26,129 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
+namespace decaf{
+namespace io{
+
+    class MyInputStream : public InputStream{
+    private:
+        std::string data;
+        std::size_t pos;
+        bool throwOnRead;
+        bool closed;
+
+    public:
+
+        MyInputStream( const std::string& data ){
+            this->data = data;
+            this->pos = 0;
+            this->throwOnRead = false;
+            this->closed = false;
+        }
+        virtual ~MyInputStream(){}
+
+        void setThrowOnRead( bool value ) {
+            this->throwOnRead = value;
+        }
+
+        bool isThrowOnRead() const {
+            return this->throwOnRead;
+        }
+
+        bool isClosed() const {
+            return this->closed;
+        }
+
+        virtual std::size_t available() const throw (IOException){
+            if( isClosed() ) {
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "MyInputStream::read - Stream already closed." );
+            }
+            std::size_t len = data.length();
+            return len - pos;
+        }
+
+        virtual unsigned char read() throw (IOException){
+            if( this->isThrowOnRead() ) {
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "MyInputStream::read - Throw on Read on." );
+            }
+
+            if( pos >= data.length() ){
+                throw IOException();
+            }
+
+            return data.c_str()[pos++];
+        }
+
+        virtual int read( unsigned char* buffer,
+                          std::size_t offset,
+                          std::size_t bufferSize )
+            throw (IOException){
+
+            std::size_t numToRead = std::min( bufferSize, available() );
+
+            if( this->isThrowOnRead() ) {
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "MyInputStream::read - Throw on Read on." );
+            }
+
+            // Simulate EOF
+            if( numToRead == 0 ) {
+                return -1;
+            }
+
+            const char* str = data.c_str();
+            for( std::size_t ix=0; ix<numToRead; ++ix ){
+                buffer[ix+offset] = str[pos+ix];
+            }
+
+            pos += numToRead;
+
+            return (int)numToRead;
+        }
+
+        virtual void close() throw( decaf::io::IOException){
+            this->closed = true;
+        }
+
+        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+            return ( pos += std::min( num, available() ) );
+        }
+
+        virtual void mark( int readLimit DECAF_UNUSED ) {
+
+        }
+
+        virtual void reset() throw ( IOException ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "BufferedInputStream::reset - mark no yet supported." );
+        }
+
+        virtual bool markSupported() const{ return false; }
+
+        virtual void lock() throw( lang::Exception ) {
+        }
+        virtual void unlock() throw( lang::Exception ) {
+        }
+        virtual void wait() throw( lang::Exception ) {
+        }
+        virtual void wait( long long millisecs DECAF_UNUSED ) throw( lang::Exception ) {
+        }
+        virtual void wait( long long millisecs DECAF_UNUSED, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
+        }
+        virtual void notify() throw( lang::Exception ) {
+        }
+        virtual void notifyAll() throw( lang::Exception ) {
+        }
+
+    };
+
+}}
+
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStreamTest::testConstructor() {
 
