@@ -20,44 +20,46 @@
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/Config.h>
-#include <stdexcept>
-#include <assert.h>
-
-#include <apr_thread_proc.h>
+#include <memory>
 
 namespace decaf{
 namespace lang{
 
+    class ThreadProperties;
+
     /**
-     * Basic thread class - mimics the Java Thread.  Derived classes may
-     * implement the run method, or this class can be used as is with
-     * a provided Runnable delegate.
+     * A {@code Thread} is a concurrent unit of execution. It has its own call stack for
+     * methods being invoked, their arguments and local variables. Each process has at
+     * least one main {@code Thread} running when it is started; typically, there are
+     * several others for housekeeping. The application might decide to launch additional
+     * {@code Thread}s for specific purposes.
+     *
+     * {@code Thread}s in the same process interact and synchronize by the use of shared
+     * objects and monitors associated with these objects.
+     *
+     * There are basically two main ways of having a {@code Thread} execute application
+     * code. One is providing a new class that extends {@code Thread} and overriding
+     * its {@link #run()} method. The other is providing a new {@code Thread} instance
+     * with a {@link Runnable} object during its creation. In both cases, the
+     * {@link #start()} method must be called to actually execute the new {@code Thread}.
+     *
+     * Each {@code Thread} has an integer priority that basically determines the amount
+     * of CPU time the {@code Thread} gets. It can be set using the {@link #setPriority(int)}
+     * method. A {@code Thread} can also be made a daemon, which makes it run in the
+     * background. The latter also affects VM termination behavior: the VM does not
+     * terminate automatically as long as there are non-daemon threads running.
+     *
+     * @see decaf.lang.ThreadGroup
+     *
+     * @since 1.0
      */
-    class DECAF_API Thread : public Runnable
-    {
+    class DECAF_API Thread : public Runnable {
     private:
 
         /**
-         * The task to be run by this thread, defaults to
-         * this thread object.
+         * The internal data necessary to manage a Thread instance.
          */
-        Runnable* task;
-
-        /**
-         * APR Thread Handle
-         */
-        apr_thread_t* threadHandle;
-
-        /**
-         * Started state of this thread.
-         */
-        bool started;
-
-        /**
-         * Indicates whether the thread has already been
-         * joined.
-         */
-        bool joined;
+        std::auto_ptr<ThreadProperties> properties;
 
     public:
 
@@ -120,8 +122,8 @@ namespace lang{
 
     private:
 
-        // Internal thread handling
-        static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param );
+        // Initialize the Threads internal state
+        void initialize( Runnable* task );
 
     };
 
