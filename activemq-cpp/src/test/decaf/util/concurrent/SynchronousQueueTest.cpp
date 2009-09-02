@@ -17,6 +17,8 @@
 
 #include "SynchronousQueueTest.h"
 
+#include <decaf/util/concurrent/SynchronousQueue.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
@@ -26,4 +28,10 @@ using namespace decaf::util::concurrent;
 ///////////////////////////////////////////////////////////////////////////////
 void SynchronousQueueTest::testConstructor_1() {
 
+    SynchronousQueue<int> q;
+
+    CPPUNIT_ASSERT( q.isEmpty() );
+    CPPUNIT_ASSERT( 0 == q.size() );
+    CPPUNIT_ASSERT( 0 == q.remainingCapacity() );
+    CPPUNIT_ASSERT( !q.offer( 0 ) );
 }
