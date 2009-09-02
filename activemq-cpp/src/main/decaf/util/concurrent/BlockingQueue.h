@@ -19,7 +19,10 @@
 #define _DECAF_UTIL_CONCURRENT_BLOCKINGQUEUE_H_
 
 #include <decaf/util/Config.h>
-#include <decaf/util/Queue.h>
+#include <decaf/util/AbstractQueue.h>
+
+#include <decaf/util/concurrent/TimeUnit.h>
+#include <decaf/lang/exceptions/InterruptedException.h>
 
 namespace decaf {
 namespace util {
@@ -159,48 +162,11 @@ namespace concurrent {
      * @since 1.0
      */
     template< typename E >
-    class BlockingQueue : public Queue<E> {
+    class BlockingQueue : public AbstractQueue<E> {
     public:
 
         virtual ~BlockingQueue() {
         }
-
-        /**
-         * Inserts the specified element into this queue if it is possible to do so immediately
-         * without violating capacity restrictions, returning <tt>true</tt> upon success and
-         * throwing an <tt>IllegalStateException</tt> if no space is currently available.
-         * When using a capacity-restricted queue, it is generally preferable to use
-         * {@link #offer(Object) offer}.
-         *
-         * @param e the element to add
-         * @return <tt>true</tt> (as specified by {@link Collection#add})
-         * @throws IllegalStateException if the element cannot be added at this
-         *         time due to capacity restrictions
-         * @throws IllegalArgumentException if some property of the specified
-         *         element prevents it from being added to this queue
-         */
-        virtual bool add( const E& e )
-            throw( lang::exceptions::IllegalStateException,
-                   lang::exceptions::IllegalArgumentException );
-
-        /**
-         * Inserts the specified element into this queue if it is possible to do
-         * so immediately without violating capacity restrictions, returning
-         * <tt>true</tt> upon success and <tt>false</tt> if no space is currently
-         * available.  When using a capacity-restricted queue, this method is
-         * generally preferable to {@link #add}, which can fail to insert an
-         * element only by throwing an exception.
-         *
-         * @param e the element to add
-         * @return <tt>true</tt> if the element was added to this queue, else
-         *         <tt>false</tt>
-         * @throws NullPointerException if the specified element is null
-         * @throws IllegalArgumentException if some property of the specified
-         *         element prevents it from being added to this queue
-         */
-        virtual bool offer( const E& value )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Inserts the specified element into this queue, waiting if necessary for space
@@ -276,35 +242,7 @@ namespace concurrent {
          *
          * @return the remaining capacity
          */
-        virtual int remainingCapacity() = 0;
-
-        /**
-         * Removes a single instance of the specified element from this queue,
-         * if it is present.  More formally, removes an element <tt>e</tt> such
-         * that <tt>o.equals(e)</tt>, if this queue contains one or more such
-         * elements.
-         * Returns <tt>true</tt> if this queue contained the specified element
-         * (or equivalently, if this queue changed as a result of the call).
-         *
-         * @param value element to be removed from this queue, if present
-         * @return <tt>true</tt> if this queue changed as a result of the call
-         *
-         * @throws NullPointerException if the specified element is null (optional)
-         */
-        virtual bool remove( const E& value )
-            throw( decaf::lang::exceptions::NullPointerException ) = 0;
-
-        /**
-         * Returns <tt>true</tt> if this queue contains the specified element.
-         * More formally, returns <tt>true</tt> if and only if this queue contains
-         * at least one element <tt>e</tt> such that <tt>o.equals(e)</tt>.
-         *
-         * @param o object to be checked for containment in this queue
-         * @return <tt>true</tt> if this queue contains the specified element
-         * @throws NullPointerException if the specified element is null (optional)
-         */
-        virtual bool contains( const E& value )
-            throw( decaf::lang::exceptions::NullPointerException ) = 0;
+        virtual int remainingCapacity() const = 0;
 
         /**
          * Removes all available elements from this queue and adds them to the given
@@ -324,7 +262,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual int drainTo( Collection<E>& c )
+        virtual std::size_t drainTo( Collection<E>& c )
             throw( decaf::lang::exceptions::UnsupportedOperationException,
                    decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
@@ -348,7 +286,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual int drainTo( Collection<E>& c, int maxElements )
+        virtual std::size_t drainTo( Collection<E>& c, std::size_t maxElements )
             throw( decaf::lang::exceptions::UnsupportedOperationException,
                    decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
