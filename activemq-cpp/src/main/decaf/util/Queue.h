@@ -68,8 +68,8 @@ namespace util{
          *
          * @return true if the operation succeeds and false if it fails.
          *
-         * @throw NullPointerException if the Queue implementation does not allow Null values to
-         *        be inserted into the Queue.
+         * @throws NullPointerException if the Queue implementation does not allow Null values to
+         *         be inserted into the Queue.
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
