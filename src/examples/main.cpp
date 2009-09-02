@@ -33,6 +33,7 @@
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 #include <memory>
 
