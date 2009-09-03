@@ -27,6 +27,8 @@
 #include <apr_thread_proc.h>
 
 #include <decaf/internal/DecafRuntime.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -65,13 +67,33 @@ namespace lang{
          */
         bool joined;
 
+        /**
+         * The Assigned name of this thread.
+         */
+        std::string name;
+
+        /**
+         * The currently assigned priority
+         */
+        int priority;
+
+        /**
+         * static value that holds the incrementing Thread ID for unnamed threads.
+         */
+        static unsigned int id;
+
+        /**
+         * The handler to invoke if the thread terminates due to an exception that
+         * was not caught in the user's run method.
+         */
+        Thread::UncaughtExceptionHandler* exHandler;
+
+        /**
+         * The Thread that created this Object.
+         */
+        Thread* parent;
+
     public:
-
-        ThreadProperties() : task( NULL ), threadHandle( NULL ), started( false ), joined( false ) {
-        }
-
-        ThreadProperties( Runnable* task ) : task( task ), threadHandle( NULL ), started( false ), joined( false ) {
-        }
 
         static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param ) {
 
@@ -81,11 +103,24 @@ namespace lang{
             // Invoke run on the task.
             try{
                 properties->task->run();
-            } catch( ... ){
-                RuntimeException ex(
+            } catch( decaf::lang::Throwable& error ){
+
+                if( properties->exHandler != NULL ) {
+                    properties->exHandler->uncaughtException( properties->parent, error );
+                }
+
+                error.printStackTrace();
+
+            } catch( ... ) {
+                RuntimeException error(
                     __FILE__, __LINE__,
                     "unhandled exception bubbled up to Thread::run");
-                ex.printStackTrace();
+
+                if( properties->exHandler != NULL ) {
+                    properties->exHandler->uncaughtException( properties->parent, error );
+                }
+
+                error.printStackTrace();
             }
 
             // Indicate we are done.
@@ -98,27 +133,46 @@ namespace lang{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread() {
+unsigned int ThreadProperties::id = 0;
 
-    this->initialize( this );
+////////////////////////////////////////////////////////////////////////////////
+Thread::Thread() {
+    this->initialize( this, "" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::Thread( Runnable* task ) {
-
-    if( task == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__,
-            "Thread::Thread( Runnable* ) Runnable instance passed was NULL" );
-    }
-
-    this->initialize( task );
+    this->initialize( task, "" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::initialize( Runnable* task ) {
+Thread::Thread( const std::string& name ) {
+    this->initialize( this, name );
+}
 
-    this->properties.reset( new ThreadProperties( task ) );
+////////////////////////////////////////////////////////////////////////////////
+Thread::Thread( Runnable* task, const std::string& name ) {
+    this->initialize( task, name );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::initialize( Runnable* task, const std::string& name ) {
+
+    this->properties.reset( new ThreadProperties() );
+
+    if( name == "" ) {
+        this->properties->name = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
+    } else {
+        this->properties->name = name;
+    }
+
+    this->properties->joined = false;
+    this->properties->started = false;
+    this->properties->priority = Thread::NORM_PRIORITY;
+    this->properties->task = task;
+    this->properties->threadHandle = NULL;
+    this->properties->exHandler = NULL;
+    this->properties->parent = this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +227,18 @@ void Thread::join() throw( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( int millisecs ) {
+void Thread::sleep( long long millisecs )
+    throw( lang::exceptions::InterruptedException,
+           lang::exceptions::IllegalArgumentException ) {
+
+    Thread::sleep( millisecs, 0 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::sleep( long long millisecs, unsigned int nanos )
+    throw( lang::exceptions::InterruptedException,
+           lang::exceptions::IllegalArgumentException ) {
+
     apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
 }
 
@@ -185,4 +250,51 @@ void Thread::yield() {
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Thread::getId() {
     return (unsigned long)( apr_os_thread_current() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::setName( const std::string& name ) {
+    this->properties->name = name;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Thread::getName() const {
+    return this->properties->name;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException ) {
+
+    if( value < Thread::MIN_PRIORITY || value > Thread::MAX_PRIORITY ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::setPriority - Specified value {%d} is out of range", value );
+    }
+
+    this->properties->priority = value;
+
+    // TODO - Alter Threads actual priority.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Thread::getPriority() const {
+    return this->properties->priority;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::setUncaughtExceptionHandler( UncaughtExceptionHandler* handler ) {
+    this->properties->exHandler = handler;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const Thread::UncaughtExceptionHandler* Thread::getUncaughtExceptionHandler() const {
+    return this->properties->exHandler;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Thread::toString() const {
+
+    return this->properties->name + ": Priority=" +
+           Integer::toString( this->properties->priority ) + ", ThreadID=" +
+           Long::toString( Thread::getId() );
 }
