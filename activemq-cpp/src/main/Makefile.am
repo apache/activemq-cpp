@@ -1113,6 +1113,7 @@ h_sources = \
     decaf/io/OutputStream.h \
     decaf/io/Reader.h \
     decaf/io/UTFDataFormatException.h \
+    decaf/io/UnsupportedEncodingException.h \
     decaf/io/Writer.h \
     decaf/lang/Appendable.h \
     decaf/lang/Boolean.h \

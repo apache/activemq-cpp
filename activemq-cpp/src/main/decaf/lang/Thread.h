@@ -17,6 +17,8 @@
 #ifndef _DECAF_LANG_THREAD_H_
 #define _DECAF_LANG_THREAD_H_
 
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/Config.h>
@@ -25,6 +27,7 @@
 namespace decaf{
 namespace lang{
 
+    class ThreadGroup;
     class ThreadProperties;
 
     /**
@@ -63,16 +66,76 @@ namespace lang{
 
     public:
 
+        /** The minimum priority that a thread can have. */
+        static const int MIN_PRIORITY = 1;
+
+        /** The default priority that a thread is given at create time. */
+        static const int NORM_PRIORITY = 5;
+
+        /** The maximum priority that a thread can have. */
+        static const int MAX_PRIORITY = 10;
+
+    public:
+
         /**
-         * default Constructor
+         * Interface for handlers invoked when a Thread abruptly terminates due to an
+         * uncaught exception.
+         */
+        class UncaughtExceptionHandler {
+        public:
+
+            /**
+             * Method invoked when the given thread terminates due to the given uncaught exception.
+             *
+             * This method is defined to indicate that it will not throw an exception, throwing
+             * and exception from this method will on most systems result in a segmentation fault.
+             */
+            virtual void uncaughtException( const Thread* thread, const Throwable& error ) throw() = 0;
+
+        };
+
+    public:
+
+        /**
+         * Constructs a new Thread. This constructor has the same effect as
+         * Thread( NULL, NULL, GIVEN_NAME ), where GIVEN_NAME is a newly generated name.
+         * When no name is given the name is automatically generated and are of the form
+         * "Thread-"+n, where n is an integer.
          */
         Thread();
 
         /**
-         * Constructor
-         * @param task the Runnable that this thread manages
+         * Constructs a new Thread with the given target Runnable task. This constructor
+         * has the same effect as Thread( NULL, task, GIVEN_NAME ), where GIVEN_NAME is a
+         * newly generated name.  When no name is given the name is automatically generated
+         * and are of the form  "Thread-"+n, where n is an integer.
+         *
+         * @param task the Runnable that this thread manages, if the task is NULL the Thread's
+         *        run method is used instead.
          */
         Thread( Runnable* task );
+
+        /**
+         * Constructs a new Thread with the given name. This constructor has the same effect
+         * as Thread( NULL, NULL, GIVEN_NAME ), where GIVEN_NAME is a newly generated name.
+         * When no name is given the name is automatically generated and are of the form
+         * "Thread-"+n, where n is an integer.
+         *
+         * @param name the name to assign to this Thread.
+         */
+        Thread( const std::string& name );
+
+        /**
+         * Constructs a new Thread with the given target Runnable task and name. This constructor
+         * has the same effect as Thread( NULL, task, GIVEN_NAME ), where GIVEN_NAME is a
+         * newly generated name.  When no name is given the name is automatically generated
+         * and are of the form  "Thread-"+n, where n is an integer.
+         *
+         * @param task the Runnable that this thread manages, if the task is NULL the Thread's
+         *        run method is used instead.
+         * @param name the name to assign to this Thread.
+         */
+        Thread( Runnable* task, const std::string& name );
 
         virtual ~Thread();
 
@@ -97,16 +160,94 @@ namespace lang{
          */
         virtual void run(){};
 
+        /**
+         * Returns the Thread's assigned name.
+         * @returns the Name of the Thread.
+         */
+        std::string getName() const;
+
+        /**
+         * Sets the name of the Thread to the new Name given by the argument <em>name</em>
+         *
+         * @paran name the new name of the Thread.
+         */
+        void setName( const std::string& name );
+
+        /**
+         * Gets the currently set priority for this Thread.
+         *
+         * @return an int value representing the Thread's current priority.
+         */
+        int getPriority() const;
+
+        /**
+         * Sets the current Thread's priority to the newly specified value.  The given value
+         * must be within the rane Thread::MIN_PRIORITY and Thread::MAX_PRIORITY.
+         *
+         * @param value the new priority value to assign to this Thread.
+         *
+         * @throws IllegalArgumentException if the value is out of range.
+         */
+        void setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException );
+
+        /**
+         * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
+         *
+         * @returns a pointer to the set UncaughtExceptionHandler.
+         */
+        const UncaughtExceptionHandler* getUncaughtExceptionHandler() const;
+
+        /**
+         * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
+         *
+         * @param handler the UncaightExceptionHandler to invoke when the Thread terminates due
+         *                to an uncaught exception.
+         */
+        void setUncaughtExceptionHandler( UncaughtExceptionHandler* handler );
+
+        /**
+         * Returns a string that describes the Thread.
+         *
+         * @return string describing the Thread.
+         */
+        std::string toString() const;
+
     public:
 
         /**
-         * Halts execution of the calling thread for a specified no of millisec.
+         * Causes the currently executing thread to halt execution for the specified number of
+         * milliseconds, subject to the precision and accuracy of system timers and schedulers.
          *
          * Note that this method is a static method that applies to the
          * calling thread and not to the thread object.
-         * @param millisecs time in milliseconds to sleep
+         *
+         * @param millisecs time in milliseconds to halt execution.
+         *
+         * @throws IllegalArgumentException if the milliseconds parameter is negative.
+         * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( int millisecs );
+        static void sleep( long long millisecs )
+            throw( lang::exceptions::InterruptedException,
+                   lang::exceptions::IllegalArgumentException );
+
+        /**
+         * Causes the currently executing thread to halt execution for the specified number of
+         * milliseconds plus any additionally specified nanoseconds given, subject to the precision
+         * and accuracy of system timers and schedulers.
+         *
+         * Note that this method is a static method that applies to the
+         * calling thread and not to the thread object.
+         *
+         * @param millisecs time in milliseconds to halt execution.
+         * @param nanos 0-999999 extra nanoseconds to sleep.
+         *
+         * @throws IllegalArgumentException if the nanoseconds parameter is out of range
+         *         or the milliseconds paramter is negative.
+         * @throws InterruptedException if the Thread was interrupted while sleeping.
+         */
+        static void sleep( long long millisecs, unsigned int nanos )
+            throw( lang::exceptions::InterruptedException,
+                   lang::exceptions::IllegalArgumentException );
 
         /**
          * Causes the currently executing thread object to temporarily pause
@@ -123,7 +264,7 @@ namespace lang{
     private:
 
         // Initialize the Threads internal state
-        void initialize( Runnable* task );
+        void initialize( Runnable* task, const std::string& name );
 
     };
 
