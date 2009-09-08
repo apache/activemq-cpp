@@ -57,15 +57,9 @@ namespace lang{
         apr_thread_t* threadHandle;
 
         /**
-         * Started state of this thread.
+         * Current state of this thread.
          */
-        bool started;
-
-        /**
-         * Indicates whether the thread has already been
-         * joined.
-         */
-        bool joined;
+        Thread::State state;
 
         /**
          * The Assigned name of this thread.
@@ -108,22 +102,26 @@ namespace lang{
                 if( properties->exHandler != NULL ) {
                     properties->exHandler->uncaughtException( properties->parent, error );
                 }
+            } catch( std::exception& stdEx ) {
 
-                error.printStackTrace();
-
-            } catch( ... ) {
-                RuntimeException error(
-                    __FILE__, __LINE__,
-                    "unhandled exception bubbled up to Thread::run");
+                RuntimeException error( __FILE__, __LINE__, stdEx.what() );
 
                 if( properties->exHandler != NULL ) {
                     properties->exHandler->uncaughtException( properties->parent, error );
                 }
+            } catch( ... ) {
 
-                error.printStackTrace();
+                RuntimeException error(
+                    __FILE__, __LINE__,
+                    "Uncaught exception bubbled up to Thread::run, Thread Terminating.");
+
+                if( properties->exHandler != NULL ) {
+                    properties->exHandler->uncaughtException( properties->parent, error );
+                }
             }
 
             // Indicate we are done.
+            properties->state = Thread::TERMINATED;
             apr_thread_exit( self, APR_SUCCESS );
             return NULL;
         }
@@ -166,8 +164,7 @@ void Thread::initialize( Runnable* task, const std::string& name ) {
         this->properties->name = name;
     }
 
-    this->properties->joined = false;
-    this->properties->started = false;
+    this->properties->state = Thread::NEW;
     this->properties->priority = Thread::NORM_PRIORITY;
     this->properties->task = task;
     this->properties->threadHandle = NULL;
@@ -180,9 +177,14 @@ Thread::~Thread() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Thread::run() {
+    // No work to do as yet.
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Thread::start() throw ( Exception )
 {
-    if( this->properties->started ) {
+    if( this->properties->state > Thread::NEW ) {
         throw Exception(
             __FILE__, __LINE__,
             "Thread::start - Thread already started");
@@ -203,33 +205,67 @@ void Thread::start() throw ( Exception )
             "Thread::start - Could not start thread");
     }
 
-    // Mark the thread as started.
-    this->properties->started = true;
+    this->properties->state = Thread::RUNNABLE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join() throw( Exception )
+void Thread::join() throw( decaf::lang::exceptions::InterruptedException )
 {
-    if( !this->properties->started ) {
+    if( this->properties->state < Thread::RUNNABLE ) {
         throw Exception( __FILE__, __LINE__,
             "Thread::join() called without having called Thread::start()");
     }
 
-    if( !this->properties->joined ) {
+    if( this->properties->state != Thread::TERMINATED ) {
         apr_status_t threadReturn;
-        if( apr_thread_join( &threadReturn, this->properties->threadHandle ) != APR_SUCCESS ) {
-            throw Exception( __FILE__, __LINE__,
-                "Thread::join() - Failed to Join the Thread");
-        }
+        apr_thread_join( &threadReturn, this->properties->threadHandle );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::join( long long millisecs )
+    throw ( decaf::lang::exceptions::IllegalArgumentException,
+            decaf::lang::exceptions::InterruptedException ) {
+
+    if( millisecs < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
     }
 
-    this->properties->joined = true;
+    this->join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::join( long long millisecs DECAF_UNUSED, unsigned int nanos DECAF_UNUSED )
+    throw ( decaf::lang::exceptions::IllegalArgumentException,
+            decaf::lang::exceptions::InterruptedException ) {
+
+    if( millisecs < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::join( millisecs, nanos ) - Value given {%d} is less than 0", millisecs );
+    }
+
+    if( nanos > 999999 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
+    }
+
+    this->join();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs )
     throw( lang::exceptions::InterruptedException,
            lang::exceptions::IllegalArgumentException ) {
+
+    if( millisecs < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::sleep( millisecs ) - Value given {%d} is less than 0", millisecs );
+    }
 
     Thread::sleep( millisecs, 0 );
 }
@@ -238,6 +274,20 @@ void Thread::sleep( long long millisecs )
 void Thread::sleep( long long millisecs, unsigned int nanos )
     throw( lang::exceptions::InterruptedException,
            lang::exceptions::IllegalArgumentException ) {
+
+    if( millisecs < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::sleep( millisecs, nanos ) - Value given {%d} is less than 0", millisecs );
+    }
+
+    if( nanos > 999999 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "Thread::sleep( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
+    }
+
+    // TODO -- Add in nanos
 
     apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
 }
@@ -297,4 +347,15 @@ std::string Thread::toString() const {
     return this->properties->name + ": Priority=" +
            Integer::toString( this->properties->priority ) + ", ThreadID=" +
            Long::toString( Thread::getId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Thread::isAlive() const {
+    return this->properties->state != Thread::NEW &&
+           this->properties->state != Thread::TERMINATED;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Thread::State Thread::getState() const {
+    return this->properties->state;
 }
