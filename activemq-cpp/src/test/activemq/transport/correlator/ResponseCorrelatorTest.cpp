@@ -291,7 +291,6 @@ namespace correlator{
         }
 
         virtual ~RequestThread(){
-            join();
         }
 
         void setTransport( Transport* transport ){

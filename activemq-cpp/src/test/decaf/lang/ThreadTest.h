@@ -30,66 +30,21 @@ namespace lang{
     class ThreadTest : public CppUnit::TestFixture {
 
       CPPUNIT_TEST_SUITE( ThreadTest );
+      CPPUNIT_TEST( testConstructor );
+      CPPUNIT_TEST( testConstructor_1 );
+      CPPUNIT_TEST( testConstructor_2 );
+      CPPUNIT_TEST( testConstructor_3 );
       CPPUNIT_TEST( testDelegate );
       CPPUNIT_TEST( testDerived );
       CPPUNIT_TEST( testJoin );
+      CPPUNIT_TEST( testSetPriority );
+      CPPUNIT_TEST( testIsAlive );
+      CPPUNIT_TEST( testGetId );
+      CPPUNIT_TEST( testGetState );
+      CPPUNIT_TEST( testSleep );
+      CPPUNIT_TEST( testSleep2Arg );
+      CPPUNIT_TEST( testUncaughtExceptionHandler );
       CPPUNIT_TEST_SUITE_END();
-
-    public:
-
-        class Delegate : public Runnable{
-        private:
-
-            int stuff;
-
-        public:
-
-            Delegate(){ stuff = 0; }
-            virtual ~Delegate(){}
-
-            int getStuff(){
-                return stuff;
-            }
-
-            virtual void run(){
-                stuff = 1;
-            }
-
-        };
-
-        class Derived : public Thread{
-        private:
-
-            int stuff;
-
-        public:
-
-            Derived(){ stuff = 0; }
-            virtual ~Derived(){}
-
-            int getStuff(){
-                return stuff;
-            }
-
-            virtual void run(){
-                stuff = 1;
-            }
-
-        };
-
-        class JoinTest : public Thread{
-        public:
-
-            JoinTest(){}
-            virtual ~JoinTest(){}
-
-            virtual void run(){
-
-                // Sleep for 2 seconds.
-                Thread::sleep( 2000 );
-            }
-
-        };
 
     public:
 
@@ -98,9 +53,21 @@ namespace lang{
         virtual void setUp(){}
         virtual void tearDown(){}
 
+        void testConstructor();
+        void testConstructor_1();
+        void testConstructor_2();
+        void testConstructor_3();
         void testDelegate();
         void testDerived();
         void testJoin();
+        void testSetPriority();
+        void testIsAlive();
+        void testGetId();
+        void testGetState();
+        void testSleep();
+        void testSleep2Arg();
+        void testUncaughtExceptionHandler();
+
     };
 
 }}
