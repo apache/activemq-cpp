@@ -75,6 +75,35 @@ namespace lang{
         /** The maximum priority that a thread can have. */
         static const int MAX_PRIORITY = 10;
 
+        /** Represents the various states that the Thread can be in during its lifetime. */
+        enum State{
+
+            /** Before a Thread is started it exists in this State. */
+            NEW = 0,
+
+            /** While a Thread is running and is not blocked it is in this State. */
+            RUNNABLE = 1,
+
+            /** A Thread that is waiting to acquire a lock is in this state. */
+            BLOCKED = 2,
+
+            /** A Thread that is waiting for another Thread to perform an action is in this state */
+            WAITING = 3,
+
+            /**
+             * A Thread that is waiting for another Thread to perform an action up to a specified
+             * time interval is in this state.
+             */
+            TIMED_WAITING = 4,
+
+            /** A Thread that is blocked in a Sleep call is in this state. */
+            SLEEPING = 5,
+
+            /** A Thread whose run method has exited is in this state. */
+            TERMINATED = 6
+
+        };
+
     public:
 
         /**
@@ -150,15 +179,48 @@ namespace lang{
         virtual void start() throw ( Exception );
 
         /**
-         * Wait til the thread exits. This is when the run()
-         * method has returned or has thrown an exception.
+         * Forces the Current Thread to wait until the thread exits.
+         *
+         * @throws InterruptedException if any thread has interrupted the current thread.
+         *         The interrupted status of the current thread is cleared when this
+         *         exception is thrown.
          */
-        virtual void join() throw ( Exception );
+        virtual void join() throw ( decaf::lang::exceptions::InterruptedException );
+
+        /**
+         * Forces the Current Thread to wait until the thread exits.
+         *
+         * @param millisecs the time in Milliseconds before the thread resumes
+         *
+         * @throws IllegalArgumentException if the milliseconds parameter is negative.
+         * @throws InterruptedException if any thread has interrupted the current thread.
+         *         The interrupted status of the current thread is cleared when this
+         *         exception is thrown.
+         */
+        virtual void join( long long millisecs )
+            throw ( decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::InterruptedException );
+
+        /**
+         * Forces the Current Thread to wait until the thread exits.
+         *
+         * @param millisecs the time in Milliseconds before the thread resumes
+         * @param nanos 0-999999 extra nanoseconds to sleep.
+         *
+         * @throws IllegalArgumentException if the nanoseconds parameter is out of range
+         *         or the milliseconds paramter is negative.
+         * @throws InterruptedException if any thread has interrupted the current thread.
+         *         The interrupted status of the current thread is cleared when this
+         *         exception is thrown.
+         */
+        virtual void join( long long millisecs, unsigned int nanos )
+            throw ( decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::InterruptedException );
 
         /**
          * Default implementation of the run method - does nothing.
          */
-        virtual void run(){};
+        virtual void run();
 
         /**
          * Returns the Thread's assigned name.
@@ -211,6 +273,21 @@ namespace lang{
          * @return string describing the Thread.
          */
         std::string toString() const;
+
+        /**
+         * Returns true if the Thread is alive, meaning it has been started and has not yet
+         * died.
+         *
+         * @return true if the thread is alive.
+         */
+        bool isAlive() const;
+
+        /**
+         * Returns the currently set State of this Thread.
+         *
+         * @return the Thread's current state.
+         */
+        Thread::State getState() const;
 
     public:
 
