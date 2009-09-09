@@ -22,6 +22,7 @@ cc_sources = \
     decaf/io/DataInputStreamBenchmark.cpp \
     decaf/io/DataOutputStreamBenchmark.cpp \
     decaf/lang/BooleanBenchmark.cpp \
+    decaf/lang/ThreadBenchmark.cpp \
     decaf/util/MapBenchmark.cpp \
     decaf/util/PropertiesBenchmark.cpp \
     decaf/util/QueueBenchmark.cpp \
@@ -38,6 +39,7 @@ h_sources = \
     decaf/io/DataInputStreamBenchmark.h \
     decaf/io/DataOutputStreamBenchmark.h \
     decaf/lang/BooleanBenchmark.h \
+    decaf/lang/ThreadBenchmark.h \
     decaf/util/MapBenchmark.h \
     decaf/util/PropertiesBenchmark.h \
     decaf/util/QueueBenchmark.h \

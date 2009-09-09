@@ -23,6 +23,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
 
 #include <decaf/lang/BooleanBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanBenchmark );
+#include <decaf/lang/ThreadBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadBenchmark );
 
 #include <decaf/util/PropertiesBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::PropertiesBenchmark );
