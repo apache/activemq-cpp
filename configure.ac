@@ -29,7 +29,10 @@ AC_CONFIG_MACRO_DIR([m4])
 ## Define the Version variables
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
-ACTIVEMQ_VERSION=3.1.0
+ACTIVEMQ_MAJOR_VERSION=3
+ACTIVEMQ_MINOR_VERSION=1
+ACTIVEMQ_PATCH_VERSION=0
+ACTIVEMQ_VERSION=${ACTIVEMQ_MAJOR_VERSION}.${ACTIVEMQ_MINOR_VERSION}.${ACTIVEMQ_PATCH_VERSION}
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
 ##
@@ -49,9 +52,13 @@ ACTIVEMQ_LIBRARY_VERSION=10:1:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
+AC_SUBST(ACTIVEMQ_MAJOR_VERSION)
+AC_SUBST(ACTIVEMQ_MINOR_VERSION)
+AC_SUBST(ACTIVEMQ_PATCH_VERSION)
 AC_SUBST(ACTIVEMQ_LIBRARY_VERSION)
 AC_SUBST(ACTIVEMQ_API_VERSION)
 
+## Value used in the generated files.
 PACKAGE=$ACTIVEMQ_LIBRARY_NAME
 VERSION=$ACTIVEMQ_VERSION
 
@@ -103,7 +110,9 @@ AC_CHECK_HEADERS([pthread.h])
 
 AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 
-AMQ_FIND_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
+AMQ_FIND_CPPUNIT( 1.10.2, cppunit=yes, cppunit=no;
+    AC_MSG_RESULT([no. Unit and Integration tests disabled])
+)
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 # Absolute source/build directory
@@ -130,14 +139,8 @@ case "${host_os}" in
     PLAT_CXXFLAGS="-ansi -pedantic"
     ;;
 
-  *cygwin* ) ## Cygwin configuration
-    PLAT_CXXFLAGS="-Wno-uninitialized"
-    PLAT_LIBS="-lm -lpthread -luuid -lrpcrt4"
-    ;;
-
   *solaris* ) ## Solaris configuration
-    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
-                AC_MSG_ERROR([libpthread not found!]))
+    DECAF_CHECK_PTHREADS()
 
     PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
 
@@ -152,11 +155,10 @@ case "${host_os}" in
 
   *) ## Unix configuration
 
-    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
-                 AC_MSG_ERROR([libpthread not found!]))
-
+    DECAF_CHECK_PTHREADS()
     PLAT_CXXFLAGS="-ansi -pedantic"
     PLAT_LIBS="-lm -lpthread -luuid"
+
 esac
 
 ## find and configure the Apache Decaf Library

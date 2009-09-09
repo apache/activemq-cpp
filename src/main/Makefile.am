@@ -513,6 +513,7 @@ cc_sources = \
     decaf/lang/Short.cpp \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
+    decaf/lang/ThreadGroup.cpp \
     decaf/net/BufferedSocket.cpp \
     decaf/net/ServerSocket.cpp \
     decaf/net/SocketError.cpp \
@@ -1135,6 +1136,7 @@ h_sources = \
     decaf/lang/Short.h \
     decaf/lang/System.h \
     decaf/lang/Thread.h \
+    decaf/lang/ThreadGroup.h \
     decaf/lang/Throwable.h \
     decaf/lang/exceptions/ClassCastException.h \
     decaf/lang/exceptions/ExceptionDefines.h \
