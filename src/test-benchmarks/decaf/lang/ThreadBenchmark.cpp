@@ -15,38 +15,44 @@
  * limitations under the License.
  */
 
-#include "BooleanBenchmark.h"
+#include "ThreadBenchmark.h"
+
+#include <decaf/lang/Runnable.h>
 
 using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-BooleanBenchmark::BooleanBenchmark() {
+namespace decaf{
+namespace lang{
+
+    class BenchmarkRunnable :  public decaf::lang::Runnable {
+    public:
+
+        virtual void run() {
+            Thread::sleep( 10 );
+        }
+
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+ThreadBenchmark::ThreadBenchmark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BooleanBenchmark::run(){
+ThreadBenchmark::~ThreadBenchmark() {
+}
 
-    int numRuns = 8000;
-    Boolean boolean( false );
+////////////////////////////////////////////////////////////////////////////////
+void ThreadBenchmark::run() {
 
-    std::string value = "";
+    BenchmarkRunnable runnable;
 
-    for( int i = 0; i < numRuns; ++i ) {
-        value = boolean.toString();
+    for( int i = 0; i < 10; ++i ) {
+        Thread theThread( &runnable );
+        theThread.start();
+        theThread.join();
     }
-
-    for( int i = 0; i < numRuns; ++i ) {
-        value = boolean.toString( false );
-        value = boolean.toString( true );
-    }
-
-    for( int i = 0; i < numRuns; ++i ) {
-        bool value1 = Boolean::parseBoolean( "false" );
-        bool value2 = Boolean::parseBoolean( "true" );
-
-        value = Boolean::valueOf( value1 ).toString();
-        value = Boolean::valueOf( value2 ).toString();
-    }
-
 }
