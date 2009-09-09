@@ -136,6 +136,8 @@ PLAT_LIBS=
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
+
+    DECAF_CHECK_PTHREADS()
     PLAT_CXXFLAGS="-ansi -pedantic"
     ;;
 
