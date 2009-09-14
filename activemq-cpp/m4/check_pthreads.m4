@@ -183,6 +183,10 @@ AC_DEFUN([DECAF_CHECK_PTHREAD_EXTRAS], [
         AC_CHECK_HEADERS([sched.h])
         AC_CHECK_FUNCS([sched_yield])
     fi
+
+    dnl ----------------------------- Check for non-posix pthreads methods
+    AC_CHECK_FUNCS([pthread_tryjoin_np pthread_timedjoin_np])
+
 ])
 
 dnl
@@ -305,8 +309,5 @@ AC_DEFUN([DECAF_CHECK_PTHREADS], [
     DECAF_CHECK_SIGWAIT_ONE_ARG
     DECAF_CHECK_PTHREAD_RECURSIVE_MUTEX
     DECAF_CHECK_PTHREAD_EXTRAS
-
-    AC_CHECK_FUNCS([pthread_mutex_trylock pthread_tryjoin_np pthread_timedjoin_np])
-
 
 ])

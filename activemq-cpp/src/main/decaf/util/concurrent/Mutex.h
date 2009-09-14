@@ -53,7 +53,7 @@ namespace concurrent{
         std::list<apr_thread_cond_t*> eventQ;
 
         // Lock Status Members
-        volatile unsigned long lock_owner;
+        volatile long long lock_owner;
         volatile unsigned long lock_count;
 
     private:
