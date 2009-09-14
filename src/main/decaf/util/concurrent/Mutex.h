@@ -22,39 +22,24 @@
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Config.h>
-#include <decaf/internal/AprPool.h>
 
-#include <apr_thread_mutex.h>
-#include <apr_thread_cond.h>
-
-#include <list>
-#include <assert.h>
+#include <memory>
 
 namespace decaf{
 namespace util{
 namespace concurrent{
 
+    class MutexProperties;
+
     /**
      * Creates a pthread_mutex_t object. The object is created
      * such that successive locks from the same thread is allowed
      * and will be successful.
-     * @see  pthread_mutex_t
      */
     class DECAF_API Mutex : public Synchronizable {
     private:
 
-        // Our one and only APR Pool
-        internal::AprPool aprPool;
-
-        // The mutex object.
-        apr_thread_mutex_t* mutex;
-
-        // List of waiting threads
-        std::list<apr_thread_cond_t*> eventQ;
-
-        // Lock Status Members
-        volatile long long lock_owner;
-        volatile long long lock_count;
+        std::auto_ptr<MutexProperties> properties;
 
     private:
 
@@ -68,6 +53,8 @@ namespace concurrent{
         virtual ~Mutex();
 
         virtual void lock() throw( lang::Exception );
+
+        virtual bool tryLock() throw( lang::Exception );
 
         virtual void unlock() throw( lang::Exception );
 
@@ -87,9 +74,7 @@ namespace concurrent{
          * Check if the calling thread is the Lock Owner
          * @retun true if the caller is the lock owner
          */
-        bool isLockOwner(){
-            return lock_owner == lang::Thread::getId();
-        }
+        bool isLockOwner() const;
 
     };
 

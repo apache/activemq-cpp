@@ -129,6 +129,9 @@ namespace io{
 
         virtual void lock() throw( lang::Exception ) {
         }
+        virtual bool tryLock() throw( lang::Exception ) {
+            return false;
+        }
         virtual void unlock() throw( lang::Exception ) {
         }
         virtual void wait() throw( lang::Exception ) {

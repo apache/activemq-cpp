@@ -23,6 +23,13 @@
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlList.h>
 
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;

@@ -34,6 +34,11 @@ void SynchronizableImpl::lock() throw( lang::Exception ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool SynchronizableImpl::tryLock() throw( lang::Exception ) {
+    return mutex.tryLock();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SynchronizableImpl::unlock() throw( lang::Exception ) {
     mutex.unlock();
 }

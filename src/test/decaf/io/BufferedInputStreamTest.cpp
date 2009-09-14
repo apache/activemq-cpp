@@ -19,6 +19,13 @@
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
@@ -131,6 +138,9 @@ namespace io{
         virtual bool markSupported() const{ return false; }
 
         virtual void lock() throw( lang::Exception ) {
+        }
+        virtual bool tryLock() throw( lang::Exception ) {
+            return false;
         }
         virtual void unlock() throw( lang::Exception ) {
         }

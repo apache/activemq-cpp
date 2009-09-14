@@ -38,6 +38,9 @@ public:
     virtual void lock() throw(lang::Exception){
         mutex.lock();
     }
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex.tryLock();
+    }
     virtual void unlock() throw(lang::Exception){
         mutex.unlock();
     }
@@ -102,6 +105,9 @@ public:
     }
     virtual void unlock() throw(lang::Exception){
         mutex.unlock();
+    }
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex.tryLock();
     }
     virtual void wait() throw(lang::Exception){
         mutex.wait();
@@ -182,6 +188,9 @@ public:
     virtual void lock() throw(lang::Exception){
         mutex.lock();
     }
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex.tryLock();
+    }
     virtual void unlock() throw(lang::Exception){
         mutex.unlock();
     }
@@ -258,6 +267,9 @@ public:
     virtual ~MyNotifiedThread(){}
     virtual void lock() throw(lang::Exception){
         mutex->lock();
+    }
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex->tryLock();
     }
     virtual void unlock() throw(lang::Exception){
         mutex->unlock();
@@ -474,6 +486,9 @@ public:
     virtual ~MyRecursiveLockThread(){}
     virtual void lock() throw(lang::Exception){
         mutex->lock();
+    }
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex->tryLock();
     }
     virtual void unlock() throw(lang::Exception){
         mutex->unlock();
