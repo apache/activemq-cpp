@@ -52,7 +52,6 @@ namespace lang{
         /**
          * APR Thread Handle
          */
-        //apr_thread_t* threadHandle;
         std::auto_ptr<ThreadHandle> threadHandle;
 
         /**
@@ -122,8 +121,6 @@ namespace lang{
 
             // Indicate we are done.
             properties->state = Thread::TERMINATED;
-            //            apr_thread_exit( self, APR_SUCCESS );
-            //            return NULL;
         }
 
     };
@@ -192,21 +189,6 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
                 "Thread::start - Thread already started");
         }
 
-//        DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
-//
-//        apr_status_t err = apr_thread_create(
-//            &this->properties->threadHandle,
-//            NULL,
-//            this->properties->runCallback,
-//            this->properties.get(),
-//            runtime->getGlobalPool() );
-//
-//        if( err != APR_SUCCESS ) {
-//            throw Exception(
-//                __FILE__, __LINE__,
-//                "Thread::start - Could not start thread");
-//        }
-
         this->properties->threadHandle.reset( ThreadImpl::create(
              this, this->properties->runCallback, this->properties.get() ) );
 
@@ -227,8 +209,6 @@ void Thread::join() throw( decaf::lang::exceptions::InterruptedException )
     }
 
     if( this->properties->state != Thread::TERMINATED ) {
-//        apr_status_t threadReturn;
-//        apr_thread_join( &threadReturn, this->properties->threadHandle );
         ThreadImpl::join( this->properties->threadHandle.get() );
     }
 }
@@ -270,7 +250,7 @@ void Thread::join( long long millisecs, unsigned int nanos )
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs )
     throw( decaf::lang::exceptions::InterruptedException,
-	       decaf::lang::exceptions::IllegalArgumentException ) {
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -284,7 +264,7 @@ void Thread::sleep( long long millisecs )
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs, unsigned int nanos )
     throw( decaf::lang::exceptions::InterruptedException,
-	       decaf::lang::exceptions::IllegalArgumentException ) {
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -298,21 +278,16 @@ void Thread::sleep( long long millisecs, unsigned int nanos )
             "Thread::sleep( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
-    // TODO -- Add in nanos
-
-//    apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
     ThreadImpl::sleep( millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::yield() {
-    //apr_thread_yield();
     ThreadImpl::yeild();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Thread::getId() {
-    //return (unsigned long)( apr_os_thread_current() );
     return ThreadImpl::getThreadId();
 }
 
