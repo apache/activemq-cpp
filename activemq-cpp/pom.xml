@@ -137,6 +137,7 @@
                 <excludes>
                   <exclude>**/decaf/security/**\*.cpp</exclude>
                   <exclude>**/decaf/security_provider/**\*.cpp</exclude>
+                  <exclude>**/decaf/internal/**/windows/**\*.cpp</exclude>
                 </excludes>
               </sources>
               <headers>
