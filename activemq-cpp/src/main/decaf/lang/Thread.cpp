@@ -269,8 +269,8 @@ void Thread::join( long long millisecs, unsigned int nanos )
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs )
-    throw( lang::exceptions::InterruptedException,
-           lang::exceptions::IllegalArgumentException ) {
+    throw( decaf::lang::exceptions::InterruptedException,
+	       decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -283,8 +283,8 @@ void Thread::sleep( long long millisecs )
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs, unsigned int nanos )
-    throw( lang::exceptions::InterruptedException,
-           lang::exceptions::IllegalArgumentException ) {
+    throw( decaf::lang::exceptions::InterruptedException,
+	       decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(

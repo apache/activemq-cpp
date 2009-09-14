@@ -11023,6 +11023,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\decaf\util\PriorityQueueTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\PriorityQueueTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\util\PropertiesTest.cpp"
 					>
 				</File>

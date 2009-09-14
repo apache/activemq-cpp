@@ -23,7 +23,7 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 
-#if HAVE_PROCESS_H
+#ifdef HAVE_PROCESS_H
 #include <process.h>
 #endif
 
@@ -73,7 +73,7 @@ namespace{
         handle->entryFunctionPtr( handle, handle->userArg );
         handle->running = false;
 #ifndef _WIN32_WCE
-    _   endthreadex( 0 );
+        _endthreadex( 0 );
 #else
         ExitThread( 0 );
 #endif
@@ -114,7 +114,7 @@ ThreadHandle* ThreadImpl::create( decaf::lang::Thread* parent,
 
 #endif
 
-   if( result != 0 ) {
+   if( handle->handle == 0 ) {
        throw RuntimeException(
            __FILE__, __LINE__, "Failed to create new Thread." );
    }
@@ -138,7 +138,7 @@ void ThreadImpl::yeild() {
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadImpl::sleep( long long mills, long long nanos ) {
 
-    ::Sleep( mills );
+    ::Sleep( (DWORD)mills );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@ void ThreadImpl::join( decaf::lang::ThreadHandle* handle ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadImpl::join( decaf::lang::ThreadHandle* handle, long long mills, long long nanos ) {
 
-    unsigned int rv = WaitForSingleObject( handle->handle, mills );
+    unsigned int rv = WaitForSingleObject( handle->handle, (DWORD)mills );
     ::CloseHandle( handle->handle );
 }
 
