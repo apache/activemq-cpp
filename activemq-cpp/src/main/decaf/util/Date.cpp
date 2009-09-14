@@ -20,6 +20,8 @@
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/System.h>
 
+#include <apr_time.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;

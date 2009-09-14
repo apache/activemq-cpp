@@ -45,6 +45,8 @@ namespace concurrent {
 
         virtual void lock() throw( lang::Exception );
 
+        virtual bool tryLock() throw( lang::Exception );
+
         virtual void unlock() throw( lang::Exception );
 
         virtual void wait() throw( lang::Exception );

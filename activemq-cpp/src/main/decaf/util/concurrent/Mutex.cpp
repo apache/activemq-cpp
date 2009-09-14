@@ -19,6 +19,12 @@
 
 #include <apr_errno.h>
 #include <apr_time.h>
+#include <apr_thread_mutex.h>
+#include <apr_thread_cond.h>
+
+#include <decaf/internal/AprPool.h>
+
+#include <list>
 
 using namespace decaf;
 using namespace decaf::internal;
@@ -26,11 +32,45 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace decaf{
+namespace util{
+namespace concurrent{
+
+    class MutexProperties {
+    public:
+
+        MutexProperties() {
+            this->mutex = NULL;
+            this->lock_owner = 0;
+            this->lock_count = 0;
+        }
+
+        // Our one and only APR Pool
+        internal::AprPool aprPool;
+
+        // The mutex object.
+        apr_thread_mutex_t* mutex;
+
+        // List of waiting threads
+        std::list<apr_thread_cond_t*> eventQ;
+
+        // Lock Status Members
+        volatile long long lock_owner;
+        volatile long long lock_count;
+
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
 Mutex::Mutex() {
 
-    apr_thread_mutex_create( &mutex, APR_THREAD_MUTEX_NESTED, aprPool.getAprPool() );
-    this->lock_owner = 0;
-    this->lock_count = 0;
+    this->properties.reset( new MutexProperties );
+
+    // Allocate the OS Mutex Implementation.
+    apr_thread_mutex_create( &( properties->mutex ),
+                             APR_THREAD_MUTEX_NESTED,
+                             properties->aprPool.getAprPool() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,23 +82,49 @@ Mutex::~Mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Mutex::isLockOwner() const {
+    return properties->lock_owner == lang::Thread::getId();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Mutex::lock() throw( lang::Exception ) {
 
     long long threadId = lang::Thread::getId();
 
-    if( threadId == lock_owner ) {
-        lock_count++;
+    if( threadId == properties->lock_owner ) {
+        properties->lock_count++;
     } else {
-        apr_thread_mutex_lock( mutex );
-        lock_owner = threadId;
-        lock_count = 1;
+        apr_thread_mutex_lock( properties->mutex );
+        properties->lock_owner = threadId;
+        properties->lock_count = 1;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Mutex::tryLock() throw( lang::Exception ) {
+
+    long long threadId = lang::Thread::getId();
+
+    if( threadId == properties->lock_owner ) {
+        properties->lock_count++;
+    } else {
+
+        if( apr_thread_mutex_trylock( properties->mutex ) == APR_SUCCESS ) {
+            properties->lock_owner = threadId;
+            properties->lock_count = 1;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void Mutex::unlock() throw( lang::Exception ) {
 
-    if( lock_owner == 0 ) {
+    if( properties->lock_owner == 0 ) {
         return;
     }
 
@@ -68,11 +134,11 @@ void Mutex::unlock() throw( lang::Exception ) {
             "Mutex::unlock - Failed, not Lock Owner!" );
     }
 
-    lock_count--;
+    properties->lock_count--;
 
-    if(lock_count == 0) {
-        lock_owner = 0;
-        apr_thread_mutex_unlock( mutex );
+    if( properties->lock_count == 0 ) {
+        properties->lock_owner = 0;
+        apr_thread_mutex_unlock( properties->mutex );
     }
 }
 
@@ -94,31 +160,31 @@ void Mutex::wait( long long millisecs ) throw( lang::Exception ) {
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
     // re-lock we want to restore to the state we were in before.
-    long long lock_owner = this->lock_owner;
-    long long lock_count = this->lock_count;
+    long long lock_owner = this->properties->lock_owner;
+    long long lock_count = this->properties->lock_count;
 
-    this->lock_owner = 0;
-    this->lock_count = 0;
+    this->properties->lock_owner = 0;
+    this->properties->lock_count = 0;
 
     // Create this threads wait event
     apr_thread_cond_t* waitEvent = NULL;
     apr_pool_t *subPool = NULL;
-    apr_pool_create_ex( &subPool, aprPool.getAprPool(), NULL, NULL );
+    apr_pool_create_ex( &subPool, properties->aprPool.getAprPool(), NULL, NULL );
     apr_thread_cond_create( &waitEvent, subPool );
 
     // Store the event in the queue so that a notify can
     // call it and wake up the thread.
-    eventQ.push_back( waitEvent );
+    properties->eventQ.push_back( waitEvent );
 
     if( millisecs != WAIT_INFINITE ) {
         apr_interval_time_t wait = millisecs * 1000;
-        apr_thread_cond_timedwait( waitEvent, mutex, wait );
+        apr_thread_cond_timedwait( waitEvent, properties->mutex, wait );
     } else {
-        apr_thread_cond_wait( waitEvent, mutex );
+        apr_thread_cond_wait( waitEvent, properties->mutex );
     }
 
     // Be Sure that the event is now removed
-    eventQ.remove( waitEvent );
+    properties->eventQ.remove( waitEvent );
 
     // Destroy our wait event now, the notify method will have removed it
     // from the event queue.
@@ -126,8 +192,8 @@ void Mutex::wait( long long millisecs ) throw( lang::Exception ) {
     apr_pool_destroy( subPool );
 
     // restore the owner
-    this->lock_owner = lock_owner;
-    this->lock_count = lock_count;
+    this->properties->lock_owner = lock_owner;
+    this->properties->lock_count = lock_count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,9 +211,9 @@ void Mutex::notify() throw( lang::Exception )
             "Mutex::Notify - Failed, not Lock Owner!" );
     }
 
-    if( !eventQ.empty() ) {
-        apr_thread_cond_t* event = eventQ.front();
-        eventQ.remove( event );
+    if( !properties->eventQ.empty() ) {
+        apr_thread_cond_t* event = properties->eventQ.front();
+        properties->eventQ.remove( event );
         apr_thread_cond_signal( event );
     }
 }
@@ -161,9 +227,9 @@ void Mutex::notifyAll() throw( lang::Exception )
             "Mutex::NotifyAll - Failed, not Lock Owner!" );
     }
 
-    while( !eventQ.empty() ) {
-        apr_thread_cond_t* event = eventQ.front();
-        eventQ.remove( event );
+    while( !properties->eventQ.empty() ) {
+        apr_thread_cond_t* event = properties->eventQ.front();
+        properties->eventQ.remove( event );
         apr_thread_cond_signal( event );
     }
 }

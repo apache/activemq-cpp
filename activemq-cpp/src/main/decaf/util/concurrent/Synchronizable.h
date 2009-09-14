@@ -43,6 +43,15 @@ namespace concurrent{
         virtual void lock() throw( lang::Exception ) = 0;
 
         /**
+         * Attempts to Lock the object, if the lock is already held by another
+         * thread than this method returns false.
+         *
+         * @return true if the lock was acquired, false if it is already held by another thread.
+         * @throws Exception
+         */
+        virtual bool tryLock() throw( lang::Exception ) = 0;
+
+        /**
          * Unlocks the object.
          * @throws Exception
          */

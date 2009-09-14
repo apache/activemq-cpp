@@ -18,6 +18,13 @@
 #include "BufferedOutputStream.h"
 #include <algorithm>
 
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::io;

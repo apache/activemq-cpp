@@ -19,6 +19,13 @@
 
 #include <decaf/lang/Integer.h>
 
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

@@ -147,6 +147,10 @@ namespace core {
             channel.lock();
         }
 
+        virtual bool tryLock() throw( decaf::lang::Exception ) {
+            return channel.tryLock();
+        }
+
         virtual void unlock() throw( decaf::lang::Exception ){
             channel.unlock();
         }

@@ -255,6 +255,10 @@ public:
         mutex.lock();
     }
 
+    virtual bool tryLock() throw( lang::Exception ) {
+        return mutex.tryLock();
+    }
+
     virtual void unlock() throw( lang::Exception ) {
         mutex.unlock();
     }
