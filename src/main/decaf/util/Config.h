@@ -65,6 +65,58 @@
         #ifndef HAVE_WINDOWS_H
             #define HAVE_WINDOWS_H
         #endif
+        #ifndef HAVE_PROCESS_H
+            #define HAVE_PROCESS_H
+        #endif
+
+        #if defined(_MSC_VER) && _MSC_VER >= 1400
+            #ifndef _CRT_SECURE_NO_DEPRECATE
+                #define _CRT_SECURE_NO_DEPRECATE
+            #endif
+            #pragma warning(disable: 4996)
+        #endif
+
+        /* Has windows.h already been included?  If so, our preferences don't matter,
+         * but we will still need the winsock things no matter what was included.
+         * If not, include a restricted set of windows headers to our tastes.
+         */
+        #ifndef _WINDOWS_
+            #ifndef WIN32_LEAN_AND_MEAN
+                #define WIN32_LEAN_AND_MEAN
+            #endif
+            #ifndef _WIN32_WINNT
+
+            /*
+             * Restrict the server to a subset of Windows XP header files by default
+             */
+            #define _WIN32_WINNT 0x0501
+            #endif
+            #ifndef NOUSER
+                #define NOUSER
+            #endif
+            #ifndef NOMCX
+                #define NOMCX
+            #endif
+            #ifndef NOIME
+                #define NOIME
+            #endif
+            #include <windows.h>
+
+            /*
+             * Add a _very_few_ declarations missing from the restricted set of headers
+             * (If this list becomes extensive, re-enable the required headers above!)
+             * winsock headers were excluded by WIN32_LEAN_AND_MEAN, so include them now
+             */
+            #define SW_HIDE             0
+            #ifndef _WIN32_WCE
+                #include <winsock2.h>
+                #include <ws2tcpip.h>
+                #include <mswsock.h>
+            #else
+                #include <winsock.h>
+            #endif
+        #endif /* !_WINDOWS_ */
+
     #else
         #ifndef HAVE_UUID_UUID_H
             #define HAVE_UUID_UUID_H

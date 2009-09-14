@@ -17,8 +17,10 @@
 #ifndef _DECAF_LANG_THREAD_H_
 #define _DECAF_LANG_THREAD_H_
 
+#include <decaf/lang/exceptions/IllegalThreadStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/Config.h>
@@ -169,14 +171,15 @@ namespace lang{
         virtual ~Thread();
 
         /**
-         * Creates a system thread and starts it in a joinable mode.
-         * Upon creation, the
-         * run() method of either this object or the provided Runnable
-         * object will be invoked in the context of this thread.
-         * @exception runtime_error is thrown if the system could
-         * not start the thread.
+         * Creates a system thread and starts it in a joinable mode.  Upon creation, the
+         * run() method of either this object or the provided Runnable object will be
+         * invoked in the context of this thread.
+         *
+         * @throws IllegalThreadStateException if the thread has already been started.
+         * @throws RuntimeException if the Thread cannot be created for some reason.
          */
-        virtual void start() throw ( Exception );
+        virtual void start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
+                                     decaf::lang::exceptions::RuntimeException );
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -336,7 +339,7 @@ namespace lang{
          * Obtains the Thread Id of the current thread
          * @return Thread Id
          */
-        static unsigned long getId();
+        static long long getId();
 
     private:
 

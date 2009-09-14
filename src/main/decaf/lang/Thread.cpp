@@ -21,11 +21,6 @@
 #pragma warning( disable: 4311 )
 #endif
 
-#include <apr.h>
-#include <apr_time.h>
-#include <apr_portable.h>
-#include <apr_thread_proc.h>
-
 #include <decaf/internal/DecafRuntime.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
@@ -33,8 +28,11 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
+#include <decaf/internal/lang/ThreadImpl.h>
+
 using namespace decaf;
 using namespace decaf::internal;
+using namespace decaf::internal::lang;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -54,7 +52,8 @@ namespace lang{
         /**
          * APR Thread Handle
          */
-        apr_thread_t* threadHandle;
+        //apr_thread_t* threadHandle;
+        std::auto_ptr<ThreadHandle> threadHandle;
 
         /**
          * Current state of this thread.
@@ -89,7 +88,8 @@ namespace lang{
 
     public:
 
-        static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param ) {
+        //static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param ) {
+        static void runCallback( ThreadHandle* thread DECAF_UNUSED, void* param ) {
 
             // Get the instance.
             ThreadProperties* properties = (ThreadProperties*)param;
@@ -122,8 +122,8 @@ namespace lang{
 
             // Indicate we are done.
             properties->state = Thread::TERMINATED;
-            apr_thread_exit( self, APR_SUCCESS );
-            return NULL;
+            //            apr_thread_exit( self, APR_SUCCESS );
+            //            return NULL;
         }
 
     };
@@ -167,7 +167,6 @@ void Thread::initialize( Runnable* task, const std::string& name ) {
     this->properties->state = Thread::NEW;
     this->properties->priority = Thread::NORM_PRIORITY;
     this->properties->task = task;
-    this->properties->threadHandle = NULL;
     this->properties->exHandler = NULL;
     this->properties->parent = this;
 }
@@ -182,30 +181,41 @@ void Thread::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::start() throw ( Exception )
-{
-    if( this->properties->state > Thread::NEW ) {
-        throw Exception(
-            __FILE__, __LINE__,
-            "Thread::start - Thread already started");
-    }
+void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
+                             decaf::lang::exceptions::RuntimeException ) {
 
-    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
+    try {
 
-    apr_status_t err = apr_thread_create(
-        &this->properties->threadHandle,
-        NULL,
-        this->properties->runCallback,
-        this->properties.get(),
-        runtime->getGlobalPool() );
+        if( this->properties->state > Thread::NEW ) {
+            throw RuntimeException(
+                __FILE__, __LINE__,
+                "Thread::start - Thread already started");
+        }
 
-    if( err != APR_SUCCESS ) {
-        throw Exception(
-            __FILE__, __LINE__,
-            "Thread::start - Could not start thread");
-    }
+//        DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
+//
+//        apr_status_t err = apr_thread_create(
+//            &this->properties->threadHandle,
+//            NULL,
+//            this->properties->runCallback,
+//            this->properties.get(),
+//            runtime->getGlobalPool() );
+//
+//        if( err != APR_SUCCESS ) {
+//            throw Exception(
+//                __FILE__, __LINE__,
+//                "Thread::start - Could not start thread");
+//        }
 
-    this->properties->state = Thread::RUNNABLE;
+        this->properties->threadHandle.reset( ThreadImpl::create(
+             this, this->properties->runCallback, this->properties.get() ) );
+
+        this->properties->state = Thread::RUNNABLE;
+     }
+     DECAF_CATCH_RETHROW( IllegalThreadStateException )
+     DECAF_CATCH_RETHROW( RuntimeException )
+     DECAF_CATCH_EXCEPTION_CONVERT( NullPointerException, RuntimeException )
+     DECAF_CATCHALL_THROW( RuntimeException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,8 +227,9 @@ void Thread::join() throw( decaf::lang::exceptions::InterruptedException )
     }
 
     if( this->properties->state != Thread::TERMINATED ) {
-        apr_status_t threadReturn;
-        apr_thread_join( &threadReturn, this->properties->threadHandle );
+//        apr_status_t threadReturn;
+//        apr_thread_join( &threadReturn, this->properties->threadHandle );
+        ThreadImpl::join( this->properties->threadHandle.get() );
     }
 }
 
@@ -233,11 +244,11 @@ void Thread::join( long long millisecs )
             "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
     }
 
-    this->join();
+    this->join( millisecs );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join( long long millisecs DECAF_UNUSED, unsigned int nanos DECAF_UNUSED )
+void Thread::join( long long millisecs, unsigned int nanos )
     throw ( decaf::lang::exceptions::IllegalArgumentException,
             decaf::lang::exceptions::InterruptedException ) {
 
@@ -253,7 +264,7 @@ void Thread::join( long long millisecs DECAF_UNUSED, unsigned int nanos DECAF_UN
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
-    this->join();
+    ThreadImpl::join( this->properties->threadHandle.get(), millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -289,17 +300,20 @@ void Thread::sleep( long long millisecs, unsigned int nanos )
 
     // TODO -- Add in nanos
 
-    apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
+//    apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
+    ThreadImpl::sleep( millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::yield() {
-    apr_thread_yield();
+    //apr_thread_yield();
+    ThreadImpl::yeild();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned long Thread::getId() {
-    return (unsigned long)( apr_os_thread_current() );
+long long Thread::getId() {
+    //return (unsigned long)( apr_os_thread_current() );
+    return ThreadImpl::getThreadId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -323,7 +337,7 @@ void Thread::setPriority( int value ) throw( decaf::lang::exceptions::IllegalArg
 
     this->properties->priority = value;
 
-    // TODO - Alter Threads actual priority.
+    ThreadImpl::setPriority( this->properties->threadHandle.get(), value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
