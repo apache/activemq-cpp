@@ -54,7 +54,7 @@ namespace concurrent{
 
         // Lock Status Members
         volatile long long lock_owner;
-        volatile unsigned long lock_count;
+        volatile long long lock_count;
 
     private:
 

@@ -22648,6 +22648,22 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="lang"
+					>
+					<File
+						RelativePath="..\src\main\decaf\internal\lang\ThreadImpl.h"
+						>
+					</File>
+					<Filter
+						Name="windows"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\lang\windows\ThreadImpl.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="lang"

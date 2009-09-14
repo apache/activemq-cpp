@@ -44,7 +44,7 @@ Mutex::~Mutex() {
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::lock() throw( lang::Exception ) {
 
-    unsigned long threadId = lang::Thread::getId();
+    long long threadId = lang::Thread::getId();
 
     if( threadId == lock_owner ) {
         lock_count++;
@@ -94,8 +94,8 @@ void Mutex::wait( long long millisecs ) throw( lang::Exception ) {
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
     // re-lock we want to restore to the state we were in before.
-    unsigned long lock_owner = this->lock_owner;
-    unsigned long lock_count = this->lock_count;
+    long long lock_owner = this->lock_owner;
+    long long lock_count = this->lock_count;
 
     this->lock_owner = 0;
     this->lock_count = 0;
