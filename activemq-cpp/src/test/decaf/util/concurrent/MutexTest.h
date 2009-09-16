@@ -21,13 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/lang/Thread.h>
-#include <decaf/lang/Runnable.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/Random.h>
-#include <time.h>
-
 namespace decaf{
 namespace util{
 namespace concurrent{
@@ -35,7 +28,8 @@ namespace concurrent{
     class MutexTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( MutexTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testSimpleThread );
         CPPUNIT_TEST( testWait );
         CPPUNIT_TEST( testTimedWait );
         CPPUNIT_TEST( testNotify );
@@ -51,9 +45,10 @@ namespace concurrent{
         virtual void setUp(){}
         virtual void tearDown(){}
 
+        void testConstructor();
         void testTimedWait();
         void testWait();
-        void test();
+        void testSimpleThread();
         void testNotify();
         void testNotifyAll();
         void testRecursiveLock();
