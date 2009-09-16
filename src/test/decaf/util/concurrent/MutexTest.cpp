@@ -17,11 +17,32 @@
 
 #include "MutexTest.h"
 
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Random.h>
+
+#include <time.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+
+///////////////////////////////////////////////////////////////////////////////
+void MutexTest::testConstructor() {
+
+    Mutex mutex;
+
+    mutex.lock();
+    mutex.unlock();
+
+    CPPUNIT_ASSERT( mutex.tryLock() == true );
+
+    mutex.unlock();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 class MyThread : public lang::Thread, public Synchronizable{
@@ -71,7 +92,7 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-void MutexTest::test() {
+void MutexTest::testSimpleThread() {
     MyThread test;
 
     synchronized(&test){
@@ -478,11 +499,16 @@ public:
 
     volatile bool done;
     Mutex* mutex;
+    int index;
 
 public:
 
     volatile int value;
-    MyRecursiveLockThread(Mutex* mutex){ this->mutex = mutex; done = false; }
+    MyRecursiveLockThread(Mutex* mutex, int index){
+        this->mutex = mutex;
+        this->done = false;
+        this->index = index;
+    }
     virtual ~MyRecursiveLockThread(){}
     virtual void lock() throw(lang::Exception){
         mutex->lock();
@@ -534,17 +560,17 @@ void MutexTest::testRecursiveLock() {
 
         Mutex mutex;
 
-        const int numThreads = 30;
+        const int numThreads = 2;
         MyRecursiveLockThread* threads[numThreads];
 
         // Create and start all the threads.
         for( int ix=0; ix<numThreads; ++ix ){
-            threads[ix] = new MyRecursiveLockThread( &mutex );
+            threads[ix] = new MyRecursiveLockThread( &mutex, ix );
             threads[ix]->start();
         }
 
         // Sleep so all the threads can get to the wait.
-        Thread::sleep( 1100 );
+        Thread::sleep( 2000 );
 
         for( int ix=0; ix<numThreads; ++ix ){
             if( threads[ix]->done == true ){
@@ -562,7 +588,7 @@ void MutexTest::testRecursiveLock() {
         }
 
         // Sleep to give the threads time to wake up.
-        Thread::sleep( 1100 );
+        Thread::sleep( 2000 );
 
         for( int ix=0; ix<numThreads; ++ix ){
             if( threads[ix]->done != true ){
