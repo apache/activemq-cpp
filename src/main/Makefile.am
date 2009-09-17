@@ -495,6 +495,8 @@ cc_sources = \
     decaf/internal/util/HexStringParser.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
+    decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
+    decaf/internal/util/concurrent/unix/MutexImpl.cpp \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/BufferedInputStream.cpp \
     decaf/io/BufferedOutputStream.cpp \
@@ -1083,6 +1085,8 @@ h_sources = \
     decaf/internal/io/StandardInputStream.h \
     decaf/internal/io/StandardOutputStream.h \
     decaf/internal/lang/ThreadImpl.h \
+    decaf/internal/lang/unix/ThreadHandle.h \
+    decaf/internal/lang/windows/ThreadHandle.h \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
@@ -1098,7 +1102,11 @@ h_sources = \
     decaf/internal/util/ByteArrayAdapter.h \
     decaf/internal/util/HexStringParser.h \
     decaf/internal/util/TimerTaskHeap.h \
+    decaf/internal/util/concurrent/ConditionImpl.h \
+    decaf/internal/util/concurrent/MutexImpl.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
+    decaf/internal/util/concurrent/unix/ConditionHandle.h \
+    decaf/internal/util/concurrent/unix/MutexHandle.h \
     decaf/io/BlockingByteArrayInputStream.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/BufferedOutputStream.h \

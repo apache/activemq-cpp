@@ -16,6 +16,7 @@
  */
 
 #include <decaf/internal/lang/ThreadImpl.h>
+#include <decaf/internal/lang/unix/ThreadHandle.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Thread.h>
@@ -53,38 +54,6 @@ using namespace decaf::internal::lang;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace lang{
-
-    class ThreadHandle {
-    public:
-
-        typedef void (*threadEntry)( decaf::lang::ThreadHandle* self, void* data );
-
-        ThreadHandle() {
-            pthread_attr_init( &attributes );
-            running = false;
-            returnStatus = false;
-            userArg = NULL;
-            entryFunctionPtr = NULL;
-        }
-
-        ~ThreadHandle() {
-            pthread_attr_destroy( &attributes );
-        }
-
-        pthread_t thread;
-        pthread_attr_t attributes;
-        bool returnStatus;
-        threadEntry entryFunctionPtr;
-        void* userArg;
-        bool running;
-
-    };
-
-}}
-
-////////////////////////////////////////////////////////////////////////////////
 namespace{
 
     void* threadWorker( void* arg ) {
@@ -118,14 +87,14 @@ ThreadHandle* ThreadImpl::create( decaf::lang::Thread* parent,
 
     int result = pthread_create( &( handle->thread ), &( handle->attributes ), threadWorker, handle.get() );
 
-    // Only try and set this if its not the default value.
-    if( parent->getPriority() != Thread::NORM_PRIORITY ) {
-        setPriority( handle.get(), parent->getPriority() );
-    }
-
     if( result != 0 ) {
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to create new Thread." );
+    }
+
+    // Only try and set this if its not the default value.
+    if( parent->getPriority() != Thread::NORM_PRIORITY ) {
+        setPriority( handle.get(), parent->getPriority() );
     }
 
     return handle.release();

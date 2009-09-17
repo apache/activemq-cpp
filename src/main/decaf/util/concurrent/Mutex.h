@@ -68,14 +68,6 @@ namespace concurrent{
 
         virtual void notifyAll() throw( lang::Exception );
 
-    private:
-
-        /**
-         * Check if the calling thread is the Lock Owner
-         * @retun true if the caller is the lock owner
-         */
-        bool isLockOwner() const;
-
     };
 
 }}}

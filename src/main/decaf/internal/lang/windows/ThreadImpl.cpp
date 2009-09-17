@@ -16,6 +16,7 @@
  */
 
 #include <decaf/internal/lang/ThreadImpl.h>
+#include <decaf/internal/lang/windows/ThreadHandle.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Thread.h>
@@ -33,36 +34,6 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
 using namespace decaf::internal::lang;
 using namespace decaf::util::concurrent;
-
-////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace lang{
-
-    class ThreadHandle {
-    public:
-
-        typedef void (*threadEntry)( decaf::lang::ThreadHandle* self, void* data );
-
-        ThreadHandle() {
-            running = false;
-            returnStatus = false;
-            userArg = NULL;
-            entryFunctionPtr = NULL;
-            handle = NULL;
-        }
-
-        ~ThreadHandle() {
-        }
-
-        HANDLE handle;
-        bool returnStatus;
-        threadEntry entryFunctionPtr;
-        void* userArg;
-        bool running;
-
-    };
-
-}}
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace{
@@ -151,7 +122,6 @@ void ThreadImpl::join( decaf::lang::ThreadHandle* handle ) {
 void ThreadImpl::join( decaf::lang::ThreadHandle* handle, long long mills, long long nanos ) {
 
     unsigned int rv = WaitForSingleObject( handle->handle, (DWORD)mills );
-    ::CloseHandle( handle->handle );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
