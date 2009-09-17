@@ -32,9 +32,11 @@ namespace concurrent{
     class MutexProperties;
 
     /**
-     * Creates a pthread_mutex_t object. The object is created
-     * such that successive locks from the same thread is allowed
-     * and will be successful.
+     * Mutex object that offers recursive support on all platforms as well as
+     * providing the ability to use the standard wait / notify pattern used in
+     * languages like Java.
+     *
+     * @since 1.0
      */
     class DECAF_API Mutex : public Synchronizable {
     private:
