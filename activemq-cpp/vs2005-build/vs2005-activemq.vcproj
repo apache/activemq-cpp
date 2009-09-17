@@ -22611,6 +22611,14 @@
 						Name="concurrent"
 						>
 						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ConditionImpl.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\MutexImpl.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.cpp"
 							>
 						</File>
@@ -22618,6 +22626,26 @@
 							RelativePath="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.h"
 							>
 						</File>
+						<Filter
+							Name="windows"
+							>
+							<File
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\ConditionHandle.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\ConditionImpl.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\MutexHandle.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\MutexImpl.cpp"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 				<Filter
@@ -22658,6 +22686,10 @@
 					<Filter
 						Name="windows"
 						>
+						<File
+							RelativePath="..\src\main\decaf\internal\lang\windows\ThreadHandle.h"
+							>
+						</File>
 						<File
 							RelativePath="..\src\main\decaf\internal\lang\windows\ThreadImpl.cpp"
 							>
