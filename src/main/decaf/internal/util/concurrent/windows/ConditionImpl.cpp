@@ -103,7 +103,7 @@ void ConditionImpl::wait( ConditionHandle* condition, long long mills, long long
 
     do {
 
-        res = WaitForSingleObject( condition->semaphore, mills );
+        res = WaitForSingleObject( condition->semaphore, (DWORD)mills );
 
         EnterCriticalSection( &condition->criticalSection );
 
@@ -114,7 +114,7 @@ void ConditionImpl::wait( ConditionHandle* condition, long long mills, long long
                 condition->numWaiting--;
                 break;
             } else {
-                wake = 1;
+                doWake = true;
             }
         }
         else if( res != WAIT_OBJECT_0 ) {
@@ -171,23 +171,23 @@ void ConditionImpl::notify( ConditionHandle* condition ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ConditionImpl::notifyAll( ConditionHandle* condition ) {
 
-    unsigned int numWake = 0;
+    try {
+        unsigned int numWake = 0;
 
-    EnterCriticalSection( &condition->criticalSection );
+        EnterCriticalSection( &condition->criticalSection );
 
-    if( condition->numWaiting > condition->numWake ) {
-        numWake = condition->numWaiting - condition->numWake;
-        condition->numWake = cond->numWaiting;
-        condition->generation++;
-    }
+        if( condition->numWaiting > condition->numWake ) {
+            numWake = condition->numWaiting - condition->numWake;
+            condition->numWake = condition->numWaiting;
+            condition->generation++;
+        }
 
-    LeaveCriticalSection( &condition->criticalSection );
+        LeaveCriticalSection( &condition->criticalSection );
 
-    if( numWake ) {
-        ReleaseSemaphore( condition->semaphore, numWake, NULL );
-    }
-
-    if( pthread_cond_broadcast( &condition->condition ) ) {
+        if( numWake ) {
+            ReleaseSemaphore( condition->semaphore, numWake, NULL );
+        }
+    } catch(...) {
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to broadcast signal OS Condition object." );
     }

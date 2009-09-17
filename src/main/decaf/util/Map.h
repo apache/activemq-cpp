@@ -18,6 +18,7 @@
 #ifndef _DECAF_UTIL_MAP_H_
 #define _DECAF_UTIL_MAP_H_
 
+#include <functional>
 #include <vector>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
