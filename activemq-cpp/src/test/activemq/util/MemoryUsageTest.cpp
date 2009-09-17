@@ -89,11 +89,11 @@ void MemoryUsageTest::testTimedWait() {
 
     unsigned long long startTime = System::currentTimeMillis();
 
-    usage.waitForSpace( 100 );
+    usage.waitForSpace( 150 );
 
     unsigned long long endTime = System::currentTimeMillis();
 
-    CPPUNIT_ASSERT( endTime - startTime >= 100 );
+    CPPUNIT_ASSERT( endTime - startTime >= 125 );
 }
 
 void MemoryUsageTest::testWait() {
