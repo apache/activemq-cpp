@@ -112,6 +112,7 @@ AC_CHECK_HEADERS([sys/timeb.h])
 AC_CHECK_HEADERS([sys/wait.h])
 AC_CHECK_HEADERS([sys/resource.h])
 AC_CHECK_HEADERS([pthread.h])
+AC_CHECK_HEADERS([errno.h])
 
 AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 
