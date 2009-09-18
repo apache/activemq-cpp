@@ -30,6 +30,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::internal::util::concurrent;
@@ -178,6 +179,27 @@ void MutexTest::testTimedWait(){
         time_t delta = endTime - startTime;
 
         CPPUNIT_ASSERT( delta >= 1 && delta <= 2 );
+
+        {
+            Mutex test;
+            test.lock();
+
+            CPPUNIT_ASSERT_THROW_MESSAGE(
+                "Should Throw an IllegalArgumentException",
+                test.wait( -1, -1 ),
+                IllegalArgumentException );
+
+            CPPUNIT_ASSERT_THROW_MESSAGE(
+                "Should Throw an IllegalArgumentException",
+                test.wait( 1, 9999999 ),
+                IllegalArgumentException );
+
+            CPPUNIT_ASSERT_THROW_MESSAGE(
+                "Should Throw an IllegalArgumentException",
+                test.wait( 0, -1 ),
+                IllegalArgumentException );
+
+        }
 
     } catch(lang::Exception& ex) {
         std::cout << ex.getMessage() << std::endl;

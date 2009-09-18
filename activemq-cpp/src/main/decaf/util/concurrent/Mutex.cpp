@@ -29,6 +29,7 @@ using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace decaf{
@@ -105,6 +106,16 @@ void Mutex::wait( long long millisecs, int nanos )
            decaf::lang::exceptions::IllegalArgumentException,
            decaf::lang::exceptions::IllegalMonitorStateException,
            decaf::lang::exceptions::InterruptedException ) {
+
+    if( millisecs < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Milliseconds value cannot be negative." );
+    }
+
+    if( nanos < 0 || nanos > 999999 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Nanoseconds value must be in the range [0..999999]." );
+    }
 
     ConditionImpl::wait( this->properties->condition.get(), millisecs, nanos );
 }
