@@ -127,22 +127,39 @@ namespace io{
 
         virtual bool markSupported() const{ return false; }
 
-        virtual void lock() throw( lang::Exception ) {
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
         }
-        virtual bool tryLock() throw( lang::Exception ) {
-            return false;
+
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
         }
-        virtual void unlock() throw( lang::Exception ) {
+
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
         }
-        virtual void wait() throw( lang::Exception ) {
+
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
         }
-        virtual void wait( long long millisecs DECAF_UNUSED ) throw( lang::Exception ) {
+
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
         }
-        virtual void wait( long long millisecs DECAF_UNUSED, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
+
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
         }
-        virtual void notify() throw( lang::Exception ) {
+
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
         }
-        virtual void notifyAll() throw( lang::Exception ) {
+
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
         }
     };
 

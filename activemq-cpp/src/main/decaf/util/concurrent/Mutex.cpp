@@ -65,43 +65,60 @@ Mutex::~Mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::lock() throw( lang::Exception ) {
+void Mutex::lock() throw( decaf::lang::exceptions::RuntimeException ) {
 
     MutexImpl::lock( this->properties->mutex.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Mutex::tryLock() throw( lang::Exception ) {
+bool Mutex::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+
     return MutexImpl::trylock( this->properties->mutex.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::unlock() throw( lang::Exception ) {
+void Mutex::unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+
     MutexImpl::unlock( this->properties->mutex.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait() throw( lang::Exception ) {
+void Mutex::wait() throw( decaf::lang::exceptions::RuntimeException,
+                          decaf::lang::exceptions::IllegalMonitorStateException,
+                          decaf::lang::exceptions::InterruptedException ) {
+
     ConditionImpl::wait( this->properties->condition.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( long long millisecs ) throw( lang::Exception ) {
+void Mutex::wait( long long millisecs )
+    throw( decaf::lang::exceptions::RuntimeException,
+           decaf::lang::exceptions::IllegalMonitorStateException,
+           decaf::lang::exceptions::InterruptedException ) {
+
     wait( millisecs, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( long long millisecs, int nanos DECAF_UNUSED ) throw( lang::Exception ) {
+void Mutex::wait( long long millisecs, int nanos )
+    throw( decaf::lang::exceptions::RuntimeException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalMonitorStateException,
+           decaf::lang::exceptions::InterruptedException ) {
 
     ConditionImpl::wait( this->properties->condition.get(), millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::notify() throw( lang::Exception ) {
+void Mutex::notify() throw( decaf::lang::exceptions::RuntimeException,
+                            decaf::lang::exceptions::IllegalMonitorStateException ) {
+
     ConditionImpl::notify( this->properties->condition.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::notifyAll() throw( lang::Exception ) {
+void Mutex::notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                               decaf::lang::exceptions::IllegalMonitorStateException ) {
+
     ConditionImpl::notifyAll( this->properties->condition.get() );
 }
