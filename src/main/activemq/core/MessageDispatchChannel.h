@@ -143,35 +143,51 @@ namespace core {
 
     public:
 
-        virtual void lock() throw( decaf::lang::Exception ){
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
             channel.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::Exception ) {
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
             return channel.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::Exception ){
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
             channel.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::Exception ){
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
             channel.wait();
         }
 
-        virtual void wait( long long millisecs ) throw( decaf::lang::Exception ) {
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             channel.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos ) throw( decaf::lang::Exception ) {
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             channel.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::Exception ){
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             channel.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::Exception ){
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             channel.notifyAll();
         }
 

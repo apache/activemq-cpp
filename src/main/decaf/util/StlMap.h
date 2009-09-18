@@ -276,35 +276,51 @@ namespace util{
 
     public:
 
-        virtual void lock() throw( lang::Exception ) {
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( lang::Exception ) {
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( lang::Exception ) {
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.unlock();
         }
 
-        virtual void wait() throw( lang::Exception ) {
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) throw( lang::Exception ) {
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos ) throw( lang::Exception ) {
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( lang::Exception ) {
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( lang::Exception ) {
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notifyAll();
         }
 

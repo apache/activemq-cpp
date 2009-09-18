@@ -23,6 +23,8 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Random.h>
 
+#include <decaf/internal/util/concurrent/SynchronizableImpl.h>
+
 #include <time.h>
 
 using namespace std;
@@ -30,6 +32,7 @@ using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::internal::util::concurrent;
 
 ///////////////////////////////////////////////////////////////////////////////
 void MutexTest::testConstructor() {
@@ -45,41 +48,12 @@ void MutexTest::testConstructor() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyThread : public lang::Thread, public Synchronizable{
-private:
-
-    Mutex mutex;
-
+class MyThread : public lang::Thread, public SynchronizableImpl{
 public:
 
     volatile int value;
     MyThread(){ value = 0;}
     virtual ~MyThread(){}
-
-    virtual void lock() throw(lang::Exception){
-        mutex.lock();
-    }
-    virtual bool tryLock() throw( lang::Exception ) {
-        return mutex.tryLock();
-    }
-    virtual void unlock() throw(lang::Exception){
-        mutex.unlock();
-    }
-    virtual void wait() throw(lang::Exception){
-        mutex.wait();
-    }
-    virtual void wait( long long millisecs ) throw(lang::Exception){
-        mutex.wait( millisecs );
-    }
-    virtual void wait( long long millisecs, int nanos ) throw(lang::Exception){
-        mutex.wait( millisecs, nanos );
-    }
-    virtual void notify() throw(lang::Exception){
-        mutex.notify();
-    }
-    virtual void notifyAll() throw(lang::Exception){
-        mutex.notifyAll();
-    }
 
     virtual void run(){
         {
@@ -110,41 +84,13 @@ void MutexTest::testSimpleThread() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyWaitingThread : public lang::Thread, public Synchronizable{
-private:
-
-    Mutex mutex;
-
+class MyWaitingThread : public lang::Thread, public SynchronizableImpl{
 public:
 
     volatile int value;
     volatile bool started;
     MyWaitingThread(){ value = 0; started = false; }
     virtual ~MyWaitingThread(){}
-    virtual void lock() throw(lang::Exception){
-        mutex.lock();
-    }
-    virtual void unlock() throw(lang::Exception){
-        mutex.unlock();
-    }
-    virtual bool tryLock() throw( lang::Exception ) {
-        return mutex.tryLock();
-    }
-    virtual void wait() throw(lang::Exception){
-        mutex.wait();
-    }
-    virtual void wait(long long millisecs) throw(lang::Exception){
-        mutex.wait( millisecs );
-    }
-    virtual void wait( long long millisecs, int nanos ) throw(lang::Exception){
-        mutex.wait( millisecs, nanos );
-    }
-    virtual void notify() throw(lang::Exception){
-        mutex.notify();
-    }
-    virtual void notifyAll() throw(lang::Exception){
-        mutex.notifyAll();
-    }
 
     virtual void run(){
 
@@ -194,11 +140,7 @@ void MutexTest::testWait(){
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyTimedWaitingThread : public lang::Thread, public Synchronizable{
-private:
-
-    Mutex mutex;
-
+class MyTimedWaitingThread : public lang::Thread, public SynchronizableImpl{
 public:
 
     volatile int value;
@@ -206,30 +148,6 @@ public:
 
     MyTimedWaitingThread(){ value = 0; started = false; }
     virtual ~MyTimedWaitingThread(){}
-    virtual void lock() throw(lang::Exception){
-        mutex.lock();
-    }
-    virtual bool tryLock() throw( lang::Exception ) {
-        return mutex.tryLock();
-    }
-    virtual void unlock() throw(lang::Exception){
-        mutex.unlock();
-    }
-    virtual void wait() throw(lang::Exception){
-        mutex.wait();
-    }
-    virtual void wait(long long millisecs) throw(lang::Exception){
-        mutex.wait( millisecs );
-    }
-    virtual void wait( long long millisecs, int nanos ) throw(lang::Exception){
-        mutex.wait( millisecs, nanos );
-    }
-    virtual void notify() throw(lang::Exception){
-        mutex.notify();
-    }
-    virtual void notifyAll() throw(lang::Exception){
-        mutex.notifyAll();
-    }
 
     virtual void run(){
 
@@ -286,28 +204,52 @@ public:
         this->done = false;
     }
     virtual ~MyNotifiedThread(){}
-    virtual void lock() throw(lang::Exception){
+
+    virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
         mutex->lock();
     }
-    virtual bool tryLock() throw( lang::Exception ) {
+
+    virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
         return mutex->tryLock();
     }
-    virtual void unlock() throw(lang::Exception){
+
+    virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
         mutex->unlock();
     }
-    virtual void wait() throw(lang::Exception){
+
+    virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                               decaf::lang::exceptions::IllegalMonitorStateException,
+                               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait();
     }
-    virtual void wait(long long millisecs) throw(lang::Exception){
+
+    virtual void wait( long long millisecs )
+        throw( decaf::lang::exceptions::RuntimeException,
+               decaf::lang::exceptions::IllegalMonitorStateException,
+               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait( millisecs );
     }
-    virtual void wait( long long millisecs, int nanos ) throw(lang::Exception){
+
+    virtual void wait( long long millisecs, int nanos )
+        throw( decaf::lang::exceptions::RuntimeException,
+               decaf::lang::exceptions::IllegalArgumentException,
+               decaf::lang::exceptions::IllegalMonitorStateException,
+               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait( millisecs, nanos );
     }
-    virtual void notify() throw(lang::Exception){
+
+    virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                 decaf::lang::exceptions::IllegalMonitorStateException ) {
+
         mutex->notify();
     }
-    virtual void notifyAll() throw(lang::Exception){
+
+    virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+
         mutex->notifyAll();
     }
 
@@ -510,28 +452,52 @@ public:
         this->index = index;
     }
     virtual ~MyRecursiveLockThread(){}
-    virtual void lock() throw(lang::Exception){
+
+    virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
         mutex->lock();
     }
-    virtual bool tryLock() throw( lang::Exception ) {
+
+    virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
         return mutex->tryLock();
     }
-    virtual void unlock() throw(lang::Exception){
+
+    virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
         mutex->unlock();
     }
-    virtual void wait() throw(lang::Exception){
+
+    virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                               decaf::lang::exceptions::IllegalMonitorStateException,
+                               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait();
     }
-    virtual void wait(long long millisecs) throw(lang::Exception){
+
+    virtual void wait( long long millisecs )
+        throw( decaf::lang::exceptions::RuntimeException,
+               decaf::lang::exceptions::IllegalMonitorStateException,
+               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait( millisecs );
     }
-    virtual void wait( long long millisecs, int nanos ) throw(lang::Exception){
+
+    virtual void wait( long long millisecs, int nanos )
+        throw( decaf::lang::exceptions::RuntimeException,
+               decaf::lang::exceptions::IllegalArgumentException,
+               decaf::lang::exceptions::IllegalMonitorStateException,
+               decaf::lang::exceptions::InterruptedException ) {
+
         mutex->wait( millisecs, nanos );
     }
-    virtual void notify() throw(lang::Exception){
+
+    virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                 decaf::lang::exceptions::IllegalMonitorStateException ) {
+
         mutex->notify();
     }
-    virtual void notifyAll() throw(lang::Exception){
+
+    virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+
         mutex->notifyAll();
     }
 
