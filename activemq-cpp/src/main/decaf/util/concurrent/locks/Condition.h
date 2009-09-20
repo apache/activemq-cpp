@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/util/Date.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/lang/exceptions/IllegalMonitorStateException.h>
 
@@ -132,8 +133,8 @@ namespace locks {
         virtual ~Condition() {}
 
         /**
-         * Causes the current thread to wait until it is signalled or interrupted.
-         * <p>
+         * Causes the current thread to wait until it is signaled or interrupted.
+         *
          * The lock associated with this Condition is atomically released and the current
          * thread becomes disabled for thread scheduling purposes and lies dormant until one
          * of four things happens:
@@ -169,6 +170,9 @@ namespace locks {
          * in response to a signal. In that case the implementation must ensure that the
          * signal is redirected to another waiting thread, if there is one.
          *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
+         *
          * @throws InterruptedException
          *         if the current thread is interrupted (and interruption of thread
          *         suspension is supported)
@@ -177,12 +181,13 @@ namespace locks {
          *         if the caller is not the lock owner.
          */
         virtual void await()
-            throw( decaf::lang::exceptions::InterruptedException,
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
                    decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Causes the current thread to wait until it is signalled.
-         * <p>
+         *
          * The lock associated with this condition is atomically released and the current
          * thread becomes disabled for thread scheduling purposes and lies dormant until
          * one of three things happens:
@@ -208,16 +213,20 @@ namespace locks {
          * (such as IllegalMonitorStateException) and the implementation must document
          * that fact.
          *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
+         *
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
         virtual void awaitUninterruptibly()
-            throw( decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
-         * Causes the current thread to wait until it is signalled or interrupted, or
+         * Causes the current thread to wait until it is signaled or interrupted, or
          * the specified waiting time elapses.
-         * <p>
+         *
          * The lock associated with this condition is atomically released and the current
          * thread becomes disabled for thread scheduling purposes and lies dormant until
          * one of five things happens:
@@ -284,6 +293,9 @@ namespace locks {
          *          a subsequent call to this method to finish waiting out the desired time.
          *          A value less than or equal to zero indicates that no time remains.
          *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
+         *
          * @throws InterruptedException
          *         if the current thread is interrupted (and interruption of thread suspension
          *         is supported)
@@ -292,11 +304,12 @@ namespace locks {
          *         if the caller is not the lock owner.
          */
         virtual long long awaitNanos( long long nanosTimeout )
-            throw( decaf::lang::exceptions::InterruptedException,
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
                    decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
-         * Causes the current thread to wait until it is signalled or interrupted, or the
+         * Causes the current thread to wait until it is signaled or interrupted, or the
          * specified waiting time elapses. This method is behaviorally equivalent to:
          *
          *      awaitNanos(unit.toNanos(time)) > 0
@@ -307,6 +320,9 @@ namespace locks {
          * @returns false if the waiting time detectably elapsed before return from the
          *          method, else true
          *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
+         *
          * @throws InterruptedException
          *         if the current thread is interrupted (and interruption of thread suspension
          *         is supported)
@@ -315,13 +331,14 @@ namespace locks {
          *         if the caller is not the lock owner.
          */
         virtual bool await( long long time, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::InterruptedException,
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
                    decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /*
-         * Causes the current thread to wait until it is signalled or interrupted, or the
+         * Causes the current thread to wait until it is signaled or interrupted, or the
          * specified deadline elapses.
-         * <p>
+         *
          * The lock associated with this condition is atomically released and the current
          * thread becomes disabled for thread scheduling purposes and lies dormant until one
          * of five things happens:
@@ -377,6 +394,9 @@ namespace locks {
          *
          * @returns false if the deadline has elapsed upon return, else true
          *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
+         *
          * @throws InterruptedException
          *         if the current thread is interrupted (and interruption of thread suspension
          *         is supported)
@@ -384,25 +404,32 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-//        virtual bool awaitUntil( Date deadline )
-//            throw( decaf::lang::exceptions::InterruptedException,
-//                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
+        virtual bool awaitUntil( const Date& deadline )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Wakes up one waiting thread.
-         * <p>
+         *
          * If any threads are waiting on this condition then one is selected for waking up.
          * That thread must then re-acquire the lock before returning from await.
+         *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
          */
-        virtual void signal() = 0;
+        virtual void signal() throw ( decaf::lang::exceptions::RuntimeException ) = 0;
 
         /**
          * Wakes up all waiting threads.
-         * <p>
+         *
          * If any threads are waiting on this condition then they are all woken up. Each
          * thread must re-acquire the lock before it can return from await.
+         *
+         * @throws RuntimeException
+         *         if an unexpected error occurs while trying to wait on the Condition.
          */
-        virtual void signalAll() = 0;
+        virtual void signalAll() throw ( decaf::lang::exceptions::RuntimeException ) = 0;
 
     };
 
