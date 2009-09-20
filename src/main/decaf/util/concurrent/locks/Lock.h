@@ -103,18 +103,19 @@ namespace locks {
 
         /**
          * Acquires the lock.
-         * <p>
+         *
          * If the lock is not available then the current thread becomes disabled for thread
          * scheduling purposes and lies dormant until the lock has been acquired.
-         * <p>
+         *
          * Implementation Considerations
-         * <p>
+         *
          * A Lock implementation may be able to detect erroneous use of the lock, such as an
-         * invocation that would cause deadlock, and may throw an (unchecked) exception in
-         * such circumstances. The circumstances and the exception type must be documented
-         * by that Lock implementation.
+         * invocation that would cause deadlock, and may throw an exception in such circumstances.
+         * The circumstances and the exception type must be documented by that Lock implementation.
+         *
+         * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void lock() = 0;
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
 
         /**
          * Acquires the lock unless the current thread is interrupted.
@@ -147,15 +148,17 @@ namespace locks {
          * An implementation can favor responding to an interrupt over normal method return.
          *
          * A Lock implementation may be able to detect erroneous use of the lock, such as an
-         * invocation that would cause deadlock, and may throw an (unchecked) exception in
-         * such circumstances. The circumstances and the exception type must be documented
-         * by that Lock implementation.
+         * invocation that would cause deadlock, and may throw an exception in such
+         * circumstances.  The circumstances and the exception type must be documented by
+         * that Lock implementation.
          *
+         * @throws RuntimeException if an error occurs while acquiring the lock.
          * @throws InterruptedException
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported).
          */
-        virtual void lockInterruptibly() throw ( decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual void lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
+                                                 decaf::lang::exceptions::InterruptedException ) = 0;
 
         /**
          * Acquires the lock only if it is free at the time of invocation.
@@ -181,8 +184,10 @@ namespace locks {
          * try to unlock if the lock was not acquired.
          *
          * @returns true if the lock was acquired and false otherwise
+         *
+         * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual bool tryLock() = 0;
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
 
         /**
          * Acquires the lock if it is free within the given waiting time and the current
@@ -234,12 +239,14 @@ namespace locks {
          * @returns true if the lock was acquired and false if the waiting time elapsed
          *          before the lock was acquired
          *
+         * @throws RuntimeException if an error occurs while acquiring the lock.
          * @throws InterruptedException
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported)
          */
         virtual bool tryLock( long long time, const TimeUnit& unit )
-            throw ( decaf::lang::exceptions::InterruptedException ) = 0;
+            throw ( decaf::lang::exceptions::RuntimeException,
+                    decaf::lang::exceptions::InterruptedException ) = 0;
 
         /**
          * Releases the lock.
@@ -250,8 +257,10 @@ namespace locks {
          * a lock (typically only the holder of the lock can release it) and may throw an
          * exception if the restriction is violated. Any restrictions and the exception
          * type must be documented by that Lock implementation.
+         *
+         * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void unlock() = 0;
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
 
         /**
          * Returns a new Condition instance that is bound to this Lock instance.
@@ -268,11 +277,13 @@ namespace locks {
          * @returns A new Condition instance for this Lock instance the caller must
          *          delete the returned Condition object when done with it.
          *
+         * @throws RuntimeException if an error occurs while creating the Condition.
          * @throws UnsupportedOperationException
          *         if this Lock implementation does not support conditions
          */
         virtual Condition* newCondition()
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+            throw ( decaf::lang::exceptions::RuntimeException,
+                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
     };
 
