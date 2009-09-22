@@ -19,7 +19,7 @@
 #include <decaf/internal/util/concurrent/unix/MutexHandle.h>
 
 #include <decaf/lang/exceptions/RuntimeException.h>
-#include <decaf/internal/lang/ThreadImpl.h>
+#include <decaf/lang/Thread.h>
 
 #include <list>
 #include <memory>
@@ -32,7 +32,6 @@ using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::internal;
-using namespace decaf::internal::lang;
 using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 using namespace decaf::lang;
@@ -58,7 +57,7 @@ MutexHandle* MutexImpl::create() {
 ////////////////////////////////////////////////////////////////////////////////
 void MutexImpl::lock( MutexHandle* handle ) {
 
-    long long threadId = ThreadImpl::getThreadId();
+    long long threadId = Thread::getId();
 
     if( threadId == handle->lock_owner ) {
         handle->lock_count++;
@@ -78,7 +77,7 @@ void MutexImpl::lock( MutexHandle* handle ) {
 ////////////////////////////////////////////////////////////////////////////////
 bool MutexImpl::trylock( MutexHandle* handle ) {
 
-    long long threadId = ThreadImpl::getThreadId();
+    long long threadId = Thread::getId();
 
     if( threadId == handle->lock_owner ) {
         handle->lock_count++;
@@ -102,7 +101,7 @@ void MutexImpl::unlock( MutexHandle* handle ) {
         return;
     }
 
-    if( handle->lock_owner != ThreadImpl::getThreadId() ) {
+    if( handle->lock_owner != Thread::getId() ) {
         throw RuntimeException(
             __FILE__, __LINE__,
             "Unlock Failed, this thread is not the Lock Owner!" );
