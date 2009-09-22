@@ -193,12 +193,16 @@ namespace{
         }
     #else
 
-        Thread* currentThread;
+        DWORD currentThreadKey;
 
         unsigned int __stdcall threadWorker( void* arg ) {
             ThreadProperties* properties = (ThreadProperties*)arg;
 
+            ::TlsSetValue( currentThreadKey, (void*)properties->parent );
+
             ThreadProperties::runCallback( properties );
+
+            ::TlsSetValue( currentThreadKey, NULL );
 
             #ifndef _WIN32_WCE
                 _endthreadex( 0 );
@@ -234,6 +238,14 @@ void Thread::initThreading() {
         pthread_key_create( &currentThreadKey, NULL );
         pthread_setspecific( currentThreadKey, mainThread );
 
+    #else
+
+        mainThread->properties->handle = getCurrentThread();
+
+        // Create the key used to store the Current Thread data
+        currentThreadKey = ::TlsAlloc();
+        ::TlsSetValue( currentThreadKey, mainThread );
+
     #endif
 }
 
@@ -249,6 +261,15 @@ void Thread::shutdownThreading() {
 
         // Destroy the current Thread key now, no longer needed.
         pthread_key_delete( currentThreadKey );
+
+    #else
+
+        Thread* mainThread = (Thread*) ::TlsGetValue( currentThreadKey );
+
+        delete mainThread;
+
+        // Destroy our TLS resources before we shutdown.
+        ::TlsFree( currentThreadKey );
 
     #endif
 }
@@ -555,17 +576,22 @@ Thread::State Thread::getState() const {
 ////////////////////////////////////////////////////////////////////////////////
 Thread* Thread::currentThread() {
 
+    void* result = NULL;
+
     #ifdef HAVE_PTHREAD_H
-        // Grab the Thread Local copy
-        void* result = pthread_getspecific( currentThreadKey );
 
-        if( result == NULL ) {
-            throw RuntimeException(
-                __FILE__, __LINE__, "Failed to find the Current Thread pointer in the TLS." );
-        }
+        result = pthread_getspecific( currentThreadKey );
 
-        return (Thread*)result;
     #else
-        return NULL;
+
+        result = ::TlsGetValue( currentThreadKey );
+
     #endif
+
+    if( result == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to find the Current Thread pointer in the TLS." );
+    }
+
+    return (Thread*)result;
 }
