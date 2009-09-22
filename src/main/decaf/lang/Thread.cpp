@@ -379,11 +379,10 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join() throw( decaf::lang::exceptions::InterruptedException )
-{
+void Thread::join() throw( decaf::lang::exceptions::InterruptedException ) {
+
     if( this->properties->state < Thread::RUNNABLE ) {
-        throw Exception( __FILE__, __LINE__,
-            "Thread::join() called without having called Thread::start()");
+        return;
     }
 
     if( this->properties->state != Thread::TERMINATED ) {
@@ -408,6 +407,10 @@ void Thread::join( long long millisecs )
             "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
     }
 
+    if( this->properties->state < Thread::RUNNABLE ) {
+        return;
+    }
+
     this->join( millisecs, 0 );
 }
 
@@ -426,6 +429,10 @@ void Thread::join( long long millisecs, unsigned int nanos )
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
+    }
+
+    if( this->properties->state < Thread::RUNNABLE ) {
+        return;
     }
 
     #ifdef HAVE_PTHREAD_H

@@ -243,15 +243,25 @@ void ThreadTest::testJoin() {
 
       JoinTest test;
 
+      // Joining a non-started thread should just return.
+      CPPUNIT_ASSERT_NO_THROW( test.join() );
+      CPPUNIT_ASSERT_NO_THROW( test.join( 10 ) );
+      CPPUNIT_ASSERT_NO_THROW( test.join( 10, 10 ) );
+
+      CPPUNIT_ASSERT_MESSAGE( "Thread is alive", !test.isAlive() );
       time_t startTime = time( NULL );
       test.start();
       test.join();
       time_t endTime = time( NULL );
+      CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
 
       time_t delta = endTime - startTime;
 
       // Should be about 5 seconds that elapsed.
       CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
+
+      // Thread should be able to join itself, use a timeout so we don't freeze
+      Thread::currentThread()->join( 100 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -396,4 +406,15 @@ void ThreadTest::testUncaughtExceptionHandler() {
     t2.join();
 
     CPPUNIT_ASSERT( myHandler.executed == true );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testCurrentThread() {
+
+    CPPUNIT_ASSERT( Thread::currentThread() != NULL );
+    CPPUNIT_ASSERT( Thread::currentThread()->getName() == "Main Thread" );
+    CPPUNIT_ASSERT( Thread::currentThread()->getPriority() == Thread::NORM_PRIORITY );
+    CPPUNIT_ASSERT( Thread::currentThread()->getState() == Thread::RUNNABLE );
+
+    CPPUNIT_ASSERT( Thread::currentThread() == Thread::currentThread() );
 }
