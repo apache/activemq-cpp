@@ -21,7 +21,6 @@
 #include <decaf/internal/util/concurrent/windows/MutexHandle.h>
 
 #include <decaf/lang/exceptions/RuntimeException.h>
-#include <decaf/internal/lang/ThreadImpl.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 
 #include <list>
