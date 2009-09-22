@@ -141,6 +141,7 @@ namespace io{
         }
 
         virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+            return false;
         }
 
         virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
