@@ -21,18 +21,40 @@
 #include <apr_general.h>
 #include <apr_pools.h>
 
+#include <decaf/lang/Thread.h>
+
 using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace decaf{
+namespace internal{
+
+    class RuntimeData {
+    public:
+
+        mutable apr_pool_t* aprPool;
+
+    public:
+
+        RuntimeData() : aprPool(NULL) {
+        }
+
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
 DecafRuntime::DecafRuntime() {
+
+    this->runtimeData.reset( new RuntimeData() );
 
     // Initializes the APR Runtime from within a library.
     apr_initialize();
 
     // Create a Global Pool for Threads to use
-    apr_pool_create_ex( &aprPool, NULL, NULL, NULL );
+    apr_pool_create_ex( &runtimeData->aprPool, NULL, NULL, NULL );
 
 }
 
@@ -40,7 +62,7 @@ DecafRuntime::DecafRuntime() {
 DecafRuntime::~DecafRuntime() {
 
     // Destroy the Global Thread Memory Pool
-    apr_pool_destroy( aprPool );
+    apr_pool_destroy( this->runtimeData->aprPool );
 
     // Cleans up APR data structures.
     apr_terminate();
@@ -48,7 +70,7 @@ DecafRuntime::~DecafRuntime() {
 
 ////////////////////////////////////////////////////////////////////////////////
 apr_pool_t* DecafRuntime::getGlobalPool() const {
-    return this->aprPool;
+    return this->runtimeData->aprPool;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +87,9 @@ void Runtime::initializeRuntime( int argc DECAF_UNUSED, char **argv DECAF_UNUSED
     // Do this for now, once we remove APR we can do this in a way that
     // makes more sense.
     Runtime::getRuntime();
+
+    // Initialize any Platform specific Threading primitives
+    Thread::initThreading();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

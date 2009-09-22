@@ -24,17 +24,42 @@
 #include <decaf/internal/DecafRuntime.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
+#include <decaf/lang/Math.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 
-#include <decaf/internal/lang/ThreadImpl.h>
+#if HAVE_PTHREAD_H
+#include <pthread.h>
+#endif
+#if HAVE_SIGNAL_H
+#include <signal.h>
+#endif
+#if HAVE_STRING_H
+#include <string.h>
+#endif
+#if HAVE_SCHED_H
+#include <sched.h>
+#endif
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#if HAVE_TIME_H
+#include <time.h>
+#endif
+#ifdef HAVE_PROCESS_H
+#include <process.h>
+#endif
 
 using namespace decaf;
 using namespace decaf::internal;
-using namespace decaf::internal::lang;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace decaf{
@@ -50,9 +75,14 @@ namespace lang{
         Runnable* task;
 
         /**
-         * APR Thread Handle
+         * The Platform Specific Thread Handle.
          */
-        std::auto_ptr<ThreadHandle> threadHandle;
+        #ifdef HAVE_PTHREAD_H
+            pthread_t handle;
+            pthread_attr_t attributes;
+        #else
+            HANDLE handle;
+        #endif
 
         /**
          * Current state of this thread.
@@ -87,11 +117,25 @@ namespace lang{
 
     public:
 
-        //static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param ) {
-        static void runCallback( ThreadHandle* thread DECAF_UNUSED, void* param ) {
+        ThreadProperties() {
 
-            // Get the instance.
-            ThreadProperties* properties = (ThreadProperties*)param;
+            #ifdef HAVE_PTHREAD_H
+                pthread_attr_init( &attributes );
+            #endif
+        }
+
+        ~ThreadProperties() {
+
+            #ifdef HAVE_PTHREAD_H
+                pthread_attr_destroy( &attributes );
+            #endif
+        }
+
+    public:
+
+        static void runCallback( ThreadProperties* properties ) {
+
+            properties->state = Thread::RUNNABLE;
 
             // Invoke run on the task.
             try{
@@ -128,7 +172,83 @@ namespace lang{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace{
+
+    #ifdef HAVE_PTHREAD_H
+
+        pthread_key_t currentThreadKey;
+
+        void* threadWorker( void* arg ) {
+
+            ThreadProperties* properties = (ThreadProperties*)arg;
+
+            pthread_setspecific( currentThreadKey, (void*)properties->parent );
+
+            ThreadProperties::runCallback( properties );
+
+            pthread_setspecific( currentThreadKey, NULL );
+            pthread_exit(0);
+
+            return NULL;
+        }
+    #else
+
+        Thread* currentThread;
+
+        unsigned int __stdcall threadWorker( void* arg ) {
+            ThreadHandle* handle = (ThreadHandle*)arg;
+            handle->running = true;
+            handle->entryFunctionPtr( handle, handle->userArg );
+            handle->running = false;
+
+            #ifndef _WIN32_WCE
+                _endthreadex( 0 );
+            #else
+                ExitThread( 0 );
+            #endif
+
+            ::CloseHandle( handle->handle );
+
+            return NULL;
+        }
+
+    #endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
 unsigned int ThreadProperties::id = 0;
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::initThreading() {
+
+    Thread* mainThread = new Thread( "Main Thread" );
+
+    mainThread->properties->state = Thread::RUNNABLE;
+    mainThread->properties->priority = Thread::NORM_PRIORITY;
+    mainThread->properties->parent = mainThread;
+
+    #ifdef HAVE_PTHREAD_H
+
+        mainThread->properties->handle = pthread_self();
+
+        // Create the Key used to store the Current Thread data
+        pthread_key_create( &currentThreadKey, NULL );
+        pthread_setspecific( currentThreadKey, mainThread );
+
+    #endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::shutdownThreading() {
+
+    // Get the Main Thread and Destroy it
+    Thread* mainThread = (Thread*) pthread_getspecific( currentThreadKey );
+
+    delete mainThread;
+
+    // Destroy the current Thread key now, no longer needed.
+    pthread_key_delete( currentThreadKey );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::Thread() {
@@ -184,15 +304,49 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
     try {
 
         if( this->properties->state > Thread::NEW ) {
-            throw RuntimeException(
+            throw IllegalThreadStateException(
                 __FILE__, __LINE__,
                 "Thread::start - Thread already started");
         }
 
-        this->properties->threadHandle.reset( ThreadImpl::create(
-             this, this->properties->runCallback, this->properties.get() ) );
+        #ifdef HAVE_PTHREAD_H
+            int result = pthread_create( &( properties->handle ),
+                                         &( properties->attributes ),
+                                         threadWorker, properties.get() );
 
-        this->properties->state = Thread::RUNNABLE;
+            if( result != 0 ) {
+                throw RuntimeException(
+                    __FILE__, __LINE__, "Failed to create new Thread." );
+            }
+
+        #else
+
+            unsigned int threadId = 0;
+
+            #ifndef _WIN32_WCE
+
+                handle->handle = (HANDLE)_beginthreadex(
+                     NULL, (DWORD)0, threadWorker, properties.get(), 0, &threadId );
+
+            #else
+
+                handle->hanlde = CreateThread( NULL, 0, threadWorker, handle.get(), 0, &threadId ) );
+
+                if( handle->handle == 0 ) {
+                    throw RuntimeException(
+                        __FILE__, __LINE__, "Failed to create new Thread." );
+                }
+
+            #endif
+
+        #endif
+
+        // Only try and set this if its not the default value.
+        if( properties->priority != Thread::NORM_PRIORITY ) {
+            setPriority( properties->priority );
+        }
+
+        properties->state = Thread::RUNNABLE;
      }
      DECAF_CATCH_RETHROW( IllegalThreadStateException )
      DECAF_CATCH_RETHROW( RuntimeException )
@@ -209,7 +363,13 @@ void Thread::join() throw( decaf::lang::exceptions::InterruptedException )
     }
 
     if( this->properties->state != Thread::TERMINATED ) {
-        ThreadImpl::join( this->properties->threadHandle.get() );
+
+        #ifdef HAVE_PTHREAD_H
+            void* theReturn = 0;
+            pthread_join( properties->handle, &theReturn );
+        #else
+            Thread::join( INFINITE, 0 );
+        #endif
     }
 }
 
@@ -224,7 +384,7 @@ void Thread::join( long long millisecs )
             "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
     }
 
-    this->join( millisecs );
+    this->join( millisecs, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,19 +404,31 @@ void Thread::join( long long millisecs, unsigned int nanos )
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
-    ThreadImpl::join( this->properties->threadHandle.get(), millisecs, nanos );
+    #ifdef HAVE_PTHREAD_H
+
+        void* theReturn = NULL;
+
+        // TODO - Still need a way to do this if the non-posix method doesn't exist.
+        #if HAVE_PTHREAD_TIMEDJOIN_NP
+
+            long long totalTime = TimeUnit::MILLISECONDS.toNanos( millisecs ) + nanos;
+
+            timespec time;
+            time.tv_nsec = totalTime % 1000000000;
+            time.tv_sec = totalTime / 1000000000;
+
+            pthread_timedjoin_np( properties->handle, &theReturn, &time );
+
+        #endif
+    #else
+        unsigned int rv = WaitForSingleObject( properties->handle, (DWORD)millisecs );
+    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( long long millisecs )
     throw( decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::IllegalArgumentException ) {
-
-    if( millisecs < 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Thread::sleep( millisecs ) - Value given {%d} is less than 0", millisecs );
-    }
 
     Thread::sleep( millisecs, 0 );
 }
@@ -278,17 +450,45 @@ void Thread::sleep( long long millisecs, unsigned int nanos )
             "Thread::sleep( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
-    ThreadImpl::sleep( millisecs, nanos );
+    #ifdef HAVE_PTHREAD_H
+        long long usecs = TimeUnit::MILLISECONDS.toMicros( millisecs ) +
+                          TimeUnit::NANOSECONDS.toMicros( nanos );
+
+        struct timeval tv;
+        tv.tv_usec = usecs % 1000000;
+        tv.tv_sec = usecs / 1000000;
+        select( 0, NULL, NULL, NULL, &tv );
+    #else
+        ::Sleep( (DWORD)mills );
+    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::yield() {
-    ThreadImpl::yeild();
+
+    #ifdef HAVE_PTHREAD_H
+        #ifdef HAVE_PTHREAD_YIELD
+            pthread_yield();
+        #else
+            #ifdef HAVE_SCHED_YIELD
+                sched_yield();
+            #endif
+        #endif
+    #else
+        #ifndef _WIN32_WCE
+            SwitchToThread();
+        #endif
+    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Thread::getId() {
-    return ThreadImpl::getThreadId();
+
+    #ifdef HAVE_PTHREAD_H
+        return (long long)pthread_self();
+    #else
+        return (long long)::GetCurrentThreadId();
+    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,7 +512,7 @@ void Thread::setPriority( int value ) throw( decaf::lang::exceptions::IllegalArg
 
     this->properties->priority = value;
 
-    ThreadImpl::setPriority( this->properties->threadHandle.get(), value );
+    //ThreadImpl::setPriority( this->properties->threadHandle.get(), value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,4 +547,22 @@ bool Thread::isAlive() const {
 ////////////////////////////////////////////////////////////////////////////////
 Thread::State Thread::getState() const {
     return this->properties->state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Thread* Thread::currentThread() {
+
+    #ifdef HAVE_PTHREAD_H
+        // Grab the Thread Local copy
+        void* result = pthread_getspecific( currentThreadKey );
+
+        if( result == NULL ) {
+            throw RuntimeException(
+                __FILE__, __LINE__, "Failed to find the Current Thread pointer in the TLS." );
+        }
+
+        return (Thread*)result;
+    #else
+        return NULL;
+    #endif
 }

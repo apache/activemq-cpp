@@ -24,6 +24,8 @@
 namespace decaf {
 namespace lang {
 
+    class Thread;
+
     /**
      * Platform definition of a Thread Handle on Windows, contains the type
      * constructs and additional data necessary to implement a thread on
@@ -42,6 +44,7 @@ namespace lang {
             userArg = NULL;
             entryFunctionPtr = NULL;
             handle = NULL;
+            parent = NULL;
         }
 
         ~ThreadHandle() {
@@ -53,6 +56,7 @@ namespace lang {
         threadEntry entryFunctionPtr;
         void* userArg;
         bool running;
+        Thread* parent;
 
     };
 

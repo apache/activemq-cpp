@@ -56,14 +56,32 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 namespace{
 
+    pthread_key_t currentThreadKey;
+
     void* threadWorker( void* arg ) {
         ThreadHandle* handle = (ThreadHandle*)arg;
+        pthread_setspecific( currentThreadKey, (void*)handle->parent );
         handle->running = true;
         handle->entryFunctionPtr( handle, handle->userArg );
         handle->running = false;
+        pthread_setspecific( currentThreadKey, NULL );
         pthread_exit(0);
         return NULL;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadImpl::initializeThreading() {
+
+    // Create the Key used to store the Current Thread data
+    pthread_key_create( &currentThreadKey, NULL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadImpl::shutdownThreading() {
+
+    // Destroy the current Thread key now, no longer needed.
+    pthread_key_delete( currentThreadKey );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +102,7 @@ ThreadHandle* ThreadImpl::create( decaf::lang::Thread* parent,
     std::auto_ptr<ThreadHandle> handle( new ThreadHandle );
     handle->entryFunctionPtr = threadEntry;
     handle->userArg = userArg;
+    handle->parent = parent;
 
     int result = pthread_create( &( handle->thread ), &( handle->attributes ), threadWorker, handle.get() );
 
@@ -164,4 +183,18 @@ void ThreadImpl::setPriority( decaf::lang::ThreadHandle* handle, unsigned int pr
 ////////////////////////////////////////////////////////////////////////////////
 long long ThreadImpl::getThreadId() {
     return (long long)pthread_self();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Thread* ThreadImpl::getCurrentThread() {
+
+    // Grab the Thread Local copy
+    void* result = pthread_getspecific( currentThreadKey );
+
+    if( result == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to find the Current Thread pointer in the TLS." );
+    }
+
+    return (Thread*)result;
 }

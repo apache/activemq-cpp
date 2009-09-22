@@ -38,6 +38,8 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 namespace{
 
+    Thread* currentThread;
+
     unsigned int __stdcall threadWorker( void* arg ) {
         ThreadHandle* handle = (ThreadHandle*)arg;
         handle->running = true;
@@ -52,6 +54,18 @@ namespace{
 
         return NULL;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadImpl::initializeThreading() {
+
+    // Create the Key used to store the Current Thread data
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadImpl::shutdownThreading() {
+
+    // Destroy the current Thread key now, no longer needed.
 }
 
 ////////////////////////////////////////////////////////////////////////////////

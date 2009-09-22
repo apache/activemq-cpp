@@ -36,6 +36,17 @@ namespace lang {
     public:
 
         /**
+         * Initializes that Thread specific data structures used to provide all the services
+         * that this collection of Thread methods provides.
+         */
+        static void initializeThreading();
+
+        /**
+         * Shutdown and Deallocate all resources associated with Threading.
+         */
+        static void shutdownThreading();
+
+        /**
          * Create a new OS Thread.  When the new thread is created the given start routine is
          * called and the supplied argument is passed along with ThreadHandle associated with
          * this thread.  If successful this method returns the active ThreadHandle to the caller,
@@ -105,6 +116,16 @@ namespace lang {
          * @returns a 64bit long value that represents the OS specific Thread Id.
          */
         static long long getThreadId();
+
+        /**
+         * Gets a Pointer to the Thread object associated with the currently running Thread.
+         *
+         * This pointer is not owned by the caller and is deallocated as soon as the current
+         * Thread dies.
+         *
+         * @return Thread pointer for the currently running Thread.
+         */
+        static decaf::lang::Thread* getCurrentThread();
 
     };
 

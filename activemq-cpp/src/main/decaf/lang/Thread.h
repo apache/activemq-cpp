@@ -27,8 +27,14 @@
 #include <memory>
 
 namespace decaf{
+namespace util{
+namespace concurrent{
+namespace locks{
+    class LockSupport;
+}}}
 namespace lang{
 
+    class Runtime;
     class ThreadGroup;
     class ThreadProperties;
 
@@ -341,10 +347,31 @@ namespace lang{
          */
         static long long getId();
 
+        /**
+         * Returns a pointer to the currently executing thread object.
+         *
+         * @return Pointer to the Thread object representing the currently running Thread.
+         */
+        static Thread* currentThread();
+
     private:
 
         // Initialize the Threads internal state
         void initialize( Runnable* task, const std::string& name );
+
+        // Called by the Decaf Runtime at startup to allow the Platform Threading
+        // code to initialize any necessary Threading constructs needed to support
+        // the features of this class.
+        static void initThreading();
+
+        // Called by the Decf Runtime at Shutdown to allow the Platform Threading
+        // code to return any resources that were allocated at startup for the
+        // Threading library.
+        static void shutdownThreading();
+
+        // Allow some Decaf Classes greater access to the Threading model.
+        friend class decaf::util::concurrent::locks::LockSupport;
+        friend class decaf::lang::Runtime;
 
     };
 
