@@ -22,6 +22,8 @@
 
 #include <decaf/util/concurrent/locks/Lock.h>
 
+#include <memory>
+
 namespace decaf {
 namespace util {
 namespace concurrent {

@@ -21,6 +21,8 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/Date.h>
+#include <decaf/util/concurrent/TimeUnit.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/lang/exceptions/IllegalMonitorStateException.h>
 

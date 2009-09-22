@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "ReentrantLock.h"
+#include <decaf/util/concurrent/locks/ReentrantLock.h>
 
 using namespace decaf;
 using namespace decaf::lang;
