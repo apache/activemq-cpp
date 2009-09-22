@@ -28,6 +28,8 @@
 namespace decaf {
 namespace lang {
 
+    class Thread;
+
     /**
      * Platform definition of a Thread Handle on Unix, contains the PThread
      * constructs and additional data necessary to implement a thread on
@@ -46,6 +48,7 @@ namespace lang {
             returnStatus = false;
             userArg = NULL;
             entryFunctionPtr = NULL;
+            parent = NULL;
         }
 
         ~ThreadHandle() {
@@ -58,6 +61,7 @@ namespace lang {
         threadEntry entryFunctionPtr;
         void* userArg;
         bool running;
+        Thread* parent;
 
     };
 

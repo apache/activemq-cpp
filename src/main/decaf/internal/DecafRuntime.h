@@ -20,10 +20,14 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Runtime.h>
+
+#include <memory>
 #include <apr_pools.h>
 
 namespace decaf {
 namespace internal {
+
+    class RuntimeData;
 
     /**
      * Handles APR initialization and termination.
@@ -31,10 +35,7 @@ namespace internal {
     class DECAF_API DecafRuntime : public decaf::lang::Runtime {
     private:
 
-        /**
-         * Internal APR pool
-         */
-        mutable apr_pool_t* aprPool;
+        std::auto_ptr<RuntimeData> runtimeData;
 
     public:
 
