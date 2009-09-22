@@ -240,7 +240,7 @@ void Thread::initThreading() {
 
     #else
 
-        mainThread->properties->handle = getCurrentThread();
+        mainThread->properties->handle = ::GetCurrentThread();
 
         // Create the key used to store the Current Thread data
         currentThreadKey = ::TlsAlloc();
