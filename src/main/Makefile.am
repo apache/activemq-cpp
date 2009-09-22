@@ -550,6 +550,8 @@ cc_sources = \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
+    decaf/util/concurrent/locks/unix/ReentrantLock.cpp \
+    decaf/util/concurrent/locks/windows/ReentrantLock.cpp \
     decaf/util/logging/LogManager.cpp \
     decaf/util/logging/LogWriter.cpp \
     decaf/util/logging/Logger.cpp \
@@ -1107,6 +1109,8 @@ h_sources = \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
     decaf/internal/util/concurrent/unix/ConditionHandle.h \
     decaf/internal/util/concurrent/unix/MutexHandle.h \
+    decaf/internal/util/concurrent/windows/ConditionHandle.h \
+    decaf/internal/util/concurrent/windows/MutexHandle.h \
     decaf/io/BlockingByteArrayInputStream.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/BufferedOutputStream.h \
@@ -1258,6 +1262,7 @@ h_sources = \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \
     decaf/util/concurrent/locks/ReadWriteLock.h \
+    decaf/util/concurrent/locks/ReentrantLock.h \
     decaf/util/logging/ConsoleHandler.h \
     decaf/util/logging/Filter.h \
     decaf/util/logging/Formatter.h \
