@@ -22676,26 +22676,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="lang"
-					>
-					<File
-						RelativePath="..\src\main\decaf\internal\lang\ThreadImpl.h"
-						>
-					</File>
-					<Filter
-						Name="windows"
-						>
-						<File
-							RelativePath="..\src\main\decaf\internal\lang\windows\ThreadHandle.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\decaf\internal\lang\windows\ThreadImpl.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="lang"
@@ -23602,6 +23582,18 @@
 							RelativePath="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReentrantLock.h"
+							>
+						</File>
+						<Filter
+							Name="windows"
+							>
+							<File
+								RelativePath="..\src\main\decaf\util\concurrent\locks\windows\ReentrantLock.cpp"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 				<Filter
