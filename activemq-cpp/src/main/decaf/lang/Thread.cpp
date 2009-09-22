@@ -196,10 +196,9 @@ namespace{
         Thread* currentThread;
 
         unsigned int __stdcall threadWorker( void* arg ) {
-            ThreadHandle* handle = (ThreadHandle*)arg;
-            handle->running = true;
-            handle->entryFunctionPtr( handle, handle->userArg );
-            handle->running = false;
+            ThreadProperties* properties = (ThreadProperties*)arg;
+
+            ThreadProperties::runCallback( properties );
 
             #ifndef _WIN32_WCE
                 _endthreadex( 0 );
@@ -207,7 +206,7 @@ namespace{
                 ExitThread( 0 );
             #endif
 
-            ::CloseHandle( handle->handle );
+            ::CloseHandle( properties->handle );
 
             return NULL;
         }
@@ -241,13 +240,17 @@ void Thread::initThreading() {
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::shutdownThreading() {
 
-    // Get the Main Thread and Destroy it
-    Thread* mainThread = (Thread*) pthread_getspecific( currentThreadKey );
+    #ifdef HAVE_PTHREAD_H
 
-    delete mainThread;
+        // Get the Main Thread and Destroy it
+        Thread* mainThread = (Thread*) pthread_getspecific( currentThreadKey );
 
-    // Destroy the current Thread key now, no longer needed.
-    pthread_key_delete( currentThreadKey );
+        delete mainThread;
+
+        // Destroy the current Thread key now, no longer needed.
+        pthread_key_delete( currentThreadKey );
+
+    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,14 +328,14 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
 
             #ifndef _WIN32_WCE
 
-                handle->handle = (HANDLE)_beginthreadex(
+                properties->handle = (HANDLE)_beginthreadex(
                      NULL, (DWORD)0, threadWorker, properties.get(), 0, &threadId );
 
             #else
 
-                handle->hanlde = CreateThread( NULL, 0, threadWorker, handle.get(), 0, &threadId ) );
+                properties->hanlde = CreateThread( NULL, 0, threadWorker, properties.get(), 0, &threadId ) );
 
-                if( handle->handle == 0 ) {
+                if( properties->handle == 0 ) {
                     throw RuntimeException(
                         __FILE__, __LINE__, "Failed to create new Thread." );
                 }
@@ -459,7 +462,7 @@ void Thread::sleep( long long millisecs, unsigned int nanos )
         tv.tv_sec = usecs / 1000000;
         select( 0, NULL, NULL, NULL, &tv );
     #else
-        ::Sleep( (DWORD)mills );
+        ::Sleep( (DWORD)millisecs );
     #endif
 }
 
