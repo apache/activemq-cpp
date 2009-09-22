@@ -44,6 +44,7 @@ namespace lang{
       CPPUNIT_TEST( testSleep );
       CPPUNIT_TEST( testSleep2Arg );
       CPPUNIT_TEST( testUncaughtExceptionHandler );
+      CPPUNIT_TEST( testCurrentThread );
       CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -67,6 +68,7 @@ namespace lang{
         void testSleep();
         void testSleep2Arg();
         void testUncaughtExceptionHandler();
+        void testCurrentThread();
 
     };
 

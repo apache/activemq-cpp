@@ -479,7 +479,6 @@ cc_sources = \
     decaf/internal/io/StandardErrorOutputStream.cpp \
     decaf/internal/io/StandardInputStream.cpp \
     decaf/internal/io/StandardOutputStream.cpp \
-    decaf/internal/lang/unix/ThreadImpl.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
     decaf/internal/nio/BufferFactory.cpp \
@@ -1086,9 +1085,6 @@ h_sources = \
     decaf/internal/io/StandardErrorOutputStream.h \
     decaf/internal/io/StandardInputStream.h \
     decaf/internal/io/StandardOutputStream.h \
-    decaf/internal/lang/ThreadImpl.h \
-    decaf/internal/lang/unix/ThreadHandle.h \
-    decaf/internal/lang/windows/ThreadHandle.h \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
