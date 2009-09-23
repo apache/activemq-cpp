@@ -259,8 +259,10 @@ namespace locks {
          * type must be documented by that Lock implementation.
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
+         * @throws IllegalMonitorStateException if the current thread is not the owner of the lock.
          */
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Returns a new Condition instance that is bound to this Lock instance.
