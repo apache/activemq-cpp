@@ -83,7 +83,7 @@ bool MutexImpl::trylock( MutexHandle* handle ) {
         handle->lock_count++;
     } else {
 
-        if( pthread_mutex_lock( &( handle->mutex ) ) == 0 ) {
+        if( pthread_mutex_trylock( &( handle->mutex ) ) == 0 ) {
             handle->lock_owner = threadId;
             handle->lock_count = 1;
         } else {
