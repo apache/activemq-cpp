@@ -19,6 +19,7 @@
 
 #include <decaf/lang/System.h>
 #include <decaf/util/StlMap.h>
+#include <decaf/lang/Thread.h>
 
 using namespace std;
 using namespace decaf;
@@ -78,9 +79,21 @@ void SystemTest::test_unsetenv() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_currentTimeMillis() {
     CPPUNIT_ASSERT( System::currentTimeMillis() != 0 );
+
+    long long start = System::currentTimeMillis();
+    Thread::sleep( 150 );
+    long long end = System::currentTimeMillis();
+
+    CPPUNIT_ASSERT_MESSAGE( "First Read isn't less than the second.", start < end );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_nanoTime() {
     CPPUNIT_ASSERT( System::nanoTime() != 0 );
+
+    long long start = System::nanoTime();
+    Thread::sleep( 150 );
+    long long end = System::nanoTime();
+
+    CPPUNIT_ASSERT_MESSAGE( "First Read isn't less than the second.", start < end );
 }
