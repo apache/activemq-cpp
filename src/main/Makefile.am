@@ -545,12 +545,12 @@ cc_sources = \
     decaf/util/concurrent/CountDownLatch.cpp \
     decaf/util/concurrent/Mutex.cpp \
     decaf/util/concurrent/PooledThread.cpp \
+    decaf/util/concurrent/Semaphore.cpp \
     decaf/util/concurrent/ThreadPool.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
-    decaf/util/concurrent/locks/unix/ReentrantLock.cpp \
-    decaf/util/concurrent/locks/windows/ReentrantLock.cpp \
+    decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/LogManager.cpp \
     decaf/util/logging/LogWriter.cpp \
     decaf/util/logging/Logger.cpp \
@@ -1245,6 +1245,7 @@ h_sources = \
     decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/RejectedExecutionException.h \
     decaf/util/concurrent/RejectedExecutionHandler.h \
+    decaf/util/concurrent/Semaphore.h \
     decaf/util/concurrent/Synchronizable.h \
     decaf/util/concurrent/SynchronousQueue.h \
     decaf/util/concurrent/TaskListener.h \
