@@ -23,13 +23,20 @@
 #include <decaf/util/Date.h>
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/util/StlMap.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 #include <apr.h>
 #include <apr_errno.h>
 #include <apr_env.h>
 #include <apr_time.h>
 
-#if APR_HAVE_UNISTD_H
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_TIME_H
+#include <time.h>
 #endif
 
 #include <cstdlib>
@@ -38,6 +45,7 @@ using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::internal;
 using namespace decaf::lang::exceptions;
 
@@ -124,12 +132,53 @@ void System::setenv( const std::string& name, const std::string& value )
 
 ////////////////////////////////////////////////////////////////////////////////
 long long System::currentTimeMillis() {
-    return apr_time_now() / 1000;
+
+#ifdef _WIN32
+
+    /* Number of micro-seconds between the beginning of the Windows epoch
+     * (Jan. 1, 1601) and the Unix epoch (Jan. 1, 1970)
+     */
+    static const unsigned long long DELTA_EPOCH_IN_USEC = 116444736000000000ULL;
+
+    unsigned long long time = 0;
+    ::GetSystemTimeAsFileTime( (FILETIME*)&time );
+    return ( time - DELTA_EPOCH_IN_USEC ) / 10000;
+
+#else
+
+    struct timeval tv;
+    gettimeofday( &tv, NULL );
+    return ( ( (long long)tv.tv_sec * 1000000 ) + tv.tv_usec ) / 1000;
+
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long System::nanoTime() {
-    return apr_time_now() * 1000;
+
+#ifdef _WIN32
+
+    LARGE_INTEGER freq, i, multiplier;
+    long long result;
+
+    if( !::QueryPerformanceFrequency( &freq ) ) {
+        return ::GetTickCount();
+    }
+
+    multiplier.QuadPart = freq.QuadPart / 1000000;
+
+    ::QueryPerformanceCounter( &i );
+    result = i.QuadPart / multiplier.QuadPart;
+
+    return result * 1000;
+
+#else
+
+    struct timeval tv;
+    gettimeofday( &tv, NULL );
+    return ( ( (long long)tv.tv_sec * 1000000 ) + tv.tv_usec ) * 1000;
+
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
