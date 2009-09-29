@@ -51,8 +51,10 @@ namespace cms{
         /**
          * Enumeration values for Message Delivery Mode
          */
-        static const int PERSISTENT = 0;
-        static const int NON_PERSISTENT = 1;
+        enum DELIVERY_MODE {
+            PERSISTENT = 0,
+            NON_PERSISTENT = 1
+        };
 
     };
 
