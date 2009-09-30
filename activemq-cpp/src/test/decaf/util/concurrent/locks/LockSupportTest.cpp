@@ -21,6 +21,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/Date.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/util/concurrent/locks/LockSupport.h>
 
 using namespace std;
@@ -90,12 +91,17 @@ void LockSupportTest::testPark2() {
     ParkTest2Thread t;
 
     try {
-        t.start();
+
         long long before = System::currentTimeMillis();
+        t.start();
         LockSupport::unpark( &t );
-        long long after = System::currentTimeMillis();
-        CPPUNIT_ASSERT( after - before < 1000 );
         t.join();
+        long long after = System::currentTimeMillis();
+
+        long long delta = after - before;
+
+        CPPUNIT_ASSERT( delta > 800 && delta < 1500 );
+
     } catch(...) {
         CPPUNIT_FAIL("Caught an unexpected exception");
     }
@@ -107,7 +113,7 @@ public:
 
     virtual void run() {
         try{
-            LockSupport::parkNanos( 1111 );
+            LockSupport::parkNanos( TimeUnit::SECONDS.toNanos( 2 ) );
         } catch(...) {
             CPPUNIT_FAIL("Caught an unexpected exception");
         }
@@ -119,12 +125,13 @@ void LockSupportTest::testParkNanos() {
 
     ParkNanosTestThread t;
 
-    try {
-        t.start();
-        t.join();
-    } catch(...) {
-        CPPUNIT_FAIL("Caught an unexpected exception");
-    }
+    long long before = System::currentTimeMillis();
+    t.start();
+    t.join();
+    long long after = System::currentTimeMillis();
+    long long delta = after - before;
+
+    CPPUNIT_ASSERT( delta > 1500 && delta < 3000 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

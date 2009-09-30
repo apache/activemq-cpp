@@ -23,8 +23,13 @@
 #include <decaf/lang/Comparable.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/InterruptedException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 namespace decaf {
+namespace lang {
+    class Thread;
+}
 namespace util {
 namespace concurrent {
 
@@ -195,38 +200,44 @@ namespace concurrent {
          * method (see {@link BlockingQueue#poll BlockingQueue.poll})
          * using:
          *
-         * <pre>  public synchronized  Object poll(long timeout, TimeUnit unit) throws InterruptedException {
-         *    while (empty) {
-         *      unit.timedWait(this, timeout);
-         *      ...
-         *    }
+         * <pre>
+         *    Object poll( long long timeout, const TimeUnit& unit )
+         *      throw( InterruptedException ) {
+         *
+         *      while( empty ) {
+         *        unit.timedWait(this, timeout);
+         *        ...
+         *      }
          *  }</pre>
          *
          * @param obj the object to wait on
          * @param timeout the maximum time to wait.
+         *
          * @throws InterruptedException if interrupted while waiting.
-         * @see Synchronizable#wait( long, int )
+         * @throws NullPointerException if the Synchronizable object is null.
+         *
+         * @see Synchronizable#wait( long long, long long )
          */
-        void timedWait( Synchronizable* obj, long long timeout ) const;
+        void timedWait( Synchronizable* obj, long long timeout ) const
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException );
 
-// TODO - Can't join Threads with a Timeout currently.
-//        /**
-//         * Perform a timed <tt>Thread.join</tt> using this time unit.
-//         * This is a convenience method that converts time arguments into the
-//         * form required by the <tt>Thread.join</tt> method.
-//         * @param thread the thread to wait for
-//         * @param timeout the maximum time to wait
-//         * @throws InterruptedException if interrupted while waiting.
-//         * @see Thread#join(long, int)
-//         */
-//        void timedJoin(Thread thread, long timeout)
-//            throws InterruptedException {
-//            if (timeout > 0) {
-//                long ms = toMillis(timeout);
-//                int ns = excessNanos(timeout, ms);
-//                thread.join(ms, ns);
-//            }
-//        }
+        /**
+         * Perform a timed <tt>Thread.join</tt> using this time unit.
+         * This is a convenience method that converts time arguments into the
+         * form required by the <tt>Thread.join</tt> method.
+         *
+         * @param thread the thread to wait for
+         * @param timeout the maximum time to wait
+         *
+         * @throws InterruptedException if interrupted while waiting.
+         * @throws NullPointerException if the thread object is null.
+         *
+         * @see Thread#join( long long, long long )
+         */
+        void timedJoin( decaf::lang::Thread* thread, long long timeout )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Perform a <tt>Thread.sleep</tt> using this unit.
@@ -235,7 +246,8 @@ namespace concurrent {
          * @param timeout the minimum time to sleep
          * @see Thread#sleep
          */
-        void sleep( long long timeout ) const;
+        void sleep( long long timeout ) const
+            throw( decaf::lang::exceptions::InterruptedException );
 
         /**
          * Converts the TimeUnit type to the Name of the TimeUnit.
