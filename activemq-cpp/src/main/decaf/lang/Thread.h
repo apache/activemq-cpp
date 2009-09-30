@@ -369,6 +369,15 @@ namespace lang{
         // Threading library.
         static void shutdownThreading();
 
+        // Called from LockSupport to Park a Thread (suspend it from execution)
+        static void park( Thread* thread );
+
+        // Called from LockSupport to Park a Thread (suspend it from execution)
+        static void park( Thread* thread, long long mills, long long nanos );
+
+        // Called from LockSupport to UnPark a Thread (resume its execution status).
+        static void unpark( Thread* thread );
+
         // Allow some Decaf Classes greater access to the Threading model.
         friend class decaf::util::concurrent::locks::LockSupport;
         friend class decaf::lang::Runtime;
