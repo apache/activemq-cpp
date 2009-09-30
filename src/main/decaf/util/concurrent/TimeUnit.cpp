@@ -98,24 +98,47 @@ int TimeUnit::excessNanos( long long time, long long ms ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimeUnit::sleep( long long timeout ) const {
+void TimeUnit::sleep( long long timeout ) const
+    throw( decaf::lang::exceptions::InterruptedException ) {
+
     if( timeout > 0 ) {
         long long ms = toMillis( timeout );
-        //int ns = excessNanos( timeout, ms );
-        Thread::sleep( (int)ms );
-        // TODO - Only have a wait for Milliseconds currently.
-        //Thread::sleep( ms, ns );
+        int ns = excessNanos( timeout, ms );
+        Thread::sleep( ms, ns );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const {
+void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const
+    throw( decaf::lang::exceptions::InterruptedException,
+           decaf::lang::exceptions::NullPointerException ) {
+
+    if( obj == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Synchronizable object pointer was null." );
+    }
+
     if( timeout > 0 ) {
         long long ms = toMillis( timeout );
-        //int ns = excessNanos( timeout, ms );
-        obj->wait( (unsigned long)ms );
-        // TODO - Only have a wait for Milliseconds currently.
-        //obj.wait( ms, ns );
+        int ns = excessNanos( timeout, ms );
+        obj->wait( ms, ns );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TimeUnit::timedJoin( Thread* thread, long long timeout )
+    throw( decaf::lang::exceptions::InterruptedException,
+           decaf::lang::exceptions::NullPointerException ) {
+
+    if( thread == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Thread object pointer was null." );
+    }
+
+    if( timeout > 0 ) {
+        long long ms = toMillis( timeout );
+        int ns = excessNanos( timeout, ms );
+        thread->join( ms, ns );
     }
 }
 

@@ -55,7 +55,16 @@ void LockSupport::park() throw() {
 void LockSupport::parkNanos( long long nanos ) throw() {
 
     try{
-        Thread::park( Thread::currentThread(), 0, nanos );
+
+        long long mills = 0;
+
+        if( nanos >= 1000000 ) {
+            mills = nanos / 1000000;
+            nanos = nanos % 1000000;
+        }
+
+        Thread::park( Thread::currentThread(), mills, nanos );
+
     } DECAF_CATCHALL_NOTHROW()
 }
 
