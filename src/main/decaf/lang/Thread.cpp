@@ -29,6 +29,7 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/TimeUnit.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #if HAVE_PTHREAD_H
 #include <pthread.h>
@@ -59,6 +60,7 @@ using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,10 +70,6 @@ namespace lang{
     class ThreadProperties {
     public:
 
-        /**
-         * The task to be run by this thread, defaults to
-         * this thread object.
-         */
         Runnable* task;
 
         /**
@@ -84,40 +82,29 @@ namespace lang{
             HANDLE handle;
         #endif
 
-        /**
-         * Current state of this thread.
-         */
         Thread::State state;
-
-        /**
-         * The Assigned name of this thread.
-         */
         std::string name;
-
-        /**
-         * The currently assigned priority
-         */
         int priority;
+        bool interrupted;
+        bool unparked;
+        bool parked;
+        decaf::util::concurrent::Mutex mutex;
 
-        /**
-         * static value that holds the incrementing Thread ID for unnamed threads.
-         */
         static unsigned int id;
 
-        /**
-         * The handler to invoke if the thread terminates due to an exception that
-         * was not caught in the user's run method.
-         */
         Thread::UncaughtExceptionHandler* exHandler;
-
-        /**
-         * The Thread that created this Object.
-         */
         Thread* parent;
 
     public:
 
         ThreadProperties() {
+
+            this->priority = Thread::NORM_PRIORITY;
+            this->state = Thread::NEW;
+            this->interrupted = false;
+            this->parked = false;
+            this->unparked = false;
+            this->parent = NULL;
 
             #ifdef HAVE_PTHREAD_H
                 pthread_attr_init( &attributes );
@@ -601,4 +588,68 @@ Thread* Thread::currentThread() {
     }
 
     return (Thread*)result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::park( Thread* thread ) {
+
+    if( thread == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Null Thread Pointer Passed." );
+    }
+
+    Thread::park( thread, 0LL, 0LL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::park( Thread* thread, long long mills, long long nanos ) {
+
+    if( thread == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Null Thread Pointer Passed." );
+    }
+
+    synchronized( &thread->properties->mutex ) {
+
+        if( thread->properties->unparked ) {
+            thread->properties->unparked = false;
+            return;
+        }
+
+        thread->properties->parked = true;
+
+        if( mills == 0 && nanos == 0 ) {
+            thread->properties->mutex.wait();
+        } else {
+            thread->properties->mutex.wait( mills, nanos );
+        }
+
+        thread->properties->parked = false;
+
+        // consume the unparked token.
+        thread->properties->unparked = false;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::unpark( Thread* thread ) {
+
+    if( thread == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Null Thread Pointer Passed." );
+    }
+
+    synchronized( &thread->properties->mutex ) {
+
+        // Set the unparked token, if the thread is parked it will consume
+        // it when it resumes, otherwise the next call to park will consume
+        // it without needing to actually wait.
+        thread->properties->unparked = true;
+
+        // If the thread is actually parked then we send it a signal so
+        // that it will resume.
+        if( thread->properties->parked ) {
+            thread->properties->mutex.notifyAll();
+        }
+    }
 }

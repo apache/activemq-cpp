@@ -240,6 +240,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicIntegerT
 #include <decaf/util/concurrent/atomic/AtomicReferenceTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicReferenceTest );
 
+#include <decaf/util/concurrent/locks/LockSupportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::LockSupportTest );
+
 #include <decaf/util/DateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 #include <decaf/util/UUIDTest.h>

@@ -550,6 +550,7 @@ cc_sources = \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
+    decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/LogManager.cpp \
     decaf/util/logging/LogWriter.cpp \
@@ -1258,6 +1259,7 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicReference.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \
+    decaf/util/concurrent/locks/LockSupport.h \
     decaf/util/concurrent/locks/ReadWriteLock.h \
     decaf/util/concurrent/locks/ReentrantLock.h \
     decaf/util/logging/ConsoleHandler.h \
