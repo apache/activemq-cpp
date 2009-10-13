@@ -38,6 +38,12 @@
 #ifdef HAVE_TIME_H
 #include <time.h>
 #endif
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_SYS_SYSCTL_H
+#include <sys/sysctl.h>
+#endif
 
 #include <cstdlib>
 
@@ -283,3 +289,40 @@ std::vector<std::string> System::getEnvArray() {
 }
 
 #endif
+
+////////////////////////////////////////////////////////////////////////////////
+int System::availableProcessors() {
+
+    int numCpus = 1;
+
+#if defined(_WIN32)
+
+    SYSTEM_INFO sysInfo;
+    ::GetSystemInfo( &sysInfo );
+    numCpus = sysInfo.dwNumberOfProcessors;
+
+#elif defined(__APPLE__)
+
+    // derived from examples in the sysctl(3) man page from FreeBSD
+    int mib[2];
+    std::size_t len;
+
+    mib[0] = CTL_HW;
+    mib[1] = HW_NCPU;
+    len = sizeof(numCpus);
+    sysctl(mib, 2, &numCpus, &len, NULL, 0);
+
+#else
+
+    // returns number of online(_SC_NPROCESSORS_ONLN) processors, number configured(_SC_NPROCESSORS_CONF)
+    // may be more than online
+    numCpus = sysconf( _SC_NPROCESSORS_ONLN );
+
+#endif
+
+    if( numCpus < 1 ) {
+        numCpus = 1;
+    }
+
+    return numCpus;
+}
