@@ -183,7 +183,7 @@ void InactivityMonitor::oneway( const Pointer<Command>& command )
         // method - its not synchronized
         // further down the transport stack and gets called by more
         // than one thread  by this class
-        synchronized( &inWriteMutes ) {
+        synchronized( &inWriteMutex ) {
             this->inWrite.set( true );
             try {
 
@@ -241,7 +241,7 @@ void InactivityMonitor::readCheck() {
 //        });
     }
 
-    commandReceived.set(false);
+    commandReceived.set( false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -269,7 +269,7 @@ void InactivityMonitor::writeCheck() {
 //        });
     }
 
-    commandSent.set(false);
+    commandSent.set( false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

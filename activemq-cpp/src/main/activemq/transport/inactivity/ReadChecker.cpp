@@ -60,6 +60,6 @@ void ReadChecker::run() {
 
     lastRunTime = now;
 
-    // Involke the parent check routine.
+    // Invoke the parent check routine.
     this->parent->readCheck();
 }
