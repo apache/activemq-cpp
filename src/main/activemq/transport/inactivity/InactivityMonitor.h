@@ -69,7 +69,7 @@ namespace inactivity {
         decaf::util::concurrent::atomic::AtomicBoolean inRead;
         decaf::util::concurrent::atomic::AtomicBoolean inWrite;
 
-        decaf::util::concurrent::Mutex inWriteMutes;
+        decaf::util::concurrent::Mutex inWriteMutex;
         decaf::util::concurrent::Mutex monitor;
 
         long long readCheckTime;
