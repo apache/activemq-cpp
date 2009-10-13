@@ -109,6 +109,17 @@ namespace lang{
          */
         static long long nanoTime();
 
+        /**
+         * Returns the number of processors available for exection of Decaf Threads.
+         *
+         * This value may change during a particular execution of a Decaf based application. Applications
+         * that are sensitive to the number of available processors should therefore occasionally poll
+         * this property and adjust their resource usage appropriately.
+         *
+         * @return the number of available processors.
+         */
+        static int availableProcessors();
+
     private:
 
         /**

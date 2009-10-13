@@ -31,6 +31,12 @@ SystemTest::SystemTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SystemTest::test_availableProcessors() {
+
+    CPPUNIT_ASSERT( System::availableProcessors() >= 1 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_getenv() {
 
     CPPUNIT_ASSERT( System::getenv( "PATH" ) != "" );
