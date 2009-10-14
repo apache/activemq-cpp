@@ -621,7 +621,7 @@ void Thread::park( Thread* thread, long long mills, long long nanos ) {
         if( mills == 0 && nanos == 0 ) {
             thread->properties->mutex.wait();
         } else {
-            thread->properties->mutex.wait( mills, nanos );
+            thread->properties->mutex.wait( mills, (int)nanos );
         }
 
         thread->properties->parked = false;
