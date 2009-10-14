@@ -208,60 +208,107 @@ void ThreadTest::testConstructor_3() {
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadTest::testDelegate(){
 
-      Delegate test;
-      int initialValue = test.getStuff();
+    Delegate test;
+    int initialValue = test.getStuff();
 
-      Thread thread( &test );
-      thread.start();
-      thread.join();
+    Thread thread( &test );
+    thread.start();
+    thread.join();
 
-      int finalValue = test.getStuff();
+    int finalValue = test.getStuff();
 
-      // The values should be different - this proves
-      // that the runnable was run.
-      CPPUNIT_ASSERT( finalValue != initialValue );
+    // The values should be different - this proves
+    // that the runnable was run.
+    CPPUNIT_ASSERT( finalValue != initialValue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadTest::testDerived() {
 
-      Derived test;
-      int initialValue = test.getStuff();
+    Derived test;
+    int initialValue = test.getStuff();
 
-      test.start();
-      test.join();
+    test.start();
+    test.join();
 
-      int finalValue = test.getStuff();
+    int finalValue = test.getStuff();
 
-      // The values should be different - this proves
-      // that the runnable was run.
-      CPPUNIT_ASSERT( finalValue != initialValue );
+    // The values should be different - this proves
+    // that the runnable was run.
+    CPPUNIT_ASSERT( finalValue != initialValue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadTest::testJoin() {
+void ThreadTest::testJoin1() {
 
-      JoinTest test;
+    JoinTest test;
 
-      // Joining a non-started thread should just return.
-      CPPUNIT_ASSERT_NO_THROW( test.join() );
-      CPPUNIT_ASSERT_NO_THROW( test.join( 10 ) );
-      CPPUNIT_ASSERT_NO_THROW( test.join( 10, 10 ) );
+    // Joining a non-started thread should just return.
+    CPPUNIT_ASSERT_NO_THROW( test.join() );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10 ) );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10, 10 ) );
 
-      CPPUNIT_ASSERT_MESSAGE( "Thread is alive", !test.isAlive() );
-      time_t startTime = time( NULL );
-      test.start();
-      test.join();
-      time_t endTime = time( NULL );
-      CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
+    CPPUNIT_ASSERT_MESSAGE( "Thread is alive", !test.isAlive() );
+    time_t startTime = time( NULL );
+    test.start();
+    test.join();
+    time_t endTime = time( NULL );
+    CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
 
-      time_t delta = endTime - startTime;
+    time_t delta = endTime - startTime;
 
-      // Should be about 5 seconds that elapsed.
-      CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
+    // Should be about 2 seconds that elapsed.
+    CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
 
-      // Thread should be able to join itself, use a timeout so we don't freeze
-      Thread::currentThread()->join( 100 );
+    // Thread should be able to join itself, use a timeout so we don't freeze
+    Thread::currentThread()->join( 100 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testJoin2() {
+
+    JoinTest test;
+
+    // Joining a non-started thread should just return.
+    CPPUNIT_ASSERT_NO_THROW( test.join() );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10 ) );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10, 10 ) );
+
+    CPPUNIT_ASSERT_MESSAGE( "Thread is alive", !test.isAlive() );
+    time_t startTime = time( NULL );
+    test.start();
+    test.join( 3500, 999999 );
+    time_t endTime = time( NULL );
+    CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
+
+    time_t delta = endTime - startTime;
+
+    // Should be about 2 seconds that elapsed.
+    CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
+
+    // Thread should be able to join itself, use a timeout so we don't freeze
+    Thread::currentThread()->join( 100 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testJoin3() {
+
+    JoinTest test;
+
+    // Joining a non-started thread should just return.
+    CPPUNIT_ASSERT_NO_THROW( test.join() );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10 ) );
+    CPPUNIT_ASSERT_NO_THROW( test.join( 10, 10 ) );
+
+    CPPUNIT_ASSERT_MESSAGE( "Thread is alive", !test.isAlive() );
+    test.start();
+    test.join( 0, 999999 );
+    CPPUNIT_ASSERT_MESSAGE( "Joined Thread is not still alive", test.isAlive() );
+    test.join( 3500, 999999 );
+    CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
+
+    // Thread should be able to join itself, use a timeout so we don't freeze
+    Thread::currentThread()->join( 100 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

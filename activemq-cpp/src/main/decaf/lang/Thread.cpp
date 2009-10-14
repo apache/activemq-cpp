@@ -122,7 +122,9 @@ namespace lang{
 
         static void runCallback( ThreadProperties* properties ) {
 
-            properties->state = Thread::RUNNABLE;
+            synchronized( &properties->mutex ) {
+                properties->state = Thread::RUNNABLE;
+            }
 
             // Invoke run on the task.
             try{
@@ -150,10 +152,15 @@ namespace lang{
                 }
             }
 
-            // Indicate we are done.
-            properties->state = Thread::TERMINATED;
-        }
+            synchronized( &properties->mutex ) {
 
+                // Indicate we are done.
+                properties->state = Thread::TERMINATED;
+
+                // Signal any joined threads.
+                properties->mutex.notifyAll();
+            }
+        }
     };
 
 }}
@@ -418,29 +425,34 @@ void Thread::join( long long millisecs, unsigned int nanos )
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
-    if( this->properties->state < Thread::RUNNABLE ) {
-        return;
+    synchronized( &this->properties->mutex ) {
+
+        if( this->properties->state < Thread::RUNNABLE ) {
+            return;
+        }
+
+        this->properties->mutex.wait( millisecs, nanos );
     }
 
-    #ifdef HAVE_PTHREAD_H
-
-        void* theReturn = NULL;
-
-        // TODO - Still need a way to do this if the non-posix method doesn't exist.
-        #if HAVE_PTHREAD_TIMEDJOIN_NP
-
-            long long totalTime = TimeUnit::MILLISECONDS.toNanos( millisecs ) + nanos;
-
-            timespec time;
-            time.tv_nsec = totalTime % 1000000000;
-            time.tv_sec = totalTime / 1000000000;
-
-            pthread_timedjoin_np( properties->handle, &theReturn, &time );
-
-        #endif
-    #else
-        unsigned int rv = WaitForSingleObject( properties->handle, (DWORD)millisecs );
-    #endif
+//    #ifdef HAVE_PTHREAD_H
+//
+//        void* theReturn = NULL;
+//
+//        // TODO - Still need a way to do this if the non-posix method doesn't exist.
+//        #if HAVE_PTHREAD_TIMEDJOIN_NP
+//
+//            long long totalTime = TimeUnit::MILLISECONDS.toNanos( millisecs ) + nanos;
+//
+//            timespec time;
+//            time.tv_nsec = totalTime % 1000000000;
+//            time.tv_sec = totalTime / 1000000000;
+//
+//            pthread_timedjoin_np( properties->handle, &theReturn, &time );
+//
+//        #endif
+//    #else
+//        unsigned int rv = WaitForSingleObject( properties->handle, (DWORD)millisecs );
+//    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
