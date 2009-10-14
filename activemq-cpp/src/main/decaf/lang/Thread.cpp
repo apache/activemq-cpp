@@ -433,26 +433,6 @@ void Thread::join( long long millisecs, unsigned int nanos )
 
         this->properties->mutex.wait( millisecs, nanos );
     }
-
-//    #ifdef HAVE_PTHREAD_H
-//
-//        void* theReturn = NULL;
-//
-//        // TODO - Still need a way to do this if the non-posix method doesn't exist.
-//        #if HAVE_PTHREAD_TIMEDJOIN_NP
-//
-//            long long totalTime = TimeUnit::MILLISECONDS.toNanos( millisecs ) + nanos;
-//
-//            timespec time;
-//            time.tv_nsec = totalTime % 1000000000;
-//            time.tv_sec = totalTime / 1000000000;
-//
-//            pthread_timedjoin_np( properties->handle, &theReturn, &time );
-//
-//        #endif
-//    #else
-//        unsigned int rv = WaitForSingleObject( properties->handle, (DWORD)millisecs );
-//    #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
