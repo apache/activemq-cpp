@@ -112,7 +112,7 @@ namespace locks{
 #ifdef HAVE_PTHREAD_H
             pthread_mutex_destroy( &handle );
 #else
-            DeleteCriticalSection( &mutex );
+            DeleteCriticalSection( &handle );
 #endif
         }
 
@@ -370,7 +370,7 @@ int ReentrantLock::getHoldCount() const {
     long long threadId = Thread::getId();
 
     if( threadId == handle->lock_owner_tid ) {
-        return handle->lock_count;
+        return (int)handle->lock_count;
     }
 
     return 0;
