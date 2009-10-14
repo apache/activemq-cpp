@@ -36,7 +36,9 @@ namespace lang{
       CPPUNIT_TEST( testConstructor_3 );
       CPPUNIT_TEST( testDelegate );
       CPPUNIT_TEST( testDerived );
-      CPPUNIT_TEST( testJoin );
+      CPPUNIT_TEST( testJoin1 );
+      CPPUNIT_TEST( testJoin2 );
+      CPPUNIT_TEST( testJoin3 );
       CPPUNIT_TEST( testSetPriority );
       CPPUNIT_TEST( testIsAlive );
       CPPUNIT_TEST( testGetId );
@@ -60,7 +62,9 @@ namespace lang{
         void testConstructor_3();
         void testDelegate();
         void testDerived();
-        void testJoin();
+        void testJoin1();
+        void testJoin2();
+        void testJoin3();
         void testSetPriority();
         void testIsAlive();
         void testGetId();
