@@ -141,7 +141,7 @@ void ActiveMQTransactionContext::commit()
         this->transactionId.reset( NULL );
 
         // Commit the current Transaction
-        this->connection->oneway( info );
+        this->connection->syncRequest( info );
 
         this->afterCommit();
     }
@@ -175,7 +175,7 @@ void ActiveMQTransactionContext::rollback()
         this->transactionId.reset( NULL );
 
         // Roll back the current Transaction
-        this->connection->oneway( info );
+        this->connection->syncRequest( info );
 
         this->afterRollback();
     }
