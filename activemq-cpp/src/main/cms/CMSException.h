@@ -120,6 +120,13 @@ namespace cms{
          */
         virtual std::string getStackTraceString() const;
 
+        /**
+         * Overloads the std::exception what() function to return the cause of the exception
+         *
+         * @return const char pointer to error message
+         */
+        virtual const char* what() const throw();
+
     };
 
 }

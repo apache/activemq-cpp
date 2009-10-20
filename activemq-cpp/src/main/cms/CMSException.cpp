@@ -27,26 +27,26 @@ using namespace cms;
 
 namespace cms{
 
-	class CMSExceptionData {
-	public:
+    class CMSExceptionData {
+    public:
 
-		std::string message;
-		std::auto_ptr<const std::exception> cause;
-		std::vector< std::pair< std::string, int> > stackTrace;
+        std::string message;
+        std::auto_ptr<const std::exception> cause;
+        std::vector< std::pair< std::string, int> > stackTrace;
 
-	};
+    };
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException() throw() : std::exception() {
-	this->data = new CMSExceptionData();
+    this->data = new CMSExceptionData();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException( const CMSException& ex ) throw() : std::exception() {
 
-	this->data = new CMSExceptionData();
+    this->data = new CMSExceptionData();
     this->data->cause.reset( ex.data->cause.release() );
     this->data->message = ex.data->message;
     this->data->stackTrace = ex.data->stackTrace;
@@ -75,7 +75,7 @@ CMSException::CMSException( const std::string& message,
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::~CMSException() throw() {
-	delete this->data;
+    delete this->data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,4 +130,9 @@ const std::exception* CMSException::getCause() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, int> > CMSException::getStackTrace() const {
     return this->data->stackTrace;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const char* CMSException::what() const throw() {
+   return this->data->message.c_str();
 }
