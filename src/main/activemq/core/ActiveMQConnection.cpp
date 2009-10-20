@@ -458,6 +458,7 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
                     dispatch->getMessage()->setReadOnlyBody( true );
                     dispatch->getMessage()->setReadOnlyProperties( true );
+                    dispatch->getMessage()->setRedeliveryCounter( dispatch->getRedeliveryCounter() );
 
                     dispatcher->dispatch( dispatch );
                 }
