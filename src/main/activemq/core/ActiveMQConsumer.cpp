@@ -293,6 +293,10 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
                     return Pointer<MessageDispatch>();
                 }
 
+            } else if( dispatch->getMessage() == NULL ) {
+
+                return Pointer<MessageDispatch>();
+
             } else if( dispatch->getMessage()->isExpired() ) {
 
                 beforeMessageIsConsumed( dispatch );
