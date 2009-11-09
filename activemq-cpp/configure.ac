@@ -68,6 +68,11 @@ AM_CONFIG_HEADER(config.h)
 # Gives us access to the host_os environment variable
 AC_CANONICAL_HOST
 
+echo "Configuring ActiveMQ-CPP library"
+echo "   Platform: $host_os"
+echo "   CPU: $host_cpu"
+echo "   Vendor: $host_vendor"
+
 ## -----------------------------------------------
 ## Checks for programs.
 ## -----------------------------------------------
@@ -142,35 +147,52 @@ AC_SUBST(DECAF_CONFIG_LOCATION)
 PLAT_CXXFLAGS=
 PLAT_LIBS=
 
+# Detect the presence of pthreads and the correct linker settings.
+DECAF_CHECK_PTHREADS()
+
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
 
-    DECAF_CHECK_PTHREADS()
-    PLAT_CXXFLAGS="-ansi -pedantic"
     ;;
 
   *solaris* ) ## Solaris configuration
-    DECAF_CHECK_PTHREADS()
 
-    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
+    PLAT_LIBS="-lm -luuid -lsocket -lrt"
 
-    if test "$GCC" = "yes"; then
-       PLAT_CXXFLAGS="-ansi -pedantic"
-    else
+    if test "$GCC" = "no"; then
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
        PLAT_CXXFLAGS="-mt -w -O5 -library=stlport4"
     fi
     ;;
 
-  *) ## Unix configuration
+  *hpux10* )
 
-    DECAF_CHECK_PTHREADS()
-    PLAT_CXXFLAGS="-ansi -pedantic"
-    PLAT_LIBS="-lm -lpthread -luuid"
+    if test "$GCC" = "no"; then
+       # Assuming aCC Compiler unknown yet if any additional settings are needed.
+       PLAT_CXXFLAGS=""
+    fi
+    ;;
+
+  *hpux11* )
+
+    if test "$GCC" = "no"; then
+       # Assuming aCC Compiler unknown yet if any additional settings are needed.
+       PLAT_CXXFLAGS=""
+    fi
+    ;;
+
+  *linux*) ## Unix configuration
+
+    PLAT_LIBS="-lm -luuid"
+    ;;
 
 esac
+
+if test "$GCC" = "yes"; then
+   PLAT_CXXFLAGS="-ansi -pedantic"
+fi
 
 ## find and configure the Apache Decaf Library
 ## DECAF_CONFIGURE_DECAF - Future use for decaf as a standalone lib
