@@ -126,6 +126,11 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("        virtual bool isExpired() const;");
         out.println("");
         out.println("        /**");
+        out.println("         * Allows derived Message classes to perform tasks before a message is sent.");
+        out.println("         */");
+        out.println("        virtual void onSend() {}");
+        out.println("");
+        out.println("        /**");
         out.println("         * Gets a reference to the Message's Properties object, allows the derived");
         out.println("         * classes to get and set their own specific properties.");
         out.println("         *");
