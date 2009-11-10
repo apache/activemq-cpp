@@ -42,11 +42,6 @@ namespace net{
          */
         typedef apr_sockaddr_t* SocketAddress;
 
-        /**
-         * Defines a constant for an invalid socket handle.
-         */
-        static const int INVALID_SOCKET_HANDLE = 0;
-
     public:
 
         virtual ~Socket() {}

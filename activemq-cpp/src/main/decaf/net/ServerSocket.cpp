@@ -31,7 +31,7 @@ using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::ServerSocket() {
-    socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+    socketHandle = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ void ServerSocket::bind( const char* host,
         &socketAddress, host, APR_INET, port, 0, apr_pool.getAprPool() );
 
     if( result != APR_SUCCESS ) {
-        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+        socketHandle = NULL;
         throw SocketException(
               __FILE__, __LINE__,
               SocketError::getErrorString().c_str() );
@@ -80,7 +80,7 @@ void ServerSocket::bind( const char* host,
         &socketHandle, APR_INET, SOCK_STREAM, APR_PROTO_TCP, apr_pool.getAprPool() );
 
     if( result != APR_SUCCESS ) {
-        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+        socketHandle = NULL;
         throw SocketException(
               __FILE__, __LINE__,
               SocketError::getErrorString().c_str() );
@@ -119,13 +119,13 @@ void ServerSocket::close() throw ( lang::Exception ){
 
     if( isBound() ) {
         apr_socket_close( socketHandle );
-        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+        socketHandle = NULL;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ServerSocket::isBound() const {
-    return this->socketHandle != (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+    return this->socketHandle != NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
