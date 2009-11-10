@@ -29,14 +29,14 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
-  : socketHandle( static_cast< SocketHandle >(INVALID_SOCKET_HANDLE) ),
+  : socketHandle( NULL ),
     inputStream( NULL ),
     outputStream( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket( SocketHandle socketHandle )
- :  socketHandle( static_cast< SocketHandle >(INVALID_SOCKET_HANDLE) ),
+ :  socketHandle( NULL ),
     inputStream( NULL ),
     outputStream( NULL ) {
 
@@ -159,7 +159,7 @@ void TcpSocket::close() throw( decaf::io::IOException ) {
         if( isConnected() ) {
             apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READWRITE );
             apr_socket_close( socketHandle );
-            socketHandle = INVALID_SOCKET_HANDLE;
+            socketHandle = NULL;
         }
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )

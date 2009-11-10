@@ -117,7 +117,7 @@ namespace net{
          * @return true if connected
          */
         virtual bool isConnected() const{
-            return socketHandle != INVALID_SOCKET_HANDLE;
+            return socketHandle != NULL;
         }
 
         /**
