@@ -805,6 +805,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\CMSExceptionSupport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\CMSExceptionSupport.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\CompositeData.cpp"
 					>
 				</File>
