@@ -216,6 +216,11 @@ namespace commands{
         virtual bool isExpired() const;
 
         /**
+         * Allows derived Message classes to perform tasks before a message is sent.
+         */
+        virtual void onSend() {}
+
+        /**
          * Gets a reference to the Message's Properties object, allows the derived
          * classes to get and set their own specific properties.
          *

@@ -66,7 +66,7 @@ namespace io{
             return len - pos;
         }
 
-        virtual unsigned char read() throw (IOException){
+        virtual int read() throw (IOException){
             if( this->isThrowOnRead() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -74,7 +74,7 @@ namespace io{
             }
 
             if( pos >= data.length() ){
-                throw IOException();
+                return -1;
             }
 
             return data.c_str()[pos++];

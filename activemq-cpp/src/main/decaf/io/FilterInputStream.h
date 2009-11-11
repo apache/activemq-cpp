@@ -108,7 +108,7 @@ namespace io{
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( IOException ) {
+        virtual int read() throw ( IOException ) {
             try {
 
                 if( isClosed() ) {

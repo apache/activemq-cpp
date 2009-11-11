@@ -44,7 +44,7 @@ std::size_t StandardInputStream::available() const throw ( decaf::io::IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char StandardInputStream::read() throw ( decaf::io::IOException ) {
+int StandardInputStream::read() throw ( decaf::io::IOException ) {
 
     if( !std::cin.good() ) {
         throw decaf::io::IOException(

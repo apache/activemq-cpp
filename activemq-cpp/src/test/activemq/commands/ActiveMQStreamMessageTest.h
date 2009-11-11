@@ -28,14 +28,51 @@ namespace commands {
 
         CPPUNIT_TEST_SUITE( ActiveMQStreamMessageTest );
         CPPUNIT_TEST( testSetAndGet );
+        CPPUNIT_TEST( testReadBoolean );
+        CPPUNIT_TEST( testReadByte );
+        CPPUNIT_TEST( testReadShort );
+        CPPUNIT_TEST( testReadChar );
+        CPPUNIT_TEST( testReadInt );
+        CPPUNIT_TEST( testReadLong );
+        CPPUNIT_TEST( testReadFloat );
+        CPPUNIT_TEST( testReadDouble );
+        CPPUNIT_TEST( testReadString );
+        CPPUNIT_TEST( testReadBigString );
+        CPPUNIT_TEST( testReadBytes );
+        CPPUNIT_TEST( testClearBody );
+        CPPUNIT_TEST( testReset );
+        CPPUNIT_TEST( testReadOnlyBody );
+        CPPUNIT_TEST( testWriteOnlyBody );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        std::vector<unsigned char> buffer;
 
     public:
 
         ActiveMQStreamMessageTest() {}
         virtual ~ActiveMQStreamMessageTest() {}
 
+        void setUp();
+        void tearDown();
+
         void testSetAndGet();
+        void testReadBoolean();
+        void testReadByte();
+        void testReadShort();
+        void testReadChar();
+        void testReadInt();
+        void testReadLong();
+        void testReadFloat();
+        void testReadDouble();
+        void testReadString();
+        void testReadBigString();
+        void testReadBytes();
+        void testClearBody();
+        void testReset();
+        void testReadOnlyBody();
+        void testWriteOnlyBody();
 
     };
 

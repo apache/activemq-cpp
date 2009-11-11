@@ -95,7 +95,7 @@ void BufferedInputStream::close() throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char BufferedInputStream::read() throw ( IOException ){
+int BufferedInputStream::read() throw ( IOException ){
 
     try{
 
@@ -114,10 +114,8 @@ unsigned char BufferedInputStream::read() throw ( IOException ){
         if( isEmpty() ){
 
             // If we hit EOF without getting any Data, then throw IOException
-            if( bufferData() == -1 ){
-                throw IOException(
-                    __FILE__, __LINE__,
-                    "BufferedInputStream::read - EOF has been Reached");
+            if( bufferData() == -1 ) {
+                return -1;
             }
         }
 

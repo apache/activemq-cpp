@@ -75,7 +75,7 @@ namespace io{
             return len - pos;
         }
 
-        virtual unsigned char read() throw (IOException){
+        virtual int read() throw (IOException){
             if( this->isThrowOnRead() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -83,7 +83,7 @@ namespace io{
             }
 
             if( pos >= data.length() ){
-                throw IOException();
+                return -1;
             }
 
             return data.c_str()[pos++];
@@ -191,23 +191,16 @@ void BufferedInputStreamTest::testConstructor() {
         BufferedInputStream is( &myStream, testStr.length() );
 
         // Ensure buffer gets filled by evaluating one read
-        is.read();
+        CPPUNIT_ASSERT( is.read() != -1 );
 
         // Read the remaining buffered characters, no IOException should
         // occur.
         is.skip( testStr.length() - 2 );
-        is.read();
-        try {
-            // is.read should now throw an exception because it will have to
-            // be filled.
-            is.read();
-        } catch (IOException& e) {
-            exceptionFired = true;
-        }
+        CPPUNIT_ASSERT( is.read() != -1 );
+        // is.read should now return -1 as all data has been read.
+        CPPUNIT_ASSERT( is.read() == -1 );
 
-        CPPUNIT_ASSERT_MESSAGE( "Exception should have been triggered by read()", exceptionFired );
-
-    } catch (IOException& e) {
+    } catch( IOException& e ) {
         e.printStackTrace();
         CPPUNIT_ASSERT_MESSAGE("Exception during test_1_Constructor", false );
     }
@@ -248,7 +241,7 @@ void BufferedInputStreamTest::testAvailable() {
     try {
         bis.available();
         CPPUNIT_ASSERT_MESSAGE("Expected test to throw IOE.", false );
-    } catch (IOException& ex) {
+    } catch( IOException& ex ) {
         // expected
     }
 }
@@ -337,7 +330,7 @@ void BufferedInputStreamTest::testRead2() {
             "Failed to read correct data",
             string( (const char*)&buf1[0], 100 ) == testStr.substr( 3000, 100 ) );
 
-    } catch (IOException& e) {
+    } catch( IOException& e ) {
         CPPUNIT_FAIL("Exception during read test");
     }
 }

@@ -72,11 +72,23 @@ namespace io{
          * @return pointer to the data
          */
         virtual const unsigned char* toByteArray() const {
-            if( activeBuffer->size() == 0 ){
+            if( activeBuffer == NULL || activeBuffer->size() == 0 ){
                 return NULL;
             }
 
             return &(*activeBuffer)[0];
+        }
+
+        /**
+         * Get a snapshot of the data
+         * @return reference to the underlying data as a const std::vector<unsigned char>&
+         */
+        virtual const std::vector<unsigned char> toByteArrayRef() const {
+            if( activeBuffer == NULL ){
+                return defaultBuffer;
+            }
+
+            return *activeBuffer;
         }
 
         /**

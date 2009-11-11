@@ -130,6 +130,7 @@ cc_sources = \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
     activemq/util/ActiveMQProperties.cpp \
+    activemq/util/CMSExceptionSupport.cpp \
     activemq/util/CompositeData.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/MemoryUsage.cpp \
@@ -704,6 +705,7 @@ h_sources = \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/tcp/TcpTransportFactory.h \
     activemq/util/ActiveMQProperties.h \
+    activemq/util/CMSExceptionSupport.h \
     activemq/util/CompositeData.h \
     activemq/util/Config.h \
     activemq/util/LongSequenceGenerator.h \
@@ -1104,6 +1106,7 @@ h_sources = \
     decaf/internal/util/concurrent/ConditionImpl.h \
     decaf/internal/util/concurrent/MutexImpl.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
+    decaf/internal/util/concurrent/Transferer.h \
     decaf/internal/util/concurrent/unix/ConditionHandle.h \
     decaf/internal/util/concurrent/unix/MutexHandle.h \
     decaf/internal/util/concurrent/windows/ConditionHandle.h \

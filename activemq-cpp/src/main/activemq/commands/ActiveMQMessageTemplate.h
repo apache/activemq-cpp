@@ -25,6 +25,9 @@
 #include <activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 
+#include <cms/MessageNotReadableException.h>
+#include <cms/MessageNotWriteableException.h>
+
 namespace activemq {
 namespace commands {
 
@@ -224,7 +227,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setBooleanProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -241,7 +244,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setByteProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -258,7 +261,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setDoubleProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -275,7 +278,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setFloatProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -292,7 +295,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setIntProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -309,7 +312,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setLongProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -326,7 +329,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setShortProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -343,7 +346,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
-                checkReadOnlyProperties();
+                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setStringProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -548,17 +551,29 @@ namespace commands {
 
     protected:
 
-        void checkReadOnlyBody() {
-            if( this->isReadOnlyBody() ) {
-                throw exceptions::ActiveMQException(
-                    __FILE__, __LINE__, "Message Body is Read-Only." );
+        virtual void onSend() {
+            this->setReadOnlyBody(true);
+            this->setReadOnlyProperties(true);
+        }
+
+        void failIfWriteOnlyBody() const {
+            if( !this->isReadOnlyBody() ){
+                throw cms::MessageNotReadableException(
+                    "message is in write-only mode and cannot be read from", NULL );
             }
         }
 
-        void checkReadOnlyProperties() {
+        void failIfReadOnlyBody() const {
+            if( this->isReadOnlyBody() ) {
+                throw cms::MessageNotWriteableException(
+                    "Message Body is Read-Only.", NULL );
+            }
+        }
+
+        void failIfReadOnlyProperties() const {
             if( this->isReadOnlyProperties() ) {
-                throw exceptions::ActiveMQException(
-                    __FILE__, __LINE__, "Message Properties are Read-Only." );
+                throw cms::MessageNotWriteableException(
+                    "Message Properties are Read-Only.", NULL );
             }
         }
 
