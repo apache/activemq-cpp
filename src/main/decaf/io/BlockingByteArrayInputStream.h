@@ -101,7 +101,7 @@ namespace io{
          * @return the next byte.
          * @throws IOException if an error occurs.
          */
-        virtual unsigned char read() throw ( IOException );
+        virtual int read() throw ( IOException );
 
         /**
          * Reads an array of bytes from the buffer.  If the desired amount

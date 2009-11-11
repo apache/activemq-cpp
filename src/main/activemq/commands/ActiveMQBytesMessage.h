@@ -393,14 +393,6 @@ namespace commands{
          */
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException );
 
-    protected:
-
-        /**
-         * Throws an exception if in write-only mode.
-         * @throws CMSException.
-         */
-        void checkWriteOnlyBody() const throw ( cms::CMSException );
-
     };
 
 }}

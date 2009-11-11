@@ -135,7 +135,7 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SocketInputStream::read() throw ( IOException ){
+int SocketInputStream::read() throw ( IOException ){
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){

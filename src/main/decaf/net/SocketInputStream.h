@@ -66,7 +66,7 @@ namespace net{
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( io::IOException );
+        virtual int read() throw ( io::IOException );
 
         /**
          * Reads an array of bytes from the buffer.  If the desired amount

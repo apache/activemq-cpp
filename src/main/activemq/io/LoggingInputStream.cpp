@@ -36,7 +36,7 @@ LoggingInputStream::LoggingInputStream( decaf::io::InputStream* inputStream, boo
 LoggingInputStream::~LoggingInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char LoggingInputStream::read() throw ( IOException ) {
+int LoggingInputStream::read() throw ( IOException ) {
     try {
 
         unsigned char c = FilterInputStream::read();

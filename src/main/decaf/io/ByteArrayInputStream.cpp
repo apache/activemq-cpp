@@ -87,7 +87,7 @@ void ByteArrayInputStream::reset() throw ( IOException){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayInputStream::read() throw ( IOException ){
+int ByteArrayInputStream::read() throw ( IOException ){
 
     if( activeBuffer == NULL ){
         throw IOException(
@@ -96,9 +96,7 @@ unsigned char ByteArrayInputStream::read() throw ( IOException ){
     }
 
     if( pos == activeBuffer->end() ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::read - Buffer is empty" );
+        return -1;
     }
 
     return *(pos++);

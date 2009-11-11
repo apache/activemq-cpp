@@ -81,7 +81,7 @@ void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char BlockingByteArrayInputStream::read() throw ( IOException ){
+int BlockingByteArrayInputStream::read() throw ( IOException ){
 
     try{
         synchronized( this ){

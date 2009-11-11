@@ -693,6 +693,7 @@ void ActiveMQSession::send(
         // around beyond the point that send returns.
         Pointer<commands::Message> msgCopy( amqMessage->cloneDataStructure() );
 
+        msgCopy->onSend();
         msgCopy->setProducerId( producer->getProducerInfo().getProducerId() );
 
         if( this->connection->getSendTimeout() <= 0 &&

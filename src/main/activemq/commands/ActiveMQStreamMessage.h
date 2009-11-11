@@ -24,7 +24,6 @@
 #endif
 
 #include <activemq/util/Config.h>
-#include <activemq/util/PrimitiveList.h>
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <cms/StreamMessage.h>
@@ -33,6 +32,9 @@
 #include <cms/MessageFormatException.h>
 #include <cms/MessageEOFException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
 #include <string>
 #include <memory>
 
@@ -43,12 +45,11 @@ namespace commands{
         public ActiveMQMessageTemplate< cms::StreamMessage > {
     private:
 
-        // Map Structure to hold unmarshaled Map Data
-        mutable std::auto_ptr<util::PrimitiveList> list;
+        mutable std::auto_ptr<decaf::io::ByteArrayOutputStream> bytesOut;
+        mutable std::auto_ptr<decaf::io::DataInputStream> dataIn;
+        mutable std::auto_ptr<decaf::io::DataOutputStream> dataOut;
 
-        // When Message is readable this is the index of the next
-        // element to be read.
-        mutable std::size_t currentPos;
+        mutable int remainingBytes;
 
     public:
 
@@ -91,20 +92,9 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
-         * Determine if this object is aware of marshaling and should have
-         * its before and after marshaling methods called.  Defaults to false.
-         * @returns true if aware of marshaling
+         * Store the Data that was written to the stream before a send
          */
-        virtual bool isMarshalAware() const {
-            return true;
-        }
-
-        /**
-         * Perform any processing needed before an marshal
-         * @param wireFormat - the OpenWireFormat object in use.
-         */
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
-            throw ( decaf::io::IOException );
+        virtual void onSend();
 
     public:   // CMS Message
 
@@ -121,11 +111,7 @@ namespace commands{
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
-        virtual void clearBody() throw( cms::CMSException ) {
-
-            // Invoke base class's version.
-            ActiveMQMessageTemplate<cms::StreamMessage>::clearBody();
-        }
+        virtual void clearBody() throw( cms::CMSException );
 
     public: // CMS Stream Message
 
@@ -137,37 +123,63 @@ namespace commands{
         virtual void reset() throw ( cms::CMSException );
 
         /**
-         * Reads a Boolean from the Bytes message stream
+         * Reads a Boolean from the Stream message stream
          * @returns boolean value from stream
-         * @throws CMSException
+         *
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual bool readBoolean() const throw ( cms::CMSException );
+        virtual bool readBoolean() const throw ( cms::MessageEOFException,
+                                                 cms::MessageFormatException,
+                                                 cms::MessageNotReadableException,
+                                                 cms::CMSException );
 
         /**
-         * Writes a boolean to the bytes message stream as a 1-byte value.
+         * Writes a boolean to the Stream message stream as a 1-byte value.
          * The value true is written as the value (byte)1; the value false
          * is written as the value (byte)0.
-         * @param value - boolean to write to the stream
-         * @throws CMSException
+         *
+         * @param value
+         *      boolean to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBoolean( bool value ) throw ( cms::CMSException );
+        virtual void writeBoolean( bool value ) throw ( cms::MessageNotWriteableException,
+                                                        cms::CMSException );
 
         /**
-         * Reads a Byte from the Bytes message stream
+         * Reads a Byte from the Stream message stream
+         *
          * @returns unsigned char value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual unsigned char readByte() const throw ( cms::CMSException );
+        virtual unsigned char readByte() const throw ( cms::MessageEOFException,
+                                                       cms::MessageFormatException,
+                                                       cms::MessageNotReadableException,
+                                                       cms::CMSException );
 
         /**
-         * Writes a byte to the bytes message stream as a 1-byte value
-         * @param value - byte to write to the stream
-         * @throws CMSException
+         * Writes a byte to the Stream message stream as a 1-byte value
+         *
+         * @param value
+         *      byte to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeByte( unsigned char value ) throw ( cms::CMSException );
+        virtual void writeByte( unsigned char value ) throw ( cms::MessageNotWriteableException,
+                                                              cms::CMSException );
 
         /**
-         * Reads a byte array from the bytes message stream.
+         * Reads a byte array from the Stream message stream.
          *
          * If the length of vector value is less than the number of bytes
          * remaining to be read from the stream, the vector should be filled. A
@@ -179,26 +191,39 @@ namespace commands{
          * length of the vector, indicating that there are no more bytes left to
          * be read from the stream. The next read of the stream returns -1.
          *
-         * @param value - buffer to place data in
+         * @param value
+         *      buffer to place data in
          * @returns the total number of bytes read into the buffer, or -1 if
          *          there is no more data because the end of the stream has
          *          been reached
-         * @throws CMSException if an error occurs.
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
         virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
-            throw ( cms::CMSException );
+            throw ( cms::MessageEOFException,
+                    cms::MessageFormatException,
+                    cms::MessageNotReadableException,
+                    cms::CMSException );
 
         /**
-         * Writes a byte array to the bytes message stream using the vector
+         * Writes a byte array to the Stream message stream using the vector
          * size as the number of bytes to write.
-         * @param value - bytes to write to the stream
-         * @throws CMSException
+         *
+         * @param value
+         *      bytes to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes(
-            const std::vector<unsigned char>& value ) throw ( cms::CMSException );
+        virtual void writeBytes( const std::vector<unsigned char>& value )
+            throw ( cms::MessageNotWriteableException,
+                    cms::CMSException );
 
         /**
-         * Reads a portion of the bytes message stream.
+         * Reads a portion of the Stream message stream.
          *
          * If the length of array value is less than the number of bytes
          * remaining to be read from the stream, the array should be filled. A
@@ -211,167 +236,268 @@ namespace commands{
          * be read from the stream. The next read of the stream returns -1.
          *
          * If length is negative, or length is greater than the length of the
-         * array value, then an IndexOutOfBoundsException is thrown. No bytes
+         * array value, then an CMSException is thrown. No bytes
          * will be read from the stream for this exception case.
          *
-         * @param buffer - the buffer into which the data is read
-         * @param length - the number of bytes to read; must be less than or
-         *                 equal to value.length
+         * @param buffer
+         *      the buffer into which the data is read
+         * @param length
+         *      the number of bytes to read; must be less than or equal to
+         *      value.length
          * @returns the total number of bytes read into the buffer, or -1 if
          *          there is no more data because the end of the stream has
          *          been reached
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) const
-            throw ( cms::CMSException );
+        virtual std::size_t readBytes( unsigned char* buffer, std::size_t length ) const
+            throw ( cms::MessageEOFException,
+                    cms::MessageFormatException,
+                    cms::MessageNotReadableException,
+                    cms::CMSException );
 
         /**
-         * Writes a portion of a byte array to the bytes message stream.
+         * Writes a portion of a byte array to the Stream message stream.
          * size as the number of bytes to write.
-         * @param value - bytes to write to the stream
-         * @param offset - the initial offset within the byte array
-         * @param length - the number of bytes to use
-         * @throws CMSException
+         *
+         * @param value
+         *      bytes to write to the stream
+         * @param offset
+         *      the initial offset within the byte array
+         * @param length
+         *      the number of bytes to use
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const unsigned char* value,
-                                 std::size_t offset,
-                                 std::size_t length ) throw ( cms::CMSException );
+        virtual void writeBytes( const unsigned char* value, std::size_t offset, std::size_t length )
+            throw ( cms::MessageNotWriteableException,
+                    cms::CMSException );
 
         /**
-         * Reads a Char from the Bytes message stream
+         * Reads a Char from the Stream message stream
+         *
          * @returns char value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual char readChar() const throw ( cms::CMSException );
+        virtual char readChar() const throw ( cms::MessageEOFException,
+                                              cms::MessageFormatException,
+                                              cms::MessageNotReadableException,
+                                              cms::CMSException );
 
         /**
-         * Writes a char to the bytes message stream as a 1-byte value
-         * @param value - char to write to the stream
-         * @throws CMSException
+         * Writes a char to the Stream message stream as a 1-byte value
+         *
+         * @param value
+         *      char to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeChar( char value ) throw ( cms::CMSException );
+        virtual void writeChar( char value ) throw ( cms::MessageNotWriteableException,
+                                                     cms::CMSException );
 
         /**
-         * Reads a 32 bit float from the Bytes message stream
+         * Reads a 32 bit float from the Stream message stream
+         *
          * @returns double value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual float readFloat() const throw ( cms::CMSException );
+        virtual float readFloat() const throw ( cms::MessageEOFException,
+                                                cms::MessageFormatException,
+                                                cms::MessageNotReadableException,
+                                                cms::CMSException );
 
         /**
-         * Writes a float to the bytes message stream as a 4 byte value
-         * @param value - float to write to the stream
-         * @throws CMSException
+         * Writes a float to the Stream message stream as a 4 byte value
+         * @param value
+         *      float to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeFloat( float value ) throw ( cms::CMSException );
+        virtual void writeFloat( float value ) throw ( cms::MessageNotWriteableException,
+                                                       cms::CMSException );
 
         /**
-         * Reads a 64 bit double from the Bytes message stream
+         * Reads a 64 bit double from the Stream message stream
+         *
          * @returns double value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual double readDouble() const throw ( cms::CMSException );
+        virtual double readDouble() const throw ( cms::MessageEOFException,
+                                                  cms::MessageFormatException,
+                                                  cms::MessageNotReadableException,
+                                                  cms::CMSException );
 
         /**
-         * Writes a double to the bytes message stream as a 8 byte value
-         * @param value - double to write to the stream
-         * @throws CMSException
+         * Writes a double to the Stream message stream as a 8 byte value
+         * @param value
+         *      double to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeDouble( double value ) throw ( cms::CMSException );
+        virtual void writeDouble( double value ) throw ( cms::MessageNotWriteableException,
+                                                         cms::CMSException );
 
         /**
-         * Reads a 16 bit signed short from the Bytes message stream
+         * Reads a 16 bit signed short from the Stream message stream
+         *
          * @returns short value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual short readShort() const throw ( cms::CMSException );
+        virtual short readShort() const throw ( cms::MessageEOFException,
+                                                cms::MessageFormatException,
+                                                cms::MessageNotReadableException,
+                                                cms::CMSException );
 
         /**
-         * Writes a signed short to the bytes message stream as a 2 byte value
-         * @param value - signed short to write to the stream
-         * @throws CMSException
+         * Writes a signed short to the Stream message stream as a 2 byte value
+         *
+         * @param value
+         *      signed short to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeShort( short value ) throw ( cms::CMSException );
+        virtual void writeShort( short value ) throw ( cms::MessageNotWriteableException,
+                                                       cms::CMSException );
 
         /**
-         * Reads a 16 bit unsigned short from the Bytes message stream
+         * Reads a 16 bit unsigned short from the Stream message stream
+         *
          * @returns unsigned short value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual unsigned short readUnsignedShort() const throw ( cms::CMSException );
+        virtual unsigned short readUnsignedShort() const throw ( cms::MessageEOFException,
+                                                                 cms::MessageFormatException,
+                                                                 cms::MessageNotReadableException,
+                                                                 cms::CMSException );
 
         /**
-         * Writes a unsigned short to the bytes message stream as a 2 byte value
-         * @param value - unsigned short to write to the stream
-         * @throws CMSException
+         * Writes a unsigned short to the Stream message stream as a 2 byte value
+         *
+         * @param value
+         *      unsigned short to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeUnsignedShort( unsigned short value ) throw ( cms::CMSException );
+        virtual void writeUnsignedShort( unsigned short value ) throw ( cms::MessageNotWriteableException,
+                                                                        cms::CMSException );
 
         /**
-         * Reads a 32 bit signed intger from the Bytes message stream
+         * Reads a 32 bit signed integer from the Stream message stream
+         *
          * @returns int value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual int readInt() const throw ( cms::CMSException );
+        virtual int readInt() const throw ( cms::MessageEOFException,
+                                            cms::MessageFormatException,
+                                            cms::MessageNotReadableException,
+                                            cms::CMSException );
 
         /**
-         * Writes a signed int to the bytes message stream as a 4 byte value
-         * @param value - signed int to write to the stream
-         * @throws CMSException
+         * Writes a signed int to the Stream message stream as a 4 byte value
+         *
+         * @param value
+         *      signed int to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeInt( int value ) throw ( cms::CMSException );
+        virtual void writeInt( int value ) throw ( cms::MessageNotWriteableException,
+                                                   cms::CMSException );
 
         /**
-         * Reads a 64 bit long from the Bytes message stream
+         * Reads a 64 bit long from the Stream message stream
+         *
          * @returns long long value from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual long long readLong() const throw ( cms::CMSException );
+        virtual long long readLong() const throw ( cms::MessageEOFException,
+                                                   cms::MessageFormatException,
+                                                   cms::MessageNotReadableException,
+                                                   cms::CMSException );
 
         /**
-         * Writes a long long to the bytes message stream as a 8 byte value
-         * @param value - signed long long to write to the stream
-         * @throws CMSException
+         * Writes a long long to the Stream message stream as a 8 byte value
+         *
+         * @param value
+         *      signed long long to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeLong( long long value ) throw ( cms::CMSException );
+        virtual void writeLong( long long value ) throw ( cms::MessageNotWriteableException,
+                                                          cms::CMSException );
 
         /**
-         * Reads an ASCII String from the Bytes message stream
+         * Reads an ASCII String from the Stream message stream
+         *
          * @returns String from stream
-         * @throws CMSException
+         * @throw CMSException - if the CMS provider fails to read the message
+         *                       due to some internal error.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if this type conversion is invalid.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::string readString() const throw ( cms::CMSException );
+        virtual std::string readString() const throw ( cms::MessageEOFException,
+                                                       cms::MessageFormatException,
+                                                       cms::MessageNotReadableException,
+                                                       cms::CMSException );
 
         /**
-         * Writes an ASCII String to the Bytes message stream
-         * @param value - String to write to the stream
-         * @throws CMSException
+         * Writes an ASCII String to the Stream message stream
+         *
+         * @param value
+         *      String to write to the stream
+         * @throws CMSException - if the CMS provider fails to write the message due
+         *                        to some internal error.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeString( const std::string& value ) throw ( cms::CMSException );
+        virtual void writeString( const std::string& value )throw ( cms::MessageNotWriteableException,
+                                                                    cms::CMSException );
 
-    protected:
+    private:
 
-        /**
-         * Throws an exception if in write-only mode.
-         * @throws CMSException.
-         */
-        void checkWriteOnlyBody() const throw( cms::CMSException );
+        void storeContent();
 
-        /**
-         * Fetches a reference to this objects PrimitiveList, if one needs
-         * to be created or unmarshaled, this will perform the correct steps.
-         * @returns reference to a PrimtiveList.
-         */
-        util::PrimitiveList& getList()
-            throw ( decaf::lang::exceptions::NullPointerException );
-        const util::PrimitiveList& getList() const
-            throw ( decaf::lang::exceptions::NullPointerException );
+        void initializeReading() const;
 
-        /**
-         * Performs the unmarshal on the List if needed, otherwise just returns.
-         */
-        void checkListIsUnmarshalled() const
-            throw ( decaf::lang::exceptions::NullPointerException );
+        void initializeWriting();
 
     };
 

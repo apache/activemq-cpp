@@ -63,6 +63,10 @@ namespace io{
 
         virtual ~DataInputStream();
 
+        virtual int read() throw ( IOException ) {
+            return FilterInputStream::read();
+        }
+
         /**
          * Reads some number of bytes from the contained input stream and
          * stores them into the buffer array b. The number of bytes actually

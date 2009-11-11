@@ -91,12 +91,15 @@ namespace io{
         virtual std::size_t available() const throw ( IOException ) = 0;
 
         /**
-         * Reads a single byte from the buffer.  Blocks until
-         * data is available.
-         * @return The next byte.
+         * Reads a single byte from the buffer.  The value byte is returned as an int in the
+         * range 0 to 255. If no byte is available because the end of the stream has been reached,
+         * the value -1 is returned. This method blocks until input data is available, the end of
+         * the stream is detected, or an exception is thrown.
+         *
+         * @return The next byte or -1 if the end of stream is reached.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( IOException ) = 0;
+        virtual int read() throw ( IOException ) = 0;
 
         /**
          * Reads an array of bytes from the buffer.  Blocks until

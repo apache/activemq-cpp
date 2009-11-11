@@ -124,7 +124,7 @@ namespace io{
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( IOException );
+        virtual int read() throw ( IOException );
 
         /**
          * Reads an array of bytes from the buffer.
