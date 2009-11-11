@@ -22,7 +22,7 @@ using namespace util;
 
 ////////////////////////////////////////////////////////////////////////////////
 const int IntegrationCommon::defaultDelay = 1000;
-const unsigned int IntegrationCommon::defaultMsgCount = 2000;
+const unsigned int IntegrationCommon::defaultMsgCount = 200;
 bool IntegrationCommon::debug = false;
 
 ////////////////////////////////////////////////////////////////////////////////
