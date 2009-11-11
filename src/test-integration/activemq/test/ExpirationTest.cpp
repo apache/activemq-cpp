@@ -47,10 +47,11 @@ namespace test {
 
     public:
 
-        Producer( const std::string& brokerURL, const std::string& topic,
+        Producer( const std::string& brokerURL, const std::string& destination,
                   int numMessages, long long timeToLive ) {
             this->cmsProvider.reset( new CMSProvider( brokerURL ) );
-            this->cmsProvider->setDestinationName( topic );
+            this->cmsProvider->setDestinationName( destination );
+            this->cmsProvider->setTopic( false );
             this->numMessages = numMessages;
             this->timeToLive = timeToLive;
             this->disableTimeStamps = false;
@@ -74,7 +75,10 @@ namespace test {
                 cms::MessageProducer* producer = cmsProvider->getProducer();
                 producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
                 producer->setDisableMessageTimeStamp( disableTimeStamps );
-                producer->setTimeToLive( 1 );
+
+                if( !this->disableTimeStamps ) {
+                    producer->setTimeToLive( timeToLive );
+                }
 
                 // Create the Thread Id String
                 string threadIdStr = Integer::toString( Thread::getId() );
@@ -103,9 +107,10 @@ namespace test {
 
     public:
 
-        Consumer( const std::string& brokerURL, const std::string& topic, long waitMillis ) {
+        Consumer( const std::string& brokerURL, const std::string& destination, long waitMillis ) {
             this->cmsProvider.reset( new CMSProvider( brokerURL ) );
-            this->cmsProvider->setDestinationName( topic + "?consumer.retroactive=true" );
+            this->cmsProvider->setTopic( false );
+            this->cmsProvider->setDestinationName( destination );
             this->waitMillis = waitMillis;
             this->numReceived = 0;
         }
@@ -149,13 +154,13 @@ namespace test {
 ////////////////////////////////////////////////////////////////////////////////
 void ExpirationTest::testExpired() {
 
-    string topic = UUID::randomUUID().toString();
-    Producer producer( this->getBrokerURL(), topic, 1, 1 );
+    string destination = UUID::randomUUID().toString();
+    Producer producer( this->getBrokerURL(), destination, 1, 1 );
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
 
-    Consumer consumer( this->getBrokerURL(), topic, 2000 );
+    Consumer consumer( this->getBrokerURL(), destination, 2000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
@@ -166,14 +171,14 @@ void ExpirationTest::testExpired() {
 ////////////////////////////////////////////////////////////////////////////////
 void ExpirationTest::testNotExpired() {
 
-    string topic = UUID::randomUUID().toString();
-    Producer producer( this->getBrokerURL(), topic, 2, 2000 );
+    string destination = UUID::randomUUID().toString();
+    Producer producer( this->getBrokerURL(), destination, 2, 2000 );
     producer.setDisableTimeStamps( true );
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
 
-    Consumer consumer( this->getBrokerURL(), topic, 3000 );
+    Consumer consumer( this->getBrokerURL(), destination, 3000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
