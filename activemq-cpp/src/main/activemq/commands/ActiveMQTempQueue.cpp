@@ -17,6 +17,7 @@
 #include <activemq/commands/ActiveMQTempQueue.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 using namespace std;
 using namespace activemq;
@@ -70,4 +71,12 @@ std::string ActiveMQTempQueue::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQTempQueue::equals( const DataStructure* value ) const {
     return ActiveMQDestination::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempQueue::destroy() throw ( cms::CMSException ) {
+    try{
+        close();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

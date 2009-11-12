@@ -21,8 +21,15 @@
 #include <activemq/util/Config.h>
 
 #include <cms/CMSException.h>
+#include <cms/CMSSecurityException.h>
 #include <cms/MessageEOFException.h>
 #include <cms/MessageFormatException.h>
+#include <cms/MessageNotReadableException.h>
+#include <cms/MessageNotWriteableException.h>
+#include <cms/InvalidClientIdException.h>
+#include <cms/InvalidDestinationException.h>
+#include <cms/InvalidSelectorException.h>
+#include <cms/IllegalStateException.h>
 
 #include <decaf/lang/Exception.h>
 
@@ -51,5 +58,55 @@ namespace util {
     };
 
 }}
+
+/**
+* Macro for catching an exception of one type and then re-throwing
+* as a Basic CMSException, good for cases where the method isn't specific
+* about what CMS Exceptions are thrown, bad if you need to throw an
+* exception of MessageNotReadableException for instance.
+*/
+#define AMQ_CATCH_ALL_THROW_CMSEXCEPTION() \
+    catch( cms::CMSSecurityException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::IllegalStateException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::InvalidClientIdException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::InvalidDestinationException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::InvalidSelectorException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::MessageEOFException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::MessageFormatException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::MessageNotReadableException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::MessageNotWriteableException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::CMSException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( activemq::exceptions::ActiveMQException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex.convertToCMSException(); \
+    } catch( decaf::lang::Exception& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        activemq::exceptions::ActiveMQException amqEx( ex ); \
+        throw amqEx.convertToCMSException(); \
+    } catch( std::exception& ex ){ \
+        throw cms::CMSException( ex.what(), NULL ); \
+    } catch(...) { \
+        throw cms::CMSException( "Caught Unknown Exception", NULL ); \
+    }
 
 #endif /* _ACTIVEMQ_UTIL_CMSEXCEPTIONSUPPORT_H_ */

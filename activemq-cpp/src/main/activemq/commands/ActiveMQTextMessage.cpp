@@ -20,7 +20,9 @@
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/DataInputStream.h>
+
 #include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 using namespace std;
 using namespace activemq;

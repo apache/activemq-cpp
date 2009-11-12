@@ -24,6 +24,7 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/exceptions/BrokerException.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/util/Iterator.h>
@@ -138,6 +139,7 @@ cms::Session* ActiveMQConnection::createSession(
         sessionId->setConnectionId( connectionInfo->getConnectionId()->getValue() );
         sessionId->setValue( this->getNextSessionId() );
         sessionInfo->setSessionId( sessionId );
+        sessionInfo->setAckMode( ackMode );
 
         // Send the subscription message to the broker.
         syncRequest( sessionInfo );
@@ -395,7 +397,7 @@ void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destinat
         syncRequest( command );
     }
     AMQ_CATCH_RETHROW( NullPointerException )
-    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::IllegalStateException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -423,7 +425,7 @@ void ActiveMQConnection::destroyDestination( const cms::Destination* destination
         this->destroyDestination( amqDestination );
     }
     AMQ_CATCH_RETHROW( NullPointerException )
-    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::IllegalStateException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

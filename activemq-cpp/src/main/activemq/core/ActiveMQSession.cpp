@@ -24,6 +24,7 @@
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQSessionExecutor.h>
 #include <activemq/util/ActiveMQProperties.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/DestinationInfo.h>
@@ -232,6 +233,19 @@ void ActiveMQSession::clearMessagesInProgress() {
         std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
         for( ; iter != consumers.end(); ++iter ) {
             (*iter)->clearMessagesInProgress();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::acknowledge() {
+
+    synchronized( &this->consumers ) {
+        std::vector< ActiveMQConsumer* > consumers = this->consumers.values();
+
+        std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
+        for( ; iter != consumers.end(); ++iter ) {
+            (*iter)->acknowledge();
         }
     }
 }

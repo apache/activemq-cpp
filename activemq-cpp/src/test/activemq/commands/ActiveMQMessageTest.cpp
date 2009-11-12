@@ -22,20 +22,21 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
+using namespace activemq::core;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMessageTest::test()
 {
     ActiveMQMessage myMessage;
-    MyAckHandler ackHandler;
+    Pointer<MyAckHandler> ackHandler( new MyAckHandler() );
 
     CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQMessage::ID_ACTIVEMQMESSAGE );
 
-    myMessage.setAckHandler( &ackHandler );
+    myMessage.setAckHandler( ackHandler );
     myMessage.acknowledge();
 
-    CPPUNIT_ASSERT( ackHandler.wasAcked == true );
+    CPPUNIT_ASSERT( ackHandler->wasAcked == true );
 
     CPPUNIT_ASSERT( myMessage.getPropertyNames().size() == 0 );
     CPPUNIT_ASSERT( myMessage.propertyExists( "something" ) == false );

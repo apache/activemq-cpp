@@ -162,11 +162,17 @@ namespace core{
         bool isAutoAcknowledge() const {
             return this->ackMode == cms::Session::AUTO_ACKNOWLEDGE;
         }
+
         bool isDupsOkAcknowledge() const {
             return this->ackMode == cms::Session::DUPS_OK_ACKNOWLEDGE;
         }
+
         bool isClientAcknowledge() const {
             return this->ackMode == cms::Session::CLIENT_ACKNOWLEDGE;
+        }
+
+        bool isIndividualAcknowledge() const {
+            return this->ackMode == cms::Session::INDIVIDUAL_ACKNOWLEDGE;
         }
 
         /**
@@ -573,6 +579,12 @@ namespace core{
          * @throw ActiveMQException if this is not a Transacted Session.
          */
         void doStartTransaction() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Request that the Session inform all its consumers to Acknowledge all Message's
+         * that have been received so far.
+         */
+        void acknowledge();
 
         /**
          * Request that this Session inform all of its consumers to deliver their pending

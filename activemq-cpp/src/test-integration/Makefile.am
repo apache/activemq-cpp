@@ -31,6 +31,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
     activemq/test/openwire/OpenwireDurableTest.cpp \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
+    activemq/test/openwire/OpenwireIndividualAckTest.cpp \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
     activemq/test/openwire/OpenwireSimpleTest.cpp \
@@ -70,6 +71,7 @@ h_sources = \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
     activemq/test/openwire/OpenwireDurableTest.h \
     activemq/test/openwire/OpenwireExpirationTest.h \
+    activemq/test/openwire/OpenwireIndividualAckTest.h \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
     activemq/test/openwire/OpenwireSimpleTest.h \

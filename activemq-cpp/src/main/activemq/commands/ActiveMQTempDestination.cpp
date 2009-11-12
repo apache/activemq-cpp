@@ -18,6 +18,7 @@
 
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 using namespace std;
 using namespace activemq;

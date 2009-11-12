@@ -17,6 +17,7 @@
 #include <activemq/commands/ActiveMQDestination.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/util/URISupport.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 #include <activemq/commands/ActiveMQTopic.h>
 #include <activemq/commands/ActiveMQQueue.h>

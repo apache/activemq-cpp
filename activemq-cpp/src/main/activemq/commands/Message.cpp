@@ -43,7 +43,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 Message::Message() : BaseCommand() {
 
-    this->ackHandler = NULL;
     this->readOnlyBody = false;
     this->readOnlyProperties = false;
     this->groupID = "";
@@ -236,7 +235,7 @@ std::string Message::toString() const {
     }
     stream << " Value of BrokerInTime = " << this->getBrokerInTime() << std::endl;
     stream << " Value of BrokerOutTime = " << this->getBrokerOutTime() << std::endl;
-    stream << " Value of ackHandler = " << ackHandler << std::endl;
+    stream << " Value of ackHandler = " << ackHandler.get() << std::endl;
     stream << " Value of properties = " << this->properties.toString() << std::endl;
     stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
     stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;

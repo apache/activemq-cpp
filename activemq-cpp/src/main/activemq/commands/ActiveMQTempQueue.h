@@ -136,12 +136,7 @@ namespace commands{
          * Destroy's the Temp Destination at the Broker
          * @throws CMSException
          */
-        virtual void destroy() throw ( cms::CMSException ) {
-            try{
-                close();
-            }
-            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-        }
+        virtual void destroy() throw ( cms::CMSException );
 
     };
 

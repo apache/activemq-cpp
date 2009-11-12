@@ -31,6 +31,7 @@
 #include <activemq/commands/MessageId.h>
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
+#include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/util/Config.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/Pointer.h>
@@ -59,7 +60,7 @@ namespace commands{
 
         // Used to allow a client to call Message::acknowledge when in the Client
         // Ack mode.
-        core::ActiveMQAckHandler* ackHandler;
+        Pointer<core::ActiveMQAckHandler> ackHandler;
 
         // Message properties, these are Marshaled and Unmarshaled from the Message
         // Command's marshaledProperties vector.
@@ -189,7 +190,7 @@ namespace commands{
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler to call
          */
-        virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {
+        virtual void setAckHandler( const Pointer<core::ActiveMQAckHandler>& handler ) {
             this->ackHandler = handler;
         }
 
@@ -198,7 +199,7 @@ namespace commands{
          * when the Acknowledge method is called.
          * @returns handler ActiveMQAckHandler to call or NULL if not set
          */
-        virtual core::ActiveMQAckHandler* getAckHandler() const {
+        virtual Pointer<core::ActiveMQAckHandler> getAckHandler() const {
             return this->ackHandler;
         }
 

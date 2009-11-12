@@ -17,6 +17,8 @@
 
 #include "ActiveMQBlobMessage.h"
 
+#include <activemq/util/CMSExceptionSupport.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::commands;
