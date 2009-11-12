@@ -18,6 +18,7 @@
 #include "CmsAccessor.h"
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 using namespace activemq::cmsutil;
 using namespace activemq::exceptions;

@@ -24,6 +24,7 @@
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 #include <cms/MessageNotReadableException.h>
 #include <cms/MessageNotWriteableException.h>

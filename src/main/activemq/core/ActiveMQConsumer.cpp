@@ -22,6 +22,7 @@
 #include <decaf/lang/Math.h>
 #include <decaf/lang/System.h>
 #include <activemq/util/Config.h>
+#include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessageAck.h>
@@ -33,6 +34,7 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
+#include <activemq/core/ActiveMQAckHandler.h>
 #include <cms/ExceptionListener.h>
 #include <memory>
 
@@ -50,6 +52,11 @@ using namespace decaf::util::concurrent;
 namespace activemq{
 namespace core {
 
+    /**
+     * Class used to deal with consumers in an active transaction.  This
+     * class calls back into the consumer when the transaction is Committed or
+     * Rolled Back to process that event.
+     */
     class TransactionSynhcronization : public Synchronization {
     private:
 
@@ -86,6 +93,11 @@ namespace core {
 
     };
 
+    /**
+     * Class used to Hook a consumer that has been closed into the Transaction
+     * it is currently a part of.  Once the Transaction has been Committed or
+     * Rolled back this Synchronization can finish the Close of the consumer.
+     */
     class CloseSynhcronization : public Synchronization {
     private:
 
@@ -116,6 +128,60 @@ namespace core {
             consumer->doClose();
         }
 
+    };
+
+    /**
+     * ActiveMQAckHandler used to support Client Acknowledge mode.
+     */
+    class ClientAckHandler : public ActiveMQAckHandler {
+    private:
+
+        ActiveMQSession* session;
+
+    public:
+
+        ClientAckHandler( ActiveMQSession* session ) {
+            this->session = session;
+        }
+
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
+            throw ( cms::CMSException ) {
+
+            try {
+                this->session->acknowledge();
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+        }
+    };
+
+    /**
+     * ActiveMQAckHandler used to enable the Individual Acknowledge mode.
+     */
+    class IndividualAckHandler : public ActiveMQAckHandler {
+    private:
+
+        Pointer<commands::MessageDispatch> dispatch;
+        ActiveMQConsumer* consumer;
+
+    public:
+
+        IndividualAckHandler( ActiveMQConsumer* consumer, const Pointer<MessageDispatch>& dispatch ) {
+            this->consumer = consumer;
+            this->dispatch = dispatch;
+        }
+
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
+            throw ( cms::CMSException ) {
+
+            try {
+
+                if( this->dispatch != NULL ) {
+                    this->consumer->acknowledge( this->dispatch );
+                    this->dispatch.reset( NULL );
+                }
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+        }
     };
 
 }}
@@ -462,42 +528,35 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) thro
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<MessageDispatch>& dispatch ) {
 
-    // If the Session is in ClientAcknowledge mode, then we set the
-    // handler in the message to this object and send it out.  Otherwise
-    // we ack it here for all the other Modes.
+    // If the Session is in ClientAcknowledge or IndividualAcknowledge mode, then
+    // we set the handler in the message to this object and send it out.
     if( session->isClientAcknowledge() ) {
-
-        // Register ourself so that we can handle the Message's
-        // acknowledge method.
-        dispatch->getMessage()->setAckHandler( this );
+        Pointer<ActiveMQAckHandler> ackHandler( new ClientAckHandler( this->session ) );
+        dispatch->getMessage()->setAckHandler( ackHandler );
+    } else if( session->isIndividualAcknowledge() ) {
+        Pointer<ActiveMQAckHandler> ackHandler( new IndividualAckHandler( this, dispatch ) );
+        dispatch->getMessage()->setAckHandler( ackHandler );
     }
 
     this->lastDeliveredSequenceId =
         dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
 
-    synchronized( &dispatchedMessages ) {
-        dispatchedMessages.enqueueFront( dispatch );
-    }
+    if( !isAutoAcknowledgeBatch() ) {
 
-    // If the session is transacted then we hand off the message to it to
-    // be stored for later redelivery.  We do need to check and see if we
-    // are approaching the prefetch limit and send an Delivered ack just so
-    // we continue to receive messages, otherwise we'd stall.
-    if( session->isTransacted() ) {
-
-        if( transaction == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "In a Transacted Session but no Transaction Context set." );
+        // When not in an Auto
+        synchronized( &dispatchedMessages ) {
+            dispatchedMessages.enqueueFront( dispatch );
         }
 
-        ackLater( dispatch, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        if( this->session->isTransacted() ) {
+            ackLater( dispatch, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& message,
-                                               bool messageExpired AMQCPP_UNUSED ) {
+                                               bool messageExpired ) {
 
     try{
 
@@ -509,7 +568,9 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
             ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
         }
 
-        if( session->isAutoAcknowledge() ) {
+        if( session->isTransacted() ) {
+            return;
+        } else if( isAutoAcknowledgeEach() ) {
 
             if( this->deliveringAcks.compareAndSet( false, true ) ) {
 
@@ -528,8 +589,12 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
                 this->deliveringAcks.set( false );
             }
 
-        } else if( session->isClientAcknowledge() ) {
+        } else if( isAutoAcknowledgeBatch() ) {
+            ackLater( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
+        } else if( session->isClientAcknowledge() || session->isIndividualAcknowledge() ) {
             ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        } else {
+            throw IllegalStateException( __FILE__, __LINE__, "Invalid Session State" );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -547,12 +612,16 @@ void ActiveMQConsumer::deliverAcks()
 
         if( this->deliveringAcks.compareAndSet( false, true ) ) {
 
-            if( this->session->isAutoAcknowledge() ) {
+            if( isAutoAcknowledgeEach() ) {
 
                 synchronized( &dispatchedMessages ) {
+
                     ack = makeAckForAllDeliveredMessages( ActiveMQConstants::ACK_TYPE_CONSUMED );
+
                     if( ack != NULL ) {
                         dispatchedMessages.clear();
+                    } else {
+                        ack.swap( pendingAck );
                     }
                 }
 
@@ -608,8 +677,14 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
 
     if( oldPendingAck == NULL ) {
         pendingAck->setFirstMessageId( pendingAck->getLastMessageId() );
-    } else {
+    } else if ( oldPendingAck->getAckType() == pendingAck->getAckType() ) {
         pendingAck->setFirstMessageId( oldPendingAck->getFirstMessageId() );
+    } else {
+        // old pending ack being superseded by ack of another type, if is is not a delivered
+        // ack and hence important, send it now so it is not lost.
+        if( oldPendingAck->getAckType() != ActiveMQConstants::ACK_TYPE_DELIVERED ) {
+            session->oneway( oldPendingAck );
+        }
     }
 
     if( session->isTransacted() ) {
@@ -619,13 +694,8 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
     if( ( 0.5 * this->consumerInfo->getPrefetchSize() ) <= ( deliveredCounter - additionalWindowSize ) ) {
         session->oneway( pendingAck );
         pendingAck.reset( NULL );
-        additionalWindowSize = deliveredCounter;
-
-        // When using DUPS ok, we do a real ack.
-        if( ackType == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
-            deliveredCounter = 0;
-            additionalWindowSize = 0;
-        }
+        deliveredCounter = 0;
+        additionalWindowSize = 0;
     }
 }
 
@@ -654,15 +724,39 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
+void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
    throw ( cms::CMSException ) {
 
     try{
 
         this->checkClosed();
 
-        if( this->session->isClientAcknowledge() ) {
-            this->acknowledge();
+        if( this->session->isIndividualAcknowledge() ) {
+
+            Pointer<MessageAck> ack( new MessageAck() );
+            ack->setAckType( ActiveMQConstants::ACK_TYPE_CONSUMED );
+            ack->setConsumerId( this->consumerInfo->getConsumerId() );
+            ack->setDestination( this->consumerInfo->getDestination() );
+            ack->setMessageCount( 1 );
+            ack->setLastMessageId( dispatch->getMessage()->getMessageId() );
+            ack->setFirstMessageId( dispatch->getMessage()->getMessageId() );
+
+            session->oneway( ack );
+
+            synchronized( &dispatchedMessages ) {
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
+                while( iter->hasNext() ) {
+                    if( iter->next() == dispatch ) {
+                        iter->remove();
+                        break;
+                    }
+                }
+            }
+
+        } else {
+            throw IllegalStateException(
+                __FILE__, __LINE__,
+                "Session is not in IndividualAcknowledge mode." );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -937,4 +1031,15 @@ void ActiveMQConsumer::clearMessagesInProgress() {
     // a flag so that the list can be cleared as soon as the
     // dispatch thread is ready to flush the dispatch list
     clearDispatchList = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumer::isAutoAcknowledgeEach() const {
+    return this->session->isAutoAcknowledge() ||
+           ( this->session->isDupsOkAcknowledge() && this->consumerInfo->getDestination()->isQueue() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumer::isAutoAcknowledgeBatch() const {
+    return this->session->isDupsOkAcknowledge() && !this->consumerInfo->getDestination()->isQueue();
 }

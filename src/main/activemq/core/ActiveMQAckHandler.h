@@ -19,9 +19,11 @@
 
 #include <cms/CMSException.h>
 #include <activemq/util/Config.h>
-#include <activemq/commands/Message.h>
 
 namespace activemq{
+namespace commands{
+    class Message;
+}
 namespace core{
 
     /**

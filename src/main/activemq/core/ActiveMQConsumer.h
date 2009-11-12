@@ -27,7 +27,6 @@
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/MessageAck.h>
 #include <activemq/commands/MessageDispatch.h>
-#include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/core/MessageDispatchChannel.h>
@@ -48,7 +47,6 @@ namespace core{
     class ActiveMQSession;
 
     class AMQCPP_API ActiveMQConsumer : public cms::MessageConsumer,
-                                        public ActiveMQAckHandler,
                                         public Dispatcher
     {
     private:
@@ -220,7 +218,7 @@ namespace core{
          * @param message the Message to Acknowledge
          * @throw CMSException
          */
-        virtual void acknowledgeMessage( const commands::Message* message )
+        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
             throw ( cms::CMSException );
 
     public:  // Dispatcher Methods
@@ -286,7 +284,7 @@ namespace core{
          * Has this Consumer Transaction Synchronization been added to the transaction
          * @return true if the synchronization has been added.
          */
-        bool issynchronizationRegistered() const {
+        bool isSynchronizationRegistered() const {
             return this->synchronizationRegistered;
         }
 
@@ -304,7 +302,6 @@ namespace core{
          * pending messages have been dispatched.
          */
         bool iterate();
-
 
         /**
          * Forces this consumer to send all pending acks to the broker.
@@ -393,6 +390,12 @@ namespace core{
 
         // Create an Ack Message that acks all messages that have been delivered so far.
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );
+
+        // Should Acks be sent on each dispatched message
+        bool isAutoAcknowledgeEach() const;
+
+        // Can Acks be batched for less network overhead.
+        bool isAutoAcknowledgeBatch() const;
 
     };
 

@@ -16,6 +16,7 @@
  */
 #include <activemq/commands/ActiveMQMapMessage.h>
 #include <activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
 using namespace std;
 using namespace decaf;

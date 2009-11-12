@@ -16,6 +16,8 @@
  */
 #include <activemq/commands/ActiveMQTempTopic.h>
 
+#include <activemq/util/CMSExceptionSupport.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::commands;
@@ -68,4 +70,12 @@ std::string ActiveMQTempTopic::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
     return ActiveMQDestination::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempTopic::destroy() throw ( cms::CMSException ) {
+    try{
+        close();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
