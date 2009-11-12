@@ -27,6 +27,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
 
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/util/PrimitiveMap.h>");
+        includes.add("<activemq/core/ActiveMQAckHandler.h>");
     }
 
     protected void generateNamespaceWrapper( PrintWriter out ) {
@@ -44,7 +45,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("");
         out.println("        // Used to allow a client to call Message::acknowledge when in the Client");
         out.println("        // Ack mode.");
-        out.println("        core::ActiveMQAckHandler* ackHandler;");
+        out.println("        Pointer<core::ActiveMQAckHandler> ackHandler;");
         out.println("");
         out.println("        // Message properties, these are Marshaled and Unmarshaled from the Message");
         out.println("        // Command's marshaledProperties vector.");
@@ -99,7 +100,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * when the Acknowledge method is called.");
         out.println("         * @param handler ActiveMQAckHandler to call");
         out.println("         */");
-        out.println("        virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {");
+        out.println("        virtual void setAckHandler( const Pointer<core::ActiveMQAckHandler>& handler ) {");
         out.println("            this->ackHandler = handler;");
         out.println("        }");
         out.println("");
@@ -108,7 +109,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * when the Acknowledge method is called.");
         out.println("         * @returns handler ActiveMQAckHandler to call or NULL if not set");
         out.println("         */");
-        out.println("        virtual core::ActiveMQAckHandler* getAckHandler() const {");
+        out.println("        virtual Pointer<core::ActiveMQAckHandler> getAckHandler() const {");
         out.println("            return this->ackHandler;");
         out.println("        }");
         out.println("");

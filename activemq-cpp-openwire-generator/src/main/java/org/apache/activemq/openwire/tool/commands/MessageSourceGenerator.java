@@ -31,7 +31,6 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
 
     protected void generateDefaultConstructorBody( PrintWriter out ) {
 
-        out.println("    this->ackHandler = NULL;");
         out.println("    this->readOnlyBody = false;");
         out.println("    this->readOnlyProperties = false;");
 
@@ -50,7 +49,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
     protected void generateToStringBody( PrintWriter out ) {
         super.generateToStringBody(out);
 
-        out.println("    stream << \" Value of ackHandler = \" << ackHandler << std::endl;");
+        out.println("    stream << \" Value of ackHandler = \" << ackHandler.get() << std::endl;");
         out.println("    stream << \" Value of properties = \" << this->properties.toString() << std::endl;");
         out.println("    stream << \" Value of readOnlyBody = \" << this->readOnlyBody << std::endl;");
         out.println("    stream << \" Value of readOnlyProperties = \" << this->readOnlyBody << std::endl;");
