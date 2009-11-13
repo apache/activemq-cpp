@@ -22,7 +22,11 @@
 
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/KeepAliveInfo.h>
+
 #include <decaf/lang/Math.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/ThreadFactory.h>
 
 using namespace std;
 using namespace activemq;
@@ -43,6 +47,14 @@ using namespace decaf::lang::exceptions;
 namespace activemq{
 namespace transport{
 namespace inactivity{
+
+    class InactivityThreadFactory : public ThreadFactory {
+    public:
+
+        virtual Thread* newThread( Runnable* runnable ) {
+            return new Thread( runnable, "Inactivity Monitor Async Task." );
+        }
+    };
 
     class AsyncException : decaf::lang::Runnable {
     private:
