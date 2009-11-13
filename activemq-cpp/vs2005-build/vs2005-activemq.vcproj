@@ -694,6 +694,38 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\IllegalStateException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\IllegalStateException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidClientIdException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidClientIdException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidDestinationException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidDestinationException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidSelectorException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\InvalidSelectorException.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MapMessage.h"
 				>
 			</File>

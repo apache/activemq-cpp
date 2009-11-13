@@ -835,6 +835,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.cpp"
 							>
 						</File>
@@ -856,6 +864,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.h"
 							>
 						</File>
 						<File
