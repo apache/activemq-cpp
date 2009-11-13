@@ -28,6 +28,7 @@ cc_sources = \
     activemq/test/TransactionTest.cpp \
     activemq/test/VirtualTopicTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
+    activemq/test/openwire/OpenwireClientAckTest.cpp \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
     activemq/test/openwire/OpenwireDurableTest.cpp \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
@@ -68,6 +69,7 @@ h_sources = \
     activemq/test/TransactionTest.h \
     activemq/test/VirtualTopicTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
+    activemq/test/openwire/OpenwireClientAckTest.h \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
     activemq/test/openwire/OpenwireDurableTest.h \
     activemq/test/openwire/OpenwireExpirationTest.h \
