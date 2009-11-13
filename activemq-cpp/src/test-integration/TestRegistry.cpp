@@ -16,6 +16,7 @@
  */
 
 #include "activemq/test/openwire/OpenwireAsyncSenderTest.h"
+#include "activemq/test/openwire/OpenwireClientAckTest.h"
 #include "activemq/test/openwire/OpenwireCmsTemplateTest.h"
 #include "activemq/test/openwire/OpenwireDurableTest.h"
 #include "activemq/test/openwire/OpenwireExpirationTest.h"
@@ -40,6 +41,7 @@
 
 // Openwire Tests
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAsyncSenderTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireClientAckTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireCmsTemplateTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireDurableTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireExpirationTest );
