@@ -18,7 +18,13 @@
 #ifndef _DECAF_UTIL_CONCURRENT_THREADFACTORY_H_
 #define _DECAF_UTIL_CONCURRENT_THREADFACTORY_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf {
+namespace lang {
+    class Thread;
+    class Runnable;
+}
 namespace util {
 namespace concurrent {
 
@@ -44,7 +50,7 @@ namespace concurrent {
      *
      * @since 1.0
      */
-    class ThreadFactory {
+    class DECAF_API ThreadFactory {
     public:
 
         virtual ~ThreadFactory() {}
@@ -61,7 +67,7 @@ namespace concurrent {
          * @returns constructed thread, or NULL if the request to create a thread is rejected
          *          the caller owns the returned pointer.
          */
-        virtual Thread* newThread( Runnable* r ) = 0;
+        virtual decaf::lang::Thread* newThread( decaf::lang::Runnable* r ) = 0;
 
     };
 
