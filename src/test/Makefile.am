@@ -50,6 +50,7 @@ cc_sources = \
     activemq/transport/TransportRegistryTest.cpp \
     activemq/transport/correlator/ResponseCorrelatorTest.cpp \
     activemq/transport/failover/FailoverTransportTest.cpp \
+    activemq/transport/inactivity/InactivityMonitorTest.cpp \
     activemq/transport/mock/MockTransportFactoryTest.cpp \
     activemq/util/LongSequenceGeneratorTest.cpp \
     activemq/util/MemoryUsageTest.cpp \
@@ -177,6 +178,7 @@ h_sources = \
     activemq/transport/TransportRegistryTest.h \
     activemq/transport/correlator/ResponseCorrelatorTest.h \
     activemq/transport/failover/FailoverTransportTest.h \
+    activemq/transport/inactivity/InactivityMonitorTest.h \
     activemq/transport/mock/MockTransportFactoryTest.h \
     activemq/util/LongSequenceGeneratorTest.h \
     activemq/util/MemoryUsageTest.h \

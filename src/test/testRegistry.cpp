@@ -102,6 +102,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrel
 #include <activemq/transport/mock/MockTransportFactoryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::mock::MockTransportFactoryTest );
 
+#include <activemq/transport/inactivity/InactivityMonitorTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::inactivity::InactivityMonitorTest );
+
 #include <activemq/transport/TransportRegistryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportRegistryTest );
 #include <activemq/transport/IOTransportTest.h>
