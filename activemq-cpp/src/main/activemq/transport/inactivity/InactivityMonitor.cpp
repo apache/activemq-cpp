@@ -203,7 +203,7 @@ InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next,
     this->members->writeCheckTime = 0;
     this->members->initialDelayTime = 0;
     this->members->keepAliveResponseRequired =
-        Boolean::parseBoolean( properties.getProperty( "keepAliveResponseRequired", false ) );
+        Boolean::parseBoolean( properties.getProperty( "keepAliveResponseRequired", "false" ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
