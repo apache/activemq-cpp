@@ -24,6 +24,7 @@
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/Comparator.h>
 #include <memory>
+#include <typeinfo>
 #include <algorithm>
 
 namespace decaf {
@@ -168,7 +169,9 @@ namespace lang {
                 // didn't actually create one as the dynamic cast failed..
                 this->release();
                 throw decaf::lang::exceptions::ClassCastException(
-                    __FILE__, __LINE__, "Failed to cast source pointer to this type." );
+                    __FILE__, __LINE__,
+                    "Failed to cast source pointer of type %s to this type: %s.",
+                    typeid( T1 ).name(), typeid( T ).name() );
             }
         }
 
