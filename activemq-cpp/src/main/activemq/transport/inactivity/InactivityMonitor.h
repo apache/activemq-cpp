@@ -30,6 +30,8 @@
 #include <decaf/util/Timer.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
+#include <memory>
+
 namespace activemq {
 namespace transport {
 namespace inactivity {
@@ -38,50 +40,20 @@ namespace inactivity {
 
     class ReadChecker;
     class WriteChecker;
-    class AsyncException;
-    class AsyncWriteKeepAlive;
+    class AsyncSignalReadErrorkTask;
+    class AsyncWriteTask;
+    class InactivityMonitorData;
 
     class AMQCPP_API InactivityMonitor : public TransportFilter {
     private:
 
-        // The configured WireFormat for the Transport Chain.
-        Pointer<wireformat::WireFormat> wireFormat;
-
-        // Local and Remote WireFormat information.
-        Pointer<commands::WireFormatInfo> localWireFormatInfo;
-        Pointer<commands::WireFormatInfo> remoteWireFormatInfo;
-
-        Pointer<ReadChecker> readCheckerTask;
-        Pointer<WriteChecker> writeCheckerTask;
-
-        // TODO - We could optimize so that all instances of an Inactivity monitor share a single
-        //        static instance of the read and write timers.  Have to track the number of tasks
-        //        that are scheduled then so we know when to cancel and cleanup the timers.
-        decaf::util::Timer readCheckTimer;
-        decaf::util::Timer writeCheckTimer;
-
-        decaf::util::concurrent::atomic::AtomicBoolean monitorStarted;
-
-        decaf::util::concurrent::atomic::AtomicBoolean commandSent;
-        decaf::util::concurrent::atomic::AtomicBoolean commandReceived;
-
-        decaf::util::concurrent::atomic::AtomicBoolean failed;
-        decaf::util::concurrent::atomic::AtomicBoolean inRead;
-        decaf::util::concurrent::atomic::AtomicBoolean inWrite;
-
-        decaf::util::concurrent::Mutex inWriteMutex;
-        decaf::util::concurrent::Mutex monitor;
-
-        long long readCheckTime;
-        long long writeCheckTime;
-        long long initialDelayTime;
+        // Internal Class used to house the data structures for this object
+        std::auto_ptr<InactivityMonitorData> members;
 
         friend class ReadChecker;
+        friend class AsyncSignalReadErrorkTask;
         friend class WriteChecker;
-        friend class AsyncException;
-        friend class AsyncWriteKeepAlive;
-
-        bool keepAliveResponseRequired;
+        friend class AsyncWriteTask;
 
     public:
 
@@ -104,13 +76,21 @@ namespace inactivity {
         virtual void oneway( const Pointer<Command>& command )
             throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
-        bool isKeepAliveResponseRequired() const {
-            return this->keepAliveResponseRequired;
-        }
+        bool isKeepAliveResponseRequired() const;
 
-        void setKeepAliveResponseRequired( bool value ) {
-            this->keepAliveResponseRequired = value;
-        }
+        void setKeepAliveResponseRequired( bool value );
+
+        long long getReadCheckTime() const;
+
+        void setReadCheckTime( long long value );
+
+        long long getWriteCheckTime() const;
+
+        void setWriteCheckTime( long long value );
+
+        long long getInitialDelayTime() const;
+
+        void setInitialDelayTime( long long value ) const;
 
     private:
 

@@ -20,17 +20,19 @@
 #include "ReadChecker.h"
 #include "WriteChecker.h"
 
+#include <activemq/threads/CompositeTask.h>
+#include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/KeepAliveInfo.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
-#include <decaf/util/concurrent/ThreadFactory.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::commands;
+using namespace activemq::threads;
 using namespace activemq::transport;
 using namespace activemq::transport::inactivity;
 using namespace activemq::exceptions;
@@ -48,81 +50,139 @@ namespace activemq{
 namespace transport{
 namespace inactivity{
 
-    class InactivityThreadFactory : public ThreadFactory {
+    class InactivityMonitorData {
     public:
 
-        virtual Thread* newThread( Runnable* runnable ) {
-            return new Thread( runnable, "Inactivity Monitor Async Task." );
-        }
+        // The configured WireFormat for the Transport Chain.
+        Pointer<WireFormat> wireFormat;
+
+        // Local and Remote WireFormat information.
+        Pointer<WireFormatInfo> localWireFormatInfo;
+        Pointer<WireFormatInfo> remoteWireFormatInfo;
+
+        Pointer<ReadChecker> readCheckerTask;
+        Pointer<WriteChecker> writeCheckerTask;
+
+        Timer readCheckTimer;
+        Timer writeCheckTimer;
+
+        Pointer<CompositeTaskRunner> asyncTasks;
+
+        Pointer<AsyncSignalReadErrorkTask> asyncReadTask;
+        Pointer<AsyncWriteTask> asyncWriteTask;
+
+        AtomicBoolean monitorStarted;
+
+        AtomicBoolean commandSent;
+        AtomicBoolean commandReceived;
+
+        AtomicBoolean failed;
+        AtomicBoolean inRead;
+        AtomicBoolean inWrite;
+
+        Mutex inWriteMutex;
+        Mutex monitor;
+
+        long long readCheckTime;
+        long long writeCheckTime;
+        long long initialDelayTime;
+
+        bool keepAliveResponseRequired;
     };
 
-    class AsyncException : decaf::lang::Runnable {
+    // Task that fires when the TaskRunner is signaled by the ReadCheck Timer Task.
+    class AsyncSignalReadErrorkTask : public CompositeTask {
     private:
 
         InactivityMonitor* parent;
+        std::string remote;
+        AtomicBoolean failed;
 
     public:
 
-        AsyncException( InactivityMonitor* parent ) : parent( parent ) {
+        AsyncSignalReadErrorkTask( InactivityMonitor* parent, const std::string& remote ) {
+            this->parent = parent;
+            this->remote = remote;
         }
 
-        virtual void run() {
-            IOException ex (
-                __FILE__, __LINE__,
-                ( std::string( "Channel was inactive for too long: " ) + parent->next->getRemoteAddress() ).c_str() );
-            parent->onException( ex );
+        void setFailed( bool failed ) {
+            this->failed.set( failed );
         }
 
+        virtual bool isPending() const {
+            return this->failed.get();
+        }
+
+        virtual bool iterate() {
+
+            if( this->failed.compareAndSet( true, false ) ) {
+
+                IOException ex (
+                    __FILE__, __LINE__,
+                    ( std::string( "Channel was inactive for too long: " ) + remote ).c_str() );
+
+                this->parent->onException( ex );
+            }
+
+            return this->failed.get();
+        }
     };
 
-}}}
-
-////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace transport{
-namespace inactivity{
-
-    class AsyncWriteKeepAlive : decaf::lang::Runnable {
+    // Task that fires when the TaskRunner is signaled by the WriteCheck Timer Task.
+    class AsyncWriteTask : public CompositeTask {
     private:
 
         InactivityMonitor* parent;
+        AtomicBoolean write;
 
     public:
 
-        AsyncWriteKeepAlive( InactivityMonitor* parent ) : parent( parent ) {
+        AsyncWriteTask( InactivityMonitor* parent ) : parent( parent ) {
         }
 
-        virtual void run() {
-            if( parent->monitorStarted.get() ) {
+        void setWrite( bool write ) {
+            this->write.set( write );
+        }
+
+        virtual bool isPending() const {
+            return this->write.get();
+        }
+
+        virtual bool iterate() {
+
+            if( this->write.compareAndSet( true, false ) &&
+                this->parent->members->monitorStarted.get() ) {
+
                 try {
                     Pointer<KeepAliveInfo> info( new KeepAliveInfo() );
-                    info->setResponseRequired( parent->keepAliveResponseRequired );
-                    parent->oneway( info );
-                } catch( IOException e ) {
-                    parent->onException( e );
+                    info->setResponseRequired( this->parent->members->keepAliveResponseRequired );
+                    this->parent->oneway( info );
+                } catch( IOException& e ) {
+                    this->parent->onException( e );
                 }
             }
-        }
 
+            return this->write.get();
+        }
     };
 
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
 InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next, const Pointer<WireFormat>& wireFormat )
-:   TransportFilter( next ),
-    wireFormat( wireFormat ),
-    monitorStarted( false ),
-    commandSent( false ),
-    commandReceived( true),
-    failed( false ),
-    inRead( false ),
-    inWrite( false ),
-    readCheckTime( 0 ),
-    writeCheckTime( 0 ),
-    initialDelayTime( 0 ),
-    keepAliveResponseRequired( false ) {
+:   TransportFilter( next ), members( new InactivityMonitorData() ) {
 
+    this->members->wireFormat = wireFormat;
+    this->members->monitorStarted = false;
+    this->members->commandSent = false;
+    this->members->commandReceived = true;
+    this->members->failed = false;
+    this->members->inRead = false;
+    this->members->inWrite = false;
+    this->members->readCheckTime = 0;
+    this->members->writeCheckTime = 0;
+    this->members->initialDelayTime = 0;
+    this->members->keepAliveResponseRequired = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,6 +191,46 @@ InactivityMonitor::~InactivityMonitor() {
         this->stopMonitorThreads();
     }
     AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long InactivityMonitor::getReadCheckTime() const {
+    return this->members->readCheckTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::setReadCheckTime( long long value ) {
+    this->members->readCheckTime = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long InactivityMonitor::getWriteCheckTime() const {
+    return this->members->writeCheckTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::setWriteCheckTime( long long value ) {
+    this->members->writeCheckTime = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long InactivityMonitor::getInitialDelayTime() const {
+    return this->members->initialDelayTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::setInitialDelayTime( long long value ) const {
+    this->members->initialDelayTime = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool InactivityMonitor::isKeepAliveResponseRequired() const {
+    return this->members->keepAliveResponseRequired;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::setKeepAliveResponseRequired( bool value ) {
+    this->members->keepAliveResponseRequired = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +247,7 @@ void InactivityMonitor::close() throw( decaf::io::IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::onException( const decaf::lang::Exception& ex ) {
 
-    if( failed.compareAndSet( false, true ) ) {
+    if( this->members->failed.compareAndSet( false, true ) ) {
         stopMonitorThreads();
         TransportFilter::onException( ex );
     }
@@ -158,15 +258,15 @@ void InactivityMonitor::onCommand( const Pointer<Command>& command ) {
 
     TransportFilter::onCommand( command );
 
-    commandReceived.set( true );
-    inRead.set( true );
+    this->members->commandReceived.set( true );
+    this->members->inRead.set( true );
 
     try {
 
         if( command->isWireFormatInfo() ) {
-            synchronized( &monitor ) {
+            synchronized( &this->members->monitor ) {
 
-                remoteWireFormatInfo = command.dynamicCast<WireFormatInfo>();
+                this->members->remoteWireFormatInfo = command.dynamicCast<WireFormatInfo>();
                 try {
                     startMonitorThreads();
                 } catch( IOException& e ) {
@@ -177,10 +277,10 @@ void InactivityMonitor::onCommand( const Pointer<Command>& command ) {
 
         TransportFilter::onCommand( command );
 
-        inRead.set( false );
+        this->members->inRead.set( false );
 
     } catch( Exception& ex ) {
-        inRead.set( false );
+        this->members->inRead.set( false );
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     }
@@ -195,31 +295,31 @@ void InactivityMonitor::oneway( const Pointer<Command>& command )
         // method - its not synchronized
         // further down the transport stack and gets called by more
         // than one thread  by this class
-        synchronized( &inWriteMutex ) {
-            this->inWrite.set( true );
+        synchronized( &this->members->inWriteMutex ) {
+            this->members->inWrite.set( true );
             try {
 
-                if( failed.get() ) {
+                if( this->members->failed.get() ) {
                     throw IOException(
                         __FILE__, __LINE__,
                         ( std::string( "Channel was inactive for too long: " ) + next->getRemoteAddress() ).c_str() );
                 }
 
                 if( command->isWireFormatInfo() ) {
-                    synchronized( &monitor ) {
-                        localWireFormatInfo = command.dynamicCast<WireFormatInfo>();
+                    synchronized( &this->members->monitor ) {
+                        this->members->localWireFormatInfo = command.dynamicCast<WireFormatInfo>();
                         startMonitorThreads();
                     }
                 }
 
                 this->next->oneway( command );
 
-                this->commandSent.set( true );
-                this->inWrite.set( false );
+                this->members->commandSent.set( true );
+                this->members->inWrite.set( false );
 
             } catch( Exception& ex ) {
-                this->commandSent.set( true );
-                this->inWrite.set( false );
+                this->members->commandSent.set( true );
+                this->members->inWrite.set( false );
 
                 ex.setMark( __FILE__, __LINE__ );
                 throw ex;
@@ -234,84 +334,94 @@ void InactivityMonitor::oneway( const Pointer<Command>& command )
 
 ////////////////////////////////////////////////////////////////////////////////
 bool InactivityMonitor::allowReadCheck( long long elapsed ) {
-    return elapsed > (readCheckTime * 9 / 10);
+    return elapsed > ( this->members->readCheckTime * 9 / 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::readCheck() {
 
-    if( inRead.get() || wireFormat->inReceive() ) {
+    if( this->members->inRead.get() || this->members->wireFormat->inReceive() ) {
         return;
     }
 
-    if( !commandReceived.get() ) {
-//        ASYNC_TASKS.execute( new Runnable() {
-//            public void run() {
-//                onException(new InactivityIOException("Channel was inactive for too long: "+next.getRemoteAddress()));
-//            };
-//
-//        });
+    std::cout << "Performing a Read Check" << std::endl;
+
+    if( !this->members->commandReceived.get() ) {
+
+        std::cout << "Read Check: No Read occurred this period, failed." << std::endl;
+
+        // Set the failed state on our async Read Failure Task and wakeup its runner.
+        this->members->asyncReadTask->setFailed( true );
+        this->members->asyncTasks->wakeup();
     }
 
-    commandReceived.set( false );
+    this->members->commandReceived.set( false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::writeCheck() {
 
-    if( inWrite.get() ) {
+    if( this->members->inWrite.get() ) {
         return;
     }
 
-    if (!commandSent.get()) {
+    std::cout << "Performing Write Check" << std::endl;
 
-//        ASYNC_TASKS.execute( new Runnable() {
-//            public void run() {
-//                if (monitorStarted.get()) {
-//                    try {
-//
-//                        KeepAliveInfo info = new KeepAliveInfo();
-//                        info.setResponseRequired(keepAliveResponseRequired);
-//                        oneway(info);
-//                    } catch (IOException e) {
-//                        onException(e);
-//                    }
-//                }
-//            };
-//        });
+    if(! this->members->commandSent.get() ) {
+
+        std::cout << "Not Command Sent this period, writing" << std::endl;
+
+        this->members->asyncWriteTask->setWrite( true );
+        this->members->asyncTasks->wakeup();
     }
 
-    commandSent.set( false );
+    this->members->commandSent.set( false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::startMonitorThreads() {
 
-    synchronized( &monitor ) {
+    synchronized( &this->members->monitor ) {
 
-        if( monitorStarted.get() ) {
+        std::cout << "Starting Monitor Threads:" << std::endl;
+
+        if( this->members->monitorStarted.get() ) {
             return;
         }
-        if( localWireFormatInfo == NULL ) {
+        if( this->members->localWireFormatInfo == NULL ) {
             return;
         }
-        if( remoteWireFormatInfo == NULL ) {
+        if( this->members->remoteWireFormatInfo == NULL ) {
             return;
         }
 
-        readCheckTime = Math::min( localWireFormatInfo->getMaxInactivityDuration(),
-                                   remoteWireFormatInfo->getMaxInactivityDuration() );
-        initialDelayTime = Math::min( localWireFormatInfo->getMaxInactivityDurationInitalDelay(),
-                                      remoteWireFormatInfo->getMaxInactivityDurationInitalDelay() );
-        if( readCheckTime > 0 ) {
+        this->members->asyncTasks.reset( new CompositeTaskRunner() );
+        this->members->asyncReadTask.reset( new AsyncSignalReadErrorkTask( this, this->getRemoteAddress() ) );
+        this->members->asyncWriteTask.reset( new AsyncWriteTask( this ) );
 
-            monitorStarted.set( true );
-            writeCheckerTask.reset( new WriteChecker( this ) );
-            readCheckerTask.reset( new ReadChecker( this ) );
-            writeCheckTime = readCheckTime > 3 ? readCheckTime / 3 : readCheckTime;
+        this->members->asyncTasks->addTask( this->members->asyncReadTask.get() );
+        this->members->asyncTasks->addTask( this->members->asyncWriteTask.get() );
 
-            this->writeCheckTimer.scheduleAtFixedRate( writeCheckerTask, initialDelayTime, writeCheckTime );
-            this->readCheckTimer.scheduleAtFixedRate( readCheckerTask, initialDelayTime, readCheckTime );
+        this->members->readCheckTime =
+            Math::min( this->members->localWireFormatInfo->getMaxInactivityDuration(),
+                        this->members->remoteWireFormatInfo->getMaxInactivityDuration() );
+
+        this->members->initialDelayTime =
+            Math::min( this->members->localWireFormatInfo->getMaxInactivityDurationInitalDelay(),
+                       this->members->remoteWireFormatInfo->getMaxInactivityDurationInitalDelay() );
+
+        if( this->members->readCheckTime > 0 ) {
+
+            this->members->monitorStarted.set( true );
+            this->members->writeCheckerTask.reset( new WriteChecker( this ) );
+            this->members->readCheckerTask.reset( new ReadChecker( this ) );
+            this->members->writeCheckTime = this->members->readCheckTime > 3 ?
+                                                this->members->readCheckTime / 3 : this->members->readCheckTime;
+
+            this->members->writeCheckTimer.scheduleAtFixedRate(
+                this->members->writeCheckerTask, this->members->initialDelayTime, this->members->writeCheckTime );
+            this->members->readCheckTimer.scheduleAtFixedRate(
+                this->members->readCheckerTask, this->members->initialDelayTime, this->members->readCheckTime );
         }
     }
 }
@@ -319,17 +429,21 @@ void InactivityMonitor::startMonitorThreads() {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::stopMonitorThreads() {
 
-    synchronized( &monitor ) {
+    synchronized( &this->members->monitor ) {
 
-        if( monitorStarted.compareAndSet( true, false ) ) {
+        std::cout << "Stopping Monitor Threads:" << std::endl;
 
-            readCheckerTask->cancel();
-            writeCheckerTask->cancel();
+        if( this->members->monitorStarted.compareAndSet( true, false ) ) {
 
-            readCheckTimer.purge();
-            readCheckTimer.cancel();
-            writeCheckTimer.purge();
-            writeCheckTimer.cancel();
+            this->members->readCheckerTask->cancel();
+            this->members->writeCheckerTask->cancel();
+
+            this->members->readCheckTimer.purge();
+            this->members->readCheckTimer.cancel();
+            this->members->writeCheckTimer.purge();
+            this->members->writeCheckTimer.cancel();
+
+            this->members->asyncTasks->shutdown();
         }
     }
 }
