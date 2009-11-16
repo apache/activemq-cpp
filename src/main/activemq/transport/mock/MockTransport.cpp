@@ -48,6 +48,9 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
     this->failOnReceiveMessage = false;
     this->numReceivedMessageBeforeFail = 0;
     this->numReceivedMessages = 0;
+    this->failOnKeepAliveSends = false;
+    this->numSentKeepAlivesBeforeFail = 0;
+    this->numSentKeepAlives = 0;
     this->failOnStart = false;
     this->failOnStop = false;
     this->failOnClose = false;
@@ -68,6 +71,15 @@ void MockTransport::oneway( const Pointer<Command>& command )
             this->numSentMessages++;
 
             if( this->numSentMessages > this->numSentMessageBeforeFail ) {
+                throw IOException(
+                    __FILE__, __LINE__, "Failed to Send Message.");
+            }
+        }
+
+        if( command->isKeepAliveInfo() && this->failOnKeepAliveSends ) {
+            this->numSentKeepAlives++;
+
+            if( this->numSentKeepAlives > this->numSentKeepAlivesBeforeFail ) {
                 throw IOException(
                     __FILE__, __LINE__, "Failed to Send Message.");
             }
