@@ -76,6 +76,9 @@ namespace mock{
         bool failOnReceiveMessage;
         int numReceivedMessageBeforeFail;
         int numReceivedMessages;
+        bool failOnKeepAliveSends;
+        int numSentKeepAlivesBeforeFail;
+        int numSentKeepAlives;
 
         bool failOnStart;
         bool failOnStop;
@@ -295,6 +298,30 @@ namespace mock{
 
         void setNumReceivedMessages( int value ) {
             this->numReceivedMessages = value;
+        }
+
+        bool isFailOnKeepAliveSends() const {
+            return this->failOnKeepAliveSends;
+        }
+
+        void setFailOnKeepAliveSends( bool value ) {
+            this->failOnKeepAliveSends = value;
+        }
+
+        int getNumSentKeepAlivesBeforeFail() const {
+            return this->numSentKeepAlivesBeforeFail;
+        }
+
+        void setNumSentKeepAlivesBeforeFail( int value ) {
+            this->numSentKeepAlivesBeforeFail = value;
+        }
+
+        int getNumSentKeepAlives() const {
+            return this->numSentKeepAlives;
+        }
+
+        void setNumSentKeepAlives( int value ) {
+            this->numSentKeepAlives = value;
         }
 
         bool isFailOnStart() const {

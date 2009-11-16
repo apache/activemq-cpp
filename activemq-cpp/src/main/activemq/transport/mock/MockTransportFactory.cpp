@@ -127,6 +127,10 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
             Boolean::parseBoolean( properties.getProperty( "failOnReceiveMessage", "false" ) ) );
         transport->setNumReceivedMessageBeforeFail(
             Integer::parseInt( properties.getProperty( "numReceivedMessageBeforeFail", "0" ) ) );
+        transport->setFailOnKeepAliveSends(
+            Boolean::parseBoolean( properties.getProperty( "failOnKeepAliveSends", "false" ) ) );
+        transport->setNumSentKeepAlivesBeforeFail(
+            Integer::parseInt( properties.getProperty( "numSentKeepAlivesBeforeFail", "0" ) ) );
 
         return transport;
     }
