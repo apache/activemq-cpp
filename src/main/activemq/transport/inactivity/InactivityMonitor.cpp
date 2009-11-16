@@ -28,6 +28,7 @@
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
+#include <decaf/lang/Boolean.h>
 
 using namespace std;
 using namespace activemq;
@@ -183,6 +184,26 @@ InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next, const Poin
     this->members->writeCheckTime = 0;
     this->members->initialDelayTime = 0;
     this->members->keepAliveResponseRequired = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next,
+                                      const decaf::util::Properties& properties,
+                                      const Pointer<wireformat::WireFormat>& wireFormat )
+:   TransportFilter( next ), members( new InactivityMonitorData() ) {
+
+    this->members->wireFormat = wireFormat;
+    this->members->monitorStarted = false;
+    this->members->commandSent = false;
+    this->members->commandReceived = true;
+    this->members->failed = false;
+    this->members->inRead = false;
+    this->members->inWrite = false;
+    this->members->readCheckTime = 0;
+    this->members->writeCheckTime = 0;
+    this->members->initialDelayTime = 0;
+    this->members->keepAliveResponseRequired =
+        Boolean::parseBoolean( properties.getProperty( "keepAliveResponseRequired", false ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -28,6 +28,7 @@
 
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/Timer.h>
+#include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
 #include <memory>
@@ -57,13 +58,12 @@ namespace inactivity {
 
     public:
 
-        /**
-         * Constructor
-         *
-         * @param next
-         *      The Transport instance that this TransportFilter wraps.
-         */
-        InactivityMonitor( const Pointer<Transport>& next, const Pointer<wireformat::WireFormat>& wireFormat );
+        InactivityMonitor( const Pointer<Transport>& next,
+                           const Pointer<wireformat::WireFormat>& wireFormat );
+
+        InactivityMonitor( const Pointer<Transport>& next,
+                           const decaf::util::Properties& properties,
+                           const Pointer<wireformat::WireFormat>& wireFormat );
 
         virtual ~InactivityMonitor();
 
