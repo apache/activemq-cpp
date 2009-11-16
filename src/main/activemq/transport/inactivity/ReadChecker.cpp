@@ -47,7 +47,7 @@ ReadChecker::~ReadChecker() {
 void ReadChecker::run() {
 
     long long now = System::currentTimeMillis();
-    long long elapsed = ( now - lastRunTime );
+    long long elapsed = ( now - this->lastRunTime );
 
     // Perhaps the timer executed a read check late.. and then executes
     // the next read check on time which causes the time elapsed between
@@ -58,7 +58,7 @@ void ReadChecker::run() {
         return;
     }
 
-    lastRunTime = now;
+    this->lastRunTime = now;
 
     // Invoke the parent check routine.
     this->parent->readCheck();
