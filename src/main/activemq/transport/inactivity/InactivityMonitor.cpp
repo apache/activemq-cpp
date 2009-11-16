@@ -344,11 +344,7 @@ void InactivityMonitor::readCheck() {
         return;
     }
 
-    std::cout << "Performing a Read Check" << std::endl;
-
     if( !this->members->commandReceived.get() ) {
-
-        std::cout << "Read Check: No Read occurred this period, failed." << std::endl;
 
         // Set the failed state on our async Read Failure Task and wakeup its runner.
         this->members->asyncReadTask->setFailed( true );
@@ -365,11 +361,7 @@ void InactivityMonitor::writeCheck() {
         return;
     }
 
-    std::cout << "Performing Write Check" << std::endl;
-
     if(! this->members->commandSent.get() ) {
-
-        std::cout << "Not Command Sent this period, writing" << std::endl;
 
         this->members->asyncWriteTask->setWrite( true );
         this->members->asyncTasks->wakeup();
@@ -382,8 +374,6 @@ void InactivityMonitor::writeCheck() {
 void InactivityMonitor::startMonitorThreads() {
 
     synchronized( &this->members->monitor ) {
-
-        std::cout << "Starting Monitor Threads:" << std::endl;
 
         if( this->members->monitorStarted.get() ) {
             return;
@@ -430,8 +420,6 @@ void InactivityMonitor::startMonitorThreads() {
 void InactivityMonitor::stopMonitorThreads() {
 
     synchronized( &this->members->monitor ) {
-
-        std::cout << "Stopping Monitor Threads:" << std::endl;
 
         if( this->members->monitorStarted.compareAndSet( true, false ) ) {
 
