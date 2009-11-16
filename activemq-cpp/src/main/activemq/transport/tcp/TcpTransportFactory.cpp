@@ -21,6 +21,7 @@
 #include <activemq/transport/tcp/TcpTransport.h>
 #include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <activemq/transport/logging/LoggingTransport.h>
+#include <activemq/transport/inactivity/InactivityMonitor.h>
 #include <activemq/util/URISupport.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/util/Properties.h>
@@ -32,6 +33,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::correlator;
 using namespace activemq::transport::logging;
+using namespace activemq::transport::inactivity;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::lang;
@@ -95,6 +97,10 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
 
         Pointer<Transport> transport( new TcpTransport(
             location, properties, Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+
+        if( properties.getProperty( "useInactivityMonitor", "true" ) == "true" ) {
+            transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        }
 
         // If there is a negotiator need then we create and wrap here.
         if( wireFormat->hasNegotiator() ) {
