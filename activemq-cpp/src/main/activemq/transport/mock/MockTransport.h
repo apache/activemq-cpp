@@ -133,6 +133,15 @@ namespace mock{
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
         /**
+         * Gets the currently set WireFormat
+         *
+         * @return the current WireFormat object.
+         */
+        Pointer<wireformat::WireFormat> getWireFormat() const {
+            return this->wireFormat;
+        }
+
+        /**
          * Sets the observer of asynchronous exceptions from this transport.
          * @param listener the listener of transport events.
          */
