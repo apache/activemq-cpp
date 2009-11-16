@@ -81,7 +81,7 @@ void MockTransport::oneway( const Pointer<Command>& command )
 
             if( this->numSentKeepAlives > this->numSentKeepAlivesBeforeFail ) {
                 throw IOException(
-                    __FILE__, __LINE__, "Failed to Send Message.");
+                    __FILE__, __LINE__, "Failed to Send KeepAliveInfo Command.");
             }
         }
 
