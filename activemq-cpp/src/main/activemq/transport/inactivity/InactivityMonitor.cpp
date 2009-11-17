@@ -277,8 +277,6 @@ void InactivityMonitor::onException( const decaf::lang::Exception& ex ) {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::onCommand( const Pointer<Command>& command ) {
 
-    TransportFilter::onCommand( command );
-
     this->members->commandReceived.set( true );
     this->members->inRead.set( true );
 
