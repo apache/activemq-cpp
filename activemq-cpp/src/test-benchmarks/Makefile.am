@@ -19,6 +19,7 @@ cc_sources = \
     activemq/util/PrimitiveMapBenchmark.cpp \
     activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.cpp \
     benchmark/PerformanceTimer.cpp \
+    decaf/io/ByteArrayOutputStreamBenchmark.cpp \
     decaf/io/DataInputStreamBenchmark.cpp \
     decaf/io/DataOutputStreamBenchmark.cpp \
     decaf/lang/BooleanBenchmark.cpp \
@@ -36,6 +37,7 @@ h_sources = \
     activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.h \
     benchmark/BenchmarkBase.h \
     benchmark/PerformanceTimer.h \
+    decaf/io/ByteArrayOutputStreamBenchmark.h \
     decaf/io/DataInputStreamBenchmark.h \
     decaf/io/DataOutputStreamBenchmark.h \
     decaf/lang/BooleanBenchmark.h \
