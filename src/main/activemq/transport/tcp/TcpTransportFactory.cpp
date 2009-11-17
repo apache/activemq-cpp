@@ -98,7 +98,7 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
         Pointer<Transport> transport( new TcpTransport(
             location, properties, Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
 
-        if( properties.getProperty( "useInactivityMonitor", "true" ) == "true" ) {
+        if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
         }
 
