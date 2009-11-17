@@ -27,6 +27,30 @@ using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util::concurrent;
+
+namespace {
+
+    class ResponseFinalizer {
+    private:
+
+        Mutex* mutex;
+        int commandId;
+        std::map<unsigned int, Pointer<FutureResponse> >* map;
+
+    public:
+
+        ResponseFinalizer( Mutex* mutex, int commandId, std::map<unsigned int, Pointer<FutureResponse> >* map ) :
+            mutex( mutex ), commandId( commandId ), map( map ) {
+        }
+
+        ~ResponseFinalizer() {
+            synchronized( mutex ){
+                map->erase( commandId );
+            }
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next )
@@ -81,6 +105,9 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
             requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
         }
 
+        // The finalizer will cleanup the map even if an exception is thrown.
+        ResponseFinalizer finalizer( &mapMutex, command->getCommandId(), &requestMap );
+
         // Wait to be notified of the response via the futureResponse
         // object.
         Pointer<commands::Response> response;
@@ -90,14 +117,6 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
 
         // Get the response.
         response = futureResponse->getResponse();
-
-        // Perform cleanup on the map.
-        synchronized( &mapMutex ){
-
-            // We've done our waiting - get this thing out
-            // of the map.
-            requestMap.erase( command->getCommandId() );
-        }
 
         if( response == NULL ){
 
@@ -131,6 +150,9 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
             requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
         }
 
+        // The finalizer will cleanup the map even if an exception is thrown.
+        ResponseFinalizer finalizer( &mapMutex, command->getCommandId(), &requestMap );
+
         // Wait to be notified of the response via the futureResponse
         // object.
         Pointer<commands::Response> response;
@@ -140,14 +162,6 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
 
         // Get the response.
         response = futureResponse->getResponse( timeout );
-
-        // Perform cleanup on the map.
-        synchronized( &mapMutex ){
-
-            // We've done our waiting - get this thing out
-            // of the map.
-            requestMap.erase( command->getCommandId() );
-        }
 
         if( response == NULL ){
 
