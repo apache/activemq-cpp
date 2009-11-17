@@ -16,7 +16,6 @@
  */
 
 #include "ByteArrayOutputStream.h"
-#include <algorithm>
 
 using namespace std;
 using namespace decaf;
@@ -48,7 +47,12 @@ void ByteArrayOutputStream::reset() throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStream::write( unsigned char c )
     throw ( IOException ) {
-    activeBuffer->push_back( c );
+
+    try{
+        activeBuffer->push_back( c );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +83,11 @@ void ByteArrayOutputStream::write( const unsigned char* buffer,
             "ByteArrayOutputStream::write - passed buffer is null" );
     }
 
-    std::back_insert_iterator< std::vector<unsigned char> > iter( *activeBuffer );
-    std::copy( buffer + offset, buffer + offset + len, iter );
+    try{
+        activeBuffer->insert( activeBuffer->end(), buffer + offset, buffer + offset + len );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
