@@ -47,6 +47,13 @@ namespace concurrent {
         static decaf::util::concurrent::ConditionHandle* create( decaf::util::concurrent::MutexHandle* mutex );
 
         /**
+         * Destroy a previously create Condition instance.
+         *
+         * @param handle The Condition handle to be destroyed.
+         */
+        static void destroy( decaf::util::concurrent::ConditionHandle* handle );
+
+        /**
          * Waits for the condition to be signaled.
          *
          * @param condition the handle to the condition to wait on.

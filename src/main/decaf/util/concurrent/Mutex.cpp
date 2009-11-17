@@ -21,7 +21,6 @@
 #include <decaf/internal/util/concurrent/ConditionImpl.h>
 
 #include <list>
-#include <memory>
 
 using namespace decaf;
 using namespace decaf::internal;
@@ -43,8 +42,8 @@ namespace concurrent{
 
         // The Platform Mutex object and an associated Condition Object
         // for use in the wait / notify pattern.
-        std::auto_ptr<MutexHandle> mutex;
-        std::auto_ptr<ConditionHandle> condition;
+        MutexHandle* mutex;
+        ConditionHandle* condition;
 
     };
 
@@ -53,34 +52,39 @@ namespace concurrent{
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::Mutex() {
 
-    this->properties.reset( new MutexProperties );
+    this->properties = new MutexProperties();
 
     // Allocate the OS Mutex Implementation.
-    this->properties->mutex.reset( MutexImpl::create() );
-    this->properties->condition.reset( ConditionImpl::create( this->properties->mutex.get() ) );
+    this->properties->mutex = MutexImpl::create();
+    this->properties->condition = ConditionImpl::create( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::~Mutex() {
     unlock();
+
+    ConditionImpl::destroy( this->properties->condition );
+    MutexImpl::destroy( this->properties->mutex );
+
+    delete this->properties;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::lock() throw( decaf::lang::exceptions::RuntimeException ) {
 
-    MutexImpl::lock( this->properties->mutex.get() );
+    MutexImpl::lock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Mutex::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
 
-    return MutexImpl::trylock( this->properties->mutex.get() );
+    return MutexImpl::trylock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::unlock() throw( decaf::lang::exceptions::RuntimeException ) {
 
-    MutexImpl::unlock( this->properties->mutex.get() );
+    MutexImpl::unlock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +92,7 @@ void Mutex::wait() throw( decaf::lang::exceptions::RuntimeException,
                           decaf::lang::exceptions::IllegalMonitorStateException,
                           decaf::lang::exceptions::InterruptedException ) {
 
-    ConditionImpl::wait( this->properties->condition.get() );
+    ConditionImpl::wait( this->properties->condition );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,19 +121,19 @@ void Mutex::wait( long long millisecs, int nanos )
             __FILE__, __LINE__, "Nanoseconds value must be in the range [0..999999]." );
     }
 
-    ConditionImpl::wait( this->properties->condition.get(), millisecs, nanos );
+    ConditionImpl::wait( this->properties->condition, millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::notify() throw( decaf::lang::exceptions::RuntimeException,
                             decaf::lang::exceptions::IllegalMonitorStateException ) {
 
-    ConditionImpl::notify( this->properties->condition.get() );
+    ConditionImpl::notify( this->properties->condition );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::notifyAll() throw( decaf::lang::exceptions::RuntimeException,
                                decaf::lang::exceptions::IllegalMonitorStateException ) {
 
-    ConditionImpl::notifyAll( this->properties->condition.get() );
+    ConditionImpl::notifyAll( this->properties->condition );
 }

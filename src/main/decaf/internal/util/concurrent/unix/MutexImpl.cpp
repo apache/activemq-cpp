@@ -55,6 +55,11 @@ MutexHandle* MutexImpl::create() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void MutexImpl::destroy( decaf::util::concurrent::MutexHandle* handle ) {
+    delete handle;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void MutexImpl::lock( MutexHandle* handle ) {
 
     long long threadId = Thread::getId();
