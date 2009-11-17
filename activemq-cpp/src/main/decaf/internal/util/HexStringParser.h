@@ -47,13 +47,13 @@ namespace util{
 
         int EXPONENT_WIDTH;
         int MANTISSA_WIDTH;
-        long EXPONENT_BASE;
-        long MAX_EXPONENT;
-        long MIN_EXPONENT;
-        long MANTISSA_MASK;
-        long sign;
-        long exponent;
-        long mantissa;
+        long long EXPONENT_BASE;
+        long long MAX_EXPONENT;
+        long long MIN_EXPONENT;
+        long long MANTISSA_MASK;
+        long long sign;
+        long long exponent;
+        long long mantissa;
         std::string abandonedNumber;
 
     public:
