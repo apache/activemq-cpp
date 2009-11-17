@@ -360,6 +360,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::string brokerURI =
         "failover:(tcp://127.0.0.1:61616"
 //        "?wireFormat=openwire"
+//        "&transport.useInactivityMonitor=false"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
