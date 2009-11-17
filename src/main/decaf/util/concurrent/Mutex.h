@@ -20,10 +20,9 @@
 
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Config.h>
-
-#include <memory>
 
 namespace decaf{
 namespace util{
@@ -41,7 +40,7 @@ namespace concurrent{
     class DECAF_API Mutex : public Synchronizable {
     private:
 
-        std::auto_ptr<MutexProperties> properties;
+        decaf::lang::Pointer<MutexProperties> properties;
 
     private:
 

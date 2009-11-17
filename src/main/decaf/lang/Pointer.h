@@ -98,7 +98,14 @@ namespace lang {
     class Pointer : public REFCOUNTER {
     private:
 
+        typedef void (*deletionFuncPtr)(T* p);
+
+    private:
+
         T* value;
+
+        // Pointer to our internal delete function, allows incompletes.
+        deletionFuncPtr onDelete;
 
     public:
 
@@ -114,7 +121,7 @@ namespace lang {
          * Initialized the contained pointer to NULL, using the -> operator
          * results in an exception unless reset to contain a real value.
          */
-        Pointer() : REFCOUNTER(), value( NULL ) {}
+        Pointer() : REFCOUNTER(), value( NULL ), onDelete( onDeleteFunc ) {}
 
         /**
          * Explicit Constructor, creates a Pointer that contains value with a
@@ -122,21 +129,23 @@ namespace lang {
          *
          * @param value - instance of the type we are containing here.
          */
-        explicit Pointer( const PointerType value ) : REFCOUNTER(), value( value ) {
+        explicit Pointer( const PointerType value ) : REFCOUNTER(), value( value ), onDelete( onDeleteFunc ) {
         }
 
         /**
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
          */
-        Pointer( const Pointer& value ) throw() : REFCOUNTER( value ), value( value.value ) {}
+        Pointer( const Pointer& value ) throw() :
+            REFCOUNTER( value ), value( value.value ), onDelete( onDeleteFunc ) {}
 
         /**
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value ) throw() : REFCOUNTER( value ), value( value.get() ) {}
+        Pointer( const Pointer<T1, R1>& value ) throw() :
+            REFCOUNTER( value ), value( value.get() ), onDelete( onDeleteFunc ) {}
 
         /**
          * Static Cast constructor. Copies the value contained in the pointer to the new
@@ -147,7 +156,7 @@ namespace lang {
          */
         template< typename T1, typename R1 >
         Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) throw() :
-            REFCOUNTER( value ), value( static_cast<T*>( value.get() ) ) {
+            REFCOUNTER( value ), value( static_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
         }
 
         /**
@@ -162,7 +171,7 @@ namespace lang {
         template< typename T1, typename R1 >
         Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& )
             throw( decaf::lang::exceptions::ClassCastException ) :
-                REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ) {
+                REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
 
             if( this->value == NULL ) {
                 // Remove the reference we took in the Reference Counter's ctor since we
@@ -177,7 +186,7 @@ namespace lang {
 
         virtual ~Pointer() throw() {
             if( REFCOUNTER::release() == true ) {
-                delete this->value;
+                onDelete( this->value );
             }
         }
 
@@ -340,6 +349,14 @@ namespace lang {
         Pointer<T1, CounterType> staticCast() const {
             return Pointer<T1, CounterType>( *this, STATIC_CAST_TOKEN() );
         }
+
+    private:
+
+        // Internal Static deletion function.
+        static void onDeleteFunc(T* value) {
+            delete value;
+        }
+
     };
 
     ////////////////////////////////////////////////////////////////////////////

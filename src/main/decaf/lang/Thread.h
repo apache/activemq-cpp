@@ -23,8 +23,8 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/Config.h>
-#include <memory>
 
 namespace decaf{
 namespace util{
@@ -70,7 +70,7 @@ namespace lang{
         /**
          * The internal data necessary to manage a Thread instance.
          */
-        std::auto_ptr<ThreadProperties> properties;
+        decaf::lang::Pointer<ThreadProperties> properties;
 
     public:
 

@@ -21,8 +21,7 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/concurrent/locks/Lock.h>
-
-#include <memory>
+#include <decaf/lang/Pointer.h>
 
 namespace decaf {
 namespace util {
@@ -81,7 +80,7 @@ namespace locks {
     class DECAF_API ReentrantLock : public Lock {
     private:
 
-        std::auto_ptr<LockHandle> handle;
+        decaf::lang::Pointer<LockHandle> handle;
 
     public:
 
