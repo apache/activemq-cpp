@@ -31,8 +31,6 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
-#include <memory>
-
 namespace activemq {
 namespace transport {
 namespace inactivity {
@@ -49,7 +47,7 @@ namespace inactivity {
     private:
 
         // Internal Class used to house the data structures for this object
-        std::auto_ptr<InactivityMonitorData> members;
+        Pointer<InactivityMonitorData> members;
 
         friend class ReadChecker;
         friend class AsyncSignalReadErrorkTask;
