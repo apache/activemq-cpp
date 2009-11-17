@@ -834,6 +834,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="inactivity"
+					>
+					<File
+						RelativePath="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="util"
