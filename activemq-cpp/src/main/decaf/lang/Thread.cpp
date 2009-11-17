@@ -168,6 +168,8 @@ namespace lang{
 ////////////////////////////////////////////////////////////////////////////////
 namespace{
 
+    Thread* mainThread = NULL;
+
     #ifdef HAVE_PTHREAD_H
 
         pthread_key_t currentThreadKey;
@@ -218,7 +220,7 @@ unsigned int ThreadProperties::id = 0;
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::initThreading() {
 
-    Thread* mainThread = new Thread( "Main Thread" );
+    mainThread = new Thread( "Main Thread" );
 
     mainThread->properties->state = Thread::RUNNABLE;
     mainThread->properties->priority = Thread::NORM_PRIORITY;
@@ -248,9 +250,7 @@ void Thread::shutdownThreading() {
 
     #ifdef HAVE_PTHREAD_H
 
-        // Get the Main Thread and Destroy it
-        Thread* mainThread = (Thread*) pthread_getspecific( currentThreadKey );
-
+        // Destroy the Main Thread instance.
         delete mainThread;
 
         // Destroy the current Thread key now, no longer needed.
@@ -258,8 +258,7 @@ void Thread::shutdownThreading() {
 
     #else
 
-        Thread* mainThread = (Thread*) ::TlsGetValue( currentThreadKey );
-
+        // Destroy the Main Thread instance.
         delete mainThread;
 
         // Destroy our TLS resources before we shutdown.
