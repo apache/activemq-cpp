@@ -486,11 +486,6 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
         } else if( command->isBrokerInfo() ) {
             this->brokerInfo =
                 command.dynamicCast<BrokerInfo>();
-        } else if( command->isKeepAliveInfo() ) {
-
-            // Return the command to prevent the broker from timing us out.
-            oneway( command );
-
         } else if( command->isShutdownInfo() ) {
 
             try {
