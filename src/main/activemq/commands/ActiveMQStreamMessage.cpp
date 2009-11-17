@@ -278,7 +278,7 @@ void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value 
     initializeWriting();
     try{
         this->dataOut->write( PrimitiveValueNode::BYTE_ARRAY_TYPE );
-        this->dataOut->writeInt( value.size() );
+        this->dataOut->writeInt( (int)value.size() );
         this->dataOut->write( &value[0], 0, value.size() );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -300,7 +300,7 @@ std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t
 
         if( this->remainingBytes == -1 ) {
 
-            this->dataIn->mark( length + 1 );
+            this->dataIn->mark( (int)length + 1 );
             int type = this->dataIn->read();
 
             if( type == -1 ) {
@@ -320,7 +320,7 @@ std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t
 
         if( length <= (size_t)this->remainingBytes ) {
             // small buffer
-            this->remainingBytes -= length;
+            this->remainingBytes -= (int)length;
             this->dataIn->readFully( buffer, 0, length );
             return length;
         } else {
@@ -348,7 +348,7 @@ void ActiveMQStreamMessage::writeBytes( const unsigned char* value,
     initializeWriting();
     try{
         this->dataOut->write( PrimitiveValueNode::BYTE_ARRAY_TYPE );
-        this->dataOut->writeInt( length );
+        this->dataOut->writeInt( (int)length );
         this->dataOut->write( value, offset, length );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
