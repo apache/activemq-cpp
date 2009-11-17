@@ -74,6 +74,11 @@ ConditionHandle* ConditionImpl::create( MutexHandle* mutex ) {
     return handle.release();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ConditionImpl::destroy( decaf::util::concurrent::ConditionHandle* handle ) {
+    delete handle;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void ConditionImpl::wait( ConditionHandle* condition ) {
 

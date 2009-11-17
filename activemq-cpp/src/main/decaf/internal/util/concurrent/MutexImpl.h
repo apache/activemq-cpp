@@ -46,6 +46,13 @@ namespace concurrent {
         static decaf::util::concurrent::MutexHandle* create();
 
         /**
+         * Destroy a previously create Mutex instance.
+         *
+         * @param mutex The Mutex instance to be destroyed.
+         */
+        static void destroy( decaf::util::concurrent::MutexHandle* handle );
+
+        /**
          * Locks the Mutex.  If the Mutex is already locked by another thread this method
          * blocks until the Mutex becomes unlocked and this thread acquires the lock.
          *
