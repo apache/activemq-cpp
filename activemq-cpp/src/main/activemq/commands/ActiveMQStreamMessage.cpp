@@ -120,8 +120,9 @@ void ActiveMQStreamMessage::clearBody() throw( cms::CMSException ) {
     // Invoke base class's version.
     ActiveMQMessageTemplate<cms::StreamMessage>::clearBody();
 
-    this->dataIn.reset(NULL);
-    this->dataOut.reset(NULL);
+    this->dataIn.reset( NULL );
+    this->dataOut.reset( NULL );
+    this->bytesOut.reset( NULL );
     this->remainingBytes = -1;
 }
 
