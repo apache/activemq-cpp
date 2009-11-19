@@ -28,6 +28,11 @@ namespace commands{
 
         CPPUNIT_TEST_SUITE( ActiveMQTextMessageTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testClearBody );
+        CPPUNIT_TEST( testReadOnlyBody );
+        CPPUNIT_TEST( testWriteOnlyBody );
+        CPPUNIT_TEST( testShallowCopy );
+        CPPUNIT_TEST( testGetBytes );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +41,11 @@ namespace commands{
         virtual ~ActiveMQTextMessageTest() {}
 
         void test();
+        void testClearBody();
+        void testReadOnlyBody();
+        void testWriteOnlyBody();
+        void testShallowCopy();
+        void testGetBytes();
 
     };
 

@@ -20,8 +20,12 @@
 
 #include <cms/Config.h>
 #include <cms/Destination.h>
-#include <cms/CMSException.h>
 #include <cms/DeliveryMode.h>
+
+#include <cms/CMSException.h>
+#include <cms/IllegalStateException.h>
+#include <cms/MessageFormatException.h>
+#include <cms/MessageNotWriteableException.h>
 
 namespace cms{
 
@@ -119,7 +123,7 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          * @throws IllegalStateException - if this method is called on a closed session.
          */
-        virtual void acknowledge() const throw( CMSException ) = 0;
+        virtual void acknowledge() const throw( IllegalStateException, CMSException ) = 0;
 
         /**
          * Clears out the body of the message.  This does not clear the
@@ -173,7 +177,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual bool getBooleanProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a byte property.
@@ -186,7 +190,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual unsigned char getByteProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a double property.
@@ -199,7 +203,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual double getDoubleProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a float property.
@@ -212,7 +216,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual float getFloatProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a int property.
@@ -225,7 +229,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual int getIntProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a long property.
@@ -238,7 +242,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual long long getLongProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a short property.
@@ -251,7 +255,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual short getShortProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Gets a string property.
@@ -264,7 +268,7 @@ namespace cms{
          * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual std::string getStringProperty( const std::string& name ) const
-            throw( CMSException ) = 0;
+            throw( MessageFormatException, CMSException ) = 0;
 
         /**
          * Sets a boolean property.
@@ -278,7 +282,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setBooleanProperty( const std::string& name, bool value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a byte property.
@@ -292,7 +296,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setByteProperty( const std::string& name, unsigned char value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a double property.
@@ -306,7 +310,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setDoubleProperty( const std::string& name, double value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a float property.
@@ -319,7 +323,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setFloatProperty( const std::string& name, float value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a int property.
@@ -333,7 +337,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setIntProperty( const std::string& name, int value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a long property.
@@ -347,7 +351,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setLongProperty( const std::string& name, long long value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a short property.
@@ -361,7 +365,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setShortProperty( const std::string& name, short value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Sets a string property.
@@ -375,7 +379,7 @@ namespace cms{
          * @throws MessageNotWriteableException - if properties are read-only
          */
         virtual void setStringProperty( const std::string& name, const std::string& value )
-            throw( CMSException ) = 0;
+            throw( MessageNotWriteableException, CMSException ) = 0;
 
         /**
          * Gets the correlation ID for the message.

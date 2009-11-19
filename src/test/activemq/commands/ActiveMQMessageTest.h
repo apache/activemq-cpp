@@ -22,6 +22,15 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/ActiveMQTopic.h>
+#include <activemq/commands/ActiveMQTempTopic.h>
+#include <activemq/commands/MessageId.h>
+
+#include <decaf/lang/Pointer.h>
+
+#include <vector>
+#include <memory>
 
 namespace activemq{
 namespace commands{
@@ -30,39 +39,106 @@ namespace commands{
 
         CPPUNIT_TEST_SUITE( ActiveMQMessageTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testSetReadOnly );
+        CPPUNIT_TEST( testSetToForeignJMSID );
+        CPPUNIT_TEST( testEqualsObject );
+        CPPUNIT_TEST( testShallowCopy );
+        CPPUNIT_TEST( testCopy );
+        CPPUNIT_TEST( testGetAndSetCMSMessageID );
+        CPPUNIT_TEST( testGetAndSetCMSTimestamp );
+        CPPUNIT_TEST( testGetAndSetCMSCorrelationID );
+        CPPUNIT_TEST( testGetAndSetCMSDeliveryMode );
+        CPPUNIT_TEST( testGetAndSetCMSRedelivered );
+        CPPUNIT_TEST( testGetAndSetCMSType );
+        CPPUNIT_TEST( testGetAndSetCMSExpiration );
+        CPPUNIT_TEST( testGetAndSetCMSPriority );
+        CPPUNIT_TEST( testClearProperties );
+        CPPUNIT_TEST( testPropertyExists );
+        CPPUNIT_TEST( testGetBooleanProperty );
+        CPPUNIT_TEST( testGetByteProperty );
+        CPPUNIT_TEST( testGetShortProperty );
+        CPPUNIT_TEST( testGetIntProperty );
+        CPPUNIT_TEST( testGetLongProperty );
+        CPPUNIT_TEST( testGetFloatProperty );
+        CPPUNIT_TEST( testGetDoubleProperty );
+        CPPUNIT_TEST( testGetStringProperty );
+        CPPUNIT_TEST( testGetPropertyNames );
+        CPPUNIT_TEST( testSetEmptyPropertyName );
+        CPPUNIT_TEST( testGetAndSetCMSXDeliveryCount );
+        CPPUNIT_TEST( testClearBody );
+        CPPUNIT_TEST( testBooleanPropertyConversion );
+        CPPUNIT_TEST( testBytePropertyConversion );
+        CPPUNIT_TEST( testShortPropertyConversion );
+        CPPUNIT_TEST( testIntPropertyConversion );
+        CPPUNIT_TEST( testLongPropertyConversion );
+        CPPUNIT_TEST( testFloatPropertyConversion );
+        CPPUNIT_TEST( testDoublePropertyConversion );
+        CPPUNIT_TEST( testReadOnlyProperties );
+        CPPUNIT_TEST( testIsExpired );
         CPPUNIT_TEST_SUITE_END();
 
-        class MyAckHandler : public core::ActiveMQAckHandler {
-        public:
+    private:
 
-            MyAckHandler() {
-                this->wasAcked = false;
-            }
+        bool readOnlyMessage;
+        decaf::lang::Pointer<commands::MessageId> cmsMessageId;
+        std::string cmsCorrelationID;
+        std::auto_ptr<commands::ActiveMQTopic> cmsDestination;
+        std::auto_ptr<commands::ActiveMQTempTopic> cmsReplyTo;
+        int cmsDeliveryMode;
+        bool cmsRedelivered;
+        std::string cmsType;
+        long long cmsExpiration;
+        int cmsPriority;
+        long long cmsTimestamp;
 
-            /**
-             * Method called to acknowledge the message passed
-             * @param message Message to Acknowlegde
-             * @throw CMSException
-             */
-            virtual void acknowledgeMessage( const commands::Message* message )
-                throw ( cms::CMSException ) {
-
-                this->wasAcked = true;
-            }
-
-            /**
-             * Public indicator that we have received an ack
-             */
-            bool wasAcked;
-
-        };
+        std::vector<long long> consumerIDs;
 
     public:
 
         ActiveMQMessageTest() {}
         virtual ~ActiveMQMessageTest() {}
 
-        virtual void test();
+        virtual void setUp();
+        virtual void tearDown();
+
+        void test();
+        void testSetReadOnly();
+        void testSetToForeignJMSID();
+        void testEqualsObject();
+        void testShallowCopy();
+        void testCopy();
+        void testGetAndSetCMSMessageID();
+        void testGetAndSetCMSTimestamp();
+        void testGetAndSetCMSCorrelationID();
+        void testGetAndSetCMSDeliveryMode();
+        void testGetAndSetCMSRedelivered();
+        void testGetAndSetCMSType();
+        void testGetAndSetCMSExpiration();
+        void testGetAndSetCMSPriority();
+        void testClearProperties();
+        void testPropertyExists();
+        void testGetBooleanProperty();
+        void testGetByteProperty();
+        void testGetShortProperty();
+        void testGetIntProperty();
+        void testGetLongProperty();
+        void testGetFloatProperty();
+        void testGetDoubleProperty();
+        void testGetStringProperty();
+        void testGetPropertyNames();
+        void testSetEmptyPropertyName();
+        void testGetAndSetCMSXDeliveryCount();
+        void testClearBody();
+        void testBooleanPropertyConversion();
+        void testBytePropertyConversion();
+        void testShortPropertyConversion();
+        void testIntPropertyConversion();
+        void testLongPropertyConversion();
+        void testFloatPropertyConversion();
+        void testDoublePropertyConversion();
+        void testStringPropertyConversion();
+        void testReadOnlyProperties();
+        void testIsExpired();
 
     };
 

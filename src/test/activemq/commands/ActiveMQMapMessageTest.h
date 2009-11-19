@@ -28,14 +28,51 @@ namespace commands{
 
         CPPUNIT_TEST_SUITE( ActiveMQMapMessageTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testBytesConversion );
+        CPPUNIT_TEST( testGetBoolean );
+        CPPUNIT_TEST( testGetByte );
+        CPPUNIT_TEST( testGetShort );
+        CPPUNIT_TEST( testGetChar );
+        CPPUNIT_TEST( testGetInt );
+        CPPUNIT_TEST( testGetLong );
+        CPPUNIT_TEST( testGetFloat );
+        CPPUNIT_TEST( testGetDouble );
+        CPPUNIT_TEST( testGetString );
+        CPPUNIT_TEST( testGetBytes );
+        CPPUNIT_TEST( testGetMapNames );
+        CPPUNIT_TEST( testItemExists );
+        CPPUNIT_TEST( testClearBody );
+        CPPUNIT_TEST( testReadOnlyBody );
+        CPPUNIT_TEST( testWriteOnlyBody );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        std::string name;
 
     public:
 
-        ActiveMQMapMessageTest() {}
+        ActiveMQMapMessageTest() { name = "test-name"; }
         virtual ~ActiveMQMapMessageTest() {}
 
-        virtual void test();
+        void test();
+        void testBytesConversion();
+        void testGetBoolean();
+        void testGetByte();
+        void testGetShort();
+        void testGetChar();
+        void testGetInt();
+        void testGetLong();
+        void testGetFloat();
+        void testGetDouble();
+        void testGetString();
+        void testGetBytes();
+        void testGetMapNames();
+        void testItemExists();
+        void testClearBody();
+        void testReadOnlyBody();
+        void testWriteOnlyBody();
+
     };
 
 }}

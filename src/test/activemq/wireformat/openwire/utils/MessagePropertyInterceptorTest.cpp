@@ -25,6 +25,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::io;
+using namespace decaf::lang;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -60,13 +61,13 @@ void MessagePropertyInterceptorTest::test() {
     interceptor.setStringProperty( "JMSXDeliveryCount", "12" );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw an ActiveMQException",
+        "Should Throw an Exception",
         interceptor.setBooleanProperty( "JMSXGroupSeq", false ),
-        ActiveMQException );
+        Exception );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw an ActiveMQException",
+        "Should Throw an Exception",
         interceptor.setStringProperty( "JMSXGroupSeq", "FOO" ),
-        ActiveMQException );
+        Exception );
 
 }

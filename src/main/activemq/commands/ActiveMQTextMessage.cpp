@@ -28,9 +28,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace activemq::util;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
 using namespace activemq::wireformat::openwire::utils;
+using namespace decaf::io;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +58,23 @@ ActiveMQTextMessage* ActiveMQTextMessage::cloneDataStructure() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTextMessage::copyDataStructure( const DataStructure* src ) {
+
+    if( this == src ) {
+        return;
+    }
+
+    const ActiveMQTextMessage* srcPtr = dynamic_cast<const ActiveMQTextMessage*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+        throw decaf::lang::exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ActiveMQTextMessage::copyDataStructure - src is NULL or invalid" );
+    }
+
+    if( srcPtr->text.get() != NULL ) {
+        this->text.reset( new std::string( *( srcPtr->text.get() ) ) );
+    }
+
     ActiveMQMessageTemplate<cms::TextMessage>::copyDataStructure( src );
 }
 
@@ -76,23 +95,82 @@ bool ActiveMQTextMessage::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTextMessage::clearBody() throw( cms::CMSException ) {
+    ActiveMQMessageTemplate<cms::TextMessage>::clearBody();
+    this->text.reset( NULL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat )
+    throw ( decaf::io::IOException ) {
+
+    ActiveMQMessageTemplate<cms::TextMessage>::beforeMarshal( wireFormat );
+
+    if( this->text.get() != NULL ) {
+
+        ByteArrayOutputStream bytesOut;
+        DataOutputStream dataOut( &bytesOut );
+
+        OpenwireStringSupport::writeString( dataOut, this->text.get() );
+
+        dataOut.close();
+
+        this->setContent( bytesOut.toByteArrayRef() );
+        this->text.reset( NULL );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int ActiveMQTextMessage::getSize() const {
+
+    if( this->text.get() != NULL ) {
+        unsigned int size = commands::Message::DEFAULT_MESSAGE_SIZE;
+
+        size += getMarshalledProperties().size();
+        size += this->text->size() * 2;
+
+        return size;
+    }
+
+    return ActiveMQMessageTemplate<cms::TextMessage>::getSize();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
-        if( getContent().size() <= 4 ) {
-            return "";
+
+        if( this->text.get() != NULL ) {
+            return *( this->text.get() );
+        } else {
+
+            if( this->getContent().size() <= 4 ) {
+                return "";
+            }
+
+            try {
+
+                decaf::io::ByteArrayInputStream bais( getContent() );
+                decaf::io::DataInputStream dataIn( &bais );
+
+                dataIn.close();
+
+                this->text.reset( new std::string( OpenwireStringSupport::readString( dataIn ) ) );
+
+            } catch( IOException& ioe ) {
+                throw CMSExceptionSupport::create( ioe );
+            }
         }
 
-        decaf::io::ByteArrayInputStream bais( getContent() );
-        decaf::io::DataInputStream dataIn( &bais );
-
-        return OpenwireStringSupport::readString( dataIn );
+        return *( this->text.get() );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) {
+void ActiveMQTextMessage::setText( const char* msg )
+    throw( cms::MessageNotWriteableException, cms::CMSException ) {
+
     try{
         setText( std::string(msg) );
     }
@@ -100,15 +178,12 @@ void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSException ) {
+void ActiveMQTextMessage::setText( const std::string& msg )
+    throw( cms::MessageNotWriteableException, cms::CMSException ) {
+
     try{
         failIfReadOnlyBody();
-        std::vector<unsigned char>& content = getContent();
-        content.clear();
-        decaf::io::ByteArrayOutputStream bos( content );
-        decaf::io::DataOutputStream dataOut( &bos );
-
-        OpenwireStringSupport::writeString( dataOut, &msg );
+        this->text.reset( new std::string( msg ) );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

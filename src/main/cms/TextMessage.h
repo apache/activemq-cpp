@@ -21,6 +21,7 @@
 #include <cms/Config.h>
 #include <cms/Message.h>
 #include <cms/CMSException.h>
+#include <cms/MessageNotWriteableException.h>
 
 namespace cms{
 
@@ -49,7 +50,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual std::string getText() const throw( CMSException ) = 0;
+        virtual std::string getText() const throw( cms::CMSException ) = 0;
 
         /**
          * Sets the message contents, does not take ownership of the passed
@@ -61,7 +62,8 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const char* msg ) throw( CMSException ) = 0;
+        virtual void setText( const char* msg ) throw( cms::MessageNotWriteableException,
+                                                       cms::CMSException ) = 0;
 
         /**
          * Sets the message contents
@@ -72,7 +74,8 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const std::string& msg ) throw( CMSException ) = 0;
+        virtual void setText( const std::string& msg ) throw( cms::MessageNotWriteableException,
+                                                              cms::CMSException ) = 0;
 
     };
 }
