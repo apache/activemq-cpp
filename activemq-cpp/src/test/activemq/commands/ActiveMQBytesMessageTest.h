@@ -27,7 +27,22 @@ namespace commands{
     class ActiveMQBytesMessageTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( ActiveMQBytesMessageTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testGetBodyLength );
+        CPPUNIT_TEST( testReadBoolean );
+        CPPUNIT_TEST( testReadByte );
+        CPPUNIT_TEST( testReadShort );
+        CPPUNIT_TEST( testReadUnsignedShort );
+        CPPUNIT_TEST( testReadChar );
+        CPPUNIT_TEST( testReadInt );
+        CPPUNIT_TEST( testReadLong );
+        CPPUNIT_TEST( testReadFloat );
+        CPPUNIT_TEST( testReadDouble );
+        CPPUNIT_TEST( testReadUTF );
+        CPPUNIT_TEST( testReadBytesbyteArray );
+        CPPUNIT_TEST( testClearBody );
+        CPPUNIT_TEST( testReset );
+        CPPUNIT_TEST( testReadOnlyBody );
+        CPPUNIT_TEST( testWriteOnlyBody );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +50,24 @@ namespace commands{
         ActiveMQBytesMessageTest() {}
         virtual ~ActiveMQBytesMessageTest() {}
 
-        void test();
+        void testGetBodyLength();
+        void testReadBoolean();
+        void testReadByte();
+        void testReadUnsignedByte();
+        void testReadShort();
+        void testReadUnsignedShort();
+        void testReadChar();
+        void testReadInt();
+        void testReadLong();
+        void testReadFloat();
+        void testReadDouble();
+        void testReadUTF();
+        void testReadBytesbyteArray();
+        void testClearBody();
+        void testReset();
+        void testReadOnlyBody();
+        void testWriteOnlyBody();
+
     };
 
 }}

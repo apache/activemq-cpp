@@ -98,6 +98,12 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
+        virtual void clearBody() throw( cms::CMSException );
+
     public:   // CMS Message
 
         /**
@@ -114,192 +120,285 @@ namespace commands{
         /**
          * Returns an Enumeration of all the names in the MapMessage
          * object.
+         *
          * @return STL Vector of String values, each of which is the
          *         name of an item in the MapMessage
-         * @throws CMSException
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
          */
-        virtual std::vector<std::string> getMapNames() const throw( cms::CMSException );
+        virtual std::vector< std::string > getMapNames() const throw( cms::CMSException );
 
         /**
          * Indicates whether an item exists in this MapMessage object.
-         * @param name - String name of the Object in question
+         *
+         * @param name
+         *      String name of the Object in question
          * @return boolean value indicating if the name is in the map
-         * @throws CMSException
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
          */
         virtual bool itemExists( const std::string& name ) const throw( cms::CMSException );
 
         /**
          * Returns the Boolean value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatExceptio - if this type conversion is invalid.
          */
         virtual bool getBoolean( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a boolean value with the specified name into the Map.
-         * @param name - the name of the boolean
-         * @param value - the boolean value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      the name of the boolean
+         * @param value
+         *      the boolean value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setBoolean( const std::string& name,
-                                 bool value ) throw( cms::CMSException );
+        virtual void setBoolean( const std::string& name, bool value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Byte value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual unsigned char getByte( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Byte value with the specified name into the Map.
-         * @param name - the name of the Byte
-         * @param value - the Byte value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      the name of the Byte
+         * @param value
+         *      the Byte value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setByte( const std::string& name,
-                              unsigned char value )
-                                 throw( cms::CMSException );
+        virtual void setByte( const std::string& name, unsigned char value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Bytes value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual std::vector<unsigned char> getBytes( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Bytes value with the specified name into the Map.
-         * @param name - the name of the Bytes
-         * @param value - the Bytes value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Bytes
+         * @param value
+         *      The Bytes value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setBytes( const std::string& name,
                                const std::vector<unsigned char>& value )
-                                   throw( cms::CMSException );
+                                    throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Char value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual char getChar( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Char value with the specified name into the Map.
-         * @param name - the name of the Char
-         * @param value - the Char value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      the name of the Char
+         * @param value
+         *      the Char value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setChar( const std::string& name, char value )
-            throw( cms::CMSException );
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Double value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual double getDouble( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Double value with the specified name into the Map.
-         * @param name - the name of the Double
-         * @param value - the Double value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Double
+         * @param value
+         *      The Double value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setDouble( const std::string& name,
-                                double value ) throw( cms::CMSException );
+        virtual void setDouble( const std::string& name, double value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Float value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual float getFloat( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Float value with the specified name into the Map.
-         * @param name - the name of the Float
-         * @param value - the Float value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Float
+         * @param value
+         *      The Float value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setFloat( const std::string& name, float value )
-            throw( cms::CMSException );
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Int value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual int getInt( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Int value with the specified name into the Map.
-         * @param name - the name of the Int
-         * @param value - the Int value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Int
+         * @param value
+         *      The Int value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setInt( const std::string& name, int value )
-            throw( cms::CMSException );
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Long value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual long long getLong( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Long value with the specified name into the Map.
-         * @param name - the name of the Long
-         * @param value - the Long value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Long
+         * @param value
+         *      The Long value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setLong( const std::string& name, long long value )
-            throw( cms::CMSException );
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the Short value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual short getShort( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a Short value with the specified name into the Map.
-         * @param name - the name of the Short
-         * @param value - the Short value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the Short
+         * @param value
+         *      The Short value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
         virtual void setShort( const std::string& name, short value )
-            throw( cms::CMSException );
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
          * Returns the String value of the Specified name
-         * @param name of the value to fetch from the map
-         * @throws CMSException
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual std::string getString( const std::string& name ) const
-            throw( cms::CMSException );
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
          * Sets a String value with the specified name into the Map.
-         * @param name - the name of the String
-         * @param value - the String value to set in the Map
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the String
+         * @param value
+         *      The String value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setString( const std::string& name,
-                                const std::string& value )
-                                    throw( cms::CMSException );
+        virtual void setString( const std::string& name, const std::string& value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
     protected:
 

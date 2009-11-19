@@ -39,6 +39,8 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQTEXTMESSAGE = 28;
 
+        mutable std::auto_ptr<std::string> text;
+
     public:
 
         ActiveMQTextMessage();
@@ -75,6 +77,27 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
+        virtual void clearBody() throw( cms::CMSException );
+
+        /**
+         * Performs any cleanup or other tasks that must be done before the Message is
+         * marshalled to its binary WireFormat version.
+         *
+         * @param wireFormat the WireFormat instance that is marshalling this message.
+         */
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Returns the Size of this message in Bytes.
+         * @returns number of bytes this message equates to.
+         */
+        virtual unsigned int getSize() const;
+
     public:   // CMS Message
 
         /**
@@ -90,22 +113,37 @@ namespace commands{
 
         /**
          * Gets the message character buffer.
+         *
          * @return The message character buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
          */
         virtual std::string getText() const throw( cms::CMSException );
 
         /**
          * Sets the message contents, does not take ownership of the passed
          * char*, but copies it instead.
-         * @param msg The message buffer.
+         *
+         * @param msg
+         *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const char* msg ) throw( cms::CMSException );
+        virtual void setText( const char* msg ) throw( cms::MessageNotWriteableException,
+                                                       cms::CMSException );
 
         /**
          * Sets the message contents
-         * @param msg The message buffer.
+         *
+         * @param msg
+         *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const std::string& msg ) throw( cms::CMSException );
+        virtual void setText( const std::string& msg ) throw( cms::MessageNotWriteableException,
+                                                              cms::CMSException );
 
     };
 

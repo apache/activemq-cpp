@@ -70,152 +70,113 @@ namespace utils {
          * Gets a boolean property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual bool getBooleanProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual bool getBooleanProperty( const std::string& name ) const;
 
         /**
          * Gets a byte property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual unsigned char getByteProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual unsigned char getByteProperty( const std::string& name ) const;
 
         /**
          * Gets a double property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual double getDoubleProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual double getDoubleProperty( const std::string& name ) const;
 
         /**
          * Gets a float property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual float getFloatProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual float getFloatProperty( const std::string& name ) const;
 
         /**
          * Gets a int property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual int getIntProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual int getIntProperty( const std::string& name ) const;
 
         /**
          * Gets a long property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual long long getLongProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual long long getLongProperty( const std::string& name ) const;
 
         /**
          * Gets a short property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual short getShortProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual short getShortProperty( const std::string& name ) const;
 
         /**
          * Gets a string property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
-         * @throws CMSException if the property does not exist.
          */
-        virtual std::string getStringProperty( const std::string& name ) const
-            throw( exceptions::ActiveMQException );
+        virtual std::string getStringProperty( const std::string& name ) const;
 
         /**
          * Sets a boolean property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setBooleanProperty( const std::string& name,
-                                         bool value )
-                                            throw( exceptions::ActiveMQException );
+        virtual void setBooleanProperty( const std::string& name, bool value );
+
         /**
          * Sets a byte property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setByteProperty( const std::string& name,
-                                      unsigned char value )
-                                        throw( exceptions::ActiveMQException );
+        virtual void setByteProperty( const std::string& name, unsigned char value );
 
         /**
          * Sets a double property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setDoubleProperty( const std::string& name,
-                                        double value )
-                                            throw( exceptions::ActiveMQException );
+        virtual void setDoubleProperty( const std::string& name, double value );
 
         /**
          * Sets a float property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setFloatProperty( const std::string& name,
-                                       float value )
-                                        throw( exceptions::ActiveMQException );
+        virtual void setFloatProperty( const std::string& name, float value );
 
         /**
          * Sets a int property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setIntProperty( const std::string& name,
-                                     int value )
-                                        throw( exceptions::ActiveMQException );
+        virtual void setIntProperty( const std::string& name, int value );
 
         /**
          * Sets a long property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setLongProperty( const std::string& name,
-                                      long long value )
-                                        throw( exceptions::ActiveMQException );
+        virtual void setLongProperty( const std::string& name, long long value );
 
         /**
          * Sets a short property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setShortProperty( const std::string& name,
-                                       short value )
-                                        throw( exceptions::ActiveMQException );
+        virtual void setShortProperty( const std::string& name, short value );
 
         /**
          * Sets a string property.
          * @param name The name of the property to retrieve.
          * @param value The value for the named property.
-         * @throws CMSException
          */
-        virtual void setStringProperty( const std::string& name,
-                                        const std::string& value )
-                                            throw( exceptions::ActiveMQException );
+        virtual void setStringProperty( const std::string& name, const std::string& value );
 
     };
 

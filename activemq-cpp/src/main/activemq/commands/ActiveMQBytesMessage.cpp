@@ -18,19 +18,28 @@
 
 #include <activemq/util/CMSExceptionSupport.h>
 
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/EOFException.h>
+#include <decaf/io/IOException.h>
+
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
+using namespace decaf::io;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() :
-    ActiveMQMessageTemplate< cms::BytesMessage >(),
-    dataInputStream( &inputStream ),
-    dataOutputStream( &outputStream ) {
+    ActiveMQMessageTemplate< cms::BytesMessage >(), length( 0 ) {
 
-    clearBody();
+    this->clearBody();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQBytesMessage::~ActiveMQBytesMessage() {
+    this->reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,8 +56,24 @@ ActiveMQBytesMessage* ActiveMQBytesMessage::cloneDataStructure() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessage::copyDataStructure( const DataStructure* src ) {
+
+    // Protect against invalid self assignment.
+    if( this == src ) {
+        return;
+    }
+
+    const ActiveMQBytesMessage* srcPtr = dynamic_cast<const ActiveMQBytesMessage*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+        throw decaf::lang::exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ActiveMQBytesMessage::copyDataStructure - src is NULL or invalid" );
+    }
+
+    ActiveMQBytesMessage* nonConstSrc = const_cast<ActiveMQBytesMessage*>( srcPtr );
+    nonConstSrc->storeContent();
+
     ActiveMQMessageTemplate<cms::BytesMessage>::copyDataStructure( src );
-    this->reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,26 +93,31 @@ bool ActiveMQBytesMessage::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
-                                         std::size_t numBytes )
-    throw( cms::CMSException ) {
+void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, std::size_t numBytes )
+    throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
     try{
 
-        clearBody();
-        std::vector<unsigned char>& content = getContent();
-        content.insert( content.end(), buffer, buffer + numBytes );
+        initializeWriting();
+        dataOut->write( buffer, 0, numBytes );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* ActiveMQBytesMessage::getBodyBytes() const throw ( cms::CMSException ) {
+unsigned char* ActiveMQBytesMessage::getBodyBytes() const
+    throw( cms::MessageNotReadableException, cms::CMSException ) {
 
     try{
 
-        if( getContent().size() > 0 ) {
-            return reinterpret_cast<const unsigned char*>( &( getContent()[0] ) );
+        initializeReading();
+
+        int length = this->getBodyLength();
+
+        if( length != 0 ) {
+            unsigned char* buffer = new unsigned char[length];
+            this->readBytes( buffer, length );
+            return buffer;
         } else {
             return NULL;
         }
@@ -96,284 +126,488 @@ const unsigned char* ActiveMQBytesMessage::getBodyBytes() const throw ( cms::CMS
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::getBodyLength() const throw ( cms::CMSException ) {
+std::size_t ActiveMQBytesMessage::getBodyLength() const
+    throw( cms::MessageNotReadableException, cms::CMSException ) {
 
     try{
-        return getContent().size();
+        initializeReading();
+        return this->length;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::reset() throw ( cms::CMSException ) {
+void ActiveMQBytesMessage::clearBody() throw( cms::CMSException ) {
+
+    // Invoke base class's version.
+    ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
+
+    this->dataOut.reset( NULL );
+    this->dataIn.reset( NULL );
+    this->length = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::onSend() {
+
+    this->storeContent();
+    ActiveMQMessageTemplate<cms::BytesMessage>::onSend();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::reset()
+    throw ( cms::MessageFormatException, cms::CMSException ) {
 
     try{
-        this->setReadOnlyBody( true );
-        inputStream.setBuffer( getContent() );
+        storeContent();
+        this->bytesOut.reset( NULL );
+        this->dataIn.reset( NULL );
+        this->dataOut.reset( NULL );
+        this->length = 0;
+        this->setReadOnlyBody(true);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQBytesMessage::readBoolean() const throw ( cms::CMSException ) {
+bool ActiveMQBytesMessage::readBoolean() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
 
+    initializeReading();
     try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readBoolean();
+        return this->dataIn->readBoolean();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBoolean( bool value ) throw ( cms::CMSException ) {
+void ActiveMQBytesMessage::writeBoolean( bool value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
 
+    initializeWriting();
     try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeBoolean( value );
+        this->dataOut->writeBoolean( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQBytesMessage::readByte() const throw ( cms::CMSException ) {
+unsigned char ActiveMQBytesMessage::readByte() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
 
+    initializeReading();
     try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readByte();
+        return this->dataIn->readByte();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeByte( unsigned char value ) throw ( cms::CMSException ) {
+void ActiveMQBytesMessage::writeByte( unsigned char value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
 
+    initializeWriting();
     try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeByte( value );
+        this->dataOut->writeByte( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value ) const
-    throw ( cms::CMSException ) {
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
 
+    return this->readBytes( &value[0], value.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
     try{
-        failIfWriteOnlyBody();
-        return dataInputStream.read( value );
+        this->dataOut->write( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t ActiveMQBytesMessage::readBytes( unsigned char* buffer, std::size_t length ) const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+
+        std::size_t n = 0;
+
+        while( n < length ) {
+            int count = this->dataIn->read( buffer, n, length - n );
+            if( count < 0 ) {
+                break;
+            }
+            n += count;
+        }
+
+        if( n == 0 && length > 0 ) {
+            n = -1;
+        }
+
+        return n;
+
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeBytes( const unsigned char* value, std::size_t offset, std::size_t length )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->write( value, offset, length );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+char ActiveMQBytesMessage::readChar() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readChar();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeChar( char value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeChar( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float ActiveMQBytesMessage::readFloat() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readFloat();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeFloat( float value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeFloat( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double ActiveMQBytesMessage::readDouble() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readDouble();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeDouble( double value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeDouble( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+short ActiveMQBytesMessage::readShort() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readShort();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeShort( short value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeShort( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned short ActiveMQBytesMessage::readUnsignedShort() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readUnsignedShort();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeUnsignedShort( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQBytesMessage::readInt() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readInt();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeInt( int value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeInt( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQBytesMessage::readLong() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readLong();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeLong( long long value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeLong( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQBytesMessage::readString() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readString();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeString( const std::string& value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeChars( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQBytesMessage::readUTF() const
+    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+
+    initializeReading();
+    try{
+        return this->dataIn->readUTF();
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( IOException& ex ) {
+        throw CMSExceptionSupport::createMessageFormatException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::writeUTF( const std::string& value )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+
+    initializeWriting();
+    try{
+        this->dataOut->writeUTF( value );
+    } catch( EOFException& ex ) {
+        throw CMSExceptionSupport::createMessageEOFException( ex );
+    } catch( Exception& ex ) {
+        throw CMSExceptionSupport::create( ex );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::storeContent() {
+
+    try {
+
+        if( this->dataOut.get() != NULL ) {
+
+            this->dataOut->close();
+
+            this->setContent( this->bytesOut->toByteArrayRef() );
+
+            this->dataOut.reset( NULL );
+            this->bytesOut.reset( NULL );
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value ) throw ( cms::CMSException ) {
+void ActiveMQBytesMessage::initializeReading() const {
 
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.write( value );
+    this->failIfWriteOnlyBody();
+    try {
+        if( this->dataIn.get() == NULL) {
+            ByteArrayInputStream* is = new ByteArrayInputStream( this->getContent() );
+            this->dataIn.reset( new DataInputStream( is, true ) );
+            this->length = this->getContent().size();
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t length ) const
-    throw ( cms::CMSException ) {
+void ActiveMQBytesMessage::initializeWriting() {
 
+    this->failIfReadOnlyBody();
     try{
-        failIfWriteOnlyBody();
-        return dataInputStream.read( buffer, 0, length );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBytes( const unsigned char* value,
-                                       std::size_t offset,
-                                       std::size_t length ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.write( value, offset, length );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-char ActiveMQBytesMessage::readChar() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readChar();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeChar( char value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeChar( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-float ActiveMQBytesMessage::readFloat() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readFloat();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeFloat( float value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeFloat( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double ActiveMQBytesMessage::readDouble() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readDouble();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeDouble( double value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeDouble( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-short ActiveMQBytesMessage::readShort() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readShort();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeShort( short value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeShort( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned short ActiveMQBytesMessage::readUnsignedShort() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readUnsignedShort();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeUnsignedShort( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::readInt() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readInt();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeInt( int value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeInt( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQBytesMessage::readLong() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readLong();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeLong( long long value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeLong( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readString() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readString();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeString( const std::string& value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeChars( value );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readUTF() const throw ( cms::CMSException ) {
-
-    try{
-        failIfWriteOnlyBody();
-        return dataInputStream.readUTF();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeUTF( const std::string& value ) throw ( cms::CMSException ) {
-
-    try{
-        failIfReadOnlyBody();
-        dataOutputStream.writeUTF( value );
+        if( this->dataOut.get() == NULL ) {
+            this->length = 0;
+            this->bytesOut.reset( new ByteArrayOutputStream() );
+            this->dataOut.reset( new DataOutputStream( this->bytesOut.get() ) );
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

@@ -56,319 +56,207 @@ MessagePropertyInterceptor::~MessagePropertyInterceptor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool MessagePropertyInterceptor::getBooleanProperty( const std::string& name ) const
-	throw( activemq::exceptions::ActiveMQException ) {
+bool MessagePropertyInterceptor::getBooleanProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        return this->properties->getBool( name );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getBool( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessagePropertyInterceptor::getByteProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+unsigned char MessagePropertyInterceptor::getByteProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        return this->properties->getByte( name );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getByte( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double MessagePropertyInterceptor::getDoubleProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+double MessagePropertyInterceptor::getDoubleProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        return this->properties->getDouble( name );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getDouble( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float MessagePropertyInterceptor::getFloatProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+float MessagePropertyInterceptor::getFloatProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        return this->properties->getFloat( name );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getFloat( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int MessagePropertyInterceptor::getIntProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+int MessagePropertyInterceptor::getIntProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        } else if( name == "JMSXDeliveryCount" ) {
-            return this->message->getRedeliveryCounter();
-        } else if( name == "JMSXGroupSeq" ) {
-            return this->message->getGroupSequence();
-        }
-
-        return this->properties->getInt( name );
+    if( name == "JMSXGroupID" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
+    } else if( name == "JMSXDeliveryCount" ) {
+        return this->message->getRedeliveryCounter();
+    } else if( name == "JMSXGroupSeq" ) {
+        return this->message->getGroupSequence();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getInt( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long MessagePropertyInterceptor::getLongProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+long long MessagePropertyInterceptor::getLongProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        } else if( name == "JMSXDeliveryCount" ) {
-            return (long long)this->message->getRedeliveryCounter();
-        } else if( name == "JMSXGroupSeq" ) {
-            return (long long)this->message->getGroupSequence();
-        }
-
-        return this->properties->getLong( name );
+    if( name == "JMSXGroupID" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
+    } else if( name == "JMSXDeliveryCount" ) {
+        return (long long)this->message->getRedeliveryCounter();
+    } else if( name == "JMSXGroupSeq" ) {
+        return (long long)this->message->getGroupSequence();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getLong( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short MessagePropertyInterceptor::getShortProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+short MessagePropertyInterceptor::getShortProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        return this->properties->getShort( name );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getShort( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MessagePropertyInterceptor::getStringProperty( const std::string& name ) const
-    throw( activemq::exceptions::ActiveMQException ) {
+std::string MessagePropertyInterceptor::getStringProperty( const std::string& name ) const {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            return this->message->getGroupID();
-        } else if( name == "JMSXDeliveryCount" ) {
-            return Integer::toString( this->message->getRedeliveryCounter() );
-        } else if( name == "JMSXGroupSeq" ) {
-            return Integer::toString( this->message->getGroupSequence() );
-        }
-
-        return this->properties->getString( name );
+    if( name == "JMSXGroupID" ) {
+        return this->message->getGroupID();
+    } else if( name == "JMSXDeliveryCount" ) {
+        return Integer::toString( this->message->getRedeliveryCounter() );
+    } else if( name == "JMSXGroupSeq" ) {
+        return Integer::toString( this->message->getGroupSequence() );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    return this->properties->getString( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setBooleanProperty( const std::string& name, bool value )
-	throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setBooleanProperty( const std::string& name, bool value ) {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        this->properties->setBool( name, value );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setBool( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setByteProperty( const std::string& name, unsigned char value )
-	throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setByteProperty( const std::string& name, unsigned char value ) {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        this->properties->setByte( name, value );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setByte( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setDoubleProperty( const std::string& name, double value )
-	throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setDoubleProperty( const std::string& name, double value ) {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        this->properties->setDouble( name, value );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setDouble( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setFloatProperty( const std::string& name, float value )
-	throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setFloatProperty( const std::string& name, float value ) {
 
-    try{
-
-        if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        }
-
-        this->properties->setFloat( name, value );
+    if( name == "JMSXDeliveryCount" || name == "JMSXGroupID" || name == "JMSXGroupSeq" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setFloat( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setIntProperty( const std::string& name, int value )
-    throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setIntProperty( const std::string& name, int value ) {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        } else if( name == "JMSXDeliveryCount" ) {
-            this->message->setRedeliveryCounter( value );
-        } else if( name == "JMSXGroupSeq" ) {
-            this->message->setGroupSequence( value );
-        }
-
-        this->properties->setInt( name, value );
+    if( name == "JMSXGroupID" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
+    } else if( name == "JMSXDeliveryCount" ) {
+        this->message->setRedeliveryCounter( value );
+    } else if( name == "JMSXGroupSeq" ) {
+        this->message->setGroupSequence( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setInt( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setLongProperty( const std::string& name, long long value )
-    throw( activemq::exceptions::ActiveMQException ) {
-
-    try{
-        this->properties->setLong( name, value );
-    }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+void MessagePropertyInterceptor::setLongProperty( const std::string& name, long long value ) {
+    this->properties->setLong( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setShortProperty( const std::string& name, short value )
-    throw( activemq::exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setShortProperty( const std::string& name, short value ) {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Cannot Convert Reserved Property to this Type." );
-        } else if( name == "JMSXDeliveryCount" ) {
-            this->message->setRedeliveryCounter( (int)value );
-        } else if( name == "JMSXGroupSeq" ) {
-            this->message->setGroupSequence( (int)value );
-        }
-
-        this->properties->setShort( name, value );
+    if( name == "JMSXGroupID" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "Cannot Convert Reserved Property to this Type." );
+    } else if( name == "JMSXDeliveryCount" ) {
+        this->message->setRedeliveryCounter( (int)value );
+    } else if( name == "JMSXGroupSeq" ) {
+        this->message->setGroupSequence( (int)value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setShort( name, value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePropertyInterceptor::setStringProperty( const std::string& name,
-                                                    const std::string& value )
-    throw( activemq::exceptions::ActiveMQException ) {
+                                                    const std::string& value ) {
 
-    try{
-
-        if( name == "JMSXGroupID" ) {
-            this->message->setGroupID( value );
-        } else if( name == "JMSXDeliveryCount" ) {
-            this->message->setRedeliveryCounter( Integer::parseInt( value ) );
-        } else if( name == "JMSXGroupSeq" ) {
-            this->message->setGroupSequence( Integer::parseInt( value ) );
-        }
-
-        this->properties->setString( name, value );
+    if( name == "JMSXGroupID" ) {
+        this->message->setGroupID( value );
+    } else if( name == "JMSXDeliveryCount" ) {
+        this->message->setRedeliveryCounter( Integer::parseInt( value ) );
+    } else if( name == "JMSXGroupSeq" ) {
+        this->message->setGroupSequence( Integer::parseInt( value ) );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    this->properties->setString( name, value );
 }

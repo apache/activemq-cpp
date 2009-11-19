@@ -26,6 +26,10 @@
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+
+#include <cms/IllegalStateException.h>
+#include <cms/MessageFormatException.h>
 #include <cms/MessageNotReadableException.h>
 #include <cms/MessageNotWriteableException.h>
 
@@ -54,9 +58,45 @@ namespace commands {
          * Acknowledges all consumed messages of the session
          * of this consumed message.
          */
-        virtual void acknowledge() const throw( cms::CMSException ) {
+        virtual void acknowledge() const throw( cms::IllegalStateException, cms::CMSException ) {
             try{
                 this->getAckHandler()->acknowledgeMessage( this );
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+        }
+
+        /**
+         * Resets the Message to a Read-Only state.
+         */
+        virtual void onSend() {
+            this->setReadOnlyBody(true);
+            this->setReadOnlyProperties(true);
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            try{
+
+                if( this == value ) {
+                    return true;
+                }
+
+                const ActiveMQMessageTemplate<T>* object =
+                    dynamic_cast< const ActiveMQMessageTemplate<T>* >( value );
+
+                if( object == NULL ) {
+                    return false;
+                }
+
+                decaf::lang::Pointer<MessageId> thisMsgId = this->getMessageId();
+                decaf::lang::Pointer<MessageId> otherMsgId = object->getMessageId();
+
+                return thisMsgId != NULL && otherMsgId != NULL && otherMsgId->equals( thisMsgId.get() );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
@@ -66,8 +106,11 @@ namespace commands {
          * headers or properties.
          */
         virtual void clearBody() throw( cms::CMSException ) {
-            this->setContent( std::vector<unsigned char>() );
-            this->setReadOnlyBody( false );
+            try{
+                this->setContent( std::vector<unsigned char>() );
+                this->setReadOnlyBody( false );
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -75,8 +118,11 @@ namespace commands {
          * header values.
          */
         virtual void clearProperties() throw( cms::CMSException ) {
-            this->getMessageProperties().clear();
-            this->setReadOnlyProperties( false );
+            try{
+                this->getMessageProperties().clear();
+                this->setReadOnlyProperties( false );
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -85,7 +131,10 @@ namespace commands {
          * message.
          */
         virtual std::vector<std::string> getPropertyNames() const throw( cms::CMSException ) {
-            return getMessageProperties().keySet();
+            try{
+                return getMessageProperties().keySet();
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -94,141 +143,200 @@ namespace commands {
          * @return True if the property exists in this message.
          */
         virtual bool propertyExists( const std::string& name ) const throw( cms::CMSException ) {
-            return getMessageProperties().containsKey( name );
+            try{
+                return getMessageProperties().containsKey( name );
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a boolean property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual bool getBooleanProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getBooleanProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a byte property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual unsigned char getByteProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getByteProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a double property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual double getDoubleProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getDoubleProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a float property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual float getFloatProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getFloatProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a int property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual int getIntProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getIntProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a long property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual long long getLongProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getLongProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a short property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual short getShortProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getShortProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Gets a string property.
-         * @param name The name of the property to retrieve.
+         *
+         * @param name
+         *      The name of the property to retrieve.
          * @return The value for the named property.
+         *
          * @throws CMSException if the property does not exist.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
         virtual std::string getStringProperty( const std::string& name ) const
-            throw( cms::CMSException ) {
+            throw( cms::MessageFormatException, cms::CMSException ) {
 
             try{
                 return this->propertiesInterceptor->getStringProperty( name );
+            } catch( decaf::lang::exceptions::UnsupportedOperationException& ex ) {
+                throw activemq::util::CMSExceptionSupport::createMessageFormatException( ex );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
          * Sets a boolean property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setBooleanProperty( const std::string& name,
-                                         bool value )
-                                            throw( cms::CMSException ) {
+        virtual void setBooleanProperty( const std::string& name, bool value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setBooleanProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -236,16 +344,24 @@ namespace commands {
 
         /**
          * Sets a byte property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setByteProperty( const std::string& name,
-                                      unsigned char value )
-                                        throw( cms::CMSException ) {
+        virtual void setByteProperty( const std::string& name, unsigned char value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setByteProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -253,16 +369,24 @@ namespace commands {
 
         /**
          * Sets a double property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setDoubleProperty( const std::string& name,
-                                        double value )
-                                            throw( cms::CMSException ) {
+        virtual void setDoubleProperty( const std::string& name, double value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setDoubleProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -270,16 +394,23 @@ namespace commands {
 
         /**
          * Sets a float property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setFloatProperty( const std::string& name,
-                                       float value )
-                                        throw( cms::CMSException ) {
+        virtual void setFloatProperty( const std::string& name, float value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setFloatProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -287,16 +418,24 @@ namespace commands {
 
         /**
          * Sets a int property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setIntProperty( const std::string& name,
-                                     int value )
-                                        throw( cms::CMSException ) {
+        virtual void setIntProperty( const std::string& name, int value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setIntProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -304,16 +443,24 @@ namespace commands {
 
         /**
          * Sets a long property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setLongProperty( const std::string& name,
-                                      long long value )
-                                        throw( cms::CMSException ) {
+        virtual void setLongProperty( const std::string& name, long long value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setLongProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -321,16 +468,24 @@ namespace commands {
 
         /**
          * Sets a short property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setShortProperty( const std::string& name,
-                                       short value )
-                                        throw( cms::CMSException ) {
+        virtual void setShortProperty( const std::string& name, short value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setShortProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -338,16 +493,24 @@ namespace commands {
 
         /**
          * Sets a string property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
-         * @throws CMSException
+         *
+         * @param name
+         *      The name of the property to retrieve.
+         * @param value
+         *      The value for the named property.
+         *
+         * @throws CMSException - if the name is an empty string.
+         * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setStringProperty( const std::string& name,
-                                        const std::string& value )
-                                            throw( cms::CMSException ) {
+        virtual void setStringProperty( const std::string& name, const std::string& value )
+            throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
+            if( name == "" ) {
+                throw cms::CMSException( "Message Property names must not be empty", NULL );
+            }
+
+            failIfReadOnlyProperties();
             try{
-                failIfReadOnlyProperties();
                 this->propertiesInterceptor->setStringProperty( name, value );
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -377,7 +540,7 @@ namespace commands {
          * @throw CMSException
          */
         virtual int getCMSDeliveryMode() const throw( cms::CMSException ) {
-            return this->isPersistent();
+            return !this->isPersistent();
         }
 
         /**
@@ -406,13 +569,16 @@ namespace commands {
         virtual void setCMSDestination( const cms::Destination* destination )
             throw( cms::CMSException ) {
 
-            if( destination != NULL ) {
-                this->setDestination(
-                    decaf::lang::Pointer<ActiveMQDestination>(
-                        dynamic_cast<ActiveMQDestination*>( destination->clone() ) ) );
-            } else {
-                this->getDestination().reset( NULL );
+            try{
+                if( destination != NULL ) {
+                    this->setDestination(
+                        decaf::lang::Pointer<ActiveMQDestination>(
+                            dynamic_cast<ActiveMQDestination*>( destination->clone() ) ) );
+                } else {
+                    this->getDestination().reset( NULL );
+                }
             }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -439,7 +605,10 @@ namespace commands {
          * @throw CMSException
          */
         virtual std::string getCMSMessageID() const throw( cms::CMSException ) {
-            return wireformat::openwire::marshal::BaseDataStreamMarshaller::toString( this->getMessageId().get() );
+            try{
+                return wireformat::openwire::marshal::BaseDataStreamMarshaller::toString( this->getMessageId().get() );
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -491,8 +660,7 @@ namespace commands {
          * @throw CMSException
          */
         virtual const cms::Destination* getCMSReplyTo() const throw( cms::CMSException ) {
-            return dynamic_cast< const cms::Destination* >(
-                this->getReplyTo().get() );
+            return dynamic_cast< const cms::Destination* >( this->getReplyTo().get() );
         }
 
         /**
@@ -505,13 +673,16 @@ namespace commands {
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) throw( cms::CMSException ) {
 
-            if( destination != NULL ) {
-                this->setReplyTo(
-                    decaf::lang::Pointer<ActiveMQDestination>(
-                        dynamic_cast<ActiveMQDestination*>( destination->clone() ) ) );
-            } else {
-                this->setReplyTo( decaf::lang::Pointer<ActiveMQDestination>() );
+            try{
+                if( destination != NULL ) {
+                    this->setReplyTo(
+                        decaf::lang::Pointer<ActiveMQDestination>(
+                            dynamic_cast<ActiveMQDestination*>( destination->clone() ) ) );
+                } else {
+                    this->setReplyTo( decaf::lang::Pointer<ActiveMQDestination>() );
+                }
             }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -551,11 +722,6 @@ namespace commands {
         }
 
     protected:
-
-        virtual void onSend() {
-            this->setReadOnlyBody(true);
-            this->setReadOnlyProperties(true);
-        }
 
         void failIfWriteOnlyBody() const {
             if( !this->isReadOnlyBody() ){
