@@ -268,6 +268,10 @@ std::size_t ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value 
             cms::MessageNotReadableException,
             cms::CMSException ) {
 
+    if( value.size() == 0 ) {
+        return 0;
+    }
+
     return this->readBytes( &value[0], value.size() );
 }
 
