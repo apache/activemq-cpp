@@ -82,7 +82,7 @@ namespace lang{
             HANDLE handle;
         #endif
 
-        Thread::State state;
+        volatile Thread::State state;
         std::string name;
         int priority;
         bool interrupted;
@@ -185,6 +185,8 @@ namespace{
             pthread_setspecific( currentThreadKey, NULL );
             pthread_exit(0);
 
+			properties->state = Thread::TERMINATED;
+
             return NULL;
         }
     #else
@@ -207,6 +209,8 @@ namespace{
             #endif
 
             ::CloseHandle( properties->handle );
+
+			properties->state = Thread::TERMINATED;
 
             return NULL;
         }
