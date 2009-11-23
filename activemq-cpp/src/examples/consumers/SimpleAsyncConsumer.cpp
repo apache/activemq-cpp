@@ -19,6 +19,8 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/core/ActiveMQConnection.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/library/ActiveMQCPP.h>
 #include <decaf/lang/Integer.h>
 #include <activemq/util/Config.h>
@@ -36,6 +38,7 @@
 
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::transport;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
@@ -44,7 +47,8 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 class SimpleAsyncConsumer : public ExceptionListener,
-                            public MessageListener {
+                            public MessageListener,
+                            public DefaultTransportListener {
 private:
 
     Connection* connection;
@@ -87,6 +91,12 @@ public:
             // Create a Connection
             connection = connectionFactory->createConnection();
             delete connectionFactory;
+
+            ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>( connection );
+            if( amqConnection != NULL ) {
+                amqConnection->addTransportListener( this );
+            }
+
             connection->start();
 
             connection->setExceptionListener(this);
@@ -144,9 +154,17 @@ public:
 
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
+    virtual void onException( const CMSException& ex AMQCPP_UNUSED ) {
         printf("CMS Exception occurred.  Shutting down client.\n");
         exit(1);
+    }
+
+    virtual void transportInterrupted() {
+        std::cout << "The Connection's Transport has been Interrupted." << std::endl;
+    }
+
+    virtual void transportResumed() {
+        std::cout << "The Connection's Transport has been Restored." << std::endl;
     }
 
 private:
