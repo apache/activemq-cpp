@@ -218,18 +218,8 @@ void OpenWireFormatNegotiator::start() throw( IOException ){
 
         try {
 
-            // Circumvent all other Transport filters and go straight for the base
-            // IOTransport, this should guarantee that there's no funny business done
-            // like async dispatch etc.  If it can't be found just use next and hope that
-            // there's nothing that will break the necessary thread locking that protects
-            // the message as it marshaled out to the wire
-            Transport* transport = this->next->narrow( typeid( transport::IOTransport ) );
-            if( transport == NULL ) {
-                transport = this->next.get();
-            }
-
             // We first send the WireFormat that we'd prefer.
-            transport->oneway( openWireFormat->getPreferedWireFormatInfo() );
+            this->next->oneway( openWireFormat->getPreferedWireFormatInfo() );
 
             // Mark the latch
             wireInfoSentDownLatch.countDown();
