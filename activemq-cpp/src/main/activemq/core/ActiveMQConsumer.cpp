@@ -593,6 +593,23 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
             ackLater( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
         } else if( session->isClientAcknowledge() || session->isIndividualAcknowledge() ) {
             ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
+
+            bool messageUnackedByConsumer = false;
+
+            synchronized( &dispatchedMessages ) {
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
+                while( iter->hasNext() ) {
+                    if( iter->next() == message ) {
+                        messageUnackedByConsumer = true;
+                        break;
+                    }
+                }
+            }
+
+            if( messageUnackedByConsumer ) {
+                this->ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
+            }
+
         } else {
             throw IllegalStateException( __FILE__, __LINE__, "Invalid Session State" );
         }
