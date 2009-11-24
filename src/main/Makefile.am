@@ -1106,6 +1106,8 @@ h_sources = \
     decaf/internal/util/concurrent/ConditionImpl.h \
     decaf/internal/util/concurrent/MutexImpl.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
+    decaf/internal/util/concurrent/TransferQueue.h \
+    decaf/internal/util/concurrent/TransferStack.h \
     decaf/internal/util/concurrent/Transferer.h \
     decaf/internal/util/concurrent/unix/ConditionHandle.h \
     decaf/internal/util/concurrent/unix/MutexHandle.h \

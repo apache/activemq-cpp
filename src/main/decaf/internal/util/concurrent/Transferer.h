@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-
 #ifndef _DECAF_INTERNAL_UTIL_CONCURRENT_TRANSFERER_H_
 #define _DECAF_INTERNAL_UTIL_CONCURRENT_TRANSFERER_H_
 
 #include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/util/concurrent/TimeoutException.h>
 
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace internal {
+namespace util {
+namespace concurrent {
 
     /**
     * Shared internal API for dual stacks and queues.
     */
-    template<typename E>
+    template< typename E >
     class Transferer {
 
         /**
@@ -44,7 +44,7 @@ namespace concurrent{
          * @throws InterruptedException if the thread was interrupted while
          *         waiting for the consumer to accept the item offered.
          */
-        virtual void transfer( E e, bool timed, long long nanos )
+        virtual void transfer( E* e, bool timed, long long nanos )
             throw( decaf::util::concurrent::TimeoutException,
                    decaf::lang::exceptions::InterruptedException ) = 0;
 
@@ -61,12 +61,12 @@ namespace concurrent{
          * @throws InterruptedException if the thread was interrupted while
          *         waiting for the producer to offer an item.
          */
-        virtual E transfer( bool timed, long long nanos )
+        virtual E* transfer( bool timed, long long nanos )
             throw( decaf::util::concurrent::TimeoutException,
                    decaf::lang::exceptions::InterruptedException ) = 0;
 
     };
 
-}}}
+}}}}
 
 #endif /* _DECAF_INTERNAL_UTIL_CONCURRENT_TRANSFERER_H_ */
