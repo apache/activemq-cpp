@@ -80,6 +80,8 @@ cc_sources = \
     decaf/internal/nio/ShortArrayBufferTest.cpp \
     decaf/internal/util/ByteArrayAdapterTest.cpp \
     decaf/internal/util/TimerTaskHeapTest.cpp \
+    decaf/internal/util/concurrent/TransferQueueTest.cpp \
+    decaf/internal/util/concurrent/TransferStackTest.cpp \
     decaf/io/BufferedInputStreamTest.cpp \
     decaf/io/BufferedOutputStreamTest.cpp \
     decaf/io/ByteArrayInputStreamTest.cpp \
@@ -208,6 +210,8 @@ h_sources = \
     decaf/internal/nio/ShortArrayBufferTest.h \
     decaf/internal/util/ByteArrayAdapterTest.h \
     decaf/internal/util/TimerTaskHeapTest.h \
+    decaf/internal/util/concurrent/TransferQueueTest.h \
+    decaf/internal/util/concurrent/TransferStackTest.h \
     decaf/io/BufferedInputStreamTest.h \
     decaf/io/BufferedOutputStreamTest.h \
     decaf/io/ByteArrayInputStreamTest.h \
