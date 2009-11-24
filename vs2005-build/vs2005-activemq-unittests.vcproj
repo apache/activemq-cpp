@@ -10741,6 +10741,26 @@
 						RelativePath="..\src\test\decaf\internal\util\TimerTaskHeapTest.h"
 						>
 					</File>
+					<Filter
+						Name="concurrent"
+						>
+						<File
+							RelativePath="..\src\test\decaf\internal\util\concurrent\TransferQueueTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\internal\util\concurrent\TransferQueueTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\internal\util\concurrent\TransferStackTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\internal\util\concurrent\TransferStackTest.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="net"

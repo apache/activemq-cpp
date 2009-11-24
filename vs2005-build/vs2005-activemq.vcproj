@@ -22694,6 +22694,18 @@
 							RelativePath="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\Transferer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\TransferQueue.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\TransferStack.h"
+							>
+						</File>
 						<Filter
 							Name="windows"
 							>
