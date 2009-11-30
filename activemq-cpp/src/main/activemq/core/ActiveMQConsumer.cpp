@@ -299,6 +299,19 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
             // Stop and Wakeup all sync consumers.
             unconsumedMessages.close();
 
+            if( this->session->isIndividualAcknowledge() ) {
+                // For IndividualAck Mode we need to unlink the ack handler to remove a
+                // cyclic reference to the MessageDispatch that brought the message to us.
+                synchronized( &dispatchedMessages ) {
+                    std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
+                    while( iter->hasNext() ) {
+                        iter->next()->getMessage()->setAckHandler( Pointer<ActiveMQAckHandler>() );
+                    }
+
+                    dispatchedMessages.clear();
+                }
+            }
+
             // Remove this Consumer from the Connections set of Dispatchers
             this->session->disposeOf( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
 
