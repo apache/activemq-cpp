@@ -99,5 +99,5 @@ void Runtime::initializeRuntime() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Runtime::shutdownRuntime() {
-
+    Thread::shutdownThreading();
 }
