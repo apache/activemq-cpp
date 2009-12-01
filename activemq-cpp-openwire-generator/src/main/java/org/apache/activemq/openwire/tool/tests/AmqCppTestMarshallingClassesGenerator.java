@@ -38,8 +38,6 @@ out.println("");
 out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+super.getTargetClassName(jclass)+".h>");
 out.println("#include <activemq/commands/"+jclass.getSimpleName()+".h>");
 out.println("");
-out.println("CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v"+getOpenwireVersion()+"::"+className+" );");
-out.println("");
 out.println("#include <activemq/wireformat/openwire/OpenWireFormat.h>");
 out.println("#include <activemq/commands/DataStructure.h>");
 out.println("#include <activemq/commands/MessageId.h>");
