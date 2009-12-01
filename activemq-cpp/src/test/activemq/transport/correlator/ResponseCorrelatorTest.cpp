@@ -301,6 +301,7 @@ namespace correlator{
 
             try{
                 resp = transport->request(cmd);
+                Thread::sleep(10);
             }catch( ... ){
                 CPPUNIT_ASSERT( false );
             }
@@ -454,7 +455,7 @@ void ResponseCorrelatorTest::testMultiRequests(){
         }
 
         // Start all the requester threads.
-        const unsigned int numRequests = 100;
+        const unsigned int numRequests = 20;
         RequestThread requesters[numRequests];
         for( unsigned int ix=0; ix<numRequests; ++ix ){
             requesters[ix].setTransport( &correlator );
