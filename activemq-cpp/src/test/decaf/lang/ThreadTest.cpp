@@ -19,6 +19,7 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/System.h>
+#include <decaf/util/Random.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 
@@ -138,6 +139,26 @@ namespace lang{
         }
 
     };
+
+    class RandomSleepRun : public Thread{
+    private:
+
+        static Random rand;
+
+    public:
+
+        RandomSleepRun() {}
+        virtual ~RandomSleepRun(){}
+
+        virtual void run(){
+
+            // Sleep for Random time.
+            Thread::sleep( rand.nextInt( 2000 ) );
+        }
+
+    };
+
+    Random RandomSleepRun::rand( System::currentTimeMillis() );
 
     class BadRunnable : public Runnable {
     public:
@@ -306,6 +327,25 @@ void ThreadTest::testJoin3() {
     CPPUNIT_ASSERT_MESSAGE( "Joined Thread is not still alive", test.isAlive() );
     test.join( 3500, 999999 );
     CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
+
+    // Thread should be able to join itself, use a timeout so we don't freeze
+    Thread::currentThread()->join( 100 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testJoin4() {
+
+    // Start all the threads.
+    const unsigned int numThreads = 200;
+    RandomSleepRun threads[numThreads];
+    for( unsigned int ix = 0; ix < numThreads; ++ix ){
+        threads[ix].start();
+    }
+
+    // Join them all to ensure they complete as expected
+    for( unsigned int ix = 0; ix < numThreads; ++ix ){
+        threads[ix].join();
+    }
 
     // Thread should be able to join itself, use a timeout so we don't freeze
     Thread::currentThread()->join( 100 );
