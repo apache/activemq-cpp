@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v1/NetworkBridgeFilterMarshaller.h>
 #include <activemq/commands/NetworkBridgeFilter.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v1::NetworkBridgeFilterMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v3/JournalTraceMarshaller.h>
 #include <activemq/commands/JournalTrace.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v3::JournalTraceMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

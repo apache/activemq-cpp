@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v1/ActiveMQTextMessageMarshaller.h>
 #include <activemq/commands/ActiveMQTextMessage.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v1::ActiveMQTextMessageMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

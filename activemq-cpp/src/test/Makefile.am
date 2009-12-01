@@ -265,9 +265,11 @@ h_sources = \
     util/teamcity/TeamCityProgressListener.h
 
 
-## include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk
-## include activemq/wireformat/openwire/marshal/v2/srcmakefile.mk
-## include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
+include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk
+include activemq/wireformat/openwire/marshal/v2/srcmakefile.mk
+include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
+include activemq/wireformat/openwire/marshal/v4/srcmakefile.mk
+include activemq/wireformat/openwire/marshal/v5/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test

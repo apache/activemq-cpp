@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v5/LastPartialCommandMarshaller.h>
 #include <activemq/commands/LastPartialCommand.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v5::LastPartialCommandMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

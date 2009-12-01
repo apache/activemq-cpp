@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v4/ExceptionResponseMarshaller.h>
 #include <activemq/commands/ExceptionResponse.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v4::ExceptionResponseMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v1/RemoveInfoMarshaller.h>
 #include <activemq/commands/RemoveInfo.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v1::RemoveInfoMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v2/PartialCommandMarshaller.h>
 #include <activemq/commands/PartialCommand.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v2::PartialCommandMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>
