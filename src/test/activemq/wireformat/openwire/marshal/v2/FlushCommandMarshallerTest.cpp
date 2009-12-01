@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v2/FlushCommandMarshaller.h>
 #include <activemq/commands/FlushCommand.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v2::FlushCommandMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

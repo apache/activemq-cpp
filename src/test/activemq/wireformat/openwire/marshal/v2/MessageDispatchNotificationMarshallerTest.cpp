@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v2/MessageDispatchNotificationMarshaller.h>
 #include <activemq/commands/MessageDispatchNotification.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v2::MessageDispatchNotificationMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

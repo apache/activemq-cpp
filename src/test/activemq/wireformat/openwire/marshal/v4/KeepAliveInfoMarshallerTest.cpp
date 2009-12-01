@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v4/KeepAliveInfoMarshaller.h>
 #include <activemq/commands/KeepAliveInfo.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v4::KeepAliveInfoMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v5/ProducerAckMarshaller.h>
 #include <activemq/commands/ProducerAck.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v5::ProducerAckMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

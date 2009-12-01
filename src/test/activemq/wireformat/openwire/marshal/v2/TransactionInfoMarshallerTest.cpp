@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v2/TransactionInfoMarshaller.h>
 #include <activemq/commands/TransactionInfo.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v2::TransactionInfoMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v4/ReplayCommandMarshaller.h>
 #include <activemq/commands/ReplayCommand.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v4::ReplayCommandMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

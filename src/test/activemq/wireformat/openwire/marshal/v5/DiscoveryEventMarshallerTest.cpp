@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v5/DiscoveryEventMarshaller.h>
 #include <activemq/commands/DiscoveryEvent.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v5::DiscoveryEventMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>

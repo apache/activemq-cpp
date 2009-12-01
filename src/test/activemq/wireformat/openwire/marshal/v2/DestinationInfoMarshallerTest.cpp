@@ -20,8 +20,6 @@
 #include <activemq/wireformat/openwire/marshal/v2/DestinationInfoMarshaller.h>
 #include <activemq/commands/DestinationInfo.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v2::DestinationInfoMarshallerTest );
-
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/commands/MessageId.h>
