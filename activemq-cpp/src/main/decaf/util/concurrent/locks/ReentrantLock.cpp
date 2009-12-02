@@ -497,6 +497,8 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to wait on OS Condition object." );
     }
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
