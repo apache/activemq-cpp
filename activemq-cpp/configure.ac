@@ -160,7 +160,7 @@ case "${host_os}" in
 
     PLAT_LIBS="-lm -luuid -lsocket -lrt"
 
-    if test "$GCC" = "no"; then
+    if ! test "$GCC" = "yes"; then
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
        PLAT_CXXFLAGS="-mt -w -O5 -library=stlport4"
@@ -169,7 +169,7 @@ case "${host_os}" in
 
   *hpux10* )
 
-    if test "$GCC" = "no"; then
+    if ! test "$GCC" = "yes"; then
        # Assuming aCC Compiler unknown yet if any additional settings are needed.
        PLAT_CXXFLAGS=""
     fi
@@ -177,7 +177,7 @@ case "${host_os}" in
 
   *hpux11* )
 
-    if test "$GCC" = "no"; then
+    if ! test "$GCC" = "yes"; then
        # Assuming aCC Compiler unknown yet if any additional settings are needed.
        PLAT_CXXFLAGS="-Wc,-ansi_for_scope,on"
     fi
