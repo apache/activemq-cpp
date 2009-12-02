@@ -505,7 +505,7 @@ bool ConditionObject::await( long long time, const TimeUnit& unit )
            decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::IllegalMonitorStateException ) {
 
-
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -514,6 +514,7 @@ bool ConditionObject::awaitUntil( const Date& deadline )
            decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::IllegalMonitorStateException ) {
 
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
