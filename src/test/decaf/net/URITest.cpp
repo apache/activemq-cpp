@@ -97,7 +97,7 @@ void URITest::testConstructorOneString() {
     // path with an escaped octet for space char
     constructorTests.push_back( "http://host/a%E2%82%ACpath#frag" );
     // path with escaped octet for unicode char, not USASCII
-    constructorTests.push_back( "http://host/a\u20ACpath#frag" );
+    // constructorTests.push_back( "http://host/a\u20ACpath#frag" );
     // path with unicode char, not USASCII equivalent to
     constructorTests.push_back( "http://host%20name/" );
     // escaped octets in host (becomes registry based)
@@ -408,10 +408,10 @@ void URITest::testConstructorFourString() {
         URI uri( "", "", "", "" );
     }
 
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Expected URISyntaxException: ",
-        URI( "http", ":2:3:4:5:6:7:8", "/apath", "\u20ACfrag" ),
-        URISyntaxException );
+//    CPPUNIT_ASSERT_THROW_MESSAGE(
+//        "Expected URISyntaxException: ",
+//        URI( "http", ":2:3:4:5:6:7:8", "/apath", "\u20ACfrag" ),
+//        URISyntaxException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
