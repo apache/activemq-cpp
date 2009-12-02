@@ -78,7 +78,7 @@ void Semaphore::acquireUninterruptibly() throw ( decaf::lang::exceptions::Runtim
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Semaphore::tryAcquire() throw ( decaf::lang::exceptions::RuntimeException ) {
-
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +86,7 @@ bool Semaphore::tryAcquire( long long timeout, const TimeUnit& unit )
     throw( decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::RuntimeException ) {
 
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +113,7 @@ bool Semaphore::tryAcquire( int permits )
     throw( decaf::lang::exceptions::IllegalArgumentException,
            decaf::lang::exceptions::RuntimeException ) {
 
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +121,7 @@ bool Semaphore::tryAcquire( int permits, long long timeout, const TimeUnit& unit
     throw( decaf::lang::exceptions::IllegalArgumentException,
            decaf::lang::exceptions::RuntimeException ) {
 
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,20 +133,20 @@ void Semaphore::release( int permits )
 
 ////////////////////////////////////////////////////////////////////////////////
 int Semaphore::availablePermits() const {
-
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Semaphore::drainPermits() throw( decaf::lang::exceptions::RuntimeException ) {
-
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Semaphore::isFair() const {
-
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Semaphore::toString() const {
-
+    return "";
 }
