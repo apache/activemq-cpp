@@ -59,7 +59,7 @@ void CompositeTaskRunner::shutdown( unsigned int timeout ) {
 
         // Wait till the thread stops ( no need to wait if shutdown
         // is called from thread that is shutting down)
-        if( !threadTerminated ) {
+        if( Thread::currentThread() != this->thread.get() && !threadTerminated ) {
             mutex.wait( timeout );
         }
     }
@@ -74,8 +74,9 @@ void CompositeTaskRunner::shutdown() {
         mutex.notifyAll();
     }
 
-    // Wait till the thread stops
-    if( !threadTerminated ) {
+    // Wait till the thread stops ( no need to wait if shutdown
+    // is called from thread that is shutting down)
+    if( Thread::currentThread() != this->thread.get() && !threadTerminated ) {
         this->thread->join();
     }
 }
