@@ -7,7 +7,7 @@ and several bugs have been fixed.  The client now has an connection Inactivity
 Monitor which allows it to more quickly detect when a TCP connection has been
 broken.  The Threading code has been rewritten to improve performance and lower
 memory usage, and there have been several other performance improvements added
-throught the codebase.
+throughout the code-base.
 
 Bug
 
