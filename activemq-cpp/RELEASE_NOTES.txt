@@ -1,4 +1,46 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.1.0                               ==
+=========================================================================
+
+This is a new Major release of ActiveMQ-CPP.  Many new features have been added
+and several bugs have been fixed.  The client now has an connection Inactivity
+Monitor which allows it to more quickly detect when a TCP connection has been
+broken.  The Threading code has been rewritten to improve performance and lower
+memory usage, and there have been several other performance improvements added
+throught the codebase.
+
+Bug
+
+    * [AMQCPP-256] - Transaction has not been started exceptions on the broker with
+                     parallel transacted sessions
+    * [AMQCPP-257] - Segfault on session or connection cleanup
+    * [AMQCPP-260] - Wrong exception propogated from Transport close methods
+    * [AMQCPP-262] - exception message in checkWriteOnlyBody is wrong
+    * [AMQCPP-263] - Use of in-class static const variables in cms/DeliveryMode.h results
+                     in crash while linking with --no-undefined option
+    * [AMQCPP-266] - Client Ack is not applied across the session
+    * [AMQCPP-267] - ResponseCorrelator::request() exception safety concern
+    * [AMQCPP-268] - Unspecified exception can be thrown from
+                     decaf::io::ByteArrayOutputStream::write( const unsigned char* buffer,
+                     std::size_t offset, std::size_t len )
+    * [AMQCPP-270] - Broker exception on message Ack,
+
+Improvement
+
+    * [AMQCPP-240] - Add the Individual Ack type to the CMS API and support of it in the
+                     ActiveMQConsumer code.
+    * [AMQCPP-250] - Implement an Inactivity Monotir Transport filter for use on Transport
+                     that are used by the Failover Transport
+    * [AMQCPP-253] - Problems with compiler aCC on HPUX
+    * [AMQCPP-254] - Update client to add support for Openwire 4 and 5.
+    * [AMQCPP-258] - Allow clients to attach a TransportListener to an ActiveMQConnection
+    * [AMQCPP-264] - Added what() to CMSException
+    * [AMQCPP-265] - The C++ ActiveMQ StreamMessage and the Java ActiveMQ StreamMessage are
+                     not compatible.
+    * [AMQCPP-269] - Update CMS API to include the proper exceptions in the Message interfaces
+                     throw declarations
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.0.1                               ==
 =========================================================================
 
