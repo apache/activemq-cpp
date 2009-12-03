@@ -41,9 +41,9 @@ namespace concurrent {
         // The actual condition object
         HANDLE semaphore;
         CRITICAL_SECTION criticalSection;
-        unsigned int numWaiting;
-        unsigned int numWake;
-        unsigned int generation;
+        volatile unsigned int numWaiting;
+        volatile unsigned int numWake;
+        volatile unsigned int generation;
 
         // The mutex object associated with this condition.
         MutexHandle* mutex;
