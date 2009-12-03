@@ -60,7 +60,7 @@
   </mailingLists>
 
   <properties>
-    <activemq-version>5.3-SNAPSHOT</activemq-version>
+    <activemq-version>5.3.0</activemq-version>
     <siteId>activemq-cpp-${activemq-version}</siteId>
     <projectName>Apache ActiveMQ-CPP</projectName>
     <annogen-version>0.1.0</annogen-version>
@@ -90,9 +90,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</url>
   </scm>
 
   <dependencyManagement>
