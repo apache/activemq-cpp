@@ -185,7 +185,7 @@ namespace{
             pthread_setspecific( currentThreadKey, NULL );
             pthread_exit(0);
 
-			properties->state = Thread::TERMINATED;
+            properties->state = Thread::TERMINATED;
 
             return NULL;
         }
@@ -210,7 +210,7 @@ namespace{
 
             ::CloseHandle( properties->handle );
 
-			properties->state = Thread::TERMINATED;
+            properties->state = Thread::TERMINATED;
 
             return NULL;
         }
@@ -330,44 +330,52 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
                 "Thread::start - Thread already started");
         }
 
-        #ifdef HAVE_PTHREAD_H
-            int result = pthread_create( &( properties->handle ),
-                                         &( properties->attributes ),
-                                         threadWorker, properties.get() );
+        // The lock here acts as a gate to the newly created thread, it won't begin execution
+        // until this method completes which ensures that if the main thread calls start and
+        // then join but the child thread has already exited there won't be a deadlock on the
+        // wait handle.  Also the new thread won't be able to update any internal data until
+        // creation is complete which ensure that there is no state corruption.
+        synchronized( &this->properties->mutex ) {
 
-            if( result != 0 ) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to create new Thread." );
-            }
+            #ifdef HAVE_PTHREAD_H
+                int result = pthread_create( &( properties->handle ),
+                                             &( properties->attributes ),
+                                             threadWorker, properties.get() );
 
-        #else
-
-            unsigned int threadId = 0;
-
-            #ifndef _WIN32_WCE
-
-                properties->handle = (HANDLE)_beginthreadex(
-                     NULL, (DWORD)0, threadWorker, properties.get(), 0, &threadId );
-
-            #else
-
-                properties->hanlde = CreateThread( NULL, 0, threadWorker, properties.get(), 0, &threadId ) );
-
-                if( properties->handle == 0 ) {
+                if( result != 0 ) {
                     throw RuntimeException(
                         __FILE__, __LINE__, "Failed to create new Thread." );
                 }
 
+            #else
+
+                unsigned int threadId = 0;
+
+                #ifndef _WIN32_WCE
+
+                    properties->handle = (HANDLE)_beginthreadex(
+                         NULL, (DWORD)0, threadWorker, properties.get(), 0, &threadId );
+
+                #else
+
+                    properties->hanlde = CreateThread( NULL, 0, threadWorker, properties.get(), 0, &threadId ) );
+
+                    if( properties->handle == 0 ) {
+                        throw RuntimeException(
+                            __FILE__, __LINE__, "Failed to create new Thread." );
+                    }
+
+                #endif
+
             #endif
 
-        #endif
+            // Only try and set this if its not the default value.
+            if( properties->priority != Thread::NORM_PRIORITY ) {
+                setPriority( properties->priority );
+            }
 
-        // Only try and set this if its not the default value.
-        if( properties->priority != Thread::NORM_PRIORITY ) {
-            setPriority( properties->priority );
+            properties->state = Thread::RUNNABLE;
         }
-
-        properties->state = Thread::RUNNABLE;
      }
      DECAF_CATCH_RETHROW( IllegalThreadStateException )
      DECAF_CATCH_RETHROW( RuntimeException )
