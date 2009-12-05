@@ -81,6 +81,10 @@ public:
         cleanup();
     }
 
+    void close() {
+        this->cleanup();
+    }
+
     virtual void run() {
         try {
             // Create a ConnectionFactory
@@ -226,6 +230,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // Create the producer and run it.
     SimpleProducer producer( brokerURI, numMessages, destURI, useTopics );
     producer.run();
+    producer.close();
 
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
