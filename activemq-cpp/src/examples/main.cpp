@@ -76,6 +76,10 @@ public:
         cleanup();
     }
 
+    void close() {
+        this->cleanup();
+    }
+
     virtual void run() {
 
         try {
@@ -197,6 +201,10 @@ public:
     }
     virtual ~HelloWorldConsumer(){
         cleanup();
+    }
+
+    void close() {
+        this->cleanup();
     }
 
     void waitUntilReady() {
@@ -399,6 +407,9 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     long long endTime = System::currentTimeMillis();
     double totalTime = (endTime - startTime) / 1000.0;
+
+    consumer.close();
+    producer.close();
 
     std::cout << "Time to completion = " << totalTime << " seconds." << std::endl;
     std::cout << "-----------------------------------------------------\n";

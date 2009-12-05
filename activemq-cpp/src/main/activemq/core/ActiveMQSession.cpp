@@ -118,6 +118,9 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 
     try {
 
+        // Now indicate that this session is closed.
+        closed = true;
+
         // Stop the dispatch executor.
         stop();
 
@@ -163,9 +166,6 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         info->setObjectId( this->sessionInfo->getSessionId() );
         info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
         this->connection->oneway( info );
-
-        // Now indicate that this session is closed.
-        closed = true;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
