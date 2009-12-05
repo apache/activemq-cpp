@@ -77,7 +77,11 @@ public:
     }
 
     virtual ~SimpleAsyncConsumer(){
-        cleanup();
+        this->cleanup();
+    }
+
+    void close() {
+        this->cleanup();
     }
 
     void runConsumer() {
@@ -156,7 +160,7 @@ public:
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED ) {
         printf("CMS Exception occurred.  Shutting down client.\n");
-        exit(1);
+        //exit(1);
     }
 
     virtual void transportInterrupted() {
@@ -179,29 +183,29 @@ private:
         // Destroy resources.
         try{
             if( destination != NULL ) delete destination;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        }catch (CMSException& e) {}
         destination = NULL;
 
         try{
             if( consumer != NULL ) delete consumer;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        }catch (CMSException& e) {}
         consumer = NULL;
 
         // Close open resources.
         try{
             if( session != NULL ) session->close();
             if( connection != NULL ) connection->close();
-        }catch (CMSException& e) { e.printStackTrace(); }
+        }catch (CMSException& e) {}
 
         // Now Destroy them
         try{
             if( session != NULL ) delete session;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        }catch (CMSException& e) {}
         session = NULL;
 
         try{
             if( connection != NULL ) delete connection;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        }catch (CMSException& e) {}
         connection = NULL;
     }
 };
@@ -269,6 +273,9 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // Wait to exit.
     std::cout << "Press 'q' to quit" << std::endl;
     while( std::cin.get() != 'q') {}
+
+    // All CMS resources should be closed before the library is shutdown.
+    consumer.close();
 
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
