@@ -31,6 +31,8 @@
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/util/concurrent/Mutex.h>
 
+#include <vector>
+
 #if HAVE_PTHREAD_H
 #include <pthread.h>
 #endif
@@ -169,6 +171,7 @@ namespace lang{
 namespace{
 
     Thread* mainThread = NULL;
+    std::vector<Thread*> foreignThreads;
 
     #ifdef HAVE_PTHREAD_H
 
@@ -224,51 +227,67 @@ unsigned int ThreadProperties::id = 0;
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::initThreading() {
 
-    mainThread = new Thread( "Main Thread" );
-
-    mainThread->properties->state = Thread::RUNNABLE;
-    mainThread->properties->priority = Thread::NORM_PRIORITY;
-    mainThread->properties->parent = mainThread;
-
-    #ifdef HAVE_PTHREAD_H
-
-        mainThread->properties->handle = pthread_self();
-
-        // Create the Key used to store the Current Thread data
-        pthread_key_create( &currentThreadKey, NULL );
-        pthread_setspecific( currentThreadKey, mainThread );
-
-    #else
-
-        mainThread->properties->handle = ::GetCurrentThread();
-
-        // Create the key used to store the Current Thread data
-        currentThreadKey = ::TlsAlloc();
-        ::TlsSetValue( currentThreadKey, mainThread );
-
-    #endif
+    // We mark the thread where Decaf's Init routine is called from as our Main Thread.
+    mainThread = Thread::createForeignThreadInstance( "Main Thread" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::shutdownThreading() {
 
-    #ifdef HAVE_PTHREAD_H
+    // Clear the Main Thread instance pointer, this indicates we are Shutdown.
+    mainThread = NULL;
 
-        // Destroy the Main Thread instance.
-        delete mainThread;
+    // Destroy any Foreign Thread Facades that were created during runtime.
+    std::vector<Thread*>::iterator iter = foreignThreads.begin();
+    for( ; iter != foreignThreads.end(); ++iter ) {
+        delete *iter;
+    }
+    foreignThreads.clear();
+
+    #ifdef HAVE_PTHREAD_H
 
         // Destroy the current Thread key now, no longer needed.
         pthread_key_delete( currentThreadKey );
 
     #else
 
-        // Destroy the Main Thread instance.
-        delete mainThread;
-
         // Destroy our TLS resources before we shutdown.
         ::TlsFree( currentThreadKey );
 
     #endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Thread* Thread::createForeignThreadInstance( const std::string& name ) {
+
+    Thread* foreignThread = new Thread( name );
+
+    foreignThread->properties->state = Thread::RUNNABLE;
+    foreignThread->properties->priority = Thread::NORM_PRIORITY;
+    foreignThread->properties->parent = NULL;
+
+    #ifdef HAVE_PTHREAD_H
+
+        foreignThread->properties->handle = pthread_self();
+
+        // Create the Key used to store the Current Thread data
+        pthread_key_create( &currentThreadKey, NULL );
+        pthread_setspecific( currentThreadKey, foreignThread );
+
+    #else
+
+        foreignThread->properties->handle = ::GetCurrentThread();
+
+        // Create the key used to store the Current Thread data
+        currentThreadKey = ::TlsAlloc();
+        ::TlsSetValue( currentThreadKey, foreignThread );
+
+    #endif
+
+    // Store the Facade for later deletion
+    foreignThreads.push_back( foreignThread );
+
+    return foreignThread;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -573,6 +592,11 @@ Thread::State Thread::getState() const {
 ////////////////////////////////////////////////////////////////////////////////
 Thread* Thread::currentThread() {
 
+    if( mainThread == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "The Decaf Threading API is in a Shutdown State." );
+    }
+
     void* result = NULL;
 
     #ifdef HAVE_PTHREAD_H
@@ -585,9 +609,11 @@ Thread* Thread::currentThread() {
 
     #endif
 
+    // This is a foreign Thread (Not Created By Decaf) lets create a stand in Thread
+    // instance so that other threads in Decaf can join it and wait on it.
     if( result == NULL ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to find the Current Thread pointer in the TLS." );
+        result = Thread::createForeignThreadInstance(
+            std::string( "ForeignThread-" ) + Integer::toString( Thread::getId() ) );
     }
 
     return (Thread*)result;

@@ -359,6 +359,9 @@ namespace lang{
         // Initialize the Threads internal state
         void initialize( Runnable* task, const std::string& name );
 
+        // Create a Thread Facade for threads not created by the Decaf Library.
+        static Thread* createForeignThreadInstance( const std::string& name );
+
         // Called by the Decaf Runtime at startup to allow the Platform Threading
         // code to initialize any necessary Threading constructs needed to support
         // the features of this class.
