@@ -118,9 +118,6 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 
     try {
 
-        // Now indicate that this session is closed.
-        closed = true;
-
         // Stop the dispatch executor.
         stop();
 
@@ -157,6 +154,9 @@ void ActiveMQSession::close() throw ( cms::CMSException )
                 }
             }
         }
+
+        // Now indicate that this session is closed.
+        closed = true;
 
         // Remove this sessions from the connection
         this->connection->removeSession( this );
