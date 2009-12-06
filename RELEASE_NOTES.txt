@@ -24,6 +24,7 @@ Bug
                      decaf::io::ByteArrayOutputStream::write( const unsigned char* buffer,
                      std::size_t offset, std::size_t len )
     * [AMQCPP-270] - Broker exception on message Ack,
+    * [AMQCPP-271] - Connection shutdown crashes if the server went down
 
 Improvement
 
