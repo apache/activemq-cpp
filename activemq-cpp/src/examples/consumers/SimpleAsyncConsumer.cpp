@@ -66,10 +66,11 @@ public:
                          const std::string& destURI,
                          bool useTopic = false,
                          bool clientAck = false ) {
-        connection = NULL;
-        session = NULL;
-        destination = NULL;
-        consumer = NULL;
+
+        this->connection = NULL;
+        this->session = NULL;
+        this->destination = NULL;
+        this->consumer = NULL;
         this->useTopic = useTopic;
         this->brokerURI = brokerURI;
         this->destURI = destURI;
@@ -160,7 +161,7 @@ public:
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED ) {
         printf("CMS Exception occurred.  Shutting down client.\n");
-        //exit(1);
+        exit(1);
     }
 
     virtual void transportInterrupted() {
