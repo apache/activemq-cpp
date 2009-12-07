@@ -64,12 +64,12 @@ public:
                     unsigned int numMessages,
                     const std::string& destURI,
                     bool useTopic = false,
-                    bool clientAck = false,
-                    unsigned int connectRetries = 0 ){
-        connection = NULL;
-        session = NULL;
-        destination = NULL;
-        producer = NULL;
+                    bool clientAck = false ){
+
+        this->connection = NULL;
+        this->session = NULL;
+        this->destination = NULL;
+        this->producer = NULL;
         this->numMessages = numMessages;
         this->useTopic = useTopic;
         this->brokerURI = brokerURI;
@@ -87,6 +87,7 @@ public:
 
     virtual void run() {
         try {
+
             // Create a ConnectionFactory
             auto_ptr<ActiveMQConnectionFactory> connectionFactory(
                 new ActiveMQConnectionFactory( brokerURI ) );
@@ -229,7 +230,11 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     // Create the producer and run it.
     SimpleProducer producer( brokerURI, numMessages, destURI, useTopics );
+
+    // Publish the given number of Messages
     producer.run();
+
+    // Before exiting we ensure that all CMS resources are closed.
     producer.close();
 
     std::cout << "-----------------------------------------------------\n";
