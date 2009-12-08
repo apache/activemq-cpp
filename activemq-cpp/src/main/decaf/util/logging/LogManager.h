@@ -234,17 +234,6 @@ namespace logging{
          */
         void operator=( const LogManager& manager );
 
-    private:
-
-        // Static mutex to protect the singleton methods
-        static concurrent::Mutex mutex;
-
-        // Static pointer to the one and only instance.
-        static LogManager* instance;
-
-        // Static counter for number of outstanding references
-        static unsigned int refCount;
-
     };
 
 }}}

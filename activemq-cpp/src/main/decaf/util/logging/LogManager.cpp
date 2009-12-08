@@ -28,11 +28,6 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-concurrent::Mutex LogManager::mutex;
-LogManager* LogManager::instance = NULL;
-unsigned int LogManager::refCount = 0;
-
-////////////////////////////////////////////////////////////////////////////////
 LogManager::~LogManager()
 {
     // TODO - Delete all the loggers.
@@ -76,46 +71,14 @@ int LogManager::getLoggerNames( const std::vector<std::string>& names  DECAF_UNU
 
 ////////////////////////////////////////////////////////////////////////////////
 LogManager* LogManager::getInstance() {
-
-    synchronized( &mutex ) {
-        if( instance == NULL ) {
-            instance = new LogManager();
-        }
-
-        refCount++;
-
-        return instance;
-    }
-
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LogManager::returnInstance() {
-
-    synchronized( &mutex ) {
-        if( refCount == 0 ) {
-            return ;
-        }
-
-        refCount--;
-
-        if( refCount == 0 ) {
-            delete instance;
-            instance = NULL;
-        }
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LogManager::destroy()
 {
-    if( instance != NULL ) {
-
-        synchronized( &mutex ) {
-            delete instance;
-            instance = NULL;
-            refCount = 0;
-        }
-    }
 }
