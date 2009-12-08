@@ -100,7 +100,7 @@ void Exception::buildMessage( const char* format, va_list& vargs ) {
 void Exception::setMark( const char* file, const int lineNumber ) {
 
     // Add this mark to the end of the stack trace.
-    stackTrace.push_back( std::make_pair( (std::string)file, (int)lineNumber ) );
+    stackTrace.push_back( std::make_pair( std::string( file ), (int)lineNumber ) );
 
     //std::ostringstream stream;
     //stream << "\tFILE: " << stackTrace[stackTrace.size()-1].first;
