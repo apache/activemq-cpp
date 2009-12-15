@@ -102,50 +102,102 @@ namespace core{
         virtual void close() throw ( cms::CMSException );
 
         /**
-         * Sends the message to the default producer destination.
-         * @param message A Message Object Pointer for the Message to send.
-         * @throws CMSException
+         * Sends the message to the default producer destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         * Uses default values for deliveryMode, priority, and time to live.
+         *
+         * @param message
+         *      The message to be sent.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( cms::Message* message ) throw ( cms::CMSException );
+        virtual void send( cms::Message* message ) throw ( cms::CMSException,
+                                                           cms::MessageFormatException,
+                                                           cms::InvalidDestinationException,
+                                                           cms::UnsupportedOperationException );
 
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * @param message A Message Object Pointer
-         * @param deliveryMode The delivery mode to be used.
-         * @param priority The priority for this message.
-         * @param timeToLive The time to live value for this message in
-         * milliseconds.
-         * @throws CMSException
+         *
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( cms::Message* message, int deliveryMode,
-                           int priority, long long timeToLive )
-                               throw ( cms::CMSException );
-
-        /**
-         * Sends the message to the designated destination.
-         * @param destination The CMS Destination that defines where the message is sent.
-         * @param message A Message Object Pointer
-         * @throws CMSException
-         */
-        virtual void send( const cms::Destination* destination,
-                           cms::Message* message ) throw ( cms::CMSException );
+        virtual void send( cms::Message* message, int deliveryMode, int priority, long long timeToLive )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
 
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
-         * @param destination - a Message Object Pointer
-         * @param message - a Message Object Pointer
-         * @param deliveryMode The delivery mode to be used.
-         * @param priority The priority for this message.
-         * @param timeToLive The time to live value for this message in
-         * milliseconds.
-         * @throws CMSException
+         * Uses default values for deliveryMode, priority, and time to live.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      the message to be sent.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( const cms::Destination* destination,
-                           cms::Message* message, int deliveryMode,
-                           int priority, long long timeToLive )
-                                throw ( cms::CMSException );
+        virtual void send( const cms::Destination* destination, cms::Message* message )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
+
+        /**
+         * Sends the message to the designated destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send( const cms::Destination* destination, cms::Message* message,
+                           int deliveryMode, int priority, long long timeToLive )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
 
         /**
          * Sets the delivery mode for this Producer

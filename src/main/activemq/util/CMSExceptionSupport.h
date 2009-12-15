@@ -30,6 +30,7 @@
 #include <cms/InvalidDestinationException.h>
 #include <cms/InvalidSelectorException.h>
 #include <cms/IllegalStateException.h>
+#include <cms/UnsupportedOperationException.h>
 
 #include <decaf/lang/Exception.h>
 
@@ -91,6 +92,9 @@ namespace util {
         ex.setMark( __FILE__, __LINE__ ); \
         throw ex; \
     } catch( cms::MessageNotWriteableException& ex ){ \
+        ex.setMark( __FILE__, __LINE__ ); \
+        throw ex; \
+    } catch( cms::UnsupportedOperationException& ex ){ \
         ex.setMark( __FILE__, __LINE__ ); \
         throw ex; \
     } catch( cms::CMSException& ex ){ \
