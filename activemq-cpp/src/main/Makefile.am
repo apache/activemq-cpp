@@ -475,6 +475,7 @@ cc_sources = \
     cms/MessageFormatException.cpp \
     cms/MessageNotReadableException.cpp \
     cms/MessageNotWriteableException.cpp \
+    cms/UnsupportedOperationException.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/io/StandardErrorOutputStream.cpp \
@@ -1083,6 +1084,7 @@ h_sources = \
     cms/TemporaryTopic.h \
     cms/TextMessage.h \
     cms/Topic.h \
+    cms/UnsupportedOperationException.h \
     decaf/internal/AprPool.h \
     decaf/internal/DecafRuntime.h \
     decaf/internal/io/StandardErrorOutputStream.h \

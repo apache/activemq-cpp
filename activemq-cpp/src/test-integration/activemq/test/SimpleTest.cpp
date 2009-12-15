@@ -138,6 +138,53 @@ void SimpleTest::testProducerWithNullDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testProducerSendWithNullDestination() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+
+    CMSListener listener( session );
+
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an InvalidDestinationException",
+        producer->send( NULL, txtMessage.get() ),
+        cms::InvalidDestinationException );
+
+    producer = cmsProvider->getNoDestProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an UnsupportedOperationException",
+        producer->send( NULL, txtMessage.get() ),
+        cms::UnsupportedOperationException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testProducerSendToNonDefaultDestination() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+
+    CMSListener listener( session );
+
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+    auto_ptr<cms::Destination> destination( session->createTemporaryTopic() );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an UnsupportedOperationException",
+        producer->send( destination.get(), txtMessage.get() ),
+        cms::UnsupportedOperationException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SimpleTest::testSyncReceive() {
 
     try {

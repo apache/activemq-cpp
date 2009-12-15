@@ -592,7 +592,7 @@ void ActiveMQConnection::oneway( Pointer<Command> command )
         this->getTransport().oneway( command );
     }
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
@@ -627,7 +627,7 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
