@@ -59,7 +59,7 @@ namespace commands{
         /**
          * Tracks the actual length of the Message when compressed.
          */
-        mutable int length;
+        mutable std::size_t length;
 
     public:
 
