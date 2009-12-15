@@ -126,8 +126,8 @@ unsigned int ActiveMQTextMessage::getSize() const {
     if( this->text.get() != NULL ) {
         unsigned int size = commands::Message::DEFAULT_MESSAGE_SIZE;
 
-        size += getMarshalledProperties().size();
-        size += this->text->size() * 2;
+        size += (unsigned int)getMarshalledProperties().size();
+        size += (unsigned int)this->text->size() * 2;
 
         return size;
     }

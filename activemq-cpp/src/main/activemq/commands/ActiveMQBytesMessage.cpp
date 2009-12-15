@@ -112,7 +112,7 @@ unsigned char* ActiveMQBytesMessage::getBodyBytes() const
 
         initializeReading();
 
-        int length = this->getBodyLength();
+        std::size_t length = this->getBodyLength();
 
         if( length != 0 ) {
             unsigned char* buffer = new unsigned char[length];

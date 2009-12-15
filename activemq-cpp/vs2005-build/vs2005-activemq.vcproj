@@ -821,6 +821,14 @@
 				RelativePath="..\src\main\cms\Topic.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\main\cms\UnsupportedOperationException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\UnsupportedOperationException.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="activemq"
