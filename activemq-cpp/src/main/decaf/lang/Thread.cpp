@@ -613,7 +613,7 @@ Thread* Thread::currentThread() {
     // instance so that other threads in Decaf can join it and wait on it.
     if( result == NULL ) {
         result = Thread::createForeignThreadInstance(
-            std::string( "ForeignThread-" ) + Integer::toString( Thread::getId() ) );
+            std::string( "ForeignThread-" ) + Long::toString( Thread::getId() ) );
     }
 
     return (Thread*)result;
