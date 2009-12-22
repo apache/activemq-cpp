@@ -380,7 +380,7 @@ void InactivityMonitor::writeCheck() {
         return;
     }
 
-    if(! this->members->commandSent.get() ) {
+    if( !this->members->commandSent.get() ) {
 
         this->members->asyncWriteTask->setWrite( true );
         this->members->asyncTasks->wakeup();
