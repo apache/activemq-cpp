@@ -48,35 +48,37 @@ int main( int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED ) {
     //
     std::string brokerURI = "failover:(tcp://127.0.0.1:61616)";
 
-    // Create the Connection
-    auto_ptr<cms::ConnectionFactory> connectionFactory(
-        cms::ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
+    {
+        // Create the Connection
+        auto_ptr<cms::ConnectionFactory> connectionFactory(
+            cms::ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
 
-    auto_ptr<cms::Connection> connection;
+        auto_ptr<cms::Connection> connection;
 
-    // Create a Connection
-    try{
-        connection.reset( connectionFactory->createConnection() );
-    } catch( CMSException& e ) {
-        e.printStackTrace();
-        return 1;
+        // Create a Connection
+        try{
+            connection.reset( connectionFactory->createConnection() );
+        } catch( CMSException& e ) {
+            e.printStackTrace();
+            return 1;
+        }
+
+        // Create the Session
+        std::auto_ptr<cms::Session> session( connection->createSession() );
+
+        // Create the Advisory Consumer and run it.
+        TempDestinationAdvisoryConsumer advisoryConsumer( session.get() );
+
+        // Start the Connection now.
+        connection->start();
+
+        // Wait until we are told to quit.
+        std::cout << "Press 'q' to quit" << std::endl;
+        while( std::cin.get() != 'q') {}
+
+        // Shutdown now
+        connection->stop();
     }
-
-    // Create the Session
-    std::auto_ptr<cms::Session> session( connection->createSession() );
-
-    // Create the Advisory Consumer and run it.
-    TempDestinationAdvisoryConsumer advisoryConsumer( session.get() );
-
-    // Start the Connection now.
-    connection->start();
-
-    // Wait until we are told to quit.
-    std::cout << "Press 'q' to quit" << std::endl;
-    while( std::cin.get() != 'q') {}
-
-    // Shutdown now
-    connection->stop();
 
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
