@@ -90,17 +90,19 @@ std::string ProducerAck::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ProducerAck" << std::endl;
-    stream << " Value of ProducerAck::ID_PRODUCERACK = 19" << std::endl;
-    stream << " Value of ProducerId is Below:" << std::endl;
+    stream << "ProducerAck { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ProducerId = ";
     if( this->getProducerId() != NULL ) {
-        stream << this->getProducerId()->toString() << std::endl;
+        stream << this->getProducerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Size = " << this->getSize() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ProducerAck" << std::endl;
+    stream << ", ";
+    stream << "Size = " << this->getSize();
+    stream << " }";
 
     return stream.str();
 }

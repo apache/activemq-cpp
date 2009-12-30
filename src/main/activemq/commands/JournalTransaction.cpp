@@ -92,18 +92,18 @@ std::string JournalTransaction::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = JournalTransaction" << std::endl;
-    stream << " Value of JournalTransaction::ID_JOURNALTRANSACTION = 54" << std::endl;
-    stream << " Value of TransactionId is Below:" << std::endl;
+    stream << "JournalTransaction { ";
+    stream << "TransactionId = ";
     if( this->getTransactionId() != NULL ) {
-        stream << this->getTransactionId()->toString() << std::endl;
+        stream << this->getTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Type = " << (int)this->getType() << std::endl;
-    stream << " Value of WasPrepared = " << this->getWasPrepared() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = JournalTransaction" << std::endl;
+    stream << ", ";
+    stream << "Type = " << (int)this->getType();
+    stream << ", ";
+    stream << "WasPrepared = " << this->getWasPrepared();
+    stream << " }";
 
     return stream.str();
 }

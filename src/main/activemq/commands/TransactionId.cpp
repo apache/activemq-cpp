@@ -93,10 +93,8 @@ std::string TransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = TransactionId" << std::endl;
-    stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = TransactionId" << std::endl;
+    stream << "TransactionId { ";
+    stream << " }";
 
     return stream.str();
 }

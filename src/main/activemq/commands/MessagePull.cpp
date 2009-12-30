@@ -94,30 +94,35 @@ std::string MessagePull::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = MessagePull" << std::endl;
-    stream << " Value of MessagePull::ID_MESSAGEPULL = 20" << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << "MessagePull { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Timeout = " << this->getTimeout() << std::endl;
-    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    stream << " Value of MessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "Timeout = " << this->getTimeout();
+    stream << ", ";
+    stream << "CorrelationId = " << this->getCorrelationId();
+    stream << ", ";
+    stream << "MessageId = ";
     if( this->getMessageId() != NULL ) {
-        stream << this->getMessageId()->toString() << std::endl;
+        stream << this->getMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = MessagePull" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

@@ -50,13 +50,7 @@ void ActiveMQBlobMessage::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQBlobMessage::toString() const{
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQBlobMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::Message>::toString();
-    stream << "End Class = ActiveMQBlobMessage" << std::endl;
-
-    return stream.str();
+    return ActiveMQMessageTemplate<cms::Message>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

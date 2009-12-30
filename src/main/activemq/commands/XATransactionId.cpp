@@ -97,17 +97,31 @@ std::string XATransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = XATransactionId" << std::endl;
-    stream << " Value of XATransactionId::ID_XATRANSACTIONID = 112" << std::endl;
-    stream << " Value of FormatId = " << this->getFormatId() << std::endl;
-    for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
-        stream << " Value of GlobalTransactionId[" << iglobalTransactionId << "] = " << this->getGlobalTransactionId()[iglobalTransactionId] << std::endl;
+    stream << "XATransactionId { ";
+    stream << "FormatId = " << this->getFormatId();
+    stream << ", ";
+    stream << "GlobalTransactionId = ";
+    if( this->getGlobalTransactionId().size() > 0 ) {
+        stream << "[";
+        for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
+            stream << this->getGlobalTransactionId()[iglobalTransactionId] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
-        stream << " Value of BranchQualifier[" << ibranchQualifier << "] = " << this->getBranchQualifier()[ibranchQualifier] << std::endl;
+    stream << ", ";
+    stream << "BranchQualifier = ";
+    if( this->getBranchQualifier().size() > 0 ) {
+        stream << "[";
+        for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
+            stream << this->getBranchQualifier()[ibranchQualifier] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << TransactionId::toString();
-    stream << "End Class = XATransactionId" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

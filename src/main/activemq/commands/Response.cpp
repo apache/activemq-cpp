@@ -89,11 +89,12 @@ std::string Response::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = Response" << std::endl;
-    stream << " Value of Response::ID_RESPONSE = 30" << std::endl;
-    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = Response" << std::endl;
+    stream << "Response { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "CorrelationId = " << this->getCorrelationId();
+    stream << " }";
 
     return stream.str();
 }

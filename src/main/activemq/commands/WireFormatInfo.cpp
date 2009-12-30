@@ -88,35 +88,35 @@ unsigned char WireFormatInfo::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string WireFormatInfo::toString() const {
+
     std::ostringstream stream;
 
-    stream << "Begin Class = WireFormatInfo" << std::endl;
+    stream << "WireFormatInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired() << ", ";
 
     std::vector<unsigned char> magic;
     std::vector<unsigned char> marshalledProperties;
 
+    stream << "Magic = [ ";
     for( size_t imagic = 0; imagic < magic.size(); ++imagic ) {
-        stream << " Value of magic[" << imagic << "] = " << magic[imagic] << std::endl;
+        stream << magic[imagic];
+        if( imagic < magic.size() - 1 ) {
+            stream << ", ";
+        }
     }
 
-    for( size_t imarshalledProperties = 0; imarshalledProperties < marshalledProperties.size(); ++imarshalledProperties ) {
-        stream << " Value of marshalledProperties[" << imarshalledProperties << "] = "
-               << marshalledProperties[imarshalledProperties] << std::endl;
-    }
+    stream << "Version = " << version << ", ";
+    stream << "StackTraceEnabled = " << isStackTraceEnabled() << ", ";
+    stream << "TcpNoDelayEnabled = " << isTcpNoDelayEnabled() << ", ";
+    stream << "CacheEnabled = " << isCacheEnabled() << ", ";
+    stream << "CacheSize = " << getCacheSize() << ", ";
+    stream << "TightEncodingEnabled = " << isTightEncodingEnabled() << ", ";
+    stream << "SizePrefixDisabled = " << isSizePrefixDisabled() << ", ";
+    stream << "MaxInactivityDuration = " << getMaxInactivityDuration() << ", ";
+    stream << "MaxInactivityDuration = " << getMaxInactivityDurationInitalDelay();
 
-    stream << " Value of properties = " << properties.toString() << std::endl;
-    stream << " Value of version = " << version << std::endl;
-    stream << " Value of stackTraceEnabled = " << isStackTraceEnabled() << std::endl;
-    stream << " Value of tcpNoDelayEnabled = " << isTcpNoDelayEnabled() << std::endl;
-    stream << " Value of cacheEnabled = " << isCacheEnabled() << std::endl;
-    stream << " Value of cacheSize = " << getCacheSize() << std::endl;
-    stream << " Value of tightEncodingEnabled = " << isTightEncodingEnabled() << std::endl;
-    stream << " Value of sizePrefixDisabled = " << isSizePrefixDisabled() << std::endl;
-    stream << " Value of maxInactivityDuration = " << getMaxInactivityDuration() << std::endl;
-    stream << " Value of maxInactivityDuration = " << getMaxInactivityDurationInitalDelay() << std::endl;
-
-    stream << BaseCommand::toString();
-    stream << "End Class = WireFormatInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

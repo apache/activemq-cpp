@@ -87,10 +87,8 @@ std::string LastPartialCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = LastPartialCommand" << std::endl;
-    stream << " Value of LastPartialCommand::ID_LASTPARTIALCOMMAND = 61" << std::endl;
-    stream << PartialCommand::toString();
-    stream << "End Class = LastPartialCommand" << std::endl;
+    stream << "LastPartialCommand { ";
+    stream << " }";
 
     return stream.str();
 }

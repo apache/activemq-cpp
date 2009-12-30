@@ -98,21 +98,27 @@ std::string ConsumerControl::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConsumerControl" << std::endl;
-    stream << " Value of ConsumerControl::ID_CONSUMERCONTROL = 17" << std::endl;
-    stream << " Value of Close = " << this->isClose() << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << "ConsumerControl { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Close = " << this->isClose();
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Prefetch = " << this->getPrefetch() << std::endl;
-    stream << " Value of Flush = " << this->isFlush() << std::endl;
-    stream << " Value of Start = " << this->isStart() << std::endl;
-    stream << " Value of Stop = " << this->isStop() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ConsumerControl" << std::endl;
+    stream << ", ";
+    stream << "Prefetch = " << this->getPrefetch();
+    stream << ", ";
+    stream << "Flush = " << this->isFlush();
+    stream << ", ";
+    stream << "Start = " << this->isStart();
+    stream << ", ";
+    stream << "Stop = " << this->isStop();
+    stream << " }";
 
     return stream.str();
 }

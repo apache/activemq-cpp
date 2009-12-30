@@ -97,15 +97,20 @@ std::string ConnectionControl::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConnectionControl" << std::endl;
-    stream << " Value of ConnectionControl::ID_CONNECTIONCONTROL = 18" << std::endl;
-    stream << " Value of Close = " << this->isClose() << std::endl;
-    stream << " Value of Exit = " << this->isExit() << std::endl;
-    stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;
-    stream << " Value of Resume = " << this->isResume() << std::endl;
-    stream << " Value of Suspend = " << this->isSuspend() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ConnectionControl" << std::endl;
+    stream << "ConnectionControl { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Close = " << this->isClose();
+    stream << ", ";
+    stream << "Exit = " << this->isExit();
+    stream << ", ";
+    stream << "FaultTolerant = " << this->isFaultTolerant();
+    stream << ", ";
+    stream << "Resume = " << this->isResume();
+    stream << ", ";
+    stream << "Suspend = " << this->isSuspend();
+    stream << " }";
 
     return stream.str();
 }

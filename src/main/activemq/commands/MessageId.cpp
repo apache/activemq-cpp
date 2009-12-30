@@ -19,7 +19,9 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
@@ -48,6 +50,29 @@ MessageId::MessageId() : BaseDataStructure() {
 ////////////////////////////////////////////////////////////////////////////////
 MessageId::MessageId( const MessageId& other ) : BaseDataStructure() {
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageId::MessageId( const std::string& messageKey ) {
+    this->setValue( messageKey );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageId::MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId ) {
+    this->producerId = producerInfo->getProducerId();
+    this->producerSequenceId = producerSequenceId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageId::MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId ) {
+    this->producerId = producerId;
+    this->producerSequenceId = producerSequenceId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageId::MessageId( const std::string& producerId, long long producerSequenceId ) {
+    this->producerId.reset( new ProducerId( producerId ) );
+    this->producerSequenceId = producerSequenceId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,22 +121,14 @@ unsigned char MessageId::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string MessageId::toString() const {
 
-    ostringstream stream;
 
-    stream << "Begin Class = MessageId" << std::endl;
-    stream << " Value of MessageId::ID_MESSAGEID = 110" << std::endl;
-    stream << " Value of ProducerId is Below:" << std::endl;
-    if( this->getProducerId() != NULL ) {
-        stream << this->getProducerId()->toString() << std::endl;
-    } else {
-        stream << "   Object is NULL" << std::endl;
+    if( key == "" ) {
+        this->key = this->producerId->toString() + ":" + 
+                    Long::toString( this->producerSequenceId ) + ":" + 
+                    Long::toString( this->brokerSequenceId );
     }
-    stream << " Value of ProducerSequenceId = " << this->getProducerSequenceId() << std::endl;
-    stream << " Value of BrokerSequenceId = " << this->getBrokerSequenceId() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = MessageId" << std::endl;
 
-    return stream.str();
+    return this->key;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -227,5 +244,27 @@ bool MessageId::operator<( const MessageId& value ) const {
 MessageId& MessageId::operator= ( const MessageId& other ) {
     this->copyDataStructure( &other );
     return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageId::setValue( const std::string& key ) {
+
+    std::string messageKey = key;
+
+    // Parse off the sequenceId
+    std::size_t p = messageKey.rfind( ':' );
+
+    if( p != std::string::npos ) {
+        producerSequenceId = Long::parseLong( messageKey.substr( p + 1, std::string::npos ) );
+        messageKey = messageKey.substr( 0, p );
+    }
+
+    this->producerId.reset( new ProducerId( messageKey ) );
+    this->key = messageKey;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageId::setTextView( const std::string& key ) {
+    this->key = key;
 }
 

@@ -25,6 +25,7 @@
 
 #include <activemq/commands/BaseDataStructure.h>
 #include <activemq/commands/ProducerId.h>
+#include <activemq/commands/ProducerInfo.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/Pointer.h>
@@ -46,6 +47,10 @@ namespace commands{
      *
      */
     class AMQCPP_API MessageId : public BaseDataStructure, public decaf::lang::Comparable<MessageId> {
+    private:
+
+        mutable std::string key;
+
     protected:
 
         Pointer<ProducerId> producerId;
@@ -63,6 +68,14 @@ namespace commands{
         MessageId();
 
         MessageId( const MessageId& other );
+
+        MessageId( const std::string& messageKey );
+
+        MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId );
+
+        MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId );
+
+        MessageId( const std::string& producerId, long long producerSequenceId );
 
         virtual ~MessageId();
 
@@ -101,6 +114,10 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        void setValue( const std::string& key );
+
+        void setTextView( const std::string& key );
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();

@@ -111,15 +111,7 @@ unsigned char ConnectionId::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ConnectionId::toString() const {
 
-    ostringstream stream;
-
-    stream << "Begin Class = ConnectionId" << std::endl;
-    stream << " Value of ConnectionId::ID_CONNECTIONID = 120" << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = ConnectionId" << std::endl;
-
-    return stream.str();
+    return this->value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

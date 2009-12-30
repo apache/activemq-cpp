@@ -89,11 +89,12 @@ std::string ControlCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ControlCommand" << std::endl;
-    stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl;
-    stream << " Value of Command = " << this->getCommand() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ControlCommand" << std::endl;
+    stream << "ControlCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Command = " << this->getCommand();
+    stream << " }";
 
     return stream.str();
 }

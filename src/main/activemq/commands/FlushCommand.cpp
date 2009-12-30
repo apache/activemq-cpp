@@ -87,10 +87,10 @@ std::string FlushCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = FlushCommand" << std::endl;
-    stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = FlushCommand" << std::endl;
+    stream << "FlushCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }

@@ -78,13 +78,7 @@ void ActiveMQBytesMessage::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQBytesMessage::toString() const{
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::BytesMessage>::toString();
-    stream << "End Class = ActiveMQBytesMessage" << std::endl;
-
-    return stream.str();
+    return ActiveMQMessageTemplate<cms::BytesMessage>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

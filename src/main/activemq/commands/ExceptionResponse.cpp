@@ -88,16 +88,14 @@ std::string ExceptionResponse::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ExceptionResponse" << std::endl;
-    stream << " Value of ExceptionResponse::ID_EXCEPTIONRESPONSE = 31" << std::endl;
-    stream << " Value of Exception is Below:" << std::endl;
+    stream << "ExceptionResponse { ";
+    stream << "Exception = ";
     if( this->getException() != NULL ) {
-        stream << this->getException()->toString() << std::endl;
+        stream << this->getException()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << Response::toString();
-    stream << "End Class = ExceptionResponse" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

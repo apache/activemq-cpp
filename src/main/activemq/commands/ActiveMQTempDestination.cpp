@@ -46,13 +46,7 @@ unsigned char ActiveMQTempDestination::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTempDestination::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQTempDestination" << std::endl;
-    stream << ActiveMQDestination::toString();
-    stream << "End Class = ActiveMQTempDestination" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

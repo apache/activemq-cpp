@@ -90,17 +90,19 @@ std::string RemoveInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = RemoveInfo" << std::endl;
-    stream << " Value of RemoveInfo::ID_REMOVEINFO = 12" << std::endl;
-    stream << " Value of ObjectId is Below:" << std::endl;
+    stream << "RemoveInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ObjectId = ";
     if( this->getObjectId() != NULL ) {
-        stream << this->getObjectId()->toString() << std::endl;
+        stream << this->getObjectId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of LastDeliveredSequenceId = " << this->getLastDeliveredSequenceId() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = RemoveInfo" << std::endl;
+    stream << ", ";
+    stream << "LastDeliveredSequenceId = " << this->getLastDeliveredSequenceId();
+    stream << " }";
 
     return stream.str();
 }

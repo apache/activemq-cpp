@@ -88,18 +88,22 @@ std::string DataArrayResponse::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = DataArrayResponse" << std::endl;
-    stream << " Value of DataArrayResponse::ID_DATAARRAYRESPONSE = 33" << std::endl;
-    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
-        stream << " Value of Data[" << idata << "] is Below:" << std::endl;
-        if( this->getData()[idata] != NULL ) {
-            stream << this->getData()[idata]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << "DataArrayResponse { ";
+    stream << "Data = ";
+    if( this->getData().size() > 0 ) {
+        stream << "[";
+        for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
+            if( this->getData()[idata] != NULL ) {
+                stream << this->getData()[idata]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << Response::toString();
-    stream << "End Class = DataArrayResponse" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

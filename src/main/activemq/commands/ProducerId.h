@@ -68,11 +68,9 @@ namespace commands{
 
         ProducerId( const ProducerId& other );
 
-        ProducerId( const SessionId& sessionId, long long consumerId ) {
-            this->connectionId = sessionId.getConnectionId();
-            this->sessionId = sessionId.getValue();
-            this->value = consumerId;
-        }
+        ProducerId( const SessionId& sessionId, long long consumerId );
+
+        ProducerId( std::string producerId );
 
         virtual ~ProducerId();
 
@@ -113,6 +111,8 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         const Pointer<SessionId>& getParentId() const;
+
+        void setProducerSessionKey( std::string sessionKey );
 
         virtual const std::string& getConnectionId() const;
         virtual std::string& getConnectionId();
