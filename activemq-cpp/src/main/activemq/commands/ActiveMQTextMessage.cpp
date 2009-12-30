@@ -23,6 +23,7 @@
 
 #include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <cms/CMSException.h>
 
 using namespace std;
 using namespace activemq;
@@ -80,13 +81,21 @@ void ActiveMQTextMessage::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTextMessage::toString() const {
-    std::ostringstream stream;
 
-    stream << "Begin Class = ActiveMQTextMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::TextMessage>::toString();
-    stream << "End Class = ActiveMQTextMessage" << std::endl;
+    try {
 
-    return stream.str();
+        std::string text = getText();
+
+        if( text != "" && text.length() > 63 ) {
+
+            text = text.substr( 0, 45 ) + "..." + text.substr( text.length() - 12 );
+            return ActiveMQMessageTemplate<cms::TextMessage>::toString() + "Text = " + text;
+        }
+
+    } catch( cms::CMSException& e ) {
+    }
+
+    return ActiveMQMessageTemplate<cms::TextMessage>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

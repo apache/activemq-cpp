@@ -45,13 +45,7 @@ ActiveMQMessage* ActiveMQMessage::cloneDataStructure() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQMessage::toString() const{
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::Message>::toString();
-    stream << "Begin Class = ActiveMQMessage" << std::endl;
-
-    return stream.str();
+    return ActiveMQMessageTemplate<cms::Message>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -58,13 +58,7 @@ void ActiveMQTempTopic::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTempTopic::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQTempTopic" << std::endl;
-    stream << ActiveMQTempDestination::toString();
-    stream << "End Class = ActiveMQTempTopic" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

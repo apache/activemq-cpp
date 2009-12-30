@@ -89,22 +89,21 @@ std::string JournalQueueAck::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = JournalQueueAck" << std::endl;
-    stream << " Value of JournalQueueAck::ID_JOURNALQUEUEACK = 52" << std::endl;
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << "JournalQueueAck { ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of MessageAck is Below:" << std::endl;
+    stream << ", ";
+    stream << "MessageAck = ";
     if( this->getMessageAck() != NULL ) {
-        stream << this->getMessageAck()->toString() << std::endl;
+        stream << this->getMessageAck()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseDataStructure::toString();
-    stream << "End Class = JournalQueueAck" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

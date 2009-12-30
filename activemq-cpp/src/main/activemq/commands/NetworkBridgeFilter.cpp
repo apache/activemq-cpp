@@ -90,17 +90,16 @@ std::string NetworkBridgeFilter::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = NetworkBridgeFilter" << std::endl;
-    stream << " Value of NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER = 91" << std::endl;
-    stream << " Value of NetworkTTL = " << this->getNetworkTTL() << std::endl;
-    stream << " Value of NetworkBrokerId is Below:" << std::endl;
+    stream << "NetworkBridgeFilter { ";
+    stream << "NetworkTTL = " << this->getNetworkTTL();
+    stream << ", ";
+    stream << "NetworkBrokerId = ";
     if( this->getNetworkBrokerId() != NULL ) {
-        stream << this->getNetworkBrokerId()->toString() << std::endl;
+        stream << this->getNetworkBrokerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseDataStructure::toString();
-    stream << "End Class = NetworkBridgeFilter" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

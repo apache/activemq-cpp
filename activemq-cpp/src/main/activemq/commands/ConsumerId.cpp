@@ -20,6 +20,7 @@
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
@@ -99,13 +100,9 @@ std::string ConsumerId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConsumerId" << std::endl;
-    stream << " Value of ConsumerId::ID_CONSUMERID = 122" << std::endl;
-    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    stream << " Value of SessionId = " << this->getSessionId() << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = ConsumerId" << std::endl;
+    stream << this->connectionId << ":"
+           << this->sessionId << ":"
+           << this->value;
 
     return stream.str();
 }

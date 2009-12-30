@@ -87,10 +87,10 @@ std::string KeepAliveInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = KeepAliveInfo" << std::endl;
-    stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = KeepAliveInfo" << std::endl;
+    stream << "KeepAliveInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }

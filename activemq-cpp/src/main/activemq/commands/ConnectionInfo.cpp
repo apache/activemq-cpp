@@ -101,30 +101,44 @@ std::string ConnectionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConnectionInfo" << std::endl;
-    stream << " Value of ConnectionInfo::ID_CONNECTIONINFO = 3" << std::endl;
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << "ConnectionInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    stream << " Value of Password = " << this->getPassword() << std::endl;
-    stream << " Value of UserName = " << this->getUserName() << std::endl;
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "ClientId = " << this->getClientId();
+    stream << ", ";
+    stream << "Password = " << this->getPassword();
+    stream << ", ";
+    stream << "UserName = " << this->getUserName();
+    stream << ", ";
+    stream << "BrokerPath = ";
+    if( this->getBrokerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+                stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of BrokerMasterConnector = " << this->isBrokerMasterConnector() << std::endl;
-    stream << " Value of Manageable = " << this->isManageable() << std::endl;
-    stream << " Value of ClientMaster = " << this->isClientMaster() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ConnectionInfo" << std::endl;
+    stream << ", ";
+    stream << "BrokerMasterConnector = " << this->isBrokerMasterConnector();
+    stream << ", ";
+    stream << "Manageable = " << this->isManageable();
+    stream << ", ";
+    stream << "ClientMaster = " << this->isClientMaster();
+    stream << " }";
 
     return stream.str();
 }

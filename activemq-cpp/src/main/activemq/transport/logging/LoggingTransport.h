@@ -20,7 +20,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
-#include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq{
@@ -33,10 +32,6 @@ namespace logging{
      * A transport filter that logs commands as they are sent/received.
      */
     class AMQCPP_API LoggingTransport : public TransportFilter {
-    private:
-
-        LOGDECAF_DECLARE( logger )
-
     public:
 
         /**

@@ -87,10 +87,10 @@ std::string ShutdownInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ShutdownInfo" << std::endl;
-    stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ShutdownInfo" << std::endl;
+    stream << "ShutdownInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }

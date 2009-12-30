@@ -91,12 +91,14 @@ std::string ReplayCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ReplayCommand" << std::endl;
-    stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl;
-    stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
-    stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ReplayCommand" << std::endl;
+    stream << "ReplayCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "FirstNakNumber = " << this->getFirstNakNumber();
+    stream << ", ";
+    stream << "LastNakNumber = " << this->getLastNakNumber();
+    stream << " }";
 
     return stream.str();
 }

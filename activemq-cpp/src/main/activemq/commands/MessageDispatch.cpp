@@ -92,29 +92,33 @@ std::string MessageDispatch::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = MessageDispatch" << std::endl;
-    stream << " Value of MessageDispatch::ID_MESSAGEDISPATCH = 21" << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << "MessageDispatch { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Message is Below:" << std::endl;
+    stream << ", ";
+    stream << "Message = ";
     if( this->getMessage() != NULL ) {
-        stream << this->getMessage()->toString() << std::endl;
+        stream << this->getMessage()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of RedeliveryCounter = " << this->getRedeliveryCounter() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = MessageDispatch" << std::endl;
+    stream << ", ";
+    stream << "RedeliveryCounter = " << this->getRedeliveryCounter();
+    stream << " }";
 
     return stream.str();
 }

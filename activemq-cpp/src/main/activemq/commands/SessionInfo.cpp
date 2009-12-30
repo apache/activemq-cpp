@@ -90,16 +90,17 @@ std::string SessionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = SessionInfo" << std::endl;
-    stream << " Value of SessionInfo::ID_SESSIONINFO = 4" << std::endl;
-    stream << " Value of SessionId is Below:" << std::endl;
+    stream << "SessionInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "SessionId = ";
     if( this->getSessionId() != NULL ) {
-        stream << this->getSessionId()->toString() << std::endl;
+        stream << this->getSessionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = SessionInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

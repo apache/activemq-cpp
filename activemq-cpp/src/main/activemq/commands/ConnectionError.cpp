@@ -89,22 +89,24 @@ std::string ConnectionError::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConnectionError" << std::endl;
-    stream << " Value of ConnectionError::ID_CONNECTIONERROR = 16" << std::endl;
-    stream << " Value of Exception is Below:" << std::endl;
+    stream << "ConnectionError { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Exception = ";
     if( this->getException() != NULL ) {
-        stream << this->getException()->toString() << std::endl;
+        stream << this->getException()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = ConnectionError" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

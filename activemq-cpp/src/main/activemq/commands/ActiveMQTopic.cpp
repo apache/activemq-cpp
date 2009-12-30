@@ -54,11 +54,5 @@ void ActiveMQTopic::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTopic::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQTopic" << std::endl;
-    stream << ActiveMQDestination::toString();
-    stream << "End Class = ActiveMQTopic" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }

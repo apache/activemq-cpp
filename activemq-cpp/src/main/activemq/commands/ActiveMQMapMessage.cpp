@@ -67,13 +67,7 @@ void ActiveMQMapMessage::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQMapMessage::toString() const{
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQMapMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::MapMessage>::toString();
-    stream << "End Class = ActiveMQMapMessage" << std::endl;
-
-    return stream.str();
+    return ActiveMQMessageTemplate<cms::MapMessage>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

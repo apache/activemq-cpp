@@ -23,6 +23,7 @@
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
@@ -118,12 +119,7 @@ std::string SessionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = SessionId" << std::endl;
-    stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl;
-    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = SessionId" << std::endl;
+    stream << this->connectionId << ":" << this->value;
 
     return stream.str();
 }
