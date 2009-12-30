@@ -29,11 +29,9 @@ public class ProducerIdHeaderGenerator extends CommandHeaderGenerator {
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const SessionId& sessionId, long long consumerId ) {");
-        out.println("            this->connectionId = sessionId.getConnectionId();");
-        out.println("            this->sessionId = sessionId.getValue();");
-        out.println("            this->value = consumerId;");
-        out.println("        }");
+        out.println("        "+getClassName()+"( const SessionId& sessionId, long long consumerId );");
+        out.println("");
+        out.println("        "+getClassName()+"( std::string producerId );");
         out.println("");
 
         super.generateAdditionalConstructors(out);
@@ -51,6 +49,8 @@ public class ProducerIdHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateAdditonalMembers( PrintWriter out ) {
         out.println("        const Pointer<SessionId>& getParentId() const;");
+        out.println("");
+        out.println("        void setProducerSessionKey( std::string sessionKey );");
         out.println("");
 
         super.generateAdditonalMembers( out );

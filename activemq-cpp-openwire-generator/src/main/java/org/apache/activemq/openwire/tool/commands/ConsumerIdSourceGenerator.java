@@ -17,6 +17,7 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
 
@@ -31,6 +32,24 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
         out.println("");
 
         super.generateAdditionalMethods(out);
+    }
+
+    protected void populateIncludeFilesSet() {
+
+        super.populateIncludeFilesSet();
+
+        Set<String> includes = getIncludeFiles();
+        includes.add("<sstream>");
+    }
+
+    protected void generateToStringBody( PrintWriter out ) {
+        out.println("    ostringstream stream;" );
+        out.println("");
+        out.println("    stream << this->connectionId << \":\"");
+        out.println("           << this->sessionId << \":\"");
+        out.println("           << this->value;");
+        out.println("");
+        out.println("    return stream.str();");
     }
 
 }

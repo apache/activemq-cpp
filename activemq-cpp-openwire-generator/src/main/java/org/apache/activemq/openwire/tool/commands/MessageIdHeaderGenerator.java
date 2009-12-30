@@ -19,38 +19,47 @@ package org.apache.activemq.openwire.tool.commands;
 import java.io.PrintWriter;
 import java.util.Set;
 
-public class ConnectionIdSourceGenerator extends CommandSourceGenerator {
+public class MessageIdHeaderGenerator extends CommandHeaderGenerator {
 
     protected void populateIncludeFilesSet() {
         Set<String> includes = getIncludeFiles();
-        includes.add("<activemq/commands/SessionId.h>");
+        includes.add("<activemq/commands/ProducerInfo.h>");
         includes.add("<activemq/commands/ProducerId.h>");
-        includes.add("<activemq/commands/ConsumerId.h>");
 
         super.populateIncludeFilesSet();
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const SessionId* sessionId ) {");
-        out.println("    this->value = sessionId->getConnectionId();");
-        out.println("}");
+
+        out.println("        "+getClassName()+"( const std::string& messageKey );");
         out.println("");
-        out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const ProducerId* producerId ) {");
-        out.println("    this->value = producerId->getConnectionId();");
-        out.println("}");
+        out.println("        "+getClassName()+"( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId );");
         out.println("");
-        out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const ConsumerId* consumerId ) {");
-        out.println("    this->value = consumerId->getConnectionId();");
-        out.println("}");
+        out.println("        "+getClassName()+"( const Pointer<ProducerId>& producerId, long long producerSequenceId );");
+        out.println("");
+        out.println("        "+getClassName()+"( const std::string& producerId, long long producerSequenceId );");
         out.println("");
 
         super.generateAdditionalConstructors(out);
     }
 
-    protected void generateToStringBody( PrintWriter out ) {
-        out.println("    return this->value;");
+    protected void generateProperties( PrintWriter out ) {
+
+        out.println("    private:");
+        out.println("");
+        out.println("        mutable std::string key;");
+        out.println("");
+
+        super.generateProperties(out);
     }
+
+    protected void generateAdditonalMembers( PrintWriter out ) {
+        out.println("        void setValue( const std::string& key );");
+        out.println("");
+        out.println("        void setTextView( const std::string& key );");
+        out.println("");
+
+        super.generateAdditonalMembers( out );
+    }
+
 }

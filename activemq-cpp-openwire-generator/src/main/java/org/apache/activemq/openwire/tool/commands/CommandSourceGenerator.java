@@ -108,17 +108,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("std::string "+getClassName()+"::toString() const {");
         out.println("");
-        out.println("    ostringstream stream;" );
-        out.println("");
-        out.println("    stream << \"Begin Class = "+getClassName()+"\" << std::endl;" );
-        out.println("    stream << \" Value of "+getClassName()+"::ID_" + getClassName().toUpperCase() + " = "+getOpenWireOpCode()+"\" << std::endl;");
         generateToStringBody(out);
-        if( getBaseClassName() != null ) {
-            out.println("    stream << "+ getBaseClassName() +"::toString();");
-        }
-        out.println("    stream << \"End Class = "+getClassName()+"\" << std::endl;" );
-        out.println("");
-        out.println("    return stream.str();");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
@@ -246,48 +236,98 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
     }
 
     protected void generateToStringBody( PrintWriter out ) {
+
+        out.println("    ostringstream stream;" );
+        out.println("");
+
+        if( getBaseClassName().equals( "BaseCommand" ) ) {
+            out.println("    stream << \""+getClassName()+" { \"" );
+            out.println("           << \"commandId = \" << this->getCommandId() << \", \"");
+            out.println("           << \"responseRequired = \" << boolalpha << this->isResponseRequired();");
+
+            if( getProperties().size() > 0 ) {
+                out.println("    stream << \", \";");
+            }
+        } else {
+            out.println("    stream << \""+getClassName()+" { \";" );
+        }
+
+        int length = getProperties().size();
+        int count = 0;
+
         for( JProperty property : getProperties() ) {
+
             String type = toCppType(property.getType());
             String propertyName = property.getSimpleName();
             String parameterName = decapitalize(propertyName);
             String getter = property.getGetter().getSimpleName();
 
             if( property.getType().getSimpleName().equals("ByteSequence") ) {
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        stream << \" Value of "+propertyName+"[\" << i" + parameterName+" << \"] = \" << this->"+getter+"()[i"+parameterName+"] << std::endl;" );
-                out.println("    }" );
-            } else if( type.equals("unsigned char") ){
-                out.println("    stream << \" Value of "+propertyName+" = \" << (int)this->"+getter+"() << std::endl;");
-            } else if( property.getType().isPrimitiveType() ||
-                       type.equals("std::string") ){
 
-                out.println("    stream << \" Value of "+propertyName+" = \" << this->"+getter+"() << std::endl;");
+                out.println("    stream << \""+propertyName+" = \";");
+                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("        stream << \"[size=\" << this->" + getter + "().size() << \"]\";");
+                out.println("    } else {");
+                out.println("        stream << \"NULL\";");
+                out.println("    }");
+
+            } else if( type.equals("unsigned char") ){
+                out.println("    stream << \""+propertyName+" = \" << (int)this->"+getter+"();");
+
+            } else if( property.getType().isPrimitiveType() || type.equals("std::string") ){
+
+                out.println("    stream << \""+propertyName+" = \" << this->"+getter+"();");
+
             } else if( property.getType().isArrayType() &&
                        !property.getType().getArrayComponentType().isPrimitiveType() ) {
 
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        stream << \" Value of "+propertyName+"[\" << i" + parameterName+" << \"] is Below:\" << std::endl;" );
-                out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL ) {");
-                out.println("            stream << this->"+getter+"()[i"+parameterName+"]->toString() << std::endl;");
-                out.println("        } else {");
-                out.println("            stream << \"   Object is NULL\" << std::endl;");
+                out.println("    stream << \""+propertyName+" = \";");
+                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("        stream << \"[\";");
+                out.println("        for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+                out.println("            if( this->"+getter+"()[i"+parameterName+"] != NULL ) {");
+                out.println("                stream << this->"+getter+"()[i"+parameterName+"]->toString() << \", \";");
+                out.println("            } else {");
+                out.println("                stream << \"NULL\" << \", \";");
+                out.println("            }");
                 out.println("        }");
+                out.println("        stream << \"]\";");
+                out.println("    } else {");
+                out.println("        stream << \"NULL\";");
                 out.println("    }");
+
             } else if( property.getType().isArrayType() &&
                        property.getType().getArrayComponentType().isPrimitiveType() ) {
 
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        stream << \" Value of "+propertyName+"[\" << i"+parameterName+" << \"] = \" << this->"+getter+"()[i"+parameterName+"] << std::endl;");
-                out.println("    }");
-            } else {
-                out.println("    stream << \" Value of "+propertyName+" is Below:\" << std::endl;" );
-                out.println("    if( this->"+getter+"() != NULL ) {");
-                out.println("        stream << this->"+getter+"()->toString() << std::endl;");
+                out.println("    stream << \""+propertyName+" = \";");
+                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("        stream << \"[\";");
+                out.println("        for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+                out.println("            stream << this->"+getter+"()[i"+parameterName+"] << \",\";");
+                out.println("        }");
+                out.println("        stream << \"]\";");
                 out.println("    } else {");
-                out.println("        stream << \"   Object is NULL\" << std::endl;");
+                out.println("        stream << \"NULL\";");
+                out.println("    }");
+
+            } else {
+
+                out.println("    stream << \""+propertyName+" = \";" );
+                out.println("    if( this->"+getter+"() != NULL ) {");
+                out.println("        stream << this->"+getter+"()->toString();");
+                out.println("    } else {");
+                out.println("        stream << \"NULL\";");
                 out.println("    }");
             }
+
+            if( ++count < length ) {
+                out.println("    stream << \", \";");
+            }
         }
+
+        out.println("    stream << \" }\";" );
+        out.println("");
+        out.println("    return stream.str();");
     }
 
     protected void generateEqualsBody( PrintWriter out ) {
