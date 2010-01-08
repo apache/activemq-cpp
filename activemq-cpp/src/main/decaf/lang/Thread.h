@@ -121,6 +121,8 @@ namespace lang{
         class UncaughtExceptionHandler {
         public:
 
+            virtual ~UncaughtExceptionHandler() {}
+
             /**
              * Method invoked when the given thread terminates due to the given uncaught exception.
              *
