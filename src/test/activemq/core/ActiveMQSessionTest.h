@@ -46,6 +46,7 @@ namespace core{
         CPPUNIT_TEST( testTransactionRollbackTwoConsumer );
         CPPUNIT_TEST( testTransactionCloseWithoutCommit );
         CPPUNIT_TEST( testExpiration );
+        CPPUNIT_TEST( testCreateManyConsumersAndSetListeners );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -86,6 +87,7 @@ namespace core{
 
         void testAutoAcking();
         void testClientAck();
+        void testCreateManyConsumersAndSetListeners();
         void testTransactionCommitOneConsumer();
         void testTransactionCommitTwoConsumer();
         void testTransactionRollbackOneConsumer();
