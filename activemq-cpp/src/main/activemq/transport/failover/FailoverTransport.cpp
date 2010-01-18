@@ -228,7 +228,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
                         } else if( timedout == true ) {
                             error.reset( new IOException(
                                 __FILE__, __LINE__,
-                                "Failover timeout of %d ms reached.", timedout ) );
+                                "Failover timeout of %d ms reached.", timeout ) );
                         } else {
                             error.reset( new IOException(
                                 __FILE__, __LINE__, "Unexpected failure.") );
