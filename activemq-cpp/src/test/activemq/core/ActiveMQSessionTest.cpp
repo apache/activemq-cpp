@@ -105,6 +105,37 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionTest::testCreateManyConsumersAndSetListeners() {
+
+    MyCMSMessageListener msgListener1;
+
+    CPPUNIT_ASSERT( connection.get() != NULL );
+    CPPUNIT_ASSERT( connection->isStarted() == true );
+
+    // Create an Auto Ack Session
+    std::auto_ptr<cms::Session> session( connection->createSession() );
+
+    // Create a Topic
+    std::auto_ptr<cms::Topic> topic1( session->createTopic( "TestTopic1" ) );
+
+    CPPUNIT_ASSERT( topic1.get() != NULL );
+
+    std::list<cms::MessageConsumer*> consumers;
+    for( int ix = 0; ix < 100; ++ix ) {
+        cms::MessageConsumer* consumer = session->createConsumer( topic1.get() );
+        consumer->setMessageListener( &msgListener1 );
+        consumers.push_back( consumer );
+    }
+
+    std::list<cms::MessageConsumer*>::iterator iter = consumers.begin();
+    for( ; iter != consumers.end(); ++iter ) {
+        (*iter)->close();
+        delete *iter;
+    }
+    consumers.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::testAutoAcking() {
 
     MyCMSMessageListener msgListener1;
