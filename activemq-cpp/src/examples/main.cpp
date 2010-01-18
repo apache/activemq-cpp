@@ -22,6 +22,7 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/System.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Config.h>
@@ -110,7 +111,7 @@ public:
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
             // Create the Thread Id String
-            string threadIdStr = Integer::toString( Thread::getId() );
+            string threadIdStr = Long::toString( Thread::getId() );
 
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
