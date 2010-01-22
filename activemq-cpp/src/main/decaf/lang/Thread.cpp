@@ -186,7 +186,7 @@ namespace{
             ThreadProperties::runCallback( properties );
 
             pthread_setspecific( currentThreadKey, NULL );
-            pthread_exit(0);
+            pthread_detach( properties->handle );
 
             properties->state = Thread::TERMINATED;
 
