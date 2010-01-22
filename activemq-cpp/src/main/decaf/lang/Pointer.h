@@ -174,9 +174,10 @@ namespace lang {
                 REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
 
             if( this->value == NULL ) {
+
                 // Remove the reference we took in the Reference Counter's ctor since we
-                // didn't actually create one as the dynamic cast failed..
-                this->release();
+                // didn't actually create one as the dynamic cast failed.
+                REFCOUNTER::release();
                 throw decaf::lang::exceptions::ClassCastException(
                     __FILE__, __LINE__,
                     "Failed to cast source pointer of type %s to this type: %s.",
