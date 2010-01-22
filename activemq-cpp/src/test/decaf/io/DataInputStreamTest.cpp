@@ -159,8 +159,14 @@ void DataInputStreamTest::test_readFully1() {
         std::vector<unsigned char> result;
         result.resize( testData.length() );
         is->readFully( result );
-        CPPUNIT_ASSERT_MESSAGE( "Incorrect data read",
-            string( (const char*)&result[0], 0, result.size() ) == testData );
+
+        string expected = "";
+        for( size_t ix = 0; ix < result.size(); ++ix ) {
+            expected += (char)result[ix];
+        }
+
+        CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
+
     } catch( IOException &e ) {
         CPPUNIT_FAIL("IOException during readFully test : " + e.getMessage());
     }
@@ -175,8 +181,14 @@ void DataInputStreamTest::test_readFully2() {
         openDataInputStream();
         unsigned char* rbytes = new unsigned char[ testData.length() ];
         is->readFully( rbytes, 0, testData.length() );
-        CPPUNIT_ASSERT_MESSAGE("Incorrect data read",
-            string( (const char*)rbytes, 0, testData.length() ) == testData );
+
+        string expected = "";
+        for( size_t ix = 0; ix < testData.length(); ++ix ) {
+            expected += (char)rbytes[ix];
+        }
+
+        CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
+
         delete [] rbytes;
     } catch( IOException &e ) {
         CPPUNIT_FAIL("IOException during readFully test : " + e.getMessage());
