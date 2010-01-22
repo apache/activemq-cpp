@@ -206,7 +206,9 @@ namespace util {
             this->getFromPriorityQueue( source );
         }
 
-        virtual ~PriorityQueue() {}
+        virtual ~PriorityQueue() {
+            delete [] elements;
+        }
 
         /**
          * Assignment operator, assign another Collection to this one.
@@ -246,6 +248,9 @@ namespace util {
             // TODO - Provide a more efficient way to clear the array without reallocating it
             //        we should keep the size it grew to since if reused it could get that big
             //        again and reallocating all that memory could be to slow.
+
+            delete [] this->elements;
+
             this->elements = new E[DEFAULT_CAPACITY];
             this->capacity = DEFAULT_CAPACITY;
             this->_size = 0;
