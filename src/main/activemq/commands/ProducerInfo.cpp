@@ -254,3 +254,11 @@ decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::Co
 
     return visitor->processProducerInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> ProducerInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getProducerId() );
+    return info;
+}
+

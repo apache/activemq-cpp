@@ -152,3 +152,11 @@ decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::Com
 
     return visitor->processSessionInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> SessionInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getSessionId() );
+    return info;
+}
+
