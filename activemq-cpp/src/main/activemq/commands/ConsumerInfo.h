@@ -28,6 +28,7 @@
 #include <activemq/commands/BooleanExpression.h>
 #include <activemq/commands/BrokerId.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Pointer.h>
 #include <string>
@@ -119,6 +120,8 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        Pointer<RemoveInfo> createRemoveCommand() const;
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();

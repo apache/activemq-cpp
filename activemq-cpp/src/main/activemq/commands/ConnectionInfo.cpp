@@ -307,3 +307,11 @@ decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::
 
     return visitor->processConnectionInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> ConnectionInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getConnectionId() );
+    return info;
+}
+

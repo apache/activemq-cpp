@@ -521,3 +521,11 @@ decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::Co
 
     return visitor->processConsumerInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> ConsumerInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getConsumerId() );
+    return info;
+}
+

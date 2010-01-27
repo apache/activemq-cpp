@@ -24,6 +24,7 @@
 #endif
 
 #include <activemq/commands/BaseCommand.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/commands/SessionId.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Pointer.h>
@@ -112,6 +113,8 @@ namespace commands{
         void setAckMode( unsigned int mode ) {
             this->ackMode = mode;
         }
+
+        Pointer<RemoveInfo> createRemoveCommand() const;
 
         virtual const Pointer<SessionId>& getSessionId() const;
         virtual Pointer<SessionId>& getSessionId();
