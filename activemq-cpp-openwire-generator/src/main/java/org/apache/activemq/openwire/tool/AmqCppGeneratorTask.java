@@ -25,7 +25,6 @@ import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingClassesGen
 import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingHeadersGenerator;
 import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingClassesGenerator;
 import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingHeadersGenerator;
-import org.apache.activemq.openwire.tool.tests.AmqCppTestRegistryGenerator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;

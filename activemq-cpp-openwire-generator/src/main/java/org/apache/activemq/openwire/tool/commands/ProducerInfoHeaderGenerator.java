@@ -19,7 +19,7 @@ package org.apache.activemq.openwire.tool.commands;
 import java.io.PrintWriter;
 import java.util.Set;
 
-public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
+public class ProducerInfoHeaderGenerator extends CommandHeaderGenerator {
 
     protected void populateIncludeFilesSet() {
 
@@ -29,26 +29,7 @@ public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
         super.populateIncludeFilesSet();
     }
 
-    protected void generateProperties( PrintWriter out ) {
-
-        out.println("    private:");
-        out.println("");
-        out.println("        // The ACK mode that the Session was created with" );
-        out.println("        unsigned int ackMode;");
-        out.println("");
-
-        super.generateProperties(out);
-    }
-
     protected void generateAdditonalMembers( PrintWriter out ) {
-        out.println("        unsigned int getAckMode() const {");
-        out.println("            return this->ackMode;");
-        out.println("        }");
-        out.println("");
-        out.println("        void setAckMode( unsigned int mode ) {");
-        out.println("            this->ackMode = mode;");
-        out.println("        }");
-        out.println("");
         out.println("        Pointer<RemoveInfo> createRemoveCommand() const;");
         out.println("");
 

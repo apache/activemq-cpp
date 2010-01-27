@@ -17,30 +17,15 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
-import java.util.Set;
 
-public class SessionInfoSourceGenerator extends CommandSourceGenerator {
-
-    protected void populateIncludeFilesSet() {
-
-        Set<String> includes = getIncludeFiles();
-        includes.add("<cms/Session.h>");
-
-        super.populateIncludeFilesSet();
-    }
-
-    protected void generateDefaultConstructorBody( PrintWriter out ) {
-
-        out.println( "    this->ackMode = (unsigned int)cms::Session::AUTO_ACKNOWLEDGE;" );
-        super.generateDefaultConstructorBody(out);
-    }
+public class ConsumerInfoSourceGenerator extends CommandSourceGenerator {
 
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("Pointer<RemoveInfo> SessionInfo::createRemoveCommand() const {");
+        out.println("Pointer<RemoveInfo> ConsumerInfo::createRemoveCommand() const {");
         out.println("    Pointer<RemoveInfo> info( new RemoveInfo() );");
         out.println("    info->setResponseRequired( this->isResponseRequired() );");
-        out.println("    info->setObjectId( this->getSessionId() );");
+        out.println("    info->setObjectId( this->getConsumerId() );");
         out.println("    return info;");
         out.println("}");
         out.println("");
