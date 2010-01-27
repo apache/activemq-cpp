@@ -77,6 +77,8 @@ void AdvisoryConsumer::onMessage( const cms::Message* message ) {
         if( amqMessage != NULL && amqMessage->getDataStructure() != NULL ) {
             const ProducerInfo* info = dynamic_cast<const ProducerInfo*>(
                 amqMessage->getDataStructure().get() );
+
+            std::cout << "Got ProducerInfo for producer: " << info->getProducerId()->toString() << std::endl;
         }
 
         if( message->propertyExists( "producerCount" ) ) {
