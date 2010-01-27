@@ -299,7 +299,7 @@ bool ReentrantLock::tryLock() throw( decaf::lang::exceptions::RuntimeException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock( long long time, const TimeUnit& unit )
+bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
     throw ( decaf::lang::exceptions::RuntimeException,
             decaf::lang::exceptions::InterruptedException ) {
 
@@ -502,7 +502,7 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::await( long long time, const TimeUnit& unit )
+bool ConditionObject::await( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
     throw( decaf::lang::exceptions::RuntimeException,
            decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::IllegalMonitorStateException ) {
@@ -511,7 +511,7 @@ bool ConditionObject::await( long long time, const TimeUnit& unit )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::awaitUntil( const Date& deadline )
+bool ConditionObject::awaitUntil( const Date& deadline DECAF_UNUSED )
     throw( decaf::lang::exceptions::RuntimeException,
            decaf::lang::exceptions::InterruptedException,
            decaf::lang::exceptions::IllegalMonitorStateException ) {
