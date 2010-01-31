@@ -18,7 +18,6 @@
 #ifndef _DECAF_UTIL_PROPERTIES_H_
 #define _DECAF_UTIL_PROPERTIES_H_
 
-#include <memory>
 #include <vector>
 #include <string>
 #include <decaf/util/Config.h>
@@ -26,6 +25,7 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/Reader.h>
 #include <decaf/io/Writer.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/io/IOException.h>
@@ -50,7 +50,7 @@ namespace util{
     class DECAF_API Properties{
     private:
 
-        std::auto_ptr<PropertiesInternal> internal;
+        decaf::lang::Pointer<PropertiesInternal> internal;
 
     protected:
 
@@ -58,7 +58,7 @@ namespace util{
          * Default list used to answer for any keys not found in the properties list, can
          * be filled in by another implementation of this class.
          */
-        std::auto_ptr<Properties> defaults;
+        decaf::lang::Pointer<Properties> defaults;
 
     public:
 

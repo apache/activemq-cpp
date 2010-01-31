@@ -43,6 +43,19 @@ namespace util{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    enum TokenState {
+        NONE = 0,
+        SLASH = 1,
+        CONTINUE = 2,
+        KEY_DONE = 3,
+        IGNOE = 4
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Properties::Properties() {
     this->internal.reset( new PropertiesInternal() );
 }
@@ -98,6 +111,8 @@ const char* Properties::getProperty( const std::string& name ) const{
     synchronized( &( internal->properties ) ) {
         if( this->internal->properties.containsKey( name ) ) {
             return this->internal->properties.get( name ).c_str();
+        } else if( this->defaults != NULL && this->defaults->hasProperty( name ) ) {
+            return this->defaults->getProperty( name );
         }
     }
 
@@ -111,6 +126,8 @@ std::string Properties::getProperty( const std::string& name,
     synchronized( &( internal->properties ) ) {
         if( this->internal->properties.containsKey( name ) ) {
             return this->internal->properties.get( name );
+        } else if( this->defaults != NULL && this->defaults->hasProperty( name ) ) {
+            return this->defaults->getProperty( name );
         }
     }
 
