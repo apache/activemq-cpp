@@ -19,6 +19,7 @@
 #define _DECAF_IO_OUTPUTSTREAM_H
 
 #include <decaf/io/Closeable.h>
+#include <decaf/io/Flushable.h>
 #include <decaf/io/IOException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
@@ -31,6 +32,7 @@ namespace io{
      * Base interface for an output stream.
      */
     class DECAF_API OutputStream : public Closeable,
+                                   public Flushable,
                                    public util::concurrent::Synchronizable
     {
     public:
@@ -64,12 +66,6 @@ namespace io{
                             std::size_t offset,
                             std::size_t len )
             throw ( IOException, lang::exceptions::NullPointerException ) = 0;
-
-        /**
-         * Flushes any pending writes in this output stream.
-         * @throws IOException
-         */
-        virtual void flush() throw ( IOException ) = 0;
 
     };
 
