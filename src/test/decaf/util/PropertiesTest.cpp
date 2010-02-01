@@ -19,10 +19,24 @@
 
 #include <memory>
 #include <decaf/util/Properties.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::io;
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::setUp() {
+
+    this->testProperties.setProperty( "test.prop", "this is a test property" );
+    this->testProperties.setProperty( "bogus.prop", "bogus" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::tearDown() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void PropertiesTest::testPutAndGet() {
@@ -187,4 +201,152 @@ void PropertiesTest::testEquals() {
     CPPUNIT_ASSERT( properties2.hasProperty( "D" ) == true );
 
     CPPUNIT_ASSERT( properties2.equals( properties1 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testLoadNPE() {
+
+    Properties properties;
+    decaf::io::InputStream* nullStream = NULL;
+    decaf::io::Reader* nullReader = NULL;
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        properties.load( nullStream ),
+        decaf::lang::exceptions::NullPointerException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        properties.load( nullReader ),
+        decaf::lang::exceptions::NullPointerException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testLoadInputStream() {
+
+    {
+        Properties properties;
+        string value(" a= b");
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        properties.load( &stream );
+        CPPUNIT_ASSERT( string( "b" ) == properties.getProperty( "a" ) );
+    }
+
+    {
+        Properties properties;
+        string value(" a b");
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        properties.load( &stream );
+        CPPUNIT_ASSERT( string( "b" ) == properties.getProperty( "a" ) );
+    }
+
+    {
+        Properties properties;
+        string value("#comment\na=value");
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        properties.load( &stream );
+        CPPUNIT_ASSERT( string( "value" ) == properties.getProperty( "a" ) );
+    }
+
+    {
+        Properties properties;
+        string value("#properties file\r\nfred=1\r\n#last comment");
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        properties.load( &stream );
+        CPPUNIT_ASSERT( string( "1" ) == properties.getProperty( "fred" ) );
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testPropertyNames() {
+
+    Properties myProps( this->testProperties );
+
+    std::vector<std::string> names = myProps.propertyNames();
+    std::vector<std::string>::const_iterator name = names.begin();
+    int i = 0;
+
+    CPPUNIT_ASSERT( names.size() == 2 );
+
+    for( ; name != names.end(); ++name, ++i ) {
+        CPPUNIT_ASSERT_MESSAGE( "Incorrect names returned",
+                                *name == "test.prop" || *name == "bogus.prop" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testPropertyNamesOverride() {
+
+    Properties props( this->testProperties );
+    props.setProperty( "test.prop", "anotherValue" );
+    props.setProperty( "3rdKey", "3rdValue" );
+    std::vector<string> set = props.propertyNames();
+    CPPUNIT_ASSERT( 3 == set.size() );
+    CPPUNIT_ASSERT( std::find( set.begin(), set.end(), "test.prop" ) != set.end() );
+    CPPUNIT_ASSERT( std::find( set.begin(), set.end(), "bogus.prop") != set.end() );
+    CPPUNIT_ASSERT( std::find( set.begin(), set.end(), "3rdKey" ) != set.end() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testPropertyNamesScenario1() {
+
+    string keys[] = { "key1", "key2", "key3" };
+    string values[] = { "value1", "value2", "value3" };
+
+    std::set<string> keyList;
+
+    Properties properties;
+    for( int index = 0; index < 3; index++ ) {
+        properties.setProperty( keys[index], values[index] );
+        keyList.insert( keyList.begin(), keys[index] );
+    }
+
+    Properties properties2( properties );
+    std::vector<string> nameSet = properties.propertyNames();
+    CPPUNIT_ASSERT_EQUAL( 3, (int)nameSet.size() );
+    std::vector<string>::const_iterator iterator = nameSet.begin();
+    for( ; iterator != nameSet.end(); ++iterator ) {
+        CPPUNIT_ASSERT( keyList.find( *iterator ) != keyList.end() );
+    }
+
+    Properties properties3( properties2 );
+    nameSet = properties2.propertyNames();
+    CPPUNIT_ASSERT_EQUAL( 3, (int)nameSet.size() );
+    iterator = nameSet.begin();
+    for( ; iterator != nameSet.end(); ++iterator ) {
+        CPPUNIT_ASSERT( keyList.find( *iterator ) != keyList.end() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PropertiesTest::testStoreOutputStream() {
+
+    Properties myProps;
+    Properties myProps2;
+
+    myProps.setProperty( "Property A", " aye\\\f\t\n\r" );
+    myProps.setProperty( "Property B", "b ee#!=:" );
+    myProps.setProperty( "Property C", "see" );
+
+    try {
+
+        ByteArrayOutputStream out;
+        myProps.store( &out, "A Header" );
+        out.close();
+
+        ByteArrayInputStream in( out.toByteArray(), out.size() );
+        myProps2.load( &in );
+        in.close();
+
+    } catch( IOException& ioe ) {
+        CPPUNIT_FAIL( string("IOException occurred reading/writing file : ") + ioe.getMessage() );
+    }
+
+    CPPUNIT_ASSERT( myProps.size() == myProps2.size() );
+    std::vector<string> nameSet = myProps.propertyNames();
+    std::vector<string>::const_iterator iterator = nameSet.begin();
+    for( ; iterator != nameSet.end(); ++iterator ) {
+        CPPUNIT_ASSERT( string( myProps2.getProperty( *iterator ) ) == string( myProps.getProperty( *iterator ) ) );
+    }
 }

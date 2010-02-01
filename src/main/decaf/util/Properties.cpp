@@ -20,8 +20,12 @@
 #include <map>
 #include <sstream>
 #include <decaf/util/Date.h>
-#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/util/Map.h>
 #include <decaf/util/StlMap.h>
+#include <decaf/io/BufferedInputStream.h>
+#include <decaf/lang/Character.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -45,13 +49,63 @@ namespace util{
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
 
-    enum TokenState {
+    /**
+     * internal namespace for Properties utility methods, these might change often
+     * so we hide them in here to preserve ABI rules on the header.
+     */
+
+    enum ParsingMode {
         NONE = 0,
         SLASH = 1,
         CONTINUE = 2,
         KEY_DONE = 3,
-        IGNOE = 4
+        IGNORE = 4
     };
+
+    void dumpString( std::ostringstream& buffer, const std::string& string, bool key ) {
+
+        std::size_t i = 0;
+        if( !key && i < string.length() && string.at(i) == ' ' ) {
+            buffer << "\\ ";
+            i++;
+        }
+
+        for( ; i < string.length(); i++ ) {
+
+            char ch = string.at(i);
+
+            switch(ch) {
+                case '\t':
+                    buffer << "\\t";
+                    break;
+                case '\n':
+                    buffer << "\\n";
+                    break;
+                case '\f':
+                    buffer << "\\f";
+                    break;
+                case '\r':
+                    buffer << "\\r";
+                    break;
+                default:
+                    if( std::string( "\\#!=:" ).find( ch ) != std::string::npos || ( key && ch == ' ' ) ) {
+                        buffer << '\\';
+                    }
+
+                    if( ch >= ' ' && ch <= '~' ) {
+                        buffer << ch;
+                    } else {
+
+                        std::string hex = Integer::toHexString( ch );
+                        buffer << "\\u";
+                        for( std::size_t j = 0; j < 4 - hex.length(); j++ ) {
+                            buffer << "0";
+                        }
+                        buffer << hex;
+                    }
+            }
+        }
+    }
 
 }
 
@@ -244,6 +298,31 @@ std::string Properties::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> Properties::propertyNames() const {
+
+    StlMap<std::string, std::string> selectedProperties;
+
+    this->selectProperties( selectedProperties );
+
+    return selectedProperties.keySet();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Properties::selectProperties( StlMap<std::string, std::string>& selectProperties ) const {
+
+    if( this->defaults != NULL ) {
+        this->defaults->selectProperties( selectProperties );
+    }
+
+    std::vector<std::string> keys = this->internal->properties.keySet();
+    std::vector<std::string>::const_iterator key = keys.begin();
+
+    for( ; key != keys.end(); ++key ) {
+        selectProperties.put( *key, this->internal->properties.get( *key ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Properties::load( decaf::io::InputStream* stream )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IllegalArgumentException,
@@ -257,9 +336,149 @@ void Properties::load( decaf::io::InputStream* stream )
                 "The Stream instance passed was Null" );
         }
 
-        throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "Not yet Implemented." );
+        int mode = NONE;
+        char nextChar;
+        std::vector<char> buf;
+        int offset = 0;
+        int keyLength = -1;
+        int intVal;
+        bool firstChar = true;
+        BufferedInputStream bis( stream );
+
+        while(true) {
+
+            intVal = bis.read();
+
+            if( intVal == -1 ) {
+                break;
+            }
+
+            nextChar = (char) ( intVal & 0xFF );
+
+            if( mode == SLASH ) {
+
+                mode = NONE;
+                switch( nextChar ) {
+                    case '\r':
+                        mode = CONTINUE; // Look for a following \n
+                        continue;
+                    case '\n':
+                        mode = IGNORE; // Ignore whitespace on the next line
+                        continue;
+                    case 'b':
+                        nextChar = '\b';
+                        break;
+                    case 'f':
+                        nextChar = '\f';
+                        break;
+                    case 'n':
+                        nextChar = '\n';
+                        break;
+                    case 'r':
+                        nextChar = '\r';
+                        break;
+                    case 't':
+                        nextChar = '\t';
+                        break;
+                }
+
+            } else {
+
+                switch( nextChar ) {
+                case '#':
+                case '!':
+                    if( firstChar ) {
+                        while( true ) {
+                            intVal = bis.read();
+                            if( intVal == -1 ) {
+                                break;
+                            }
+
+                            nextChar = (char)( intVal & 0xFF );
+
+                            if( nextChar == '\r' || nextChar == '\n' ) {
+                                break;
+                            }
+                        }
+                        continue;
+                    }
+                    break;
+                case '\n':
+                    if( mode == CONTINUE) { // Part of a \r\n sequence
+                        mode = IGNORE; // Ignore whitespace on the next line
+                        continue;
+                    }
+                    // fall into the next case
+                case '\r':
+                    mode = NONE;
+                    firstChar = true;
+                    if( offset > 0 || ( offset == 0 && keyLength == 0 ) ) {
+
+                        if( keyLength == -1 ) {
+                            keyLength = offset;
+                        }
+                        std::string temp( &buf[0], 0, offset );
+
+                        this->internal->properties.put( temp.substr( 0, keyLength ),
+                                                        temp.substr( keyLength ) );
+                    }
+
+                    keyLength = -1;
+                    offset = 0;
+                    buf.clear();
+                    continue;
+                case '\\':
+                    if( mode == KEY_DONE ) {
+                        keyLength = offset;
+                    }
+                    mode = SLASH;
+                    continue;
+                case ':':
+                case '=':
+                    if( keyLength == -1 ) { // if parsing the key
+                        mode = NONE;
+                        keyLength = offset;
+                        continue;
+                    }
+                    break;
+                }
+                if( Character::isWhitespace( nextChar ) ) {
+                    if( mode == CONTINUE ) {
+                        mode = IGNORE;
+                    }
+                    // if key length == 0 or value length == 0
+                    if( offset == 0 || offset == keyLength || mode == IGNORE ) {
+                        continue;
+                    }
+                    if( keyLength == -1 ) { // if parsing the key
+                        mode = KEY_DONE;
+                        continue;
+                    }
+                }
+
+                if( mode == IGNORE || mode == CONTINUE ) {
+                    mode = NONE;
+                }
+            }
+
+            firstChar = false;
+            if( mode == KEY_DONE ) {
+                keyLength = offset;
+                mode = NONE;
+            }
+
+            offset += 1;
+            buf.push_back( nextChar );
+        }
+
+        if( keyLength == -1 && offset > 0 ) {
+            keyLength = offset;
+        }
+
+        if( keyLength >= 0 ) {
+            std::string temp( &buf[0], 0, offset );
+            this->internal->properties.put( temp.substr( 0, keyLength ), temp.substr( keyLength ) );
+        }
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IllegalArgumentException )
@@ -306,9 +525,35 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
                 "The OutputStream instance passed was Null" );
         }
 
-        throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "Not yet Implemented." );
+        std::ostringstream buffer;
+        std::ostringstream writer;
+
+        if( comments != "" ) {
+            writer << "#";
+            writer << comments;
+            writer << std::endl;
+        }
+
+        writer << "#";
+        writer << Date().toString();
+        writer << std::endl;
+
+        std::vector<std::string> keys = this->internal->properties.keySet();
+        std::vector<std::string>::const_iterator key = keys.begin();
+
+        for( ; key != keys.end(); ++key ) {
+
+            dumpString( buffer, *key, true );
+            buffer << "=";
+            dumpString( buffer, this->internal->properties.get( *key ), false );
+            buffer << std::endl;
+
+            writer << buffer.str();
+            buffer.str("");
+        }
+
+        out->write( (const unsigned char*)writer.str().c_str(), 0, writer.str().length() );
+        out->flush();
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -338,3 +583,4 @@ void Properties::store( decaf::io::Writer* writer, const std::string& comments D
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
+
