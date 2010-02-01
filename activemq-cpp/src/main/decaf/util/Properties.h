@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include <decaf/util/Config.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/Reader.h>
@@ -129,6 +130,16 @@ namespace util{
          * @param name the name of the property to remove.
          */
         void remove( const std::string& name );
+
+        /**
+         * Returns an enumeration of all the keys in this property list, including distinct keys
+         * in the default property list if a key of the same name has not already been found from
+         * the main properties list.
+         *
+         * @returns a set of keys in this property list where the key and its corresponding value are
+         *          strings, including the keys in the default property list.
+         */
+        std::vector<std::string> propertyNames() const;
 
         /**
          * Method that serializes the contents of the property map to
@@ -374,6 +385,10 @@ namespace util{
         void store( decaf::io::Writer* writer, const std::string& comments )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException );
+
+    private:
+
+        void selectProperties( decaf::util::StlMap<std::string, std::string>& selectProperties ) const;
 
     };
 

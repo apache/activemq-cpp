@@ -21,6 +21,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <decaf/util/Properties.h>
+
 namespace decaf {
 namespace util {
 
@@ -34,13 +36,26 @@ namespace util {
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testClear );
         CPPUNIT_TEST( testEquals );
+        CPPUNIT_TEST( testLoadNPE );
+        CPPUNIT_TEST( testLoadInputStream );
+        CPPUNIT_TEST( testPropertyNames );
+        CPPUNIT_TEST( testPropertyNamesOverride );
+        CPPUNIT_TEST( testPropertyNamesScenario1 );
+        CPPUNIT_TEST( testStoreOutputStream );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        Properties testProperties;
 
     public:
 
         PropertiesTest() {}
 
         virtual ~PropertiesTest() {}
+
+        virtual void setUp();
+        virtual void tearDown();
 
         void testPutAndGet();
         void testAssign();
@@ -49,6 +64,12 @@ namespace util {
         void testRemove();
         void testClear();
         void testEquals();
+        void testLoadNPE();
+        void testLoadInputStream();
+        void testPropertyNames();
+        void testPropertyNamesOverride();
+        void testPropertyNamesScenario1();
+        void testStoreOutputStream();
 
     };
 
