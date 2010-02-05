@@ -21,6 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/Exception.h>
 
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+
 #include <string>
 
 namespace decaf {
@@ -38,6 +40,10 @@ namespace logging {
      * @since 1.0
      */
     class DECAF_API ErrorManager {
+    private:
+
+        decaf::util::concurrent::atomic::AtomicBoolean wasCalled;
+
     public:
 
         /**
@@ -72,6 +78,8 @@ namespace logging {
 
     public:
 
+        ErrorManager();
+
         virtual ~ErrorManager();
 
         /**
@@ -80,11 +88,11 @@ namespace logging {
          * This method may be overridden in subclasses. The default behavior in this base class is
          * that the first call is reported to System.err, and subsequent calls are ignored.
          *
-         * @param msg - a descriptive string (may be null)
-         * @param ex - an exception (may be null)
+         * @param msg - a descriptive string (may be empty)
+         * @param ex - an exception (may be NULL)
          * @param code - an error code defined in ErrorManager
          */
-        virtual void error( const std::string& message, decaf::lang::Exception& ex, int code ) = 0;
+        virtual void error( const std::string& message, decaf::lang::Exception* ex, int code );
 
     };
 
