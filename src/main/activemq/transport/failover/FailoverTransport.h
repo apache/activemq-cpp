@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Command.h>
+#include <activemq/commands/ConnectionId.h>
 #include <activemq/threads/TaskRunner.h>
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
@@ -67,10 +68,14 @@ namespace failover {
         bool useExponentialBackOff;
         bool initialized;
         int maxReconnectAttempts;
+        int startupMaxReconnectAttempts;
         int connectFailures;
         long long reconnectDelay;
         bool trackMessages;
+        bool trackTransactionProducers;
         int maxCacheSize;
+        bool connectionInterruptProcessingComplete;
+        bool firstConnection;
 
         mutable decaf::util::concurrent::Mutex reconnectMutex;
         mutable decaf::util::concurrent::Mutex sleepMutex;
@@ -368,6 +373,14 @@ namespace failover {
             this->maxReconnectAttempts = value;
         }
 
+        int getStartupMaxReconnectAttempts() const {
+            return this->startupMaxReconnectAttempts;
+        }
+
+        void setStartupMaxReconnectAttempts( int value ) {
+            this->startupMaxReconnectAttempts = value;
+        }
+
         long long getReconnectDelay() const {
             return this->reconnectDelay;
         }
@@ -400,6 +413,14 @@ namespace failover {
             this->trackMessages = value;
         }
 
+        bool isTrackTransactionProducers() const {
+            return this->trackTransactionProducers;
+        }
+
+        void setTrackTransactionProducers( bool value ) {
+            this->trackTransactionProducers = value;
+        }
+
         int getMaxCacheSize() const {
             return this->maxCacheSize;
         }
@@ -407,6 +428,8 @@ namespace failover {
         void setMaxCacheSize( int value ) {
             this->maxCacheSize = value;
         }
+
+        void setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId );
 
     protected:
 

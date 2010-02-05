@@ -25,10 +25,13 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/exceptions/BrokerException.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/transport/failover/FailoverTransport.h>
 
+#include <decaf/lang/Math.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/util/UUID.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 
 #include <activemq/commands/Command.h>
 #include <activemq/commands/ActiveMQMessage.h>
@@ -56,9 +59,12 @@ using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
+using namespace activemq::transport;
+using namespace activemq::transport::failover;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -224,7 +230,12 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
             return;
         }
 
-        // Indicates we are on the way out to squelch any exceptions getting
+        // If we are running lets stop first.
+        if( !this->transportFailed.get() ) {
+            this->stop();
+        }
+
+        // Indicates we are on the way out to suppress any exceptions getting
         // passed on from the transport as it goes down.
         this->closing.set( true );
 
@@ -234,18 +245,23 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
             allSessions = activeSessions.toArray();
         }
 
+        long long lastDeliveredSequenceId = 0;
+
         // Close all of the resources.
         for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
-            cms::Session* session = allSessions[ix];
+            ActiveMQSession* session = allSessions[ix];
             try{
                 session->close();
+
+                lastDeliveredSequenceId =
+                    Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
             } catch( cms::CMSException& ex ){
                 /* Absorb */
             }
         }
 
         // Now inform the Broker we are shutting down.
-        this->disconnect();
+        this->disconnect( lastDeliveredSequenceId );
 
         // Once current deliveries are done this stops the delivery
         // of any new messages.
@@ -261,15 +277,16 @@ void ActiveMQConnection::start() throw ( cms::CMSException ) {
 
         enforceConnected();
 
-        // This starts or restarts the delivery of all incomming messages
+        // This starts or restarts the delivery of all incoming messages
         // messages delivered while this connection is stopped are dropped
         // and not acknowledged.
-        this->started.set( true );
+        if( this->started.compareAndSet( false, true ) ) {
 
-        // Start all the sessions.
-        std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
-        for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
-            sessions[ix]->start();
+            // Start all the sessions.
+            std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
+            for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
+                sessions[ix]->start();
+            }
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -284,12 +301,12 @@ void ActiveMQConnection::stop() throw ( cms::CMSException ) {
 
         // Once current deliveries are done this stops the delivery of any
         // new messages.
-        this->started.set( false );
+        if( this->started.compareAndSet( true, false ) ) {
+            std::auto_ptr< Iterator<ActiveMQSession*> > iter( activeSessions.iterator() );
 
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( activeSessions.iterator() );
-
-        while( iter->hasNext() ){
-            iter->next()->stop();
+            while( iter->hasNext() ){
+                iter->next()->stop();
+            }
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -329,13 +346,14 @@ void ActiveMQConnection::connect() throw ( activemq::exceptions::ActiveMQExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disconnect() throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
         // Remove our ConnectionId from the Broker
-        Pointer<RemoveInfo> command( new RemoveInfo() );
-        command->setObjectId( this->connectionInfo->getConnectionId() );
+        Pointer<RemoveInfo> command( this->connectionInfo->createRemoveCommand() );
+        command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
         this->syncRequest( command, this->getCloseTimeout() );
 
         // Send the disconnect command to the broker.
@@ -440,6 +458,9 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
             Pointer<MessageDispatch> dispatch = command.dynamicCast<MessageDispatch>();
 
+            // Check first to see if we are recovering.
+            waitForTransportInterruptionProcessingToComplete();
+
             // Check for an empty Message, shouldn't ever happen but who knows.
             if( dispatch->getMessage() == NULL ) {
                 throw ActiveMQException(
@@ -527,6 +548,9 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
             return;
         }
 
+        // Mark this Connection as having a Failed transport.
+        this->transportFailed.set( true );
+
         // Inform the user of the error.
         fire( exceptions::ActiveMQException( ex ) );
 
@@ -547,6 +571,8 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportInterrupted() {
+
+    transportInterruptionProcessingComplete.reset( new CountDownLatch( dispatchers.size() ) );
 
     synchronized( &activeSessions ) {
         std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->activeSessions.iterator() );
@@ -692,5 +718,60 @@ void ActiveMQConnection::removeTransportListener( TransportListener* transportLi
     // Remove this listener from the set of active TransportListeners
     synchronized( &transportListeners ) {
         transportListeners.remove( transportListener );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
+    throw( decaf::lang::exceptions::InterruptedException ) {
+
+    if( transportInterruptionProcessingComplete != NULL ) {
+
+        while( !closed.get() && !transportFailed.get() &&
+               !transportInterruptionProcessingComplete->await( 15, TimeUnit::SECONDS) ) {
+
+            //LOG.warn( "dispatch paused, waiting for outstanding dispatch interruption processing (" +
+            //          transportInterruptionProcessingComplete.getCount() + ") to complete..");
+        }
+
+        signalInterruptionProcessingComplete();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
+
+    synchronized( &mutex ) {
+
+        if( transportInterruptionProcessingComplete != NULL ) {
+            transportInterruptionProcessingComplete->countDown();
+
+            try {
+                signalInterruptionProcessingComplete();
+            } catch( InterruptedException& ignored ) {}
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::signalInterruptionProcessingComplete()
+    throw( decaf::lang::exceptions::InterruptedException ) {
+
+    if( transportInterruptionProcessingComplete->await( 0, TimeUnit::SECONDS ) ) {
+        synchronized( &mutex ) {
+
+            transportInterruptionProcessingComplete.reset( NULL );
+            FailoverTransport* failoverTransport =
+                dynamic_cast<FailoverTransport*>( this->getTransport().narrow( typeid( FailoverTransport ) ) );
+
+            if( failoverTransport != NULL ) {
+                failoverTransport->setConnectionInterruptProcessingComplete(
+                    this->connectionInfo->getConnectionId() );
+
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("transportInterruptionProcessingComplete for: " + this.getConnectionInfo().getConnectionId());
+                //}
+            }
+        }
     }
 }

@@ -95,6 +95,8 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(
             Boolean::parseBoolean( properties.getProperty( "useExponentialBackOff", "true" ) ) );
         transport->setMaxReconnectAttempts(
             Integer::parseInt( properties.getProperty( "maxReconnectAttempts", "0" ) ) );
+        transport->setStartupMaxReconnectAttempts(
+            Integer::parseInt( properties.getProperty( "startupMaxReconnectAttempts", "0" ) ) );
         transport->setRandomize(
             Boolean::parseBoolean( properties.getProperty( "randomize", "true" ) ) );
         transport->setBackup(

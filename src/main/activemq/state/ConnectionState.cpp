@@ -25,6 +25,7 @@ using namespace activemq::state;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) : disposed( false ) {
 
+    this->connectionInterruptProcessingComplete = true;
     this->info = info;
 }
 

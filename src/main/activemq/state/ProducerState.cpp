@@ -17,6 +17,8 @@
 
 #include "ProducerState.h"
 
+#include <activemq/state/TransactionState.h>
+
 using namespace activemq;
 using namespace activemq::state;
 using namespace activemq::commands;
@@ -38,4 +40,14 @@ std::string ProducerState::toString() const {
     }
 
     return "NULL";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ProducerState::setTransactionState( const Pointer<TransactionState>& transactionState ) {
+    this->transactionState = transactionState;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<TransactionState> ProducerState::getTransactionState() const {
+    return this->transactionState;
 }

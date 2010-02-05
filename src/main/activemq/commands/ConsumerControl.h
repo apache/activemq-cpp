@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BaseCommand.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/util/Config.h>
@@ -47,6 +48,7 @@ namespace commands{
     class AMQCPP_API ConsumerControl : public BaseCommand {
     protected:
 
+        Pointer<ActiveMQDestination> destination;
         bool close;
         Pointer<ConsumerId> consumerId;
         int prefetch;
@@ -104,6 +106,10 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
         virtual bool isClose() const;
         virtual void setClose( bool close );

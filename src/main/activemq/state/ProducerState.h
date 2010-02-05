@@ -32,10 +32,13 @@ namespace state {
     using namespace decaf::lang;
     using namespace activemq::commands;
 
+    class TransactionState;
+
     class AMQCPP_API ProducerState {
     private:
 
         Pointer<ProducerInfo> info;
+        Pointer<TransactionState> transactionState;
 
     public:
 
@@ -48,6 +51,10 @@ namespace state {
         const Pointer<ProducerInfo>& getInfo() const {
             return this->info;
         }
+
+        void setTransactionState( const Pointer<TransactionState>& transactionState );
+
+        Pointer<TransactionState> getTransactionState() const;
 
     };
 
