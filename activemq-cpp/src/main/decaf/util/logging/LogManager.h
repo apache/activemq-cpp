@@ -22,16 +22,23 @@
 #include <string>
 #include <vector>
 
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
 
 namespace decaf{
+namespace lang{
+    class Runtime;
+}
 namespace util{
 namespace logging{
 
     class Logger;
+    class LogManagerInternals;
     class PropertyChangeListener;
+
+    using decaf::lang::Pointer;
 
     /**
      * There is a single global LogManager object that is used to maintain
@@ -127,6 +134,8 @@ namespace logging{
      * the tree.
      *
      * All methods on the LogManager object are multi-thread safe.
+     *
+     * @since 1.0
      */
     class DECAF_API LogManager {
     private:
@@ -136,6 +145,9 @@ namespace logging{
 
         // Properties of the Log Manager
         util::Properties properties;
+
+        // Data structure for LogManager Internal data.
+        Pointer<LogManagerInternals> internal;
 
     public:
 
@@ -199,28 +211,29 @@ namespace logging{
     public:     // Static Singleton Methods.
 
         /**
-         * Get the singleton instance
-         * @return Pointer to an instance of the Log Manager
+         * Get the global {@code LogManager} instance.
+         * @return A reference to the global LogManager instaince.
          */
-        static LogManager* getInstance();
+        static LogManager& getLogManager();
+
+    private:
 
         /**
-         * Returns a Checked out instance of this Manager
+         * Initialize the Logging subsystem.
          */
-        static void returnInstance();
+        static void initialize();
 
         /**
-         * Forcefully Delete the Instance of this LogManager
-         * even if there are outstanding references.
+         * Shutdown the Logging subsystem.
          */
-        static void destroy();
+        static void shutdown();
 
     protected:
 
         /**
          * Constructor, hidden to protect against direct instantiation
          */
-        LogManager() {}
+        LogManager();
 
         /**
          * Copy Constructo
@@ -233,6 +246,10 @@ namespace logging{
          * @param manager the manager to assign from
          */
         void operator=( const LogManager& manager );
+
+    private:
+
+        friend class decaf::lang::Runtime;
 
     };
 

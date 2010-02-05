@@ -14,29 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_UTIL_LOGGING_LOGGERCOMMON_H_
-#define _DECAF_UTIL_LOGGING_LOGGERCOMMON_H_
 
-namespace decaf{
-namespace util{
-namespace logging{
+#include "ErrorManager.h"
 
-    /**
-     * Defines an enumeration for logging levels
-     */
-    enum Levels
-    {
-        Off,
-        Null,
-        Markblock,
-        Debug,
-        Info,
-        Warn,
-        Error,
-        Fatal,
-        Throwing
-    };
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::logging;
 
-}}}
+////////////////////////////////////////////////////////////////////////////////
+const int ErrorManager::GENERIC_FAILURE = 1;
+const int ErrorManager::WRITE_FAILURE = 2;
+const int ErrorManager::FLUSH_FAILURE = 3;
+const int ErrorManager::CLOSE_FAILURE = 4;
+const int ErrorManager::OPEN_FAILURE = 5;
+const int ErrorManager::FORMAT_FAILURE = 6;
 
-#endif /*_DECAF_UTIL_LOGGING_LOGGERCOMMON_H_ */
+////////////////////////////////////////////////////////////////////////////////
+ErrorManager::~ErrorManager() {
+}

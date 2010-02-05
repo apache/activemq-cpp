@@ -17,6 +17,9 @@
 #ifndef _DECAF_UTIL_LOGGING_FORMATTER_H_
 #define _DECAF_UTIL_LOGGING_FORMATTER_H_
 
+#include <decaf/util/Config.h>
+#include <decaf/util/logging/Handler.h>
+
 namespace decaf{
 namespace util{
 namespace logging{

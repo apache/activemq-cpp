@@ -25,14 +25,13 @@ using namespace decaf::util::concurrent;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-SimpleLogger::SimpleLogger( const std::string& name )
-{
+SimpleLogger::SimpleLogger( const std::string& name ) {
     this->name = name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SimpleLogger::~SimpleLogger()
-{}
+SimpleLogger::~SimpleLogger() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void SimpleLogger::mark( const std::string& message ) {

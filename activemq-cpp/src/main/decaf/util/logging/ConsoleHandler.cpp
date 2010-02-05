@@ -14,29 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_UTIL_LOGGING_LOGGERCOMMON_H_
-#define _DECAF_UTIL_LOGGING_LOGGERCOMMON_H_
 
-namespace decaf{
-namespace util{
-namespace logging{
+#include "ConsoleHandler.h"
 
-    /**
-     * Defines an enumeration for logging levels
-     */
-    enum Levels
-    {
-        Off,
-        Null,
-        Markblock,
-        Debug,
-        Info,
-        Warn,
-        Error,
-        Fatal,
-        Throwing
-    };
+#include <decaf/util/logging/Level.h>
 
-}}}
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::logging;
 
-#endif /*_DECAF_UTIL_LOGGING_LOGGERCOMMON_H_ */
+////////////////////////////////////////////////////////////////////////////////
+ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
+
+    // Defaults level to Info
+    setLevel( Level::INFO );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsoleHandler::close() throw ( decaf::io::IOException )
+{
+    if( getOutputStream() ) {
+        getOutputStream()->flush();
+    }
+}

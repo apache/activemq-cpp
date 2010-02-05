@@ -17,15 +17,27 @@
 #ifndef _DECAF_UTIL_LOGGING_LOGRECORD_H_
 #define _DECAF_UTIL_LOGGING_LOGRECORD_H_
 
+#include <decaf/lang/Throwable.h>
 #include <decaf/util/logging/LoggerCommon.h>
+#include <decaf/util/logging/Level.h>
 #include <decaf/util/Config.h>
 
+#include <memory>
 #include <string>
 
 namespace decaf{
 namespace util{
 namespace logging{
 
+    /**
+     * LogRecord objects are used to pass logging requests between the logging framework and
+     * individual log Handlers.
+     *
+     * When a LogRecord is passed into the logging framework it logically belongs to the framework
+     * and should no longer be used or updated by the client application.
+     *
+     * @since 1.0
+     */
     class DECAF_API LogRecord {
     private:
 
@@ -39,7 +51,7 @@ namespace logging{
         std::string sourceFile;
 
         // Line in the source file where log occurred
-        unsigned long sourceLine;
+        unsigned int sourceLine;
 
         // The message to Log.
         std::string message;
@@ -48,15 +60,19 @@ namespace logging{
         std::string functionName;
 
         // Time in Mills since UTC that this Record was logged
-        unsigned long timeStamp;
+        long long timeStamp;
 
         // Thread Id of the Thread that logged this Record
-        unsigned long threadId;
+        long long threadId;
+
+        // A Throwable that is associated with this record
+        std::auto_ptr<decaf::lang::Throwable> thrown;
 
     public:
 
-        LogRecord() {}
-        virtual ~LogRecord() {}
+        LogRecord();
+
+        virtual ~LogRecord();
 
         /**
          * Get Level of this log record
@@ -110,7 +126,7 @@ namespace logging{
          * Gets the Source Log line number
          * @return the source loggers line number
          */
-        unsigned long getSourceLine() const {
+        unsigned int getSourceLine() const {
             return sourceLine;
         };
 
@@ -118,7 +134,7 @@ namespace logging{
          * Sets the Source Log line number
          * @param sourceLine the source logger's line number
          */
-        void setSourceLine( long sourceLine ) {
+        void setSourceLine( unsigned int sourceLine ) {
             this->sourceLine = sourceLine;
         };
 
@@ -158,13 +174,13 @@ namespace logging{
          * Gets the time in mills that this message was logged.
          * @return UTC time in milliseconds
          */
-        unsigned long getTimestamp() const { return timeStamp; };
+        long long getTimestamp() const { return timeStamp; };
 
         /**
          * Sets the time in mills that this message was logged.
          * @param timeStamp UTC Time in Milliseconds.
          */
-        void setTimestamp( long timeStamp ) {
+        void setTimestamp( long long timeStamp ) {
             this->timeStamp = timeStamp;
         };
 
@@ -172,7 +188,7 @@ namespace logging{
          * Gets the Thread Id where this Log was created
          * @return the source loggers line number
          */
-        unsigned long getTreadId() const {
+        long long getTreadId() const {
             return threadId;
         };
 
@@ -180,9 +196,30 @@ namespace logging{
          * Sets the Thread Id where this Log was created
          * @param threadId the source logger's line number
          */
-        void setTreadId( long threadId ) {
+        void setTreadId( long long threadId ) {
             this->threadId = threadId;
         };
+
+        /**
+         * Gets any Throwable associated with this LogRecord
+         * @return point to a Throwable instance or Null.
+         */
+        decaf::lang::Throwable* getThrown() const {
+            return this->thrown.get();
+        }
+
+        /**
+         * Sets the Throwable associated with this LogRecord, the pointer becomes
+         * the property of this instance of the LogRecord and will be deleted when
+         * the record is destroyed.
+         *
+         * @param thrown
+         *      A pointer to a Throwable that will be associated with this record.
+         */
+        void setThrown( decaf::lang::Throwable* thrown ) {
+            this->thrown.reset( thrown );
+        }
+
     };
 
 }}}

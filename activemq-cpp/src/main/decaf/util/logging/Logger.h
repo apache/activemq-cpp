@@ -49,7 +49,7 @@ namespace logging{
         Filter* filter;
 
         // The Log Level of this Logger
-        Level level;
+        Levels level;
 
         // Using Parent Handlers?
         bool useParentHandlers;
@@ -133,7 +133,7 @@ namespace logging{
          * effective level will be inherited from its parent.
          * @return the level that is currently set
          */
-        virtual Level getLevel() const {
+        virtual Levels getLevel() const {
             return level;
         }
 
@@ -148,7 +148,7 @@ namespace logging{
          * specific (non-null) level value.
          * @param level new Level value
          */
-        virtual void setLevel( Level level ) {
+        virtual void setLevel( Levels level ) {
             this->level = level;
         }
 
@@ -304,7 +304,7 @@ namespace logging{
          * @param level - a message logging level
          * @returns true if the given message level is currently being logged.
          */
-        virtual bool isLoggable( Level level ) const;
+        virtual bool isLoggable( Levels level ) const;
 
         /**
          * Log a LogRecord.
@@ -324,7 +324,7 @@ namespace logging{
          * @param level the Level to log at
          * @param message the message to log
          */
-        virtual void log( Level level, const std::string& message );
+        virtual void log( Levels level, const std::string& message );
 
         /**
          * Log a message, with the list of params that is formatted into
@@ -338,7 +338,7 @@ namespace logging{
          * @param line the line in the file
          * @param ... variable length argument to format the message string.
          */
-        virtual void log( Level level,
+        virtual void log( Levels levels,
                           const std::string& file,
                           const int line,
                           const std::string& message, ... );
@@ -358,7 +358,7 @@ namespace logging{
          * @param message the message to log.
          * @param ex the Exception to log
          */
-        virtual void log( Level level,
+        virtual void log( Levels level,
                           const std::string& file,
                           const int line,
                           const std::string& message,

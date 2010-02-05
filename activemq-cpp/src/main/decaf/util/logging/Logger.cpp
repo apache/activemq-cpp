@@ -69,7 +69,7 @@ void Logger::setFilter( Filter* filter DECAF_UNUSED ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Logger::isLoggable( Level level DECAF_UNUSED ) const{
+bool Logger::isLoggable( Levels level DECAF_UNUSED ) const{
     return false;
 }
 
@@ -121,12 +121,12 @@ void Logger::fatal( const std::string& file DECAF_UNUSED,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Level level DECAF_UNUSED,
+void Logger::log( Levels level DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Level level DECAF_UNUSED,
+void Logger::log( Levels level DECAF_UNUSED,
                   const std::string& file DECAF_UNUSED,
                   const int line DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED,
@@ -134,7 +134,7 @@ void Logger::log( Level level DECAF_UNUSED,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Level level DECAF_UNUSED,
+void Logger::log( Levels level DECAF_UNUSED,
                   const std::string& file DECAF_UNUSED,
                   const int line DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED, ... ) {
