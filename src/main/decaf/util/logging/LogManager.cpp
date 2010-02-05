@@ -16,26 +16,55 @@
 */
 #include "LogManager.h"
 
+#include <decaf/lang/exceptions/RuntimeException.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/util/logging/PropertiesChangeListener.h>
+#include <decaf/util/logging/Logger.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/Config.h>
 
+#include <string>
 #include <algorithm>
 
 using namespace std;
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager::~LogManager()
-{
+namespace decaf{
+namespace util{
+namespace logging{
+
+    class LogManagerInternals {
+    public:
+
+        StlMap<string, Logger*> loggers;
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    LogManager* theManager = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+LogManager::LogManager() {
+
+    this->internal.reset( new LogManagerInternals() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+LogManager::~LogManager() {
     // TODO - Delete all the loggers.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::setProperties( const Properties& properties )
-{
+void LogManager::setProperties( const Properties& properties ) {
     // Copy the properties
     this->properties = properties;
 
@@ -70,15 +99,26 @@ int LogManager::getLoggerNames( const std::vector<std::string>& names  DECAF_UNU
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager* LogManager::getInstance() {
-    return NULL;
+LogManager& LogManager::getLogManager() {
+
+    if( theManager == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "The Logging Subsystem is not initialized." );
+    }
+
+    return *theManager;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::returnInstance() {
+void LogManager::initialize() {
+
+    // Initialize the global instance.
+    theManager = new LogManager;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::destroy()
-{
+void LogManager::shutdown() {
+
+    // Destroy the global LogManager
+    delete theManager;
 }

@@ -18,7 +18,9 @@
 #define _DECAF_UTIL_LOGGING_HANDLER_H_
 
 #include <decaf/io/Closeable.h>
+#include <decaf/lang/Exception.h>
 #include <decaf/util/logging/LogRecord.h>
+#include <decaf/util/logging/Level.h>
 
 namespace decaf{
 namespace util{
@@ -26,6 +28,7 @@ namespace logging{
 
     class Filter;
     class Formatter;
+    class ErrorManager;
 
     /**
      * A Handler object takes log messages from a Logger and exports them.
@@ -65,7 +68,7 @@ namespace logging{
          * LogRecord.
          * @param record <code>LogRecord</code> to check
          */
-        virtual void isLoggable( const LogRecord& record ) = 0;
+        virtual bool isLoggable( const LogRecord& record ) const = 0;
 
         /**
          * Sets the Filter that this Handler uses to filter Log Records
@@ -75,7 +78,7 @@ namespace logging{
          * discarded.
          * @param filter <code>Filter</code> derived instance
          */
-        virtual void setFilter( const Filter* filter ) = 0;
+        virtual void setFilter( Filter* filter ) = 0;
 
         /**
          * Gets the Filter that this Handler uses to filter Log Records
@@ -91,7 +94,7 @@ namespace logging{
          * but to limit the messages that are sent to certain Handlers.
          * @param value Level enumeration value
          */
-        virtual void setLevel( Level value ) = 0;
+        virtual void setLevel( const Level& value ) = 0;
 
         /**
          * Get the log level specifying which message levels will be logged
@@ -107,13 +110,29 @@ namespace logging{
          * Formatter will be remembered, but not used.
          * @param formatter <code>Filter</code> derived instance
          */
-        virtual void setFormatter( const Formatter* formatter ) = 0;
+        virtual void setFormatter( Formatter* formatter ) = 0;
 
         /**
          * Gets the <code>Formatter</code> used by this Handler
          * @returns <code>Filter</code> derived instance
          */
         virtual const Formatter* getFormatter() = 0;
+
+        /**
+         * Sets the <code>Formatter</code> used by this Handler
+         * <p>
+         * The ErrorManager's "error" method will be invoked if any errors occur while
+         * using this Handler.
+         *
+         * @param errorManager <code>ErrorManager</code> derived instance
+         */
+        virtual void setErrorManager( ErrorManager* errorManager ) = 0;
+
+        /**
+         * Gets the <code>ErrorManager</code> used by this Handler.
+         * @returns <code>ErrorManager</code> derived pointer or NULL.
+         */
+        virtual const ErrorManager* getErrorManager() = 0;
 
    };
 

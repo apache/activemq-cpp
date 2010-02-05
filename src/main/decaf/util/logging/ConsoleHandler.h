@@ -17,8 +17,11 @@
 #ifndef _DECAF_UTIL_LOGGING_CONSOLEHANDLER_H_
 #define _DECAF_UTIL_LOGGING_CONSOLEHANDLER_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/util/logging/StreamHandler.h>
-#include <decaf/io/StandardErrorOutputStream.h>
+#include <decaf/util/logging/SimpleFormatter.h>
+#include <decaf/io/IOException.h>
+#include <decaf/internal/io/StandardErrorOutputStream.h>
 
 namespace decaf{
 namespace util{
@@ -39,23 +42,21 @@ namespace logging{
      *  (defaults to no Filter).
      * ConsoleHandler.formatter specifies the name of a Formatter class to
      *  use (defaults to SimpleFormatter).
+     *
+     * @since 1.0
      */
     class DECAF_API ConsoleHandler : public StreamHandler {
     private:
 
         // The Standard Error Stream to log to
-        io::StandardErrorOutputStream stream;
+        internal::io::StandardErrorOutputStream stream;
 
         // The default Simple Formatter
         SimpleFormatter formatter;
 
     public:
 
-        ConsoleHandler() : StreamHandler( &stream, &formatter ) {
-
-            // Defaults level to Info
-            setLevel( Level.INFO );
-        }
+        ConsoleHandler();
 
         virtual ~ConsoleHandler() {}
 
@@ -66,15 +67,10 @@ namespace logging{
          * but doesn't close.
          * @throw IOException
          */
-        virtual void close() throw ( IOException )
-        {
-            if( getOutputStream() ) {
-                getOutputStream->flush();
-            }
-        }
+        virtual void close() throw ( decaf::io::IOException );
 
     };
 
-}})
+}}}
 
 #endif /*_DECAF_UTIL_LOGGING_CONSOLEHANDLER_H_*/

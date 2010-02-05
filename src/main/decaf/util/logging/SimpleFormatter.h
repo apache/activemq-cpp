@@ -17,7 +17,10 @@
 #ifndef _DECAF_UTIL_LOGGING_SIMPLEFORMATTER_H_
 #define _DECAF_UTIL_LOGGING_SIMPLEFORMATTER_H_
 
-#include <decaf/util/logging/formatter.h>
+#include <decaf/util/Config.h>
+#include <decaf/util/logging/Formatter.h>
+
+#include <string>
 
 namespace decaf{
 namespace util{
@@ -30,24 +33,20 @@ namespace logging{
     class DECAF_API SimpleFormatter : public Formatter {
     public:
 
-        SimpleFormatter() {}
-        virtual ~SimpleFormatter() {}
+        SimpleFormatter();
+        virtual ~SimpleFormatter();
 
         /**
          * Format the given log record and return the formatted string.
          * @param record The Log Record to Format
          */
-        virtual std::string format( const LogRecord& record ) const {
-            return "";
-        }
+        virtual std::string format( const LogRecord& record ) const;
 
         /**
          * Format the message string from a log record.
          * @param record The Log Record to Format
          */
-         virtual std::string formatMessage( const LogRecord& record ) const{
-            return record.getMessage();
-        }
+         virtual std::string formatMessage( const LogRecord& record ) const;
 
         /**
          * Return the header string for a set of formatted records.  In the
@@ -55,9 +54,7 @@ namespace logging{
          * @param handler the target handler, can be null
          * @return empty string
          */
-        virtual std::string getHead( const Handler* handler ) {
-            return "";
-        }
+        virtual std::string getHead( const Handler* handler );
 
         /**
          * Return the tail string for a set of formatted records.  In the
@@ -65,9 +62,7 @@ namespace logging{
          * @param handler the target handler, can be null
          * @return empty string
          */
-        virtual std::string getTail( const Handler* handler ) {
-            return "";
-        }
+        virtual std::string getTail( const Handler* handler );
 
     };
 

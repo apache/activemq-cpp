@@ -554,11 +554,17 @@ cc_sources = \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
+    decaf/util/logging/ConsoleHandler.cpp \
+    decaf/util/logging/ErrorManager.cpp \
+    decaf/util/logging/Level.cpp \
     decaf/util/logging/LogManager.cpp \
+    decaf/util/logging/LogRecord.cpp \
     decaf/util/logging/LogWriter.cpp \
     decaf/util/logging/Logger.cpp \
     decaf/util/logging/LoggerHierarchy.cpp \
-    decaf/util/logging/SimpleLogger.cpp
+    decaf/util/logging/SimpleFormatter.cpp \
+    decaf/util/logging/SimpleLogger.cpp \
+    decaf/util/logging/StreamHandler.cpp
 
 
 h_sources = \
@@ -1126,6 +1132,7 @@ h_sources = \
     decaf/io/EOFException.h \
     decaf/io/FilterInputStream.h \
     decaf/io/FilterOutputStream.h \
+    decaf/io/Flushable.h \
     decaf/io/IOException.h \
     decaf/io/InputStream.h \
     decaf/io/InterruptedIOException.h \
@@ -1270,9 +1277,11 @@ h_sources = \
     decaf/util/concurrent/locks/ReadWriteLock.h \
     decaf/util/concurrent/locks/ReentrantLock.h \
     decaf/util/logging/ConsoleHandler.h \
+    decaf/util/logging/ErrorManager.h \
     decaf/util/logging/Filter.h \
     decaf/util/logging/Formatter.h \
     decaf/util/logging/Handler.h \
+    decaf/util/logging/Level.h \
     decaf/util/logging/LogManager.h \
     decaf/util/logging/LogRecord.h \
     decaf/util/logging/LogWriter.h \
