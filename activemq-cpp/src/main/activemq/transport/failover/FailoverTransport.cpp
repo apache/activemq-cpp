@@ -51,14 +51,18 @@ FailoverTransport::FailoverTransport() {
     this->useExponentialBackOff = true;
     this->initialized = false;
     this->maxReconnectAttempts = 0;
+    this->startupMaxReconnectAttempts = 0;
     this->connectFailures = 0;
     this->reconnectDelay = this->initialReconnectDelay;
     this->trackMessages = false;
+    this->trackTransactionProducers = true;
     this->maxCacheSize = 128 * 1024;
 
     this->started = false;
     this->closed = false;
     this->connected = false;
+    this->connectionInterruptProcessingComplete = false;
+    this->firstConnection = true;
 
     this->transportListener = NULL;
     this->uris.reset( new URIPool() );
@@ -188,8 +192,8 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
                     return;
                 }
 
-                if( command->isRemoveInfo() ) {
-                    // Simulate response to RemoveInfo command
+                if( command->isRemoveInfo() || command->isMessageAck() ) {
+                    // Simulate response to RemoveInfo command or Ack as they will be stale.
                     stateTracker.track( command );
                     Pointer<Response> response( new Response() );
                     response->setCorrelationId( command->getCommandId() );
@@ -332,6 +336,7 @@ void FailoverTransport::start() throw( IOException ) {
 
             stateTracker.setMaxCacheSize( this->getMaxCacheSize() );
             stateTracker.setTrackMessages( this->isTrackMessages() );
+            stateTracker.setTrackTransactionProducers( this->isTrackTransactionProducers() );
 
             if( connectedTransport != NULL ) {
                 stateTracker.restore( connectedTransport );
@@ -454,7 +459,6 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
         // Hand off to the close task so it gets done in a different thread.
         closeTask->add( transport );
-        taskRunner->wakeup();
 
         synchronized( &reconnectMutex ) {
 
@@ -463,13 +467,18 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
             connectedTransportURI.reset( NULL );
             connected = false;
 
+            // Notify before we attempt to reconnect so that the consumers have a chance
+            // to cleanup their state.
+            if( transportListener != NULL ) {
+                transportListener->transportInterrupted();
+            }
+
+            // Place the State Tracker into a reconnection state.
+            this->stateTracker.transportInterrupted();
+
             if( started ) {
                 taskRunner->wakeup();
             }
-        }
-
-        if( transportListener != NULL ) {
-            transportListener->transportInterrupted();
         }
     }
 }
@@ -578,6 +587,10 @@ bool FailoverTransport::iterate() {
                             transport->setTransportListener( disposedListener.get() );
                         }
 
+                        try{
+                            transport->stop();
+                        } catch(...) {}
+
                         // Hand off to the close task so it gets done in a different thread
                         // this prevents a deadlock from occurring if the Transport happens
                         // to call back through our onException method or locks in some other
@@ -616,6 +629,10 @@ bool FailoverTransport::iterate() {
                     transportListener->transportResumed();
                 }
 
+                if( firstConnection ) {
+                    firstConnection = false;
+                }
+
                 //std::cout << "Failover: Successfully connected to Broker at: "
                 //          << connectedTransportURI->toString() << std::endl;
 
@@ -623,7 +640,17 @@ bool FailoverTransport::iterate() {
             }
         }
 
-        if( maxReconnectAttempts > 0 && ++connectFailures >= maxReconnectAttempts ) {
+        int reconnectAttempts = 0;
+        if( firstConnection ) {
+            if( startupMaxReconnectAttempts != 0 ) {
+                reconnectAttempts = startupMaxReconnectAttempts;
+            }
+        }
+        if( reconnectAttempts == 0 ) {
+            reconnectAttempts = maxReconnectAttempts;
+        }
+
+        if( reconnectAttempts > 0 && ++connectFailures >= reconnectAttempts ) {
             connectionFailure = failure;
 
             // Make sure on initial startup, that the transportListener has been initialized
@@ -695,4 +722,12 @@ Pointer<Transport> FailoverTransport::createTransport( const URI& location ) con
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId ) {
+
+    synchronized( &reconnectMutex ) {
+        stateTracker.connectionInterruptProcessingComplete( this, connectionId );
+    }
 }

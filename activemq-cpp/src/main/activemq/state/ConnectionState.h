@@ -30,6 +30,7 @@
 #include <activemq/state/SessionState.h>
 #include <activemq/state/TransactionState.h>
 
+#include <decaf/util/StlMap.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
 #include <decaf/util/StlList.h>
@@ -57,6 +58,11 @@ namespace state {
                           SessionId::COMPARATOR > sessions;
         StlList< Pointer<DestinationInfo> > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
+
+        bool connectionInterruptProcessingComplete;
+        StlMap< Pointer<ConsumerId>,
+                Pointer<ConsumerInfo>,
+                ConsumerId::COMPARATOR > recoveringPullConsumers;
 
     public:
 
@@ -131,6 +137,18 @@ namespace state {
 
         std::vector< Pointer<SessionState> > getSessionStates() const {
             return sessions.values();
+        }
+
+        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR > getRecoveringPullConsumers() {
+            return recoveringPullConsumers;
+        }
+
+        void setConnectionInterruptProcessingComplete(bool connectionInterruptProcessingComplete) {
+            this->connectionInterruptProcessingComplete = connectionInterruptProcessingComplete;
+        }
+
+        bool isConnectionInterruptProcessingComplete() {
+            return this->connectionInterruptProcessingComplete;
         }
 
     };

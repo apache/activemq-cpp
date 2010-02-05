@@ -63,6 +63,7 @@ namespace state {
         bool restoreProducers;
         bool restoreTransaction;
         bool trackMessages;
+        bool trackTransactionProducers;
         int maxCacheSize;
         int currentCacheSize;
 
@@ -80,6 +81,11 @@ namespace state {
 
         void restore( const Pointer<transport::Transport>& transport )
             throw( decaf::io::IOException );
+
+        void connectionInterruptProcessingComplete(
+            transport::Transport* transport, const Pointer<ConnectionId>& connectionId );
+
+        void transportInterrupted();
 
         virtual Pointer<Command> processDestinationInfo( DestinationInfo* info )
             throw ( exceptions::ActiveMQException );
@@ -189,6 +195,14 @@ namespace state {
 
         void setMaxCacheSize( int maxCacheSize ) {
             this->maxCacheSize = maxCacheSize;
+        }
+
+        bool isTrackTransactionProducers() const {
+            return this->trackTransactionProducers;
+        }
+
+        void setTrackTransactionProducers( bool trackTransactionProducers ) {
+            this->trackTransactionProducers = trackTransactionProducers;
         }
 
     private:

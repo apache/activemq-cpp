@@ -35,6 +35,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlSet.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -48,6 +49,7 @@ namespace core{
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicBoolean;
+    using decaf::util::concurrent::CountDownLatch;
 
     class ActiveMQSession;
     class ActiveMQProducer;
@@ -104,6 +106,11 @@ namespace core{
         AtomicBoolean closing;
 
         /**
+         * Indicates that this connection's Transport has failed.
+         */
+        AtomicBoolean transportFailed;
+
+        /**
          * Map of message dispatchers indexed by consumer id.
          */
         DispatcherMap dispatchers;
@@ -137,6 +144,12 @@ namespace core{
          * Command sent from the Broker with its WireFormatInfo
          */
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
+
+        /**
+         * Latch used to track completion of recovery of consumers
+         * after a Connection Interrupted event.
+         */
+        Pointer<CountDownLatch> transportInterruptionProcessingComplete;
 
     public:
 
@@ -214,6 +227,14 @@ namespace core{
          */
         bool isStarted() const {
             return this->started.get();
+        }
+
+        /**
+         * Checks if the Connection's Transport has failed
+         * @return true if the Connection's Transport has failed.
+         */
+        bool isTransportFailed() const {
+            return this->transportFailed.get();
         }
 
         /**
@@ -427,16 +448,30 @@ namespace core{
          */
         virtual void fire( const exceptions::ActiveMQException& ex );
 
+        /**
+         * Indicates that a Connection resource that is processing the transportInterrupted
+         * event has completed.
+         */
+        void setTransportInterruptionProcessingComplete();
+
     private:
 
         // Sends the connect message to the broker and waits for the response.
         void connect() throw ( activemq::exceptions::ActiveMQException );
 
         // Sends a oneway disconnect message to the broker.
-        void disconnect() throw ( activemq::exceptions::ActiveMQException );
+        void disconnect( long long lastDeliveredSequenceId ) throw ( activemq::exceptions::ActiveMQException );
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() const throw ( activemq::exceptions::ActiveMQException );
+
+        // Waits for all Consumers to handle the Transport Interrupted event.
+        void waitForTransportInterruptionProcessingToComplete()
+            throw ( decaf::lang::exceptions::InterruptedException );
+
+        // Marks processing complete for a single caller when interruption processing completes.
+        void signalInterruptionProcessingComplete()
+            throw ( decaf::lang::exceptions::InterruptedException );
 
     };
 

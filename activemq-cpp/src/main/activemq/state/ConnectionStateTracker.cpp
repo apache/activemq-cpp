@@ -20,7 +20,13 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 
+#include <activemq/commands/ConsumerControl.h>
+#include <activemq/commands/RemoveInfo.h>
+#include <activemq/core/ActiveMQConstants.h>
+#include <activemq/transport/TransportListener.h>
+
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::state;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -28,8 +34,6 @@ using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::io;
 using namespace decaf::lang::exceptions;
-
-////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace activemq {
@@ -67,6 +71,7 @@ ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new 
     this->restoreProducers = true;
     this->restoreTransaction = true;
     this->trackMessages = true;
+    this->trackTransactionProducers = true;
     this->maxCacheSize = 128 * 1024;
     this->currentCacheSize = 0;
 }
@@ -153,6 +158,8 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
     try{
 
+        std::vector< Pointer<Command> > toIgnore;
+
         // Restore the session's transaction state
         std::vector< Pointer<TransactionState> > transactionStates =
             connectionState->getTransactionStates();
@@ -160,14 +167,60 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
         std::vector< Pointer<TransactionState> >::const_iterator iter = transactionStates.begin();
 
         for( ; iter != transactionStates.end(); ++iter ) {
-            Pointer<TransactionState> state = *iter;
+
+            //if( LOG.isDebugEnabled() ) {
+            //    LOG.debug("tx: " + transactionState.getId());
+            //}
+
+            // ignore any empty (ack) transaction
+            if( (*iter)->getCommands().size() == 2 ) {
+                Pointer<Command> lastCommand = (*iter)->getCommands().get(1);
+                if( lastCommand->isTransactionInfo() ) {
+                    Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
+
+                    if( transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE ) {
+                        //if( LOG.isDebugEnabled() ) {
+                        //    LOG.debug("not replaying empty (ack) tx: " + transactionState.getId());
+                        //}
+                        toIgnore.push_back(lastCommand);
+                        continue;
+                    }
+                }
+            }
+
+            // replay short lived producers that may have been involved in the transaction
+            std::vector< Pointer<ProducerState> > producerStates = (*iter)->getProducerStates();
+            std::vector< Pointer<ProducerState> >::const_iterator state = producerStates.begin();
+
+            for( ; state != producerStates.end(); ++state ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("tx replay producer :" + producerState.getInfo());
+                //}
+                transport->oneway( (*state)->getInfo() );
+            }
 
             std::auto_ptr< Iterator< Pointer<Command> > > commands(
-                state->getCommands().iterator() );
+                (*iter)->getCommands().iterator() );
 
             while( commands->hasNext() ) {
                 transport->oneway( commands->next() );
             }
+
+            state = producerStates.begin();
+            for( ; state != producerStates.end(); ++state ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("tx remove replayed producer :" + producerState.getInfo());
+                //}
+                transport->oneway( (*state)->getInfo()->createRemoveCommand() );
+            }
+        }
+
+        std::vector< Pointer<Command> >::const_iterator command = toIgnore.begin();
+        for( ; command != toIgnore.end(); ++command ) {
+            // respond to the outstanding commit
+            Pointer<Response> response( new Response() );
+            response->setCorrelationId( (*command)->getCommandId() );
+            transport->getTransportListener()->onCommand( response );
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -212,14 +265,27 @@ void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transp
 
     try{
 
-        // Restore the session's consumers
+        // Restore the session's consumers but possibly in pull only (prefetch 0 state) till recovery complete
+        Pointer<ConnectionState> connectionState =
+            connectionStates.get( sessionState->getInfo()->getSessionId()->getParentId() );
+        bool connectionInterruptionProcessingComplete =
+            connectionState->isConnectionInterruptProcessingComplete();
+
         std::vector< Pointer<ConsumerState> > consumerStates = sessionState->getConsumerStates();
+        std::vector< Pointer<ConsumerState> >::const_iterator state = consumerStates.begin();
 
-        std::vector< Pointer<ConsumerState> >::const_iterator iter = consumerStates.begin();
+        for( ; state != consumerStates.end(); ++state ) {
 
-        for( ; iter != consumerStates.end(); ++iter ) {
-            Pointer<ConsumerState> state = *iter;
-            transport->oneway( state->getInfo() );
+            Pointer<ConsumerInfo> infoToSend = (*state)->getInfo();
+
+            if( !connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0) {
+
+                infoToSend.reset( (*state)->getInfo()->cloneDataStructure() );
+                connectionState->getRecoveringPullConsumers().put( infoToSend->getConsumerId(), (*state)->getInfo() );
+                infoToSend->setPrefetchSize(0);
+            }
+
+            transport->oneway( infoToSend );
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -501,10 +567,12 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
+
         if( message != NULL ) {
             if( trackTransactions && message->getTransactionId() != NULL ) {
-                Pointer<ConnectionId> connectionId =
-                    message->getProducerId()->getParentId()->getParentId();
+                Pointer<ProducerId> producerId = message->getProducerId();
+                Pointer<ConnectionId> connectionId = producerId->getParentId()->getParentId();
+
                 if( connectionId != NULL ) {
                     Pointer<ConnectionState> cs = connectionStates.get( connectionId );
                     if( cs != NULL ) {
@@ -513,6 +581,13 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
                         if( transactionState != NULL ) {
                             transactionState->addCommand(
                                 Pointer<Command>( message->cloneDataStructure() ) );
+
+                            if( trackTransactionProducers ) {
+                                // Track the producer in case it is closed before a commit
+                                Pointer<SessionState> sessionState = cs->getSessionState( producerId->getParentId() );
+                                Pointer<ProducerState> producerState = sessionState->getProducerState(producerId);
+                                producerState->setTransactionState(transactionState);
+                            }
                         }
                     }
                 }
@@ -740,3 +815,55 @@ Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo*
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionStateTracker::connectionInterruptProcessingComplete(
+    transport::Transport* transport, const Pointer<ConnectionId>& connectionId ) {
+
+    Pointer<ConnectionState> connectionState = connectionStates.get( connectionId );
+
+    if( connectionState != NULL ) {
+
+        connectionState->setConnectionInterruptProcessingComplete( true );
+
+        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR > stalledConsumers =
+            connectionState->getRecoveringPullConsumers();
+
+        std::vector< Pointer<ConsumerId> > keySet = stalledConsumers.keySet();
+        std::vector< Pointer<ConsumerId> >::const_iterator key = keySet.begin();
+
+        for( ; key != keySet.end(); ++key ) {
+            Pointer<ConsumerControl> control( new ConsumerControl() );
+
+            control->setConsumerId( *key );
+            control->setPrefetch( stalledConsumers.get( *key )->getPrefetchSize() );
+            control->setDestination( stalledConsumers.get( *key )->getDestination() );
+
+            try {
+
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("restored recovering consumer: " + control.getConsumerId() +
+                //              " with: " + control.getPrefetch());
+                //}
+                transport->oneway( control );
+            } catch( Exception& ex ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("Failed to submit control for consumer: " + control.getConsumerId() +
+                //              " with: " + control.getPrefetch(), ex);
+                //}
+            }
+        }
+
+        stalledConsumers.clear();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionStateTracker::transportInterrupted() {
+
+    std::vector< Pointer<ConnectionState> > connectionStatesVec = this->connectionStates.values();
+    std::vector< Pointer<ConnectionState> >::const_iterator state = connectionStatesVec.begin();
+
+    for( ; state != connectionStatesVec.end(); ++state ) {
+        (*state)->setConnectionInterruptProcessingComplete( false );
+    }
+}

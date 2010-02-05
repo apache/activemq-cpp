@@ -20,11 +20,13 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/Command.h>
+#include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
 
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 
 #include <string>
 #include <memory>
@@ -35,7 +37,10 @@ namespace state {
     using decaf::lang::Pointer;
     using decaf::util::StlList;
     using decaf::util::concurrent::atomic::AtomicBoolean;
+    using decaf::util::concurrent::ConcurrentStlMap;
     using namespace activemq::commands;
+
+    class ProducerState;
 
     class AMQCPP_API TransactionState {
     private:
@@ -45,6 +50,8 @@ namespace state {
         AtomicBoolean disposed;
         bool prepared;
         int preparedResult;
+        ConcurrentStlMap< Pointer<ProducerId>, Pointer<ProducerState>,
+                          ProducerId::COMPARATOR > producers;
 
     public:
 
@@ -85,6 +92,10 @@ namespace state {
         int getPreparedResult() const {
             return this->preparedResult;
         }
+
+        void addProducerState( const Pointer<ProducerState>& producerState );
+
+        std::vector< Pointer<ProducerState> > getProducerStates();
 
     };
 

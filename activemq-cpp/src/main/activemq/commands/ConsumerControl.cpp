@@ -80,6 +80,7 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
     // Copy the data of the base class or classes
     BaseCommand::copyDataStructure( src );
 
+    this->setDestination( srcPtr->getDestination() );
     this->setClose( srcPtr->isClose() );
     this->setConsumerId( srcPtr->getConsumerId() );
     this->setPrefetch( srcPtr->getPrefetch() );
@@ -101,6 +102,13 @@ std::string ConsumerControl::toString() const {
     stream << "ConsumerControl { "
            << "commandId = " << this->getCommandId() << ", "
            << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Destination = ";
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString();
+    } else {
+        stream << "NULL";
+    }
     stream << ", ";
     stream << "Close = " << this->isClose();
     stream << ", ";
@@ -136,6 +144,13 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
         return false;
     }
 
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
     if( this->isClose() != valuePtr->isClose() ) {
         return false;
     }
@@ -162,6 +177,21 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const decaf::lang::Pointer<ActiveMQDestination>& ConsumerControl::getDestination() const {
+    return destination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<ActiveMQDestination>& ConsumerControl::getDestination() {
+    return destination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+    this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
