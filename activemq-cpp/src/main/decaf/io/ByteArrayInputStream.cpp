@@ -56,8 +56,12 @@ void ByteArrayInputStream::setBuffer( const vector<unsigned char>& buffer ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer,
-                                         std::size_t bufferSize ) {
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, std::size_t bufferSize ) {
+
+    if( buffer == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Input Buffer cannot be NULL." );
+    }
 
     // We're using the default buffer.
     this->activeBuffer = &this->defaultBuffer;
@@ -67,8 +71,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer,
     this->defaultBuffer.reserve( bufferSize );
 
     // Copy data to internal buffer.
-    std::back_insert_iterator< std::vector<unsigned char> > iter( this->defaultBuffer );
-    std::copy( buffer, buffer + bufferSize, iter );
+    this->defaultBuffer.insert( this->defaultBuffer.begin(), buffer, buffer + bufferSize );
 
     // Start the stream off at the beginning marking begin as the reset point.
     this->markpos = this->activeBuffer->begin();
@@ -76,36 +79,45 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::reset() throw ( IOException){
-    if( activeBuffer == NULL ){
-        throw IOException( __FILE__, __LINE__, "Buffer has not been initialized" );
-    }
+void ByteArrayInputStream::reset() throw ( IOException ){
 
-    // Begin at the Beginning if mark hasn't been called otherwise it
-    // starts at the marked pos.
-    pos = this->markpos;
+    try{
+
+        if( activeBuffer == NULL ){
+            throw IOException( __FILE__, __LINE__, "Buffer has not been initialized" );
+        }
+
+        // Begin at the Beginning if mark hasn't been called otherwise it
+        // starts at the marked pos.
+        pos = this->markpos;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ByteArrayInputStream::read() throw ( IOException ){
 
-    if( activeBuffer == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::read - Buffer has not been initialized" );
-    }
+    try{
 
-    if( pos == activeBuffer->end() ){
-        return -1;
-    }
+        if( activeBuffer == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "ByteArrayInputStream::read - Buffer has not been initialized" );
+        }
 
-    return *(pos++);
+        if( pos == activeBuffer->end() ){
+            return -1;
+        }
+
+        return *(pos++);
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read( unsigned char* buffer,
-                                std::size_t offset,
-                                std::size_t bufferSize )
+int ByteArrayInputStream::read( unsigned char* buffer, std::size_t offset, std::size_t bufferSize )
     throw ( IOException, lang::exceptions::NullPointerException ){
 
     try{
@@ -150,17 +162,22 @@ int ByteArrayInputStream::read( unsigned char* buffer,
 std::size_t ByteArrayInputStream::skip( std::size_t num )
     throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
-    if( activeBuffer == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::skip - Buffer has not been initialized" );
+    try{
+
+        if( activeBuffer == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "ByteArrayInputStream::skip - Buffer has not been initialized" );
+        }
+
+        std::size_t ix = 0;
+
+        // Increment the position until we've skipped the desired number
+        // or we've hit the end of the buffer.
+        for( ; ix < num && pos != activeBuffer->end(); ++ix, ++pos) {}
+
+        return ix;
     }
-
-    std::size_t ix = 0;
-
-    // Increment the position until we've skipped the desired number
-    // or we've hit the end of the buffer.
-    for( ; ix < num && pos != activeBuffer->end(); ++ix, ++pos) {}
-
-    return ix;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

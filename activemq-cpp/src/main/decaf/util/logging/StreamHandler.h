@@ -19,9 +19,6 @@
 
 #include <decaf/util/logging/LoggerCommon.h>
 #include <decaf/util/logging/Handler.h>
-#include <decaf/util/logging/Formatter.h>
-#include <decaf/util/logging/Filter.h>
-#include <decaf/util/logging/ErrorManager.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/util/concurrent/Concurrent.h>
@@ -30,27 +27,43 @@
 namespace decaf{
 namespace io{
     class OutputStream;
+    class Writer;
 }
 namespace util{
 namespace logging{
 
+    /**
+     * Stream based logging Handler.
+     *
+     * This is primarily intended as a base class or support class to be used in implementing
+     * other logging Handlers.
+     *
+     * LogRecords are published to a given <code>decaf.io.OutputStream</code>.
+     *
+     * Configuration: By default each StreamHandler is initialized using the following LogManager
+     * configuration properties. If properties are not defined (or have invalid values) then the
+     * specified default values are used.
+     *
+     *   * decaf.util.logging.StreamHandler.level specifies the default level for the Handler
+     *     (defaults to Level.INFO).
+     *   * decaf.util.logging.StreamHandler.filter specifies the name of a Filter class to use
+     *     (defaults to no Filter).
+     *   * decaf.util.logging.StreamHandler.formatter specifies the name of a Formatter class
+     *     to use (defaults to decaf.util.logging.SimpleFormatter).
+     *
+     * @since 1.0
+     */
     class DECAF_API StreamHandler : public Handler {
     private:
 
         // OutputStream to write to
         decaf::io::OutputStream* stream;
 
-        // Formats this Handlers output
-        Formatter* formatter;
+        // A Writer to wrap the OutputStream
+        decaf::io::Writer* writer;
 
-        // Filter object for Log Filtering
-        Filter* filter;
-
-        // ErrorManager instance for this Handler
-        ErrorManager* errorManager;
-
-        // Level at which that this Handler will start logging.
-        Level level;
+        // Indicates if the writer has been initialized already
+        bool writerNotInitialized;
 
     public:
 
@@ -101,90 +114,39 @@ namespace logging{
          */
         virtual bool isLoggable( const LogRecord& record ) const;
 
-        /**
-         * Sets the Filter that this Handler uses to filter Log Records
-         * @param filter
-         *      <code>Filter</code> derived instance
-         */
-        virtual void setFilter( Filter* filter ) {
-            this->filter = filter;
-        }
+    protected:
 
         /**
-         * Gets the Filter that this Handler uses to filter Log Records
-         * @return <code>Filter</code> derived instance
-         */
-        virtual const Filter* getFilter() {
-            return filter;
-        }
-
-        /**
-         * Set the log level specifying which message levels will be logged
-         * by this Handler.
-         * <p>
-         * The intention is to allow developers to turn on verbose logging,
-         * but to limit the messages that are sent to certain Handlers.
+         * Change the output stream.
          *
-         * @param level
-         *      Level enumeration value
-         */
-        virtual void setLevel( Level level ) {
-            this->level = level;
-        }
-
-        /**
-         * Get the log level specifying which message levels will be logged
-         * by this Handler.
-         * @return Currently set Level enumeration value
-         */
-        virtual Level getLevel() {
-            return level;
-        }
-
-        /**
-         * Sets the <code>Formatter</code> used by this Handler
-         * @param formatter
-         *      <code>Formatter</code> derived instance
-         */
-        virtual void setFormatter( Formatter* formatter ){
-            this->formatter = formatter;
-        }
-
-        /**
-         * Gets the <code>Formatter</code> used by this Handler
-         * @return currently configured <code>Formatter</code> derived instance
-         */
-        virtual const Formatter* getFormatter(){
-            return formatter;
-        }
-
-        /**
-         * Gets the output Stream that this Handler is using
-         * @return OuputStream pointer used by this handler.
-         */
-        virtual io::OutputStream* getOutputStream() const{
-            return stream;
-        }
-
-        /**
-         * Sets the <code>Formatter</code> used by this Handler
-         * <p>
-         * The ErrorManager's "error" method will be invoked if any errors occur while
-         * using this Handler.
+         * If there is a current output stream then the Formatter's tail string is written and
+         * the stream is flushed and closed. Then the output stream is replaced with the new
+         * output stream.
          *
-         * @param errorManager <code>ErrorManager</code> derived instance
+         * @param stream - New output stream. May not be NULL.
+         *
+         * @throws NullPointerException if the passed stream is NULL.
          */
-        virtual void setErrorManager( ErrorManager* errorManager ) {
-            this->errorManager = errorManager;
-        }
+        virtual void setOuputStream( decaf::io::OutputStream* stream )
+            throw( decaf::lang::exceptions::NullPointerException );
 
         /**
-         * Gets the <code>ErrorManager</code> used by this Handler.
-         * @returns <code>ErrorManager</code> derived pointer or NULL.
+         * Closes this handler, but the underlying output stream is only closed if
+         * {@code closeStream} is {@code true}.
+         *
+         * @param closeStream
+         *            whether to close the underlying output stream.
          */
-        virtual const ErrorManager* getErrorManager() {
-            return this->errorManager;
-        }
+        void close( bool closeStream );
+
+    private:
+
+        // Safely writes the string to the output stream, calling the ErrorManager
+        // if any exceptions are thrown while writing.
+        void write( const std::string& value );
+
+        // Initialize the Writer if its not already been initialized.
+        void initializeWritter();
 
     };
 

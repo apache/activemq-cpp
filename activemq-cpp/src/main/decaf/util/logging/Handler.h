@@ -21,6 +21,9 @@
 #include <decaf/lang/Exception.h>
 #include <decaf/util/logging/LogRecord.h>
 #include <decaf/util/logging/Level.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+
+#include <string>
 
 namespace decaf{
 namespace util{
@@ -44,9 +47,31 @@ namespace logging{
      * specific documentation for each concrete Handler class.
      */
     class DECAF_API Handler : public io::Closeable {
+    private:
+
+        // Default Logging Level for Handler
+        static const Level DEFAULT_LEVEL;
+
+        // Formats this Handlers output
+        Formatter* formatter;
+
+        // Filter object for Log Filtering
+        Filter* filter;
+
+        // ErrorManager instance for this Handler
+        ErrorManager* errorManager;
+
+        // Level at which that this Handler will start logging.
+        Level level;
+
+        // Name of this class used to read properties
+        std::string prefix;
+
     public:
 
-        virtual ~Handler() {}
+        Handler();
+
+        virtual ~Handler();
 
         /**
          * Flush the Handler's output, clears any buffers.
@@ -68,23 +93,28 @@ namespace logging{
          * LogRecord.
          * @param record <code>LogRecord</code> to check
          */
-        virtual bool isLoggable( const LogRecord& record ) const = 0;
+        virtual bool isLoggable( const LogRecord& record ) const;
 
         /**
          * Sets the Filter that this Handler uses to filter Log Records
-         * <p>
+         *
          * For each call of publish the Handler will call this Filter (if it
          * is non-null) to check if the LogRecord should be published or
          * discarded.
+         *
          * @param filter <code>Filter</code> derived instance
          */
-        virtual void setFilter( Filter* filter ) = 0;
+        virtual void setFilter( Filter* filter ) {
+            this->filter = filter;
+        }
 
         /**
          * Gets the Filter that this Handler uses to filter Log Records
          * @returns <code>Filter</code> derived instance
          */
-        virtual const Filter* getFilter() = 0;
+        virtual Filter* getFilter() {
+            return this->filter;
+        }
 
         /**
          * Set the log level specifying which message levels will be logged
@@ -94,14 +124,18 @@ namespace logging{
          * but to limit the messages that are sent to certain Handlers.
          * @param value Level enumeration value
          */
-        virtual void setLevel( const Level& value ) = 0;
+        virtual void setLevel( const Level& value ) {
+            this->level = value;
+        }
 
         /**
          * Get the log level specifying which message levels will be logged
          * by this Handler.
          * @returns Level enumeration value
          */
-        virtual Level getLevel() = 0;
+        virtual Level getLevel() {
+            return this->level;
+        }
 
         /**
          * Sets the <code>Formatter</code> used by this Handler
@@ -110,13 +144,15 @@ namespace logging{
          * Formatter will be remembered, but not used.
          * @param formatter <code>Filter</code> derived instance
          */
-        virtual void setFormatter( Formatter* formatter ) = 0;
+        virtual void setFormatter( Formatter* formatter );
 
         /**
          * Gets the <code>Formatter</code> used by this Handler
          * @returns <code>Filter</code> derived instance
          */
-        virtual const Formatter* getFormatter() = 0;
+        virtual Formatter* getFormatter() {
+            return this->formatter;
+        }
 
         /**
          * Sets the <code>Formatter</code> used by this Handler
@@ -126,15 +162,28 @@ namespace logging{
          *
          * @param errorManager <code>ErrorManager</code> derived instance
          */
-        virtual void setErrorManager( ErrorManager* errorManager ) = 0;
+        virtual void setErrorManager( ErrorManager* errorManager );
 
         /**
          * Gets the <code>ErrorManager</code> used by this Handler.
          * @returns <code>ErrorManager</code> derived pointer or NULL.
          */
-        virtual const ErrorManager* getErrorManager() = 0;
+        virtual ErrorManager* getErrorManager() {
+            return this->errorManager;
+        }
 
-   };
+    protected:
+
+        /**
+         * Protected convenience method to report an error to this Handler's ErrorManager.
+         *
+         * @param message - a descriptive string (may be empty)
+         * @param ex - an exception (may be NULL)
+         * @param code - an error code defined in ErrorManager
+         */
+        void reportError( const std::string& message, decaf::lang::Exception* ex, int code );
+
+    };
 
 }}}
 

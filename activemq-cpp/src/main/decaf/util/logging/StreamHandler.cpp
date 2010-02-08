@@ -18,35 +18,49 @@
 #include "StreamHandler.h"
 
 #include <decaf/util/logging/Level.h>
+#include <decaf/util/logging/Formatter.h>
+#include <decaf/util/logging/ErrorManager.h>
+#include <decaf/util/logging/Filter.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/io/Writer.h>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler() : level( Level::SEVERE ) {
-
+StreamHandler::StreamHandler() : Handler() {
     this->stream = NULL;
-    this->formatter = NULL;
-    this->filter = NULL;
+    this->writerNotInitialized = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) : level( Level::SEVERE ) {
+StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) : Handler() {
+
+    if( stream == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "OutputStream cannot be NULL." );
+    }
+
+    if( formatter == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Formatter cannot be NULL." );
+    }
 
     this->stream = stream;
-    this->formatter = formatter;
-    this->filter = NULL;
+    this->writerNotInitialized = true;
+
+    setFormatter( formatter );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 StreamHandler::~StreamHandler() {
 
     try {
-        this->close();
+        this->close(true);
     }
     DECAF_CATCH_NOTHROW( lang::Exception)
     DECAF_CATCHALL_NOTHROW()
@@ -54,16 +68,23 @@ StreamHandler::~StreamHandler() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void StreamHandler::close() throw ( decaf::io::IOException ) {
-    if( stream ) {
-        stream->flush();
-        stream->close();
-    }
+    this->close( true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StreamHandler::flush() {
-    if( stream ) {
-        stream->flush();
+
+    if( this->stream != NULL ) {
+        try {
+            if( this->writer != NULL ) {
+                this->writer->flush();
+            } else {
+                this->stream->flush();
+            }
+        } catch( Exception& e ) {
+            this->getErrorManager()->error(
+                "Failed to flush the output stream", &e, ErrorManager::FLUSH_FAILURE );
+        }
     }
 }
 
@@ -72,36 +93,97 @@ void StreamHandler::publish( const LogRecord& record ) {
 
     try {
 
-        if( !stream ) {
-            throw lang::exceptions::NullPointerException(
-                __FILE__, __LINE__,
-                "StreamHandler::publish - Stream not set.");
-        }
+        if( this->isLoggable( record ) ) {
 
-        // Check if we should log this record
-        if( isLoggable( record ) ) {
-
-            std::string log = formatter->format( record );
-
-            synchronized( stream ) {
-                // Write the data to the stream
-                stream->write( (const unsigned char*)log.c_str(), 0, log.length() );
+            if( this->writerNotInitialized ) {
+                initializeWritter();
             }
+
+            std::string msg = "";
+            try {
+                msg = getFormatter()->format( record );
+            } catch( Exception& e ) {
+                this->getErrorManager()->error(
+                    "Failed to format the LogRecord", &e, ErrorManager::FORMAT_FAILURE );
+            }
+
+            this->write( msg );
         }
+    } catch( Exception& e ) {
+        this->getErrorManager()->error(
+            "Failed to publish the LogRecord", &e, ErrorManager::GENERIC_FAILURE );
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool StreamHandler::isLoggable( const LogRecord& record ) const {
 
-    if( filter ) {
-        // Allow for some filtering to occur
-        return filter->isLoggable( record );
+    if( this->stream != NULL && Handler::isLoggable( record ) ) {
+        return true;
     }
 
-    // By default we want everything that is greater than our
-    // equal to the set level of this Handler.
-    return record.getLevel().compareTo( this->level ) >= 0;
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StreamHandler::setOuputStream( decaf::io::OutputStream* stream )
+    throw( decaf::lang::exceptions::NullPointerException ) {
+
+    if( stream == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "OutputStream cannot be set to NULL." );
+    }
+
+    this->close( true );
+    this->stream = stream;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StreamHandler::close( bool closeStream ) {
+
+    if( this->stream != NULL ) {
+
+        if( this->writerNotInitialized ) {
+            initializeWritter();
+        }
+
+        this->write( getFormatter()->getTail( this ) );
+
+        try {
+
+            this->writer->flush();
+
+            if( closeStream ) {
+                this->writer->close();
+                this->writer = NULL;
+                this->stream = NULL;
+            }
+
+        } catch( Exception& e ) {
+            this->getErrorManager()->error(
+                "Failed to close the OutputStream", &e, ErrorManager::CLOSE_FAILURE );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StreamHandler::write( const std::string& value ) {
+
+    try{
+        this->stream->write( (const unsigned char*)value.c_str(), 0, value.length() );
+    } catch( Exception& e ) {
+        this->getErrorManager()->error(
+            "Failed to write to the OutputStream", &e, ErrorManager::WRITE_FAILURE );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StreamHandler::initializeWritter() {
+
+    this->writerNotInitialized = false;
+    // TODO
+    //this->writer = new OutputStreamWriter(this.os);
+
+    // Start the Document by writing out the Head element.
+    this->write( getFormatter()->getHead( this ) );
 }

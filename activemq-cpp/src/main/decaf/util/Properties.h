@@ -24,14 +24,16 @@
 #include <decaf/util/StlMap.h>
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
-#include <decaf/io/Reader.h>
-#include <decaf/io/Writer.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/io/IOException.h>
 
 namespace decaf{
+namespace io{
+    class Reader;
+    class Writer;
+}
 namespace util{
 
     class PropertiesInternal;
