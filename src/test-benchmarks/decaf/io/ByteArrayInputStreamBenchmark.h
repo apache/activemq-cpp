@@ -15,23 +15,36 @@
  * limitations under the License.
  */
 
-#include "ConsoleHandler.h"
+#ifndef _DECAF_IO_BYTEARRAYINPUTSTREAMBENCHMARK_H_
+#define _DECAF_IO_BYTEARRAYINPUTSTREAMBENCHMARK_H_
 
-#include <decaf/util/logging/Level.h>
+#include <benchmark/BenchmarkBase.h>
+#include <decaf/io/ByteArrayInputStream.h>
 
-using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::util;
-using namespace decaf::util::logging;
+namespace decaf {
+namespace io {
 
-////////////////////////////////////////////////////////////////////////////////
-ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
+    class ByteArrayInputStreamBenchmark :
+    public benchmark::BenchmarkBase<
+        decaf::io::ByteArrayInputStreamBenchmark, ByteArrayInputStream >
+    {
+    private:
 
-    // Defaults level to Info
-    setLevel( Level::INFO );
-}
+        unsigned char* buffer;
+        std::vector<unsigned char> stlBuffer;
+        static const int bufferSize = 200000;
 
-////////////////////////////////////////////////////////////////////////////////
-void ConsoleHandler::close() throw ( decaf::io::IOException ) {
-    StreamHandler::close( true );
-}
+    public:
+
+        ByteArrayInputStreamBenchmark();
+        virtual ~ByteArrayInputStreamBenchmark();
+
+        virtual void setUp();
+        virtual void tearDown();
+        virtual void run();
+
+    };
+
+}}
+
+#endif /* _DECAF_IO_BYTEARRAYINPUTSTREAMBENCHMARK_H_ */

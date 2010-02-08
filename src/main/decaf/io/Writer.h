@@ -18,52 +18,106 @@
 #define _DECAF_IO_WRITER_H
 
 #include <string>
+#include <vector>
 #include <decaf/io/IOException.h>
-#include <decaf/io/OutputStream.h>
+#include <decaf/io/Closeable.h>
+#include <decaf/io/Flushable.h>
+#include <decaf/lang/Appendable.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf{
 namespace io{
 
     /*
-     * Writer interface for an object that wraps around an output stream.
+     * Abstract class for writing to character streams. The only methods that a
+     * subclass must implement are write( char*, size_t, size_t ), flush(), and
+     * close().  Most subclasses, however, will override some of the methods
+     * defined here in order to provide higher efficiency, additional functionality,
+     * or both.
      *
      * @since 1.0
      */
-    class DECAF_API Writer {
+    class DECAF_API Writer : public decaf::io::Closeable,
+                             public decaf::io::Flushable,
+                             public decaf::lang::Appendable {
     public:
 
         virtual ~Writer(){};
 
         /**
-         * Sets the target output stream.
-         * @param os
-         *      The provided Outputstream to use to write to.
+         * Writes an single byte char value.
+         *
+         * @param v
+         *      The value to be written.
+         *
+         * @throws IOException thrown if an error occurs.
          */
-        virtual void setOutputStream( OutputStream* os ) = 0;
+        virtual void write( char v ) throw( decaf::io::IOException );
 
         /**
-         * Gets the target output stream.
-         * @returns the output stream currently being used
+         * Writes an array of Chars
+         *
+         * @param buffer
+         *      The array to be written.
+         *
+         * @throws IOException thrown if an error occurs.
          */
-        virtual OutputStream* getOutputStream() = 0;
+        virtual void write( const std::vector<char>& buffer )
+            throw( decaf::io::IOException );
 
         /**
          * Writes a byte array to the output stream.
-         * @param buffer a byte array
-         * @param count the number of bytes in the array to write.
+         *
+         * @param buffer
+         *      The byte array to write (cannot be NULL).
+         * @param offset
+         *      The position in the array to start writing from.
+         * @param length
+         *      The number of bytes in the array to write.
+         *
+         * @throws IOException if an I/O error occurs.
+         * @throws NullPointerException if buffer is NULL.
+         */
+        virtual void write( const char* buffer, std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException, decaf::lang::exceptions::NullPointerException ) = 0;
+
+        /**
+         * Writes a string
+         *
+         * @param str
+         *      The string to be written.
+         *
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t count )
-            throw( IOException, lang::exceptions::NullPointerException ) = 0;
+        virtual void write( const std::string& str ) throw( decaf::io::IOException );
 
-         /**
-          * Writes a byte to the output stream.
-          * @param v The value to be written.
-          * @throws IOException thrown if an error occurs.
-          */
-         virtual void writeByte( unsigned char v ) throw( IOException ) = 0;
+        /**
+         * Writes a string
+         *
+         * @param str
+         *      The string to be written.
+         * @param offset
+         *      The position in the array to start writing from.
+         * @param length
+         *      The number of bytes in the array to write.
+         *
+         * @throws IOException thrown if an error occurs.
+         * @throws IndexOutOfBoundsException if offset+length is greater than the string length.
+         */
+        virtual void write( const std::string& str, std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
+
+        virtual decaf::lang::Appendable& append( char value ) throw( decaf::io::IOException );
+
+        virtual decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq )
+            throw ( decaf::io::IOException );
+
+        virtual decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq,
+                                                 std::size_t start, std::size_t end )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
     };
 

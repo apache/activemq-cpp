@@ -90,6 +90,10 @@ cc_sources = \
     decaf/io/DataOutputStreamTest.cpp \
     decaf/io/FilterInputStreamTest.cpp \
     decaf/io/FilterOutputStreamTest.cpp \
+    decaf/io/InputStreamReaderTest.cpp \
+    decaf/io/OutputStreamWriterTest.cpp \
+    decaf/io/ReaderTest.cpp \
+    decaf/io/WriterTest.cpp \
     decaf/lang/BooleanTest.cpp \
     decaf/lang/ByteTest.cpp \
     decaf/lang/CharacterTest.cpp \
@@ -220,6 +224,10 @@ h_sources = \
     decaf/io/DataOutputStreamTest.h \
     decaf/io/FilterInputStreamTest.h \
     decaf/io/FilterOutputStreamTest.h \
+    decaf/io/InputStreamReaderTest.h \
+    decaf/io/OutputStreamWriterTest.h \
+    decaf/io/ReaderTest.h \
+    decaf/io/WriterTest.h \
     decaf/lang/BooleanTest.h \
     decaf/lang/ByteTest.h \
     decaf/lang/CharacterTest.h \

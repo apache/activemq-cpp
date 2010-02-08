@@ -184,6 +184,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
 #include <decaf/io/DataOutputStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamTest );
+#include <decaf/io/WriterTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::WriterTest );
+#include <decaf/io/ReaderTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ReaderTest );
+#include <decaf/io/OutputStreamWriterTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::OutputStreamWriterTest );
+#include <decaf/io/InputStreamReaderTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::InputStreamReaderTest );
 
 #include <decaf/lang/MathTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::MathTest );

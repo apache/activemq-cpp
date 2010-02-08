@@ -505,6 +505,10 @@ cc_sources = \
     decaf/io/ByteArrayOutputStream.cpp \
     decaf/io/DataInputStream.cpp \
     decaf/io/DataOutputStream.cpp \
+    decaf/io/InputStreamReader.cpp \
+    decaf/io/OutputStreamWriter.cpp \
+    decaf/io/Reader.cpp \
+    decaf/io/Writer.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Byte.cpp \
     decaf/lang/Character.cpp \
@@ -556,6 +560,7 @@ cc_sources = \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
     decaf/util/logging/ErrorManager.cpp \
+    decaf/util/logging/Handler.cpp \
     decaf/util/logging/Level.cpp \
     decaf/util/logging/LogManager.cpp \
     decaf/util/logging/LogRecord.cpp \
@@ -1135,8 +1140,10 @@ h_sources = \
     decaf/io/Flushable.h \
     decaf/io/IOException.h \
     decaf/io/InputStream.h \
+    decaf/io/InputStreamReader.h \
     decaf/io/InterruptedIOException.h \
     decaf/io/OutputStream.h \
+    decaf/io/OutputStreamWriter.h \
     decaf/io/Reader.h \
     decaf/io/UTFDataFormatException.h \
     decaf/io/UnsupportedEncodingException.h \
@@ -1156,6 +1163,7 @@ h_sources = \
     decaf/lang/Math.h \
     decaf/lang/Number.h \
     decaf/lang/Pointer.h \
+    decaf/lang/Readable.h \
     decaf/lang/Runnable.h \
     decaf/lang/Runtime.h \
     decaf/lang/Short.h \

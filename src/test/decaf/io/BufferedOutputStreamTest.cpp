@@ -169,8 +169,7 @@ void BufferedOutputStreamTest::testWrite() {
         BufferedOutputStream os( &baos, (std::size_t)512 );
         os.write( (unsigned char*)&testString[0], 0, 500 );
 
-        ByteArrayInputStream bais1( baos.toByteArray(), baos.size() );
-        CPPUNIT_ASSERT_MESSAGE( "Bytes written, not buffered", 0 == bais1.available());
+        CPPUNIT_ASSERT_MESSAGE( "Bytes written, not buffered", NULL == baos.toByteArray() );
         os.flush();
         ByteArrayInputStream bais2( baos.toByteArray(), baos.size() );
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush", 500 == bais2.available() );
@@ -293,8 +292,7 @@ void BufferedOutputStreamTest::testWriteI() {
         ByteArrayOutputStream baos;
         BufferedOutputStream os( &baos );
         os.write('t');
-        ByteArrayInputStream bais1( baos.toByteArray(), baos.size() );
-        CPPUNIT_ASSERT_MESSAGE( "Byte written, not buffered", 0 == bais1.available() );
+        CPPUNIT_ASSERT_MESSAGE( "Byte written, not buffered", NULL == baos.toByteArray() );
         os.flush();
 
         ByteArrayInputStream bais2( baos.toByteArray(), baos.size() );
