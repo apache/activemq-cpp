@@ -22,6 +22,7 @@
 #include <decaf/util/logging/ErrorManager.h>
 #include <decaf/util/logging/Filter.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/io/OutputStreamWriter.h>
 #include <decaf/io/Writer.h>
 
 using namespace decaf;
@@ -181,8 +182,7 @@ void StreamHandler::write( const std::string& value ) {
 void StreamHandler::initializeWritter() {
 
     this->writerNotInitialized = false;
-    // TODO
-    //this->writer = new OutputStreamWriter(this.os);
+    this->writer = new OutputStreamWriter( this->stream );
 
     // Start the Document by writing out the Head element.
     this->write( getFormatter()->getHead( this ) );

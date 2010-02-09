@@ -69,6 +69,14 @@ namespace logging{
          */
         virtual void close() throw ( decaf::io::IOException );
 
+        /**
+         * Publish the Log Record to this Handler
+         *
+         * @param record
+         *      The <code>LogRecord</code> to Publish
+         */
+        virtual void publish( const LogRecord& record );
+
     };
 
 }}}

@@ -51,15 +51,20 @@ namespace logging{
          * @param record The Log Record to Format
          * @returns the formatted message
          */
-        virtual std::string formatMessage( const LogRecord& record ) const = 0;
+        virtual std::string formatMessage( const LogRecord& record ) const;
 
         /**
          * Return the header string for a set of formatted records.  In the
-         * default implementation this method should return empty string
-         * @param handler the target handler, can be null
-         * @return the head string
+         * default implementation this method should return empty string.
+         *
+         * @param handler
+         *      The target handler, can be NULL.
+         *
+         * @return the head string.
          */
-        virtual std::string getHead( const Handler* handler ) = 0;
+        virtual std::string getHead( const Handler* handler DECAF_UNUSED ) {
+            return "";
+        }
 
         /**
          * Return the tail string for a set of formatted records.  In the
@@ -67,7 +72,9 @@ namespace logging{
          * @param handler the target handler, can be null
          * @return the tail string
          */
-        virtual std::string getTail( const Handler* handler ) = 0;
+        virtual std::string getTail( const Handler* handler DECAF_UNUSED ) {
+            return "";
+        }
 
     };
 
