@@ -15,30 +15,14 @@
  * limitations under the License.
  */
 
-#include "ConsoleHandler.h"
-
-#include <decaf/util/logging/Level.h>
+#include "Formatter.h"
 
 using namespace decaf;
-using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
+std::string Formatter::formatMessage( const LogRecord& record ) const {
 
-    // Defaults level to Info
-    setLevel( Level::INFO );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ConsoleHandler::close() throw ( decaf::io::IOException ) {
-    StreamHandler::close( true );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ConsoleHandler::publish( const LogRecord& record ) {
-    StreamHandler::publish( record );
-
-    this->flush();
+    return record.getMessage();
 }

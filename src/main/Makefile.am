@@ -560,6 +560,7 @@ cc_sources = \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
     decaf/util/logging/ErrorManager.cpp \
+    decaf/util/logging/Formatter.cpp \
     decaf/util/logging/Handler.cpp \
     decaf/util/logging/Level.cpp \
     decaf/util/logging/LogManager.cpp \
