@@ -29,6 +29,7 @@ namespace net{
 
         CPPUNIT_TEST_SUITE( URIHelperTest );
         CPPUNIT_TEST( testParseURI );
+        CPPUNIT_TEST( isValidIPv4Address );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -37,6 +38,8 @@ namespace net{
         virtual ~URIHelperTest() {}
 
         void testParseURI();
+        void isValidIPv4Address();
+
 
     };
 
