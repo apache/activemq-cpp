@@ -153,7 +153,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
             result.setPath( temp );
         }
 
-		std::size_t pathIndex = 0;
+        std::size_t pathIndex = 0;
         if( index2 != std::string::npos ) {
             pathIndex += index2;
         }
@@ -487,7 +487,7 @@ bool URIHelper::isValidDomainName( const std::string& host ) {
 ////////////////////////////////////////////////////////////////////////////////
 bool URIHelper::isValidIPv4Address( const std::string& host ) {
 
-	std::size_t index;
+    std::size_t index;
     std::size_t index2;
 
     try {
@@ -500,13 +500,13 @@ bool URIHelper::isValidIPv4Address( const std::string& host ) {
         }
 
         index2 = host.find( '.', index + 1 );
-        num = Integer::parseInt( host.substr( index + 1, index2 ) );
+        num = Integer::parseInt( host.substr( index + 1, index2 - index - 1 ) );
         if( num < 0 || num > 255 ) {
             return false;
         }
 
         index = host.find( '.', index2 + 1 );
-        num = Integer::parseInt( host.substr( index2 + 1, index ) );
+        num = Integer::parseInt( host.substr( index2 + 1, index - index2 - 1 ) );
         if( num < 0 || num > 255 ) {
             return false;
         }
