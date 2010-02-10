@@ -27,6 +27,9 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 namespace decaf{
 namespace lang{
     class Runtime;
@@ -154,6 +157,22 @@ namespace logging{
         virtual ~LogManager();
 
         /**
+         * Add a named logger. This does nothing and returns false if a logger with
+         * the same name is already registered.
+         *
+         * The Logger factory methods call this method to register each newly created Logger.
+         *
+         * @param logger
+         *      The new Logger instance to add to this LogManager.
+         *
+         * @throws NullPointerException if logger is NULL.
+         * @throws IllegalArgumentException if the logger has no name.
+         */
+        bool addLogger( Logger* logger )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
+
+        /**
          * Sets the Properties this LogManager should use to configure
          * its loggers.  Once set a properties change event is fired.
          * @param properties Pointer to read the configuration from
@@ -236,7 +255,7 @@ namespace logging{
         LogManager();
 
         /**
-         * Copy Constructo
+         * Copy Constructor
          * @param manager the Manager to copy
          */
         LogManager( const LogManager& manager );

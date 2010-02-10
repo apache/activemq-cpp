@@ -39,6 +39,7 @@ namespace logging {
      *   * SEVERE (highest value)
      *   * WARNING
      *   * INFO
+     *   * DEBUG
      *   * CONFIG
      *   * FINE
      *   * FINER
@@ -59,6 +60,12 @@ namespace logging {
         int value;
 
     public:
+
+        /**
+         * NULL is a special level that indicates that the Logger should get its Level from
+         * its parent Logger, the value is initialized as zero.
+         */
+        static const Level INHERIT;
 
         /**
          * OFF is a special level that can be used to turn off logging. This level is initialized
