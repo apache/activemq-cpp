@@ -19,6 +19,11 @@
 
 #include <decaf/util/logging/Level.h>
 
+#include <decaf/util/Date.h>
+
+#include <sstream>
+
+using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
@@ -34,5 +39,46 @@ SimpleFormatter::~SimpleFormatter() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string SimpleFormatter::format( const LogRecord& record DECAF_UNUSED ) const {
-    return "";
+
+    ostringstream stream;
+
+    stream << Date( record.getTimestamp() ).toString();
+    stream << " ";
+    stream << record.getSourceFile();
+    stream << ":";
+    stream << record.getSourceLine();
+    stream << std::endl;
+
+    stream << record.getLevel().getName();
+    stream << ": ";
+    stream << this->formatMessage( record );
+    stream << std::endl;
+
+    if( record.getThrown() != NULL ) {
+        stream << "Throwable occurred: ";
+        stream << std::endl;
+
+        // TODO write Stack Trace.
+    }
+//    if (null != r.getThrown()) {
+//        sb.append("Throwable occurred: "); //$NON-NLS-1$
+//        Throwable t = r.getThrown();
+//        PrintWriter pw = null;
+//        try {
+//            StringWriter sw = new StringWriter();
+//            pw = new PrintWriter(sw);
+//            t.printStackTrace(pw);
+//            sb.append(sw.toString());
+//        } finally {
+//            if (pw != null) {
+//                try {
+//                    pw.close();
+//                } catch (Exception e) {
+//                    // ignore
+//                }
+//            }
+//        }
+//    }
+
+    return stream.str();
 }
