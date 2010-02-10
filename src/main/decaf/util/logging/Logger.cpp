@@ -24,29 +24,33 @@ using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger::Logger( const std::string& name DECAF_UNUSED,
-                Logger* parent DECAF_UNUSED ) {
+Logger::Logger( const std::string& name ) : level( Level::INHERIT ) {
+
+    this->name = name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Logger::~Logger() {
+
+    std::list<Handler*>::iterator handler = this->handlers.begin();
+    for( ; handler != this->handlers.end(); ++handler ) {
+        delete *handler;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::addHandler( Handler* handler ) throw ( IllegalArgumentException ) {
+void Logger::addHandler( Handler* handler ) throw ( NullPointerException ) {
 
-    if( handler == NULL )
-    {
-        IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Logger::addHandler - HAndler cannot be null");
+    if( handler == NULL ) {
+        NullPointerException(
+            __FILE__, __LINE__, "Logger::addHandler - Handler cannot be null");
     }
 
-    if( find( handlers.begin(), handlers.end(), handler) != handlers.end() )
-    {
+    if( find( handlers.begin(), handlers.end(), handler) != handlers.end() ) {
         handlers.push_back( handler );
     }
 }
@@ -54,42 +58,57 @@ void Logger::addHandler( Handler* handler ) throw ( IllegalArgumentException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void Logger::removeHandler( Handler* handler ) {
 
+    if( handler == NULL ) {
+        return;
+    }
+
     list<Handler*>::iterator itr =
         find( handlers.begin(), handlers.end(), handler );
 
     if( itr != handlers.end() ) {
-
-        delete *itr;
-        handlers.erase(itr);
+        handlers.erase( itr );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::setFilter( Filter* filter DECAF_UNUSED ){
+const std::list<Handler*>& Logger::getHandlers() const {
+    return this->handlers;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Logger::isLoggable( Levels level DECAF_UNUSED ) const{
+void Logger::setFilter( Filter* filter ){
+    this->filter = filter;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Logger::isLoggable( const Level& level DECAF_UNUSED ) const{
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::entry( const std::string& blockName DECAF_UNUSED,
-                    const std::string& file DECAF_UNUSED,
-                    const int line DECAF_UNUSED ) {
+void Logger::entering( const std::string& blockName DECAF_UNUSED,
+                       const std::string& file DECAF_UNUSED,
+                       const int line DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::exit(const std::string& blockName DECAF_UNUSED,
-                  const std::string& file DECAF_UNUSED,
-                  const int line DECAF_UNUSED) {
+void Logger::exiting( const std::string& blockName DECAF_UNUSED,
+                      const std::string& file DECAF_UNUSED,
+                      const int line DECAF_UNUSED) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::debug( const std::string& file DECAF_UNUSED,
-                    const int line DECAF_UNUSED,
-                    const std::string fnctionName DECAF_UNUSED,
-                    const std::string& message DECAF_UNUSED ) {
+void Logger::severe( const std::string& file DECAF_UNUSED,
+                     const int line DECAF_UNUSED,
+                     const std::string fnctionName DECAF_UNUSED,
+                     const std::string& message DECAF_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Logger::warning( const std::string& file DECAF_UNUSED,
+                      const int line DECAF_UNUSED,
+                      const std::string fnctionName DECAF_UNUSED,
+                      const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,33 +119,54 @@ void Logger::info( const std::string& file DECAF_UNUSED,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::error( const std::string& file DECAF_UNUSED,
+void Logger::debug( const std::string& file DECAF_UNUSED,
                     const int line DECAF_UNUSED,
                     const std::string fnctionName DECAF_UNUSED,
                     const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::warn( const std::string& file DECAF_UNUSED,
+void Logger::config( const std::string& file DECAF_UNUSED,
+                     const int line DECAF_UNUSED,
+                     const std::string fnctionName DECAF_UNUSED,
+                     const std::string& message DECAF_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Logger::fine( const std::string& file DECAF_UNUSED,
                    const int line DECAF_UNUSED,
                    const std::string fnctionName DECAF_UNUSED,
                    const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::fatal( const std::string& file DECAF_UNUSED,
+void Logger::finer( const std::string& file DECAF_UNUSED,
                     const int line DECAF_UNUSED,
                     const std::string fnctionName DECAF_UNUSED,
                     const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Levels level DECAF_UNUSED,
+void Logger::finest( const std::string& file DECAF_UNUSED,
+                     const int line DECAF_UNUSED,
+                     const std::string fnctionName DECAF_UNUSED,
+                     const std::string& message DECAF_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Logger::throwing( const std::string& file DECAF_UNUSED,
+                       const int line DECAF_UNUSED,
+                       const std::string functionName DECAF_UNUSED,
+                       const decaf::lang::Throwable& thrown DECAF_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Logger::log( const Level& level DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Levels level DECAF_UNUSED,
+void Logger::log( const Level& level DECAF_UNUSED,
                   const std::string& file DECAF_UNUSED,
                   const int line DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED,
@@ -134,7 +174,7 @@ void Logger::log( Levels level DECAF_UNUSED,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Levels level DECAF_UNUSED,
+void Logger::log( const Level& level DECAF_UNUSED,
                   const std::string& file DECAF_UNUSED,
                   const int line DECAF_UNUSED,
                   const std::string& message DECAF_UNUSED, ... ) {

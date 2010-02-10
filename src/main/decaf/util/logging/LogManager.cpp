@@ -89,6 +89,13 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool LogManager::addLogger( Logger* logger DECAF_UNUSED )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Logger* LogManager::getLogger( const std::string& name DECAF_UNUSED ) {
     return NULL;
 }

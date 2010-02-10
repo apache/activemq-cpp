@@ -19,8 +19,13 @@
 
 #include <decaf/util/logging/LoggerCommon.h>
 #include <decaf/util/logging/LogRecord.h>
-#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/logging/LogManager.h>
+#include <decaf/util/logging/Handler.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
+
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 #include <list>
 #include <string>
@@ -30,9 +35,54 @@ namespace decaf{
 namespace util{
 namespace logging{
 
-    class Handler;
     class Filter;
 
+    /**
+     * A Logger object is used to log messages for a specific system or application component.
+     * Loggers are normally named, using a hierarchical dot-separated namespace. Logger names
+     * can be arbitrary strings, but they should normally be based on the namespace or class
+     * name of the logged component, such as decaf.net or org.apache.decaf. In addition it is
+     * possible to create "anonymous" Loggers that are not stored in the Logger namespace.
+     *
+     * Logger objects may be obtained by calls on one of the getLogger factory methods. These
+     * will either create a new Logger or return a suitable existing Logger.
+     *
+     * Logging messages will be forwarded to registered Handler objects, which can forward
+     * the messages to a variety of destinations, including consoles, files, OS logs, etc.
+     *
+     * Each Logger keeps track of a "parent" Logger, which is its nearest existing ancestor
+     * in the Logger namespace.
+     *
+     * Each Logger has a "Level" associated with it. This reflects a minimum Level that this
+     * logger cares about. If a Logger's level is set to Level::INHERIT, then its effective level
+     * is inherited from its parent, which may in turn obtain it recursively from its parent,
+     * and so on up the tree.
+     *
+     * The log level can be configured based on the properties from the logging configuration
+     * file, as described in the description of the LogManager class. However it may also be
+     * dynamically changed by calls on the Logger.setLevel method. If a logger's level is changed
+     * the change may also affect child loggers, since any child logger that has 'inherit' as its
+     * level will inherit its effective level from its parent.
+     *
+     * On each logging call the Logger initially performs a cheap check of the request level
+     * (e.g. SEVERE or FINE) against the effective log level of the logger. If the request level
+     * is lower than the log level, the logging call returns immediately.
+     *
+     * After passing this initial (cheap) test, the Logger will allocate a LogRecord to describe
+     * the logging message. It will then call a Filter (if present) to do a more detailed check
+     * on whether the record should be published. If that passes it will then publish the LogRecord
+     * to its output Handlers. By default, loggers also publish to their parent's Handlers,
+     * recursively up the tree.
+     *
+     * Formatting is the responsibility of the output Handler, which will typically call a Formatter.
+     *
+     * Note that formatting need not occur synchronously. It may be delayed until a LogRecord is
+     * actually written to an external sink.
+     *
+     * All methods on Logger are thread safe.
+     *
+     * @since 1.0
+     */
     class DECAF_API Logger {
     private:
 
@@ -49,26 +99,28 @@ namespace logging{
         Filter* filter;
 
         // The Log Level of this Logger
-        Levels level;
+        Level level;
 
         // Using Parent Handlers?
         bool useParentHandlers;
 
-    public:
+    protected:
 
         /**
-         * Creates a new instance of the Logger with the given name
-         * and assign it the given parent logger.
-         * <p>
+         * Creates a new instance of the Logger with the given name.
+         *
          * The logger will be initially configured with a null Level
          * and with useParentHandlers true.
-         * @param name - A name for the logger. This should be a
-         * dot-separated name and should normally be based on the package
-         * name or class name of the subsystem, such as java.net or
-         * javax.swing. It may be null for anonymous Loggers.
-         * @param parent logger that is this one's parent
+         *
+         * @param name
+         *      A name for the logger. This should be a dot-separated name and
+         *      should normally be based on the package name or class name of the
+         *      subsystem, such as decaf.net or org.apache.decaf.  It may be empty
+         *      for anonymous Loggers.
          */
-        Logger( const std::string& name, Logger* parent );
+        Logger( const std::string& name );
+
+    public:
 
         virtual ~Logger();
 
@@ -76,79 +128,114 @@ namespace logging{
          * Gets the name of this Logger
          * @return logger name
          */
-        virtual const std::string& getName() const {
+        const std::string& getName() const {
             return name;
         }
 
         /**
+         * Gets the parent of this Logger which will be the nearest existing Logger in this
+         * Loggers namespace.
+         *
+         * If this is the Root Logger than this method returns NULL.
+         *
+         * @return Pointer to this Loggers nearest parent Logger.
+         */
+        Logger* getParent() const {
+            return this->parent;
+        }
+
+        /**
+         * Set the parent for this Logger. This method is used by the LogManager to update
+         * a Logger when the namespace changes.
+         *
+         * It should not be called from application code.
+         */
+        void setParent( Logger* parent ) {
+            this->parent = parent;
+        }
+
+        /**
          * Add a log Handler to receive logging messages.
-         * <p>
+         *
          * By default, Loggers also send their output to their parent logger.
          * Typically the root Logger is configured with a set of Handlers
          * that essentially act as default handlers for all loggers.
          *
+         * The ownership of the given Handler is passed to the Logger and the
+         * Handler will be deleted when this Logger is destroyed unless the caller
+         * first calls removeHandler with the same pointer value as was originally
+         * given.
+         *
          * @param handler A Logging Handler
-         * @throws IllegalArgumentException
+         *
+         * @throws NullPointerException if the Handler given is NULL.
          */
-        virtual void addHandler( Handler* handler )
-            throw ( lang::exceptions::IllegalArgumentException );
+        void addHandler( Handler* handler )
+            throw ( lang::exceptions::NullPointerException );
 
         /**
-         * Removes the specified Handler and destroys it
-         * <p>
+         * Removes the specified Handler from this logger, ownership of the
+         * Handler pointer is returned to the caller.
+         *
          * Returns silently if the given Handler is not found.
+         *
          * @param handler The Handler to remove
          */
-        virtual void removeHandler( Handler* handler );
+        void removeHandler( Handler* handler );
 
         /**
          * Gets a vector containing all the handlers that this class
          * has been assigned to use.
          * @returns a list of handlers that are used by this logger
          */
-        // virtual const std::list<Handler*>& getHandlers() const;
+        const std::list<Handler*>& getHandlers() const;
 
         /**
          * Set a filter to control output on this Logger.
-         * <p>
+         *
          * After passing the initial "level" check, the Logger will call
          * this Filter to check if a log record should really be published.
-         * <p>
+         *
          * The caller releases ownership of this filter to this logger
-         * @param filter to use, can be null
+         *
+         * @param filter
+         *      The Filter to use, (can be NULL).
          */
-        virtual void setFilter( Filter* filter );
+        void setFilter( Filter* filter );
 
         /**
          * Gets the Filter object that this class is using.
-         * @return the Filter in use, can be null
+         * @return the Filter in use, (can be NULL).
          */
-        virtual const Filter* getFilter() const {
+        const Filter* getFilter() const {
             return filter;
         }
 
         /**
          * Get the log Level that has been specified for this Logger. The
-         * result may be the Null level, which means that this logger's
+         * result may be the INHERIT level, which means that this logger's
          * effective level will be inherited from its parent.
+         *
          * @return the level that is currently set
          */
-        virtual Levels getLevel() const {
+        Level getLevel() const {
             return level;
         }
 
         /**
          * Set the log level specifying which message levels will be logged
          * by this logger. Message levels lower than this value will be
-         * discarded. The level value Level.OFF can be used to turn off
+         * discarded. The level value Level::OFF can be used to turn off
          * logging.
-         * <p>
-         * If the new level is the Null Level, it means that this node
+         *
+         * If the new level is the INHERIT Level, it means that this node
          * should inherit its level from its nearest ancestor with a
-         * specific (non-null) level value.
-         * @param level new Level value
+         * specific (non-INHERIT) level value.
+         *
+         * @param level
+         *      The new Level value to use when logging.
          */
-        virtual void setLevel( Levels level ) {
+        void setLevel( const Level& level ) {
             this->level = level;
         }
 
@@ -157,76 +244,113 @@ namespace logging{
          * its parent logger.
          * @return true if using Parent Handlers
          */
-        virtual bool getUseParentHandlers() const {
+        bool getUseParentHandlers() const {
             return useParentHandlers;
         }
 
         /**
-         * pecify whether or not this logger should send its output to it's
+         * Specify whether or not this logger should send its output to it's
          * parent Logger. This means that any LogRecords will also be
          * written to the parent's Handlers, and potentially to its parent,
          * recursively up the namespace.
-         * @param value True is output is to be writen to the parent
+         *
+         * @param value
+         *      True is output is to be written to the parent
          */
-        virtual void setUseParentHandlers( bool value ) {
+        void setUseParentHandlers( bool value ) {
             this->useParentHandlers = value;
         }
 
+    public:   // Logging Methods.
+
         /**
          * Logs an Block Enter message
-         * <p>
-         * This is a convenience method that is used to tag a block enter, a
-         * log record with the class name function name and the string
-         * Entering is logged at the DEBUG log level.
-         * @param blockName source block name
-         * @param file source file name
-         * @param line source line name
+         *
+         * This is a convenience method that is used to tag a block enter, a log record
+         * with the given information is logged at the Level::FINER log level.
+         *
+         * @param blockName
+         *      The source block name, (usually ClassName::MethodName, or MethodName).
+         * @param file
+         *      The source file name where this method was called from.
+         * @param line
+         *      The source line number where this method was called from.
          */
-        virtual void entry( const std::string& blockName,
-                            const std::string& file,
-                            const int line );
+        virtual void entering( const std::string& blockName,
+                               const std::string& file,
+                               const int line );
 
         /**
          * Logs an Block Exit message
-         * <p>
-         * This is a convenience method that is used to tag a block exit, a
-         * log record with the class name function name and the string
-         * Exiting is logged at the DEBUG log level.
-         * @param blockName source block name
-         * @param file source file name
-         * @param line source line name
-         */
-        virtual void exit( const std::string& blockName,
-                           const std::string& file,
-                           const int line );
-
-        /**
-         * Log a Debug Level Log
-         * <p>
-         * If the logger is currently enabled for the DEBUG message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param functionName name of the function that logged this
-         * @param message the message to log
-         */
-        virtual void debug( const std::string& file,
-                            const int line,
-                            const std::string functionName,
-                            const std::string& message );
-
-        /**
-         * Log a info Level Log
-         * <p>
-         * If the logger is currently enabled for the info message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
          *
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param functionName name of the function that logged this
-         * @param message the message to log
+         * This is a convenience method that is used to tag a block enter, a log record
+         * with the given information is logged at the Level::FINER log level.
+         *
+         * @param blockName
+         *      The source block name, (usually ClassName::MethodName, or MethodName).
+         * @param file
+         *      The source file name where this method was called from.
+         * @param line
+         *      The source line number where this method was called from.
+         */
+        virtual void exiting( const std::string& blockName,
+                              const std::string& file,
+                              const int line );
+
+        /**
+         * Log a SEVERE Level Log
+         *
+         * If the logger is currently enabled for the SEVERE message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void severe( const std::string& file,
+                             const int line,
+                             const std::string functionName,
+                             const std::string& message );
+
+        /**
+         * Log a WARN Level Log
+         *
+         * If the logger is currently enabled for the WARN message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void warning( const std::string& file,
+                              const int line,
+                              const std::string functionName,
+                              const std::string& message );
+
+        /**
+         * Log a INFO Level Log
+         *
+         * If the logger is currently enabled for the INFO message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
          */
         virtual void info( const std::string& file,
                            const int line,
@@ -234,68 +358,128 @@ namespace logging{
                            const std::string& message );
 
         /**
-         * Log a warn Level Log
-         * <p>
-         * If the logger is currently enabled for the warn message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param functionName name of the function that logged this
-         * @param message the message to log
+         * Log a DEBUG Level Log
+         *
+         * If the logger is currently enabled for the DEBUG message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
          */
-        virtual void warn( const std::string& file,
-                           const int line,
-                           const std::string functionName,
-                           const std::string& message );
-
-        /**
-         * Log a error Level Log
-         * <p>
-         * If the logger is currently enabled for the error message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param fnctionName name of the function that logged this
-         * @param message the message to log
-         */
-        virtual void error( const std::string& file,
-                            const int line,
-                            const std::string fnctionName,
-                            const std::string& message );
-
-        /**
-         * Log a fatal Level Log
-         * <p>
-         * If the logger is currently enabled for the fatal message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param functionName name of the function that logged this
-         * @param message the message to log
-         */
-        virtual void fatal( const std::string& file,
+        virtual void debug( const std::string& file,
                             const int line,
                             const std::string functionName,
                             const std::string& message );
 
         /**
-         * Log a Throw Message
-         * <p>
-         * If the logger is currently enabled for the Throwing message level
-         * then the given message is forwarded to all the registered output
-         * Handler objects.
-         * @param file the file name where the log was generated
-         * @param line the line number where the log was generated
-         * @param functionName name of the function that logged this
-         * @param message the message to log
+         * Log a CONFIG Level Log
+         *
+         * If the logger is currently enabled for the CONFIG message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void config( const std::string& file,
+                             const int line,
+                             const std::string functionName,
+                             const std::string& message );
+
+        /**
+         * Log a FINE Level Log
+         *
+         * If the logger is currently enabled for the FINE message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void fine( const std::string& file,
+                           const int line,
+                           const std::string functionName,
+                           const std::string& message );
+
+        /**
+         * Log a FINER Level Log
+         *
+         * If the logger is currently enabled for the FINER message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void finer( const std::string& file,
+                            const int line,
+                            const std::string functionName,
+                            const std::string& message );
+
+        /**
+         * Log a FINEST Level Log
+         *
+         * If the logger is currently enabled for the FINEST message level then the
+         * given message is forwarded to all the registered output Handler objects.
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param message
+         *      The message to log at this Level.
+         */
+        virtual void finest( const std::string& file,
+                             const int line,
+                             const std::string functionName,
+                             const std::string& message );
+
+        /**
+         * Log throwing an exception.
+         *
+         * This is a convenience method to log that a method is terminating by throwing an
+         * exception. The logging is done using the FINER level.
+         *
+         * If the logger is currently enabled for the given message level then the given
+         * arguments are stored in a LogRecord which is forwarded to all registered output
+         * handlers. The LogRecord's message is set to "THROW".
+         *
+         * @param file
+         *      The file name where the log was generated.
+         * @param line
+         *      The line number where the log was generated.
+         * @param functionName
+         *      The name of the function that logged this.
+         * @param thrown
+         *      The Throwable that will be thrown, will be cloned.
+         */
         virtual void throwing( const std::string& file,
                                const int line,
                                const std::string functionName,
-                               const std::string& message );
-         */
+                               const decaf::lang::Throwable& thrown );
 
         /**
          * Check if a message of the given level would actually be logged
@@ -304,7 +488,7 @@ namespace logging{
          * @param level - a message logging level
          * @returns true if the given message level is currently being logged.
          */
-        virtual bool isLoggable( Levels level ) const;
+        virtual bool isLoggable( const Level& level ) const;
 
         /**
          * Log a LogRecord.
@@ -324,7 +508,7 @@ namespace logging{
          * @param level the Level to log at
          * @param message the message to log
          */
-        virtual void log( Levels level, const std::string& message );
+        virtual void log( const Level& level, const std::string& message );
 
         /**
          * Log a message, with the list of params that is formatted into
@@ -338,7 +522,7 @@ namespace logging{
          * @param line the line in the file
          * @param ... variable length argument to format the message string.
          */
-        virtual void log( Levels levels,
+        virtual void log( const Level& levels,
                           const std::string& file,
                           const int line,
                           const std::string& message, ... );
@@ -358,7 +542,7 @@ namespace logging{
          * @param message the message to log.
          * @param ex the Exception to log
          */
-        virtual void log( Levels level,
+        virtual void log( const Level& level,
                           const std::string& file,
                           const int line,
                           const std::string& message,

@@ -38,6 +38,7 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const Level Level::INHERIT( "INHERIT", 0 );
 const Level Level::OFF( "OFF", Integer::MAX_VALUE );
 const Level Level::SEVERE( "SEVERE", 1000 );
 const Level Level::WARNING( "WARNING", 900 );
