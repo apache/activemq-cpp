@@ -570,7 +570,8 @@ cc_sources = \
     decaf/util/logging/LoggerHierarchy.cpp \
     decaf/util/logging/SimpleFormatter.cpp \
     decaf/util/logging/SimpleLogger.cpp \
-    decaf/util/logging/StreamHandler.cpp
+    decaf/util/logging/StreamHandler.cpp \
+    decaf/util/logging/XMLFormatter.cpp
 
 
 h_sources = \
@@ -1302,7 +1303,8 @@ h_sources = \
     decaf/util/logging/PropertiesChangeListener.h \
     decaf/util/logging/SimpleFormatter.h \
     decaf/util/logging/SimpleLogger.h \
-    decaf/util/logging/StreamHandler.h
+    decaf/util/logging/StreamHandler.h \
+    decaf/util/logging/XMLFormatter.h
 
 
 ##
