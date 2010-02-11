@@ -385,62 +385,62 @@ void Properties::load( decaf::io::InputStream* stream )
             } else {
 
                 switch( nextChar ) {
-                case '#':
-                case '!':
-                    if( firstChar ) {
-                        while( true ) {
-                            intVal = bis.read();
-                            if( intVal == -1 ) {
-                                break;
-                            }
+                    case '#':
+                    case '!':
+                        if( firstChar ) {
+                            while( true ) {
+                                intVal = bis.read();
+                                if( intVal == -1 ) {
+                                    break;
+                                }
 
-                            nextChar = (char)( intVal & 0xFF );
+                                nextChar = (char)( intVal & 0xFF );
 
-                            if( nextChar == '\r' || nextChar == '\n' ) {
-                                break;
+                                if( nextChar == '\r' || nextChar == '\n' ) {
+                                    break;
+                                }
                             }
+                            continue;
                         }
-                        continue;
-                    }
-                    break;
-                case '\n':
-                    if( mode == CONTINUE) { // Part of a \r\n sequence
-                        mode = IGNORE; // Ignore whitespace on the next line
-                        continue;
-                    }
-                    // fall into the next case
-                case '\r':
-                    mode = NONE;
-                    firstChar = true;
-                    if( offset > 0 || ( offset == 0 && keyLength == 0 ) ) {
+                        break;
+                    case '\n':
+                        if( mode == CONTINUE) { // Part of a \r\n sequence
+                            mode = IGNORE; // Ignore whitespace on the next line
+                            continue;
+                        }
+                        // fall into the next case
+                    case '\r':
+                        mode = NONE;
+                        firstChar = true;
+                        if( offset > 0 || ( offset == 0 && keyLength == 0 ) ) {
 
-                        if( keyLength == -1 ) {
+                            if( keyLength == -1 ) {
+                                keyLength = offset;
+                            }
+                            std::string temp( buf.begin(), buf.begin() + offset );
+
+                            this->internal->properties.put( temp.substr( 0, keyLength ),
+                                                            temp.substr( keyLength ) );
+                        }
+
+                        keyLength = -1;
+                        offset = 0;
+                        buf.clear();
+                        continue;
+                    case '\\':
+                        if( mode == KEY_DONE ) {
                             keyLength = offset;
                         }
-                        std::string temp( &buf[0], 0, offset );
-
-                        this->internal->properties.put( temp.substr( 0, keyLength ),
-                                                        temp.substr( keyLength ) );
-                    }
-
-                    keyLength = -1;
-                    offset = 0;
-                    buf.clear();
-                    continue;
-                case '\\':
-                    if( mode == KEY_DONE ) {
-                        keyLength = offset;
-                    }
-                    mode = SLASH;
-                    continue;
-                case ':':
-                case '=':
-                    if( keyLength == -1 ) { // if parsing the key
-                        mode = NONE;
-                        keyLength = offset;
+                        mode = SLASH;
                         continue;
-                    }
-                    break;
+                    case ':':
+                    case '=':
+                        if( keyLength == -1 ) { // if parsing the key
+                            mode = NONE;
+                            keyLength = offset;
+                            continue;
+                        }
+                        break;
                 }
                 if( Character::isWhitespace( nextChar ) ) {
                     if( mode == CONTINUE ) {
@@ -476,7 +476,7 @@ void Properties::load( decaf::io::InputStream* stream )
         }
 
         if( keyLength >= 0 ) {
-            std::string temp( &buf[0], 0, offset );
+            std::string temp( buf.begin(), buf.begin() + offset );
             this->internal->properties.put( temp.substr( 0, keyLength ), temp.substr( keyLength ) );
         }
     }
