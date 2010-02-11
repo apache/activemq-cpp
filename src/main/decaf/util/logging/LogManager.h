@@ -27,12 +27,16 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
 
+#include <decaf/io/IOException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace decaf{
 namespace lang{
     class Runtime;
+}
+namespace io{
+    class InputStream;
 }
 namespace util{
 namespace logging{
@@ -173,65 +177,117 @@ namespace logging{
                    decaf::lang::exceptions::IllegalArgumentException );
 
         /**
+         * Retrieves or creates a new Logger using the name specified
+         * a new logger inherits the configuration of the logger's
+         * parent if there is no configuration data for the logger.
+         * @param name The name of the Logger.
+         */
+        Logger* getLogger( const std::string& name );
+
+        /**
+         * Gets a list of known Logger Names from this Manager, new loggers added
+         * while this method is in progress are not garunteed to be in the list.
+         *
+         * @param names
+         *      STL Vector to hold string logger names.
+         *
+         * @return names count of how many loggers were inserted.
+         */
+        int getLoggerNames( const std::vector<std::string>& names );
+
+        /**
          * Sets the Properties this LogManager should use to configure
          * its loggers.  Once set a properties change event is fired.
          * @param properties Pointer to read the configuration from
          */
-        virtual void setProperties( const util::Properties& properties );
+        void setProperties( const util::Properties& properties );
 
         /**
          * Gets a reference to the Logging Properties used by this
          * logger.
          * @returns The Logger Properties Pointer
          */
-        virtual const util::Properties& getProperties() const {
+        const util::Properties& getProperties() const {
             return properties;
         }
 
         /**
-         * Gets the value of a named property of this LogManager
-         * @param name of the Property to retrieve
+         * Gets the value of a named property of this LogManager.
+         *
+         * @param name
+         *      The name of the Property to retrieve.
+         *
          * @return the value of the property
          */
-        virtual std::string getProperty( const std::string& name ) {
-            return properties.getProperty( name );
-        }
+        std::string getProperty( const std::string& name );
 
         /**
          * Adds a change listener for LogManager Properties, adding the same
          * instance of a change event listener does nothing.
-         * @param listener a PropertyChangeListener
+         *
+         * @param listener
+         *      The PropertyChangeListener to add (can be NULL).
          */
-        virtual void addPropertyChangeListener(
-            PropertyChangeListener* listener );
+        void addPropertyChangeListener( PropertyChangeListener* listener );
 
         /**
-         * Removes a properties change listener from the LogManager.
-         * @param listener a PropertyChangeListener
+         * Removes a properties change listener from the LogManager, if the
+         * listener is not found of the param is NULL this method returns
+         * silently.
+         *
+         * @param listener
+         *      The PropertyChangeListener to remove from the listeners set.
          */
-        virtual void removePropertyChangeListener(
-            PropertyChangeListener* listener );
+        void removePropertyChangeListener( PropertyChangeListener* listener );
 
         /**
-         * Retrieves or creates a new Logger using the name specified
-         * a new logger inherits the configuration of the logger's
-         * parent if there is no configuration data for the logger.
-         * @param name The name of the Logger.
+         * Reinitialize the logging properties and reread the logging configuration.
+         *
+         * The same rules are used for locating the configuration properties as are used at
+         * startup. So normally the logging properties will be re-read from the same file
+         * that was used at startup.
+         *
+         * Any log level definitions in the new configuration file will be applied using
+         * Logger.setLevel(), if the target Logger exists.
+         *
+         * A PropertyChangeEvent will be fired after the properties are read.
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual Logger* getLogger( const std::string& name );
+        void readConfiguration() throw( decaf::io::IOException );
 
         /**
-         * Gets a list of known Logger Names from this Manager
-         * @param names STL Vector to hold string logger names
-         * @return names count of how many loggers were inserted
+         * Reinitialize the logging properties and reread the logging configuration from the
+         * given stream, which should be in decaf.util.Properties format. A PropertyChangeEvent
+         * will be fired after the properties are read.
+         *
+         * Any log level definitions in the new configuration file will be applied using
+         * Logger.setLevel(), if the target Logger exists.
+         *
+         * @param stream
+         *      The InputStream to read the Properties from.
+         *
+         * @throws NullPointerException if stream is NULL.
+         * @throws IOException if an I/O error occurs.
          */
-        virtual int getLoggerNames( const std::vector<std::string>& names );
+        void readConfiguration( decaf::io::InputStream* stream )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Reset the logging configuration.
+         *
+         * For all named loggers, the reset operation removes and closes all Handlers and
+         * (except for the root logger) sets the level to INHERIT. The root logger's level
+         * is set to Level::INFO.
+         */
+        void reset();
 
     public:     // Static Singleton Methods.
 
         /**
          * Get the global {@code LogManager} instance.
-         * @return A reference to the global LogManager instaince.
+         * @return A reference to the global LogManager instance.
          */
         static LogManager& getLogManager();
 

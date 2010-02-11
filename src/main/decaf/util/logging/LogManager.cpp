@@ -22,12 +22,14 @@
 #include <decaf/util/logging/Logger.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/Config.h>
+#include <decaf/io/InputStream.h>
 
 #include <string>
 #include <algorithm>
 
 using namespace std;
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
@@ -54,7 +56,6 @@ namespace {
 
 ////////////////////////////////////////////////////////////////////////////////
 LogManager::LogManager() {
-
     this->internal.reset( new LogManagerInternals() );
 }
 
@@ -93,6 +94,7 @@ bool LogManager::addLogger( Logger* logger DECAF_UNUSED )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +105,11 @@ Logger* LogManager::getLogger( const std::string& name DECAF_UNUSED ) {
 ////////////////////////////////////////////////////////////////////////////////
 int LogManager::getLoggerNames( const std::vector<std::string>& names  DECAF_UNUSED ) {
     return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string LogManager::getProperty( const std::string& name ) {
+    return properties.getProperty( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,4 +135,20 @@ void LogManager::shutdown() {
 
     // Destroy the global LogManager
     delete theManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::readConfiguration()
+    throw( decaf::io::IOException ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::reset() {
+
 }
