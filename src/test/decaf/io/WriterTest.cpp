@@ -52,7 +52,7 @@ namespace io{
 
         virtual void close() throw( decaf::io::IOException ) {
             flush();
-            delete contents;
+            delete [] contents;
             contents = NULL;
         }
 
