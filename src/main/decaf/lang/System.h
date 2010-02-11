@@ -28,9 +28,12 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API System {
-    public:
+    protected:
 
         System();
+
+    public:
+
         virtual ~System() {}
 
     public:  // Static Methods
