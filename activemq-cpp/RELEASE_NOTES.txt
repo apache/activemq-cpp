@@ -1,4 +1,25 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.1.1                               ==
+=========================================================================
+
+This release is a minor patch release that resolves a few memory leaks and
+other small bugs found since the 3.1.0 release.  The changes in this release
+should not break compatibility with the previous version.
+
+Bug
+
+    * [AMQCPP-273] - Segmentation violation after pure virtual method called
+                     in tempdest_advisory_producer example
+    * [AMQCPP-275] - Thread::UncaughtExceptionHandler missing virtual destructor
+    * [AMQCPP-280] - Missing call to pthread_detach on linux causes temporary
+                     resource leak.
+    * [AMQCPP-281] - Memory Leak in Pointer class Constructor when dynamic cast fails.
+    * [AMQCPP-285] - If brokerURI is ipv4 format(127.0.0.1), createConnection will
+                     throw decaf::lang::exceptions::NumberFormatException.
+    * [AMQCPP-286] - Memory leak when adding connection.sendTimeout=3000 to a
+                     failover transport
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.1.0                               ==
 =========================================================================
 

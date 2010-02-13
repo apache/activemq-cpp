@@ -133,6 +133,7 @@
                 <directory>${basedir}/src/main/</directory>
                 <includes>
                   <includes>**\*.cpp</includes>
+                  <includes>**\*.c</includes>
                 </includes>
                 <excludes>
                   <exclude>**/decaf/security/**\*.cpp</exclude>
