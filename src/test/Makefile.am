@@ -136,6 +136,10 @@ cc_sources = \
     decaf/util/concurrent/atomic/AtomicIntegerTest.cpp \
     decaf/util/concurrent/atomic/AtomicReferenceTest.cpp \
     decaf/util/concurrent/locks/LockSupportTest.cpp \
+    decaf/util/zip/Adler32Test.cpp \
+    decaf/util/zip/CRC32Test.cpp \
+    decaf/util/zip/DeflaterTest.cpp \
+    decaf/util/zip/InflaterTest.cpp \
     main.cpp \
     testRegistry.cpp \
     util/teamcity/TeamCityProgressListener.cpp
@@ -270,6 +274,10 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicIntegerTest.h \
     decaf/util/concurrent/atomic/AtomicReferenceTest.h \
     decaf/util/concurrent/locks/LockSupportTest.h \
+    decaf/util/zip/Adler32Test.h \
+    decaf/util/zip/CRC32Test.h \
+    decaf/util/zip/DeflaterTest.h \
+    decaf/util/zip/InflaterTest.h \
     util/teamcity/TeamCityProgressListener.h
 
 

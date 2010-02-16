@@ -1,0 +1,446 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "Inflater.h"
+
+#include <stdio.h>
+#include <assert.h>
+
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
+#include <decaf/internal/util/zip/zlib.h>
+
+#include <decaf/lang/exceptions/RuntimeException.h>
+
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+using namespace decaf::util;
+using namespace decaf::util::zip;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace decaf{
+namespace util{
+namespace zip{
+
+    class InflaterData {
+    public:
+
+        bool nowrap;
+        bool finished;
+        bool needDictionary;
+        int flush;
+
+        z_stream* stream;
+
+    public:
+
+        static void initZlibInflate( InflaterData* handle, bool nowrap = false ) {
+
+            if( handle == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Error While initializing the Decompression Library." );
+            }
+
+            handle->stream = new z_stream;
+            handle->finished = false;
+            handle->needDictionary = false;
+            handle->flush = Z_NO_FLUSH;
+            handle->nowrap = nowrap;
+
+            // Init the ZLib stream to defaults
+            handle->stream->zalloc = Z_NULL;
+            handle->stream->zfree = Z_NULL;
+            handle->stream->opaque = Z_NULL;
+            handle->stream->avail_in = 0;
+            handle->stream->next_in = Z_NULL;
+
+            int result = Z_OK;
+            if( nowrap == false ) {
+                result = inflateInit( handle->stream );
+            } else {
+                // Disable the ZLib header.
+                result = inflateInit2( handle->stream, -15 );
+            }
+
+            if( result != Z_OK ) {
+                throw RuntimeException(
+                    __FILE__, __LINE__, "Error While initializing the Decompression Library." );
+            }
+        }
+
+        static void finishZlibDeflate( InflaterData* handle ) {
+
+            if( handle == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Error While initializing the Decompression Library." );
+            }
+
+            if( handle->stream != NULL ) {
+
+                // Shutdown the ZLib stream
+                inflateEnd( handle->stream );
+                delete handle->stream;
+                handle->stream = NULL;
+            }
+        }
+
+        static void resetZlibStream( InflaterData* handle ) {
+
+            if( handle == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Error While initializing the Decompression Library." );
+            }
+
+            if( handle->stream != NULL ) {
+
+                handle->finished = false;
+                handle->needDictionary = false;
+                handle->flush = Z_NO_FLUSH;
+
+                // Ask ZLib to do the reset.
+                inflateReset( handle->stream );
+
+                // clear any old data
+                handle->stream->opaque = Z_NULL;
+                handle->stream->avail_in = 0;
+                handle->stream->next_in = Z_NULL;
+            }
+        }
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+Inflater::Inflater( bool nowrap ) {
+
+    this->data = new InflaterData();
+
+    InflaterData::initZlibInflate( this->data, nowrap );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Inflater::Inflater() {
+
+    this->data = new InflaterData();
+
+    InflaterData::initZlibInflate( this->data );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Inflater::~Inflater() {
+    try{
+        this->end();
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setInput( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
+
+    try{
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Passed Buffer was NULL." );
+        }
+
+        if( this->data->stream == NULL ) {
+            throw IllegalStateException(
+                __FILE__, __LINE__, "The Inflater end method has already been called." );
+        }
+
+        if( offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "The offset + length given is greater than the specified buffer size." );
+        }
+
+        this->data->stream->avail_in = length;
+        this->data->stream->next_in = (Bytef*)( buffer + offset );
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( IllegalStateException )
+    DECAF_CATCHALL_THROW( IllegalStateException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setInput( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
+
+    if( buffer.empty() ) {
+        return;
+    }
+
+    this->setInput( &buffer[0], buffer.size(), offset, length );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setInput( const std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalStateException ) {
+
+    if( buffer.empty() ) {
+        return;
+    }
+
+    this->setInput( &buffer[0], buffer.size(), 0, buffer.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t Inflater::getRemaining() const {
+
+    if( this->data->stream != NULL ) {
+        return this->data->stream->avail_in;
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setDictionary( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
+
+    try{
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Passed Buffer was NULL." );
+        }
+
+        if( this->data->stream == NULL ) {
+            throw IllegalStateException(
+                __FILE__, __LINE__, "The Inflater end method has already been called." );
+        }
+
+        if( offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "The offset + length given is greater than the specified buffer size." );
+        }
+
+        // From the ZLib documentation
+        // inflateSetDictionary returns Z_OK if success, Z_STREAM_ERROR if a parameter is invalid (such
+        // as NULL dictionary) or the stream state is inconsistent, Z_DATA_ERROR if the given dictionary
+        // doesn't match the expected one (incorrect adler32 value). inflateSetDictionary does not
+        // perform any decompression: this will be done by subsequent calls of inflate().
+        int result = inflateSetDictionary( this->data->stream, buffer + offset, length );
+        if( result != Z_OK ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "Dictionary given does not match required checksum value." );
+        }
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( IllegalStateException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( IllegalStateException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setDictionary( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
+
+    if( buffer.empty() ) {
+        return;
+    }
+
+    this->setDictionary( &buffer[0], buffer.size(), offset, length );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::setDictionary( const std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
+
+    if( buffer.empty() ) {
+        return;
+    }
+
+    this->setDictionary( &buffer[0], buffer.size(), 0, buffer.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Inflater::needsInput() const {
+
+    if( this->data->stream == NULL ) {
+        return false;
+    }
+
+    return this->data->stream->avail_in == 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Inflater::needsDictionary() const {
+    return this->data->needDictionary;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::finish() {
+    this->data->flush = Z_FINISH;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Inflater::finished() const {
+    return this->data->finished;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t Inflater::inflate( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::util::zip::DataFormatException ) {
+
+    try{
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Passed Buffer was NULL." );
+        }
+
+        if( this->data->stream == NULL ) {
+            throw IllegalStateException(
+                __FILE__, __LINE__, "The Inflater end method has already been called." );
+        }
+
+        if( offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "The offset + length given is greater than the specified buffer size." );
+        }
+
+        std::size_t outStart = this->data->stream->total_out;
+
+        this->data->stream->next_out = buffer + offset;
+        this->data->stream->avail_out = length;
+
+        // Call ZLib and then process the resulting data to figure out what happened.
+        int result = ::inflate( this->data->stream, this->data->flush );
+
+        if( result == Z_STREAM_END ) {
+            this->data->finished = true;
+        } else if( result == Z_NEED_DICT ) {
+
+            if( this->needsDictionary() ) {
+                throw DataFormatException(
+                    __FILE__, __LINE__, "Inflate cannot proceed until a Dictionary is set." );
+            }
+
+            this->data->needDictionary = true;
+        } else if( result == Z_DATA_ERROR ) {
+            throw DataFormatException(
+                __FILE__, __LINE__, "Inflate failed because a block of invalid data was found." );
+        }
+
+        return this->data->stream->total_out - outStart;
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( DataFormatException )
+    DECAF_CATCH_RETHROW( IllegalStateException )
+    DECAF_CATCHALL_THROW( IllegalStateException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t Inflater::inflate( std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::util::zip::DataFormatException ) {
+
+    if( buffer.empty() ) {
+        return 0;
+    }
+
+    return this->inflate( &buffer[0], buffer.size(), offset, length );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t Inflater::inflate( std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalStateException,
+           decaf::util::zip::DataFormatException ){
+
+    if( buffer.empty() ) {
+        return 0;
+    }
+
+    return this->inflate( &buffer[0], buffer.size(), 0, buffer.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t Inflater::getAdler() const throw( decaf::lang::exceptions::IllegalStateException ) {
+
+    if( this->data->stream == NULL ) {
+        throw IllegalStateException(
+            __FILE__, __LINE__, "The Inflater has already been ended." );
+    }
+
+    return this->data->stream->adler;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long Inflater::getBytesRead() const throw( decaf::lang::exceptions::IllegalStateException ) {
+
+    if( this->data->stream == NULL ) {
+        throw IllegalStateException(
+            __FILE__, __LINE__, "The Inflater has already been ended." );
+    }
+
+    return this->data->stream->total_in;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long Inflater::getBytesWritten() const throw( decaf::lang::exceptions::IllegalStateException ) {
+
+    if( this->data->stream == NULL ) {
+        throw IllegalStateException(
+            __FILE__, __LINE__, "The Inflater has already been ended." );
+    }
+
+    return this->data->stream->total_out;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::reset() throw( decaf::lang::exceptions::IllegalStateException ) {
+
+    if( this->data->stream == NULL ) {
+        throw IllegalStateException(
+            __FILE__, __LINE__, "The Inflater has already been ended." );
+    }
+
+    InflaterData::resetZlibStream( this->data );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Inflater::end() {
+
+    if( this->data ) {
+        InflaterData::finishZlibDeflate( this->data );
+    }
+}

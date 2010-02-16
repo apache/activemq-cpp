@@ -498,6 +498,18 @@ cc_sources = \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
     decaf/internal/util/concurrent/unix/MutexImpl.cpp \
+    decaf/internal/util/zip/adler32.c \
+    decaf/internal/util/zip/compress.c \
+    decaf/internal/util/zip/crc32.c \
+    decaf/internal/util/zip/deflate.c \
+    decaf/internal/util/zip/gzio.c \
+    decaf/internal/util/zip/infback.c \
+    decaf/internal/util/zip/inffast.c \
+    decaf/internal/util/zip/inftrees.c \
+    decaf/internal/util/zip/minigzip.c \
+    decaf/internal/util/zip/trees.c \
+    decaf/internal/util/zip/uncompr.c \
+    decaf/internal/util/zip/zutil.c \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/BufferedInputStream.cpp \
     decaf/io/BufferedOutputStream.cpp \
@@ -571,7 +583,13 @@ cc_sources = \
     decaf/util/logging/SimpleFormatter.cpp \
     decaf/util/logging/SimpleLogger.cpp \
     decaf/util/logging/StreamHandler.cpp \
-    decaf/util/logging/XMLFormatter.cpp
+    decaf/util/logging/XMLFormatter.cpp \
+    decaf/util/zip/Adler32.cpp \
+    decaf/util/zip/CRC32.cpp \
+    decaf/util/zip/Deflater.cpp \
+    decaf/util/zip/DeflaterOutputStream.cpp \
+    decaf/util/zip/Inflater.cpp \
+    decaf/util/zip/InflaterInputStream.cpp
 
 
 h_sources = \
@@ -1128,6 +1146,16 @@ h_sources = \
     decaf/internal/util/concurrent/unix/MutexHandle.h \
     decaf/internal/util/concurrent/windows/ConditionHandle.h \
     decaf/internal/util/concurrent/windows/MutexHandle.h \
+    decaf/internal/util/zip/crc32.h \
+    decaf/internal/util/zip/deflate.h \
+    decaf/internal/util/zip/inffast.h \
+    decaf/internal/util/zip/inffixed.h \
+    decaf/internal/util/zip/inflate.h \
+    decaf/internal/util/zip/inftrees.h \
+    decaf/internal/util/zip/trees.h \
+    decaf/internal/util/zip/zconf.h \
+    decaf/internal/util/zip/zlib.h \
+    decaf/internal/util/zip/zutil.h \
     decaf/io/BlockingByteArrayInputStream.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/BufferedOutputStream.h \
@@ -1304,7 +1332,16 @@ h_sources = \
     decaf/util/logging/SimpleFormatter.h \
     decaf/util/logging/SimpleLogger.h \
     decaf/util/logging/StreamHandler.h \
-    decaf/util/logging/XMLFormatter.h
+    decaf/util/logging/XMLFormatter.h \
+    decaf/util/zip/Adler32.h \
+    decaf/util/zip/CRC32.h \
+    decaf/util/zip/Checksum.h \
+    decaf/util/zip/DataFormatException.h \
+    decaf/util/zip/Deflater.h \
+    decaf/util/zip/DeflaterOutputStream.h \
+    decaf/util/zip/Inflater.h \
+    decaf/util/zip/InflaterInputStream.h \
+    decaf/util/zip/ZipException.h
 
 
 ##
