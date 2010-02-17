@@ -112,8 +112,10 @@ void DeflaterTest::testDeflateArray() {
     static const std::size_t INPUT_SIZE = 5;
 
     unsigned char outPutBuf[BUFFER_SIZE];
+    memset( outPutBuf, 0, BUFFER_SIZE );
     unsigned char byteArray[] = { 5, 2, 3, 7, 8 };
     unsigned char outPutInf[BUFFER_SIZE];
+    memset( outPutInf, 0, BUFFER_SIZE );
 
     std::size_t offSet = 1;
     std::size_t length = BUFFER_SIZE - 1;
@@ -153,7 +155,7 @@ void DeflaterTest::testDeflateArray() {
         CPPUNIT_ASSERT_EQUAL( byteArray[i], outPutInf[i] );
     }
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Final decompressed data contained more bytes than original",
-                                  0, (int) outPutInf[BUFFER_SIZE] );
+                                  0, (int) outPutInf[BUFFER_SIZE-1] );
     infl.end();
 
     // Set of tests testing the boundaries of the offSet/length
