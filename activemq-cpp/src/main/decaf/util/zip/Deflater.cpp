@@ -52,10 +52,6 @@ namespace zip{
         bool finished;
         bool ended;
 
-        unsigned char* inputBuffer;
-        std::size_t inRead;
-        std::size_t inLength;
-
         z_stream* stream;
 
     public:
@@ -132,7 +128,6 @@ namespace zip{
                 handle->finished = false;
                 handle->flush = Z_NO_FLUSH;
                 handle->ended = false;
-                handle->flush = Z_NO_FLUSH;
 
                 // Ask ZLib to do the reset.
                 deflateReset( handle->stream );
