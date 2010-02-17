@@ -150,6 +150,7 @@ Inflater::Inflater() {
 Inflater::~Inflater() {
     try{
         this->end();
+        delete data;
     }
     DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
