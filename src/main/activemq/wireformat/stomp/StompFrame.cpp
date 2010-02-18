@@ -56,10 +56,10 @@ void StompFrame::setBody( const unsigned char* bytes, std::size_t numBytes ) {
 
     // Remove old data
     body.clear();
+    body.reserve( numBytes );
 
     // Copy data to internal buffer.
-    std::back_insert_iterator< std::vector<unsigned char> > iter( body );
-    std::copy( bytes, bytes + numBytes, iter );
+    this->body.insert( this->body.begin(), bytes, bytes + numBytes );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const
 
     // Write the command.
     const string& cmdString = this->getCommand();
-    stream->write( (unsigned char*)cmdString.c_str(), 0, cmdString.length() );
+    stream->write( (unsigned char*)cmdString.c_str(), cmdString.length(), 0, cmdString.length() );
     stream->write( '\n' );
 
     // Write all the headers.
@@ -82,9 +82,9 @@ void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const
         string& name = headers[ix].first;
         string& value = headers[ix].second;
 
-        stream->write( (unsigned char*)name.c_str(), 0, name.length() );
+        stream->write( (unsigned char*)name.c_str(), name.length(), 0, name.length() );
         stream->write( ':' );
-        stream->write( (unsigned char*)value.c_str(), 0, value.length() );
+        stream->write( (unsigned char*)value.c_str(), value.length(), 0, value.length() );
         stream->write( '\n' );
     }
 
@@ -94,7 +94,7 @@ void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const
     // Write the body.
     const std::vector<unsigned char>& body = this->getBody();
     if( body.size() > 0 ) {
-        stream->write( &body[0], 0, body.size() );
+        stream->write( &body[0], body.size(), 0, body.size() );
     }
 
     if( ( this->getBodyLength() == 0 ) ||
@@ -302,7 +302,7 @@ void StompFrame::readBody( decaf::io::DataInputStream* in )
             this->body.resize( (std::size_t)content_length );
 
             // Read the Content Length now
-            in->read( &body[0], 0, content_length );
+            in->read( &body[0], body.size(), 0, content_length );
 
             // Content Length read, now pop the end terminator off (\0\n).
             if( in->readByte() != '\0' ) {

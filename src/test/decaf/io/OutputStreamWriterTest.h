@@ -33,7 +33,7 @@ namespace io {
         CPPUNIT_TEST_SUITE( OutputStreamWriterTest );
         CPPUNIT_TEST( testClose );
         CPPUNIT_TEST( testFlush );
-        CPPUNIT_TEST( testWriteCharArrayIntInt );
+        CPPUNIT_TEST( testWriteCharArrayIntIntInt );
         CPPUNIT_TEST( testWriteChar );
         CPPUNIT_TEST( testWriteStringIntInt );
         CPPUNIT_TEST( testOutputStreamWriterOutputStream );
@@ -62,7 +62,7 @@ namespace io {
 
         void testClose();
         void testFlush();
-        void testWriteCharArrayIntInt();
+        void testWriteCharArrayIntIntInt();
         void testWriteChar();
         void testWriteStringIntInt();
         void testOutputStreamWriterOutputStream();

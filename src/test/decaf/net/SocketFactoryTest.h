@@ -97,7 +97,7 @@ namespace net{
                         io::InputStream* stream = socket->getInputStream();
                         memset( buf, 0, 1000 );
                         try{
-                            if( stream->read( buf, 0, 1000 ) == -1 ) {
+                            if( stream->read( buf, 1000, 0, 1000 ) == -1 ) {
                                 done = true;
                                 continue;
                             }
@@ -106,7 +106,7 @@ namespace net{
 
                             if( strcmp( (char*)buf, "reply" ) == 0 ){
                                 io::OutputStream* output = socket->getOutputStream();
-                                output->write( (unsigned char*)"hello", 0, strlen("hello" ) );
+                                output->write( (unsigned char*)"hello", strlen("hello"), 0, strlen("hello") );
                             }
 
                         }catch( io::IOException& ex ){
@@ -119,8 +119,7 @@ namespace net{
 
                     numClients--;
 
-                    synchronized(&mutex)
-                    {
+                    synchronized(&mutex) {
                         mutex.notifyAll();
                     }
 

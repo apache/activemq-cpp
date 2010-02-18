@@ -66,21 +66,13 @@ namespace io {
 
         virtual void flush() throw( decaf::io::IOException );
 
-        virtual void write( char v ) throw( decaf::io::IOException );
-
-        virtual void write( const std::vector<char>& buffer )
-            throw( decaf::io::IOException );
-
-        virtual void write( const std::string& str )
-            throw( decaf::io::IOException );
-
-        virtual void write( const std::string& str, std::size_t offset, std::size_t count )
-            throw( decaf::io::IOException, decaf::lang::exceptions::IndexOutOfBoundsException );
-
-        virtual void write( const char* buffer, std::size_t offset, std::size_t count )
-            throw( decaf::io::IOException, decaf::lang::exceptions::NullPointerException );
-
     protected:
+
+        virtual void doWriteArraySizeOffsetLength( const char* buffer, std::size_t size,
+                                                   std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         // Used to check state and throw error when closed.
         virtual void checkClosed() const throw( decaf::io::IOException );

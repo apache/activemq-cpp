@@ -135,20 +135,29 @@ namespace io{
         }
 
         /**
-         * Writes an array of bytes to the output stream.  The write method of
-         * FilterOutputStream calls the write method of one argument on each
-         * byte to output.
-         * @param buffer The array of bytes to write.
-         * @param offset, the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
+         * Writes an array of bytes to the output stream in order starting at buffer[offset]
+         * and proceeding until the number of bytes specified by the length argument are
+         * written or an error occurs.
+         *
+         * @param buffer
+         *      The array of bytes to write.
+         * @param size
+         *      The size of the buffer array passed.
+         * @param offset
+         *      The position to start writing in buffer.
+         * @param length
+         *      The number of bytes from the buffer to be written.
+         *
+         * @throws IOException if an I/O error occurs.
          * @throws NullPointerException thrown if buffer is Null.
+         * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset DECAF_UNUSED,
-                            std::size_t len )
-            throw ( IOException,
-                    lang::exceptions::NullPointerException ) {
+        virtual void write( const unsigned char* buffer, std::size_t size,
+                            std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
             try {
 
                 if( isClosed() ) {
@@ -158,13 +167,19 @@ namespace io{
                 }
 
                 if( buffer == NULL ) {
-                    throw lang::exceptions::NullPointerException(
+                    throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__,
                         "FilterOutputStream::write - Buffer passed is Null.");
                 }
 
-                for( std::size_t ix = 0; ix < len; ++ix ) {
-                    outputStream->write( buffer[ix] );
+                if( ( offset + length ) > size ) {
+                    throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                        __FILE__, __LINE__,
+                        "FilterOutputStream::write - given offset + length is greater than buffer size.");
+                }
+
+                for( std::size_t ix = 0; ix < length; ++ix ) {
+                    outputStream->write( buffer[offset + ix] );
                 }
             }
             DECAF_CATCH_RETHROW( IOException )

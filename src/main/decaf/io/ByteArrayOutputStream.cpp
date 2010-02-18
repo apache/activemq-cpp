@@ -65,17 +65,22 @@ void ByteArrayOutputStream::write( const std::vector<unsigned char>& buffer )
             return;
         }
 
-        this->write( &buffer[0], 0, buffer.size() );
+        this->write( &buffer[0], buffer.size(), 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( const unsigned char* buffer,
-                                   std::size_t offset,
-                                   std::size_t len )
-    throw ( IOException, lang::exceptions::NullPointerException ) {
+void ByteArrayOutputStream::write( const unsigned char* buffer, std::size_t size,
+                                   std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    if( length == 0 ) {
+        return;
+    }
 
     if( buffer == NULL ) {
         throw NullPointerException(
@@ -83,8 +88,14 @@ void ByteArrayOutputStream::write( const unsigned char* buffer,
             "ByteArrayOutputStream::write - passed buffer is null" );
     }
 
+    if( ( offset + length ) > size ) {
+        throw decaf::lang::exceptions::IndexOutOfBoundsException(
+            __FILE__, __LINE__,
+            "ByteArrayOutputStream::write - given offset + length is greater than buffer size.");
+    }
+
     try{
-        activeBuffer->insert( activeBuffer->end(), buffer + offset, buffer + offset + len );
+        activeBuffer->insert( activeBuffer->end(), buffer + offset, buffer + offset + length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -116,7 +127,7 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
                 "ByteArrayOutputStream::writeTo - Passed stream pointer is null" );
         }
 
-        out->write( this->toByteArray(), 0, this->size() );
+        out->write( this->toByteArray(), this->size(), 0, this->size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )

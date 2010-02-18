@@ -89,12 +89,12 @@ namespace io{
             return data.c_str()[pos++];
         }
 
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw (IOException){
+        virtual int read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException ) {
 
-            std::size_t numToRead = std::min( bufferSize, available() );
+            std::size_t numToRead = std::min( length, available() );
 
             if( this->isThrowOnRead() ) {
                 throw IOException(
@@ -184,7 +184,6 @@ void BufferedInputStreamTest::testConstructor() {
     MyInputStream myStream( testStr );
 
     // Test for method BufferedInputStream(InputStream, int)
-    bool exceptionFired = false;
     try {
 
         // Create buffer with exact size of data
@@ -296,7 +295,7 @@ void BufferedInputStreamTest::testRead() {
         CPPUNIT_ASSERT_MESSAGE( "Wrong initial byte", 0 == is.read() );
         // Fill the buffer
         unsigned char buf[14];
-        is.read( &buf[0], 0, (std::size_t)14 );
+        is.read( &buf[0], 14, 0, (std::size_t)14 );
 
         // Read greater than the buffer
         CPPUNIT_ASSERT_MESSAGE( "Wrong block read data",
@@ -325,7 +324,7 @@ void BufferedInputStreamTest::testRead2() {
     unsigned char buf1[100];
     try {
         is.skip( 3000 );
-        is.read( buf1, 0, 100 );
+        is.read( buf1, 100, 0, 100 );
         CPPUNIT_ASSERT_MESSAGE(
             "Failed to read correct data",
             string( (const char*)&buf1[0], 100 ) == testStr.substr( 3000, 100 ) );
@@ -342,14 +341,14 @@ void BufferedInputStreamTest::testReadException() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw IOException",
-        bis.read( NULL, 0, (size_t)-1 ),
+        bis.read( NULL, 1, 0, (size_t)-1 ),
         IOException );
 
     bis.close();
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw IOException",
-        bis.read( NULL, 0, 1 ),
+        bis.read( NULL, 1, 0, 1 ),
         IOException );
 }
 
@@ -386,7 +385,7 @@ void BufferedInputStreamTest::testSmallerBuffer(){
 
     unsigned char dummyBuf[20];
     memset( dummyBuf, 0, 20 );
-    std::size_t numRead = bufStream.read( dummyBuf, 0, 10 );
+    std::size_t numRead = bufStream.read( dummyBuf, 20, 0, 10 );
     CPPUNIT_ASSERT( numRead == 10 );
     CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );
 
@@ -427,7 +426,7 @@ void BufferedInputStreamTest::testBiggerBuffer(){
 
     unsigned char dummyBuf[20];
     memset( dummyBuf, 0, 20 );
-    std::size_t numRead = bufStream.read( dummyBuf, 0, 10 );
+    std::size_t numRead = bufStream.read( dummyBuf, 20, 0, 10 );
     CPPUNIT_ASSERT( numRead == 10 );
     CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );
 

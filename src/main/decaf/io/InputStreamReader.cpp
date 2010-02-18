@@ -84,8 +84,11 @@ bool InputStreamReader::ready() const throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::read( char* buffer, std::size_t offset, std::size_t length )
-    throw( IOException, lang::exceptions::NullPointerException ) {
+int InputStreamReader::doReadArraySizeOffsetLength(
+    char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        throw( decaf::io::IOException,
+               decaf::lang::exceptions::NullPointerException,
+               decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         checkClosed();
@@ -94,9 +97,11 @@ int InputStreamReader::read( char* buffer, std::size_t offset, std::size_t lengt
             return 0;
         }
 
-        return this->stream->read( (unsigned char*)buffer, offset, length );
+        return this->stream->read( (unsigned char*)buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
@@ -105,41 +110,4 @@ void InputStreamReader::checkClosed() const throw( decaf::io::IOException ) {
     if( closed ) {
         throw IOException( __FILE__, __LINE__, "This Reader is Closed" );
     }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::read( std::vector<char>& buffer )
-    throw( decaf::io::IOException ) {
-
-    try{
-        checkClosed();
-        return Reader::read( buffer );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::read() throw( decaf::io::IOException ) {
-
-    try{
-        checkClosed();
-        return Reader::read();
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::read( decaf::nio::CharBuffer* charBuffer )
-         throw( decaf::io::IOException,
-                decaf::lang::exceptions::NullPointerException,
-                decaf::nio::ReadOnlyBufferException ) {
-
-    try{
-        checkClosed();
-        return Reader::read( charBuffer );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
 }

@@ -134,10 +134,11 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw ( IOException, lang::exceptions::NullPointerException );
+        virtual int read( unsigned char* buffer, std::size_t size,
+                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
         /**
          * Closes the target input stream.

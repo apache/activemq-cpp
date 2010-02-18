@@ -69,22 +69,15 @@ namespace io {
 
         virtual void close() throw( decaf::io::IOException );
 
-        virtual int read( char* buffer, std::size_t offset, std::size_t count )
-            throw( IOException, lang::exceptions::NullPointerException );
-
         virtual bool ready() const throw( decaf::io::IOException );
 
-        virtual int read( std::vector<char>& buffer )
-            throw( decaf::io::IOException );
-
-        virtual int read() throw( decaf::io::IOException );
-
-        virtual int read( decaf::nio::CharBuffer* charBuffer )
-                 throw( decaf::io::IOException,
-                        decaf::lang::exceptions::NullPointerException,
-                        decaf::nio::ReadOnlyBufferException );
-
     protected:
+
+        virtual int doReadArraySizeOffsetLength( char* buffer, std::size_t size,
+                                                 std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         virtual void checkClosed() const throw( decaf::io::IOException );
 

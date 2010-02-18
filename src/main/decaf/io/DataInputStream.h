@@ -135,19 +135,27 @@ namespace io{
          * If the first byte cannot be read for any reason other than end of
          * file, then an IOException is thrown. In particular, an IOException
          * is thrown if the input stream has been closed.
-         * @param buffer - byte array to insert read data into
-         * @param offset - location in buffer to start writing
-         * @param length - number of bytes to read
-         * @returns the total number of bytes read, or -1 if there is no
-         *          more data because the stream is EOF.
-         * @throws IOException
-         * @throws NullPointerException if the buffer is null
+         *
+         * @param buffer
+         *      The target buffer to write the read in data to.
+         * @param size
+         *      The size in bytes of the target buffer.
+         * @param offset
+         *      The position in the buffer to start inserting the read in data.
+         * @param length
+         *      The maximum number of bytes that should be read into buffer.
+         *
+         * @return The number of bytes read or -1 if EOF is detected
+         *
+         * @throws IOException if an I/O error occurs.
+         * @throws NullPointerException if buffer passed is NULL.
+         * @throws IndexOutOfBoundsException if length > size - offset.
          */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t length )
-            throw ( io::IOException,
-                    lang::exceptions::NullPointerException );
+        virtual int read( unsigned char* buffer, std::size_t size,
+                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
         /**
          * Reads one input byte and returns true if that byte is nonzero,
@@ -368,23 +376,9 @@ namespace io{
 
     private:
 
-        // Used internally to reliable get data from the underlying stream
-        inline void readAllData( unsigned char* buffer,
-                                 std::size_t length )
-            throw ( io::IOException,
-                    io::EOFException ) {
-
-            std::size_t n = 0;
-            do{
-                int count = inputStream->read( &buffer[n], 0, length - n );
-                if( count == -1 ) {
-                    throw EOFException(
-                        __FILE__, __LINE__,
-                        "DataInputStream::readLong - Reached EOF" );
-                }
-                n += count;
-            } while( n < length );
-        }
+        // Used internally to reliably get data from the underlying stream
+        void readAllData( unsigned char* buffer, std::size_t length )
+            throw ( decaf::io::IOException, decaf::io::EOFException );
 
     };
 

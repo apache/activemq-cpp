@@ -45,7 +45,7 @@ void SocketOutputStream::close() throw( decaf::io::IOException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void SocketOutputStream::write( unsigned char c ) throw ( IOException ) {
-    write( &c, 0, 1 );
+    write( &c, 1, 0, 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,52 +58,67 @@ void SocketOutputStream::write( const std::vector<unsigned char>& buffer )
             return;
         }
 
-        this->write( &buffer[0], 0, buffer.size() );
+        this->write( &buffer[0], buffer.size(), 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char* buffer,
-                                std::size_t offset, std::size_t len )
-    throw ( IOException, lang::exceptions::NullPointerException ) {
+void SocketOutputStream::write( const unsigned char* buffer, std::size_t size,
+                                std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
-    if( len == 0 ) {
-        return;
-    }
+    try{
 
-    if( buffer == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__,
-            "SocketOutputStream::write - passed buffer is null" );
-    }
-
-    if( closed ) {
-        throw IOException(
-            __FILE__, __LINE__,
-            "decaf::net::SocketOutputStream::write - This Stream has been closed." );
-    }
-
-    apr_size_t remaining = (apr_size_t)len;
-    apr_status_t result = APR_SUCCESS;
-
-    const unsigned char* lbuffer = buffer + offset;
-
-    while( remaining > 0 && !closed ) {
-        // On input remaining is the bytes to send, after return remaining
-        // is the amount actually sent.
-        result = apr_socket_send( socket, (const char*)lbuffer, &remaining );
-
-        if( result != APR_SUCCESS || closed ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "decaf::net::SocketOutputStream::write - %s",
-                SocketError::getErrorString().c_str() );
+        if( length == 0 ) {
+            return;
         }
 
-        // move us to next position to write, or maybe end.
-        lbuffer += remaining;
-        remaining = len - remaining;
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__,
+                "SocketOutputStream::write - passed buffer is null" );
+        }
+
+        if( closed ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "SocketOutputStream::write - This Stream has been closed." );
+        }
+
+        if( ( offset + length ) > size ) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "SocketOutputStream::write - given offset + length is greater than buffer size.");
+        }
+
+        apr_size_t remaining = (apr_size_t)length;
+        apr_status_t result = APR_SUCCESS;
+
+        const unsigned char* lbuffer = buffer + offset;
+
+        while( remaining > 0 && !closed ) {
+            // On input remaining is the bytes to send, after return remaining
+            // is the amount actually sent.
+            result = apr_socket_send( socket, (const char*)lbuffer, &remaining );
+
+            if( result != APR_SUCCESS || closed ) {
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "decaf::net::SocketOutputStream::write - %s",
+                    SocketError::getErrorString().c_str() );
+            }
+
+            // move us to next position to write, or maybe end.
+            lbuffer += remaining;
+            remaining = length - remaining;
+        }
     }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
 }

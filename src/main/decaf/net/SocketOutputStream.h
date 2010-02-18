@@ -63,17 +63,28 @@ namespace net{
             throw ( io::IOException );
 
         /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param offset the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
+         * Writes an array of bytes to the output stream in order starting at buffer[offset]
+         * and proceeding until the number of bytes specified by the length argument are
+         * written or an error occurs.
+         *
+         * @param buffer
+         *      The array of bytes to write.
+         * @param size
+         *      The size of the buffer array passed.
+         * @param offset
+         *      The position to start writing in buffer.
+         * @param length
+         *      The number of bytes from the buffer to be written.
+         *
+         * @throws IOException if an I/O error occurs.
          * @throws NullPointerException thrown if buffer is Null.
+         * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset,
-                            std::size_t len )
-            throw ( io::IOException, lang::exceptions::NullPointerException );
+        virtual void write( const unsigned char* buffer, std::size_t size,
+                            std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Flush - does nothing.

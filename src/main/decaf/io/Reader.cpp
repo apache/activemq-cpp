@@ -72,14 +72,19 @@ std::size_t Reader::skip( std::size_t count )
 
         while( skipped < count ) {
 
-            int read = this->read( &charsSkipped[0], 0, toRead );
+            int read = this->doReadArraySizeOffsetLength(
+                            &charsSkipped[0], charsSkipped.size(), 0, toRead );
+
             if( read == -1 ) {
                 return skipped;
             }
+
             skipped += read;
+
             if( read < toRead ) {
                 return skipped;
             }
+
             if( count - skipped < (std::size_t)toRead ) {
                 toRead = (int)( count - skipped );
             }
@@ -95,12 +100,32 @@ std::size_t Reader::skip( std::size_t count )
 int Reader::read( std::vector<char>& buffer ) throw( decaf::io::IOException ) {
 
     try{
+        return this->doReadVector( buffer );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
 
-        if( buffer.size() == 0 ) {
-            return -1;
-        }
+////////////////////////////////////////////////////////////////////////////////
+int Reader::read( char* buffer, std::size_t length )
+   throw( decaf::io::IOException,
+          decaf::lang::exceptions::NullPointerException ) {
 
-        return this->read( &buffer[0], 0, buffer.size() );
+    try{
+        return this->doReadArraySize( buffer, length );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Reader::read( char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
+
+    try{
+        return this->doReadArraySizeOffsetLength( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -110,13 +135,7 @@ int Reader::read( std::vector<char>& buffer ) throw( decaf::io::IOException ) {
 int Reader::read() throw( IOException ) {
 
     try{
-        char buffer;
-
-        if( this->read( &buffer, 0, 1 ) == -1 ) {
-            return -1;
-        }
-
-        return buffer;
+        return this->doReadChar();
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -127,6 +146,72 @@ int Reader::read( decaf::nio::CharBuffer* charBuffer )
          throw( decaf::io::IOException,
                 decaf::lang::exceptions::NullPointerException,
                 decaf::nio::ReadOnlyBufferException ) {
+
+    try{
+        // Error checking is done in the Impl.
+        return this->doReadCharBuffer( charBuffer );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( ReadOnlyBufferException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Reader::doReadVector( std::vector<char>& buffer )
+    throw( decaf::io::IOException ) {
+
+    try{
+
+        if( buffer.size() == 0 ) {
+            return -1;
+        }
+
+        return this->doReadArraySizeOffsetLength( &buffer[0], buffer.size(), 0, buffer.size() );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Reader::doReadArraySize( char* buffer, std::size_t length )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException ) {
+
+    try{
+
+        if( length == 0 ) {
+            return 0;
+        }
+
+        return this->doReadArraySizeOffsetLength( buffer, length, 0, length );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Reader::doReadChar() throw( decaf::io::IOException ) {
+
+    try{
+
+        char buffer;
+
+        if( this->doReadArraySizeOffsetLength( &buffer, 1, 0, 1 ) == -1 ) {
+            return -1;
+        }
+
+        return buffer;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException,
+           decaf::nio::ReadOnlyBufferException ) {
 
     try{
 
@@ -143,7 +228,7 @@ int Reader::read( decaf::nio::CharBuffer* charBuffer )
 
         std::vector<char> buffer( length );
 
-        length = Math::min( length, this->read( buffer ) );
+        length = Math::min( length, this->doReadVector( buffer ) );
 
         if( length > 0 ) {
             charBuffer->put( &buffer[0], 0, length );

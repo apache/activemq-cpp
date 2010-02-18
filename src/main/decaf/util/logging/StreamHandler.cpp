@@ -171,7 +171,7 @@ void StreamHandler::close( bool closeStream ) {
 void StreamHandler::write( const std::string& value ) {
 
     try{
-        this->stream->write( (const unsigned char*)value.c_str(), 0, value.length() );
+        this->stream->write( (const unsigned char*)value.c_str(), value.length(), 0, value.length() );
     } catch( Exception& e ) {
         this->getErrorManager()->error(
             "Failed to write to the OutputStream", &e, ErrorManager::WRITE_FAILURE );

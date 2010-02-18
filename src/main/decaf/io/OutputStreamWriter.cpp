@@ -80,8 +80,11 @@ void OutputStreamWriter::flush() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::write( const char* buffer, std::size_t offset, std::size_t count )
-    throw( IOException, NullPointerException ) {
+void OutputStreamWriter::doWriteArraySizeOffsetLength( const char* buffer, std::size_t size,
+                                                       std::size_t offset, std::size_t length )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         checkClosed();
@@ -91,56 +94,10 @@ void OutputStreamWriter::write( const char* buffer, std::size_t offset, std::siz
                 __FILE__, __LINE__, "Given buffer was NULL." );
         }
 
-        this->stream->write( (const unsigned char*)buffer, offset, count );
+        this->stream->write( (const unsigned char*)buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::write( char v ) throw( IOException ) {
-
-    try{
-        checkClosed();
-        Writer::write( v );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::write( const std::vector<char>& buffer ) throw( IOException ) {
-
-    try{
-        checkClosed();
-        Writer::write( buffer );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::write( const std::string& str ) throw( IOException ) {
-
-    try{
-        checkClosed();
-        Writer::write( str );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::write( const std::string& str, std::size_t offset, std::size_t length )
-    throw( IOException, IndexOutOfBoundsException ) {
-
-    try{
-        checkClosed();
-        Writer::write( str, offset, length );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
 

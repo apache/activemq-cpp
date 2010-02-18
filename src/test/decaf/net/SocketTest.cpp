@@ -98,7 +98,7 @@ void SocketTest::testTx() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "don't reply";
-        stream->write( (unsigned char*)msg.c_str(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
 
         Thread::sleep( 10 );
 
@@ -152,7 +152,7 @@ void SocketTest::testTrx() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "reply";
-        stream->write( (unsigned char*)msg.c_str(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
 
         synchronized(&serverThread.mutex)
         {
@@ -163,7 +163,7 @@ void SocketTest::testTrx() {
         memset( buf, 0, 500 );
         io::InputStream* istream = client.getInputStream();
         CPPUNIT_ASSERT( istream->available() != 0 );
-        std::size_t numRead = istream->read( buf, 0, 500 );
+        std::size_t numRead = istream->read( buf, 500, 0, 500 );
         CPPUNIT_ASSERT( numRead == 5 );
         CPPUNIT_ASSERT( strcmp( (char*)buf, "hello" ) == 0 );
 
@@ -256,7 +256,7 @@ void SocketTest::testTrxNoDelay() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "reply";
-        stream->write( (unsigned char*)msg.c_str(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
 
         synchronized(&serverThread.mutex)
         {
@@ -266,7 +266,7 @@ void SocketTest::testTrxNoDelay() {
         unsigned char buf[500];
         memset( buf, 0, 500 );
         io::InputStream* istream = client.getInputStream();
-        std::size_t numRead = istream->read( buf, 0, 500 );
+        std::size_t numRead = istream->read( buf, 500, 0, 500 );
         CPPUNIT_ASSERT( numRead == 5 );
         CPPUNIT_ASSERT( strcmp( (char*)buf, "hello" ) == 0 );
 

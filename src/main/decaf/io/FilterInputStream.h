@@ -134,12 +134,12 @@ namespace io{
          * @throws IOException thrown if an error occurs.
          * @throws NullPointerException
          */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw ( IOException,
-                    lang::exceptions::NullPointerException )
-        {
+        virtual int read( unsigned char* buffer, std::size_t size,
+                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException ) {
+
             try {
 
                 if( isClosed() ) {
@@ -148,7 +148,7 @@ namespace io{
                         "FilterInputStream::read - Stream is closed" );
                 }
 
-                return inputStream->read( buffer, offset, bufferSize );
+                return inputStream->read( buffer, size, offset, length );
             }
             DECAF_CATCH_RETHROW( IOException )
             DECAF_CATCH_RETHROW( lang::exceptions::NullPointerException )

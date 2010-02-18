@@ -117,10 +117,16 @@ int ByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read( unsigned char* buffer, std::size_t offset, std::size_t bufferSize )
-    throw ( IOException, lang::exceptions::NullPointerException ){
+int ByteArrayInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
+
+        if( size == 0 || length == 0 ) {
+            return 0;
+        }
 
         if( activeBuffer == NULL ){
             throw IOException(
@@ -134,6 +140,12 @@ int ByteArrayInputStream::read( unsigned char* buffer, std::size_t offset, std::
                 "ByteArrayInputStream::read - Buffer passed is Null" );
         }
 
+        if( length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        }
+
         std::size_t ix = 0;
 
         if( pos == activeBuffer->end() ) {
@@ -145,9 +157,9 @@ int ByteArrayInputStream::read( unsigned char* buffer, std::size_t offset, std::
 
         // We only read as much as is left if the amount remaining is less than
         // the amount of data asked for.
-        bufferSize = remaining < bufferSize ? remaining : bufferSize;
+        length = remaining < length ? remaining : length;
 
-        for( ; ix < bufferSize; ++ix, ++pos) {
+        for( ; ix < length; ++ix, ++pos) {
             buffer[ix + offset] = *(pos);
         }
 

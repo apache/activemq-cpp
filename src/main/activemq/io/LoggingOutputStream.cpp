@@ -47,12 +47,17 @@ void LoggingOutputStream::write( const unsigned char c ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::write( const unsigned char* buffer,
-                                 size_t offset,
-                                 size_t len )
-    throw ( IOException, NullPointerException ) {
+void LoggingOutputStream::write( const unsigned char* buffer, std::size_t size,
+                                 std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
+
+        if( length == 0 ) {
+            return;
+        }
 
         if( buffer == NULL ) {
             throw NullPointerException(
@@ -60,11 +65,19 @@ void LoggingOutputStream::write( const unsigned char* buffer,
                 "LoggingOutputStream::write - Passed Buffer is Null" );
         }
 
-        log( buffer, len );
+        if( ( offset + length ) > size ) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        }
 
-        FilterOutputStream::write( buffer, offset, len );
+        log( buffer + offset, length );
+
+        FilterOutputStream::write( buffer, size, offset, length );
     }
     AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
     AMQ_CATCHALL_THROW( IOException )
 }
 

@@ -23,13 +23,17 @@
 #include <decaf/io/IOException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
+
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf{
 namespace io{
 
     /**
-     * Base interface for an output stream.
+     * Base interface for any class that wants to represent an output stream of bytes.
+     *
+     * @since 1.0
      */
     class DECAF_API OutputStream : public Closeable,
                                    public Flushable,
@@ -37,35 +41,53 @@ namespace io{
     {
     public:
 
-        virtual ~OutputStream(){}
+        virtual ~OutputStream() {}
 
         /**
          * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
+         *
+         * @param c
+         *      The byte to write to the sink.
+         *
+         * @throws IOException if an I/O error occurs.
          */
         virtual void write( unsigned char c ) throw ( IOException ) = 0;
 
         /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
+         * Writes an array of bytes to the output stream.  The entire contents of
+         * the given vector are written to the output stream.
+         *
+         * @param buffer
+         *      The vector of bytes to write.
+         *
+         * @throws IOException if an I/O error occurs.
          */
         virtual void write( const std::vector<unsigned char>& buffer )
             throw ( IOException ) = 0;
 
         /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param offset the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
+         * Writes an array of bytes to the output stream in order starting at buffer[offset]
+         * and proceeding until the number of bytes specified by the length argument are
+         * written or an error occurs.
+         *
+         * @param buffer
+         *      The array of bytes to write.
+         * @param size
+         *      The size of the buffer array passed.
+         * @param offset
+         *      The position to start writing in buffer.
+         * @param length
+         *      The number of bytes from the buffer to be written.
+         *
+         * @throws IOException if an I/O error occurs.
          * @throws NullPointerException thrown if buffer is Null.
+         * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset,
-                            std::size_t len )
-            throw ( IOException, lang::exceptions::NullPointerException ) = 0;
+        virtual void write( const unsigned char* buffer, std::size_t size,
+                            std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
     };
 

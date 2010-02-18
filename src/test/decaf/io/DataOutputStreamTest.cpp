@@ -49,11 +49,11 @@ void DataOutputStreamTest::testFlush() {
 void DataOutputStreamTest::testSize() {
 
     try {
-        os->write( (unsigned char*)&testData[0], 0, 150 );
+        os->write( (unsigned char*)&testData[0], testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char rbuf[150];
-        is->read( rbuf, 0, 150 );
+        is->read( rbuf, 150, 0, 150 );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect size returned", 150 == os->size());
     } catch( IOException &e ) {
@@ -65,11 +65,11 @@ void DataOutputStreamTest::testSize() {
 void DataOutputStreamTest::testWrite1() {
 
     try {
-        os->write( (unsigned char*)&testData[0], 0, 150 );
+        os->write( (unsigned char*)&testData[0], testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char* rbuf = new unsigned char[150];
-        is->read(rbuf, 0, 150);
+        is->read(rbuf, 150, 0, 150);
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)rbuf, 150 ) == testData.substr( 0, 150 ) );
@@ -369,7 +369,7 @@ void DataOutputStreamTest::test(){
     writer.writeLong( longVal );
     writer.writeFloat( floatVal );
     writer.writeDouble( doubleVal );
-    writer.write( arrayVal, 0, 3 );
+    writer.write( arrayVal, 3, 0, 3 );
 
     const unsigned char* buffer = myStream.toByteArray();
     int ix = 0;
