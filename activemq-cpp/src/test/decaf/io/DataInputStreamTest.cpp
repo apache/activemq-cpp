@@ -79,7 +79,7 @@ void DataInputStreamTest::testRead2() {
         os->close();
         openDataInputStream();
         unsigned char* result = new unsigned char[ testData.length() ];
-        is->read( result, 0, testData.length() );
+        is->read( result, testData.length(), 0, testData.length() );
         CPPUNIT_ASSERT_MESSAGE("Incorrect data read",
             string( (const char*)result, testData.size() ) == testData );
         delete [] result;
@@ -442,7 +442,7 @@ void DataInputStreamTest::test(){
     //std::cout << "double Value = " << doubleVal << std::endl;
     CPPUNIT_ASSERT( doubleVal == 100.0 );
 
-    reader.read( arrayVal, 0, 3 );
+    reader.read( arrayVal, 3, 0, 3 );
     //std::cout << "char[0] Value = " << (int)arrayVal[0] << std::endl;
     CPPUNIT_ASSERT( arrayVal[0] == 'a' );
     //std::cout << "char[1] Value = " << (int)arrayVal[1] << std::endl;

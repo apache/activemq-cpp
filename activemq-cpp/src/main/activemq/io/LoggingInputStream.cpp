@@ -48,12 +48,16 @@ int LoggingInputStream::read() throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::read( unsigned char* buffer,
-                              std::size_t offset,
-                              std::size_t bufferSize )
-    throw ( IOException, NullPointerException )
-{
+int LoggingInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
+
     try {
+
+        if( length == 0 ) {
+            return 0;
+        }
 
         if( buffer == NULL ) {
             throw NullPointerException(
@@ -61,7 +65,13 @@ int LoggingInputStream::read( unsigned char* buffer,
                 "LoggingInputStream::read - Passed Buffer is Null" );
         }
 
-        std::size_t numRead = FilterInputStream::read( buffer, offset, bufferSize );
+        if( length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        }
+
+        std::size_t numRead = FilterInputStream::read( buffer, size, offset, length );
 
         log( buffer, numRead );
 

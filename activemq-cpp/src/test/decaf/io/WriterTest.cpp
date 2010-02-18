@@ -59,47 +59,27 @@ namespace io{
         virtual void flush() throw( decaf::io::IOException ) {
         }
 
-        virtual void write( const char* buffer, std::size_t offset, std::size_t count )
-            throw( decaf::io::IOException, lang::exceptions::NullPointerException ) {
+        virtual void doWriteArraySizeOffsetLength(
+            const char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+                throw( decaf::io::IOException,
+                       decaf::lang::exceptions::NullPointerException,
+                       decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
             if( NULL == contents ) {
                 throw IOException( __FILE__, __LINE__, "Writer was already closed." );
             }
 
-            if( offset >= count ) {
-                throw IndexOutOfBoundsException( __FILE__, __LINE__, "offset must be less than count." );
+            if( offset + length > size ) {
+                throw IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "offset + length must be less than size." );
             }
 
-            for( std::size_t i = 0; i < count; i++ ) {
+            for( std::size_t i = 0; i < length; i++ ) {
                 contents[this->offset + i] = buffer[offset + i];
             }
 
-            this->offset += count;
+            this->offset += length;
 
-        }
-
-        virtual void write( char v )
-            throw( IOException ) {
-
-            Writer::write( v );
-        }
-
-        virtual void write( const std::vector<char>& buffer )
-            throw( IOException ) {
-
-            Writer::write( buffer );
-        }
-
-        virtual void write( const std::string& str )
-            throw( IOException ) {
-
-            Writer::write( str );
-        }
-
-        virtual void write( const std::string& str, std::size_t offset, std::size_t count )
-            throw( IOException, lang::exceptions::IndexOutOfBoundsException ) {
-
-            Writer::write( str, offset, count );
         }
 
         std::vector<char> getContents() {

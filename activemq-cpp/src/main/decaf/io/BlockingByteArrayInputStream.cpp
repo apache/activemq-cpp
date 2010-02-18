@@ -49,15 +49,14 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     synchronized( this ){
 
         // Remove old data
-        buffer.clear();
-        buffer.reserve( lbufferSize );
+        this->buffer.clear();
+        this->buffer.reserve( lbufferSize );
 
         // Copy data to internal buffer.
-        std::back_insert_iterator< std::vector<unsigned char> > iter( buffer );
-        std::copy( lbuffer, lbuffer + lbufferSize, iter );
+        this->buffer.insert( this->buffer.begin(), lbuffer, lbuffer + lbufferSize );
 
         // Begin at the Beginning.
-        pos = this->buffer.begin();
+        this->pos = this->buffer.begin();
 
         // Notify any listening threds that there is now data available.
         notifyAll();
@@ -106,12 +105,13 @@ int BlockingByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::read( unsigned char* buffer,
-                                        std::size_t offset,
-                                        std::size_t bufferSize )
-    throw ( IOException, lang::exceptions::NullPointerException ){
+int BlockingByteArrayInputStream::read( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
-    if( bufferSize == 0 ) {
+    if( size == 0 || length == 0 ) {
         return 0;
     }
 
@@ -121,11 +121,17 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer,
             "BlockingByteArrayInputStream::read - Passed buffer is Null" );
     }
 
+    if( length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__,
+            "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+    }
+
     synchronized( this ){
 
         std::size_t ix = 0;
 
-        for( ; ix < bufferSize && !closing; ++ix ) {
+        for( ; ix < length && !closing; ++ix ) {
 
             if( pos == this->buffer.end() ) {
                 // Wait for more data to come in.

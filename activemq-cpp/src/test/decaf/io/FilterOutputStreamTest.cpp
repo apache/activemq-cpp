@@ -43,7 +43,7 @@ void FilterOutputStreamTest::testClose() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, 500 );
+        os.write( (unsigned char*)&testString[0], testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -59,7 +59,7 @@ void FilterOutputStreamTest::testFlush() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, 500 );
+        os.write( (unsigned char*)&testString[0], testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -75,13 +75,13 @@ void FilterOutputStreamTest::testWrite1() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, testString.size() );
+        os.write( (unsigned char*)&testString[0], testString.size(), 0, testString.size() );
         ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 bais.available() == testString.length() );
         unsigned char* wbytes = new unsigned char[ testString.length() ];
-        bais.read( wbytes, 0, testString.length() );
+        bais.read( wbytes, testString.length(), 0, testString.length() );
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             testString == string( (const char*)wbytes, testString.length() ) );
 
@@ -102,7 +102,7 @@ void FilterOutputStreamTest::testWrite2() {
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Byte not written after flush", 1 == bais.available() );
         unsigned char wbytes[1];
-        bais.read( wbytes, 0, 1 );
+        bais.read( wbytes, 1, 0, 1 );
         CPPUNIT_ASSERT_MESSAGE("Incorrect byte written", 't' == wbytes[0] );
     } catch( IOException& e ) {
         CPPUNIT_FAIL("Write test failed : " + e.getMessage());

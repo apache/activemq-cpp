@@ -82,11 +82,11 @@ void OutputStreamWriterTest::testFlush() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriterTest::testWriteCharArrayIntInt() {
+void OutputStreamWriterTest::testWriteCharArrayIntIntInt() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw an NullPointerException",
-        this->writer1->write( NULL, 1, 1 ),
+        this->writer1->write( NULL, 0, 1, 1 ),
         NullPointerException );
 
     this->writer1->write( TEST_STRING.c_str(), 1, 2 );
@@ -104,7 +104,7 @@ void OutputStreamWriterTest::testWriteCharArrayIntInt() {
     // After the stream is closed, should throw IOException first
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw an IOException",
-        this->writer1->write( NULL, 0, 10 ),
+        this->writer1->write( NULL, 0, 0, 10 ),
         IOException );
 }
 

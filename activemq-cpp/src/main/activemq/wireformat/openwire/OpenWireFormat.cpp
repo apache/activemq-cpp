@@ -229,7 +229,7 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                 if( !sizePrefixDisabled ) {
                     looseOut->close();
                     dataOut->writeInt( (int)baos->size() );
-                    dataOut->write( baos->toByteArray(), 0, baos->size() );
+                    dataOut->write( baos->toByteArray(), baos->size(), 0, baos->size() );
 
                     // Delete allocated resource
                     delete baos;
@@ -412,7 +412,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
             MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
             vector<unsigned char> sequence = ma->getMarshaledForm( this );
-            ds->write( &sequence[0], 0, sequence.size() );
+            ds->write( sequence );
 
         } else {
 

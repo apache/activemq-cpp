@@ -48,14 +48,19 @@ void StandardErrorOutputStream::write( const std::vector<unsigned char>& buffer 
         return;
     }
 
-    this->write( &buffer[0], 0, buffer.size() );
+    this->write( &buffer[0], buffer.size(), 0, buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::write( const unsigned char* buffer,
-                                       std::size_t offset,
-                                       std::size_t len )
-    throw ( decaf::io::IOException, lang::exceptions::NullPointerException ) {
+void StandardErrorOutputStream::write( const unsigned char* buffer, std::size_t size,
+                                       std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    if( length == 0 ) {
+        return;
+    }
 
     if( buffer == NULL ) {
         throw lang::exceptions::NullPointerException(
@@ -63,13 +68,13 @@ void StandardErrorOutputStream::write( const unsigned char* buffer,
             "StandardErrorOutputStream::write - Passed buffer is null." );
     }
 
-    if( offset > len ) {
-        throw decaf::io::IOException(
+    if( ( offset + length ) > size ) {
+        throw decaf::lang::exceptions::IndexOutOfBoundsException(
             __FILE__, __LINE__,
-            "StandardErrorOutputStream::write - offset passed is greater than length" );
+            "StandardErrorOutputStream::write - given offset + length is greater than buffer size.");
     }
 
-	for( std::size_t i = 0; i < len; ++i ) {
+    for( std::size_t i = 0; i < length; ++i ) {
         std::cerr << buffer[i+offset];
     }
 }

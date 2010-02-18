@@ -129,10 +129,10 @@ int BufferedInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::read( unsigned char* targetBuffer,
-                               std::size_t offset,
-                               std::size_t targetBufferSize )
-    throw ( IOException, NullPointerException ){
+int BufferedInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -143,14 +143,19 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
         }
 
         // For zero, do nothing
-        if( targetBufferSize == 0 ) {
+        if( size == 0 || length == 0 ) {
             return 0;
         }
 
-        if( targetBuffer == NULL ) {
-            throw NullPointerException(
+        if( length > size - offset ) {
+            throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
-                "BufferedInputStream::read - Passed NULL for target Buffer");
+                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        }
+
+        if( size - offset < length ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Given size{%d} - offset{%d} > length{%d}.", size, offset, length );
         }
 
         // If there's no data left, reset to pointers to the beginning of the
@@ -160,13 +165,13 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
         // If we still haven't filled the output buffer AND there is data
         // on the input stream to be read, read a buffer's worth from the stream.
         std::size_t totalRead = 0;
-        while( totalRead < targetBufferSize ){
+        while( totalRead < length ){
 
             // Get the remaining bytes to copy.
-            std::size_t bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
+            std::size_t bytesToCopy = min( tail-head, (length-totalRead) );
 
             // Copy the data to the output buffer.
-            memcpy( targetBuffer+totalRead+offset, this->buffer+head, bytesToCopy );
+            memcpy( buffer+totalRead+offset, this->buffer+head, bytesToCopy );
 
             // Increment the total bytes read.
             totalRead += bytesToCopy;
@@ -180,7 +185,7 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
 
             // If we still haven't satisified the request,
             // read more data.
-            if( totalRead < targetBufferSize ){
+            if( totalRead < length ){
 
                 // Buffer as much data as we can, return EOF if we hit it.
                 if( bufferData() == -1 ) {
@@ -262,7 +267,7 @@ int BufferedInputStream::bufferData() throw ( IOException ){
         std::size_t bytesToRead = max( (std::size_t)1, min( available, getUnusedBytes() ) );
 
         // Read the bytes from the input stream.
-        int bytesRead = inputStream->read( getTail(), 0, bytesToRead );
+        int bytesRead = inputStream->read( buffer, bufferSize, tail, bytesToRead );
         if( bytesRead == 0 ){
             throw IOException(
                 __FILE__, __LINE__,

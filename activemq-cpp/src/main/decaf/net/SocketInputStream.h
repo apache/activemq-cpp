@@ -78,10 +78,11 @@ namespace net{
          * @return the number of bytes read. or -1 if EOF
          * @throws IOException f an error occurs.
          */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw ( io::IOException, lang::exceptions::NullPointerException );
+        virtual int read( unsigned char* buffer, std::size_t size,
+                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
         /**
          * Close - does nothing.  It is the responsibility of the owner

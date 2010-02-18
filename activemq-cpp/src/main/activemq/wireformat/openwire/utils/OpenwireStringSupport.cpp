@@ -177,7 +177,7 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
             }
 
             dataOut.writeInt( utfLength );
-            dataOut.write( &utfBytes[0], 0, utfLength );
+            dataOut.write( &utfBytes[0], utfLength, 0, utfLength );
 
         } else {
             dataOut.writeInt( -1 );

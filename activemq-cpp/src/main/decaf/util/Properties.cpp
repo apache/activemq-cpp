@@ -552,7 +552,9 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
             buffer.str("");
         }
 
-        out->write( (const unsigned char*)writer.str().c_str(), 0, writer.str().length() );
+        std::size_t length = writer.str().length();
+
+        out->write( (const unsigned char*)writer.str().c_str(), length, 0, length );
         out->flush();
     }
     DECAF_CATCH_RETHROW( IOException )

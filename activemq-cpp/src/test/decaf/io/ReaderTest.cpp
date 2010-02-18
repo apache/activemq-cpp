@@ -59,9 +59,13 @@ namespace io{
             contents.clear();
         }
 
-        virtual int read( char* buffer, std::size_t offset, std::size_t length )
+    protected:
+
+        virtual int doReadArraySizeOffsetLength( char* buffer, std::size_t size,
+                                                 std::size_t offset, std::size_t length )
             throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException ) {
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
             if( contents.empty() ) {
                 return -1;
@@ -77,24 +81,6 @@ namespace io{
 
             current_offset += length;
             return length;
-        }
-
-        virtual int read( decaf::nio::CharBuffer* charBuffer )
-                 throw( decaf::io::IOException,
-                        decaf::lang::exceptions::NullPointerException,
-                        decaf::nio::ReadOnlyBufferException ) {
-
-            return Reader::read( charBuffer );
-        }
-
-        virtual int read() throw( decaf::io::IOException ) {
-            return Reader::read();
-        }
-
-        virtual int read( std::vector<char>& buffer )
-            throw( decaf::io::IOException ) {
-
-            return Reader::read( buffer );
         }
 
     };

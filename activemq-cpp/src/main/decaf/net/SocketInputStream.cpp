@@ -52,6 +52,7 @@ using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::util;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,10 +160,10 @@ int SocketInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::read( unsigned char* buffer,
-                             std::size_t offset,
-                             std::size_t bufferSize )
-    throw ( IOException, lang::exceptions::NullPointerException ) {
+int SocketInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
@@ -171,17 +172,29 @@ int SocketInputStream::read( unsigned char* buffer,
             "decaf::io::SocketInputStream::read - The Stream has been closed" );
     }
 
-    apr_size_t size = (apr_size_t)bufferSize;
+    if( buffer == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__,
+            "SocketInputStream::read - Buffer passed is Null" );
+    }
+
+    if( length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__,
+            "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+    }
+
+    apr_size_t aprSize = (apr_size_t)length;
     apr_status_t result = APR_SUCCESS;
 
     // Read data from the socket, size on input is size of buffer, when done
     // size is the number of bytes actually read, can be <= bufferSize.
-    result = apr_socket_recv( socket, (char*)buffer + offset, &size );
+    result = apr_socket_recv( socket, (char*)buffer + offset, &aprSize );
 
     // Check for EOF, on windows we only get size==0 so check that to, if we
     // were closed though then we throw an IOException so the caller knows we
     // aren't usable anymore.
-    if( ( APR_STATUS_IS_EOF( result ) || size == 0 ) && !closed ) {
+    if( ( APR_STATUS_IS_EOF( result ) || aprSize == 0 ) && !closed ) {
         return -1;
     }
 
@@ -200,7 +213,7 @@ int SocketInputStream::read( unsigned char* buffer,
             SocketError::getErrorString().c_str() );
     }
 
-    return (int)size;
+    return (int)aprSize;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

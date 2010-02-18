@@ -80,12 +80,12 @@ namespace io{
             return data.c_str()[pos++];
         }
 
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw (IOException){
+        virtual int read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException ) {
 
-            std::size_t numToRead = std::min( bufferSize, available() );
+            std::size_t numToRead = std::min( length, available() );
 
             if( this->isThrowOnRead() ) {
                 throw IOException(
@@ -219,7 +219,7 @@ void FilterInputStreamTest::testRead2() {
     FilterInputStream is( &myStream );
 
     unsigned char buf[30];
-    is.read( buf, 0, 30 );
+    is.read( buf, 30, 0, 30 );
     CPPUNIT_ASSERT_MESSAGE( "Failed to read correct data",
         string( (const char*)buf, 30 ) == testStr.substr(0, 30) );
 }
@@ -236,7 +236,7 @@ void FilterInputStreamTest::testRead3() {
 
     unsigned char buf[100];
     is.skip(3000);
-    is.read( buf, 0, 100 );
+    is.read( buf, 100, 0, 100 );
     CPPUNIT_ASSERT_MESSAGE( "Failed to read correct data",
         string( (const char*)buf, 100 ) == testStr.substr( 3000, 100 ) );
 }
@@ -253,7 +253,7 @@ void FilterInputStreamTest::testSkip() {
 
     unsigned char buf[100];
     is.skip( 1000 );
-    is.read( buf, 0, 100 );
+    is.read( buf, 100, 0, 100 );
     CPPUNIT_ASSERT_MESSAGE( "Failed to skip to correct position",
             string( (const char*)buf, 100 ) == testStr.substr( 1000, 100 ) );
 }

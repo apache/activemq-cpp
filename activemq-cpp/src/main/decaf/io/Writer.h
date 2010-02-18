@@ -53,7 +53,7 @@ namespace io{
          *
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( char v ) throw( decaf::io::IOException );
+        void write( char v ) throw( decaf::io::IOException );
 
         /**
          * Writes an array of Chars
@@ -63,7 +63,7 @@ namespace io{
          *
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const std::vector<char>& buffer )
+        void write( const std::vector<char>& buffer )
             throw( decaf::io::IOException );
 
         /**
@@ -71,6 +71,23 @@ namespace io{
          *
          * @param buffer
          *      The byte array to write (cannot be NULL).
+         * @param size
+         *      The size in bytes of the buffer passed.
+         *
+         * @throws IOException if an I/O error occurs.
+         * @throws NullPointerException if buffer is NULL.
+         */
+        void write( const char* buffer, std::size_t size )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        /**
+         * Writes a byte array to the output stream.
+         *
+         * @param buffer
+         *      The byte array to write (cannot be NULL).
+         * @param size
+         *      The size in bytes of the buffer passed.
          * @param offset
          *      The position in the array to start writing from.
          * @param length
@@ -78,9 +95,12 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          * @throws NullPointerException if buffer is NULL.
+         * @throws IndexOutOfBoundsException if offset + length > size of the buffer.
          */
-        virtual void write( const char* buffer, std::size_t offset, std::size_t length )
-            throw( decaf::io::IOException, decaf::lang::exceptions::NullPointerException ) = 0;
+        void write( const char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Writes a string
@@ -90,7 +110,7 @@ namespace io{
          *
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const std::string& str ) throw( decaf::io::IOException );
+        void write( const std::string& str ) throw( decaf::io::IOException );
 
         /**
          * Writes a string
@@ -105,17 +125,59 @@ namespace io{
          * @throws IOException thrown if an error occurs.
          * @throws IndexOutOfBoundsException if offset+length is greater than the string length.
          */
-        virtual void write( const std::string& str, std::size_t offset, std::size_t length )
+        void write( const std::string& str, std::size_t offset, std::size_t length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
-        virtual decaf::lang::Appendable& append( char value ) throw( decaf::io::IOException );
+        decaf::lang::Appendable& append( char value ) throw( decaf::io::IOException );
 
-        virtual decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq )
+        decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq )
             throw ( decaf::io::IOException );
 
-        virtual decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq,
+        decaf::lang::Appendable& append( const decaf::lang::CharSequence* csq,
                                                  std::size_t start, std::size_t end )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    protected:
+
+        /**
+         * Override this method to customize the functionality of the method
+         * write( char* buffer, std::size_t offset, std::size_t length ).
+         *
+         * All subclasses must override this method to provide the basic Writer
+         * functionality.
+         */
+        virtual void doWriteArraySizeOffsetLength( const char* buffer, std::size_t size,
+                                                   std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+
+    protected:
+
+        virtual void doWriteChar( char v ) throw( decaf::io::IOException );
+
+        virtual void doWriteVector( const std::vector<char>& buffer )
+            throw( decaf::io::IOException );
+
+        virtual void doWriteArraySize( const char* buffer, std::size_t size )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
+
+        virtual void doWriteString( const std::string& str ) throw( decaf::io::IOException );
+
+        virtual void doWriteStringOffsetLength( const std::string& str, std::size_t offset, std::size_t length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
+
+        virtual decaf::lang::Appendable& doAppendChar( char value ) throw( decaf::io::IOException );
+
+        virtual decaf::lang::Appendable& doAppendCharSequence( const decaf::lang::CharSequence* csq )
+            throw ( decaf::io::IOException );
+
+        virtual decaf::lang::Appendable& doAppendCharSequenceStartEnd( const decaf::lang::CharSequence* csq,
+                                                                       std::size_t start, std::size_t end )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::IndexOutOfBoundsException );
 

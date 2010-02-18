@@ -62,10 +62,10 @@ namespace io{
          * @throws IOException thrown if an error occurs.
          * @throws NullPointerException if buffer is null
          */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
+        virtual int read( unsigned char* buffer, std::size_t size,
+                          std::size_t offset, std::size_t length )
             throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );
 
     private:

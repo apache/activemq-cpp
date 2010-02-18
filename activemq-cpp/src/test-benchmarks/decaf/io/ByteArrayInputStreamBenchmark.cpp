@@ -69,7 +69,7 @@ void ByteArrayInputStreamBenchmark::run(){
     }
 
     for( int iy = 0; iy < numRuns; ++iy ){
-        bis.read( &bucket[0], 0, bufferSize );
+        bis.read( &bucket[0], bufferSize, 0, bufferSize );
         bis.reset();
     }
 

@@ -42,17 +42,15 @@ DataInputStream::~DataInputStream() {}
 int DataInputStream::read( std::vector<unsigned char>& buffer ) throw ( io::IOException ) {
 
     try {
-        return this->read( &buffer[0], 0, buffer.size() );
+        return this->read( &buffer[0], buffer.size(), 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( unsigned char* buffer,
-                           std::size_t offset,
-                           std::size_t length )
-    throw ( IOException, NullPointerException ) {
+int DataInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+    throw ( IOException, NullPointerException, IndexOutOfBoundsException ) {
 
     try {
 
@@ -72,7 +70,13 @@ int DataInputStream::read( unsigned char* buffer,
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        return inputStream->read( &buffer[offset], 0, length );
+        if( length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        }
+
+        return inputStream->read( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -246,7 +250,7 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
 
         while( true ) {
 
-            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 0, 1 ) == -1 ) {
+            if( inputStream->read( (unsigned char*)( &buffer[0] ), size, pos, 1 ) == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readString - Reached EOF" );
@@ -409,7 +413,7 @@ void DataInputStream::readFully( unsigned char* buffer,
 
         std::size_t n = 0;
         while( n < length ) {
-            int count = inputStream->read( &buffer[offset + n], 0, (length - n) );
+            int count = inputStream->read( buffer, length, offset + n, length - n );
             if( count == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
@@ -449,4 +453,20 @@ std::size_t DataInputStream::skip( std::size_t num )
     DECAF_CATCH_RETHROW( UnsupportedOperationException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStream::readAllData( unsigned char* buffer, std::size_t length )
+    throw ( decaf::io::IOException, decaf::io::EOFException ) {
+
+    std::size_t n = 0;
+    do{
+        int count = inputStream->read( buffer, length, n, length - n );
+        if( count == -1 ) {
+            throw EOFException(
+                __FILE__, __LINE__,
+                "DataInputStream::readLong - Reached EOF" );
+        }
+        n += count;
+    } while( n < length );
 }

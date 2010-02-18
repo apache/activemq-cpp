@@ -93,7 +93,7 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, std::size_
     try{
 
         initializeWriting();
-        dataOut->write( buffer, 0, numBytes );
+        dataOut->write( buffer, numBytes, 0, numBytes );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -254,7 +254,7 @@ std::size_t ActiveMQBytesMessage::readBytes( unsigned char* buffer, std::size_t 
         std::size_t n = 0;
 
         while( n < length ) {
-            int count = this->dataIn->read( buffer, n, length - n );
+            int count = this->dataIn->read( buffer, length, n, length - n );
             if( count < 0 ) {
                 break;
             }
@@ -282,7 +282,7 @@ void ActiveMQBytesMessage::writeBytes( const unsigned char* value, std::size_t o
 
     initializeWriting();
     try{
-        this->dataOut->write( value, offset, length );
+        this->dataOut->write( value, length, offset, length );
     } catch( EOFException& ex ) {
         throw CMSExceptionSupport::createMessageEOFException( ex );
     } catch( Exception& ex ) {

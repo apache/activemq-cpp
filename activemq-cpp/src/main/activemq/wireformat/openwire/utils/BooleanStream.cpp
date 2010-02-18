@@ -106,7 +106,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
         }
 
         // Dump the payload
-        dataOut->write( &data[0], 0, arrayLimit );
+        dataOut->write( &data[0], data.size(), 0, arrayLimit );
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -131,8 +131,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
         }
 
         // Insert all data from data into the passed buffer
-        std::back_insert_iterator< std::vector<unsigned char> > iter( dataOut );
-        std::copy( &data[0], &data[arrayLimit-1], iter );
+        dataOut.insert( dataOut.end(), &data[0], &data[arrayLimit-1] );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )

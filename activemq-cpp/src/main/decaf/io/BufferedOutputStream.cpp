@@ -100,7 +100,7 @@ void BufferedOutputStream::emptyBuffer() throw ( IOException ){
     }
 
     if( head != tail ){
-        outputStream->write( buffer+head, 0, tail-head );
+        outputStream->write( buffer+head, tail-head, 0, tail-head );
     }
     head = tail = 0;
 }
@@ -163,21 +163,22 @@ void BufferedOutputStream::write( const std::vector<unsigned char>& buffer )
                 "BufferedOutputStream::write - Stream is clsoed" );
         }
 
-        this->write( &buffer[0], 0, buffer.size() );
+        this->write( &buffer[0], buffer.size(), 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::write( const unsigned char* buffer,
-                                  std::size_t offset, std::size_t len )
-    throw ( IOException, lang::exceptions::NullPointerException ) {
+void BufferedOutputStream::write( const unsigned char* buffer, std::size_t size,
+                                  std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        // Fast exit.
-        if( len == 0 ) {
+        if( length == 0 ) {
             return;
         }
 
@@ -193,15 +194,21 @@ void BufferedOutputStream::write( const unsigned char* buffer,
                 "BufferedOutputStream::write - Buffer passed is Null.");
         }
 
+        if( ( offset + length ) > size ) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        }
+
         // Iterate until all the data is written.
-        for( std::size_t pos=0; pos < len; ){
+        for( std::size_t pos=0; pos < length; ){
 
             if( tail >= bufferSize ){
                 emptyBuffer();
             }
 
             // Get the number of bytes left to write.
-            std::size_t bytesToWrite = min( (int)bufferSize-tail, len-pos );
+            std::size_t bytesToWrite = min( (int)bufferSize-tail, length-pos );
 
             // Copy the data.
             memcpy( this->buffer+tail, buffer+offset+pos, bytesToWrite );
@@ -215,5 +222,6 @@ void BufferedOutputStream::write( const unsigned char* buffer,
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
