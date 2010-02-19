@@ -1162,7 +1162,9 @@ h_sources = \
     decaf/io/ByteArrayInputStream.h \
     decaf/io/ByteArrayOutputStream.h \
     decaf/io/Closeable.h \
+    decaf/io/DataInput.h \
     decaf/io/DataInputStream.h \
+    decaf/io/DataOutput.h \
     decaf/io/DataOutputStream.h \
     decaf/io/EOFException.h \
     decaf/io/FilterInputStream.h \
