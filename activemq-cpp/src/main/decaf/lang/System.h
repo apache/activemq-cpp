@@ -21,6 +21,7 @@
 #include <decaf/util/Config.h>
 #include <decaf/util/Map.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/internal/AprPool.h>
 #include <string>
 
@@ -37,6 +38,15 @@ namespace lang{
         virtual ~System() {}
 
     public:  // Static Methods
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         */
+        static void arraycopy( unsigned char* src, std::size_t srcPos,
+                               unsigned char* dest, std::size_t destPos, std::size_t length )
+            throw( decaf::lang::exceptions::NullPointerException );
 
         /**
          * Enumerates the system environment and returns a map of env variable

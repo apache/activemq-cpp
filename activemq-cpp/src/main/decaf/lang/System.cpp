@@ -44,6 +44,12 @@
 #ifdef HAVE_SYS_SYSCTL_H
 #include <sys/sysctl.h>
 #endif
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
 
 #include <cstdlib>
 
@@ -63,6 +69,29 @@ System::System() {
 AprPool& System::getAprPool() {
     static AprPool aprPool;
     return aprPool;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( unsigned char* src, std::size_t srcPos,
+                        unsigned char* dest, std::size_t destPos, std::size_t length )
+    throw( decaf::lang::exceptions::NullPointerException ){
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
