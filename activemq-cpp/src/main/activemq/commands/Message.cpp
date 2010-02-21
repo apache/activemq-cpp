@@ -283,13 +283,14 @@ std::string Message::toString() const {
     stream << "BrokerInTime = " << this->getBrokerInTime();
     stream << ", ";
     stream << "BrokerOutTime = " << this->getBrokerOutTime();
-    stream << " }";
 
-    return stream.str();
     stream << " Value of ackHandler = " << ackHandler.get() << std::endl;
     stream << " Value of properties = " << this->properties.toString() << std::endl;
     stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
     stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
+    stream << " }";
+
+    return stream.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -842,7 +843,7 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor )
     throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessage( this );
