@@ -19,7 +19,6 @@
 #define _DECAF_IO_BLOCKINGBYTEARRAYINPUTSTREAM_H_
 
 #include <decaf/io/InputStream.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <vector>
 
 namespace decaf{
@@ -44,11 +43,6 @@ namespace io{
         std::vector<unsigned char>::const_iterator pos;
 
         /**
-         * Synchronization object.
-         */
-        util::concurrent::Mutex mutex;
-
-        /**
          * Indicates that this stream is in the process of shutting
          * down.
          */
@@ -68,9 +62,6 @@ namespace io{
         BlockingByteArrayInputStream( const unsigned char* buffer,
                                       std::size_t bufferSize );
 
-        /**
-         * Destructor
-         */
         virtual ~BlockingByteArrayInputStream();
 
         /**
@@ -90,41 +81,13 @@ namespace io{
          * @return the data available in the internal buffer.
          * @throws IOException if an error occurs.
          */
-        virtual std::size_t available() const throw ( IOException ){
-            return std::distance( pos, buffer.end() );
-        }
-
-        /**
-         * Reads a single byte from the buffer.  This operation will
-         * block until data has been added to the buffer via a call
-         * to setByteArray.
-         * @return the next byte.
-         * @throws IOException if an error occurs.
-         */
-        virtual int read() throw ( IOException );
-
-        /**
-         * Reads an array of bytes from the buffer.  If the desired amount
-         * of data is not currently available, this operation
-         * will block until the appropriate amount of data is available
-         * in the buffer via a call to setByteArray.
-         * @param buffer (out) the target buffer
-         * @param offset the position in the buffer to start from.
-         * @param bufferSize the size of the output buffer.
-         * @return the number of bytes read. or -1 if EOF
-         * @throws IOException f an error occurs.
-         */
-        virtual int read( unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual std::size_t available() const throw ( decaf::io::IOException );
 
         /**
          * Closes the target input stream.
          * @throws IOException if an error occurs.
          */
-        virtual void close() throw ( io::IOException );
+        virtual void close() throw ( decaf::io::IOException );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -143,106 +106,18 @@ namespace io{
          * @throws IOException if an error occurs
          */
         virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
-        /**
-         * Marks the current position in the stream A subsequent call to the
-         * reset method repositions this stream at the last marked position so
-         * that subsequent reads re-read the same bytes.
-         *
-         * If a stream instance reports that marks are supported then the stream
-         * will ensure that the same bytes can be read again after the reset method
-         * is called so long the readLimit is not reached.
-         * @param readLimit - max bytes read before marked position is invalid.
-         */
-        virtual void mark( int readLimit DECAF_UNUSED ) {}
+    protected:
 
-        /**
-         * Repositions this stream to the position at the time the mark method was
-         * last called on this input stream.
-         *
-         * If the method markSupported returns true, then:
-         *   * If the method mark has not been called since the stream was created,
-         *     or the number of bytes read from the stream since mark was last called
-         * 	   is larger than the argument to mark at that last call, then an
-         *     IOException might be thrown.
-         *   * If such an IOException is not thrown, then the stream is reset to a
-         *     state such that all the bytes read since the most recent call to mark
-         *     (or since the start of the file, if mark has not been called) will be
-         *     resupplied to subsequent callers of the read method, followed by any
-         *     bytes that otherwise would have been the next input data as of the
-         *     time of the call to reset.
-         * If the method markSupported returns false, then:
-         *   * The call to reset may throw an IOException.
-         *   * If an IOException is not thrown, then the stream is reset to a fixed
-         *     state that depends on the particular type of the input stream and how
-         *     it was created. The bytes that will be supplied to subsequent callers
-         *     of the read method depend on the particular type of the input stream.
-         * @throws IOException
-         */
-        virtual void reset() throw ( IOException ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::reset - mark no yet supported." );
-        }
+        virtual int doReadByte() throw ( IOException );
 
-        /**
-         * Determines if this input stream supports the mark and reset methods.
-         * Whether or not mark and reset are supported is an invariant property of
-         * a particular input stream instance.
-         * @returns true if this stream instance supports marks
-         */
-        virtual bool markSupported() const{ return false; }
-
-    public:
-
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
-
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     };
 

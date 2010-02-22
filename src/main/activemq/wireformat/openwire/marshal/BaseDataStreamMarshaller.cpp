@@ -694,7 +694,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
         if( bs->readBoolean() ) {
             int size = dataIn->readInt();
             data.resize( size );
-            dataIn->readFully( data );
+            dataIn->readFully( &data[0], data.size() );
         }
 
         return data;
@@ -715,7 +715,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
             int size = dataIn->readInt();
             std::vector<unsigned char> data;
             data.resize( size );
-            dataIn->readFully( data );
+            dataIn->readFully( &data[0], data.size() );
             return data;
         }
 
@@ -736,7 +736,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArra
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( data );
+        dataIn->readFully( &data[0], data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -753,7 +753,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( data );
+        dataIn->readFully( &data[0], data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -815,16 +815,13 @@ std::string BaseDataStreamMarshaller::readAsciiString(
 
     try{
 
-        int size = dataIn->readShort() + 1; // add space c++ NULL
-        unsigned char* data = new unsigned char[size];
-        dataIn->readFully( data, 0, size-1 );
-        data[size-1] = 0;  // enforce NULL
+        int size = dataIn->readShort();
+        std::vector<char> data( size );
+        dataIn->readFully( (unsigned char*)&data[0], size );
 
         // Now build a string and copy data into it.
         std::string text;
-        text.resize( size );
-        text.assign( (char*)data, (int)size-1 );
-        delete [] data;
+        text.insert( text.begin(), data.begin(), data.end() );
 
         return text;
     }

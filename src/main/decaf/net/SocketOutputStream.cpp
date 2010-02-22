@@ -24,6 +24,7 @@ using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace std;
 
@@ -35,7 +36,11 @@ SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketOutputStream::~SocketOutputStream() {
-    close();
+    try{
+        this->close();
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,29 +49,20 @@ void SocketOutputStream::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( unsigned char c ) throw ( IOException ) {
-    write( &c, 1, 0, 1 );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( IOException ) {
+void SocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
 
     try{
 
-        if( buffer.empty() ) {
-            return;
-        }
-
-        this->write( &buffer[0], buffer.size(), 0, buffer.size() );
+        // Treat the single byte case the same as an array.
+        this->doWriteArrayBounded( &c, 1, 0, 1 );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char* buffer, std::size_t size,
-                                std::size_t offset, std::size_t length )
+void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                              std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {

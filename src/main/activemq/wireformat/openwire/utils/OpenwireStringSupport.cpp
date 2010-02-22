@@ -43,7 +43,7 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
         std::vector<unsigned char> buffer( utfLength );
         std::vector<unsigned char> result( utfLength );
 
-        dataIn.readFully( &buffer[0], 0, utfLength );
+        dataIn.readFully( &buffer[0], utfLength );
 
         int count = 0;
         int index = 0;

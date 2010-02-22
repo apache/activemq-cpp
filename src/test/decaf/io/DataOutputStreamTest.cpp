@@ -131,7 +131,7 @@ void DataOutputStreamTest::testWriteBytes() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( result );
+        is->read( &result[0], testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );
@@ -166,7 +166,7 @@ void DataOutputStreamTest::testWriteChars() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( result );
+        is->read( &result[0], testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );

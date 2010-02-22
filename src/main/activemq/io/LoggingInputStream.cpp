@@ -36,10 +36,10 @@ LoggingInputStream::LoggingInputStream( decaf::io::InputStream* inputStream, boo
 LoggingInputStream::~LoggingInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::read() throw ( IOException ) {
+int LoggingInputStream::doReadByte() throw ( IOException ) {
     try {
 
-        unsigned char c = FilterInputStream::read();
+        unsigned char c = FilterInputStream::doReadByte();
         log( &c, 1 );
         return c;
     }
@@ -48,7 +48,8 @@ int LoggingInputStream::read() throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                            std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -71,13 +72,15 @@ int LoggingInputStream::read( unsigned char* buffer, std::size_t size, std::size
                 "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
         }
 
-        std::size_t numRead = FilterInputStream::read( buffer, size, offset, length );
+        std::size_t numRead = FilterInputStream::doReadArrayBounded( buffer, size, offset, length );
 
         log( buffer, numRead );
 
         return (int)numRead;
     }
     AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
+    AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCHALL_THROW( IOException )
 }
 

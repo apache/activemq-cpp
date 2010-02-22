@@ -72,7 +72,7 @@ AprPool& System::getAprPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void System::arraycopy( unsigned char* src, std::size_t srcPos,
+void System::arraycopy( const unsigned char* src, std::size_t srcPos,
                         unsigned char* dest, std::size_t destPos, std::size_t length )
     throw( decaf::lang::exceptions::NullPointerException ){
 

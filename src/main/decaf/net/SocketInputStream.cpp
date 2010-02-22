@@ -56,7 +56,7 @@ using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket ) {
+SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket ) : InputStream() {
     this->socket = socket;
     this->closed = false;
 }
@@ -136,7 +136,7 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::read() throw ( IOException ){
+int SocketInputStream::doReadByte() throw ( IOException ){
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
@@ -160,7 +160,8 @@ int SocketInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int SocketInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                           std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -170,6 +171,10 @@ int SocketInputStream::read( unsigned char* buffer, std::size_t size, std::size_
         throw IOException(
             __FILE__, __LINE__,
             "decaf::io::SocketInputStream::read - The Stream has been closed" );
+    }
+
+    if( length == 0 ) {
+        return 0;
     }
 
     if( buffer == NULL ) {
@@ -224,4 +229,3 @@ std::size_t SocketInputStream::skip( std::size_t num DECAF_UNUSED )
         __FILE__, __LINE__,
         "SocketInputStream::skip() method is not supported");
 }
-

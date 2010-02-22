@@ -19,7 +19,6 @@
 #define _DECAF_IO_BYTEARRAYOUTPUTSTREAM_H_
 
 #include <decaf/io/OutputStream.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <vector>
 
 namespace decaf{
@@ -38,11 +37,6 @@ namespace io{
          */
         std::vector<unsigned char>* activeBuffer;
 
-        /**
-         * Synchronization object.
-         */
-        util::concurrent::Mutex mutex;
-
     public:
 
         /**
@@ -56,7 +50,7 @@ namespace io{
          */
         ByteArrayOutputStream( std::vector<unsigned char>& buffer );
 
-        virtual ~ByteArrayOutputStream() {};
+        virtual ~ByteArrayOutputStream();
 
         /**
          * Sets the internal buffer.  This input stream will wrap around
@@ -71,79 +65,19 @@ namespace io{
          * Get a snapshot of the data
          * @return pointer to the data
          */
-        virtual const unsigned char* toByteArray() const {
-            if( activeBuffer == NULL || activeBuffer->size() == 0 ){
-                return NULL;
-            }
-
-            return &(*activeBuffer)[0];
-        }
+        virtual const unsigned char* toByteArray() const;
 
         /**
          * Get a snapshot of the data
          * @return reference to the underlying data as a const std::vector<unsigned char>&
          */
-        virtual const std::vector<unsigned char> toByteArrayRef() const {
-            if( activeBuffer == NULL ){
-                return defaultBuffer;
-            }
-
-            return *activeBuffer;
-        }
+        virtual const std::vector<unsigned char> toByteArrayRef() const;
 
         /**
          * Get the Size of the Internal Buffer
          * @return size of the internal buffer
          */
-        virtual std::size_t size() const {
-            return activeBuffer->size();
-        }
-
-        /**
-         * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( unsigned char c )
-           throw ( IOException );
-
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException );
-
-        /**
-         * Writes an array of bytes to the output stream in order starting at buffer[offset]
-         * and proceeding until the number of bytes specified by the length argument are
-         * written or an error occurs.
-         *
-         * @param buffer
-         *      The array of bytes to write.
-         * @param size
-         *      The size of the buffer array passed.
-         * @param offset
-         *      The position to start writing in buffer.
-         * @param length
-         *      The number of bytes from the buffer to be written.
-         *
-         * @throws IOException if an I/O error occurs.
-         * @throws NullPointerException thrown if buffer is Null.
-         * @throws IndexOutOfBoundsException if the offset + length > size.
-         */
-        virtual void write( const unsigned char* buffer, std::size_t size,
-                            std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
-
-        /**
-         * Invokes flush on the target output stream, has no affect.
-         * @throws IOException
-         */
-        virtual void flush() throw ( IOException ){ /* do nothing */ }
+        virtual std::size_t size() const;
 
         /**
          * Clear current Stream contents
@@ -152,16 +86,10 @@ namespace io{
         virtual void reset() throw ( IOException );
 
         /**
-         * Invokes close on the target output stream.
-         * @throws IOException
-         */
-        void close() throw( io::IOException ){ /* do nothing */ }
-
-        /**
          * Converts the bytes in the buffer into a standard C++ string
          * @returns a string containing the bytes in the buffer
          */
-        std::string toString() const;
+        virtual std::string toString() const;
 
         /**
          * Writes the complete contents of this byte array output stream to the
@@ -169,57 +97,18 @@ namespace io{
          * stream's write method using out.write( buf, 0, count ).
          */
         void writeTo( OutputStream* out ) const
-            throw ( IOException, lang::exceptions::NullPointerException );
+            throw ( decaf::io::IOException, decaf::lang::exceptions::NullPointerException );
 
-    public:
+    protected:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
+        virtual void doWriteByte( unsigned char value )
+           throw ( decaf::io::IOException );
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     };
 

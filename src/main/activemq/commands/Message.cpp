@@ -284,10 +284,14 @@ std::string Message::toString() const {
     stream << ", ";
     stream << "BrokerOutTime = " << this->getBrokerOutTime();
 
-    stream << " Value of ackHandler = " << ackHandler.get() << std::endl;
-    stream << " Value of properties = " << this->properties.toString() << std::endl;
-    stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
-    stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
+    stream << ", ";
+    stream << " ackHandler = " << ackHandler.get() << std::endl;
+    stream << ", ";
+    stream << " properties = " << this->properties.toString() << std::endl;
+    stream << ", ";
+    stream << " readOnlyBody = " << this->readOnlyBody << std::endl;
+    stream << ", ";
+    stream << " readOnlyProperties = " << this->readOnlyBody << std::endl;
     stream << " }";
 
     return stream.str();

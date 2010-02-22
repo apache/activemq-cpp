@@ -26,8 +26,8 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
-namespace decaf{
-namespace io{
+////////////////////////////////////////////////////////////////////////////////
+namespace {
 
     class MyOutputStream : public OutputStream{
     private:
@@ -43,7 +43,7 @@ namespace io{
 
         const char* getBuffer() const{ return buffer; }
 
-        virtual void write( unsigned char c ) throw (IOException){
+        virtual void doWriteByte( unsigned char c ) throw (IOException){
             if( pos >= 100 ){
                 throw IOException();
             }
@@ -51,18 +51,8 @@ namespace io{
             buffer[pos++] = c;
         }
 
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException ) {
-
-            if( buffer.empty() ){
-                return;
-            }
-
-            this->write( &buffer[0], buffer.size(), 0, buffer.size() );
-        }
-
-        virtual void write( const unsigned char* buffer, std::size_t size,
-                            std::size_t offset, std::size_t length )
+        virtual void doWriteByteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                              std::size_t offset, std::size_t length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException,
                     decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -76,51 +66,9 @@ namespace io{
             pos += length;
         }
 
-        virtual void flush() throw (IOException){
-        }
-
-        virtual void close() throw(IOException){
-            // do nothing.
-        }
-
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-        }
-
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return false;
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-        }
     };
 
-}}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStreamTest::testConstructor1() {

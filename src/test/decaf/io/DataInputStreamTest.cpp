@@ -63,7 +63,7 @@ void DataInputStreamTest::testRead1() {
         openDataInputStream();
         std::vector<unsigned char> result;
         result.resize( testData.length() );
-        is->read( result );
+        is->read( &result[0], testData.length() );
         CPPUNIT_ASSERT_MESSAGE( "Incorrect data read",
             string( (const char*)&result[0], result.size() ) == testData );
     } catch( IOException &e ) {
@@ -158,7 +158,7 @@ void DataInputStreamTest::test_readFully1() {
         openDataInputStream();
         std::vector<unsigned char> result;
         result.resize( testData.length() );
-        is->readFully( result );
+        is->readFully( &result[0], testData.length() );
 
         string expected = "";
         for( size_t ix = 0; ix < result.size(); ++ix ) {
@@ -180,7 +180,7 @@ void DataInputStreamTest::test_readFully2() {
         os->close();
         openDataInputStream();
         unsigned char* rbytes = new unsigned char[ testData.length() ];
-        is->readFully( rbytes, 0, testData.length() );
+        is->readFully( rbytes, testData.length() );
 
         string expected = "";
         for( size_t ix = 0; ix < testData.length(); ++ix ) {
@@ -203,22 +203,22 @@ void DataInputStreamTest::test_readFullyNullArray() {
 
     unsigned char* nullByteArray = NULL;
 
-    is.readFully( nullByteArray, 0, 0);
-    is.readFully( nullByteArray, 1, 0);
+    is.readFully( nullByteArray, 0, 0, 0);
+    is.readFully( nullByteArray, 0, 1, 0);
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 0, 1),
+        is.readFully( nullByteArray, 0, 0, 1),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 1, 1),
+        is.readFully( nullByteArray, 0, 1, 1),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 1, Integer::MAX_VALUE),
+        is.readFully( nullByteArray, 0, 1, Integer::MAX_VALUE),
         NullPointerException );
 }
 
@@ -228,22 +228,22 @@ void DataInputStreamTest::test_readFullyNullStream() {
     DataInputStream is(NULL);
     unsigned char* byteArray = new unsigned char[testData.length()];
 
-    is.readFully( byteArray, 0, 0 );
-    is.readFully( byteArray, 1, 0 );
+    is.readFully( byteArray, testData.length(), 0, 0 );
+    is.readFully( byteArray, testData.length(), 1, 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( byteArray, 1, 1 ),
+        is.readFully( byteArray, testData.length(), 1, 1 ),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( byteArray, 0, 1 ),
+        is.readFully( byteArray, testData.length(), 0, 1 ),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( byteArray, 0, Integer::MAX_VALUE ),
+        is.readFully( byteArray, testData.length(), 0, Integer::MAX_VALUE ),
         NullPointerException );
 
     delete [] byteArray;
@@ -255,22 +255,22 @@ void DataInputStreamTest::test_readFullyNullStreamNullArray() {
     DataInputStream is(NULL);
     unsigned char* nullByteArray = NULL;
 
-    is.readFully( nullByteArray, 0, 0 );
-    is.readFully( nullByteArray, 1, 0 );
+    is.readFully( nullByteArray, 0, 0, 0 );
+    is.readFully( nullByteArray, 0, 1, 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 0, 1),
+        is.readFully( nullByteArray, 0, 0, 1),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 1, 1),
+        is.readFully( nullByteArray, 0, 1, 1),
         NullPointerException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw NullPointerException",
-        is.readFully( nullByteArray, 1, Integer::MAX_VALUE),
+        is.readFully( nullByteArray, 0, 1, Integer::MAX_VALUE),
         NullPointerException );
 }
 
@@ -338,7 +338,7 @@ void DataInputStreamTest::test_skipBytes() {
         openDataInputStream();
         is->skip( 100 );
         std::vector<unsigned char> result( 50 );
-        is->read( result );
+        is->read( &result[0], 50 );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect data read",
             string( (const char*)&result[0], 50) == testData.substr( 100, 50) );
@@ -485,7 +485,7 @@ void DataInputStreamTest::testString() {
 
     try{
         std::vector<unsigned char> buffer2;
-        reader.readFully( buffer2 );
+        reader.readFully( &buffer2[0], buffer2.size() );
     } catch(...){
         CPPUNIT_ASSERT( false );
     }

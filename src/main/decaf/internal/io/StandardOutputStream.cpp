@@ -34,47 +34,46 @@ StandardOutputStream::~StandardOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( unsigned char c )
+void StandardOutputStream::doWriteByte( unsigned char c )
     throw ( decaf::io::IOException ) {
 
     std::cout << c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( decaf::io::IOException ) {
+void StandardOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                                     std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
-    if( buffer.empty() ){
+    if( length == 0 ) {
         return;
     }
-
-    this->write( &buffer[0], 0, buffer.size() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( const unsigned char* buffer,
-                                       std::size_t offset,
-                                       std::size_t len )
-    throw ( decaf::io::IOException, lang::exceptions::NullPointerException ) {
 
     if( buffer == NULL ) {
         throw lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "StandardOutputStream::write - Passed buffer is null." );
+            "StandardErrorOutputStream::write - Passed buffer is null." );
     }
 
-    if( offset > len ) {
-        throw decaf::io::IOException(
+    if( ( offset + length ) > size ) {
+        throw decaf::lang::exceptions::IndexOutOfBoundsException(
             __FILE__, __LINE__,
-            "StandardOutputStream::write - offset passed is greater than length" );
+            "StandardErrorOutputStream::write - given offset + length is greater than buffer size.");
     }
 
-	for( std::size_t i = 0; i < len; ++i ) {
+    for( std::size_t i = 0; i < length; ++i ) {
         std::cout << buffer[i+offset];
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StandardOutputStream::flush() throw ( decaf::io::IOException ){
+    std::cout.flush();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StandardOutputStream::close() throw ( decaf::io::IOException ){
     std::cout.flush();
 }

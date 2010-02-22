@@ -43,8 +43,21 @@ namespace lang{
          * Copies the number of elements specified by length from the source array starting at
          * the given source offset specified by srcPos to the dest array starting at the given
          * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
          */
-        static void arraycopy( unsigned char* src, std::size_t srcPos,
+        static void arraycopy( const unsigned char* src, std::size_t srcPos,
                                unsigned char* dest, std::size_t destPos, std::size_t length )
             throw( decaf::lang::exceptions::NullPointerException );
 

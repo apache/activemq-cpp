@@ -22,6 +22,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
@@ -107,4 +108,40 @@ void FilterOutputStreamTest::testWrite2() {
     } catch( IOException& e ) {
         CPPUNIT_FAIL("Write test failed : " + e.getMessage());
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStreamTest::testWriteBIIIExceptions() {
+
+    ByteArrayOutputStream baos;
+    FilterOutputStream os( &baos );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        os.write( NULL, 1000, 0, 1001 ),
+        NullPointerException );
+
+    unsigned char buffer[1000];
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 0, 1001 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 1001, 0 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 500, 501 ),
+        IndexOutOfBoundsException );
+
+    os.close();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IOException",
+        os.write( buffer, 1000, 0, 100 ),
+        IOException );
 }
