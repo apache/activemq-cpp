@@ -53,7 +53,7 @@ void Writer::write( const char* buffer, std::size_t size )
            decaf::lang::exceptions::NullPointerException ) {
 
     try {
-        this->doWriteArraySize( buffer, size );
+        this->doWriteArray( buffer, size );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -67,7 +67,7 @@ void Writer::write( const char* buffer, std::size_t size, std::size_t offset, st
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( buffer, size, offset, length );
+        this->doWriteArrayBounded( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -96,7 +96,7 @@ void Writer::write( const std::string& str, std::size_t offset, std::size_t leng
                 __FILE__, __LINE__, "Given Offset + Length value greater than the String length." );
         }
 
-        this->doWriteStringOffsetLength( str.c_str(), offset, length );
+        this->doWriteStringBounded( str.c_str(), offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -141,7 +141,7 @@ Appendable& Writer::append( const decaf::lang::CharSequence* csq, std::size_t st
 void Writer::doWriteChar( char v ) throw( decaf::io::IOException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( (const char*)&v, 1, 0, 1 );
+        this->doWriteArrayBounded( (const char*)&v, 1, 0, 1 );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -152,19 +152,19 @@ void Writer::doWriteVector( const std::vector<char>& buffer )
     throw( decaf::io::IOException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( &buffer[0], buffer.size(), 0, buffer.size() );
+        this->doWriteArrayBounded( &buffer[0], buffer.size(), 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::doWriteArraySize( const char* buffer, std::size_t size )
+void Writer::doWriteArray( const char* buffer, std::size_t size )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( buffer, size, 0, size );
+        this->doWriteArrayBounded( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -175,19 +175,19 @@ void Writer::doWriteArraySize( const char* buffer, std::size_t size )
 void Writer::doWriteString( const std::string& str ) throw( decaf::io::IOException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( str.c_str(), str.length(), 0, str.length() );
+        this->doWriteArrayBounded( str.c_str(), str.length(), 0, str.length() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::doWriteStringOffsetLength( const std::string& str, std::size_t offset, std::size_t length )
+void Writer::doWriteStringBounded( const std::string& str, std::size_t offset, std::size_t length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
-        this->doWriteArraySizeOffsetLength( str.c_str(), str.length(), offset, length );
+        this->doWriteArrayBounded( str.c_str(), str.length(), offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

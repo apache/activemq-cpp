@@ -39,52 +39,6 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( std::vector<unsigned char>& buffer ) throw ( io::IOException ) {
-
-    try {
-        return this->read( &buffer[0], buffer.size(), 0, buffer.size() );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
-    throw ( IOException, NullPointerException, IndexOutOfBoundsException ) {
-
-    try {
-
-        if( length == 0 ) {
-            return 0;
-        }
-
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::read - Buffer is null" );
-        }
-
-        if( inputStream == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Base input stream is null" );
-        }
-
-        if( length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
-        }
-
-        return inputStream->read( buffer, size, offset, length );
-    }
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
 
     try {
@@ -262,7 +216,7 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
             }
 
             // Resize to hold more if we exceed current size
-            if( ++pos > size ) {
+            if( ++pos >= size ) {
                 buffer.resize( (size *= 2) );
             }
         }
@@ -294,7 +248,7 @@ std::string DataInputStream::readUTF()
         std::vector<unsigned char> buffer( utfLength );
         std::vector<unsigned char> result( utfLength );
 
-        this->readFully( &buffer[0], 0, utfLength );
+        this->readFully( &buffer[0], utfLength );
 
         std::size_t count = 0;
         std::size_t index = 0;
@@ -371,14 +325,14 @@ std::string DataInputStream::readUTF()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( std::vector< unsigned char >& buffer )
-    throw ( io::IOException, io::EOFException ) {
+void DataInputStream::readFully( unsigned char* buffer, std::size_t size )
+    throw ( decaf::io::IOException, decaf::io::EOFException ) {
 
     try {
-        if( buffer.empty() ) {
+        if( size == 0 ) {
             return;
         }
-        this->readFully( &buffer[0], 0, buffer.size() );
+        this->readFully( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
@@ -386,12 +340,56 @@ void DataInputStream::readFully( std::vector< unsigned char >& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer,
-                                 std::size_t offset,
-                                 std::size_t length )
-    throw ( io::IOException,
-            io::EOFException,
-            lang::exceptions::NullPointerException )
+std::string DataInputStream::readLine() throw( decaf::io::IOException ) {
+    try{
+
+        throw IOException( __FILE__, __LINE__, "Not Yet Implemented." );
+        // TODO - Once PushBackInputStream is done.
+//        std::string line;
+//        bool foundTerminator = false;
+//
+//        while( true ) {
+//
+//            int nextByte = inputStream->read();
+//            switch( nextByte ) {
+//                case -1:
+//                    if( line.length() == 0 && !foundTerminator ) {
+//                        return "";
+//                    }
+//                    return line;
+//                case (unsigned char)'\r':
+//                    if( foundTerminator ) {
+//                        ( (PushbackInputStream)in ).unread( nextByte );
+//                        return line.toString();
+//                    }
+//                    foundTerminator = true;
+//                    /* Have to be able to peek ahead one byte */
+//                    if(!(in.getClass() == PushbackInputStream.class))  {
+//                        in = new PushbackInputStream( in );
+//                    }
+//                    break;
+//                case (byte)'\n':
+//                    return line.toString();
+//                default:
+//                    if( foundTerminator ) {
+//                        ( (PushbackInputStream)in ).unread( nextByte );
+//                        return line.toString();
+//                    }
+//                    line.append( (char)nextByte );
+//            }
+//        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStream::readFully( unsigned char* buffer, std::size_t size,
+                                 std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::io::EOFException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException )
 {
     try {
 
@@ -409,6 +407,11 @@ void DataInputStream::readFully( unsigned char* buffer,
             throw NullPointerException(
                 __FILE__, __LINE__,
                 "DataInputStream::readFully - Base input stream is null" );
+        }
+
+        if( offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset + Length is greater than the size of the Buffer." );
         }
 
         std::size_t n = 0;
@@ -429,8 +432,8 @@ void DataInputStream::readFully( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::skip( std::size_t num )
-    throw( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+std::size_t DataInputStream::skipBytes( std::size_t num )
+    throw( decaf::io::IOException ) {
 
     try {
 
@@ -450,7 +453,6 @@ std::size_t DataInputStream::skip( std::size_t num )
 
         return total;
     }
-    DECAF_CATCH_RETHROW( UnsupportedOperationException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }

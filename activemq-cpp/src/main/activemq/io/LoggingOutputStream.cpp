@@ -36,19 +36,19 @@ LoggingOutputStream::LoggingOutputStream( OutputStream* outputStream, bool own )
 LoggingOutputStream::~LoggingOutputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::write( const unsigned char c ) throw ( IOException ) {
+void LoggingOutputStream::doWriteByte( const unsigned char c ) throw ( IOException ) {
     try {
 
         log( &c, 1 );
-        FilterOutputStream::write( c );
+        FilterOutputStream::doWriteByte( c );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::write( const unsigned char* buffer, std::size_t size,
-                                 std::size_t offset, std::size_t length )
+void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                               std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -73,7 +73,7 @@ void LoggingOutputStream::write( const unsigned char* buffer, std::size_t size,
 
         log( buffer + offset, length );
 
-        FilterOutputStream::write( buffer, size, offset, length );
+        FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( NullPointerException )

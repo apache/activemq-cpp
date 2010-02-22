@@ -15,42 +15,57 @@
  * limitations under the License.
  */
 
-#include "StandardInputStream.h"
+#include "OutputStreamTest.h"
 
-#include <iostream>
-
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
+#include <decaf/io/OutputStream.h>
 
 using namespace std;
 using namespace decaf;
-using namespace decaf::lang;
+using namespace decaf::io;
 using namespace decaf::lang::exceptions;
-using namespace decaf::internal;
-using namespace decaf::internal::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-StandardInputStream::StandardInputStream() {
+namespace {
+
+    class MockOutputStream : public OutputStream {
+    private:
+
+        std::vector<unsigned char> buffer;
+
+    public:
+
+        virtual ~MockOutputStream() {}
+
+        virtual void doWriteByte( unsigned char c ) throw( decaf::io::IOException ) {
+            buffer.push_back( c );
+        }
+
+        const std::vector<unsigned char>& getBuffer() {
+            return this->buffer;
+        }
+    };
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StandardInputStream::~StandardInputStream() {
+OutputStreamTest::OutputStreamTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::available() const throw ( decaf::io::IOException ) {
-    return 1;
+OutputStreamTest::~OutputStreamTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::doReadByte() throw ( decaf::io::IOException ) {
+void OutputStreamTest::test() {
 
-    if( !std::cin.good() ) {
-        throw decaf::io::IOException(
-            __FILE__, __LINE__,
-            "Standard Input Stream in Error State." );
-    }
+    MockOutputStream ostream;
 
-    return std::cin.get();
+    ostream.write( 'h' );
+    ostream.write( (const unsigned char*)std::string( "ello " ).c_str(), 5 );
+    ostream.write( (const unsigned char*)std::string( "hello world" ).c_str(), 11, 6, 5 );
+
+    std::string result( ostream.getBuffer().begin(), ostream.getBuffer().end() );
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Written string not what was expected",
+                                  std::string( "hello world" ), result );
 }

@@ -20,7 +20,6 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/IOException.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
@@ -42,9 +41,6 @@ namespace io{
         // The input stream to wrap
         InputStream* inputStream;
 
-        // Synchronization object.
-        util::concurrent::Mutex mutex;
-
         // Indicates if we own the wrapped stream
         bool own;
 
@@ -55,27 +51,15 @@ namespace io{
 
         /**
          * Constructor to create a wrapped InputStream
-         * @param inputStream the stream to wrap and filter
-         * @param own indicates if we own the stream object, defaults to false
+         *
+         * @param inputStream
+         *      The stream to wrap and filter.
+         * @param own
+         *      Indicates if we own the stream object, defaults to false.
          */
-        FilterInputStream( InputStream* inputStream, bool own = false ) {
-            this->inputStream = inputStream;
-            this->own = own;
-            this->closed = false;
-        }
+        FilterInputStream( InputStream* inputStream, bool own = false );
 
-        virtual ~FilterInputStream() {
-            try {
-                this->close();
-
-                if( own ) {
-                    delete inputStream;
-                }
-                inputStream = NULL;
-            }
-            DECAF_CATCH_NOTHROW( IOException )
-            DECAF_CATCHALL_NOTHROW( )
-        }
+        virtual ~FilterInputStream();
 
         /**
          * Returns the number of bytes that can be read from this input stream
@@ -83,93 +67,15 @@ namespace io{
          * returns the result.
          * @return the number of bytes available without blocking.
          */
-        virtual std::size_t available() const throw ( IOException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterInputStream::available - Stream is closed" );
-                }
-
-                return inputStream->available();
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
-
-        /**
-         * Reads the next byte of data from this input stream. The value byte
-         * is returned as an unsigned char in the range 0 to 255. If no byte is
-         * available because the end of the stream has been reached, the value
-         * -1 is returned. This method blocks until input data is available,
-         * the end of the stream is detected, or an exception is thrown.
-         * This method simply performs in.read() and returns the result.
-         * @return The next byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read() throw ( IOException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterInputStream::read - Stream is closed" );
-                }
-
-                return inputStream->read();
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
-
-        /**
-         * Reads up to len bytes of data from this input stream into an array
-         * of bytes. This method blocks until some input is available.
-         * This method simply performs in.read(b, len) and returns the result.
-         * @param buffer (out) the target buffer.
-         * @param offset the position to start reading in the passed buffer.
-         * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read or -1 if EOF is detected
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException
-         */
-        virtual int read( unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException ) {
-
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterInputStream::read - Stream is closed" );
-                }
-
-                return inputStream->read( buffer, size, offset, length );
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCH_RETHROW( lang::exceptions::NullPointerException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual std::size_t available() const throw ( decaf::io::IOException );
 
         /**
          * Close the Stream, the FilterOutputStream simply calls the close
          * method of the underlying stream
-         * @throws Exception
+         *
+         * @throws IOException if an I/O error occurs
          */
-        virtual void close() throw ( io::IOException ) {
-            try {
-                if( !closed && inputStream != NULL ) {
-                    inputStream->close();
-                }
-                this->closed = true;
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual void close() throw ( decaf::io::IOException );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -185,23 +91,11 @@ namespace io{
          * provide a more efficient implementation of this method.
          * @param num - the number of bytes to skip
          * @returns total butes skipped
-         * @throws IOException if an error occurs
+         * @throws IOException if an I/O error occurs
          */
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterInputStream::skip - Stream is closed" );
-                }
-
-                return inputStream->skip( num );
-            }
-            DECAF_CATCH_RETHROW( lang::exceptions::UnsupportedOperationException )
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual std::size_t skip( std::size_t num )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Marks the current position in the stream A subsequent call to the
@@ -215,15 +109,7 @@ namespace io{
          * @param readLimit
          *      The max bytes read before marked position is invalid.
          */
-        virtual void mark( int readLimit ) {
-            try {
-
-                if( !isClosed() ) {
-                    inputStream->mark( readLimit );
-                }
-            }
-            DECAF_CATCHALL_NOTHROW()
-        }
+        virtual void mark( int readLimit );
 
         /**
          * Repositions this stream to the position at the time the mark method was
@@ -248,20 +134,7 @@ namespace io{
          *     of the read method depend on the particular type of the input stream.
          * @throws IOException
          */
-        virtual void reset() throw ( IOException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterInputStream::skip - Stream is closed" );
-                }
-
-                return inputStream->reset();
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual void reset() throw ( decaf::io::IOException );
 
         /**
          * Determines if this input stream supports the mark and reset methods.
@@ -269,74 +142,22 @@ namespace io{
          * a particular input stream instance.
          * @returns true if this stream instance supports marks
          */
-        virtual bool markSupported() const {
-            try {
-                if( !isClosed() ) {
-                    return inputStream->markSupported();
-                }
-            }
-            DECAF_CATCHALL_NOTHROW()
-            return false;
-        }
-
-    public:  // Synchronizable
-
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
-
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual bool markSupported() const;
 
     protected:
+
+        virtual int doReadByte() throw ( decaf::io::IOException );
+
+        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
         /**
          * @returns true if this stream has been closed.
          */
-        virtual bool isClosed() const {
-            return this->closed || inputStream == NULL;
-        }
+        virtual bool isClosed() const;
 
     };
 

@@ -31,8 +31,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace io{
+namespace {
 
     class MockReader : public decaf::io::Reader {
     private:
@@ -61,8 +60,8 @@ namespace io{
 
     protected:
 
-        virtual int doReadArraySizeOffsetLength( char* buffer, std::size_t size,
-                                                 std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -85,7 +84,7 @@ namespace io{
 
     };
 
-}}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ReaderTest::ReaderTest() {

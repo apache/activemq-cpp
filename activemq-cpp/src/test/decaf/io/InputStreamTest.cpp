@@ -15,42 +15,46 @@
  * limitations under the License.
  */
 
-#include "StandardInputStream.h"
+#include "InputStreamTest.h"
 
-#include <iostream>
-
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
+#include <decaf/io/InputStream.h>
 
 using namespace std;
 using namespace decaf;
-using namespace decaf::lang;
+using namespace decaf::io;
 using namespace decaf::lang::exceptions;
-using namespace decaf::internal;
-using namespace decaf::internal::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-StandardInputStream::StandardInputStream() {
+namespace{
+
+    class MockInputStream : public InputStream {
+    public:
+
+        virtual ~MockInputStream() {}
+
+        virtual int doReadByte() throw( decaf::io::IOException ) {
+            return 0;
+        }
+
+    };
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StandardInputStream::~StandardInputStream() {
+InputStreamTest::InputStreamTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::available() const throw ( decaf::io::IOException ) {
-    return 1;
+InputStreamTest::~InputStreamTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::doReadByte() throw ( decaf::io::IOException ) {
+void InputStreamTest::test() {
 
-    if( !std::cin.good() ) {
-        throw decaf::io::IOException(
-            __FILE__, __LINE__,
-            "Standard Input Stream in Error State." );
-    }
+    MockInputStream stream;
 
-    return std::cin.get();
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a NullPointerException",
+        stream.read( NULL, 0, 0, 1 ),
+        NullPointerException );
 }

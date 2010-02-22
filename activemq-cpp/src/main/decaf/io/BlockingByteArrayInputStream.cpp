@@ -64,6 +64,11 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::size_t BlockingByteArrayInputStream::available() const throw ( decaf::io::IOException ){
+    return std::distance( pos, buffer.end() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 
     synchronized( this ){
@@ -80,9 +85,10 @@ void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::read() throw ( IOException ){
+int BlockingByteArrayInputStream::doReadByte() throw ( IOException ){
 
     try{
+
         synchronized( this ){
 
             while( !closing ){
@@ -105,13 +111,13 @@ int BlockingByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::read( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                                      std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
 
-    if( size == 0 || length == 0 ) {
+    if( length == 0 ) {
         return 0;
     }
 
@@ -127,33 +133,40 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer, std::size_t size,
             "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
     }
 
-    synchronized( this ){
+    try {
 
-        std::size_t ix = 0;
+        synchronized( this ){
 
-        for( ; ix < length && !closing; ++ix ) {
+            std::size_t ix = 0;
 
-            if( pos == this->buffer.end() ) {
-                // Wait for more data to come in.
-                wait();
+            for( ; ix < length && !closing; ++ix ) {
+
+                if( pos == this->buffer.end() ) {
+                    // Wait for more data to come in.
+                    wait();
+                }
+
+                if( !closing && pos != this->buffer.end() ){
+                    buffer[ix + offset] = *(pos);
+                    ++pos;
+                }
             }
 
-            if( !closing && pos != this->buffer.end() ){
-                buffer[ix + offset] = *(pos);
-                ++pos;
+            if( closing ){
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "BlockingByteArrayInputStream::read - close occurred during read" );
             }
+
+            return (int)ix;
         }
 
-        if( closing ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BlockingByteArrayInputStream::read - close occurred during read" );
-        }
-
-        return (int)ix;
+        return 0;
     }
-
-    return 0;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

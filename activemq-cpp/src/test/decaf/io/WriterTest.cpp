@@ -28,8 +28,7 @@ using namespace decaf::nio;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace io{
+namespace {
 
     class MockWriter : public Writer {
     private:
@@ -59,7 +58,7 @@ namespace io{
         virtual void flush() throw( decaf::io::IOException ) {
         }
 
-        virtual void doWriteArraySizeOffsetLength(
+        virtual void doWriteArrayBounded(
             const char* buffer, std::size_t size, std::size_t offset, std::size_t length )
                 throw( decaf::io::IOException,
                        decaf::lang::exceptions::NullPointerException,
@@ -94,7 +93,7 @@ namespace io{
         }
     };
 
-}}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 WriterTest::WriterTest() {

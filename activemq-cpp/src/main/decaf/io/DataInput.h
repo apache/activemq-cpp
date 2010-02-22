@@ -256,27 +256,31 @@ namespace io {
         /**
          * Reads some bytes from an input stream and stores them into the
          * buffer array buffer. The number of bytes read is equal to the length
-         * of buffer.<p>
+         * of buffer.
+         *
          * This method blocks until one of the following conditions occurs:
-         *    * buffer.size() bytes of input data are available, in which case
+         *    * buffer's size bytes of input data are available, in which case
          *      a normal return is made.
          *    * End of file is detected, in which case an EOFException is
          *      thrown.
          *    * An I/O error occurs, in which case an IOException other than
          *      EOFException is thrown.
-         * <p>
-         * If buffer.size() is zero, then no bytes are read. Otherwise, the
+         *
+         * If buffer size is zero, then no bytes are read. Otherwise, the
          * first byte read is stored into element b[0], the next one into
          * buffer[1], and so on. If an exception is thrown from this method,
          * then it may be that some but not all bytes of buffer have been
          * updated with data from the input stream.
          *
-         * @param buffer - vector of char that is read to its size().
+         * @param buffer
+         *      The byte array to insert read data into.
+         * @param size
+         *      The size in bytes of the given byte buffer.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual void readFully( std::vector<unsigned char>& buffer )
+        virtual void readFully( unsigned char* buffer, std::size_t size )
             throw( decaf::io::IOException, decaf::io::EOFException ) = 0;
 
         /**

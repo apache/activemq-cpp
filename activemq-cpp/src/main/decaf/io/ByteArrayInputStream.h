@@ -52,11 +52,6 @@ namespace io{
         std::vector<unsigned char>::const_iterator pos;
 
         /**
-         * Synchronization object.
-         */
-        util::concurrent::Mutex mutex;
-
-        /**
          * The currently marked position or begin() of activeBuffer.
          */
         std::vector<unsigned char>::const_iterator markpos;
@@ -106,45 +101,10 @@ namespace io{
                                    std::size_t bufferSize );
 
         /**
-         * Indcates the number of bytes avaialable.
+         * Indicates the number of bytes available.
          * @return The number of bytes until the end of the internal buffer.
          */
-        virtual std::size_t available() const throw ( IOException ) {
-            if( activeBuffer == NULL ){
-                throw IOException(
-                    __FILE__, __LINE__,
-                    "buffer has not been initialized");
-            }
-
-            return std::distance( pos, activeBuffer->end() );
-        }
-
-        /**
-         * Reads a single byte from the buffer.
-         * @return The next byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read() throw ( IOException );
-
-        /**
-         * Reads an array of bytes from the buffer.
-         * @param buffer (out) the target buffer.
-         * @param offset the position in the buffer to start reading from.
-         * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read( unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
-
-        /**
-         * Closes the target input stream.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void close() throw( io::IOException ){ /* do nothing */ }
+        virtual std::size_t available() const throw ( IOException );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -175,11 +135,7 @@ namespace io{
          * is called so long the readLimit is not reached.
          * @param readLimit - max bytes read before marked position is invalid.
          */
-        virtual void mark( int readLimit DECAF_UNUSED ) {
-            // the reset point is now the marked position until a new byte buffer
-            // is set on this stream.
-            this->markpos = pos;
-        }
+        virtual void mark( int readLimit );
 
         /**
          * Resets the read index to the beginning of the byte array, unless mark
@@ -198,53 +154,13 @@ namespace io{
 
     protected:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
+        virtual int doReadByte() throw ( IOException );
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     };
 

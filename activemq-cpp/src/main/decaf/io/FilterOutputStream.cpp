@@ -1,0 +1,164 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "FilterOutputStream.h"
+
+#include <decaf/io/OutputStream.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+
+using namespace decaf;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+
+////////////////////////////////////////////////////////////////////////////////
+FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ){
+    this->outputStream = outputStream;
+    this->own = own;
+    this->closed = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+FilterOutputStream::~FilterOutputStream() {
+    try {
+        this->close();
+
+        if( own ) {
+            delete outputStream;
+        }
+        outputStream = NULL;
+    }
+    DECAF_CATCH_NOTHROW( IOException )
+    DECAF_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStream::doWriteByte( unsigned char c ) throw ( decaf::io::IOException ) {
+    try {
+
+        if( isClosed()  ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::write - Stream is closed" );
+        }
+
+        this->outputStream->write( c );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStream::doWriteArray( const unsigned char* buffer, std::size_t size )
+    throw ( decaf::io::IOException ) {
+
+    try {
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::write - Stream is closed" );
+        }
+
+        for( std::size_t ix = 0; ix < size; ++ix ) {
+            this->outputStream->write( buffer[ix] );
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                              std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    try {
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::write - Stream is closed" );
+        }
+
+        if( buffer == NULL ) {
+            throw decaf::lang::exceptions::NullPointerException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::write - Buffer passed is Null.");
+        }
+
+        if( ( offset + length ) > size ) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::write - given offset + length is greater than buffer size.");
+        }
+
+        for( std::size_t ix = offset; ix < offset + length; ++ix ) {
+            this->outputStream->write( buffer[ix] );
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStream::flush() throw ( decaf::io::IOException ) {
+    try {
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "FilterOutputStream::flush - Stream is closed" );
+        }
+
+        this->outputStream->flush();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStream::close() throw ( decaf::io::IOException ) {
+    try {
+        if( !this->closed && this->outputStream != NULL ) {
+            this->outputStream->flush();
+            this->outputStream->close();
+        }
+        this->closed = true;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string FilterOutputStream::toString() const {
+
+    if( this->outputStream != NULL ) {
+        return this->outputStream->toString();
+    }
+
+    return typeid( this ).name();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FilterOutputStream::isClosed() const {
+    return this->closed || this->outputStream == NULL;
+}

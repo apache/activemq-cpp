@@ -28,8 +28,7 @@ namespace io{
      * Wrapper around another output stream that buffers
      * output before writing to the target output stream.
      */
-    class DECAF_API BufferedOutputStream : public FilterOutputStream
-    {
+    class DECAF_API BufferedOutputStream : public FilterOutputStream {
     private:
 
         /**
@@ -74,65 +73,30 @@ namespace io{
          * @param own
          *      Indicates if this class owns the stream pointer.
          */
-        BufferedOutputStream( OutputStream* stream,
-                              std::size_t bufferSize,
-                              bool own = false )
-            throw ( lang::exceptions::IllegalArgumentException );
+        BufferedOutputStream( OutputStream* stream, std::size_t bufferSize, bool own = false );
 
         virtual ~BufferedOutputStream();
-
-        /**
-         * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( unsigned char c ) throw ( IOException );
-
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException );
-
-        /**
-         * Writes an array of bytes to the output stream in order starting at buffer[offset]
-         * and proceeding until the number of bytes specified by the length argument are
-         * written or an error occurs.
-         *
-         * @param buffer
-         *      The array of bytes to write.
-         * @param size
-         *      The size of the buffer array passed.
-         * @param offset
-         *      The position to start writing in buffer.
-         * @param length
-         *      The number of bytes from the buffer to be written.
-         *
-         * @throws IOException if an I/O error occurs.
-         * @throws NullPointerException thrown if buffer is Null.
-         * @throws IndexOutOfBoundsException if the offset + length > size.
-         */
-        virtual void write( const unsigned char* buffer, std::size_t size,
-                            std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Invokes flush on the target output stream.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void flush() throw ( IOException );
+        virtual void flush() throw ( decaf::io::IOException );
 
-        /**
-         * Invokes close on the target output stream.
-         * @throws IOException thrown if an error occurs.
-         */
-        void close() throw( io::IOException );
+    protected:
 
-   private:
+        virtual void doWriteByte( unsigned char c ) throw ( decaf::io::IOException );
+
+        virtual void doWriteArray( const unsigned char* buffer, std::size_t size )
+            throw ( decaf::io::IOException );
+
+        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    private:
 
         /**
          * Initializes the internal structures.
@@ -144,7 +108,7 @@ namespace io{
         /**
          * Writes the contents of the buffer to the output stream.
          */
-        void emptyBuffer() throw ( IOException );
+        void emptyBuffer() throw ( decaf::io::IOException );
 
    };
 

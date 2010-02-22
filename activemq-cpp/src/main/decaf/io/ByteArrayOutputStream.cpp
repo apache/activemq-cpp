@@ -24,8 +24,12 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayOutputStream::ByteArrayOutputStream() {
+ByteArrayOutputStream::ByteArrayOutputStream() : OutputStream() {
     activeBuffer = &defaultBuffer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ByteArrayOutputStream::~ByteArrayOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,13 +43,36 @@ void ByteArrayOutputStream::setBuffer( vector<unsigned char>& buffer) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const unsigned char* ByteArrayOutputStream::toByteArray() const {
+    if( activeBuffer == NULL || activeBuffer->size() == 0 ){
+        return NULL;
+    }
+
+    return &(*activeBuffer)[0];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::vector<unsigned char> ByteArrayOutputStream::toByteArrayRef() const {
+    if( activeBuffer == NULL ){
+        return defaultBuffer;
+    }
+
+    return *activeBuffer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::size_t ByteArrayOutputStream::size() const {
+    return activeBuffer->size();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStream::reset() throw ( IOException ) {
     // Empty the contents of the buffer to the output stream.
     activeBuffer->clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( unsigned char c )
+void ByteArrayOutputStream::doWriteByte( unsigned char c )
     throw ( IOException ) {
 
     try{
@@ -56,24 +83,8 @@ void ByteArrayOutputStream::write( unsigned char c )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( IOException ) {
-
-    try{
-
-        if( buffer.empty() ) {
-            return;
-        }
-
-        this->write( &buffer[0], buffer.size(), 0, buffer.size() );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( const unsigned char* buffer, std::size_t size,
-                                   std::size_t offset, std::size_t length )
+void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                                 std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -127,7 +138,7 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
                 "ByteArrayOutputStream::writeTo - Passed stream pointer is null" );
         }
 
-        out->write( this->toByteArray(), this->size(), 0, this->size() );
+        out->write( this->toByteArray(), this->size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )

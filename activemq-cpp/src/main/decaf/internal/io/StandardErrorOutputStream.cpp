@@ -34,26 +34,15 @@ StandardErrorOutputStream::~StandardErrorOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::write( unsigned char c )
+void StandardErrorOutputStream::doWriteByte( unsigned char c )
     throw ( decaf::io::IOException ) {
 
     std::cerr << c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( decaf::io::IOException ) {
-
-    if( buffer.empty() ){
-        return;
-    }
-
-    this->write( &buffer[0], buffer.size(), 0, buffer.size() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::write( const unsigned char* buffer, std::size_t size,
-                                       std::size_t offset, std::size_t length )
+void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                                     std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -81,5 +70,10 @@ void StandardErrorOutputStream::write( const unsigned char* buffer, std::size_t 
 
 ////////////////////////////////////////////////////////////////////////////////
 void StandardErrorOutputStream::flush() throw ( decaf::io::IOException ){
+    std::cerr.flush();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StandardErrorOutputStream::close() throw ( decaf::io::IOException ){
     std::cerr.flush();
 }

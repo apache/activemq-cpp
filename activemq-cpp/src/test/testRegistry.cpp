@@ -168,6 +168,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::net::URIHelperTest );
 #include <decaf/nio/BufferTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::nio::BufferTest );
 
+#include <decaf/io/InputStreamTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::InputStreamTest );
+#include <decaf/io/OutputStreamTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::OutputStreamTest );
 #include <decaf/io/FilterInputStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::FilterInputStreamTest );
 #include <decaf/io/FilterOutputStreamTest.h>

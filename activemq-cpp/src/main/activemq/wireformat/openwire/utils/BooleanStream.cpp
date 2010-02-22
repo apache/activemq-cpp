@@ -155,7 +155,7 @@ void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
         data.resize( arrayLimit );
 
         // Make sure we get all the data we are expecting
-        dataIn->readFully( &data[0], 0, arrayLimit );
+        dataIn->readFully( &data[0], data.size(), 0, arrayLimit );
 
         clear();
     }

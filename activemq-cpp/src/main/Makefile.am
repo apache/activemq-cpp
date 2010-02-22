@@ -517,7 +517,11 @@ cc_sources = \
     decaf/io/ByteArrayOutputStream.cpp \
     decaf/io/DataInputStream.cpp \
     decaf/io/DataOutputStream.cpp \
+    decaf/io/FilterInputStream.cpp \
+    decaf/io/FilterOutputStream.cpp \
+    decaf/io/InputStream.cpp \
     decaf/io/InputStreamReader.cpp \
+    decaf/io/OutputStream.cpp \
     decaf/io/OutputStreamWriter.cpp \
     decaf/io/Reader.cpp \
     decaf/io/Writer.cpp \

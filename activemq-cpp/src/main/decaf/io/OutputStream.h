@@ -22,6 +22,7 @@
 #include <decaf/io/Flushable.h>
 #include <decaf/io/IOException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
 
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -39,36 +40,70 @@ namespace io{
                                    public Flushable,
                                    public util::concurrent::Synchronizable
     {
+    private:
+
+        // Synchronization object.
+        util::concurrent::Mutex mutex;
+
     public:
 
-        virtual ~OutputStream() {}
+        virtual ~OutputStream();
+
+        /**
+         * {@inheritDoc}
+         *
+         * The default implementation of this method does nothing.
+         */
+        virtual void close() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         *
+         * The default implementation of this method does nothing.
+         */
+        virtual void flush() throw( decaf::io::IOException );
 
         /**
          * Writes a single byte to the output stream.
+         *
+         * The default implementation of this method calls the pure virtual method
+         * doWriteByte which must be implemented by any subclass of the OutputStream.
          *
          * @param c
          *      The byte to write to the sink.
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void write( unsigned char c ) throw ( IOException ) = 0;
+        virtual void write( unsigned char c ) throw ( decaf::io::IOException );
 
         /**
          * Writes an array of bytes to the output stream.  The entire contents of
          * the given vector are written to the output stream.
          *
+         * The default implementation of this method simply calls the doWriteArray which
+         * writes the contents of the array using the doWriteByte method repeatedly.  It is
+         * recommended that a subclass override doWriteArray to provide more performant
+         * means of writing the array.
+         *
          * @param buffer
          *      The vector of bytes to write.
+         * @param size
+         *      The size of the buffer passed.
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException ) = 0;
+        virtual void write( const unsigned char* buffer, std::size_t size )
+            throw ( decaf::io::IOException );
 
         /**
          * Writes an array of bytes to the output stream in order starting at buffer[offset]
          * and proceeding until the number of bytes specified by the length argument are
          * written or an error occurs.
+         *
+         * The default implementation of this method simply calls the doWriteArrayBounded method
+         * which writes the contents of the array using the doWriteByte method repeatedly.  It is
+         * recommended that a subclass override doWriteArrayBounded to provide more performant
+         * means of writing the array.
          *
          * @param buffer
          *      The array of bytes to write.
@@ -87,7 +122,80 @@ namespace io{
                             std::size_t offset, std::size_t length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
+
+        /**
+         * Output a String representation of this object.
+         *
+         * The default version of this method just prints the Class Name.
+         *
+         * @return a string representation of the object.
+         */
+        virtual std::string toString() const;
+
+    protected:
+
+        virtual void doWriteByte( unsigned char value )
+            throw( decaf::io::IOException ) = 0;
+
+        virtual void doWriteArray( const unsigned char* buffer, std::size_t size )
+            throw ( decaf::io::IOException );
+
+        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    public:  // Synchronizable
+
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+            mutex.lock();
+        }
+
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+            return mutex.tryLock();
+        }
+
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+            mutex.unlock();
+        }
+
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
+            mutex.wait();
+        }
+
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
+            mutex.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
+            mutex.wait( millisecs, nanos );
+        }
+
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
+            mutex.notify();
+        }
+
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
+            mutex.notifyAll();
+        }
 
     };
 

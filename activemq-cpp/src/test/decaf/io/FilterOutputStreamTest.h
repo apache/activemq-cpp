@@ -35,6 +35,7 @@ namespace io{
         CPPUNIT_TEST( testFlush );
         CPPUNIT_TEST( testWrite1 );
         CPPUNIT_TEST( testWrite2 );
+        CPPUNIT_TEST( testWriteBIIIExceptions );
         CPPUNIT_TEST_SUITE_END();
 
         std::string testString;
@@ -53,6 +54,7 @@ namespace io{
         void testFlush();
         void testWrite1();
         void testWrite2();
+        void testWriteBIIIExceptions();
 
     };
 

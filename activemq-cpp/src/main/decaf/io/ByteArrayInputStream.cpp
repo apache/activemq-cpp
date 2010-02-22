@@ -79,6 +79,26 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer, std::size_
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::size_t ByteArrayInputStream::available() const throw ( IOException ) {
+
+    if( activeBuffer == NULL ){
+        throw IOException(
+            __FILE__, __LINE__,
+            "buffer has not been initialized");
+    }
+
+    return std::distance( pos, activeBuffer->end() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayInputStream::mark( int readLimit DECAF_UNUSED ) {
+
+    // the reset point is now the marked position until a new byte buffer
+    // is set on this stream.
+    this->markpos = pos;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ByteArrayInputStream::reset() throw ( IOException ){
 
     try{
@@ -96,7 +116,7 @@ void ByteArrayInputStream::reset() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read() throw ( IOException ){
+int ByteArrayInputStream::doReadByte() throw ( IOException ){
 
     try{
 
@@ -117,14 +137,15 @@ int ByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                              std::size_t offset, std::size_t length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
-        if( size == 0 || length == 0 ) {
+        if( length == 0 ) {
             return 0;
         }
 
@@ -166,6 +187,7 @@ int ByteArrayInputStream::read( unsigned char* buffer, std::size_t size, std::si
         return (int)ix;
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCHALL_THROW( IOException )
 }

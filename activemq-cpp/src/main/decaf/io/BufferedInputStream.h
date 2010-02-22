@@ -18,11 +18,14 @@
 #ifndef _DECAF_IO_BUFFEREDINPUTSTREAM_H_
 #define _DECAF_IO_BUFFEREDINPUTSTREAM_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace decaf{
 namespace io{
+
+    class StreamBuffer;
 
     /**
      * A wrapper around another input stream that performs
@@ -33,56 +36,33 @@ namespace io{
     class DECAF_API BufferedInputStream : public FilterInputStream {
     private:
 
-        /**
-         * The internal buffer.
-         */
-        unsigned char* buffer;
-
-        /**
-         * The buffer size.
-         */
-        std::size_t bufferSize;
-
-        /**
-         * The current head of the buffer.
-         */
-        std::size_t head;
-
-        /**
-         * The current tail of the buffer.
-         */
-        std::size_t tail;
-
-        /**
-         * The current limit, which when passed, invalidates the current mark.
-         */
-        int markLimit;
-
-        /**
-         * The currently marked position. -1 indicates no mark has been set or the
-         * mark has been invalidated.
-         */
-        int markpos;
+        StreamBuffer* buffer;
 
     public:
 
         /**
          * Constructor
-         * @param stream The target input stream.
-         * @param own indicates if we own the stream object, defaults to false
+         *
+         * @param stream
+         *      The target input stream to buffer.
+         * @param own
+         *      Indicates if we own the stream object, defaults to false.
          */
         BufferedInputStream( InputStream* stream, bool own = false );
 
         /**
          * Constructor
-         * @param stream the target input stream
-         * @param bufferSize the size for the internal buffer.
-         * @param own indicates if we own the stream object, defaults to false.
+         *
+         * @param stream
+         *      The target input stream to buffer.
+         * @param bufferSize
+         *      The size in bytes to allocate for the internal buffer.
+         * @param own
+         *      Indicates if we own the stream object, defaults to false.
+         *
          * @throws IllegalArgumentException is the size is zero.
          */
-        BufferedInputStream( InputStream* stream,
-                             std::size_t bufferSize,
-                             bool own = false )
+        BufferedInputStream( InputStream* stream, std::size_t bufferSize, bool own = false )
             throw ( lang::exceptions::IllegalArgumentException );
 
         virtual ~BufferedInputStream();
@@ -93,45 +73,14 @@ namespace io{
          * in the buffer and the data available on the target
          * input stream.
          */
-        virtual std::size_t available() const throw ( IOException ) {
-            if( buffer == NULL || this->isClosed() ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    "BufferedInputStream::available - Buffer was closed");
-            }
-            return ( tail - head ) + inputStream->available();
-        }
+        virtual std::size_t available() const throw ( decaf::io::IOException );
 
         /**
          * Close this BufferedInputStream. This implementation closes the target
          * stream and releases any resources associated with it.
          * @throws IOException If an error occurs attempting to close this stream.
          */
-        virtual void close() throw( IOException );
-
-        /**
-         * Reads a single byte from the buffer.  Blocks until
-         * the data is available.
-         * @return The next byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read() throw ( IOException );
-
-        /**
-         * Reads an array of bytes from the buffer.  Blocks
-         * until the requested number of bytes are available.
-         * @param buffer (out) the target buffer.
-         * @param offset the position in the buffer to start reading from.
-         * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read or -1 if EOF
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException if buffer is NULL
-         */
-        virtual int read( unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -150,7 +99,8 @@ namespace io{
          * @throws IOException if an error occurs
          */
         virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Marks the current position in the stream A subsequent call to the
@@ -164,10 +114,7 @@ namespace io{
          * @param readLimit
          *      max bytes read before marked position is invalid.
          */
-        virtual void mark( int readLimit ) {
-            this->markLimit = readLimit;
-            this->markpos = (int)head;
-        }
+        virtual void mark( int readLimit );
 
         /**
          * Repositions this stream to the position at the time the mark method was
@@ -192,11 +139,7 @@ namespace io{
          *     of the read method depend on the particular type of the input stream.
          * @throws IOException
          */
-        virtual void reset() throw ( IOException ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::reset - mark no yet supported." );
-        }
+        virtual void reset() throw ( decaf::io::IOException );
 
         /**
          * Determines if this input stream supports the mark and reset methods.
@@ -204,63 +147,21 @@ namespace io{
          * a particular input stream instance.
          * @returns true if this stream instance supports marks
          */
-        virtual bool markSupported() const{ return false; }
+        virtual bool markSupported() const{ return true; }
+
+    protected:
+
+        virtual int doReadByte() throw ( decaf::io::IOException );
+
+        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     private:
 
-        /**
-         * Initializes the internal structures.
-         * @param bufferSize
-         *      size of buffer to allocate
-         */
-        void init( std::size_t bufferSize );
-
-        /**
-         * Populates the buffer with as much data as possible
-         * from the target input stream.
-         * @returns total bytes read, or -1 if EOF.
-         * @throws IOException
-         */
-        int bufferData() throw ( IOException );
-
-        /**
-         * Returns the number of bytes that are currently unused
-         * in the buffer.
-         */
-        std::size_t getUnusedBytes() const{
-            return bufferSize - tail;
-        }
-
-        /**
-         * Returns the current tail position of the buffer.
-         */
-        unsigned char* getTail() {
-            return buffer + tail;
-        }
-
-        /**
-         * Initializes the head and tail indices to the beginning
-         * of the buffer.
-         */
-        void clear(){
-            head = tail = 0;
-        }
-
-        /**
-         * Indicates whether or not the buffer is empty.
-         */
-        bool isEmpty() const{
-            return head == tail;
-        }
-
-        /**
-         * Clears the buffer if there is no data remaining.
-         */
-        void normalizeBuffer(){
-            if( isEmpty() ){
-                clear();
-            }
-        }
+        int bufferData( InputStream* stream ) throw ( decaf::io::IOException );
 
     };
 

@@ -322,7 +322,7 @@ std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t
         if( length <= (size_t)this->remainingBytes ) {
             // small buffer
             this->remainingBytes -= (int)length;
-            this->dataIn->readFully( buffer, 0, length );
+            this->dataIn->readFully( buffer, length );
             return length;
         } else {
             // big buffer

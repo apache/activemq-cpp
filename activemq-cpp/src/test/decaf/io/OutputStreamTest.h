@@ -15,45 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_IO_FILTERINPUTSTREAMTEST_H_
-#define _DECAF_IO_FILTERINPUTSTREAMTEST_H_
+#ifndef _DECAF_IO_OUTPUTSTREAMTEST_H_
+#define _DECAF_IO_OUTPUTSTREAMTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/lang/Exception.h>
-#include <decaf/io/FilterInputStream.h>
+namespace decaf {
+namespace io {
 
-namespace decaf{
-namespace io{
+    class OutputStreamTest : public CppUnit::TestFixture {
 
-    class FilterInputStreamTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( FilterInputStreamTest );
-        CPPUNIT_TEST( testAvailable );
-        CPPUNIT_TEST( testClose );
-        CPPUNIT_TEST( testRead );
-        CPPUNIT_TEST( testRead2 );
-        CPPUNIT_TEST( testRead3 );
-        CPPUNIT_TEST( testSkip );
-        CPPUNIT_TEST( testReadBIIIExceptions );
+        CPPUNIT_TEST_SUITE( OutputStreamTest );
+        CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        FilterInputStreamTest() {}
-        virtual ~FilterInputStreamTest() {}
+        OutputStreamTest();
+        virtual ~OutputStreamTest();
 
-        void testAvailable();
-        void testClose();
-        void testRead();
-        void testRead2();
-        void testRead3();
-        void testSkip();
-        void testReadBIIIExceptions();
+        void test();
 
     };
 
 }}
 
-#endif /*_DECAF_IO_FILTERINPUTSTREAMTEST_H_*/
+#endif /* _DECAF_IO_OUTPUTSTREAMTEST_H_ */

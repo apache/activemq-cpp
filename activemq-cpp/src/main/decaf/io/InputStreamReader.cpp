@@ -84,8 +84,8 @@ bool InputStreamReader::ready() const throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::doReadArraySizeOffsetLength(
-    char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int InputStreamReader::doReadArrayBounded( char* buffer, std::size_t size,
+                                           std::size_t offset, std::size_t length )
         throw( decaf::io::IOException,
                decaf::lang::exceptions::NullPointerException,
                decaf::lang::exceptions::IndexOutOfBoundsException ) {

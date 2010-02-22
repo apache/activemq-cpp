@@ -38,7 +38,19 @@ namespace io{
         CPPUNIT_TEST( testRead );
         CPPUNIT_TEST( testRead2 );
         CPPUNIT_TEST( testReadException );
+        CPPUNIT_TEST( testSkipNullInputStream );
+        CPPUNIT_TEST( testMarkSupported );
+        CPPUNIT_TEST( testResetScenario1 );
+        CPPUNIT_TEST( testResetScenario2 );
+        CPPUNIT_TEST( testResetException );
+        CPPUNIT_TEST( testReset );
+        CPPUNIT_TEST( testMarkI );
+        CPPUNIT_TEST( testSkipJ );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        static const std::string testString;
 
     public:
 
@@ -54,6 +66,14 @@ namespace io{
         void testRead();
         void testReadException();
         void testRead2();
+        void testMarkSupported();
+        void testSkipNullInputStream();
+        void testResetScenario1();
+        void testResetScenario2();
+        void testResetException();
+        void testReset();
+        void testMarkI();
+        void testSkipJ();
 
     };
 

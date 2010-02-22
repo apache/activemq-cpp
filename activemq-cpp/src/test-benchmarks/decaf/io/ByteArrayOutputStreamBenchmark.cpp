@@ -66,7 +66,7 @@ void ByteArrayOutputStreamBenchmark::run(){
     bos.reset();
 
     for( int iy = 0; iy < numRuns; ++iy ){
-        bos.write( stlBuffer );
+        bos.write( &stlBuffer[0], bufferSize );
     }
     bos.reset();
 }

@@ -21,11 +21,12 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
-namespace decaf{
-namespace io{
+////////////////////////////////////////////////////////////////////////////////
+namespace {
 
     class MyInputStream : public InputStream{
     private:
@@ -66,7 +67,16 @@ namespace io{
             return len - pos;
         }
 
-        virtual int read() throw (IOException){
+        virtual void close() throw(IOException){
+            this->closed = true;
+        }
+        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+            return ( pos += std::min( num, available() ) );
+        }
+
+    protected:
+
+        virtual int doReadByte() throw (IOException){
             if( this->isThrowOnRead() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -80,12 +90,22 @@ namespace io{
             return data.c_str()[pos++];
         }
 
-        virtual int read( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
+                                        std::size_t offset, std::size_t length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException ) {
 
             std::size_t numToRead = std::min( length, available() );
+
+            if( buffer == NULL ) {
+                throw NullPointerException( __FILE__, __LINE__, "Buffer was Null." );
+            }
+
+            if( offset > size || offset + length > size ) {
+                throw IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "Offset + Length greater than the given buffer size." );
+            }
 
             if( this->isThrowOnRead() ) {
                 throw IOException(
@@ -108,63 +128,9 @@ namespace io{
             return (int)numToRead;
         }
 
-        virtual void close() throw(IOException){
-            this->closed = true;
-        }
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-            return ( pos += std::min( num, available() ) );
-        }
-
-        virtual void mark( int readLimit DECAF_UNUSED ) {
-
-        }
-
-        virtual void reset() throw ( IOException ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::reset - mark no yet supported." );
-        }
-
-        virtual bool markSupported() const{ return false; }
-
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-        }
-
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return false;
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-        }
     };
 
-}}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void FilterInputStreamTest::testAvailable() {
@@ -237,8 +203,11 @@ void FilterInputStreamTest::testRead3() {
     unsigned char buf[100];
     is.skip(3000);
     is.read( buf, 100, 0, 100 );
-    CPPUNIT_ASSERT_MESSAGE( "Failed to read correct data",
-        string( (const char*)buf, 100 ) == testStr.substr( 3000, 100 ) );
+
+    std::string bufferString( (const char*)buf, (const char*)(buf + 100) );
+    std::string testSubString = testStr.substr( 3000, 100 );
+
+    CPPUNIT_ASSERT_MESSAGE( "Failed to read correct data", bufferString == testSubString );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -256,4 +225,50 @@ void FilterInputStreamTest::testSkip() {
     is.read( buf, 100, 0, 100 );
     CPPUNIT_ASSERT_MESSAGE( "Failed to skip to correct position",
             string( (const char*)buf, 100 ) == testStr.substr( 1000, 100 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterInputStreamTest::testReadBIIIExceptions() {
+
+    std::string testStr;
+    for( int i = 0; i < 1000; ++i ) {
+        testStr += (char)i;
+    }
+    MyInputStream myStream( testStr );
+    FilterInputStream is( &myStream );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "should throw NullPointerException",
+         is.read( NULL, 1000, 0, 1001 ),
+         NullPointerException );
+
+    unsigned char buf[1000];
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "should throw IndexOutOfBoundsException",
+         is.read( buf, 1000, 0, 1001 ),
+         IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "should throw IndexOutOfBoundsException",
+         is.read( buf, 1000, 1001, 0 ),
+         IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "should throw IndexOutOfBoundsException",
+         is.read( buf, 1000, 500, 501 ),
+         IndexOutOfBoundsException );
+
+    {
+        MyInputStream myStream( testStr );
+        FilterInputStream is( &myStream );
+
+        unsigned char buf[1000];
+
+        is.close();
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+             "should throw IOException",
+             is.read( buf, 1000, 0, 100 ),
+             IOException );
+    }
 }
