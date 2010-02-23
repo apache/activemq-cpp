@@ -523,6 +523,7 @@ cc_sources = \
     decaf/io/InputStreamReader.cpp \
     decaf/io/OutputStream.cpp \
     decaf/io/OutputStreamWriter.cpp \
+    decaf/io/PushbackInputStream.cpp \
     decaf/io/Reader.cpp \
     decaf/io/Writer.cpp \
     decaf/lang/Boolean.cpp \
@@ -1180,6 +1181,7 @@ h_sources = \
     decaf/io/InterruptedIOException.h \
     decaf/io/OutputStream.h \
     decaf/io/OutputStreamWriter.h \
+    decaf/io/PushbackInputStream.h \
     decaf/io/Reader.h \
     decaf/io/UTFDataFormatException.h \
     decaf/io/UnsupportedEncodingException.h \
