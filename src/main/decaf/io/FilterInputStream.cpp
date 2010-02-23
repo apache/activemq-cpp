@@ -29,7 +29,7 @@ using namespace decaf::lang::exceptions;
 FilterInputStream::FilterInputStream( InputStream* inputStream, bool own ) {
     this->inputStream = inputStream;
     this->own = own;
-    this->closed = false;
+    this->closed = inputStream == NULL ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

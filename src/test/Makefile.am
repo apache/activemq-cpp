@@ -94,6 +94,7 @@ cc_sources = \
     decaf/io/InputStreamTest.cpp \
     decaf/io/OutputStreamTest.cpp \
     decaf/io/OutputStreamWriterTest.cpp \
+    decaf/io/PushbackInputStreamTest.cpp \
     decaf/io/ReaderTest.cpp \
     decaf/io/WriterTest.cpp \
     decaf/lang/BooleanTest.cpp \
@@ -234,6 +235,7 @@ h_sources = \
     decaf/io/InputStreamTest.h \
     decaf/io/OutputStreamTest.h \
     decaf/io/OutputStreamWriterTest.h \
+    decaf/io/PushbackInputStreamTest.h \
     decaf/io/ReaderTest.h \
     decaf/io/WriterTest.h \
     decaf/lang/BooleanTest.h \
