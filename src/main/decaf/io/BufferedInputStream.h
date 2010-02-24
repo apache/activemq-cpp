@@ -21,6 +21,7 @@
 #include <decaf/util/Config.h>
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/Pointer.h>
 
 namespace decaf{
 namespace io{
@@ -36,7 +37,10 @@ namespace io{
     class DECAF_API BufferedInputStream : public FilterInputStream {
     private:
 
-        StreamBuffer* buffer;
+        // Internal data buffer, uses a smart pointer so that async close
+        // operations allow read methods fail gracefully instead of segfaulting
+        // on access to invalid memory.
+        decaf::lang::Pointer<StreamBuffer> buffer;
 
     public:
 
@@ -161,7 +165,8 @@ namespace io{
 
     private:
 
-        int bufferData( InputStream* stream ) throw ( decaf::io::IOException );
+        int bufferData( InputStream* stream, decaf::lang::Pointer<StreamBuffer>& buffer )
+            throw ( decaf::io::IOException );
 
     };
 

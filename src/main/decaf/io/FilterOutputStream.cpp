@@ -29,7 +29,7 @@ using namespace decaf::lang::exceptions;
 FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ){
     this->outputStream = outputStream;
     this->own = own;
-    this->closed = false;
+    this->closed = outputStream == NULL ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
