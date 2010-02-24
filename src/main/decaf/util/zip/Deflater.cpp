@@ -20,15 +20,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
-
 #include <decaf/internal/util/zip/zlib.h>
-
 #include <decaf/lang/exceptions/RuntimeException.h>
 
 using namespace decaf;
@@ -416,7 +408,7 @@ std::size_t Deflater::deflate( std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Deflater::getAdler() const throw( decaf::lang::exceptions::IllegalStateException ) {
+long long Deflater::getAdler() const throw( decaf::lang::exceptions::IllegalStateException ) {
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__, "The Deflator has already been ended." );

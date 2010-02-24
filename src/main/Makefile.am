@@ -591,6 +591,8 @@ cc_sources = \
     decaf/util/logging/XMLFormatter.cpp \
     decaf/util/zip/Adler32.cpp \
     decaf/util/zip/CRC32.cpp \
+    decaf/util/zip/CheckedInputStream.cpp \
+    decaf/util/zip/CheckedOutputStream.cpp \
     decaf/util/zip/Deflater.cpp \
     decaf/util/zip/DeflaterOutputStream.cpp \
     decaf/util/zip/Inflater.cpp \
@@ -1343,6 +1345,8 @@ h_sources = \
     decaf/util/logging/XMLFormatter.h \
     decaf/util/zip/Adler32.h \
     decaf/util/zip/CRC32.h \
+    decaf/util/zip/CheckedInputStream.h \
+    decaf/util/zip/CheckedOutputStream.h \
     decaf/util/zip/Checksum.h \
     decaf/util/zip/DataFormatException.h \
     decaf/util/zip/Deflater.h \

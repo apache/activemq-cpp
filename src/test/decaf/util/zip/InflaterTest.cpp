@@ -138,7 +138,7 @@ void InflaterTest::testGetAdler() {
     // getting the checkSum value through the Adler32 class
     Adler32 adl;
     adl.update( dictionary, DICT_SIZE, 0, DICT_SIZE );
-    std::size_t checkSumR = adl.getValue();
+    long long checkSumR = adl.getValue();
 
     Inflater inflateDiction;
     inflateDiction.setInput( outPutBuf );

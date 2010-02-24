@@ -340,7 +340,7 @@ namespace zip {
          *
          * @throws IllegalStateException if in the end state.
          */
-        std::size_t getAdler() const throw( decaf::lang::exceptions::IllegalStateException );
+        long long getAdler() const throw( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * @returns the total number of uncompressed bytes input so far.
