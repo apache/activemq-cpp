@@ -179,5 +179,5 @@ int FilterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t si
 
 ////////////////////////////////////////////////////////////////////////////////
 bool FilterInputStream::isClosed() const {
-    return this->closed;
+    return this->closed || this->inputStream == NULL;
 }

@@ -169,7 +169,7 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, bool own )
 : FilterInputStream( stream, own ) {
 
     // Default to a 8k buffer.
-    this->buffer = new StreamBuffer( 8192 );
+    this->buffer.reset( new StreamBuffer( 8192 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,14 +182,13 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, std::size_t buffe
             "BufferedInputStream::init - Size must be greater than zero");
     }
 
-    this->buffer = new StreamBuffer( bufferSize );
+    this->buffer.reset( new StreamBuffer( bufferSize ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedInputStream::~BufferedInputStream() {
     try{
         this->close();
-        delete this->buffer;
     }
     DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
@@ -200,6 +199,10 @@ void BufferedInputStream::close() throw( IOException ) {
 
     // let parent close the inputStream
     FilterInputStream::close();
+
+    // Free the class reference, read operation may still be
+    // holding onto the buffer while blocked.
+    this->buffer.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +227,7 @@ void BufferedInputStream::mark( int readLimit ) {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::reset() throw ( IOException ) {
 
-    if( this->isClosed() ) {
+    if( this->buffer == NULL ) {
         throw IOException(
             __FILE__, __LINE__,
             "BufferedInputStream::reset - This stream has been closed." );
@@ -246,27 +249,28 @@ int BufferedInputStream::doReadByte() throw ( IOException ){
 
         // Use a local reference in case of unsynchronized close.
         InputStream* inputStream = this->inputStream;
+        Pointer<StreamBuffer> buffer = this->buffer;
 
-        if( isClosed() || inputStream == NULL ){
+        if( isClosed() || buffer == NULL ){
             throw IOException(
                 __FILE__, __LINE__,
                 "BufferedInputStream::bufferData - Stream is closed" );
         }
 
         // Are there buffered bytes available?  Or can we read more?
-        if( this->buffer->isEmpty() && bufferData( inputStream ) == -1 ) {
+        if( buffer->isEmpty() && bufferData( inputStream, buffer ) == -1 ) {
             return -1;
         }
 
         // Stream might have closed while we were buffering.
-        if( isClosed() ){
+        if( isClosed() ) {
             throw IOException(
                 __FILE__, __LINE__,
                 "BufferedInputStream::bufferData - Stream is closed" );
         }
 
-        if( !this->buffer->isEmpty() ) {
-            return this->buffer->next();
+        if( !buffer->isEmpty() ) {
+            return buffer->next();
         }
 
         return -1;
@@ -285,9 +289,9 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
     try{
 
         // Use a local reference in case of unsynchronized close.
-        InputStream* inputStream = this->inputStream;
+        Pointer<StreamBuffer> streamBuffer = this->buffer;
 
-        if( isClosed() ){
+        if( streamBuffer == NULL ){
             throw IOException(
                 __FILE__, __LINE__, "Stream is closed" );
         }
@@ -309,6 +313,9 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
             return 0;
         }
 
+        // Use a local reference in case of unsynchronized close.
+        InputStream* inputStream = this->inputStream;
+
         if( inputStream == NULL ){
             throw IOException(
                 __FILE__, __LINE__, "Stream is closed" );
@@ -319,14 +326,14 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
         // There are bytes available in the buffer so use them up first and
         // then we check to see if any are available on the stream, if not
         // then just return what we had.
-        if( !this->buffer->isEmpty() ) {
+        if( !streamBuffer->isEmpty() ) {
 
             std::size_t copylength =
-                this->buffer->available() >= length ? length : this->buffer->available();
+                streamBuffer->available() >= length ? length : streamBuffer->available();
 
-            System::arraycopy( this->buffer->getBuffer(), this->buffer->getPos(),
+            System::arraycopy( streamBuffer->getBuffer(), streamBuffer->getPos(),
                                buffer, offset, copylength );
-            this->buffer->advance( copylength );
+            streamBuffer->advance( copylength );
 
             if( copylength == length || inputStream->available() == 0 ) {
                 return copylength;
@@ -353,21 +360,21 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
 
             } else {
 
-                if( bufferData( inputStream ) == -1 ) {
+                if( bufferData( inputStream, streamBuffer ) == -1 ) {
                     return required == length ? -1 : length - required;
                 }
 
                 // Stream might have closed while we were buffering.
-                if( isClosed() ){
+                if( isClosed() || this->buffer == NULL ){
                     throw IOException(
                         __FILE__, __LINE__,
                         "BufferedInputStream::bufferData - Stream is closed" );
                 }
 
-                read = this->buffer->available() >= required ? required : this->buffer->available();
-                System::arraycopy( this->buffer->getBuffer(), this->buffer->getPos(),
+                read = streamBuffer->available() >= required ? required : streamBuffer->available();
+                System::arraycopy( streamBuffer->getBuffer(), streamBuffer->getPos(),
                                    buffer, offset, read );
-                this->buffer->advance( read );
+                streamBuffer->advance( read );
             }
 
             required -= read;
@@ -401,38 +408,39 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
 
         // Use a local reference in case of unsynchronized close.
         InputStream* inputStream = this->inputStream;
+        Pointer<StreamBuffer> streamBuffer = this->buffer;
 
-        if( isClosed() || inputStream == NULL ){
+        if( isClosed() || streamBuffer == NULL ){
             throw IOException(
                 __FILE__, __LINE__,
-                "BufferedInputStream::bufferData - Stream is closed" );
+                "BufferedInputStream::skip - Stream is closed" );
         }
 
-        if( buffer->available() >= amount ) {
-            buffer->advance( amount );
+        if( streamBuffer->available() >= amount ) {
+            streamBuffer->advance( amount );
             return amount;
         }
 
-        int read = buffer->available();
+        int read = streamBuffer->available();
 
-        buffer->advance( buffer->getCount() );
+        streamBuffer->advance( streamBuffer->getCount() );
 
-        if( buffer->isMarked() ) {
+        if( streamBuffer->isMarked() ) {
 
-            if( amount <= buffer->getMarkLimit() ) {
+            if( amount <= streamBuffer->getMarkLimit() ) {
 
-                if( bufferData( inputStream ) == -1 ) {
+                if( bufferData( inputStream, streamBuffer ) == -1 ) {
                     return read;
                 }
 
-                if( buffer->available() >= ( amount - read ) ) {
-                    buffer->advance( amount - read );
+                if( streamBuffer->available() >= ( amount - read ) ) {
+                    streamBuffer->advance( amount - read );
                     return amount;
                 }
 
                 // Couldn't get all the bytes, skip what we read
-                read += buffer->available();
-                buffer->advance( buffer->getCount() );
+                read += streamBuffer->available();
+                streamBuffer->advance( streamBuffer->getCount() );
 
                 return read;
             }
@@ -445,7 +453,8 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::bufferData( InputStream* inputStream ) throw ( IOException ){
+int BufferedInputStream::bufferData( InputStream* inputStream, Pointer<StreamBuffer>& buffer )
+    throw ( decaf::io::IOException ){
 
     try{
 
@@ -471,7 +480,7 @@ int BufferedInputStream::bufferData( InputStream* inputStream ) throw ( IOExcept
             if( newLength > markLimit ) {
                 newLength = markLimit;
             }
-            this->buffer->resize( newLength );
+            buffer->resize( newLength );
         } else if( markPos > 0 ) {
             System::arraycopy( buffer->getBuffer(), markPos,
                                buffer->getBuffer(), 0, buffer->getBufferSize() - markPos );
