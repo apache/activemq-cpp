@@ -24,6 +24,7 @@
 #include <cms/MessageProducer.h>
 #include <cms/MessageConsumer.h>
 #include <activemq/util/Config.h>
+#include <decaf/util/StlList.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -36,11 +37,17 @@ namespace cmsutil {
     class AMQCPP_API ResourceLifecycleManager {
     private:
 
-        std::vector<cms::Connection*> connections;
-        std::vector<cms::Session*> sessions;
-        std::vector<cms::Destination*> destinations;
-        std::vector<cms::MessageProducer*> producers;
-        std::vector<cms::MessageConsumer*> consumers;
+        typedef decaf::util::StlList< cms::Connection* > ConnectionList;
+        typedef decaf::util::StlList< cms::Session* > SessionList;
+        typedef decaf::util::StlList< cms::Destination* > DestinationList;
+        typedef decaf::util::StlList< cms::MessageProducer* > ProducerList;
+        typedef decaf::util::StlList< cms::MessageConsumer* > ConsumerList;
+
+        ConnectionList connections;
+        SessionList sessions;
+        DestinationList destinations;
+        ProducerList producers;
+        ConsumerList consumers;
 
     public:
 
@@ -58,9 +65,8 @@ namespace cmsutil {
          * @param connection
          *         the object to be managed
          */
-        void addConnection( cms::Connection* connection ) {
-            connections.push_back( connection );
-        }
+        void addConnection( cms::Connection* connection )
+            throw ( cms::CMSException );
 
         /**
          * Adds a session so that its life will be managed by
@@ -69,9 +75,8 @@ namespace cmsutil {
          * @param session
          *         the object to be managed
          */
-        void addSession( cms::Session* session ) {
-            sessions.push_back( session );
-        }
+        void addSession( cms::Session* session )
+            throw ( cms::CMSException );
 
         /**
          * Adds a destination so that its life will be managed by
@@ -80,9 +85,8 @@ namespace cmsutil {
          * @param dest
          *         the object to be managed
          */
-        void addDestination( cms::Destination* dest ) {
-            destinations.push_back( dest );
-        }
+        void addDestination( cms::Destination* dest )
+            throw ( cms::CMSException );
 
         /**
          * Adds a message producer so that its life will be managed by
@@ -91,9 +95,8 @@ namespace cmsutil {
          * @param producer
          *         the object to be managed
          */
-        void addMessageProducer( cms::MessageProducer* producer ) {
-            producers.push_back( producer );
-        }
+        void addMessageProducer( cms::MessageProducer* producer )
+            throw ( cms::CMSException );
 
         /**
          * Adds a message consumer so that its life will be managed by
@@ -102,9 +105,8 @@ namespace cmsutil {
          * @param consumer
          *         the object to be managed
          */
-        void addMessageConsumer( cms::MessageConsumer* consumer ) {
-            consumers.push_back( consumer );
-        }
+        void addMessageConsumer( cms::MessageConsumer* consumer )
+            throw ( cms::CMSException );
 
         /**
          * Closes and destroys the contained CMS resources.

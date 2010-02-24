@@ -17,6 +17,9 @@
 
 #include "ResourceLifecycleManager.h"
 
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/CMSExceptionSupport.h>
+
 using namespace activemq::cmsutil;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,8 +33,8 @@ ResourceLifecycleManager::~ResourceLifecycleManager() {
 
         // Destroy all the resources
         destroy();
-
-    } catch( cms::CMSException& e ) { /* Absorb*/ }
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,48 +50,140 @@ void ResourceLifecycleManager::releaseAll() {
 ////////////////////////////////////////////////////////////////////////////////
 void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
 
-    // Close all the connections.
-    for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        try {
-            connections[ix]->close();
-        } catch(...){}
-    }
+    try{
+        // Close all the connections.
+        std::auto_ptr< decaf::util::Iterator< cms::Connection* > > connIter(
+            connections.iterator() );
 
-    // Destroy the producers.
-    for (std::size_t ix=0; ix<producers.size(); ++ix) {
-        try {
-            delete producers[ix];
-        } catch( ... ) {}
-    }
+        while( connIter->hasNext() ) {
+            cms::Connection* conn = connIter->next();
+            try {
+                conn->close();
+            } catch(...){}
+        }
 
-    // Destroy the consumers.
-    for (std::size_t ix=0; ix<consumers.size(); ++ix) {
-        try {
-            delete consumers[ix];
-        } catch( ... ) {}
-    }
+        // Destroy the producers.
+        std::auto_ptr< decaf::util::Iterator< cms::MessageProducer* > > prodIter(
+            producers.iterator() );
 
-    // Destroy the destinations.
-    for (std::size_t ix=0; ix<destinations.size(); ++ix) {
-        try {
-            delete destinations[ix];
-        } catch( ... ) {}
-    }
+        while( prodIter->hasNext() ) {
+            cms::MessageProducer* producer = prodIter->next();
+            try {
+                delete producer;
+            } catch( ... ) {}
+        }
 
-    // Destroy the sessions.
-    for (std::size_t ix=0; ix<sessions.size(); ++ix) {
-        try {
-            delete sessions[ix];
-        } catch( ... ) {}
-    }
+        // Destroy the consumers.
+        std::auto_ptr< decaf::util::Iterator< cms::MessageConsumer* > > consIter(
+            consumers.iterator() );
 
-    // Destroy the connections,
-    for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        try {
-            delete connections[ix];
-        } catch( ... ) {}
-    }
+        while( consIter->hasNext() ) {
+            cms::MessageConsumer* consumer = consIter->next();
+            try {
+                delete consumer;
+            } catch( ... ) {}
+        }
 
-    // Empty all the vectors.
-    releaseAll();
+        // Destroy the destinations.
+        std::auto_ptr< decaf::util::Iterator< cms::Destination* > > destIter(
+            destinations.iterator() );
+
+        while( destIter->hasNext() ) {
+            cms::Destination* dest = destIter->next();
+            try {
+                delete dest;
+            } catch( ... ) {}
+        }
+
+        // Destroy the sessions.
+        std::auto_ptr< decaf::util::Iterator< cms::Session* > > sessIter(
+            sessions.iterator() );
+
+        while( sessIter->hasNext() ) {
+            cms::Session* session = sessIter->next();
+            try {
+                delete session;
+            } catch( ... ) {}
+        }
+
+        // Destroy the connections,
+        connIter.reset( connections.iterator() );
+
+        while( connIter->hasNext() ) {
+            cms::Connection* conn = connIter->next();
+            try {
+                delete conn;
+            } catch( ... ) {}
+        }
+
+        // Empty all the lists.
+        releaseAll();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addConnection( cms::Connection* connection )
+    throw ( cms::CMSException ) {
+
+    try{
+        // Add the connection to the list.
+        synchronized( &connections ) {
+            connections.add( connection );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addSession( cms::Session* session )
+    throw ( cms::CMSException ) {
+
+    try{
+        // Add the session to the list.
+        synchronized( &sessions ) {
+            sessions.add( session );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addDestination( cms::Destination* dest )
+    throw ( cms::CMSException ) {
+
+    try{
+        // Add the destination to the list.
+        synchronized( &destinations ) {
+            destinations.add( dest );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer )
+    throw ( cms::CMSException ) {
+
+    try{
+        // Add the producer to the list.
+        synchronized( &producers ) {
+            producers.add( producer );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer )
+    throw ( cms::CMSException ) {
+
+    try{
+        // Add the consumer to the list.
+        synchronized( &consumers ) {
+            consumers.add( consumer );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
