@@ -96,7 +96,7 @@ void FilterInputStream::reset() throw ( IOException ) {
         if( isClosed() ) {
             throw IOException(
                 __FILE__, __LINE__,
-                "FilterInputStream::skip - Stream is closed" );
+                "FilterInputStream::reset - Stream is closed" );
         }
 
         return inputStream->reset();
@@ -145,12 +145,32 @@ int FilterInputStream::doReadByte() throw ( IOException ) {
         if( isClosed() ) {
             throw IOException(
                 __FILE__, __LINE__,
-                "FilterInputStream::read - Stream is closed" );
+                "FilterInputStream::doReadByte - Stream is closed" );
         }
 
         return inputStream->read();
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FilterInputStream::doReadArray( unsigned char* buffer, std::size_t size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException ) {
+
+    try {
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "FilterInputStream::doReadArray - Stream is closed" );
+        }
+
+        return doReadArrayBounded( buffer, size, 0, size );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
@@ -166,7 +186,7 @@ int FilterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t si
         if( isClosed() ) {
             throw IOException(
                 __FILE__, __LINE__,
-                "FilterInputStream::read - Stream is closed" );
+                "FilterInputStream::doReadArrayBounded - Stream is closed" );
         }
 
         return inputStream->read( buffer, size, offset, length );

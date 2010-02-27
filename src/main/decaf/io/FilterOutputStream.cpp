@@ -74,9 +74,7 @@ void FilterOutputStream::doWriteArray( const unsigned char* buffer, std::size_t 
                 "FilterOutputStream::write - Stream is closed" );
         }
 
-        for( std::size_t ix = 0; ix < size; ++ix ) {
-            this->outputStream->write( buffer[ix] );
-        }
+        this->doWriteArrayBounded( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -109,8 +107,9 @@ void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::
                 "FilterOutputStream::write - given offset + length is greater than buffer size.");
         }
 
+        // Calls the doWriteByte method since subclasses may over override that method.
         for( std::size_t ix = offset; ix < offset + length; ++ix ) {
-            this->outputStream->write( buffer[ix] );
+            this->doWriteByte( buffer[ix] );
         }
     }
     DECAF_CATCH_RETHROW( IOException )
