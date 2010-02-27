@@ -143,7 +143,9 @@ cc_sources = \
     decaf/util/zip/CRC32Test.cpp \
     decaf/util/zip/CheckedInputStreamTest.cpp \
     decaf/util/zip/CheckedOutputStreamTest.cpp \
+    decaf/util/zip/DeflaterOutputStreamTest.cpp \
     decaf/util/zip/DeflaterTest.cpp \
+    decaf/util/zip/InflaterInputStreamTest.cpp \
     decaf/util/zip/InflaterTest.cpp \
     main.cpp \
     testRegistry.cpp \
@@ -286,7 +288,9 @@ h_sources = \
     decaf/util/zip/CRC32Test.h \
     decaf/util/zip/CheckedInputStreamTest.h \
     decaf/util/zip/CheckedOutputStreamTest.h \
+    decaf/util/zip/DeflaterOutputStreamTest.h \
     decaf/util/zip/DeflaterTest.h \
+    decaf/util/zip/InflaterInputStreamTest.h \
     decaf/util/zip/InflaterTest.h \
     util/teamcity/TeamCityProgressListener.h
 

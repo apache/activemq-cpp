@@ -25,10 +25,179 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::size_t DeflaterOutputStream::DEFAULT_BUFFER_SIZE = 512;
+
+////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, bool own ) :
     FilterOutputStream( outputStream, own ) {
+
+    this->deflater = new Deflater();
+    this->ownDeflater = true;
+    this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->isDone = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own )
+ :  FilterOutputStream( outputStream, own ) {
+
+    if( deflater == NULL ) {
+        throw NullPointerException(
+             __FILE__, __LINE__, "Deflater passed was NULL." );
+    }
+
+    this->deflater = deflater;
+    this->ownDeflater = false;
+    this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->isDone = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
+                                            std::size_t bufferSize, bool own )
+ :  FilterOutputStream( outputStream, own ) {
+
+    if( deflater == NULL ) {
+        throw NullPointerException(
+             __FILE__, __LINE__, "Deflater passed was NULL." );
+    }
+
+    if( bufferSize == 0 ) {
+        throw IllegalArgumentException(
+             __FILE__, __LINE__, "Cannot create a zero sized buffer." );
+    }
+
+    this->deflater = deflater;
+    this->ownDeflater = false;
+    this->buf.resize( bufferSize );
+    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::~DeflaterOutputStream() {
+    try{
+
+        this->close();
+
+        if( ownDeflater ) {
+            delete this->deflater;
+        }
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
+
+    try{
+
+        if( isDone ) {
+            return;
+        }
+
+        std::size_t result;
+        this->deflater->finish();
+
+        while( !this->deflater->finished() ) {
+
+            if( this->deflater->needsInput() ) {
+                this->deflater->setInput( buf, 0, 0 );
+            }
+            result = this->deflater->deflate( &buf[0], buf.size(), 0, buf.size() );
+            this->outputStream->write( &buf[0], buf.size(), 0, result );
+        }
+
+        this->isDone = true;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DeflaterOutputStream::close() throw ( decaf::io::IOException ) {
+
+    try{
+
+        if( !this->deflater->finished() ) {
+            this->finish();
+        }
+        this->deflater->end();
+        FilterOutputStream::close();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DeflaterOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
+
+    try{
+        this->doWriteArrayBounded( &value, 1, 0, 1 );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                                std::size_t offset, std::size_t length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    try{
+
+        if( isDone ) {
+            throw IOException(
+                __FILE__, __LINE__, "Finish was already called on this DeflaterOutputStream." );
+        }
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Buffer passed was NULL." );
+        }
+
+        if( offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset + length exceeds the buffer size." );
+        }
+
+        if( length == 0 ) {
+            return;
+        }
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__, "The stream is already closed." );
+        }
+
+        if( !this->deflater->needsInput() ) {
+            throw IOException(
+                __FILE__, __LINE__, "The Deflater is in an Invalid State." );
+        }
+
+        this->deflater->setInput( buffer, size, offset, length );
+
+        this->deflate();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DeflaterOutputStream::deflate() throw ( decaf::io::IOException ) {
+
+    try{
+
+        std::size_t result;
+        do{
+            result = this->deflater->deflate( &buf[0], buf.size(), 0, buf.size() );
+            this->outputStream->write( &buf[0], buf.size(), 0, result );
+        } while( !this->deflater->needsInput() );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
