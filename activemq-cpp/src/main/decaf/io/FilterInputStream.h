@@ -148,6 +148,10 @@ namespace io{
 
         virtual int doReadByte() throw ( decaf::io::IOException );
 
+        virtual int doReadArray( unsigned char* buffer, std::size_t size )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException );
+
         virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
                                         std::size_t offset, std::size_t length )
             throw ( decaf::io::IOException,
