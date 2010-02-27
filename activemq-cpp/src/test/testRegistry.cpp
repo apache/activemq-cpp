@@ -172,22 +172,22 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::InputStreamTest );
 //#include <decaf/io/OutputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::OutputStreamTest );
-#include <decaf/io/FilterInputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::FilterInputStreamTest );
+//#include <decaf/io/FilterInputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::FilterInputStreamTest );
 //#include <decaf/io/FilterOutputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::FilterOutputStreamTest );
-#include <decaf/io/BufferedInputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamTest );
+//#include <decaf/io/BufferedInputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamTest );
 //#include <decaf/io/BufferedOutputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedOutputStreamTest );
 //#include <decaf/io/ByteArrayInputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayInputStreamTest );
 //#include <decaf/io/ByteArrayOutputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamTest );
-#include <decaf/io/PushbackInputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::PushbackInputStreamTest );
-#include <decaf/io/DataInputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
+//#include <decaf/io/PushbackInputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::PushbackInputStreamTest );
+//#include <decaf/io/DataInputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
 //#include <decaf/io/DataOutputStreamTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamTest );
 //#include <decaf/io/WriterTest.h>
@@ -291,10 +291,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::Adler32Test );
 //#include <decaf/util/zip/CRC32Test.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::CRC32Test );
-#include <decaf/util/zip/CheckedInputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::CheckedInputStreamTest );
-#include <decaf/util/zip/CheckedOutputStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::CheckedOutputStreamTest );
+//#include <decaf/util/zip/CheckedInputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::CheckedInputStreamTest );
+//#include <decaf/util/zip/CheckedOutputStreamTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::CheckedOutputStreamTest );
+#include <decaf/util/zip/DeflaterOutputStreamTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::DeflaterOutputStreamTest );
+#include <decaf/util/zip/InflaterInputStreamTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::InflaterInputStreamTest );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Marshaler Tests
