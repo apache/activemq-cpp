@@ -122,6 +122,9 @@ void ActiveMQConnectionSupport::shutdownTransport() throw( decaf::lang::Exceptio
 
         if( transport.get() != NULL ){
 
+            // Clear the listener, we don't care about errors at this point.
+            transport->setTransportListener( NULL );
+
             try{
                 transport->close();
             }catch( exceptions::ActiveMQException& ex ){
