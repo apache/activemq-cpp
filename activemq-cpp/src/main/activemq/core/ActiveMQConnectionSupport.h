@@ -64,6 +64,13 @@ namespace core {
         bool useAsyncSend;
 
         /**
+         * Boolean indicating if messages sent from this Connection should use Message
+         * body compression.  When enabled the body of a Message is compressed before
+         * it is marshalled to the wire using a Java compatible ZLib compression format.
+         */
+        bool useCompression;
+
+        /**
          * Send Timeout, forces all messages to be sent Synchronously.
          */
         unsigned int sendTimeout;
@@ -189,6 +196,24 @@ namespace core {
          */
         void setUseAsyncSend( bool value ) {
             this->useAsyncSend = value;
+        }
+
+        /**
+         * Gets if the Connection is configured for Message body compression.
+         * @returns if the Message body will be Compressed or not.
+         */
+        bool isUseCompression() const {
+            return this->useCompression;
+        }
+
+        /**
+         * Sets whether Message body compression is enabled.
+         *
+         * @param value
+         *      Boolean indicating if Message body compression is enabled.
+         */
+        void setUseCompression( bool value ) {
+            this->useCompression = value;
         }
 
         /**

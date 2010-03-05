@@ -58,6 +58,11 @@ ActiveMQConnectionSupport::ActiveMQConnectionSupport(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_USEASYNCSEND ), "false" ) ) );
 
+    this->setUseCompression( Boolean::parseBoolean(
+        properties->getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_USECOMPRESSION ), "false" ) ) );
+
     this->setProducerWindowSize( decaf::lang::Integer::parseInt(
         properties->getProperty(
             core::ActiveMQConstants::toString(
