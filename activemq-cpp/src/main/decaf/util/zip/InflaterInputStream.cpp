@@ -115,13 +115,15 @@ std::size_t InflaterInputStream::skip( std::size_t num )
         std::size_t count = 0;
         std::size_t remaining = Math::min( (long long)num, (long long)buff.size() );
 
+        std::vector<unsigned char> buffer( remaining );
+
         while( count < num ) {
-            int x = read( &buff[0], buff.size() , 0, remaining );
+            int x = read( &buffer[0], buffer.size() , 0, remaining );
             if( x == -1 ) {
                 return count;
             }
             count += x;
-            remaining = ( num - count ) < buff.size() ? num - count : buff.size();
+            remaining = ( num - count ) < buffer.size() ? num - count : buffer.size();
         }
 
         return count;

@@ -118,7 +118,7 @@ void InflaterInputStreamTest::setUp() {
     this->inputBuffer.clear();
     this->inputBuffer.resize( 500 );
     this->deflatedData.clear();
-    this->deflatedData.resize( testString.size() + 100 );
+    this->deflatedData.resize( testString.size() + 256 );
 
     Deflater deflater;
 
@@ -130,7 +130,7 @@ void InflaterInputStreamTest::setUp() {
         x += deflater.deflate( deflatedData, x, deflatedData.size() - x );
     }
 
-    this->deflatedData.resize( x );
+    this->deflatedData.resize( x + 1 );
 
     deflater.end();
 }
@@ -323,120 +323,93 @@ void InflaterInputStreamTest::testReset() {
         IOException );
 }
 
-//void testSkip() {
-//    InputStream is = Support_Resources.getStream("hyts_available.tst");
-//    InflaterInputStream iis = new InflaterInputStream(is);
-//
-//    // Tests for skipping a negative number of bytes.
-//    try {
-//        iis.skip(-3);
-//        fail("IllegalArgumentException not thrown");
-//    } catch (IllegalArgumentException e) {
-//        // Expected
-//    }
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Byte Returned.", 5, iis.read());
-//
-//    try {
-//        iis.skip(Integer.MIN_VALUE);
-//        fail("IllegalArgumentException not thrown");
-//    } catch (IllegalArgumentException e) {
-//        // Expected
-//    }
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Byte Returned.", 4, iis.read());
-//
-//    // Test to make sure the correct number of bytes were skipped
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Number Of Bytes Skipped.", 3, iis.skip(3));
-//
-//    // Test to see if the number of bytes skipped returned is true.
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Byte Returned.", 7, iis.read());
-//
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Number Of Bytes Skipped.", 0, iis.skip(0));
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Byte Returned.", 0, iis.read());
-//
-//    // Test for skipping more bytes than available in the stream
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Number Of Bytes Skipped.", 2, iis.skip(4));
-//    CPPUNIT_ASSERT_EQUAL("Incorrect Byte Returned.", -1, iis.read());
-//    iis.close();
-//}
-//
-//void testSkip2() {
-//    int result = 0;
-//    int buffer[] = new int[100];
-//    unsigned char orgBuffer[] = { 1, 3, 4, 7, 8 };
-//
-//    // testing for negative input to skip
-//    InputStream infile = Support_Resources
-//            .getStream("hyts_constru(OD).txt");
-//    Inflater inflate = new Inflater();
-//    InflaterInputStream inflatIP = new InflaterInputStream(infile,
-//            inflate, 10);
-//    long skip;
-//    try {
-//        skip = inflatIP.skip(Integer.MIN_VALUE);
-//        fail("Expected IllegalArgumentException when skip() is called with negative parameter");
-//    } catch (IllegalArgumentException e) {
-//        // Expected
-//    }
-//    inflatIP.close();
-//
-//    // testing for number of bytes greater than input.
-//    InputStream infile2 = Support_Resources
-//            .getStream("hyts_constru(OD).txt");
-//    InflaterInputStream inflatIP2 = new InflaterInputStream(infile2);
-//
-//    // looked at how many bytes the skip skipped. It is
-//    // 5 and its supposed to be the entire input stream.
-//
-//    skip = inflatIP2.skip(Integer.MAX_VALUE);
-//    // System.out.println(skip);
-//    CPPUNIT_ASSERT_EQUAL("method skip() returned wrong number of bytes skipped",
-//            5, skip);
-//
-//    // test for skipping of 2 bytes
-//    InputStream infile3 = Support_Resources
-//            .getStream("hyts_constru(OD).txt");
-//    InflaterInputStream inflatIP3 = new InflaterInputStream(infile3);
-//    skip = inflatIP3.skip(2);
-//    CPPUNIT_ASSERT_EQUAL("the number of bytes returned by skip did not correspond with its input parameters",
-//            2, skip);
-//    int i = 0;
-//    result = 0;
-//    while ((result = inflatIP3.read()) != -1) {
-//        buffer[i] = result;
-//        i++;
-//    }
-//    inflatIP2.close();
-//
-//    for (int j = 2; j < orgBuffer.length; j++) {
-//        assertTrue(
-//            "original compressed data did not equal decompressed data",
-//            buffer[j - 2] == orgBuffer[j]);
-//    }
-//}
-//
-//void testAvailable() {
-//    InputStream is = Support_Resources.getStream("hyts_available.tst");
-//    InflaterInputStream iis = new InflaterInputStream(is);
-//
-//    int available;
-//    for (int i = 0; i < 11; i++) {
-//        iis.read();
-//        available = iis.available();
-//        if (available == 0) {
-//            CPPUNIT_ASSERT_EQUAL_MESSAGE("Expected no more bytes to read", -1, iis.read());
-//        } else {
-//            CPPUNIT_ASSERT_EQUAL_MESSAGE("Bytes Available Should Return 1.", 1, available);
-//        }
-//    }
-//
-//    iis.close();
-//    try {
-//        iis.available();
-//        fail("available after close should throw IOException.");
-//    } catch (IOException e) {
-//        // Expected
-//    }
-//}
+////////////////////////////////////////////////////////////////////////////////
+void InflaterInputStreamTest::testSkip() {
+
+    ByteArrayInputStream bais( this->deflatedData );
+    InflaterInputStream iis( &bais );
+
+    // Tests for skipping a zero value
+    iis.skip( 0 );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", (int)'T', iis.read() );
+
+    // Test to make sure the correct number of bytes were skipped
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Number Of Bytes Skipped.", 3, (int)iis.skip( 3 ) );
+
+    // Test to see if the number of bytes skipped returned is true.
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", (int)'_', iis.read() );
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Number Of Bytes Skipped.", 0, (int)iis.skip( 0 ) );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", (int)'A', iis.read() );
+
+    // Test for skipping more bytes than available in the stream
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Number Of Bytes Skipped.",
+                                  testString.length() - 6, iis.skip( testString.length() ) );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", -1, iis.read() );
+    iis.close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InflaterInputStreamTest::testSkip2() {
+
+    std::vector<unsigned char> buffer( testString.length() );
+
+    // testing for number of bytes greater than input.
+    ByteArrayInputStream bais1( this->deflatedData );
+    InflaterInputStream iis1( &bais1 );
+
+    std::size_t skip = iis1.skip( Integer::MAX_VALUE );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "method skip() returned wrong number of bytes skipped",
+                                  testString.size(), skip );
+
+    // test for skipping of 2 bytes
+    ByteArrayInputStream bais2( this->deflatedData );
+    InflaterInputStream iis2( &bais2 );
+
+    skip = iis2.skip( 2 );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "the number of bytes returned by skip did not correspond with its input parameters",
+                                  (std::size_t)2, skip );
+    int i = 0;
+    int result = 0;
+    while( ( result = iis2.read() ) != -1 ) {
+        buffer[i] = result;
+        i++;
+    }
+
+    iis2.close();
+
+    for( std::size_t j = 2; j < testString.length(); j++ ) {
+        CPPUNIT_ASSERT_MESSAGE( "original compressed data did not equal decompressed data",
+                                buffer[j - 2] == testString.at( j ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InflaterInputStreamTest::testAvailable() {
+
+    // this unsigned char[] is a deflation of these bytes: { 1, 3, 4, 6 }
+    unsigned char deflated[] = {72, -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0};
+
+    ByteArrayInputStream bais( deflated, 13 );
+    InflaterInputStream iis( &bais );
+
+    int available;
+    for( int i = 0; i < 4; i++ ) {
+        iis.read();
+        available = iis.available();
+        if( available == 0 ) {
+            CPPUNIT_ASSERT_EQUAL_MESSAGE( "Expected no more bytes to read", -1, iis.read() );
+        } else {
+            CPPUNIT_ASSERT_EQUAL_MESSAGE( "Bytes Available Should Return 1.", 1, available );
+        }
+    }
+
+    iis.close();
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IOException",
+        iis.available(),
+        IOException );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void InflaterInputStreamTest::testClose() {

@@ -71,7 +71,7 @@ namespace io{
          * Get a snapshot of the data
          * @return reference to the underlying data as a const std::vector<unsigned char>&
          */
-        virtual const std::vector<unsigned char> toByteArrayRef() const;
+        virtual const std::vector<unsigned char>& toByteArrayRef() const;
 
         /**
          * Get the Size of the Internal Buffer
