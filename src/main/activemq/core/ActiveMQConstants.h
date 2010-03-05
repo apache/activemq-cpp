@@ -88,6 +88,7 @@ namespace core{
             CONNECTION_CLOSETIMEOUT,
             CONNECTION_ALWAYSSYNCSEND,
             CONNECTION_USEASYNCSEND,
+            CONNECTION_USECOMPRESSION,
             PARAM_USERNAME,
             PARAM_PASSWORD,
             PARAM_CLIENTID,
