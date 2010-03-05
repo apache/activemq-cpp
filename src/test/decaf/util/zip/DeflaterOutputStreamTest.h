@@ -36,6 +36,8 @@ namespace zip {
         CPPUNIT_TEST( testClose );
         CPPUNIT_TEST( testFinish );
         CPPUNIT_TEST( testDeflate );
+        CPPUNIT_TEST( testWriteI );
+        CPPUNIT_TEST( testWriteBIII );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -56,6 +58,8 @@ namespace zip {
         void testClose();
         void testFinish();
         void testDeflate();
+        void testWriteI();
+        void testWriteBIII();
 
     };
 

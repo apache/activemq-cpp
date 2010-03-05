@@ -52,7 +52,7 @@ const unsigned char* ByteArrayOutputStream::toByteArray() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> ByteArrayOutputStream::toByteArrayRef() const {
+const std::vector<unsigned char>& ByteArrayOutputStream::toByteArrayRef() const {
     if( activeBuffer == NULL ){
         return defaultBuffer;
     }

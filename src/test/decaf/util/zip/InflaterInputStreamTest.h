@@ -41,6 +41,8 @@ namespace zip {
         CPPUNIT_TEST( testReadBIII3 );
         CPPUNIT_TEST( testReset );
         CPPUNIT_TEST( testClose );
+        CPPUNIT_TEST( testSkip );
+        CPPUNIT_TEST( testSkip2 );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -70,6 +72,9 @@ namespace zip {
         void testReadBIII3();
         void testReset();
         void testClose();
+        void testAvailable();
+        void testSkip();
+        void testSkip2();
 
     };
 
