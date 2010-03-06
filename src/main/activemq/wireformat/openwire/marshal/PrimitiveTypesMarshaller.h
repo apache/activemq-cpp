@@ -45,62 +45,110 @@ namespace marshal{
         virtual ~PrimitiveTypesMarshaller() {}
 
         /**
-         * Static Marshal of a primitive map object.
+         * Marshal a primitive map object to the given byte buffer.
          *
          * @param map
          *      Map to Marshal.
-         * @param dest
-         *      Reference to a byte array to house the data.
+         * @param buffer
+         *      The byte buffer to write the marshaled data to.
          *
-         * @throws Exception
+         * @throws Exception if an error occurs during the marshaling process.
          */
-        static void marshal( const util::PrimitiveMap* map,
-                             std::vector<unsigned char>& dest )
-                                throw ( decaf::lang::Exception );
+        static void marshal( const util::PrimitiveMap* map, std::vector<unsigned char>& buffer )
+            throw ( decaf::lang::Exception );
 
         /**
-         * Static Map Unmarshaler, takes an array of bytes and returns a
-         * new instance of a PrimitiveMap object.  Caller owns the pointer.
+         * Unmarshal a PrimitiveMap from the provided Byte buffer.
          *
          * @param map
-         *      Map to Unmarshal into
-         * @param src
-         *      Reference to a byte array to read data from.
+         *      The Map to populate with values from the marshaled data.
+         * @param buffer
+         *      The byte buffer containing the marshaled Map.
          *
-         * @throws Exception
+         * @throws Exception if an error occurs during the unmarshal process.
          */
-        static void unmarshal( util::PrimitiveMap* map,
-                               const std::vector<unsigned char>& src )
-                                    throw ( decaf::lang::Exception );
+        static void unmarshal( util::PrimitiveMap* map, const std::vector<unsigned char>& buffer )
+            throw ( decaf::lang::Exception );
 
         /**
-         * Static Marshal of a primitive map object.
+         * Marshal a primitive list object to the given byte buffer.
+         *
+         * @param map
+         *      The PrimitiveList to Marshal.
+         * @param buffer
+         *      The byte buffer to write the marshaled data to.
+         *
+         * @throws Exception if an error occurs during the marshaling process.
+         */
+        static void marshal( const util::PrimitiveList* list, std::vector<unsigned char>& buffer )
+            throw ( decaf::lang::Exception );
+
+        /**
+         * Unmarshal a PrimitiveList from the provided byte buffer.
+         *
+         * @param map
+         *      The List to populate with values from the marshaled data.
+         * @param buffer
+         *      The byte buffer containing the marshaled Map.
+         *
+         * @throws Exception if an error occurs during the unmarshal process.
+         */
+        static void unmarshal( util::PrimitiveList* list, const std::vector<unsigned char>& buffer )
+            throw ( decaf::lang::Exception );
+
+    public:
+
+        /**
+         * Marshal a primitive map object to the given DataOutputStream.
+         *
+         * @param map
+         *      Map to Marshal.
+         * @param dataOut
+         *      Reference to a DataOutputStream to write the marshaled data to.
+         *
+         * @throws Exception if an error occurs during the marshaling process.
+         */
+        static void marshalMap( const util::PrimitiveMap* map, decaf::io::DataOutputStream& dataOut )
+            throw ( decaf::lang::Exception );
+
+        /**
+         * Unmarshal a PrimitiveMap from the provided DataInputStream.
+         *
+         * @param dataIn
+         *      The DataInputStream instance to read the marshaled PrimitiveMap from.
+         *
+         * @return a pointer to a newly allocated PrimitiveMap instnace.
+         *
+         * @throws Exception if an error occurs during the unmarshal process.
+         */
+        static util::PrimitiveMap* unmarshalMap( decaf::io::DataInputStream& dataIn )
+            throw ( decaf::lang::Exception );
+
+        /**
+         * Marshal a PrimitiveList to the given DataOutputStream.
          *
          * @param list
          *      The list object to Marshal
-         * @param dest
-         *      Reference to a byte array to house the data
+         * @param dataOut
+         *      Reference to a DataOutputStream to write the marshaled data to.
          *
-         * @throws Exception
+         * @throws Exception if an error occurs during the marshaling process.
          */
-        static void marshal( const util::PrimitiveList* list,
-                             std::vector<unsigned char>& dest )
-                                throw ( decaf::lang::Exception );
+        static void marshalList( const util::PrimitiveList* list, decaf::io::DataOutputStream& dataOut )
+            throw ( decaf::lang::Exception );
 
         /**
-         * Static Map Unmarshaler, takes an array of bytes and returns a
-         * new instance of a PrimitiveMap object.  Caller owns the pointer.
+         * Unmarshal a PrimitiveList from the given DataInputStream.
          *
-         * @param list
-         *      The list object to Un-marshal
-         * @param src
-         *      Reference to a byte array to read data from.
+         * @param dataIn
+         *      The DataInputStream instance to read the marshaled PrimitiveList from.
          *
-         * @throws Exception
+         * @return a pointer to a newly allocated PrimitiveList instnace.
+         *
+         * @throws Exception if an error occurs during the unmarshal process.
          */
-        static void unmarshal( util::PrimitiveList* list,
-                               const std::vector<unsigned char>& src )
-                                    throw ( decaf::lang::Exception );
+        static util::PrimitiveList* unmarshalList( decaf::io::DataInputStream& dataIn )
+            throw ( decaf::lang::Exception );
 
     protected:
 

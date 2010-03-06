@@ -45,7 +45,7 @@ namespace commands{
         public ActiveMQMessageTemplate< cms::StreamMessage > {
     private:
 
-        mutable std::auto_ptr<decaf::io::ByteArrayOutputStream> bytesOut;
+        decaf::io::ByteArrayOutputStream* bytesOut;
         mutable std::auto_ptr<decaf::io::DataInputStream> dataIn;
         mutable std::auto_ptr<decaf::io::DataOutputStream> dataOut;
 

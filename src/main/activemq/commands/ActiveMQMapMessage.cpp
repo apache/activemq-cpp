@@ -20,10 +20,21 @@
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/BufferedInputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/util/zip/DeflaterOutputStream.h>
+#include <decaf/util/zip/InflaterInputStream.h>
+
 using namespace std;
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util;
+using namespace decaf::util::zip;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -92,8 +103,20 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
         ActiveMQMessageTemplate<cms::MapMessage>::beforeMarshal( wireFormat );
 
         if( map.get() != NULL && !map->isEmpty() ) {
-            // Marshal as Content.
-            PrimitiveTypesMarshaller::marshal( map.get(), getContent() );
+
+            ByteArrayOutputStream* bytesOut = new ByteArrayOutputStream();
+
+            OutputStream* os = bytesOut;
+
+            if( this->connection != NULL && this->connection->isUseCompression() ) {
+                os = new DeflaterOutputStream( os, true );
+            }
+
+            DataOutputStream dataOut( os, true );
+            PrimitiveTypesMarshaller::marshalMap( map.get(), dataOut );
+            dataOut.close();
+            setContent( bytesOut->toByteArrayRef() );
+
         } else {
             clearBody();
         }
@@ -136,13 +159,18 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 
     try {
 
-        if( map.get() == NULL ) {
+        if( map.get() == NULL && !getContent().empty() ) {
 
-            map.reset( new PrimitiveMap() );
+            InputStream* is = new ByteArrayInputStream( getContent() );
 
-            if( getContent().size() != 0 ){
-                PrimitiveTypesMarshaller::unmarshal( map.get(), getContent() );
+            if( isCompressed() == true ) {
+                is = new InflaterInputStream( is, true );
+                is = new BufferedInputStream( is, true );
             }
+
+            DataInputStream dataIn( is, true );
+
+            map.reset( PrimitiveTypesMarshaller::unmarshalMap( dataIn ) );
 
             if( map.get() == NULL ) {
                 throw NullPointerException(
@@ -150,6 +178,8 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
                     "ActiveMQMapMessage::getMap() - All attempts to create a "
                     "map have failed." );
             }
+        } else if( map.get() == NULL ) {
+            map.reset( new PrimitiveMap() );
         }
     }
     AMQ_CATCH_RETHROW( NullPointerException )

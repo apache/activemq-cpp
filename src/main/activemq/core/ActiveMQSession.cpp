@@ -557,7 +557,9 @@ cms::Message* ActiveMQSession::createMessage()
     try{
 
         this->checkClosed();
-        return new commands::ActiveMQMessage();
+        commands::ActiveMQMessage* message = new commands::ActiveMQMessage();
+        message->setConnection( this->connection );
+        return message;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -569,7 +571,9 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
     try{
 
         this->checkClosed();
-        return new commands::ActiveMQBytesMessage();
+        commands::ActiveMQBytesMessage* message = new commands::ActiveMQBytesMessage();
+        message->setConnection( this->connection );
+        return message;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -597,7 +601,9 @@ cms::StreamMessage* ActiveMQSession::createStreamMessage()
     try{
 
         this->checkClosed();
-        return new commands::ActiveMQStreamMessage();
+        commands::ActiveMQStreamMessage* message = new commands::ActiveMQStreamMessage();
+        message->setConnection( this->connection );
+        return message;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -609,7 +615,9 @@ cms::TextMessage* ActiveMQSession::createTextMessage()
     try{
 
         this->checkClosed();
-        return new commands::ActiveMQTextMessage();
+        commands::ActiveMQTextMessage* message = new commands::ActiveMQTextMessage();
+        message->setConnection( this->connection );
+        return message;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -635,7 +643,9 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
     try{
 
         this->checkClosed();
-        return new commands::ActiveMQMapMessage();
+        commands::ActiveMQMapMessage* message = new commands::ActiveMQMapMessage();
+        message->setConnection( this->connection );
+        return message;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

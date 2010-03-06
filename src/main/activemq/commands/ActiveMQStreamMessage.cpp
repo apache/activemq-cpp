@@ -37,6 +37,9 @@
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Float.h>
 #include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/BufferedInputStream.h>
+#include <decaf/util/zip/DeflaterOutputStream.h>
+#include <decaf/util/zip/InflaterInputStream.h>
 
 using namespace std;
 using namespace cms;
@@ -51,6 +54,8 @@ using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::util;
+using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQStreamMessage::ActiveMQStreamMessage() :
@@ -116,7 +121,7 @@ void ActiveMQStreamMessage::clearBody() throw( cms::CMSException ) {
 
     this->dataIn.reset( NULL );
     this->dataOut.reset( NULL );
-    this->bytesOut.reset( NULL );
+    this->bytesOut = NULL;
     this->remainingBytes = -1;
 }
 
@@ -132,7 +137,7 @@ void ActiveMQStreamMessage::reset() throw ( cms::CMSException ) {
 
     try{
         storeContent();
-        this->bytesOut.reset(NULL);
+        this->bytesOut = NULL;
         this->dataIn.reset(NULL);
         this->dataOut.reset(NULL);
         this->remainingBytes = -1;
@@ -900,8 +905,8 @@ void ActiveMQStreamMessage::storeContent() {
 
         this->dataOut->close();
         this->setContent( this->bytesOut->toByteArrayRef() );
-        this->dataOut.reset(NULL);
-        this->bytesOut.reset(NULL);
+        this->dataOut.reset( NULL );
+        this->bytesOut = NULL;
     }
 }
 
@@ -911,7 +916,13 @@ void ActiveMQStreamMessage::initializeReading() const {
     this->failIfWriteOnlyBody();
     try {
         if( this->dataIn.get() == NULL) {
-            ByteArrayInputStream* is = new ByteArrayInputStream( this->getContent() );
+            InputStream* is = new ByteArrayInputStream( this->getContent() );
+
+            if( isCompressed() ) {
+                is = new InflaterInputStream( is, true );
+                is = new BufferedInputStream( is, true );
+            }
+
             this->dataIn.reset( new DataInputStream( is, true ) );
         }
     }
@@ -924,8 +935,16 @@ void ActiveMQStreamMessage::initializeWriting() {
     this->failIfReadOnlyBody();
     try{
         if( this->dataOut.get() == NULL ) {
-            this->bytesOut.reset( new ByteArrayOutputStream() );
-            this->dataOut.reset( new DataOutputStream( this->bytesOut.get() ) );
+            this->bytesOut = new ByteArrayOutputStream();
+
+            OutputStream* os = this->bytesOut;
+
+            if( this->connection != NULL && this->connection->isUseCompression() ) {
+                this->compressed = true;
+                os = new DeflaterOutputStream( os, true );
+            }
+
+            this->dataOut.reset( new DataOutputStream( os, true ) );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
