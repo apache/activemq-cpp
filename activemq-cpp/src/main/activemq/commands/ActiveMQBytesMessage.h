@@ -44,7 +44,7 @@ namespace commands{
          * OutputStream that wraps around the command's content when in
          * write-only mode.
          */
-        std::auto_ptr<decaf::io::ByteArrayOutputStream> bytesOut;
+        decaf::io::ByteArrayOutputStream* bytesOut;
 
         /**
          * DataInputStream wrapper around the input stream.

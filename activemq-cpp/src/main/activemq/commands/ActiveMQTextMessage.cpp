@@ -20,6 +20,8 @@
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/DataInputStream.h>
+#include <decaf/util/zip/DeflaterOutputStream.h>
+#include <decaf/util/zip/InflaterInputStream.h>
 
 #include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/util/CMSExceptionSupport.h>
@@ -35,6 +37,8 @@ using namespace activemq::wireformat::openwire;
 using namespace activemq::wireformat::openwire::utils;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTextMessage::ActiveMQTextMessage() :
@@ -117,14 +121,21 @@ void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat )
 
     if( this->text.get() != NULL ) {
 
-        ByteArrayOutputStream bytesOut;
-        DataOutputStream dataOut( &bytesOut );
+        ByteArrayOutputStream* bytesOut = new ByteArrayOutputStream;
+        OutputStream* os = bytesOut;
+
+        if( this->connection != NULL && this->connection->isUseCompression() ) {
+            this->compressed = true;
+            os = new DeflaterOutputStream( os, true );
+        }
+
+        DataOutputStream dataOut( os, true );
 
         OpenwireStringSupport::writeString( dataOut, this->text.get() );
 
         dataOut.close();
 
-        this->setContent( bytesOut.toByteArrayRef() );
+        this->setContent( bytesOut->toByteArrayRef() );
         this->text.reset( NULL );
     }
 }
@@ -159,12 +170,17 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
             try {
 
-                decaf::io::ByteArrayInputStream bais( getContent() );
-                decaf::io::DataInputStream dataIn( &bais );
+                InputStream* is = new ByteArrayInputStream( getContent() );
 
-                dataIn.close();
+                if( isCompressed() ) {
+                    is = new InflaterInputStream( is, true );
+                }
+
+                DataInputStream dataIn( is, true );
 
                 this->text.reset( new std::string( OpenwireStringSupport::readString( dataIn ) ) );
+
+                dataIn.close();
 
             } catch( IOException& ioe ) {
                 throw CMSExceptionSupport::create( ioe );

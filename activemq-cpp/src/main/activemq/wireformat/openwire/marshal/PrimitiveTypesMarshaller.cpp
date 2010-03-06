@@ -25,6 +25,9 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Short.h>
 
+#include <memory>
+
+using namespace std;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -37,13 +40,12 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveMap* map,
-                                      std::vector<unsigned char>& dest )
-                                        throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<unsigned char>& buffer )
+    throw ( decaf::lang::Exception ) {
 
     try {
 
-        ByteArrayOutputStream bytesOut( dest );
+        ByteArrayOutputStream bytesOut( buffer );
         DataOutputStream dataOut( &bytesOut );
 
         if( map == NULL ) {
@@ -57,20 +59,19 @@ void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveMap* map,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal(
-    activemq::util::PrimitiveMap* map,
-    const std::vector<unsigned char>& src ) throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<unsigned char>& buffer )
+    throw ( decaf::lang::Exception ) {
 
     try {
 
-        if( map == NULL || src.empty() ) {
+        if( map == NULL || buffer.empty() ) {
             return;
         }
 
         // Clear old data
         map->clear();
 
-        ByteArrayInputStream bytesIn( src );
+        ByteArrayInputStream bytesIn( buffer );
         DataInputStream dataIn( &bytesIn );
         PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *map );
     }
@@ -79,12 +80,12 @@ void PrimitiveTypesMarshaller::unmarshal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveList* list,
-                                        std::vector<unsigned char>& dest )
-                                            throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list, std::vector<unsigned char>& buffer )
+    throw ( decaf::lang::Exception ) {
+
     try {
 
-        ByteArrayOutputStream bytesOut( dest );
+        ByteArrayOutputStream bytesOut( buffer );
         DataOutputStream dataOut( &bytesOut );
 
         if( list == NULL ) {
@@ -98,22 +99,81 @@ void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveList* lis
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( activemq::util::PrimitiveList* list,
-                                          const std::vector<unsigned char>& src )
-                                                throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::unmarshal( util::PrimitiveList* list, const std::vector<unsigned char>& buffer )
+    throw ( decaf::lang::Exception ) {
 
     try {
 
-        if( list == NULL || src.empty() ) {
+        if( list == NULL || buffer.empty() ) {
             return;
         }
 
         // Clear old data
         list->clear();
 
-        ByteArrayInputStream bytesIn( src );
+        ByteArrayInputStream bytesIn( buffer );
         DataInputStream dataIn( &bytesIn );
         PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *list );
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::marshalMap( const PrimitiveMap* map, DataOutputStream& dataOut )
+    throw ( decaf::lang::Exception ) {
+
+    try {
+
+        if( map == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            PrimitiveTypesMarshaller::marshalPrimitiveMap( dataOut, *map );
+        }
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+PrimitiveMap* PrimitiveTypesMarshaller::unmarshalMap( DataInputStream& dataIn )
+    throw ( decaf::lang::Exception ) {
+
+    try {
+
+        std::auto_ptr<PrimitiveMap> map( new PrimitiveMap() );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *( map.get() ) );
+        return map.release();
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::marshalList( const PrimitiveList* list, DataOutputStream& dataOut )
+    throw ( decaf::lang::Exception ) {
+
+    try {
+
+        if( list == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            PrimitiveTypesMarshaller::marshalPrimitiveList( dataOut, *list );
+        }
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+PrimitiveList* PrimitiveTypesMarshaller::unmarshalList( DataInputStream& dataIn )
+    throw ( decaf::lang::Exception ) {
+
+    try {
+
+        std::auto_ptr<PrimitiveList> list( new PrimitiveList() );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *( list.get() ) );
+        return list.release();
     }
     AMQ_CATCH_RETHROW( decaf::lang::Exception )
     AMQ_CATCHALL_THROW( decaf::lang::Exception )

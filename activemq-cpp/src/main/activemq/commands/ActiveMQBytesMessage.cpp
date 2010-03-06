@@ -18,9 +18,13 @@
 
 #include <activemq/util/CMSExceptionSupport.h>
 
+#include <decaf/io/FilterOutputStream.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/EOFException.h>
 #include <decaf/io/IOException.h>
+
+#include <decaf/util/zip/DeflaterOutputStream.h>
+#include <decaf/util/zip/InflaterInputStream.h>
 
 using namespace std;
 using namespace activemq;
@@ -29,6 +33,51 @@ using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::zip;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace{
+
+    class ByteCounterOutputStream : public FilterOutputStream {
+    private:
+
+        std::size_t* length;
+
+    public:
+
+        ByteCounterOutputStream( std::size_t* length, OutputStream* stream, bool own = false )
+            : FilterOutputStream( stream, own ), length( length ) {
+        }
+
+        virtual ~ByteCounterOutputStream() {}
+
+    protected:
+
+        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
+            (*length)++;
+            FilterOutputStream::doWriteByte( value );
+        }
+
+        virtual void doWriteArray( const unsigned char* buffer, std::size_t size )
+            throw( decaf::io::IOException ) {
+
+            (*length) += size;
+            FilterOutputStream::doWriteArray( buffer, size );
+        }
+
+        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
+                                          std::size_t offset, std::size_t length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+            (*this->length) += length;
+            FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );
+        }
+
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() :
@@ -137,6 +186,7 @@ void ActiveMQBytesMessage::clearBody() throw( cms::CMSException ) {
     ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
 
     this->dataOut.reset( NULL );
+    this->bytesOut = NULL;
     this->dataIn.reset( NULL );
     this->length = 0;
 }
@@ -154,7 +204,7 @@ void ActiveMQBytesMessage::reset()
 
     try{
         storeContent();
-        this->bytesOut.reset( NULL );
+        this->bytesOut = NULL;
         this->dataIn.reset( NULL );
         this->dataOut.reset( NULL );
         this->length = 0;
@@ -569,10 +619,25 @@ void ActiveMQBytesMessage::storeContent() {
 
             this->dataOut->close();
 
-            this->setContent( this->bytesOut->toByteArrayRef() );
+            if( !this->compressed ) {
+                this->setContent( this->bytesOut->toByteArrayRef() );
+            } else {
+
+                ByteArrayOutputStream buffer;
+                DataOutputStream doBuffer( &buffer );
+
+                // Start by writing the length of the written data before compression.
+                doBuffer.writeInt( this->length );
+
+                // Now write the Compressed bytes.
+                this->bytesOut->writeTo( &doBuffer );
+
+                // Now store the annotated content.
+                this->setContent( buffer.toByteArrayRef() );
+            }
 
             this->dataOut.reset( NULL );
-            this->bytesOut.reset( NULL );
+            this->bytesOut = NULL;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -583,10 +648,24 @@ void ActiveMQBytesMessage::initializeReading() const {
 
     this->failIfWriteOnlyBody();
     try {
-        if( this->dataIn.get() == NULL) {
-            ByteArrayInputStream* is = new ByteArrayInputStream( this->getContent() );
+        if( this->dataIn.get() == NULL ) {
+            InputStream* is = new ByteArrayInputStream( this->getContent() );
+
+            if( this->isCompressed() ) {
+
+                try{
+                    DataInputStream dis( is );
+                    this->length = dis.readInt();
+                } catch( IOException& ex ) {
+                    CMSExceptionSupport::create( ex );
+                }
+
+                is = new InflaterInputStream( is, true );
+
+            } else {
+                this->length = this->getContent().size();
+            }
             this->dataIn.reset( new DataInputStream( is, true ) );
-            this->length = this->getContent().size();
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -599,8 +678,18 @@ void ActiveMQBytesMessage::initializeWriting() {
     try{
         if( this->dataOut.get() == NULL ) {
             this->length = 0;
-            this->bytesOut.reset( new ByteArrayOutputStream() );
-            this->dataOut.reset( new DataOutputStream( this->bytesOut.get() ) );
+            this->bytesOut = new ByteArrayOutputStream();
+
+            OutputStream* os = this->bytesOut;
+
+            if( this->connection != NULL && this->connection->isUseCompression() ) {
+                this->compressed = true;
+
+                os = new DeflaterOutputStream( os, true );
+                os = new ByteCounterOutputStream( &length, os, true );
+            }
+
+            this->dataOut.reset( new DataOutputStream( os, true ) );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

@@ -22,6 +22,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/Message.h>
 #include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/util/CMSExceptionSupport.h>
@@ -42,15 +43,27 @@ namespace commands {
 
         std::auto_ptr<wireformat::openwire::utils::MessagePropertyInterceptor> propertiesInterceptor;
 
+    protected:
+
+        activemq::core::ActiveMQConnection* connection;
+
     public:
 
-        ActiveMQMessageTemplate() : commands::Message() {
+        ActiveMQMessageTemplate() : commands::Message(), connection( NULL ) {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
                     this, &this->getMessageProperties() ) );
         }
 
         virtual ~ActiveMQMessageTemplate() {}
+
+        activemq::core::ActiveMQConnection* getConnection() const {
+            return this->connection;
+        }
+
+        void setConnection( activemq::core::ActiveMQConnection* connection ) {
+            this->connection = connection;
+        }
 
     public:  // cms::Message related methods
 
