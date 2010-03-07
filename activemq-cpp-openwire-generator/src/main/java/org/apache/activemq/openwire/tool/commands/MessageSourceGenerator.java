@@ -26,6 +26,8 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>");
         includes.add("<activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>");
+        includes.add("<activemq/core/ActiveMQAckHandler.h>");
+        includes.add("<activemq/core/ActiveMQConnection.h>");
         includes.add("<decaf/lang/System.h>");
     }
 
@@ -33,6 +35,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
 
         out.println("    this->readOnlyBody = false;");
         out.println("    this->readOnlyProperties = false;");
+        out.println("    this->connection = NULL;");
 
         super.generateDefaultConstructorBody(out);
     }
@@ -44,6 +47,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
         out.println("    this->setReadOnlyBody( srcPtr->isReadOnlyBody() );");
         out.println("    this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );");
+        out.println("    this->setConnection( srcPtr->getConnection() );");
     }
 
     protected void generateToStringBody( PrintWriter out ) {
