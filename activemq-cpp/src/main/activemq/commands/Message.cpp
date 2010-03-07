@@ -16,6 +16,8 @@
  */
 
 #include <activemq/commands/Message.h>
+#include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
@@ -45,6 +47,7 @@ Message::Message() : BaseCommand() {
 
     this->readOnlyBody = false;
     this->readOnlyProperties = false;
+    this->connection = NULL;
     this->groupID = "";
     this->groupSequence = 0;
     this->correlationId = "";
@@ -129,6 +132,7 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setAckHandler( srcPtr->getAckHandler() );
     this->setReadOnlyBody( srcPtr->isReadOnlyBody() );
     this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );
+    this->setConnection( srcPtr->getConnection() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -283,15 +287,6 @@ std::string Message::toString() const {
     stream << "BrokerInTime = " << this->getBrokerInTime();
     stream << ", ";
     stream << "BrokerOutTime = " << this->getBrokerOutTime();
-
-    stream << ", ";
-    stream << " ackHandler = " << ackHandler.get() << std::endl;
-    stream << ", ";
-    stream << " properties = " << this->properties.toString() << std::endl;
-    stream << ", ";
-    stream << " readOnlyBody = " << this->readOnlyBody << std::endl;
-    stream << ", ";
-    stream << " readOnlyProperties = " << this->readOnlyBody << std::endl;
     stream << " }";
 
     return stream.str();
@@ -847,7 +842,7 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor )
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
     throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessage( this );
