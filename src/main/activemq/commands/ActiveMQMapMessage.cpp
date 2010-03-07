@@ -109,6 +109,7 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
             OutputStream* os = bytesOut;
 
             if( this->connection != NULL && this->connection->isUseCompression() ) {
+                this->compressed = true;
                 os = new DeflaterOutputStream( os, true );
             }
 
@@ -163,7 +164,7 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 
             InputStream* is = new ByteArrayInputStream( getContent() );
 
-            if( isCompressed() == true ) {
+            if( isCompressed() ) {
                 is = new InflaterInputStream( is, true );
                 is = new BufferedInputStream( is, true );
             }

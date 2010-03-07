@@ -22,6 +22,7 @@ cc_sources = \
     activemq/test/DurableTest.cpp \
     activemq/test/ExpirationTest.cpp \
     activemq/test/JmsMessageGroupsTest.cpp \
+    activemq/test/MessageCompressionTest.cpp \
     activemq/test/SimpleRollbackTest.cpp \
     activemq/test/SimpleTest.cpp \
     activemq/test/SlowListenerTest.cpp \
@@ -34,6 +35,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
     activemq/test/openwire/OpenwireIndividualAckTest.cpp \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
+    activemq/test/openwire/OpenwireMessageCompressionTest.cpp \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
     activemq/test/openwire/OpenwireSimpleTest.cpp \
     activemq/test/openwire/OpenwireSlowListenerTest.cpp \
@@ -63,6 +65,7 @@ h_sources = \
     activemq/test/DurableTest.h \
     activemq/test/ExpirationTest.h \
     activemq/test/JmsMessageGroupsTest.h \
+    activemq/test/MessageCompressionTest.h \
     activemq/test/SimpleRollbackTest.h \
     activemq/test/SimpleTest.h \
     activemq/test/SlowListenerTest.h \
@@ -75,6 +78,7 @@ h_sources = \
     activemq/test/openwire/OpenwireExpirationTest.h \
     activemq/test/openwire/OpenwireIndividualAckTest.h \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
+    activemq/test/openwire/OpenwireMessageCompressionTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
     activemq/test/openwire/OpenwireSimpleTest.h \
     activemq/test/openwire/OpenwireSlowListenerTest.h \

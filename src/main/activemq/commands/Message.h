@@ -41,6 +41,7 @@
 namespace activemq{
 namespace core{
     class ActiveMQAckHandler;
+    class ActiveMQConnection;
 }
 namespace commands{
 
@@ -73,6 +74,8 @@ namespace commands{
         bool readOnlyBody;
 
     protected:
+
+        core::ActiveMQConnection* connection;
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
 
@@ -201,6 +204,24 @@ namespace commands{
          */
         virtual Pointer<core::ActiveMQAckHandler> getAckHandler() const {
             return this->ackHandler;
+        }
+
+        /**
+         * Sets the ActiveMQConnection instance that this Command was created from
+         * when the session create methods are called to create a Message..
+         * @param handler ActiveMQConnection parent for this message
+         */
+        void setConnection( core::ActiveMQConnection* connection ) {
+            this->connection = connection;
+        }
+
+        /**
+         * Gets the ActiveMQConnection instance that this Command was created from
+         * when the session create methods are called to create a Message..
+         * @returns the ActiveMQConnection parent for this Message or NULL if not set.
+         */
+        core::ActiveMQConnection* getConnection() const {
+            return this->connection;
         }
 
         /**

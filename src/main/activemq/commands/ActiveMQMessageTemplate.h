@@ -43,27 +43,15 @@ namespace commands {
 
         std::auto_ptr<wireformat::openwire::utils::MessagePropertyInterceptor> propertiesInterceptor;
 
-    protected:
-
-        activemq::core::ActiveMQConnection* connection;
-
     public:
 
-        ActiveMQMessageTemplate() : commands::Message(), connection( NULL ) {
+        ActiveMQMessageTemplate() : commands::Message() {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
                     this, &this->getMessageProperties() ) );
         }
 
         virtual ~ActiveMQMessageTemplate() {}
-
-        activemq::core::ActiveMQConnection* getConnection() const {
-            return this->connection;
-        }
-
-        void setConnection( activemq::core::ActiveMQConnection* connection ) {
-            this->connection = connection;
-        }
 
     public:  // cms::Message related methods
 
