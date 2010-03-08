@@ -336,7 +336,7 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
             streamBuffer->advance( copylength );
 
             if( copylength == length || inputStream->available() == 0 ) {
-                return copylength;
+                return (int)copylength;
             }
 
             offset += copylength;
@@ -355,13 +355,13 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
 
                 read = inputStream->read( buffer, size, offset, required );
                 if( read == -1 ) {
-                    return required == length ? -1 : length - required;
+                    return required == length ? -1 : (int)( length - required );
                 }
 
             } else {
 
                 if( bufferData( inputStream, streamBuffer ) == -1 ) {
-                    return required == length ? -1 : length - required;
+                    return required == length ? -1 : (int)( length - required );
                 }
 
                 // Stream might have closed while we were buffering.
@@ -371,7 +371,7 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                         "BufferedInputStream::bufferData - Stream is closed" );
                 }
 
-                read = streamBuffer->available() >= required ? required : streamBuffer->available();
+                read = (int)( streamBuffer->available() >= required ? required : streamBuffer->available() );
                 System::arraycopy( streamBuffer->getBuffer(), streamBuffer->getPos(),
                                    buffer, offset, read );
                 streamBuffer->advance( read );
@@ -380,11 +380,11 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
             required -= read;
 
             if( required == 0 ) {
-                return length;
+                return (int)length;
             }
 
             if( inputStream->available() == 0 ) {
-                return length - required;
+                return (int)( length - required );
             }
 
             offset += read;
@@ -421,7 +421,7 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
             return amount;
         }
 
-        int read = streamBuffer->available();
+        int read = (int)streamBuffer->available();
 
         streamBuffer->advance( streamBuffer->getCount() );
 
@@ -439,7 +439,7 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
                 }
 
                 // Couldn't get all the bytes, skip what we read
-                read += streamBuffer->available();
+                read += (int)streamBuffer->available();
                 streamBuffer->advance( streamBuffer->getCount() );
 
                 return read;

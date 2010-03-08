@@ -93,7 +93,7 @@ Short Short::decode( const std::string& value )
 ////////////////////////////////////////////////////////////////////////////////
 short Short::reverseBytes( short value ) {
     unsigned short temp = value;
-    temp = ( ( temp & 0xFF00 ) >> 8 ) | ( ( temp & 0x00FF ) << 8 );
+    temp = (unsigned short)( ( ( temp & 0xFF00 ) >> 8 ) | ( ( temp & 0x00FF ) << 8 ) );
     return temp;
 }
 

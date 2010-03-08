@@ -188,11 +188,8 @@ void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, std
             }
 
             // Get the number of bytes left to write.
-            std::size_t bytesToWrite = Math::min( (long long)( bufferSize - tail ),
-                                                  (long long)( length - pos ) );
-
-            // Copy the data.
-            //memcpy( this->buffer+tail, buffer+offset+pos, bytesToWrite );
+            std::size_t bytesToWrite = Math::min( (int)( bufferSize - tail ),
+                                                  (int)( length - pos ) );
 
             System::arraycopy( buffer, offset + pos, this->buffer, this->tail, bytesToWrite );
 

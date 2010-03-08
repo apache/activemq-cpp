@@ -181,8 +181,8 @@ void DataOutputStream::writeShort( short value ) throw ( IOException ) {
                 "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (value & 0xFF00) >> 8;
-        buffer[1] = (value & 0x00FF) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
+        buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
 
         outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
         written += sizeof( value );
@@ -203,8 +203,8 @@ void DataOutputStream::writeUnsignedShort( unsigned short value )
                 "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (value & 0xFF00) >> 8;
-        buffer[1] = (value & 0x00FF) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
+        buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
 
         outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
         written += sizeof( value );
@@ -223,10 +223,10 @@ void DataOutputStream::writeInt( int value ) throw ( IOException ) {
                 "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (value & 0xFF000000) >> 24;
-        buffer[1] = (value & 0x00FF0000) >> 16;
-        buffer[2] = (value & 0x0000FF00) >> 8;
-        buffer[3] = (value & 0x000000FF) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF000000) >> 24);
+        buffer[1] = (unsigned char)((value & 0x00FF0000) >> 16);
+        buffer[2] = (unsigned char)((value & 0x0000FF00) >> 8);
+        buffer[3] = (unsigned char)((value & 0x000000FF) >> 0);
 
         outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
         written += sizeof( value );

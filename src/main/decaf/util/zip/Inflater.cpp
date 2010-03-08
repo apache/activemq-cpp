@@ -172,7 +172,7 @@ void Inflater::setInput( const unsigned char* buffer, std::size_t size, std::siz
                 __FILE__, __LINE__, "The offset + length given is greater than the specified buffer size." );
         }
 
-        this->data->stream->avail_in = length;
+        this->data->stream->avail_in = (uInt)length;
         this->data->stream->next_in = (Bytef*)( buffer + offset );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -243,7 +243,7 @@ void Inflater::setDictionary( const unsigned char* buffer, std::size_t size, std
         // as NULL dictionary) or the stream state is inconsistent, Z_DATA_ERROR if the given dictionary
         // doesn't match the expected one (incorrect adler32 value). inflateSetDictionary does not
         // perform any decompression: this will be done by subsequent calls of inflate().
-        int result = inflateSetDictionary( this->data->stream, buffer + offset, length );
+        int result = inflateSetDictionary( this->data->stream, buffer + offset, (uInt)length );
         if( result != Z_OK ) {
             throw IllegalArgumentException(
                 __FILE__, __LINE__, "Dictionary given does not match required checksum value." );
@@ -333,7 +333,7 @@ std::size_t Inflater::inflate( unsigned char* buffer, std::size_t size, std::siz
         std::size_t outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
-        this->data->stream->avail_out = length;
+        this->data->stream->avail_out = (uInt)length;
 
         // Call ZLib and then process the resulting data to figure out what happened.
         int result = ::inflate( this->data->stream, this->data->flush );

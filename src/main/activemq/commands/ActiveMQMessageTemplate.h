@@ -636,7 +636,7 @@ namespace commands {
          * @throw CMSException
          */
         virtual void setCMSPriority( int priority ) throw( cms::CMSException ) {
-            this->setPriority( priority );
+            this->setPriority( (unsigned char)priority );
         }
 
         /**

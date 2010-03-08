@@ -55,7 +55,7 @@ std::size_t CheckedInputStream::skip( std::size_t num ) throw( decaf::io::IOExce
         }
 
         // Perform smaller reads then the indicated amount
-        std::size_t remaining = Math::min( num, 2048 );
+        std::size_t remaining = Math::min( (int)num, 2048 );
         std::size_t skipped = 0;
 
         std::vector<unsigned char> buffer( remaining );

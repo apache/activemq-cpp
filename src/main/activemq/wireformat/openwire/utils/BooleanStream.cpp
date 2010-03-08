@@ -74,7 +74,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
         }
 
         if( value ) {
-            data[arrayPos] |= ( 0x01 << bytePos );
+            data[arrayPos] |= (unsigned char)( 0x01 << bytePos );
         }
 
         bytePos++;
@@ -126,8 +126,8 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
             dataOut.push_back( ( unsigned char ) arrayLimit );
         } else {
             dataOut.push_back( ( unsigned char ) 0x80 );
-            dataOut.push_back( arrayLimit >> 8 );   // High Byte
-            dataOut.push_back( arrayLimit & 0xFF ); // Low Byte
+            dataOut.push_back( ( unsigned char )( arrayLimit >> 8 ) );   // High Byte
+            dataOut.push_back( ( unsigned char )( arrayLimit & 0xFF ) ); // Low Byte
         }
 
         // Insert all data from data into the passed buffer

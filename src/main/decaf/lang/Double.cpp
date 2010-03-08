@@ -202,7 +202,7 @@ std::string Double::toHexString( double value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            int digitDiff = fractionDigits - hexSignificand.length();
+            int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }
@@ -226,7 +226,7 @@ std::string Double::toHexString( double value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            int digitDiff = fractionDigits - hexSignificand.length();
+            int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }

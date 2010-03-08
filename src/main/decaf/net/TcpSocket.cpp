@@ -95,7 +95,7 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
 
         // Create the Address data
         checkResult( apr_sockaddr_info_get(
-            &socketAddress, host, APR_INET, port, 0, apr_pool.getAprPool() ) );
+            &socketAddress, host, APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() ) );
 
         // Create the actual socket.
         checkResult( apr_socket_create(

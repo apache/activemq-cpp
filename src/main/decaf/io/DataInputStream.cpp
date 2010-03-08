@@ -92,7 +92,7 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
     try {
         short value = 0;
         readAllData( buffer, sizeof(short) );
-        value |= (buffer[0] << 8 | buffer[1] << 0);
+        value |= (short)(buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -106,7 +106,7 @@ unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io:
     try {
         unsigned short value = 0;
         readAllData( buffer, sizeof(unsigned short) );
-        value |= (buffer[0] << 8 | buffer[1] << 0);
+        value |= (unsigned short)(buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -281,7 +281,7 @@ std::string DataInputStream::readUTF()
                         "This method only supports encoded ASCII values of (0-255)." );
                 }
 
-                result[index++] = ( ( a & 0x1F ) << 6 ) | ( b & 0x3F );
+                result[index++] = (unsigned char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
 
             } else if( ( a & 0xF0 ) == 0xE0 ) {
 

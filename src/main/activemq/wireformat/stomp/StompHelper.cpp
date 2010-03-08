@@ -55,7 +55,7 @@ void StompHelper::convertProperties( const Pointer<StompFrame>& frame,
     }
 
     if( frame->hasProperty( StompCommandConstants::HEADER_JMSPRIORITY ) ) {
-        message->setPriority( Integer::parseInt(
+        message->setPriority( (unsigned char)Integer::parseInt(
             frame->removeProperty( StompCommandConstants::HEADER_JMSPRIORITY ) ) );
     }
 

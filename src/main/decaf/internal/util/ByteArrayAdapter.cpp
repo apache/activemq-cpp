@@ -505,7 +505,7 @@ short ByteArrayAdapter::getShortAt( std::size_t index ) const
         short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
         this->read( buffer, index, sizeof(value) );
-        value |= (buffer[0] << 8 | buffer[1] << 0);
+        value |= (short)(buffer[0] << 8 | buffer[1] << 0);
 
         return value;
     }
@@ -691,10 +691,10 @@ ByteArrayAdapter& ByteArrayAdapter::putIntAt( std::size_t index, int value )
 
         unsigned char buffer[sizeof(value)];
 
-        buffer[0] = (value & 0xFF000000) >> 24;
-        buffer[1] = (value & 0x00FF0000) >> 16;
-        buffer[2] = (value & 0x0000FF00) >> 8;
-        buffer[3] = (value & 0x000000FF) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF000000) >> 24);
+        buffer[1] = (unsigned char)((value & 0x00FF0000) >> 16);
+        buffer[2] = (unsigned char)((value & 0x0000FF00) >> 8);
+        buffer[3] = (unsigned char)((value & 0x000000FF) >> 0);
 
         this->write( buffer, index, sizeof(value) );
 
@@ -733,8 +733,8 @@ ByteArrayAdapter& ByteArrayAdapter::putShortAt( std::size_t index, short value )
 
         unsigned char buffer[sizeof(value)];
 
-        buffer[0] = (value & 0xFF00) >> 8;
-        buffer[1] = (value & 0x00FF) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
+        buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
 
         this->write( buffer, index, sizeof(value) );
 

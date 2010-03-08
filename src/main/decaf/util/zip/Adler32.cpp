@@ -76,5 +76,5 @@ void Adler32::update( const unsigned char* buffer, std::size_t size, std::size_t
             __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
     }
 
-    this->value = adler32( this->value, (const Bytef*)( buffer + offset ), length );
+    this->value = (long long)adler32( this->value, (const Bytef*)( buffer + offset ), (uInt)length );
 }
