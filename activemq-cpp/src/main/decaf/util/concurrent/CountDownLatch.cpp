@@ -17,6 +17,8 @@
 
 #include "CountDownLatch.h"
 
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -60,11 +62,16 @@ void CountDownLatch::await()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( unsigned long timeOut )
+bool CountDownLatch::await( long long timeOut )
     throw ( decaf::lang::exceptions::InterruptedException,
             decaf::lang::Exception ) {
 
     try {
+
+        if( timeOut < 0 ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "Timeout value cannot be less than zero." );
+        }
 
         synchronized( &mutex ) {
             if( count == 0 ){

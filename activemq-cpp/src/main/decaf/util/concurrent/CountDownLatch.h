@@ -107,7 +107,7 @@ namespace concurrent{
          * @throws InterruptedException - if the current thread is interrupted while waiting.
          * @throws Exception - if any other error occurs.
          */
-        virtual bool await( unsigned long timeOut )
+        virtual bool await( long long timeOut )
             throw ( decaf::lang::exceptions::InterruptedException,
                     decaf::lang::Exception );
 
