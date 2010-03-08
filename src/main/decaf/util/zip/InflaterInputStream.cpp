@@ -225,12 +225,12 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
             // It may also be true if the next read() should return -1.
             try {
 
-                int result = inflater->inflate( buffer, size, offset, length );
+                std::size_t result = inflater->inflate( buffer, size, offset, length );
 
                 atEOF = inflater->finished();
 
                 if( result > 0 ) {
-                    return result;
+                    return (int)result;
                 } else if( atEOF ) {
                     return -1;
                 } else if( inflater->needsDictionary() ) {
