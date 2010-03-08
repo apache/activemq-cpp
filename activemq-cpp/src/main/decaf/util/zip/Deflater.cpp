@@ -208,7 +208,7 @@ void Deflater::setInput( const unsigned char* buffer, std::size_t size, std::siz
             deflateParams( this->data->stream, this->data->level, this->data->strategy );
         }
 
-        this->data->stream->avail_in = length;
+        this->data->stream->avail_in = (uInt)length;
         this->data->stream->next_in = (Bytef*)( buffer + offset );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -264,7 +264,7 @@ void Deflater::setDictionary( const unsigned char* buffer, std::size_t size, std
         // (such as NULL dictionary) or the stream state is inconsistent (for example if deflate has
         // already been called for this stream or if the compression method is bsort).
         // deflateSetDictionary does not perform any compression: this will be done by deflate().
-        if( deflateSetDictionary( this->data->stream, buffer + offset, length ) != Z_OK ) {
+        if( deflateSetDictionary( this->data->stream, buffer + offset, (uInt)length ) != Z_OK ) {
             throw IllegalStateException(
                 __FILE__, __LINE__, "Deflator could not accept the dictionary." );
         }
@@ -375,7 +375,7 @@ std::size_t Deflater::deflate( unsigned char* buffer, std::size_t size, std::siz
         std::size_t outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
-        this->data->stream->avail_out = length;
+        this->data->stream->avail_out = (uInt)length;
 
         // Call ZLib and then process the resulting data to figure out what happened.
         int result = ::deflate( this->data->stream, this->data->flush );

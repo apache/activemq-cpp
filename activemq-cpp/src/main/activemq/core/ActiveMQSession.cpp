@@ -889,7 +889,7 @@ void ActiveMQSession::applyDestinationOptions( const Pointer<ConsumerInfo>& info
     std::string priorityStr =
         core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_PRIORITY );
     if( options.hasProperty( priorityStr ) ) {
-        info->setPriority( Integer::parseInt( options.getProperty( priorityStr ) ) );
+        info->setPriority( (unsigned char)Integer::parseInt( options.getProperty( priorityStr ) ) );
     }
 
     std::string dispatchAsyncStr =

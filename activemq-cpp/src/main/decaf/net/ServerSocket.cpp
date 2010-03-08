@@ -66,7 +66,7 @@ void ServerSocket::bind( const char* host,
 
     // Create the Address Info for the Socket
     result = apr_sockaddr_info_get(
-        &socketAddress, host, APR_INET, port, 0, apr_pool.getAprPool() );
+        &socketAddress, host, APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() );
 
     if( result != APR_SUCCESS ) {
         socketHandle = NULL;

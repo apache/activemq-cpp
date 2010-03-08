@@ -145,7 +145,6 @@ void Adler32Test::testUpdateArrayIndexed() {
     // The value of the adl should be 262148
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "update(unsigned char[],std::size_t,std::size_t) failed to update the checksum to the correct value ",
                                   262148LL, adl.getValue() );
-    std::size_t r = 0;
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown an IndexOutOfBoundsException for lenError",

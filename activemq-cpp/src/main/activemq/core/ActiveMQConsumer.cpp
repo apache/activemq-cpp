@@ -700,7 +700,7 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
     Pointer<MessageAck> oldPendingAck = pendingAck;
     pendingAck.reset( new MessageAck() );
     pendingAck->setConsumerId( dispatch->getConsumerId() );
-    pendingAck->setAckType( ackType );
+    pendingAck->setAckType( (unsigned char)ackType );
     pendingAck->setDestination( dispatch->getDestination() );
     pendingAck->setLastMessageId( dispatch->getMessage()->getMessageId() );
     pendingAck->setMessageCount( deliveredCounter );
@@ -739,7 +739,7 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
             Pointer<MessageDispatch> dispatched = dispatchedMessages.front();
 
             Pointer<MessageAck> ack( new MessageAck() );
-            ack->setAckType( type );
+            ack->setAckType( (unsigned char)type );
             ack->setConsumerId( dispatched->getConsumerId() );
             ack->setDestination( dispatched->getDestination() );
             ack->setMessageCount( (int)dispatchedMessages.size() );

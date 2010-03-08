@@ -61,7 +61,7 @@ double Random::nextDouble() {
     long long divisor = 1LL;
     divisor <<= 31;
     divisor <<= 22;
-    return ((((long long) next(26) << 27) + next(27)) / (double) divisor);
+    return ( (double)( ( (long long) next(26) << 27) + next(27)) / (double) divisor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

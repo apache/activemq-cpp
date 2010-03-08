@@ -39,7 +39,7 @@ LoggingInputStream::~LoggingInputStream() {}
 int LoggingInputStream::doReadByte() throw ( IOException ) {
     try {
 
-        unsigned char c = FilterInputStream::doReadByte();
+        unsigned char c = (unsigned char)FilterInputStream::doReadByte();
         log( &c, 1 );
         return c;
     }

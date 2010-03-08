@@ -227,19 +227,19 @@ int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
 
         // Have we copied enough?
         if( copyLength == length ) {
-            return length;
+            return (int)length;
         }
 
         int inCopied = inputStream->read( buffer, size, newOffset, length - copiedBytes );
         if( inCopied > 0 ) {
-            return inCopied + copiedBytes;
+            return (int)( inCopied + copiedBytes );
         }
 
         if( copiedBytes == 0 ) {
             return inCopied;
         }
 
-        return copiedBytes;
+        return (int)copiedBytes;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

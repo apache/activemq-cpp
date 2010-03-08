@@ -345,7 +345,7 @@ int System::availableProcessors() {
 
     // returns number of online(_SC_NPROCESSORS_ONLN) processors, number configured(_SC_NPROCESSORS_CONF)
     // may be more than online
-    numCpus = sysconf( _SC_NPROCESSORS_ONLN );
+    numCpus = (int)sysconf( _SC_NPROCESSORS_ONLN );
 
 #endif
 

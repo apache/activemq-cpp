@@ -76,7 +76,7 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
                         "This method only supports encoded ASCII values of (0-255)." );
                 }
 
-                result[index++] = ( ( a & 0x1F ) << 6 ) | ( b & 0x3F );
+                result[index++] = (unsigned char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
 
             } else if( ( a & 0xF0 ) == 0xE0 ) {
 

@@ -179,18 +179,18 @@ int InputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
             int c;
             try {
                 if( ( c = doReadByte() ) == -1 ) {
-                    return i == 0 ? -1 : i;
+                    return i == 0 ? -1 : (int)i;
                 }
             } catch( IOException& e ) {
                 if( i != 0 ) {
-                    return i;
+                    return (int)i;
                 }
                 throw e;
             }
             buffer[offset + i] = (unsigned char)c;
         }
 
-        return length;
+        return (int)length;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

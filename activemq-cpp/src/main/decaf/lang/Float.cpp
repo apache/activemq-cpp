@@ -210,7 +210,7 @@ std::string Float::toHexString( float value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            unsigned int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }
@@ -233,7 +233,7 @@ std::string Float::toHexString( float value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            unsigned int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }
