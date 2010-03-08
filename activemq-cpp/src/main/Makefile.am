@@ -537,6 +537,7 @@ cc_sources = \
     decaf/lang/Long.cpp \
     decaf/lang/Math.cpp \
     decaf/lang/Short.cpp \
+    decaf/lang/String.cpp \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
@@ -1208,6 +1209,7 @@ h_sources = \
     decaf/lang/Runnable.h \
     decaf/lang/Runtime.h \
     decaf/lang/Short.h \
+    decaf/lang/String.h \
     decaf/lang/System.h \
     decaf/lang/Thread.h \
     decaf/lang/ThreadGroup.h \
