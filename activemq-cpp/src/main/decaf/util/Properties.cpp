@@ -55,11 +55,11 @@ namespace {
      */
 
     enum ParsingMode {
-        NONE = 0,
-        SLASH = 1,
-        CONTINUE = 2,
-        KEY_DONE = 3,
-        IGNORE = 4
+        PARSE_MODE_NONE = 0,
+        PARSE_MODE_SLASH = 1,
+        PARSE_MODE_CONTINUE = 2,
+        PARSE_MODE_KEY_DONE = 3,
+        PARSE_MODE_IGNORE = 4
     };
 
     void dumpString( std::ostringstream& buffer, const std::string& string, bool key ) {
@@ -336,7 +336,7 @@ void Properties::load( decaf::io::InputStream* stream )
                 "The Stream instance passed was Null" );
         }
 
-        int mode = NONE;
+        int mode = PARSE_MODE_NONE;
         char nextChar;
         std::vector<char> buf;
         int offset = 0;
@@ -355,15 +355,15 @@ void Properties::load( decaf::io::InputStream* stream )
 
             nextChar = (char) ( intVal & 0xFF );
 
-            if( mode == SLASH ) {
+            if( mode == PARSE_MODE_SLASH ) {
 
-                mode = NONE;
+                mode = PARSE_MODE_NONE;
                 switch( nextChar ) {
                     case '\r':
-                        mode = CONTINUE; // Look for a following \n
+                        mode = PARSE_MODE_CONTINUE; // Look for a following \n
                         continue;
                     case '\n':
-                        mode = IGNORE; // Ignore whitespace on the next line
+                        mode = PARSE_MODE_IGNORE; // Ignore whitespace on the next line
                         continue;
                     case 'b':
                         nextChar = '\b';
@@ -404,13 +404,13 @@ void Properties::load( decaf::io::InputStream* stream )
                         }
                         break;
                     case '\n':
-                        if( mode == CONTINUE) { // Part of a \r\n sequence
-                            mode = IGNORE; // Ignore whitespace on the next line
+                        if( mode == PARSE_MODE_CONTINUE) { // Part of a \r\n sequence
+                            mode = PARSE_MODE_IGNORE; // Ignore whitespace on the next line
                             continue;
                         }
                         // fall into the next case
                     case '\r':
-                        mode = NONE;
+                        mode = PARSE_MODE_NONE;
                         firstChar = true;
                         if( offset > 0 || ( offset == 0 && keyLength == 0 ) ) {
 
@@ -428,43 +428,43 @@ void Properties::load( decaf::io::InputStream* stream )
                         buf.clear();
                         continue;
                     case '\\':
-                        if( mode == KEY_DONE ) {
+                        if( mode == PARSE_MODE_KEY_DONE ) {
                             keyLength = offset;
                         }
-                        mode = SLASH;
+                        mode = PARSE_MODE_SLASH;
                         continue;
                     case ':':
                     case '=':
                         if( keyLength == -1 ) { // if parsing the key
-                            mode = NONE;
+                            mode = PARSE_MODE_NONE;
                             keyLength = offset;
                             continue;
                         }
                         break;
                 }
                 if( Character::isWhitespace( nextChar ) ) {
-                    if( mode == CONTINUE ) {
-                        mode = IGNORE;
+                    if( mode == PARSE_MODE_CONTINUE ) {
+                        mode = PARSE_MODE_IGNORE;
                     }
                     // if key length == 0 or value length == 0
                     if( offset == 0 || offset == keyLength || mode == IGNORE ) {
                         continue;
                     }
                     if( keyLength == -1 ) { // if parsing the key
-                        mode = KEY_DONE;
+                        mode = PARSE_MODE_KEY_DONE;
                         continue;
                     }
                 }
 
-                if( mode == IGNORE || mode == CONTINUE ) {
-                    mode = NONE;
+                if( mode == PARSE_MODE_IGNORE || mode == PARSE_MODE_CONTINUE ) {
+                    mode = PARSE_MODE_NONE;
                 }
             }
 
             firstChar = false;
-            if( mode == KEY_DONE ) {
+            if( mode == PARSE_MODE_KEY_DONE ) {
                 keyLength = offset;
-                mode = NONE;
+                mode = PARSE_MODE_NONE;
             }
 
             offset += 1;

@@ -36,7 +36,7 @@ Adler32::~Adler32() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Adler32::reset() {
-    this->value = adler32( this->value, NULL, 0 );
+    this->value = adler32( (uLong)this->value, NULL, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ void Adler32::update( const std::vector<unsigned char>& buffer, std::size_t offs
 
 ////////////////////////////////////////////////////////////////////////////////
 void Adler32::update( int byte ) {
-    this->value = adler32( this->value, (const Bytef*)&byte, 1 );
+    this->value = adler32( (uLong)this->value, (const Bytef*)&byte, 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,5 +76,5 @@ void Adler32::update( const unsigned char* buffer, std::size_t size, std::size_t
             __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
     }
 
-    this->value = (long long)adler32( this->value, (const Bytef*)( buffer + offset ), (uInt)length );
+    this->value = adler32( (uLong)this->value, (const Bytef*)( buffer + offset ), (uInt)length );
 }
