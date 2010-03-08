@@ -505,6 +505,7 @@ cc_sources = \
     decaf/internal/util/zip/gzio.c \
     decaf/internal/util/zip/infback.c \
     decaf/internal/util/zip/inffast.c \
+    decaf/internal/util/zip/inflate.c \
     decaf/internal/util/zip/inftrees.c \
     decaf/internal/util/zip/minigzip.c \
     decaf/internal/util/zip/trees.c \
