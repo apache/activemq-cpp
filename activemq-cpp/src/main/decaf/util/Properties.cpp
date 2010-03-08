@@ -447,7 +447,7 @@ void Properties::load( decaf::io::InputStream* stream )
                         mode = PARSE_MODE_IGNORE;
                     }
                     // if key length == 0 or value length == 0
-                    if( offset == 0 || offset == keyLength || mode == IGNORE ) {
+                    if( offset == 0 || offset == keyLength || mode == PARSE_MODE_IGNORE ) {
                         continue;
                     }
                     if( keyLength == -1 ) { // if parsing the key
