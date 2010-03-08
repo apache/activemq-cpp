@@ -10850,6 +10850,62 @@
 					RelativePath="..\src\test\decaf\io\FilterOutputStreamTest.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\InputStreamReaderTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\InputStreamReaderTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\InputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\InputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\OutputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\OutputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\OutputStreamWriterTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\OutputStreamWriterTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\PushbackInputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\PushbackInputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ReaderTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ReaderTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\WriterTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\WriterTest.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="lang"
@@ -11213,6 +11269,74 @@
 				<Filter
 					Name="logging"
 					>
+				</Filter>
+				<Filter
+					Name="zip"
+					>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\Adler32Test.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\Adler32Test.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CheckedInputStreamTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CheckedInputStreamTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CheckedOutputStreamTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CheckedOutputStreamTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CRC32Test.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\CRC32Test.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\DeflaterOutputStreamTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\DeflaterOutputStreamTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\DeflaterTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\DeflaterTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\InflaterInputStreamTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\InflaterInputStreamTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\InflaterTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\zip\InflaterTest.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

@@ -44,6 +44,7 @@
     // of Windows or OS X to do this build
 
     #if defined(_WIN32)
+
         #ifndef HAVE_OBJBASE_H
             #define HAVE_OBJBASE_H
         #endif

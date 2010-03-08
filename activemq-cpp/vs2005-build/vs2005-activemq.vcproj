@@ -22735,6 +22735,98 @@
 							</File>
 						</Filter>
 					</Filter>
+					<Filter
+						Name="zip"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\adler32.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\compress.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\crc32.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\crc32.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\deflate.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\deflate.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\gzio.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\infback.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inffast.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inffast.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inffixed.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inflate.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inftrees.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inftrees.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\minigzip.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\trees.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\trees.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\uncompr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\zconf.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\zlib.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\zutil.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\zutil.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="io"
@@ -23005,11 +23097,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\DataInput.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\DataInputStream.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\io\DataInputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\DataOutput.h"
 					>
 				</File>
 				<File
@@ -23025,7 +23125,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\FilterInputStream.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\FilterInputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\FilterOutputStream.cpp"
 					>
 				</File>
 				<File
@@ -23033,7 +23141,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\Flushable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\InputStream.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\InputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\InputStreamReader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\InputStreamReader.h"
 					>
 				</File>
 				<File
@@ -23045,7 +23169,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\OutputStream.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\OutputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\OutputStreamWriter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\OutputStreamWriter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\PushbackInputStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\PushbackInputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\Reader.cpp"
 					>
 				</File>
 				<File
@@ -23053,7 +23201,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\UnsupportedEncodingException.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\UTFDataFormatException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\Writer.cpp"
 					>
 				</File>
 				<File
@@ -23688,7 +23844,19 @@
 					Name="logging"
 					>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\ConsoleHandler.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\ConsoleHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\ErrorManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\ErrorManager.h"
 						>
 					</File>
 					<File
@@ -23696,11 +23864,27 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\Formatter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\Formatter.h"
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\Handler.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\Handler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\Level.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\Level.h"
 						>
 					</File>
 					<File
@@ -23736,6 +23920,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\LogRecord.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\LogRecord.h"
 						>
 					</File>
@@ -23756,6 +23944,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\SimpleFormatter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\SimpleFormatter.h"
 						>
 					</File>
@@ -23768,7 +23960,171 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\logging\StreamHandler.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\logging\StreamHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\XMLFormatter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\logging\XMLFormatter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="zip"
+					>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Adler32.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Adler32.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CheckedInputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CheckedInputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CheckedOutputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CheckedOutputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Checksum.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CRC32.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\CRC32.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\DataFormatException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Deflater.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Deflater.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\DeflaterOutputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\DeflaterOutputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Inflater.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Inflater.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\InflaterInputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\InflaterInputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\ZipException.h"
 						>
 					</File>
 				</Filter>
