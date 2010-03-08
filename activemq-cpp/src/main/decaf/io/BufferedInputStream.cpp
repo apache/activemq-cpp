@@ -126,7 +126,7 @@ namespace io{
         }
 
         void reset() {
-            this->pos = this->markPos;
+            this->pos = (std::size_t)this->markPos;
         }
 
         void normalizeBuffer() {

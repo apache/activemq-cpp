@@ -113,7 +113,7 @@ std::size_t InflaterInputStream::skip( std::size_t num )
     try{
 
         std::size_t count = 0;
-        std::size_t remaining = Math::min( (long long)num, (long long)buff.size() );
+        std::size_t remaining = (std::size_t)Math::min( (long long)num, (long long)buff.size() );
 
         std::vector<unsigned char> buffer( remaining );
 
