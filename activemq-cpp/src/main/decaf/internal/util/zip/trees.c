@@ -39,6 +39,10 @@
 #  include <ctype.h>
 #endif
 
+#ifdef WIN32
+#pragma warning( disable : 4267 )
+#endif
+
 /* ===========================================================================
  * Constants
  */

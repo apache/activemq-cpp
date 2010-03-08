@@ -484,8 +484,8 @@ void DataInputStreamTest::testString() {
     }
 
     try{
-        std::vector<unsigned char> buffer2;
-        reader.readFully( &buffer2[0], buffer2.size() );
+        unsigned char buffer2[1];
+        reader.readFully( buffer2, 0 );
     } catch(...){
         CPPUNIT_ASSERT( false );
     }

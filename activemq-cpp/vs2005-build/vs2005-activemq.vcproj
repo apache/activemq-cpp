@@ -22783,6 +22783,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\inflate.c"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\internal\util\zip\inflate.h"
 							>
 						</File>
