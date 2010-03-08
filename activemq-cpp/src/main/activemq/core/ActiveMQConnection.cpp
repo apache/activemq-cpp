@@ -572,7 +572,7 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportInterrupted() {
 
-    transportInterruptionProcessingComplete.reset( new CountDownLatch( dispatchers.size() ) );
+    transportInterruptionProcessingComplete.reset( new CountDownLatch( (int)dispatchers.size() ) );
 
     synchronized( &activeSessions ) {
         std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->activeSessions.iterator() );

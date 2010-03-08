@@ -80,7 +80,7 @@ void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<u
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list, std::vector<unsigned char>& buffer )
+void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<unsigned char>& buffer )
     throw ( decaf::lang::Exception ) {
 
     try {
@@ -99,7 +99,7 @@ void PrimitiveTypesMarshaller::marshal( const util::PrimitiveList* list, std::ve
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( util::PrimitiveList* list, const std::vector<unsigned char>& buffer )
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveList* list, const std::vector<unsigned char>& buffer )
     throw ( decaf::lang::Exception ) {
 
     try {

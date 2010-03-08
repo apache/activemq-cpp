@@ -627,7 +627,7 @@ void ActiveMQBytesMessage::storeContent() {
                 DataOutputStream doBuffer( &buffer );
 
                 // Start by writing the length of the written data before compression.
-                doBuffer.writeInt( this->length );
+                doBuffer.writeInt( (int)this->length );
 
                 // Now write the Compressed bytes.
                 this->bytesOut->writeTo( &doBuffer );
