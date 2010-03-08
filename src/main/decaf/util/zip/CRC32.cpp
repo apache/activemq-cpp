@@ -36,7 +36,7 @@ CRC32::~CRC32() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void CRC32::reset() {
-    this->value = crc32( this->value, NULL, 0 );
+    this->value = crc32( (uLong)this->value, NULL, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ void CRC32::update( const std::vector<unsigned char>& buffer, std::size_t offset
 
 ////////////////////////////////////////////////////////////////////////////////
 void CRC32::update( int byte ) {
-    this->value = crc32( this->value, (const Bytef*)&byte, 1 );
+    this->value = crc32( (uLong)this->value, (const Bytef*)&byte, 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ void CRC32::update( const unsigned char* buffer, std::size_t size, std::size_t o
             __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
     }
 
-    this->value = (long long)crc32( this->value, (const Bytef*)( buffer + offset ), (uInt)length );
+    this->value = crc32( (uLong)this->value, (const Bytef*)( buffer + offset ), (uInt)length );
 }
 
 
