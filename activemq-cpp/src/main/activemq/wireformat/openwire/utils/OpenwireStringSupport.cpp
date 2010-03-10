@@ -125,7 +125,7 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
 
     try {
 
-        if( str != NULL ) {
+        if( str != NULL && str->length() != 0 ) {
 
             int utfLength = 0;
             std::size_t length = str->length();
