@@ -18,10 +18,12 @@
 #include "StringTest.h"
 
 #include <decaf/lang/String.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 StringTest::StringTest() {
@@ -32,5 +34,15 @@ StringTest::~StringTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StringTest::test() {
+void StringTest::testConstructor1() {
+
+    String test;
+
+    CPPUNIT_ASSERT( test.length() == 0 );
+    CPPUNIT_ASSERT( test.isEmpty() == true );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "Should have thrown an IndexOutOfBoundsException",
+         test.charAt( 1 ),
+         IndexOutOfBoundsException );
 }

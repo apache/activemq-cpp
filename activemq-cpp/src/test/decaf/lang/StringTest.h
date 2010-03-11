@@ -27,7 +27,7 @@ namespace lang {
     class StringTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( StringTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testConstructor1 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,7 +36,7 @@ namespace lang {
 
         virtual ~StringTest();
 
-        void test();
+        void testConstructor1();
 
     };
 

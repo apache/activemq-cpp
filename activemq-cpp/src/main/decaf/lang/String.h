@@ -22,7 +22,6 @@
 
 #include <decaf/lang/CharSequence.h>
 #include <decaf/lang/Comparable.h>
-#include <decaf/lang/Pointer.h>
 
 #include <string>
 
@@ -36,12 +35,12 @@ namespace lang {
      *
      * @since 1.0
      */
-    class DECAF_API String {
+    class DECAF_API String : public CharSequence {
     private:
 
-        decaf::lang::Pointer<Contents> contents;
+        Contents* contents;
 
-    public:
+    public:  // Constructors
 
         /**
          * Creates a new empty String object.
@@ -57,6 +56,37 @@ namespace lang {
         String( const std::string& source );
 
         virtual ~String();
+
+    public:  // String API
+
+        /**
+         * @returns true if the length of this String is zero.
+         */
+        bool isEmpty() const;
+
+    public:  // CharSequence Implementation
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual std::size_t length() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual char charAt( std::size_t index ) const
+            throw( lang::exceptions::IndexOutOfBoundsException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual CharSequence* subSequence( std::size_t start, std::size_t end ) const
+            throw( lang::exceptions::IndexOutOfBoundsException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual std::string toString() const;
 
     };
 
