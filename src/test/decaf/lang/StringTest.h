@@ -15,51 +15,31 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_LANG_STRING_H_
-#define _DECAF_LANG_STRING_H_
+#ifndef _DECAF_LANG_STRINGTEST_H_
+#define _DECAF_LANG_STRINGTEST_H_
 
-#include <decaf/util/Config.h>
-
-#include <decaf/lang/CharSequence.h>
-#include <decaf/lang/Comparable.h>
-#include <decaf/lang/Pointer.h>
-
-#include <string>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace decaf {
 namespace lang {
 
-    class Contents;
-
-    /**
-     * The String class represents an immutable sequence of chars.
-     *
-     * @since 1.0
-     */
-    class DECAF_API String {
-    private:
-
-        decaf::lang::Pointer<Contents> contents;
+    class StringTest : public CppUnit::TestFixture
+    {
+        CPPUNIT_TEST_SUITE( StringTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        /**
-         * Creates a new empty String object.
-         */
-        String();
+        StringTest();
 
-        /**
-         * Create a new String object that represents the given STL string
-         *
-         * @param source
-         *      The string to copy into this new String object.
-         */
-        String( const std::string& source );
+        virtual ~StringTest();
 
-        virtual ~String();
+        void test();
 
     };
 
 }}
 
-#endif /* _DECAF_LANG_STRING_H_ */
+#endif /* _DECAF_LANG_STRINGTEST_H_ */

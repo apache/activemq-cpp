@@ -97,6 +97,7 @@ cc_sources = \
     decaf/io/PushbackInputStreamTest.cpp \
     decaf/io/ReaderTest.cpp \
     decaf/io/WriterTest.cpp \
+    decaf/lang/ArrayPointerTest.cpp \
     decaf/lang/BooleanTest.cpp \
     decaf/lang/ByteTest.cpp \
     decaf/lang/CharacterTest.cpp \
@@ -108,6 +109,7 @@ cc_sources = \
     decaf/lang/MathTest.cpp \
     decaf/lang/PointerTest.cpp \
     decaf/lang/ShortTest.cpp \
+    decaf/lang/StringTest.cpp \
     decaf/lang/SystemTest.cpp \
     decaf/lang/ThreadTest.cpp \
     decaf/net/SocketFactoryTest.cpp \
@@ -242,6 +244,7 @@ h_sources = \
     decaf/io/PushbackInputStreamTest.h \
     decaf/io/ReaderTest.h \
     decaf/io/WriterTest.h \
+    decaf/lang/ArrayPointerTest.h \
     decaf/lang/BooleanTest.h \
     decaf/lang/ByteTest.h \
     decaf/lang/CharacterTest.h \
@@ -253,6 +256,7 @@ h_sources = \
     decaf/lang/MathTest.h \
     decaf/lang/PointerTest.h \
     decaf/lang/ShortTest.h \
+    decaf/lang/StringTest.h \
     decaf/lang/SystemTest.h \
     decaf/lang/ThreadTest.h \
     decaf/net/SocketFactoryTest.h \
