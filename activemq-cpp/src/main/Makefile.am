@@ -1191,6 +1191,7 @@ h_sources = \
     decaf/io/UnsupportedEncodingException.h \
     decaf/io/Writer.h \
     decaf/lang/Appendable.h \
+    decaf/lang/ArrayPointer.h \
     decaf/lang/Boolean.h \
     decaf/lang/Byte.h \
     decaf/lang/CharSequence.h \

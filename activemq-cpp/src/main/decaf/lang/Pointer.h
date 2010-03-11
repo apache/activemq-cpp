@@ -21,7 +21,7 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/ClassCastException.h>
-#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/atomic/AtomicRefCounter.h>
 #include <decaf/util/Comparator.h>
 #include <memory>
 #include <typeinfo>
@@ -29,52 +29,6 @@
 
 namespace decaf {
 namespace lang {
-
-    class AtomicRefCounter {
-    private:
-
-        decaf::util::concurrent::atomic::AtomicInteger* counter;
-
-    private:
-
-        AtomicRefCounter& operator= ( const AtomicRefCounter& );
-
-    public:
-
-        AtomicRefCounter() :
-            counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
-        AtomicRefCounter( const AtomicRefCounter& other ) : counter( other.counter ) {
-            this->counter->incrementAndGet();
-        }
-
-    protected:
-
-        /**
-         * Swaps this instance's reference counter with the one given, this allows
-         * for copy-and-swap semantics of this object.
-         *
-         * @param other
-         *      The value to swap with this one's.
-         */
-        void swap( AtomicRefCounter& other ) {
-            std::swap( this->counter, other.counter );
-        }
-
-        /**
-         * Removes a reference to the counter Atomically and returns if the counter
-         * has reached zero, once the counter hits zero, the internal counter is
-         * destroyed and this instance is now considered to be unreferenced.
-         *
-         * @return true if the count is now zero.
-         */
-        bool release() {
-            if( this->counter->decrementAndGet() == 0 ) {
-                delete this->counter;
-                return true;
-            }
-            return false;
-        }
-    };
 
     // Used internally in Pointer.
     struct STATIC_CAST_TOKEN {};
@@ -94,7 +48,7 @@ namespace lang {
      *
      * @since 1.0
      */
-    template< typename T, typename REFCOUNTER = AtomicRefCounter >
+    template< typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter >
     class Pointer : public REFCOUNTER {
     private:
 
@@ -396,7 +350,7 @@ namespace lang {
      * to be compared based on the comparison of the object itself and not just the value of
      * the pointer.
      */
-    template< typename T, typename R = AtomicRefCounter >
+    template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
     class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
     public:
 
