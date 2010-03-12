@@ -873,6 +873,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\MarshallingSupport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\MarshallingSupport.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\MemoryUsage.cpp"
 					>
 				</File>
@@ -22294,14 +22302,6 @@
 							RelativePath="..\src\main\activemq\wireformat\openwire\utils\MessagePropertyInterceptor.h"
 							>
 						</File>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\openwire\utils\OpenwireStringSupport.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\activemq\wireformat\openwire\utils\OpenwireStringSupport.h"
-							>
-						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -22869,6 +22869,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\ArrayPointer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Boolean.cpp"
 					>
 				</File>
@@ -22974,6 +22978,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\lang\Short.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\String.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\String.h"
 					>
 				</File>
 				<File
