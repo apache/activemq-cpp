@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-#include <activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::OpenWireStringSupportBenchmark );
-
 #include <activemq/util/PrimitiveMapBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
 

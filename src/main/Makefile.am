@@ -133,6 +133,7 @@ cc_sources = \
     activemq/util/CMSExceptionSupport.cpp \
     activemq/util/CompositeData.cpp \
     activemq/util/LongSequenceGenerator.cpp \
+    activemq/util/MarshallingSupport.cpp \
     activemq/util/MemoryUsage.cpp \
     activemq/util/PrimitiveList.cpp \
     activemq/util/PrimitiveMap.cpp \
@@ -459,7 +460,6 @@ cc_sources = \
     activemq/wireformat/openwire/utils/BooleanStream.cpp \
     activemq/wireformat/openwire/utils/HexTable.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.cpp \
-    activemq/wireformat/openwire/utils/OpenwireStringSupport.cpp \
     activemq/wireformat/stomp/StompCommandConstants.cpp \
     activemq/wireformat/stomp/StompFrame.cpp \
     activemq/wireformat/stomp/StompHelper.cpp \
@@ -750,6 +750,7 @@ h_sources = \
     activemq/util/CompositeData.h \
     activemq/util/Config.h \
     activemq/util/LongSequenceGenerator.h \
+    activemq/util/MarshallingSupport.h \
     activemq/util/MemoryUsage.h \
     activemq/util/PrimitiveList.h \
     activemq/util/PrimitiveMap.h \
@@ -1082,7 +1083,6 @@ h_sources = \
     activemq/wireformat/openwire/utils/BooleanStream.h \
     activemq/wireformat/openwire/utils/HexTable.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h \
-    activemq/wireformat/openwire/utils/OpenwireStringSupport.h \
     activemq/wireformat/stomp/StompCommandConstants.h \
     activemq/wireformat/stomp/StompFrame.h \
     activemq/wireformat/stomp/StompHelper.h \
@@ -1322,6 +1322,7 @@ h_sources = \
     decaf/util/concurrent/TimeoutException.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \
+    decaf/util/concurrent/atomic/AtomicRefCounter.h \
     decaf/util/concurrent/atomic/AtomicReference.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \

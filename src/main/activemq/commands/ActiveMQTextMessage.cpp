@@ -23,7 +23,7 @@
 #include <decaf/util/zip/DeflaterOutputStream.h>
 #include <decaf/util/zip/InflaterInputStream.h>
 
-#include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
+#include <activemq/util/MarshallingSupport.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <cms/CMSException.h>
 
@@ -34,7 +34,6 @@ using namespace activemq::commands;
 using namespace activemq::util;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
-using namespace activemq::wireformat::openwire::utils;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::util;
@@ -131,7 +130,11 @@ void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat )
 
         DataOutputStream dataOut( os, true );
 
-        OpenwireStringSupport::writeString( dataOut, this->text.get() );
+        if( this->text.get() == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            MarshallingSupport::writeString32( dataOut, *( this->text ) );
+        }
 
         dataOut.close();
 
@@ -178,7 +181,7 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
                 DataInputStream dataIn( is, true );
 
-                this->text.reset( new std::string( OpenwireStringSupport::readString( dataIn ) ) );
+                this->text.reset( new std::string( MarshallingSupport::readString32( dataIn ) ) );
 
                 dataIn.close();
 

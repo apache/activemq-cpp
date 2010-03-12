@@ -53,6 +53,7 @@ cc_sources = \
     activemq/transport/inactivity/InactivityMonitorTest.cpp \
     activemq/transport/mock/MockTransportFactoryTest.cpp \
     activemq/util/LongSequenceGeneratorTest.cpp \
+    activemq/util/MarshallingSupportTest.cpp \
     activemq/util/MemoryUsageTest.cpp \
     activemq/util/PrimitiveListTest.cpp \
     activemq/util/PrimitiveMapTest.cpp \
@@ -66,7 +67,6 @@ cc_sources = \
     activemq/wireformat/openwire/utils/BooleanStreamTest.cpp \
     activemq/wireformat/openwire/utils/HexTableTest.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.cpp \
-    activemq/wireformat/openwire/utils/OpenwireStringSupportTest.cpp \
     decaf/internal/net/URIEncoderDecoderTest.cpp \
     decaf/internal/net/URIHelperTest.cpp \
     decaf/internal/nio/BufferFactoryTest.cpp \
@@ -200,6 +200,7 @@ h_sources = \
     activemq/transport/inactivity/InactivityMonitorTest.h \
     activemq/transport/mock/MockTransportFactoryTest.h \
     activemq/util/LongSequenceGeneratorTest.h \
+    activemq/util/MarshallingSupportTest.h \
     activemq/util/MemoryUsageTest.h \
     activemq/util/PrimitiveListTest.h \
     activemq/util/PrimitiveMapTest.h \
@@ -213,7 +214,6 @@ h_sources = \
     activemq/wireformat/openwire/utils/BooleanStreamTest.h \
     activemq/wireformat/openwire/utils/HexTableTest.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
-    activemq/wireformat/openwire/utils/OpenwireStringSupportTest.h \
     decaf/internal/net/URIEncoderDecoderTest.h \
     decaf/internal/net/URIHelperTest.h \
     decaf/internal/nio/BufferFactoryTest.h \

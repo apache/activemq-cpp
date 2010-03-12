@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 #include <activemq/commands/ActiveMQStreamMessage.h>
-#include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/util/MarshallingSupport.h>
 
 #include <cms/MessageEOFException.h>
 #include <cms/MessageFormatException.h>
@@ -49,7 +49,6 @@ using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
-using namespace activemq::wireformat::openwire::utils;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
@@ -828,10 +827,10 @@ std::string ActiveMQStreamMessage::readString() const throw ( cms::MessageEOFExc
             return "";
         }
         if( type == PrimitiveValueNode::BIG_STRING_TYPE ) {
-            return OpenwireStringSupport::readString( *dataIn );
+            return MarshallingSupport::readString32( *this->dataIn );
         }
         if( type == PrimitiveValueNode::STRING_TYPE ) {
-            return this->dataIn->readUTF();
+            return MarshallingSupport::readString16( *this->dataIn );
         }
         if( type == PrimitiveValueNode::LONG_TYPE ) {
             return Long( this->dataIn->readLong() ).toString();
@@ -887,13 +886,7 @@ void ActiveMQStreamMessage::writeString( const std::string& value ) throw ( cms:
 
     initializeWriting();
     try{
-        if( value.size() <= Short::MAX_VALUE / 4 ) {
-            this->dataOut->write( PrimitiveValueNode::STRING_TYPE );
-            this->dataOut->writeUTF( value );
-        } else {
-            this->dataOut->write( PrimitiveValueNode::BIG_STRING_TYPE );
-            OpenwireStringSupport::writeString( *(this->dataOut), &value );
-        }
+        MarshallingSupport::writeString( *this->dataOut, value );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
