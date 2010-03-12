@@ -63,6 +63,13 @@ void MarshallingSupport::writeString16( decaf::io::DataOutputStream& dataOut, co
     try{
 
         std::size_t strSize = value.length();
+
+        if( strSize > (std::size_t)Short::MAX_VALUE ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "String size exceeds Short::MAX_VALUE and cannot be sent via Openwire." );
+        }
+
         dataOut.writeShort( (short)strSize );
         if( strSize > 0 ) {
             dataOut.write( (unsigned char*)value.c_str(), strSize, 0, strSize );
@@ -78,7 +85,15 @@ void MarshallingSupport::writeString32( decaf::io::DataOutputStream& dataOut, co
     throw( decaf::io::IOException ) {
 
     try{
+
         std::size_t strSize = value.length();
+
+        if( strSize > (std::size_t)Integer::MAX_VALUE ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "String size exceeds Integer::MAX_VALUE and cannot be sent via Openwire." );
+        }
+
         dataOut.writeInt( (int)strSize );
         if( strSize > 0 ) {
             dataOut.write( (unsigned char*)value.c_str(), strSize, 0, strSize );
