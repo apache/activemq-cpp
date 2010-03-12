@@ -859,6 +859,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\activemq\util\MarshallingSupportTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\MarshallingSupportTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\util\MemoryUsageTest.cpp"
 					>
 				</File>
@@ -10508,14 +10516,6 @@
 							RelativePath="..\src\test\activemq\wireformat\openwire\utils\MessagePropertyInterceptorTest.h"
 							>
 						</File>
-						<File
-							RelativePath="..\src\test\activemq\wireformat\openwire\utils\OpenwireStringSupportTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test\activemq\wireformat\openwire\utils\OpenwireStringSupportTest.h"
-							>
-						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -10911,6 +10911,14 @@
 				Name="lang"
 				>
 				<File
+					RelativePath="..\src\test\decaf\lang\ArrayPointerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ArrayPointerTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\lang\BooleanTest.cpp"
 					>
 				</File>
@@ -10996,6 +11004,14 @@
 				</File>
 				<File
 					RelativePath="..\src\test\decaf\lang\ShortTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\StringTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\StringTest.h"
 					>
 				</File>
 				<File
