@@ -15,34 +15,39 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_
-#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_
+#ifndef _ACTIVEMQ_UTIL_MARSHALLINGSUPPORTTEST_H_
+#define _ACTIVEMQ_UTIL_MARSHALLINGSUPPORTTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-namespace activemq{
-namespace wireformat{
-namespace openwire{
-namespace utils{
+namespace activemq {
+namespace util {
 
-    class OpenwireStringSupportTest : public CppUnit::TestFixture {
+    class MarshallingSupportTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( OpenwireStringSupportTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE( MarshallingSupportTest );
         CPPUNIT_TEST( testWriteString );
-        CPPUNIT_TEST( testReadString );
+        CPPUNIT_TEST( testWriteString16 );
+        CPPUNIT_TEST( testWriteString32 );
+        CPPUNIT_TEST( testReadString16 );
+        CPPUNIT_TEST( testReadString32 );
+        CPPUNIT_TEST( testAsciiToModifiedUtf8 );
+        CPPUNIT_TEST( testModifiedUtf8ToAscii );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        OpenwireStringSupportTest() {}
-        virtual ~OpenwireStringSupportTest() {}
-
-        void test();
+        MarshallingSupportTest();
+        virtual ~MarshallingSupportTest();
 
         void testWriteString();
-        void testReadString();
+        void testWriteString16();
+        void testWriteString32();
+        void testReadString16();
+        void testReadString32();
+        void testAsciiToModifiedUtf8();
+        void testModifiedUtf8ToAscii();
 
     private:
 
@@ -51,9 +56,8 @@ namespace utils{
 
         void writeTestHelper( unsigned char* input, int inputLength,
                               unsigned char* expect, int expectLength );
-
     };
 
-}}}}
+}}
 
-#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_*/
+#endif /* _ACTIVEMQ_UTIL_MARSHALLINGSUPPORTTEST_H_ */

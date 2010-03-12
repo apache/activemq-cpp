@@ -21,7 +21,6 @@
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
-#include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Short.h>
 
@@ -33,7 +32,6 @@ using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
-using namespace activemq::wireformat::openwire::utils;
 using namespace activemq::wireformat::openwire::marshal;
 using namespace decaf;
 using namespace decaf::io;
@@ -283,12 +281,17 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             std::string data = value.getString();
 
             // is the string big??
-            if( data.size() > Short::MAX_VALUE / 4 ) {
+            if( data.size() == 0 ) {
+                dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
+                dataOut.writeShort( (short)data.size() );
+            } else if( data.size() > Short::MAX_VALUE / 4 ) {
                 dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
-                OpenwireStringSupport::writeString( dataOut, &data );
+                dataOut.writeInt( (int)data.size() );
+                dataOut.write( (unsigned char*)data.c_str(), data.length(), 0, data.length() );
             } else {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
-                dataOut.writeUTF( data );
+                dataOut.writeShort( (short)data.size() );
+                dataOut.write( (unsigned char*)data.c_str(), data.length(), 0, data.length() );
             }
 
         } else if( value.getType() == PrimitiveValueNode::LIST_TYPE ) {
@@ -401,11 +404,27 @@ PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
                 break;
             }
             case PrimitiveValueNode::STRING_TYPE:
-                value.setString( dataIn.readUTF() );
+            {
+                int utfLength = dataIn.readShort();
+                if( utfLength > 0 ) {
+
+                    std::vector<unsigned char> buffer( utfLength );
+                    dataIn.readFully( &buffer[0], utfLength );
+                    value.setString( std::string( (char*)( &buffer[0] ), utfLength ) );
+                }
                 break;
+            }
             case PrimitiveValueNode::BIG_STRING_TYPE:
-                value.setString( OpenwireStringSupport::readString( dataIn ) );
+            {
+                int utfLength = dataIn.readInt();
+                if( utfLength > 0 ) {
+
+                    std::vector<unsigned char> buffer( utfLength );
+                    dataIn.readFully( &buffer[0], utfLength );
+                    value.setString( std::string( (char*)( &buffer[0] ), utfLength ) );
+                }
                 break;
+            }
             case PrimitiveValueNode::LIST_TYPE:
             {
                 PrimitiveList list;
