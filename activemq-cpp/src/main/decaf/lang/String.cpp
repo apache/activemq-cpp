@@ -104,7 +104,22 @@ char String::charAt( std::size_t index ) const
 CharSequence* String::subSequence( std::size_t start DECAF_UNUSED, std::size_t end DECAF_UNUSED ) const
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
-    return NULL;
+    try{
+
+        if( start > end ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Start index is greater than end index." );
+        }
+
+        if( end - start > this->length() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Requested Range is greater than the String length." );
+        }
+
+        return NULL;
+    }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IndexOutOfBoundsException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
