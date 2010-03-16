@@ -78,17 +78,20 @@ namespace core{
         /**
          * Constructor, creates an instance of an ActiveMQProducer
          *
-         * @param producerInfo
-         *        Pointer to a ProducerInfo command which identifies this producer.
+         * @param session
+         *        The Session which is the parent of this Producer.
+         * @param producerId
+         *        Pointer to a ProducerId object which identifies this producer.
          * @param destination
          *        The assigned Destination this Producer sends to, or null if not set.
          *        The Producer does not own the Pointer passed.
-         * @param session
-         *        The Session which is the parent of this Producer.
+         * @param sendTimeout
+         *        The configured send timeout for this Producer.
          */
-        ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                          const Pointer<cms::Destination>& destination,
-                          ActiveMQSession* session );
+        ActiveMQProducer( ActiveMQSession* session,
+                          const Pointer<commands::ProducerId>& producerId,
+                          const Pointer<commands::ActiveMQDestination>& destination,
+                          long long sendTimeout );
 
         virtual ~ActiveMQProducer();
 
@@ -308,18 +311,18 @@ namespace core{
          * Retries this object ProducerInfo pointer
          * @return ProducerInfo Reference
          */
-        const commands::ProducerInfo& getProducerInfo() const {
+        const Pointer<commands::ProducerInfo>& getProducerInfo() const {
             this->checkClosed();
-            return *( this->producerInfo );
+            return this->producerInfo;
         }
 
         /**
          * Retries this object ProducerId or NULL if closed.
          * @return ProducerId Reference
          */
-        commands::ProducerId& getProducerId() const {
+        const Pointer<commands::ProducerId>& getProducerId() const {
             this->checkClosed();
-            return *( this->producerInfo->getProducerId() );
+            return this->producerInfo->getProducerId();
         }
 
         /**

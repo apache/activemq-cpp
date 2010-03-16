@@ -173,13 +173,13 @@ void ActiveMQSessionTest::testAutoAcking() {
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
+    injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
 
     msgListener1.asyncWaitForMessages( 1 );
 
     CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
 
-    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
+    injectTextMessage( "This is a Test 2" , *topic2, *( consumer2->getConsumerId() ) );
 
     msgListener2.asyncWaitForMessages( 1 );
 
@@ -234,7 +234,7 @@ void ActiveMQSessionTest::testClientAck() {
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
+    injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
 
     msgListener1.asyncWaitForMessages( 1 );
 
@@ -242,7 +242,7 @@ void ActiveMQSessionTest::testClientAck() {
 
     msgListener1.messages[0]->acknowledge();
 
-    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
+    injectTextMessage( "This is a Test 2" , *topic2, *( consumer2->getConsumerId() ) );
 
     msgListener2.asyncWaitForMessages( 1 );
 
@@ -292,7 +292,7 @@ void ActiveMQSessionTest::testTransactionCommitOneConsumer() {
     consumer1->setMessageListener( &msgListener1 );
 
     for( int i = 0; i < MSG_COUNT; ++i ) {
-        injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
+        injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
     }
 
     msgListener1.asyncWaitForMessages( MSG_COUNT );
@@ -349,13 +349,13 @@ void ActiveMQSessionTest::testTransactionCommitTwoConsumer() {
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
+    injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
 
     msgListener1.asyncWaitForMessages( 1 );
 
     CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener1.messages.size() );
 
-    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
+    injectTextMessage( "This is a Test 2" , *topic2, *( consumer2->getConsumerId() ) );
 
     msgListener2.asyncWaitForMessages( 1 );
 
@@ -409,7 +409,7 @@ void ActiveMQSessionTest::testTransactionRollbackOneConsumer() {
     for( unsigned int i = 0; i < msgCount; ++i ) {
         std::ostringstream stream;
         stream << "This is test message #" << i << std::ends;
-        injectTextMessage( stream.str() , *topic1, consumer1->getConsumerId() );
+        injectTextMessage( stream.str() , *topic1, *( consumer1->getConsumerId() ) );
     }
 
     msgListener1.asyncWaitForMessages( msgCount );
@@ -470,13 +470,13 @@ void ActiveMQSessionTest::testTransactionRollbackTwoConsumer() {
     for( unsigned int i = 0; i < msgCount; ++i ) {
         std::ostringstream stream;
         stream << "This is test message #" << i << std::ends;
-        injectTextMessage( stream.str() , *topic1, consumer1->getConsumerId() );
+        injectTextMessage( stream.str() , *topic1, *( consumer1->getConsumerId() ) );
     }
 
     for( unsigned int i = 0; i < msgCount; ++i ) {
         std::ostringstream stream;
         stream << "This is test message #" << i << std::ends;
-        injectTextMessage( stream.str() , *topic2, consumer2->getConsumerId() );
+        injectTextMessage( stream.str() , *topic2, *( consumer2->getConsumerId() ) );
     }
 
     msgListener1.asyncWaitForMessages( msgCount );
@@ -535,7 +535,7 @@ void ActiveMQSessionTest::testTransactionCloseWithoutCommit() {
     consumer1->setMessageListener( &msgListener1 );
 
     for( int i = 0; i < MSG_COUNT; ++i ) {
-        injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
+        injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
     }
 
     msgListener1.asyncWaitForMessages( MSG_COUNT );
@@ -585,7 +585,7 @@ void ActiveMQSessionTest::testExpiration() {
 
     injectTextMessage( "This is a Test 1" ,
                        *topic1,
-                       consumer1->getConsumerId(),
+                       *( consumer1->getConsumerId() ),
                        decaf::lang::System::currentTimeMillis(),
                        50 );
 
@@ -595,7 +595,7 @@ void ActiveMQSessionTest::testExpiration() {
 
     injectTextMessage( "This is a Test 2" ,
                        *topic2,
-                       consumer2->getConsumerId(),
+                       *( consumer2->getConsumerId() ),
                        decaf::lang::System::currentTimeMillis() - 100,
                        1 );
 

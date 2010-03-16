@@ -27,7 +27,6 @@
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/MessageAck.h>
 #include <activemq/commands/MessageDispatch.h>
-#include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/core/MessageDispatchChannel.h>
 
@@ -55,11 +54,6 @@ namespace core{
          * The session that owns this Consumer
          */
         ActiveMQSession* session;
-
-        /**
-         * The Transaction Context, null if not in a Transacted Session.
-         */
-        Pointer<ActiveMQTransactionContext> transaction;
 
         /**
          * The Consumer info for this Consumer
@@ -136,9 +130,17 @@ namespace core{
         /**
          * Constructor
          */
-        ActiveMQConsumer( const Pointer<commands::ConsumerInfo>& consumerInfo,
-                          ActiveMQSession* session,
-                          const Pointer<ActiveMQTransactionContext>& transaction );
+        ActiveMQConsumer( ActiveMQSession* session,
+                          const Pointer<commands::ConsumerId>& id,
+                          const Pointer<commands::ActiveMQDestination>& destination,
+                          const std::string& name,
+                          const std::string& selector,
+                          int prefetch,
+                          int maxPendingMessageCount,
+                          bool noLocal,
+                          bool browser,
+                          bool dispatchAsync,
+                          cms::MessageListener* listener );
 
         virtual ~ActiveMQConsumer();
 
@@ -259,18 +261,18 @@ namespace core{
          * Get the Consumer information for this consumer
          * @return Reference to a Consumer Info Object
          */
-        const commands::ConsumerInfo& getConsumerInfo() const {
+        const Pointer<commands::ConsumerInfo>& getConsumerInfo() const {
             this->checkClosed();
-            return *( this->consumerInfo );
+            return this->consumerInfo;
         }
 
         /**
          * Get the Consumer Id for this consumer
          * @return Reference to a Consumer Id Object
          */
-        const commands::ConsumerId& getConsumerId() const {
+        const Pointer<commands::ConsumerId>& getConsumerId() const {
             this->checkClosed();
-            return *( this->consumerInfo->getConsumerId() );
+            return this->consumerInfo->getConsumerId();
         }
 
         /**
@@ -332,6 +334,11 @@ namespace core{
             this->lastDeliveredSequenceId = value;
         }
 
+        /**
+         * @returns the number of Message's this consumer is waiting to Dispatch.
+         */
+        int getMessageAvailableCount() const;
+
     protected:
 
         /**
@@ -367,15 +374,16 @@ namespace core{
 
     private:
 
-        /**
-         * If supported sends a message pull request to the service provider asking
-         * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefetch or is only
-         * capable of delivering messages on a pull basis.  No request is made if
-         * there are already messages in the unconsumed queue since there's no need
-         * for a server round-trip in that instance.
-         * @param timeout - the time that the client is willing to wait.
-         */
+        // Using options from the Destination URI override any settings that are
+        // defined for this consumer.
+        void applyDestinationOptions( const Pointer<commands::ConsumerInfo>& info );
+
+        // If supported sends a message pull request to the service provider asking
+        // for the delivery of a new message.  This is used in the case where the
+        // service provider has been configured with a zero prefetch or is only
+        // capable of delivering messages on a pull basis.  No request is made if
+        // there are already messages in the unconsumed queue since there's no need
+        // for a server round-trip in that instance.
         void sendPullRequest( long long timeout )
             throw ( exceptions::ActiveMQException );
 

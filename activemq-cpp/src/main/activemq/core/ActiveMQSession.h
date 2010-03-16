@@ -34,6 +34,7 @@
 #include <activemq/core/MessageDispatchChannel.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/Properties.h>
@@ -547,28 +548,55 @@ namespace core{
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
-         * Dispose of a Consumer from this session.  Removes it from the Connection
-         * and clean up any resources associated with it.
+         * Adds a MessageConsumer to this session registering it with the Connection and store
+         * a reference to it so the session can ensure that all resources are closed when
+         * the session is closed.
          *
-         * @param id
-         *      The Id of the Consumer to dispose.
-         *
-         * @param lastDeliveredSequenceId
-         *      The Broker Sequence Id of the last message the Consumer delivered.
+         * @param consumer
+         *      The ActiveMQConsumer instance to add to this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void disposeOf( decaf::lang::Pointer<commands::ConsumerId> id, long long lastDeliveredSequenceId )
+        void addConsumer( ActiveMQConsumer* consumer )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
-         * Dispose of a Producer from this session.  Removes it from the Connection
+         * Dispose of a MessageConsumer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
          *
-         * @param id - the Id of the Producer to dispose.
+         * @param consumerId
+         *      The ConsumerId of the MessageConsumer to remove from this Session.
+         * @param lastDeliveredSequenceId
+         *      The sequenceId of the last Message the consumer delivered.
+         *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void disposeOf( decaf::lang::Pointer<commands::ProducerId> id )
+        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId, long long lastDeliveredSequenceId = 0 )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Adds a MessageProducer to this session registering it with the Connection and store
+         * a reference to it so the session can ensure that all resources are closed when
+         * the session is closed.
+         *
+         * @param consumer
+         *      The ActiveMQProducer instance to add to this session.
+         *
+         * @throw ActiveMQException if an internal error occurs.
+         */
+        void addProducer( ActiveMQProducer* consumer )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Dispose of a MessageProducer from this session.  Removes it from the Connection
+         * and clean up any resources associated with it.
+         *
+         * @param producerId
+         *      The ProducerId of the MessageProducer to remove from this session.
+         *
+         * @throw ActiveMQException if an internal error occurs.
+         */
+        void removeProducer( const Pointer<commands::ProducerId>& producerId )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -579,6 +607,15 @@ namespace core{
          * @throw ActiveMQException if this is not a Transacted Session.
          */
         void doStartTransaction() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Gets the Pointer to this Session's TransactionContext
+         *
+         * @return a Pointer to this Session's TransactionContext
+         */
+        Pointer<ActiveMQTransactionContext> getTransactionContext() {
+            return this->transaction;
+        }
 
         /**
          * Request that the Session inform all its consumers to Acknowledge all Message's
@@ -603,15 +640,19 @@ namespace core{
          */
         void wakeup();
 
-   private:
+        /**
+         * Get the Next available Consumer Id
+         * @return the next id in the sequence.
+         */
+        Pointer<commands::ConsumerId> getNextConsumerId();
 
-       /**
-        * Get the Next available Producer Id
-        * @return the next id in the sequence.
-        */
-       long long getNextProducerId() {
-           return this->producerIds.getNextSequenceId();
-       }
+        /**
+         * Get the Next available Producer Id
+         * @return the next id in the sequence.
+         */
+        Pointer<commands::ProducerId> getNextProducerId();
+
+   private:
 
        /**
         * Get the Next available Producer Sequence Id
@@ -621,27 +662,8 @@ namespace core{
            return this->producerSequenceIds.getNextSequenceId();
        }
 
-       /**
-        * Get the Next available Consumer Id
-        * @return the next id in the sequence.
-        */
-       long long getNextConsumerId() {
-           return this->consumerIds.getNextSequenceId();
-       }
-
        // Checks for the closed state and throws if so.
        void checkClosed() const throw( exceptions::ActiveMQException );
-
-       // Performs the work of creating and configuring a valid Consumer Info, this
-       // can be used both by the normal createConsumer call and by a createDurableConsumer
-       // call as well.  Caller owns the returned ConsumerInfo object.
-       commands::ConsumerInfo* createConsumerInfo(
-           const cms::Destination* destination )
-               throw ( activemq::exceptions::ActiveMQException );
-
-       // Using options from the Destination URI override any settings that are
-       // defined for this consumer.
-       void applyDestinationOptions( const Pointer<commands::ConsumerInfo>& info );
 
        // Send the Destination Creation Request to the Broker, alerting it
        // that we've created a new Temporary Destination.
