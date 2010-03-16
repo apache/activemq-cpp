@@ -738,6 +738,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageEnumeration.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MessageEOFException.cpp"
 				>
 			</File>
@@ -1510,6 +1514,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQQueueBrowser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQQueueBrowser.h"
 					>
 				</File>
 				<File
