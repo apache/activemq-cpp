@@ -21,8 +21,12 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/Math.h>
 #include <decaf/lang/System.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <activemq/util/Config.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/util/ActiveMQProperties.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessageAck.h>
@@ -40,6 +44,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -187,19 +192,50 @@ namespace core {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
-                                    ActiveMQSession* session,
-                                    const Pointer<ActiveMQTransactionContext>& transaction ) {
+ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
+                                    const Pointer<ConsumerId>& id,
+                                    const Pointer<ActiveMQDestination>& destination,
+                                    const std::string& name,
+                                    const std::string& selector,
+                                    int prefetch,
+                                    int maxPendingMessageCount,
+                                    bool noLocal,
+                                    bool browser,
+                                    bool dispatchAsync,
+                                    cms::MessageListener* listener ) {
 
-    if( session == NULL || consumerInfo == NULL ) {
+    if( session == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
-            "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Session");
+            "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Session" );
     }
 
-    // Initialize Producer Data
+    if( destination == NULL ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Destination" );
+    }
+
+    if( destination->getPhysicalName() == "" ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "ActiveMQConsumer::ActiveMQConsumer - Destination given has no Physical Name." );
+    }
+
+    Pointer<ConsumerInfo> consumerInfo( new ConsumerInfo() );
+
+    consumerInfo->setConsumerId( id );
+    consumerInfo->setDestination( destination );
+    consumerInfo->setSubscriptionName( name );
+    consumerInfo->setSelector( selector );
+    consumerInfo->setPrefetchSize( prefetch );
+    consumerInfo->setMaximumPendingMessageLimit( maxPendingMessageCount );
+    consumerInfo->setBrowser( browser );
+    consumerInfo->setDispatchAsync( dispatchAsync );
+    consumerInfo->setNoLocal( noLocal );
+
+    // Initialize Consumer Data
     this->session = session;
-    this->transaction = transaction;
     this->consumerInfo = consumerInfo;
     this->lastDeliveredSequenceId = -1;
     this->synchronizationRegistered = false;
@@ -208,6 +244,10 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->deliveredCounter = 0;
     this->clearDispatchList = false;
     this->listener = NULL;
+
+    if( listener != NULL ) {
+        this->setMessageListener( listener );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,7 +284,8 @@ void ActiveMQConsumer::close()
 
     try{
         if( !this->isClosed() ) {
-            if( this->transaction != NULL && this->transaction->isInTransaction() ) {
+            if( this->session->getTransactionContext() != NULL &&
+                this->session->getTransactionContext()->isInTransaction() ) {
 
                 // TODO - Currently we can do this since the consumer could be
                 // deleted right after the close call so it won't stick around
@@ -313,7 +354,7 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
             }
 
             // Remove this Consumer from the Connections set of Dispatchers
-            this->session->disposeOf( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
+            this->session->removeConsumer( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
 
             // Remove at the Broker Side, consumer has been removed from the local
             // Session and Connection objects so if the remote call to remove throws
@@ -689,7 +730,7 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
             synchronizationRegistered = true;
 
             Pointer<Synchronization> sync( new TransactionSynhcronization( this ) );
-            this->transaction->addSynchronization( sync );
+            this->session->getTransactionContext()->addSynchronization( sync );
         }
     }
 
@@ -718,7 +759,7 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
     }
 
     if( session->isTransacted() ) {
-        pendingAck->setTransactionId( this->transaction->getTransactionId() );
+        pendingAck->setTransactionId( this->session->getTransactionContext()->getTransactionId() );
     }
 
     if( ( 0.5 * this->consumerInfo->getPrefetchSize() ) <= ( deliveredCounter - additionalWindowSize ) ) {
@@ -809,7 +850,7 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
 
             if( session->isTransacted() ) {
                 session->doStartTransaction();
-                ack->setTransactionId( transaction->getTransactionId() );
+                ack->setTransactionId( session->getTransactionContext()->getTransactionId() );
             }
 
             session->oneway( ack );
@@ -850,7 +891,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
             Pointer<MessageDispatch> lastMsg = dispatchedMessages.front();
             const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
-                redeliveryDelay = transaction->getRedeliveryDelay();
+                redeliveryDelay = session->getTransactionContext()->getRedeliveryDelay();
             }
 
             Pointer<MessageId> firstMsgId =
@@ -863,7 +904,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                 message->setRedeliveryCounter( message->getRedeliveryCounter() + 1 );
             }
 
-            if( lastMsg->getRedeliveryCounter() > this->transaction->getMaximumRedeliveries() ) {
+            if( lastMsg->getRedeliveryCounter() > this->session->getTransactionContext()->getMaximumRedeliveries() ) {
 
                 // We need to NACK the messages so that they get sent to the DLQ.
                 // Acknowledge the last message.
@@ -1072,4 +1113,84 @@ bool ActiveMQConsumer::isAutoAcknowledgeEach() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQConsumer::isAutoAcknowledgeBatch() const {
     return this->session->isDupsOkAcknowledge() && !this->consumerInfo->getDestination()->isQueue();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConsumer::getMessageAvailableCount() const {
+    return this->unconsumedMessages.size();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::applyDestinationOptions( const Pointer<ConsumerInfo>& info ) {
+
+    decaf::lang::Pointer<commands::ActiveMQDestination> amqDestination = info->getDestination();
+
+    // Get any options specified in the destination and apply them to the
+    // ConsumerInfo object.
+    const ActiveMQProperties& options = amqDestination->getOptions();
+
+    std::string noLocalStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_NOLOCAL );
+    if( options.hasProperty( noLocalStr ) ) {
+        info->setNoLocal( Boolean::parseBoolean(
+            options.getProperty( noLocalStr ) ) );
+    }
+
+    std::string selectorStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_SELECTOR );
+    if( options.hasProperty( selectorStr ) ) {
+        info->setSelector( options.getProperty( selectorStr ) );
+    }
+
+    std::string priorityStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_PRIORITY );
+    if( options.hasProperty( priorityStr ) ) {
+        info->setPriority( (unsigned char)Integer::parseInt( options.getProperty( priorityStr ) ) );
+    }
+
+    std::string dispatchAsyncStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_DISPATCHASYNC );
+    if( options.hasProperty( dispatchAsyncStr ) ) {
+        info->setDispatchAsync(
+            Boolean::parseBoolean( options.getProperty( dispatchAsyncStr ) ) );
+    }
+
+    std::string exclusiveStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_EXCLUSIVE );
+    if( options.hasProperty( exclusiveStr ) ) {
+        info->setExclusive(
+            Boolean::parseBoolean( options.getProperty( exclusiveStr ) ) );
+    }
+
+    std::string maxPendingMsgLimitStr =
+        core::ActiveMQConstants::toString(
+            core::ActiveMQConstants::CUNSUMER_MAXPENDINGMSGLIMIT );
+
+    if( options.hasProperty( maxPendingMsgLimitStr ) ) {
+        info->setMaximumPendingMessageLimit(
+            Integer::parseInt(
+                options.getProperty( maxPendingMsgLimitStr ) ) );
+    }
+
+    std::string prefetchSizeStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_PREFECTCHSIZE );
+    if( info->getPrefetchSize() <= 0 || options.hasProperty( prefetchSizeStr )  ) {
+        info->setPrefetchSize(
+            Integer::parseInt( options.getProperty( prefetchSizeStr, "1000" ) ) );
+    }
+
+    std::string retroactiveStr =
+        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_RETROACTIVE );
+    if( options.hasProperty( retroactiveStr ) ) {
+        info->setRetroactive(
+            Boolean::parseBoolean( options.getProperty( retroactiveStr ) ) );
+    }
+
+    std::string networkSubscriptionStr = "consumer.networkSubscription";
+
+    if( options.hasProperty( networkSubscriptionStr ) ) {
+        info->setNetworkSubscription(
+            Boolean::parseBoolean(
+                options.getProperty( networkSubscriptionStr ) ) );
+    }
 }

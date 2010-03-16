@@ -178,7 +178,7 @@ void ActiveMQConnectionFactoryTest::testCreateWithURIOptions()
         std::auto_ptr<ActiveMQProducer> producer( dynamic_cast<ActiveMQProducer*>(
             session->createProducer( NULL ) ) );
 
-        CPPUNIT_ASSERT( producer->getProducerInfo().getWindowSize() == 65536 );
+        CPPUNIT_ASSERT( producer->getProducerInfo()->getWindowSize() == 65536 );
 
         return;
     }

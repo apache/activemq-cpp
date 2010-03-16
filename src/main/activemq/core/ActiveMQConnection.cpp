@@ -191,7 +191,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 
         // Add this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.put( producer->getProducerInfo().getProducerId(), producer );
+            activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -461,14 +461,6 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             // Check first to see if we are recovering.
             waitForTransportInterruptionProcessingToComplete();
 
-            // Check for an empty Message, shouldn't ever happen but who knows.
-            if( dispatch->getMessage() == NULL ) {
-                throw ActiveMQException(
-                    __FILE__, __LINE__,
-                    "ActiveMQConnection::onCommand - "
-                    "Received unsupported dispatch message" );
-            }
-
             // Look up the dispatcher.
             Dispatcher* dispatcher = NULL;
             synchronized( &dispatchers ) {
@@ -479,9 +471,14 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
                 // just closed.
                 if( dispatcher != NULL ) {
 
-                    dispatch->getMessage()->setReadOnlyBody( true );
-                    dispatch->getMessage()->setReadOnlyProperties( true );
-                    dispatch->getMessage()->setRedeliveryCounter( dispatch->getRedeliveryCounter() );
+                    Pointer<commands::Message> message = dispatch->getMessage();
+
+                    // Message == NULL to signal the end of a Queue Browse.
+                    if( message != NULL ) {
+                        message->setReadOnlyBody( true );
+                        message->setReadOnlyProperties( true );
+                        message->setRedeliveryCounter( dispatch->getRedeliveryCounter() );
+                    }
 
                     dispatcher->dispatch( dispatch );
                 }

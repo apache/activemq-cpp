@@ -91,6 +91,7 @@ cc_sources = \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQProducer.cpp \
+    activemq/core/ActiveMQQueueBrowser.cpp \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/core/ActiveMQTransactionContext.cpp \
@@ -690,6 +691,7 @@ h_sources = \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQProducer.h \
+    activemq/core/ActiveMQQueueBrowser.h \
     activemq/core/ActiveMQSession.h \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/ActiveMQTransactionContext.h \
@@ -1108,6 +1110,7 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h \
     cms/MessageEOFException.h \
+    cms/MessageEnumeration.h \
     cms/MessageFormatException.h \
     cms/MessageListener.h \
     cms/MessageNotReadableException.h \

@@ -20,13 +20,16 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/util/ActiveMQProperties.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/System.h>
+#include <decaf/lang/Boolean.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -35,20 +38,38 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                                    const Pointer<cms::Destination>& destination,
-                                    ActiveMQSession* session ) {
+ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
+                                    const Pointer<commands::ProducerId>& producerId,
+                                    const Pointer<ActiveMQDestination>& destination,
+                                    long long sendTimeout ) {
 
-    if( session == NULL || producerInfo == NULL ) {
+    if( session == NULL || producerId == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQProducer::ActiveMQProducer - Init with NULL Session" );
     }
 
+    this->producerInfo.reset( new ProducerInfo() );
+
+    this->producerInfo->setProducerId( producerId );
+    this->producerInfo->setDestination( destination );
+    this->producerInfo->setWindowSize( session->getConnection()->getProducerWindowSize() );
+
+    // Get any options specified in the destination and apply them to the
+    // ProducerInfo object.
+    if( destination != NULL ) {
+        const ActiveMQProperties& options = destination->getOptions();
+        this->producerInfo->setDispatchAsync( Boolean::parseBoolean(
+            options.getProperty( "producer.dispatchAsync", "false" )) );
+
+        this->destination = destination.dynamicCast<cms::Destination>();
+    }
+
+    // TODO - Check for need of MemoryUsage if there's a producer Windows size
+    //        and the Protocol version is greater than 3.
+
     // Init Producer Data
     this->session = session;
-    this->producerInfo = producerInfo;
-    this->destination = destination;
     this->closed = false;
 
     // Default the Delivery options
@@ -57,6 +78,7 @@ ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& produ
     this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
+    this->sendTimeout = sendTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +97,7 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
         if( !this->isClosed() ) {
 
-            this->session->disposeOf( this->producerInfo->getProducerId() );
+            this->session->removeProducer( this->producerInfo->getProducerId() );
             this->closed = true;
 
             // Remove at the Broker Side, if this fails the producer has already
