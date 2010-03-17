@@ -29,11 +29,11 @@ namespace util {
 namespace concurrent {
 
     /**
-     * A {@link java.util.Queue} that additionally supports operations that wait for
+     * A decaf::util::Queue that additionally supports operations that wait for
      * the queue to become non-empty when retrieving an element, and wait for space
      * to become available in the queue when storing an element.
      *
-     * <p><tt>BlockingQueue</tt> methods come in four forms, with different ways of
+     * <tt>BlockingQueue</tt> methods come in four forms, with different ways of
      * handling operations that cannot be satisfied immediately, but may be satisfied
      * at some point in the future:
      * one throws an exception, the second returns a special value (either
@@ -42,7 +42,6 @@ namespace concurrent {
      * and the fourth blocks for only a given maximum time limit before giving
      * up.  These methods are summarized in the following table:
      *
-     * <p>
      * <table BORDER CELLPADDING=3 CELLSPACING=1>
      *  <tr>
      *    <td></td>
@@ -74,19 +73,19 @@ namespace concurrent {
      *  </tr>
      * </table>
      *
-     * <p>A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may have
+     * A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may have
      * a <tt>remainingCapacity</tt> beyond which no additional elements can be <tt>put</tt>
      * without blocking.  A <tt>BlockingQueue</tt> without any intrinsic capacity
      * constraints always reports a remaining capacity of <tt>Integer::MAX_VALUE</tt>.
      *
-     * <p> <tt>BlockingQueue</tt> implementations are designed to be used primarily for
-     * producer-consumer queues, but additionally support {@link decaf.util.Collection}
+     * <tt>BlockingQueue</tt> implementations are designed to be used primarily for
+     * producer-consumer queues, but additionally support {@link decaf::util::Collection}
      * interface.  So, for example, it is possible to remove an arbitrary element from a
      * queue using <tt>remove(x)</tt>. However, such operations are in general <em>not</em>
      * performed very efficiently, and are intended for only occasional use, such as
      * when a queued message is cancelled.
      *
-     * <p> <tt>BlockingQueue</tt> implementations are thread-safe.  All queuing methods
+     * <tt>BlockingQueue</tt> implementations are thread-safe.  All queuing methods
      * achieve their effects atomically using internal locks or other forms of concurrency
      * control. However, the <em>bulk</em> Collection operations <tt>addAll</tt>,
      * <tt>containsAll</tt>, <tt>retainAll</tt> and <tt>removeAll</tt> are <em>not</em>
@@ -94,7 +93,7 @@ namespace concurrent {
      * So it is possible, for example, for <tt>addAll(c)</tt> to fail (throwing an exception)
      * after adding only some of the elements in <tt>c</tt>.
      *
-     * <p>A <tt>BlockingQueue</tt> does <em>not</em> intrinsically support any kind of
+     * A <tt>BlockingQueue</tt> does <em>not</em> intrinsically support any kind of
      * &quot;close&quot; or &quot;shutdown&quot; operation to indicate that no more
      * items will be added.  The needs and usage of such features tend to be
      * implementation-dependent. For example, a common tactic is for producers to
@@ -155,9 +154,9 @@ namespace concurrent {
      * </pre>
      *
      * <p>Memory consistency effects: As with other concurrent collections, actions in a
-     * thread prior to placing an object into a {@code BlockingQueue} <em>happen-before</em><
+     * thread prior to placing an object into a BlockingQueue <em>happen-before</em>
      * actions subsequent to the access or removal of that element from the
-     * {@code BlockingQueue} in another thread.
+     * BlockingQueue in another thread.
      *
      * @since 1.0
      */

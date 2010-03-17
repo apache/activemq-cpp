@@ -38,7 +38,7 @@ namespace logging{
      * This is primarily intended as a base class or support class to be used in implementing
      * other logging Handlers.
      *
-     * LogRecords are published to a given <code>decaf.io.OutputStream</code>.
+     * LogRecords are published to a given <code>decaf::io::OutputStream</code>.
      *
      * Configuration: By default each StreamHandler is initialized using the following LogManager
      * configuration properties. If properties are not defined (or have invalid values) then the
@@ -81,13 +81,13 @@ namespace logging{
 
         /**
          * Close the current output stream.
-         * <p>
+         *
          * The close method will perform a flush and then close the Handler.
          * After close has been called this Handler  should no longer be used.
          * Method calls may either be silently ignored or may throw runtime
          * exceptions.
          *
-         * @throw IOException
+         * @throw IOException if an I/O error occurs.
          */
         virtual void close() throw ( decaf::io::IOException );
 
@@ -123,7 +123,8 @@ namespace logging{
          * the stream is flushed and closed. Then the output stream is replaced with the new
          * output stream.
          *
-         * @param stream - New output stream. May not be NULL.
+         * @param stream
+         *      The new output stream. May not be NULL.
          *
          * @throws NullPointerException if the passed stream is NULL.
          */
@@ -132,10 +133,10 @@ namespace logging{
 
         /**
          * Closes this handler, but the underlying output stream is only closed if
-         * {@code closeStream} is {@code true}.
+         * closeStream is true.
          *
          * @param closeStream
-         *            whether to close the underlying output stream.
+         *      whether to close the underlying output stream.
          */
         void close( bool closeStream );
 

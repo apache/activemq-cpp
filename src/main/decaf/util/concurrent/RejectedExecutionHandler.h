@@ -47,12 +47,14 @@ namespace concurrent {
          *
          * <p>In the absence of other alternatives, the method may throw
          * an {@link RejectedExecutionException}, which will be propagated to
-         * the caller of {@code execute}.
+         * the caller of {@link ThreadPoolExecutor#execute execute}.
          *
-         * @param r pointer to the runnable task requested to be executed
-         * @param executor pointer to the executor attempting to execute this task
+         * @param r
+         *      The pointer to the runnable task requested to be executed.
+         * @param executor
+         *      The pointer to the executor attempting to execute this task.
          *
-         * @throws RejectedExecutionException if there is no remedy
+         * @throws RejectedExecutionException if there is no remedy.
          */
         virtual void rejectedExecution( Runnable* r, ThreadPoolExecutor* executer )
             throw( RejectedExecutionException ) = 0;

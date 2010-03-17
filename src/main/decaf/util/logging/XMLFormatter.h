@@ -45,7 +45,7 @@ namespace logging {
         virtual ~XMLFormatter();
 
         /**
-         * Converts a {@code LogRecord} into an XML string.
+         * Converts a LogRecord into an XML string.
          *
          * @param record
          *       The log record to be formatted.
@@ -60,7 +60,7 @@ namespace logging {
          * using the default platform encoding.
          *
          * @param handler
-         *       The output handler, may be {@code null}.
+         *       The output handler, may be NULL.
          *
          * @return the header string for log records formatted as XML strings.
          */
@@ -71,7 +71,7 @@ namespace logging {
          * strings.
          *
          * @param handler
-         *       The output handler, may be {@code null}.
+         *       The output handler, may be NULL.
          *
          * @return the tail string for log records formatted as XML strings.
          */

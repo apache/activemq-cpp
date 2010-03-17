@@ -38,12 +38,12 @@ namespace zip {
      * href="http://www.gzip.org/algorithm.txt">specification</a>).
      *
      * Basically this class is part of the API to the stream based ZLIB compression
-     * library and is used as such by {@code DeflaterOutputStream} and its
+     * library and is used as such by DeflaterOutputStream and its
      * descendants.
      *
-     * The typical usage of a {@code Deflater} instance outside this package
-     * consists of a specific call to one of its constructors before being passed to
-     * an instance of {@code DeflaterOutputStream}.
+     * The typical usage of a Deflater instance outside this package consists of a
+     * specific call to one of its constructors before being passed to an instance
+     * of DeflaterOutputStream.
      *
      * @see DeflaterOutputStream
      * @see Inflater
