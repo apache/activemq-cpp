@@ -48,14 +48,8 @@ namespace io {
 
     public:
 
-        /**
-         *
-         */
         PushbackInputStream( InputStream* stream, bool own = false );
 
-        /**
-         *
-         */
         PushbackInputStream( InputStream* stream, std::size_t bufSize, bool own = false );
 
         virtual ~PushbackInputStream();
@@ -133,23 +127,23 @@ namespace io {
                     decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * {@inheritDoc}
+         * Does nothing except throw an IOException.
          *
-         * Does nothing for this class.
+         * {@inheritDoc}
          */
         virtual void mark( int readLimit );
 
         /**
-         * {@inheritDoc}
-         *
          * Does nothing except throw an IOException.
+         *
+         * {@inheritDoc}
          */
         virtual void reset() throw ( decaf::io::IOException );
 
         /**
-         * {@inheritDoc}
+         * Does nothing except throw an IOException.
          *
-         * Always returns false for this class.
+         * {@inheritDoc}
          */
         virtual bool markSupported() const {
             return false;
