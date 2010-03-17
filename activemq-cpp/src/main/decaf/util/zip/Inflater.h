@@ -40,12 +40,11 @@ namespace zip {
      * algorithm (see <a href="http://www.gzip.org/algorithm.txt">specification</a>).
      * <p>
      * Basically this class is part of the API to the stream based ZLIB compression
-     * library and is used as such by {@code InflaterInputStream} and its
-     * descendants.
+     * library and is used as such by InflaterInputStream and its descendants.
      * <p>
-     * The typical usage of a {@code Inflater} outside this package consists of a
-     * specific call to one of its constructors before being passed to an instance
-     * of {@code InflaterInputStream}.
+     * The typical usage of a Inflater outside this package consists of a specific
+     * call to one of its constructors before being passed to an instance of
+     * InflaterInputStream.
      *
      * @see InflaterInputStream
      * @see Deflater

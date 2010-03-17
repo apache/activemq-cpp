@@ -60,7 +60,7 @@ namespace logging{
      *     objects to configure themselves.
      *
      * The global LogManager object can be retrieved using
-     * LogManager.getLogManager(). The LogManager object is created during
+     * LogManager::getLogManager(). The LogManager object is created during
      * class initialization and cannot subsequently be changed.
      *
      * ***TODO****
@@ -87,14 +87,14 @@ namespace logging{
      * alternate configuration class can use readConfiguration(InputStream)
      * to define properties in the LogManager.
      *
-     * If "java.util.logging.config.class" property is not set, then the
-     * "java.util.logging.config.file" system property can be used to specify
-     * a properties file (in java.util.Properties format). The initial
+     * If "decaf.util.logging.config.class" property is not set, then the
+     * "decaf.util.logging.config.file" system property can be used to specify
+     * a properties file (in decaf.util.Properties format). The initial
      * logging configuration will be read from this file.
      *
      * If neither of these properties is defined then, as described above,
      * the LogManager will read its initial configuration from a properties
-     * file "lib/logging.properties" in the JRE directory.
+     * file "lib/logging.properties" in the working directory.
      *
      * The properties for loggers and Handlers will have names starting with
      * the dot-separated name for the handler or logger.
@@ -286,7 +286,7 @@ namespace logging{
     public:     // Static Singleton Methods.
 
         /**
-         * Get the global {@code LogManager} instance.
+         * Get the global LogManager instance.
          * @return A reference to the global LogManager instance.
          */
         static LogManager& getLogManager();
