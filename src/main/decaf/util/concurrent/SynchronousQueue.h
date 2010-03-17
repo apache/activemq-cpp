@@ -29,7 +29,7 @@ namespace util {
 namespace concurrent {
 
     /**
-     * A {@linkplain BlockingQueue blocking queue} in which each insert operation
+     * A {@link BlockingQueue blocking queue} in which each insert operation
      * must wait for a corresponding remove operation by another thread, and
      * vice versa.  A synchronous queue does not have any internal capacity,
      * not even a capacity of one.  You cannot <tt>peek</tt> at a synchronous
