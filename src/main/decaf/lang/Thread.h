@@ -39,24 +39,24 @@ namespace lang{
     class ThreadProperties;
 
     /**
-     * A {@code Thread} is a concurrent unit of execution. It has its own call stack for
+     * A Thread is a concurrent unit of execution. It has its own call stack for
      * methods being invoked, their arguments and local variables. Each process has at
-     * least one main {@code Thread} running when it is started; typically, there are
+     * least one main Thread running when it is started; typically, there are
      * several others for housekeeping. The application might decide to launch additional
-     * {@code Thread}s for specific purposes.
+     * Threads for specific purposes.
      *
-     * {@code Thread}s in the same process interact and synchronize by the use of shared
+     * Threads in the same process interact and synchronize by the use of shared
      * objects and monitors associated with these objects.
      *
-     * There are basically two main ways of having a {@code Thread} execute application
-     * code. One is providing a new class that extends {@code Thread} and overriding
-     * its {@link #run()} method. The other is providing a new {@code Thread} instance
+     * There are basically two main ways of having a Thread execute application
+     * code. One is providing a new class that extends Thread and overriding
+     * its {@link #run()} method. The other is providing a new Thread instance
      * with a {@link Runnable} object during its creation. In both cases, the
-     * {@link #start()} method must be called to actually execute the new {@code Thread}.
+     * {@link #start()} method must be called to actually execute the new Thread.
      *
-     * Each {@code Thread} has an integer priority that basically determines the amount
-     * of CPU time the {@code Thread} gets. It can be set using the {@link #setPriority(int)}
-     * method. A {@code Thread} can also be made a daemon, which makes it run in the
+     * Each Thread has an integer priority that basically determines the amount
+     * of CPU time the Thread gets. It can be set using the {@link #setPriority(int)}
+     * method. A Thread can also be made a daemon, which makes it run in the
      * background. The latter also affects VM termination behavior: the VM does not
      * terminate automatically as long as there are non-daemon threads running.
      *
