@@ -10666,14 +10666,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\test\decaf\internal\nio\ByteArrayPerspectiveTest.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\src\test\decaf\internal\nio\ByteArrayPerspectiveTest.h"
-						>
-					</File>
-					<File
 						RelativePath="..\src\test\decaf\internal\nio\CharArrayBufferTest.cpp"
 						>
 					</File>

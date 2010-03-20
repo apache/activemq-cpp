@@ -22632,14 +22632,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\decaf\internal\nio\ByteArrayPerspective.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\src\main\decaf\internal\nio\ByteArrayPerspective.h"
-						>
-					</File>
-					<File
 						RelativePath="..\src\main\decaf\internal\nio\CharArrayBuffer.cpp"
 						>
 					</File>
