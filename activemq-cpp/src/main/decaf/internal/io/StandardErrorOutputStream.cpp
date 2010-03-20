@@ -17,11 +17,9 @@
 
 #include "StandardErrorOutputStream.h"
 
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
-
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
 using namespace decaf::internal::io;
 
@@ -41,8 +39,8 @@ void StandardErrorOutputStream::doWriteByte( unsigned char c )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                                     std::size_t offset, std::size_t length )
+void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                                     int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -57,13 +55,22 @@ void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer
             "StandardErrorOutputStream::write - Passed buffer is null." );
     }
 
-    if( ( offset + length ) > size ) {
-        throw decaf::lang::exceptions::IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            "StandardErrorOutputStream::write - given offset + length is greater than buffer size.");
+    if( size < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
     }
 
-    for( std::size_t i = 0; i < length; ++i ) {
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+    }
+
+    for( int i = 0; i < length; ++i ) {
         std::cerr << buffer[i+offset];
     }
 }

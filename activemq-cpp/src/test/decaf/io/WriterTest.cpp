@@ -34,12 +34,12 @@ namespace {
     private:
 
         char* contents;
-        std::size_t length;
-        std::size_t offset;
+        int length;
+        int offset;
 
     public:
 
-        MockWriter( std::size_t capacity ) {
+        MockWriter( int capacity ) {
             contents = new char[capacity];
             length = capacity;
             offset = 0;
@@ -59,7 +59,7 @@ namespace {
         }
 
         virtual void doWriteArrayBounded(
-            const char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+            const char* buffer, int size, int offset, int length )
                 throw( decaf::io::IOException,
                        decaf::lang::exceptions::NullPointerException,
                        decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -73,7 +73,7 @@ namespace {
                     __FILE__, __LINE__, "offset + length must be less than size." );
             }
 
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 contents[this->offset + i] = buffer[offset + i];
             }
 
@@ -85,7 +85,7 @@ namespace {
 
             std::vector<char> result( offset );
 
-            for( std::size_t i = 0; i < offset; i++ ) {
+            for( int i = 0; i < offset; i++ ) {
                 result[i] = contents[i];
             }
 

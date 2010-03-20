@@ -93,8 +93,7 @@ namespace lang{
          * @throws IndexOutOfBoundsException start is greater than end, or end is
          *         greater than csq.length()
          */
-        virtual Appendable& append( const CharSequence* csq,
-                                    std::size_t start, std::size_t end )
+        virtual Appendable& append( const CharSequence* csq, int start, int end )
             throw( decaf::lang::Exception ) = 0;
 
     };

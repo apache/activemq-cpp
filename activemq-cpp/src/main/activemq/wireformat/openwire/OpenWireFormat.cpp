@@ -412,7 +412,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
             MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
             vector<unsigned char> sequence = ma->getMarshaledForm( this );
-            ds->write( sequence );
+            ds->write( &sequence[0], (int)sequence.size() );
 
         } else {
 

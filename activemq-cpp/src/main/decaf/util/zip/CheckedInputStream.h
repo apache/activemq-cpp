@@ -72,14 +72,13 @@ namespace zip {
          *
          * Adds the skipped bytes into the Checksum.
          */
-        virtual std::size_t skip( std::size_t num ) throw( decaf::io::IOException );
+        virtual long long skip( long long num ) throw( decaf::io::IOException );
 
     protected:
 
         virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

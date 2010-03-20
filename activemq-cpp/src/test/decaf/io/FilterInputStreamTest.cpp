@@ -31,7 +31,7 @@ namespace {
     class MyInputStream : public InputStream{
     private:
         std::string data;
-        std::size_t pos;
+        int pos;
         bool throwOnRead;
         bool closed;
 
@@ -57,21 +57,21 @@ namespace {
             return this->closed;
         }
 
-        virtual std::size_t available() const throw (IOException){
+        virtual int available() const throw (IOException){
             if( isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
                     "MyInputStream::read - Stream already closed." );
             }
-            std::size_t len = data.length();
+            int len = (int)data.length();
             return len - pos;
         }
 
         virtual void close() throw(IOException){
             this->closed = true;
         }
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-            return ( pos += std::min( num, available() ) );
+        virtual long long skip( long long num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+            return ( pos += std::min( num, (long long)available() ) );
         }
 
     protected:
@@ -83,20 +83,20 @@ namespace {
                     "MyInputStream::read - Throw on Read on." );
             }
 
-            if( pos >= data.length() ){
+            if( pos >= (int)data.length() ){
                 return -1;
             }
 
             return data.c_str()[pos++];
         }
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size,
+                                        int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException ) {
 
-            std::size_t numToRead = std::min( length, available() );
+            int numToRead = std::min( length, available() );
 
             if( buffer == NULL ) {
                 throw NullPointerException( __FILE__, __LINE__, "Buffer was Null." );
@@ -119,7 +119,7 @@ namespace {
             }
 
             const char* str = data.c_str();
-            for( std::size_t ix=0; ix<numToRead; ++ix ){
+            for( int ix=0; ix<numToRead; ++ix ){
                 buffer[ix+offset] = str[pos+ix];
             }
 
@@ -140,7 +140,7 @@ void FilterInputStreamTest::testAvailable() {
     FilterInputStream is( &myStream );
 
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect number of available bytes",
-                            is.available() == testStr.length() );
+                            is.available() == (int)testStr.length() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

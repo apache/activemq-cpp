@@ -101,10 +101,8 @@ void BufferedSocket::connect( const char* host, int port )
         socket->connect( host, port );
 
         // Now create the buffered streams that wrap around the socket.
-        inputStream = new BufferedInputStream(
-            socket->getInputStream(), (std::size_t)inputBufferSize );
-        outputStream = new BufferedOutputStream(
-            socket->getOutputStream(), (std::size_t)outputBufferSize );
+        inputStream = new BufferedInputStream( socket->getInputStream(), inputBufferSize );
+        outputStream = new BufferedOutputStream( socket->getOutputStream(), outputBufferSize );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )

@@ -57,19 +57,22 @@ void OutputStream::write( unsigned char c ) throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStream::write( const unsigned char* buffer, std::size_t size )
-    throw ( decaf::io::IOException ) {
+void OutputStream::write( const unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->doWriteArray( buffer, size );
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStream::write( const unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
+void OutputStream::write( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -84,8 +87,10 @@ void OutputStream::write( const unsigned char* buffer, std::size_t size,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStream::doWriteArray( const unsigned char* buffer, std::size_t size )
-    throw ( decaf::io::IOException ) {
+void OutputStream::doWriteArray( const unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->doWriteArrayBounded( buffer, size, 0, size );
@@ -95,8 +100,7 @@ void OutputStream::doWriteArray( const unsigned char* buffer, std::size_t size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+void OutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -108,12 +112,22 @@ void OutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t
                 __FILE__, __LINE__, "Buffer pointer passed was NULL." );
         }
 
-        if( offset > size || length > size - offset ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + Length greater than buffer size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        for( std::size_t i = offset; i < offset + length; i++ ) {
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        for( int i = offset; i < offset + length; i++ ) {
             this->doWriteByte( buffer[i] );
         }
     }

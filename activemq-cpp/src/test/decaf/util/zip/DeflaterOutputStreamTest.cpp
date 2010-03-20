@@ -62,7 +62,7 @@ namespace{
             this->deflateFlag = false;
         }
 
-        MyDeflaterOutputStream( OutputStream* out, Deflater* defl, std::size_t size ) :
+        MyDeflaterOutputStream( OutputStream* out, Deflater* defl, int size ) :
             DeflaterOutputStream( out, defl, size ) {
 
             this->deflateFlag = false;
@@ -167,8 +167,8 @@ void DeflaterOutputStreamTest::testConstructorOutputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStreamTest::testConstructorOutputStreamDeflaterI() {
 
-    std::size_t buf = 5;
-    std::size_t zeroBuf = 0;
+    int buf = 5;
+    int zeroBuf = 0;
 
     unsigned char byteArray[] = { 1, 3, 4, 7, 8, 3, 6 };
     ByteArrayOutputStream baos;

@@ -58,7 +58,7 @@ namespace io{
          *
          * @throw IOException if an I/O error occurs, or the stream does not support mark.
          */
-        virtual void mark( std::size_t readAheadLimit ) throw( decaf::io::IOException );
+        virtual void mark( int readAheadLimit ) throw( decaf::io::IOException );
 
         /**
          * Tells whether this stream supports the mark() operation. The default implementation
@@ -102,7 +102,7 @@ namespace io{
          *
          * @throw IOException if an I/O error occurs.
          */
-        virtual std::size_t skip( std::size_t count ) throw( decaf::io::IOException );
+        virtual long long skip( long long count ) throw( decaf::io::IOException );
 
         /**
          * Reads characters into an array. This method will block until some input is available,
@@ -132,7 +132,7 @@ namespace io{
          * @throws IOException thrown if an I/O error occurs.
          * @throws NullPointerException if buffer is NULL.
          */
-        virtual int read( char* buffer, std::size_t length )
+        virtual int read( char* buffer, int size )
            throw( decaf::io::IOException,
                   decaf::lang::exceptions::NullPointerException );
 
@@ -155,7 +155,7 @@ namespace io{
          * @throws NullPointerException if buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length is greater than the array size.
          */
-        virtual int read( char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        virtual int read( char* buffer, int size, int offset, int length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::NullPointerException );
@@ -183,13 +183,12 @@ namespace io{
 
         /**
          * Override this method to customize the functionality of the method
-         * read( char* buffer, std::size_t offset, std::size_t length ).
+         * read( unsigned char* buffer, int size, int offset, int length ).
          *
          * All subclasses must override this method to provide the basic Reader
          * functionality.
          */
-        virtual int doReadArrayBounded( char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( char* buffer, int size, int offset, int length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
@@ -207,7 +206,7 @@ namespace io{
          * Override this method to customize the functionality of the method
          * read( char* buffer, std::size_t length ).
          */
-        virtual int doReadArray( char* buffer, std::size_t length )
+        virtual int doReadArray( char* buffer, int length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException );
 

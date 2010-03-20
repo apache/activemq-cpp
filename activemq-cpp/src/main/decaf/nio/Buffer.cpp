@@ -25,7 +25,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer::Buffer( std::size_t capacity ) {
+Buffer::Buffer( int capacity ) {
     this->_capacity = capacity;
     this->_limit = capacity;
     this->_position = 0;
@@ -44,10 +44,10 @@ Buffer::Buffer( const Buffer& other ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::position( std::size_t newPosition )
+Buffer& Buffer::position( int newPosition )
     throw( lang::exceptions::IllegalArgumentException ) {
 
-    if( newPosition > this->_limit ) {
+    if( newPosition < 0 || newPosition > this->_limit ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Buffer::position - New Position is greater than set limit" );
@@ -63,9 +63,9 @@ Buffer& Buffer::position( std::size_t newPosition )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::limit( std::size_t newLimit ) throw( IllegalArgumentException ) {
+Buffer& Buffer::limit( int newLimit ) throw( IllegalArgumentException ) {
 
-    if( newLimit > this->capacity() ) {
+    if( newLimit < 0 || newLimit > this->capacity() ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Buffer::limit - new limit is larger than the capacity." );

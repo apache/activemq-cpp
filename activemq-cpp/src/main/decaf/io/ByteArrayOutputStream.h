@@ -77,7 +77,7 @@ namespace io{
          * Get the Size of the Internal Buffer
          * @return size of the internal buffer
          */
-        virtual std::size_t size() const;
+        virtual long long size() const;
 
         /**
          * Clear current Stream contents
@@ -104,8 +104,7 @@ namespace io{
         virtual void doWriteByte( unsigned char value )
            throw ( decaf::io::IOException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                          std::size_t offset, std::size_t length )
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException,
                     decaf::lang::exceptions::IndexOutOfBoundsException );

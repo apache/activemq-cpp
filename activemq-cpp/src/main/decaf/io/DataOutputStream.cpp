@@ -38,7 +38,7 @@ DataOutputStream::~DataOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char c ) throw ( IOException ) {
+void DataOutputStream::doWriteByte( const unsigned char c ) throw ( IOException ) {
     try {
 
         if( outputStream == NULL ) {
@@ -55,32 +55,7 @@ void DataOutputStream::write( const unsigned char c ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( IOException ) {
-
-    try {
-
-        if( buffer.size() == 0 ){
-            // nothing to write.
-            return;
-        }
-
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
-        }
-
-        outputStream->write( &buffer[0], buffer.size(), 0, buffer.size() );
-        written += buffer.size();
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char* buffer, std::size_t size,
-                              std::size_t offset, std::size_t length )
+void DataOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -103,10 +78,19 @@ void DataOutputStream::write( const unsigned char* buffer, std::size_t size,
                 "DataOutputStream::write - passed buffer is Null" );
         }
 
-        if( ( offset + length ) > size ) {
-            throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         outputStream->write( buffer, size, offset, length );

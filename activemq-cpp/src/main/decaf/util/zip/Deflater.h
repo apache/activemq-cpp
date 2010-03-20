@@ -138,7 +138,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        void setInput( const unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
@@ -157,7 +157,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        void setInput( const std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
 
@@ -192,7 +192,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setDictionary( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        void setDictionary( const unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
@@ -213,7 +213,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        void setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
 
@@ -294,7 +294,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        std::size_t deflate( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        int deflate( unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
@@ -316,7 +316,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        std::size_t deflate( std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        int deflate( std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
 
@@ -332,7 +332,7 @@ namespace zip {
          *
          * @throws IllegalStateException if in the end state.
          */
-        std::size_t deflate( std::vector<unsigned char>& buffer )
+        int deflate( std::vector<unsigned char>& buffer )
             throw( decaf::lang::exceptions::IllegalStateException );
 
         /**

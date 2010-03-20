@@ -94,7 +94,7 @@ namespace {
         MyInflaterInputStream( InputStream* in, Inflater* infl ) : InflaterInputStream( in, infl ) {
         }
 
-        MyInflaterInputStream( InputStream* in, Inflater* infl, std::size_t size )
+        MyInflaterInputStream( InputStream* in, Inflater* infl, int size )
             : InflaterInputStream( in, infl, size ) {
         }
 
@@ -155,7 +155,7 @@ void InflaterInputStreamTest::testConstructorInputStreamInflaterI() {
 
     ByteArrayInputStream bais( deflatedData );
     Inflater inflate;
-    InflaterInputStream inflatIP( &bais, &inflate, (std::size_t)1 );
+    InflaterInputStream inflatIP( &bais, &inflate, 1 );
 
     int i = 0;
     while( ( result = inflatIP.read() ) != -1 ) {
@@ -193,7 +193,7 @@ void InflaterInputStreamTest::testRead() {
     int result = 0;
     ByteArrayInputStream bais( deflatedData );
     Inflater inflate;
-    InflaterInputStream inflatIP( &bais, &inflate, (std::size_t)1 );
+    InflaterInputStream inflatIP( &bais, &inflate, 1 );
 
     int i = 0;
     while( ( result = inflatIP.read() ) != -1 ) {
@@ -266,7 +266,7 @@ void InflaterInputStreamTest::testReadBIII() {
 
     ByteArrayOutputStream baos;
     DeflaterOutputStream dos( &baos );
-    dos.write( test, (std::size_t)507 );
+    dos.write( test, 507 );
     dos.close();
 
     ByteArrayInputStream bais( baos.toByteArrayRef() );
@@ -344,7 +344,7 @@ void InflaterInputStreamTest::testSkip() {
 
     // Test for skipping more bytes than available in the stream
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Number Of Bytes Skipped.",
-                                  testString.length() - 6, iis.skip( testString.length() ) );
+                                  (long long)testString.length() - 6, iis.skip( testString.length() ) );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", -1, iis.read() );
     iis.close();
 }
@@ -358,9 +358,9 @@ void InflaterInputStreamTest::testSkip2() {
     ByteArrayInputStream bais1( this->deflatedData );
     InflaterInputStream iis1( &bais1 );
 
-    std::size_t skip = iis1.skip( Integer::MAX_VALUE );
+    long long skip = iis1.skip( Integer::MAX_VALUE );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "method skip() returned wrong number of bytes skipped",
-                                  testString.size(), skip );
+                                  (long long)testString.size(), skip );
 
     // test for skipping of 2 bytes
     ByteArrayInputStream bais2( this->deflatedData );
@@ -368,7 +368,7 @@ void InflaterInputStreamTest::testSkip2() {
 
     skip = iis2.skip( 2 );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "the number of bytes returned by skip did not correspond with its input parameters",
-                                  (std::size_t)2, skip );
+                                  2LL, skip );
     int i = 0;
     int result = 0;
     while( ( result = iis2.read() ) != -1 ) {
@@ -378,7 +378,7 @@ void InflaterInputStreamTest::testSkip2() {
 
     iis2.close();
 
-    for( std::size_t j = 2; j < testString.length(); j++ ) {
+    for( int j = 2; j < (int)testString.length(); j++ ) {
         CPPUNIT_ASSERT_MESSAGE( "original compressed data did not equal decompressed data",
                                 buffer[j - 2] == testString.at( j ) );
     }

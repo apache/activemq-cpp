@@ -32,11 +32,7 @@ namespace io {
 
         virtual ~StandardInputStream();
 
-        /**
-         * Indicates the number of bytes available.
-         * @return The number of bytes until the end of the internal buffer.
-         */
-        virtual std::size_t available() const throw ( decaf::io::IOException );
+        virtual int available() const throw ( decaf::io::IOException );
 
     protected:
 

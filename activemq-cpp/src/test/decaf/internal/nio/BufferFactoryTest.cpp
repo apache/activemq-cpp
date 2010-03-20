@@ -61,7 +61,7 @@ void BufferFactoryTest::testCreateByteBuffer3() {
 
     std::vector<unsigned char> array;
     array.resize( 500 );
-    ByteBuffer* buffer = BufferFactory::createByteBuffer( &array[0], 100, 400 );
+    ByteBuffer* buffer = BufferFactory::createByteBuffer( &array[0], 500, 100, 400 );
     CPPUNIT_ASSERT( buffer != NULL );
     CPPUNIT_ASSERT( buffer->hasArray() == true );
     CPPUNIT_ASSERT( buffer->array() == &array[0] );

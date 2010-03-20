@@ -80,8 +80,7 @@ void OutputStreamWriter::flush() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::doWriteArrayBounded( const char* buffer, std::size_t size,
-                                              std::size_t offset, std::size_t length )
+void OutputStreamWriter::doWriteArrayBounded( const char* buffer, int size, int offset, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {

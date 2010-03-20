@@ -104,7 +104,7 @@ namespace zip {
          * @throws IllegalArgumentException if the bufferSize value is zero.
          */
         InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                              std::size_t bufferSize, bool own = false );
+                             int bufferSize, bool own = false );
 
         virtual ~InflaterInputStream();
 
@@ -113,7 +113,7 @@ namespace zip {
          *
          * Until EOF this method always returns 1, thereafter it always returns 0.
          */
-        virtual std::size_t available() const throw ( decaf::io::IOException );
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -127,7 +127,7 @@ namespace zip {
          *
          * Skips the specified amount of uncompressed input data.
          */
-        virtual std::size_t skip( std::size_t num )
+        virtual long long skip( long long num )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -165,8 +165,7 @@ namespace zip {
 
         virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

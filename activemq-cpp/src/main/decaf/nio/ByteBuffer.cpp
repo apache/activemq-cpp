@@ -31,23 +31,25 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer::ByteBuffer( std::size_t capacity ) : Buffer( capacity ) {
+ByteBuffer::ByteBuffer( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* ByteBuffer::allocate( std::size_t capacity ) {
+ByteBuffer* ByteBuffer::allocate( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
-
         return BufferFactory::createByteBuffer( capacity );
     }
-    DECAF_CATCH_RETHROW( Exception )
-    DECAF_CATCHALL_THROW( Exception )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( IllegalArgumentException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* ByteBuffer::wrap( unsigned char* buffer, std::size_t offset, std::size_t length )
-    throw( lang::exceptions::NullPointerException ) {
+ByteBuffer* ByteBuffer::wrap( unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
@@ -57,9 +59,15 @@ ByteBuffer* ByteBuffer::wrap( unsigned char* buffer, std::size_t offset, std::si
                 "ByteBuffer::wrap - Passed Buffer is Null.");
         }
 
-        return BufferFactory::createByteBuffer( buffer, offset, length );
+        if( size < 0 || offset < 0 || length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Invalid array access parameters passed." );
+        }
+
+        return BufferFactory::createByteBuffer( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
@@ -75,7 +83,7 @@ ByteBuffer* ByteBuffer::wrap( std::vector<unsigned char>& buffer ) {
                 "ByteBuffer::wrap - Passed Buffer is Empty.");
         }
 
-        return BufferFactory::createByteBuffer( &buffer[0], 0, buffer.size() );
+        return BufferFactory::createByteBuffer( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -89,7 +97,7 @@ ByteBuffer& ByteBuffer::get( std::vector<unsigned char> buffer )
     try{
 
         if( !buffer.empty() ) {
-            this->get( &buffer[0], 0, buffer.size() );
+            this->get( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
 
         return *this;
@@ -100,10 +108,8 @@ ByteBuffer& ByteBuffer::get( std::vector<unsigned char> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::get( unsigned char* buffer,
-                             std::size_t offset,
-                             std::size_t length )
-    throw( BufferUnderflowException, NullPointerException ) {
+ByteBuffer& ByteBuffer::get( unsigned char* buffer, int size, int offset, int length )
+    throw( BufferUnderflowException, NullPointerException, IndexOutOfBoundsException ) {
 
     try{
 
@@ -117,6 +123,11 @@ ByteBuffer& ByteBuffer::get( unsigned char* buffer,
                 "ByteBuffer::get - Passed Buffer is Null.");
         }
 
+        if( size < 0 || offset < 0 || length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > this->remaining() ) {
             throw BufferUnderflowException(
                 __FILE__, __LINE__,
@@ -124,7 +135,7 @@ ByteBuffer& ByteBuffer::get( unsigned char* buffer,
         }
 
         // read length bytes starting from the offset
-        for( std::size_t ix = 0; ix < length; ++ix ) {
+        for( int ix = 0; ix < length; ++ix ) {
             buffer[ix + offset] = this->get();
         }
 
@@ -132,6 +143,7 @@ ByteBuffer& ByteBuffer::get( unsigned char* buffer,
     }
     DECAF_CATCH_RETHROW( BufferUnderflowException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferUnderflowException )
     DECAF_CATCHALL_THROW( BufferUnderflowException )
 }
@@ -174,10 +186,8 @@ ByteBuffer& ByteBuffer::put( ByteBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::put( const unsigned char* buffer,
-                             std::size_t offset,
-                             std::size_t length )
-    throw( BufferOverflowException, ReadOnlyBufferException, NullPointerException ) {
+ByteBuffer& ByteBuffer::put( const unsigned char* buffer, int size, int offset, int length )
+    throw( BufferOverflowException, ReadOnlyBufferException, NullPointerException, IndexOutOfBoundsException ) {
 
     try{
 
@@ -197,6 +207,11 @@ ByteBuffer& ByteBuffer::put( const unsigned char* buffer,
                 "ByteBuffer::put - Passed Buffer is Null.");
         }
 
+        if( size < 0 || offset < 0 || length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > this->remaining() ) {
             throw BufferOverflowException(
                 __FILE__, __LINE__,
@@ -204,7 +219,7 @@ ByteBuffer& ByteBuffer::put( const unsigned char* buffer,
         }
 
         // read length bytes starting from the offset
-        for( std::size_t ix = 0; ix < length; ++ix ) {
+        for( int ix = 0; ix < length; ++ix ) {
             this->put( buffer[ix + offset] );
         }
 
@@ -224,7 +239,7 @@ ByteBuffer& ByteBuffer::put( std::vector<unsigned char>& buffer )
     try{
 
         if( !buffer.empty() ) {
-            this->put( &buffer[0], 0, buffer.size() );
+            this->put( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
 
         return *this;
@@ -240,12 +255,12 @@ int ByteBuffer::compareTo( const ByteBuffer& value ) const {
 
     try{
 
-        std::size_t compareRemaining =
+        int compareRemaining =
             ( remaining() < value.remaining() ) ?
                 remaining() : value.remaining();
 
-        std::size_t thisPos = this->position();
-        std::size_t otherPos = value.position();
+        int thisPos = this->position();
+        int otherPos = value.position();
 
         unsigned char thisByte, otherByte = 0;
 
@@ -277,8 +292,8 @@ bool ByteBuffer::equals( const ByteBuffer& value ) const {
             return false;
         }
 
-        std::size_t myPosition = this->position();
-        std::size_t otherPosition = value.position();
+        int myPosition = this->position();
+        int otherPosition = value.position();
 
         while( myPosition < this->limit() ) {
             if( get( myPosition++ ) != value.get( otherPosition++ ) ) {

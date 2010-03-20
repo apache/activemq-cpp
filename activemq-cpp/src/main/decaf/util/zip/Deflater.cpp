@@ -180,7 +180,7 @@ Deflater::~Deflater() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void Deflater::setInput( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
@@ -218,7 +218,7 @@ void Deflater::setInput( const unsigned char* buffer, std::size_t size, std::siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+void Deflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
@@ -237,7 +237,7 @@ void Deflater::setInput( const std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void Deflater::setDictionary( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
@@ -276,7 +276,7 @@ void Deflater::setDictionary( const unsigned char* buffer, std::size_t size, std
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+void Deflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
@@ -350,7 +350,7 @@ bool Deflater::finished() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Deflater::deflate( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int Deflater::deflate( unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
@@ -367,12 +367,22 @@ std::size_t Deflater::deflate( unsigned char* buffer, std::size_t size, std::siz
                 __FILE__, __LINE__, "The Deflator has already been ended." );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Given offset + length greater than the size of the buffer." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        std::size_t outStart = this->data->stream->total_out;
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
         this->data->stream->avail_out = (uInt)length;
@@ -393,7 +403,7 @@ std::size_t Deflater::deflate( unsigned char* buffer, std::size_t size, std::siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Deflater::deflate( std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+int Deflater::deflate( std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
@@ -401,7 +411,7 @@ std::size_t Deflater::deflate( std::vector<unsigned char>& buffer, std::size_t o
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Deflater::deflate( std::vector<unsigned char>& buffer )
+int Deflater::deflate( std::vector<unsigned char>& buffer )
     throw( decaf::lang::exceptions::IllegalStateException ){
 
     return this->deflate( &buffer[0], buffer.size(), 0, buffer.size() );

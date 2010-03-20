@@ -63,8 +63,10 @@ void FilterOutputStream::doWriteByte( unsigned char c ) throw ( decaf::io::IOExc
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArray( const unsigned char* buffer, std::size_t size )
-    throw ( decaf::io::IOException ) {
+void FilterOutputStream::doWriteArray( const unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
 
@@ -77,12 +79,13 @@ void FilterOutputStream::doWriteArray( const unsigned char* buffer, std::size_t 
         this->doWriteArrayBounded( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                              std::size_t offset, std::size_t length )
+void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -101,14 +104,23 @@ void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::
                 "FilterOutputStream::write - Buffer passed is Null.");
         }
 
-        if( ( offset + length ) > size ) {
-            throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::write - given offset + length is greater than buffer size.");
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         // Calls the doWriteByte method since subclasses may over override that method.
-        for( std::size_t ix = offset; ix < offset + length; ++ix ) {
+        for( int ix = offset; ix < offset + length; ++ix ) {
             this->doWriteByte( buffer[ix] );
         }
     }

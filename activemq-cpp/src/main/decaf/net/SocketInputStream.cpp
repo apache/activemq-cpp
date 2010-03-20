@@ -70,7 +70,7 @@ void SocketInputStream::close() throw( decaf::io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::available() const throw ( io::IOException ){
+int SocketInputStream::available() const throw ( io::IOException ){
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
@@ -160,8 +160,7 @@ int SocketInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                           std::size_t offset, std::size_t length )
+int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -183,10 +182,19 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t si
             "SocketInputStream::read - Buffer passed is Null" );
     }
 
-    if( length > size - offset ) {
+    if( size < 0 ) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    }
+
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
     }
 
     apr_size_t aprSize = (apr_size_t)length;
@@ -222,7 +230,7 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t si
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::skip( std::size_t num DECAF_UNUSED )
+long long SocketInputStream::skip( long long num DECAF_UNUSED )
     throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
 
     throw lang::exceptions::UnsupportedOperationException(

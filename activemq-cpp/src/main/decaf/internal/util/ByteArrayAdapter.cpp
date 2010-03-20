@@ -31,102 +31,122 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( std::size_t capacity ) {
+ByteArrayAdapter::ByteArrayAdapter( int size )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
 
-        this->array.bytes = new unsigned char[capacity];
-        memset( this->array.bytes, 0, capacity );
-        this->initialize( array.bytes, capacity, true );
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Array size given must be greater than zero." );
+        }
+
+        this->array.bytes = new unsigned char[size];
+        memset( this->array.bytes, 0, size );
+        this->initialize( array.bytes, size, true );
     }
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
-        this->initialize( array, capacity, own );
+        this->initialize( array, size, own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( char* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
-        this->initialize( reinterpret_cast<unsigned char*>( array ), capacity, own );
+        this->initialize( reinterpret_cast<unsigned char*>( array ), size, own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( double* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
-
-    try{
-        this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          capacity * sizeof( double ), own );
-    }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( NullPointerException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( float* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          capacity * sizeof( float ), own );
+                          size * sizeof( double ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( long long* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          capacity * sizeof( long long ), own );
+                          size * sizeof( float ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( int* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          capacity * sizeof( int ), own );
+                          size * sizeof( long long ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( short* array, std::size_t capacity, bool own )
-    throw( lang::exceptions::NullPointerException ) {
+ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          capacity * sizeof( short ), own );
+                          size * sizeof( int ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::initialize( unsigned char* array, std::size_t capacity, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    try{
+        this->initialize( reinterpret_cast<unsigned char*>( array ),
+                          size * sizeof( short ), own );
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( NullPointerException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayAdapter::initialize( unsigned char* array, int size, bool own ) {
 
     try{
 
@@ -136,8 +156,13 @@ void ByteArrayAdapter::initialize( unsigned char* array, std::size_t capacity, b
                 "ByteArrayAdapter::initialize - Passed Buffer is null" );
         }
 
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Array size given must be greater than zero." );
+        }
+
         this->array.bytes = array;
-        this->capacity = capacity;
+        this->size = size;
         this->own = own;
     }
     DECAF_CATCH_RETHROW( Exception )
@@ -158,8 +183,8 @@ ByteArrayAdapter::~ByteArrayAdapter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::read( unsigned char* buffer, std::size_t offset, std::size_t length ) const
-    throw( NullPointerException, BufferUnderflowException ) {
+void ByteArrayAdapter::read( unsigned char* buffer, int size, int offset, int length ) const
+    throw( IndexOutOfBoundsException, NullPointerException, BufferUnderflowException ) {
 
     try{
 
@@ -173,24 +198,39 @@ void ByteArrayAdapter::read( unsigned char* buffer, std::size_t offset, std::siz
                 "ByteArrayAdapter::write - Passed buffer is null" );
         }
 
-        if( ( offset + length ) > this->capacity ) {
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        if( ( offset + length ) > this->size ) {
             throw BufferUnderflowException(
-                __FILE__, __LINE__,
-                "ByteArrayAdapter::read - Not enough data to fill request." );
+                __FILE__, __LINE__, "Not enough data to fill request." );
         }
 
         // Read, starting at offset, length number of bytes to Buffer
         memcpy( buffer, this->array.bytes + offset, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( BufferUnderflowException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferUnderflowException )
     DECAF_CATCHALL_THROW( BufferUnderflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::write( unsigned char* buffer, std::size_t offset, std::size_t length )
-    throw( NullPointerException, BufferOverflowException ) {
+void ByteArrayAdapter::write( unsigned char* buffer, int size, int offset, int length )
+    throw( IndexOutOfBoundsException, NullPointerException, BufferOverflowException ) {
 
     try{
 
@@ -204,7 +244,22 @@ void ByteArrayAdapter::write( unsigned char* buffer, std::size_t offset, std::si
                 "ByteArrayAdapter::write - Passed buffer is null" );
         }
 
-        if( ( offset + length ) > this->capacity ) {
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        if( ( offset + length ) > this->size ) {
             throw BufferOverflowException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::read - Not room in array to hold request." );
@@ -214,14 +269,15 @@ void ByteArrayAdapter::write( unsigned char* buffer, std::size_t offset, std::si
         memcpy( this->array.bytes + offset, buffer, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( BufferOverflowException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferOverflowException )
     DECAF_CATCHALL_THROW( BufferOverflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::resize( std::size_t capacity )
-    throw ( lang::exceptions::InvalidStateException ) {
+void ByteArrayAdapter::resize( int size )
+    throw ( IllegalArgumentException, InvalidStateException ) {
 
     try{
 
@@ -231,14 +287,19 @@ void ByteArrayAdapter::resize( std::size_t capacity )
                 "ByteArrayAdapter::resize - Not the array owner, can't resize" );
         }
 
+        if( size < 0 ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
         // Save old state
-        std::size_t oldCapacity = this->capacity;
+        int oldCapacity = this->size;
         unsigned char* oldArray = this->array.bytes;
 
         // Resize and copy as much of the old as we can back and delete old array
-        this->array.bytes = new unsigned char[capacity];
-        this->capacity = capacity;
-        memcpy( this->array.bytes, oldArray, Math::min( (int)oldCapacity, (int)capacity ) );
+        this->array.bytes = new unsigned char[size];
+        this->size = size;
+        memcpy( this->array.bytes, oldArray, Math::min( (int)oldCapacity, (int)size ) );
         delete [] oldArray;
     }
     DECAF_CATCH_RETHROW( InvalidStateException )
@@ -246,20 +307,19 @@ void ByteArrayAdapter::resize( std::size_t capacity )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::clear() {
-    memset( this->array.bytes, 0, this->capacity );
+void ByteArrayAdapter::clear() throw() {
+    memset( this->array.bytes, 0, this->size );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char& ByteArrayAdapter::operator[]( std::size_t index )
+unsigned char& ByteArrayAdapter::operator[]( int index )
     throw ( IndexOutOfBoundsException ) {
 
     try{
 
-        if( index > this->capacity ) {
+        if( index < 0 || index > this->size ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "ByteArrayAdapter::operator[] - Index %d is out of bounds", index );
+                __FILE__, __LINE__, "Index %d is out of bounds", index );
         }
 
         return this->array.bytes[index];
@@ -269,15 +329,14 @@ unsigned char& ByteArrayAdapter::operator[]( std::size_t index )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char& ByteArrayAdapter::operator[]( std::size_t index ) const
+const unsigned char& ByteArrayAdapter::operator[]( int index ) const
     throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index > this->capacity ) {
+        if( index < 0 || index > this->size ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "ByteArrayAdapter::operator[] - Index %d is out of bounds", index );
+                __FILE__, __LINE__, "Index %d is out of bounds", index );
         }
 
         return this->array.bytes[index];
@@ -287,12 +346,12 @@ const unsigned char& ByteArrayAdapter::operator[]( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayAdapter::get( std::size_t index ) const
+unsigned char ByteArrayAdapter::get( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getCapacity() ) {
+        if( index < 0 || index >= this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::get - Not enough data to fill request." );
@@ -306,12 +365,24 @@ unsigned char ByteArrayAdapter::get( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayAdapter::getDouble( std::size_t index ) const
+char ByteArrayAdapter::getChar( int index ) const
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
+    try{
+        return (char)this->get( index );
+    }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IndexOutOfBoundsException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double ByteArrayAdapter::getDouble( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getDoubleCapacity() ) {
+        if( index < 0 || index >= this->getDoubleCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getDouble(i) - Not enough data to fill a long long." );
@@ -325,7 +396,7 @@ double ByteArrayAdapter::getDouble( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayAdapter::getDoubleAt( std::size_t index ) const
+double ByteArrayAdapter::getDoubleAt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -339,12 +410,12 @@ double ByteArrayAdapter::getDoubleAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayAdapter::getFloat( std::size_t index ) const
+float ByteArrayAdapter::getFloat( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getFloatCapacity() ) {
+        if( index < 0 || index >= this->getFloatCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getFloat(i) - Not enough data to fill a long long." );
@@ -358,7 +429,7 @@ float ByteArrayAdapter::getFloat( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayAdapter::getFloatAt( std::size_t index ) const
+float ByteArrayAdapter::getFloatAt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -372,12 +443,12 @@ float ByteArrayAdapter::getFloatAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayAdapter::getLong( std::size_t index ) const
+long long ByteArrayAdapter::getLong( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getLongCapacity() ) {
+        if( index < 0 || index >= this->getLongCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getLong(i) - Not enough data to fill a long long." );
@@ -391,12 +462,12 @@ long long ByteArrayAdapter::getLong( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayAdapter::getLongAt( std::size_t index ) const
+long long ByteArrayAdapter::getLongAt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( ( index + sizeof( long long ) ) > this->getCapacity() ) {
+        if( ( index < 0 || index + sizeof( long long ) ) > this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getLong(i) - Not enough data to fill a long long." );
@@ -404,7 +475,7 @@ long long ByteArrayAdapter::getLongAt( std::size_t index ) const
 
         unsigned long long value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-        this->read( buffer, index, sizeof(value) );
+        this->read( buffer, sizeof(value), index, sizeof(value) );
 
         // Have to do it this way because on Solaris and Cygwin we get all
         // kinds of warnings when shifting a byte up into a long long.
@@ -428,12 +499,12 @@ long long ByteArrayAdapter::getLongAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayAdapter::getInt( std::size_t index ) const
+int ByteArrayAdapter::getInt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getIntCapacity() ) {
+        if( index < 0 || index >= this->getIntCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getInt(i) - Not enough data to fill an int." );
@@ -447,12 +518,12 @@ int ByteArrayAdapter::getInt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayAdapter::getIntAt( std::size_t index ) const
+int ByteArrayAdapter::getIntAt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( ( index + sizeof( int ) ) > this->getCapacity() ) {
+        if( index < 0 || ( index + (int)sizeof(int) ) > this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getInt(i) - Not enough data to fill an int." );
@@ -460,7 +531,7 @@ int ByteArrayAdapter::getIntAt( std::size_t index ) const
 
         unsigned int value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-        this->read( buffer, index, sizeof(value) );
+        this->read( buffer, sizeof(value), index, sizeof(value) );
         value |= (buffer[0] << 24 | buffer[1] << 16 |
                   buffer[2] << 8 | buffer[3] << 0);
 
@@ -472,12 +543,12 @@ int ByteArrayAdapter::getIntAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayAdapter::getShort( std::size_t index ) const
+short ByteArrayAdapter::getShort( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException )  {
 
     try{
 
-        if( index >= this->getShortCapacity() ) {
+        if( index < 0 || index >= this->getShortCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getShort(i) - Not enough data to fill a short." );
@@ -491,12 +562,12 @@ short ByteArrayAdapter::getShort( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayAdapter::getShortAt( std::size_t index ) const
+short ByteArrayAdapter::getShortAt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException )  {
 
     try{
 
-        if( ( index + sizeof( short ) ) > this->getCapacity() ) {
+        if( index < 0 || ( index + (int)sizeof(short) ) > this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getShort(i) - Not enough data to fill a short." );
@@ -504,7 +575,7 @@ short ByteArrayAdapter::getShortAt( std::size_t index ) const
 
         short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-        this->read( buffer, index, sizeof(value) );
+        this->read( buffer, sizeof(value), index, sizeof(value) );
         value |= (short)(buffer[0] << 8 | buffer[1] << 0);
 
         return value;
@@ -515,12 +586,12 @@ short ByteArrayAdapter::getShortAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::put( std::size_t index, unsigned char value )
+ByteArrayAdapter& ByteArrayAdapter::put( int index, unsigned char value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getCapacity() ) {
+        if( index < 0 || index >= this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::put(i,i) - Not enough data to fill request." );
@@ -536,7 +607,7 @@ ByteArrayAdapter& ByteArrayAdapter::put( std::size_t index, unsigned char value 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putChar( std::size_t index, char value )
+ByteArrayAdapter& ByteArrayAdapter::putChar( int index, char value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -550,12 +621,12 @@ ByteArrayAdapter& ByteArrayAdapter::putChar( std::size_t index, char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putDouble( std::size_t index, double value )
+ByteArrayAdapter& ByteArrayAdapter::putDouble( int index, double value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getDoubleCapacity() ) {
+        if( index < 0 || index >= this->getDoubleCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::putDouble(i,i) - Not enough data to fill request." );
@@ -570,7 +641,7 @@ ByteArrayAdapter& ByteArrayAdapter::putDouble( std::size_t index, double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( std::size_t index, double value )
+ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( int index, double value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -584,12 +655,12 @@ ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( std::size_t index, double value
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putFloat( std::size_t index, float value )
+ByteArrayAdapter& ByteArrayAdapter::putFloat( int index, float value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getFloatCapacity() ) {
+        if( index < 0 || index >= this->getFloatCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::putFloat(i,i) - Not enough data to fill request." );
@@ -604,7 +675,7 @@ ByteArrayAdapter& ByteArrayAdapter::putFloat( std::size_t index, float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putFloatAt( std::size_t index, float value )
+ByteArrayAdapter& ByteArrayAdapter::putFloatAt( int index, float value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -618,12 +689,12 @@ ByteArrayAdapter& ByteArrayAdapter::putFloatAt( std::size_t index, float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putLong( std::size_t index, long long value )
+ByteArrayAdapter& ByteArrayAdapter::putLong( int index, long long value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getLongCapacity() ) {
+        if( index < 0 || index >= this->getLongCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::putLong(i,i) - Not enough data to fill request." );
@@ -638,7 +709,7 @@ ByteArrayAdapter& ByteArrayAdapter::putLong( std::size_t index, long long value 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putLongAt( std::size_t index, long long value )
+ByteArrayAdapter& ByteArrayAdapter::putLongAt( int index, long long value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -654,7 +725,7 @@ ByteArrayAdapter& ByteArrayAdapter::putLongAt( std::size_t index, long long valu
         buffer[6] = (unsigned char)((value & 0x000000000000FF00ULL) >> 8);
         buffer[7] = (unsigned char)((value & 0x00000000000000FFULL) >> 0);
 
-        this->write( buffer, index, sizeof(value) );
+        this->write( buffer, sizeof(value), index, sizeof(value) );
 
         return *this;
     }
@@ -664,12 +735,12 @@ ByteArrayAdapter& ByteArrayAdapter::putLongAt( std::size_t index, long long valu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putInt( std::size_t index, int value )
+ByteArrayAdapter& ByteArrayAdapter::putInt( int index, int value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getIntCapacity() ) {
+        if( index < 0 || index >= this->getIntCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::putInt(i,i) - Not enough data to fill request." );
@@ -684,7 +755,7 @@ ByteArrayAdapter& ByteArrayAdapter::putInt( std::size_t index, int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putIntAt( std::size_t index, int value )
+ByteArrayAdapter& ByteArrayAdapter::putIntAt( int index, int value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -696,7 +767,7 @@ ByteArrayAdapter& ByteArrayAdapter::putIntAt( std::size_t index, int value )
         buffer[2] = (unsigned char)((value & 0x0000FF00) >> 8);
         buffer[3] = (unsigned char)((value & 0x000000FF) >> 0);
 
-        this->write( buffer, index, sizeof(value) );
+        this->write( buffer, sizeof(value), index, sizeof(value) );
 
         return *this;
     }
@@ -706,12 +777,12 @@ ByteArrayAdapter& ByteArrayAdapter::putIntAt( std::size_t index, int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putShort( std::size_t index, short value )
+ByteArrayAdapter& ByteArrayAdapter::putShort( int index, short value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->getShortCapacity() ) {
+        if( index < 0 || index >= this->getShortCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::putShort(i,i) - Not enough data to fill request." );
@@ -726,7 +797,7 @@ ByteArrayAdapter& ByteArrayAdapter::putShort( std::size_t index, short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putShortAt( std::size_t index, short value )
+ByteArrayAdapter& ByteArrayAdapter::putShortAt( int index, short value )
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -736,7 +807,7 @@ ByteArrayAdapter& ByteArrayAdapter::putShortAt( std::size_t index, short value )
         buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
         buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
 
-        this->write( buffer, index, sizeof(value) );
+        this->write( buffer, sizeof(value), index, sizeof(value) );
 
         return *this;
     }

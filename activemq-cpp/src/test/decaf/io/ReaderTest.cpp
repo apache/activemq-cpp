@@ -38,8 +38,8 @@ namespace {
 
         std::vector<char> contents;
 
-        std::size_t current_offset;
-        std::size_t length;
+        int current_offset;
+        int length;
 
     public:
 
@@ -60,8 +60,8 @@ namespace {
 
     protected:
 
-        virtual int doReadArrayBounded( char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( char* buffer, int size,
+                                        int offset, int length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -74,7 +74,7 @@ namespace {
             }
 
             length = Math::min( (long long)length, (long long)( this->length - current_offset ) );
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 buffer[offset + i] = contents[current_offset + i];
             }
 
@@ -184,7 +184,7 @@ void ReaderTest::testRead() {
     MockReader mockReader(srcBuffer);
 
     // normal read
-    for( std::size_t ix = 0; ix < srcBuffer.size(); ++ix ) {
+    for( int ix = 0; ix < (int)srcBuffer.size(); ++ix ) {
 
         char c = srcBuffer[ix];
         CPPUNIT_ASSERT_EQUAL_MESSAGE(

@@ -28,6 +28,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int ShortArrayBufferTest::testData1Size = 100;
+const int ShortArrayBufferTest::SMALL_TEST_LENGTH = 5;
+const int ShortArrayBufferTest::BUFFER_LENGTH = 250;
+
+////////////////////////////////////////////////////////////////////////////////
 void ShortArrayBufferTest::test() {
 
     // Check that we have setup the array and our initial assumptions on state
@@ -127,7 +132,7 @@ void ShortArrayBufferTest::testAsReadOnlyBuffer() {
     CPPUNIT_ASSERT( testBuffer1->position() == readOnly->position() );
     CPPUNIT_ASSERT( testBuffer1->limit() == readOnly->limit() );
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); ++i ) {
+    for( int i = 0; i < testBuffer1->capacity(); ++i ) {
         CPPUNIT_ASSERT( testBuffer1->get( i ) == readOnly->get( i ) );
     }
 
@@ -296,7 +301,7 @@ void ShortArrayBufferTest::testEquals() {
 void ShortArrayBufferTest::testGet() {
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -313,7 +318,7 @@ void ShortArrayBufferTest::testGetShortArray() {
     std::vector<short> array(1);
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         ShortBuffer& ret = testBuffer1->get( array );
         CPPUNIT_ASSERT( array[0] == testBuffer1->get(i) );
@@ -330,38 +335,70 @@ void ShortArrayBufferTest::testGetShortArray() {
 void ShortArrayBufferTest::testGetShortArray2() {
 
     testBuffer1->clear();
-    short* array = new short[testBuffer1->capacity()];
+    short* array1 = new short[testBuffer1->capacity()];
+    short* array2 = new short[testBuffer1->capacity() + 1];
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferUnderflowException",
-        testBuffer1->get( array, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->get( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferUnderflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->get( array, 10, 0 );
+    testBuffer1->get( array1, testBuffer1->capacity(), 10, 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should throw BufferUnderflowException",
-        testBuffer1->get( array, 1, Integer::MAX_VALUE ),
-        BufferUnderflowException );
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), -1, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 2, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 2, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), Integer::MAX_VALUE, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw NullPointerException",
+        testBuffer1->get( NULL, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     testBuffer1->clear();
-    ShortBuffer& ret = testBuffer1->get( array, 0, testBuffer1->capacity() );
+    ShortBuffer& ret = testBuffer1->get( array1, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    assertContentEquals( testBuffer1, array, 0, testBuffer1->capacity() );
+    assertContentEquals( testBuffer1, array1, 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( &ret == testBuffer1 );
 
-    delete [] array;
+    delete [] array1;
+    delete [] array2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ShortArrayBufferTest::testGet2() {
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -369,6 +406,11 @@ void ShortArrayBufferTest::testGet2() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw IndexOutOfBoundsException",
         testBuffer1->get( testBuffer1->limit() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( -1 ),
         IndexOutOfBoundsException );
 }
 
@@ -382,7 +424,7 @@ void ShortArrayBufferTest::testPutShort() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         ShortBuffer& ret = testBuffer1->put( (short)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (short)i );
@@ -401,17 +443,17 @@ void ShortArrayBufferTest::testPutShortArray() {
     short* array = new short[1];
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         array[0] = (short) i;
-        ShortBuffer& ret = testBuffer1->put( array, 0, 1 );
+        ShortBuffer& ret = testBuffer1->put( array, 1, 0, 1 );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (short)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferOverflowException",
-        testBuffer1->put( array, 0, 1 ),
+        testBuffer1->put( array, 1, 0, 1 ),
         BufferOverflowException );
 
     delete [] array;
@@ -426,18 +468,53 @@ void ShortArrayBufferTest::testPutShortArray2() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferOverflowException",
-        testBuffer1->put( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->put( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferOverflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->put( array1, testBuffer1->capacity() + 1, 0 );
+    testBuffer1->put( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 0 );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), -1, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 2, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 2, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), Integer::MAX_VALUE, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw NullPointerException",
+        testBuffer1->put( NULL, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     loadTestData2( array1, 0, testBuffer1->capacity() );
-    ShortBuffer& ret = testBuffer1->put( array1, 0, testBuffer1->capacity() );
+    ShortBuffer& ret = testBuffer1->put( array1, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
     assertContentEquals( testBuffer1, array1, 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -481,12 +558,17 @@ void ShortArrayBufferTest::testGetWithIndex() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         ShortBuffer& ret = testBuffer1->put( i, (short)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (short)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( -1, 0 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw IndexOutOfBoundsException",
@@ -507,7 +589,7 @@ void ShortArrayBufferTest::testPutIndexed() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         ShortBuffer& ret = testBuffer1->put( i, (short)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (short)i );
@@ -517,6 +599,11 @@ void ShortArrayBufferTest::testPutIndexed() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
         testBuffer1->put( testBuffer1->limit(), 0 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a IndexOutOfBoundsException",
+        testBuffer1->put( -1, 0 ),
         IndexOutOfBoundsException );
 }
 

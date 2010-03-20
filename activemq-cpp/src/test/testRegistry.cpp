@@ -141,8 +141,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::ByteArrayAdapterTest );
 #include <decaf/internal/util/TimerTaskHeapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::TimerTaskHeapTest );
 
-#include <decaf/internal/nio/ByteArrayPerspectiveTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::nio::ByteArrayPerspectiveTest );
 #include <decaf/internal/nio/ByteArrayBufferTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::nio::ByteArrayBufferTest );
 #include <decaf/internal/nio/BufferFactoryTest.h>

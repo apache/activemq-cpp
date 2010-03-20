@@ -41,11 +41,11 @@ CheckedInputStream::~CheckedInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t CheckedInputStream::skip( std::size_t num ) throw( decaf::io::IOException ) {
+long long CheckedInputStream::skip( long long num ) throw( decaf::io::IOException ) {
 
     try{
 
-        if( num == 0 ) {
+        if( num <= 0 ) {
             return 0;
         }
 
@@ -55,8 +55,8 @@ std::size_t CheckedInputStream::skip( std::size_t num ) throw( decaf::io::IOExce
         }
 
         // Perform smaller reads then the indicated amount
-        std::size_t remaining = Math::min( (int)num, 2048 );
-        std::size_t skipped = 0;
+        int remaining = Math::min( (int)num, 2048 );
+        long long skipped = 0;
 
         std::vector<unsigned char> buffer( remaining );
 
@@ -76,7 +76,7 @@ std::size_t CheckedInputStream::skip( std::size_t num ) throw( decaf::io::IOExce
             this->sum->update( buffer, 0, remaining );
 
             skipped += result;
-            remaining = ( num - skipped ) > buffer.size() ? buffer.size() : num - skipped;
+            remaining = ( num - skipped ) > (long long)buffer.size() ? (int)buffer.size() : num - skipped;
         }
 
         return skipped;
@@ -108,8 +108,7 @@ int CheckedInputStream::doReadByte() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                            std::size_t offset, std::size_t length )
+int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -121,9 +120,19 @@ int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t s
                 __FILE__, __LINE__, "Buffer passed was NULL" );
         }
 
-        if( ( offset + length ) > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + Length exceeds buffer size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         if( length == 0 ) {

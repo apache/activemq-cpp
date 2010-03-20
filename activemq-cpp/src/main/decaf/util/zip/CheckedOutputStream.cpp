@@ -56,8 +56,8 @@ void CheckedOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CheckedOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                               std::size_t offset, std::size_t length )
+void CheckedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                               int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -69,9 +69,19 @@ void CheckedOutputStream::doWriteArrayBounded( const unsigned char* buffer, std:
                  __FILE__, __LINE__, "The buffer passed was NULL." );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Given offset + length exceeds the buffer size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         if( isClosed() ) {

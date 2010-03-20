@@ -47,8 +47,8 @@ void LoggingOutputStream::doWriteByte( const unsigned char c ) throw ( IOExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                               std::size_t offset, std::size_t length )
+void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                               int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -82,16 +82,16 @@ void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, std:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::log( const unsigned char* buffer, size_t len ) {
+void LoggingOutputStream::log( const unsigned char* buffer, int len ) {
 
     // Write the buffer as hex to a string stream.
     ostringstream ostream;
     ostream << "TCP Trace: Writing:" << endl << '[';
 
-    for( size_t ix=0; ix<len; ++ix ){
-        ostream << setw(2) << setfill('0') << std::hex << (int)buffer[ix];
+    for( int ix = 0; ix < len; ++ix ) {
+        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
 
-        if( ((ix+1) % 2) == 0 ){
+        if( ( ( ix + 1 ) % 2 ) == 0 ) {
             ostream << ' ';
         }
     }

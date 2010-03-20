@@ -279,9 +279,12 @@ namespace io {
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
+         * @throws IndexOutOfBoundsException if the size value is negative.
          */
-        virtual void readFully( unsigned char* buffer, std::size_t size )
-            throw( decaf::io::IOException, decaf::io::EOFException ) = 0;
+        virtual void readFully( unsigned char* buffer, int size )
+            throw( decaf::io::IOException,
+                   decaf::io::EOFException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Reads length bytes from an input stream.
@@ -312,10 +315,9 @@ namespace io {
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          * @throws NullPointerException if the buffer is NULL.
-         * @throws IndexOutOfBoundsException if the offset + length > size.
+         * @throws IndexOutOfBoundsException if the offset + length > size, or an int param is negative.
          */
-        virtual void readFully( unsigned char* buffer, std::size_t size,
-                                std::size_t offset, std::size_t length )
+        virtual void readFully( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::io::EOFException,
                     decaf::lang::exceptions::NullPointerException,
@@ -336,7 +338,7 @@ namespace io {
          *
          * @throws IOException if an I/O Error occurs.
          */
-        virtual std::size_t skipBytes( std::size_t num ) throw( io::IOException ) = 0;
+        virtual long long skipBytes( long long num ) throw( io::IOException ) = 0;
 
     };
 

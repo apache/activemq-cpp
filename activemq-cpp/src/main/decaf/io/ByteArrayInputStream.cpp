@@ -35,8 +35,10 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer,
-                                            std::size_t bufferSize ){
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
+
     setByteArray( buffer, bufferSize );
 }
 
@@ -56,11 +58,18 @@ void ByteArrayInputStream::setBuffer( const vector<unsigned char>& buffer ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer, std::size_t bufferSize ) {
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( buffer == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "Input Buffer cannot be NULL." );
+    }
+
+    if( bufferSize < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Size given for input buffer was negative." );
     }
 
     // We're using the default buffer.
@@ -79,7 +88,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer, std::size_
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayInputStream::available() const throw ( IOException ) {
+int ByteArrayInputStream::available() const throw ( IOException ) {
 
     if( activeBuffer == NULL ){
         throw IOException(
@@ -87,7 +96,7 @@ std::size_t ByteArrayInputStream::available() const throw ( IOException ) {
             "buffer has not been initialized");
     }
 
-    return std::distance( pos, activeBuffer->end() );
+    return (int)std::distance( pos, activeBuffer->end() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,8 +146,8 @@ int ByteArrayInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                              std::size_t offset, std::size_t length )
+int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                              int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -161,20 +170,29 @@ int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t
                 "ByteArrayInputStream::read - Buffer passed is Null" );
         }
 
-        if( length > size - offset ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        std::size_t ix = 0;
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int ix = 0;
 
         if( pos == activeBuffer->end() ) {
             return -1;
         }
 
         // How far are we from end
-        std::size_t remaining = (std::size_t)distance( pos, activeBuffer->end() );
+        int remaining = (int)distance( pos, activeBuffer->end() );
 
         // We only read as much as is left if the amount remaining is less than
         // the amount of data asked for.
@@ -184,7 +202,7 @@ int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t
             buffer[ix + offset] = *(pos);
         }
 
-        return (int)ix;
+        return ix;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -193,7 +211,7 @@ int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayInputStream::skip( std::size_t num )
+long long ByteArrayInputStream::skip( long long num )
     throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     try{
@@ -204,7 +222,7 @@ std::size_t ByteArrayInputStream::skip( std::size_t num )
                 "ByteArrayInputStream::skip - Buffer has not been initialized" );
         }
 
-        std::size_t ix = 0;
+        long long ix = 0;
 
         // Increment the position until we've skipped the desired number
         // or we've hit the end of the buffer.

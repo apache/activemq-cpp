@@ -110,7 +110,7 @@ void CheckedInputStreamTest::testSkip() {
     Adler32 adler;
     CheckedInputStream checkIn( &bais, &adler );
 
-    std::size_t skipValue = 5;
+    long long skipValue = 5;
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "the value returned by skip(n) is not the same as its parameter",
                                   skipValue, checkIn.skip( skipValue ) );
     checkIn.skip( skipValue );
