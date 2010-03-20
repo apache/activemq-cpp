@@ -197,10 +197,10 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        size_t size = 1024;
+        int size = 1024;
         std::vector<char> buffer;
         buffer.resize( size );
-        size_t pos = 0;
+        int pos = 0;
 
         while( true ) {
 

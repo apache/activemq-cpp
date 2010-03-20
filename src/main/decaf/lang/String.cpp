@@ -58,7 +58,7 @@ String::String() {
 String::String( const std::string& source ) {
 
     // Initialize the contents object.
-    this->contents = new Contents( source.length() );
+    this->contents = new Contents( (int)source.length() );
 
     // load the passed string into the contents value.
     System::arraycopy( (unsigned char*)source.c_str(), 0, contents->value.get(), 0, source.length() );

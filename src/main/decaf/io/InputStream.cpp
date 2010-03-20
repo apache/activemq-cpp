@@ -110,7 +110,7 @@ long long InputStream::skip( long long num )
         // Lets not try and buffer every byte since it could be as large as
         // whatever size_t is on this platform, read the data in reasonable
         // chunks until finished.
-        int toRead = num < 4096 ? num : 4096;
+        int toRead = num < 4096LL ? (int)num : 4096;
         std::vector<unsigned char> buffer( toRead );
 
         while( skipped < num ) {

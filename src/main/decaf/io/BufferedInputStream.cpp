@@ -425,7 +425,7 @@ long long BufferedInputStream::skip( long long amount )
         }
 
         if( streamBuffer->available() >= amount ) {
-            streamBuffer->advance( amount );
+            streamBuffer->advance( (int)amount );
             return amount;
         }
 
@@ -441,8 +441,8 @@ long long BufferedInputStream::skip( long long amount )
                     return read;
                 }
 
-                if( streamBuffer->available() >= ( amount - read ) ) {
-                    streamBuffer->advance( amount - read );
+                if( streamBuffer->available() >= ( (int)amount - read ) ) {
+                    streamBuffer->advance( (int)amount - read );
                     return amount;
                 }
 

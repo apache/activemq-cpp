@@ -76,7 +76,7 @@ long long CheckedInputStream::skip( long long num ) throw( decaf::io::IOExceptio
             this->sum->update( buffer, 0, remaining );
 
             skipped += result;
-            remaining = ( num - skipped ) > (long long)buffer.size() ? (int)buffer.size() : num - skipped;
+            remaining = ( num - skipped ) > (long long)buffer.size() ? (int)buffer.size() : (int)(num - skipped);
         }
 
         return skipped;

@@ -28,7 +28,7 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::size_t InflaterInputStream::DEFAULT_BUFFER_SIZE = 512;
+const int InflaterInputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
@@ -119,10 +119,10 @@ long long InflaterInputStream::skip( long long num )
         long long count = 0;
         long long remaining = (std::size_t)Math::min( num, (long long)buff.size() );
 
-        std::vector<unsigned char> buffer( remaining );
+        std::vector<unsigned char> buffer( (std::size_t)remaining );
 
         while( count < num ) {
-            int x = read( &buffer[0], buffer.size() , 0, remaining );
+            int x = read( &buffer[0], (int)buffer.size() , 0, (int)remaining );
             if( x == -1 ) {
                 return count;
             }
@@ -287,10 +287,10 @@ void InflaterInputStream::fill() throw ( decaf::io::IOException ) {
         }
 
         // Try and fill the input buffer, whatever we get goes into the inflater.
-        length = inputStream->read( &buff[0], buff.size(), 0, buff.size() );
+        length = inputStream->read( &buff[0], (int)buff.size(), 0, (int)buff.size() );
 
         if( length > 0 ) {
-            inflater->setInput( &buff[0], buff.size(), 0, length );
+            inflater->setInput( &buff[0], (int)buff.size(), 0, length );
         }
     }
     DECAF_CATCH_RETHROW( IOException )

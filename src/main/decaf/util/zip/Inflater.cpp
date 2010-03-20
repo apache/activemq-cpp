@@ -190,7 +190,7 @@ void Inflater::setInput( const std::vector<unsigned char>& buffer, int offset, i
         return;
     }
 
-    this->setInput( &buffer[0], buffer.size(), offset, length );
+    this->setInput( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ void Inflater::setInput( const std::vector<unsigned char>& buffer )
         return;
     }
 
-    this->setInput( &buffer[0], buffer.size(), 0, buffer.size() );
+    this->setInput( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ void Inflater::setDictionary( const std::vector<unsigned char>& buffer, int offs
         return;
     }
 
-    this->setDictionary( &buffer[0], buffer.size(), offset, length );
+    this->setDictionary( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -278,7 +278,7 @@ void Inflater::setDictionary( const std::vector<unsigned char>& buffer )
         return;
     }
 
-    this->setDictionary( &buffer[0], buffer.size(), 0, buffer.size() );
+    this->setDictionary( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -382,7 +382,7 @@ int Inflater::inflate( std::vector<unsigned char>& buffer, int offset, int lengt
         return 0;
     }
 
-    return this->inflate( &buffer[0], buffer.size(), offset, length );
+    return this->inflate( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -394,7 +394,7 @@ int Inflater::inflate( std::vector<unsigned char>& buffer )
         return 0;
     }
 
-    return this->inflate( &buffer[0], buffer.size(), 0, buffer.size() );
+    return this->inflate( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

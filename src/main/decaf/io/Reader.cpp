@@ -166,7 +166,7 @@ int Reader::doReadVector( std::vector<char>& buffer )
             return -1;
         }
 
-        return this->doReadArrayBounded( &buffer[0], buffer.size(), 0, buffer.size() );
+        return this->doReadArrayBounded( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -230,7 +230,7 @@ int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer )
         length = Math::min( length, this->doReadVector( buffer ) );
 
         if( length > 0 ) {
-            charBuffer->put( &buffer[0], buffer.size() , 0, length );
+            charBuffer->put( &buffer[0], (int)buffer.size() , 0, length );
         }
 
         return length;

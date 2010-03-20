@@ -552,7 +552,7 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
             buffer.str("");
         }
 
-        std::size_t length = writer.str().length();
+        int length = (int)writer.str().length();
 
         out->write( (const unsigned char*)writer.str().c_str(), length, 0, length );
         out->flush();

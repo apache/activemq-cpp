@@ -467,7 +467,7 @@ long long ByteArrayAdapter::getLongAt( int index ) const
 
     try{
 
-        if( ( index < 0 || index + sizeof( long long ) ) > this->getCapacity() ) {
+        if( index < 0 || ( index + (int)sizeof( long long ) ) > this->getCapacity() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayAdapter::getLong(i) - Not enough data to fill a long long." );

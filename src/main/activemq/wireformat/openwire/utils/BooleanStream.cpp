@@ -106,7 +106,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
         }
 
         // Dump the payload
-        dataOut->write( &data[0], data.size(), 0, arrayLimit );
+        dataOut->write( &data[0], (int)data.size(), 0, arrayLimit );
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )
