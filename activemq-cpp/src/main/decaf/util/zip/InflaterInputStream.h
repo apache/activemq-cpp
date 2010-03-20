@@ -56,7 +56,7 @@ namespace zip {
         bool ownInflater;
         bool atEOF;
 
-        static const std::size_t DEFAULT_BUFFER_SIZE;
+        static const int DEFAULT_BUFFER_SIZE;
 
     public:
 

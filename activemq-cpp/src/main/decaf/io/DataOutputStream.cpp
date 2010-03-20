@@ -276,7 +276,7 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
         }
 
         // do not add one so that we don't write the NULL
-        this->write( (const unsigned char*)value.c_str(), value.length(), 0, value.length() );
+        this->write( (const unsigned char*)value.c_str(), (int)value.length(), 0, (int)value.length() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -291,7 +291,7 @@ void DataOutputStream::writeChars( const std::string& value ) throw ( IOExceptio
         }
 
         // add one so that we write the NULL
-        this->write( (const unsigned char*)value.c_str(), value.length() + 1, 0, value.length() + 1 );
+        this->write( (const unsigned char*)value.c_str(), (int)value.length() + 1, 0, (int)value.length() + 1 );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )

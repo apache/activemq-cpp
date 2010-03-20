@@ -152,7 +152,7 @@ void Writer::doWriteVector( const std::vector<char>& buffer )
     throw( decaf::io::IOException ) {
 
     try {
-        this->doWriteArrayBounded( &buffer[0], buffer.size(), 0, buffer.size() );
+        this->doWriteArrayBounded( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -175,7 +175,7 @@ void Writer::doWriteArray( const char* buffer, int size )
 void Writer::doWriteString( const std::string& str ) throw( decaf::io::IOException ) {
 
     try {
-        this->doWriteArrayBounded( str.c_str(), str.length(), 0, str.length() );
+        this->doWriteArrayBounded( str.c_str(), (int)str.length(), 0, (int)str.length() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -187,7 +187,7 @@ void Writer::doWriteStringBounded( const std::string& str, int offset, int lengt
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
-        this->doWriteArrayBounded( str.c_str(), str.length(), offset, length );
+        this->doWriteArrayBounded( str.c_str(), (int)str.length(), offset, length );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

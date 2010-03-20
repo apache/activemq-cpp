@@ -104,8 +104,8 @@ void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
             if( this->deflater->needsInput() ) {
                 this->deflater->setInput( buf, 0, 0 );
             }
-            result = this->deflater->deflate( &buf[0], buf.size(), 0, buf.size() );
-            this->outputStream->write( &buf[0], buf.size(), 0, result );
+            result = this->deflater->deflate( &buf[0], (int)buf.size(), 0, (int)buf.size() );
+            this->outputStream->write( &buf[0], (int)buf.size(), 0, result );
         }
 
         this->isDone = true;

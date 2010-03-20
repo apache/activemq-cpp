@@ -222,7 +222,7 @@ void Deflater::setInput( const std::vector<unsigned char>& buffer, int offset, i
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
-    this->setInput( &buffer[0], buffer.size(), offset, length );
+    this->setInput( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ void Deflater::setInput( const std::vector<unsigned char>& buffer )
         return;
     }
 
-    this->setInput( &buffer[0], buffer.size(), 0, buffer.size() );
+    this->setInput( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ void Deflater::setDictionary( const std::vector<unsigned char>& buffer, int offs
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
-    this->setDictionary( &buffer[0], buffer.size(), offset, length );
+    this->setDictionary( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ void Deflater::setDictionary( const std::vector<unsigned char>& buffer )
         return;
     }
 
-    this->setDictionary( &buffer[0], buffer.size(), 0, buffer.size() );
+    this->setDictionary( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,14 +407,14 @@ int Deflater::deflate( std::vector<unsigned char>& buffer, int offset, int lengt
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
-    return this->deflate( &buffer[0], buffer.size(), offset, length );
+    return this->deflate( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Deflater::deflate( std::vector<unsigned char>& buffer )
     throw( decaf::lang::exceptions::IllegalStateException ){
 
-    return this->deflate( &buffer[0], buffer.size(), 0, buffer.size() );
+    return this->deflate( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

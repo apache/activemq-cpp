@@ -92,7 +92,7 @@ int SocketInputStream::available() const throw ( io::IOException ){
         throw SocketException( __FILE__, __LINE__, "ioctlsocket failed" );
     }
 
-    return (std::size_t)numBytes;
+    return numBytes;
 
 #else // !defined(HAVE_WINSOCK2_H)
 
@@ -100,7 +100,7 @@ int SocketInputStream::available() const throw ( io::IOException ){
     // are available.
     #if defined(FIONREAD)
 
-        std::size_t numBytes = 0;
+        int numBytes = 0;
         if( ::ioctl( oss, FIONREAD, &numBytes ) != -1 ){
             return numBytes;
         }

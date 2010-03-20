@@ -379,7 +379,7 @@ CharBuffer& CharBuffer::put( const std::string& src )
     try{
 
         if( !src.empty() ) {
-            this->put( src.c_str(), src.size(), 0, src.size() );
+            this->put( src.c_str(), (int)src.size(), 0, (int)src.size() );
         }
 
         return *this;
@@ -411,12 +411,10 @@ int CharBuffer::read( CharBuffer* target )
         }
 
         if( this->remaining() == 0 ) {
-            return target->remaining() == 0 ? 0 : string::npos;
+            return target->remaining() == 0 ? 0 : -1;
         }
 
-        int result = (int)Math::min(
-                (int)target->remaining(),
-                (int)this->remaining() );
+        int result = (int)Math::min( (int)target->remaining(), (int)this->remaining() );
         std::vector<char> chars( result, 0 );
         get( &chars[0], result, 0, result );
         target->put( &chars[0], result, 0, result );

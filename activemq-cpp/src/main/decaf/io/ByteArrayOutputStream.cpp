@@ -128,7 +128,7 @@ std::string ByteArrayOutputStream::toString() const {
         return "";
     }
 
-    return string( (const char*)this->toByteArray(), this->size() );
+    return string( (const char*)this->toByteArray(), (std::size_t)this->size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
