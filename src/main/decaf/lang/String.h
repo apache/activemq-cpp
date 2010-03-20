@@ -69,18 +69,18 @@ namespace lang {
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t length() const;
+        virtual int length() const;
 
         /**
          * {@inheritDoc}
          */
-        virtual char charAt( std::size_t index ) const
+        virtual char charAt( int index ) const
             throw( lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual CharSequence* subSequence( std::size_t start, std::size_t end ) const
+        virtual CharSequence* subSequence( int start, int end ) const
             throw( lang::exceptions::IndexOutOfBoundsException );
 
         /**

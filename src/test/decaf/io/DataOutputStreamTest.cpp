@@ -252,7 +252,7 @@ void DataOutputStreamTest::testWriteUTF() {
     os->close();
     openDataInputStream();
     CPPUNIT_ASSERT_MESSAGE("Failed to write string in UTF format",
-        is->available() == testString.length() + 2 );
+        is->available() == (int)testString.length() + 2 );
     CPPUNIT_ASSERT_MESSAGE("Incorrect string returned",
         is->readUTF() == testString );
 }
@@ -309,7 +309,7 @@ void DataOutputStreamTest::testHelper( unsigned char* input, int inputLength,
     CPPUNIT_ASSERT( result[0] == 0x00 );
     CPPUNIT_ASSERT( result[1] == (unsigned char)( expectLength ) );
 
-    for( std::size_t i = 2; i < baos->size(); ++i ) {
+    for( int i = 2; i < baos->size(); ++i ) {
         CPPUNIT_ASSERT( result[i] == expect[i-2] );
     }
 

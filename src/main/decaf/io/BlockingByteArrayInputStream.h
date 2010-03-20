@@ -59,53 +59,29 @@ namespace io{
          * Constructor that initializes the internal buffer.
          * @see setByteArray.
          */
-        BlockingByteArrayInputStream( const unsigned char* buffer,
-                                      std::size_t bufferSize );
+        BlockingByteArrayInputStream( const unsigned char* buffer, int bufferSize );
 
         virtual ~BlockingByteArrayInputStream();
 
         /**
-         * Sets the data that this reader uses.  Replaces any existing
-         * data and resets the read index to the beginning of the buffer.
-         * When this method is called, it notifies any other threads that
-         * data is now available to be read.
-         * @param buffer The new data to be copied to the internal buffer.
-         * @param bufferSize The size of the new buffer.
+         * {@inheritDoc}
          */
-        virtual void setByteArray( const unsigned char* buffer,
-                                   std::size_t bufferSize );
+        virtual void setByteArray( const unsigned char* buffer, int bufferSize );
 
         /**
-         * Indicates the number of bytes available to be read without
-         * blocking.
-         * @return the data available in the internal buffer.
-         * @throws IOException if an error occurs.
+         * {@inheritDoc}
          */
-        virtual std::size_t available() const throw ( decaf::io::IOException );
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
-         * Closes the target input stream.
-         * @throws IOException if an error occurs.
+         * {@inheritDoc}
          */
         virtual void close() throw ( decaf::io::IOException );
 
         /**
-         * Skips over and discards n bytes of data from this input stream. The
-         * skip method may, for a variety of reasons, end up skipping over some
-         * smaller number of bytes, possibly 0. This may result from any of a
-         * number of conditions; reaching end of file before n bytes have been
-         * skipped is only one possibility. The actual number of bytes skipped
-         * is returned. If n is negative, no bytes are skipped.
-         * <p>
-         * The skip method of InputStream creates a byte array and then
-         * repeatedly reads into it until n bytes have been read or the end
-         * of the stream has been reached. Subclasses are encouraged to
-         * provide a more efficient implementation of this method.
-         * @param num - the number of bytes to skip
-         * @returns total butes skipped
-         * @throws IOException if an error occurs
+         * {@inheritDoc}
          */
-        virtual std::size_t skip( std::size_t num )
+        virtual long long skip( long long num )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -113,8 +89,7 @@ namespace io{
 
         virtual int doReadByte() throw ( IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

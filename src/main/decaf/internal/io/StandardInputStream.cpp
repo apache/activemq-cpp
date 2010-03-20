@@ -19,10 +19,6 @@
 
 #include <iostream>
 
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
@@ -39,7 +35,7 @@ StandardInputStream::~StandardInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::available() const throw ( decaf::io::IOException ) {
+int StandardInputStream::available() const throw ( decaf::io::IOException ) {
     return 1;
 }
 

@@ -28,55 +28,72 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( std::size_t capacity, bool readOnly )
-    : CharBuffer( capacity ){
+CharArrayBuffer::CharArrayBuffer( int size, bool readOnly )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : CharBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
-    this->_array = new ByteArrayPerspective( capacity );
+    this->_array.reset( new ByteArrayAdapter( size ) );
     this->offset = 0;
+    this->length = size;
     this->readOnly = readOnly;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( char* array, std::size_t offset,
-                                  std::size_t capacity, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException ) : CharBuffer( capacity ) {
+CharArrayBuffer::CharArrayBuffer( char* array, int size, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) : CharBuffer( length ) {
 
     try{
 
+        if( offset < 0 || offset > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = new ByteArrayPerspective( array, capacity, false );
+        this->_array.reset( new ByteArrayAdapter( array, size, false ) );
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( ByteArrayPerspective& array,
-                                  std::size_t offset, std::size_t length,
-                                  bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException )
-    : CharBuffer( length ) {
+CharArrayBuffer::CharArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) : CharBuffer( length ) {
 
     try{
-        if( offset > array.getCapacity() ) {
+
+        if( offset < 0 || offset > array->getCapacity() ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "CharArrayBuffer::CharArrayBuffer - offset %d is greater than capacity %d",
-                offset, array.getCapacity() );
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
 
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = array.takeRef();
+        this->_array = array;
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
-    DECAF_CATCHALL_THROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IndexOutOfBoundsException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,8 +101,9 @@ CharArrayBuffer::CharArrayBuffer( const CharArrayBuffer& other )
     : CharBuffer( other ) {
 
     // get the byte buffer of the caller and take a reference
-    this->_array = other._array->takeRef();
+    this->_array = other._array;
     this->offset = other.offset;
+    this->length = other.length;
     this->readOnly = other.readOnly;
 }
 
@@ -93,16 +111,6 @@ CharArrayBuffer::CharArrayBuffer( const CharArrayBuffer& other )
 CharArrayBuffer::~CharArrayBuffer() {
 
     try{
-
-        // Return this object's reference to the buffer.
-        this->_array->returnRef();
-
-        // If there are no other Buffers out there that reference it then we
-        // delete it now, the internal unsigned char* array will be deleted
-        // if we where the owner.
-        if( this->_array->getReferences() == 0 ) {
-            delete this->_array;
-        }
     }
     DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
@@ -136,7 +144,7 @@ char* CharArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::size_t CharArrayBuffer::arrayOffset()
+int CharArrayBuffer::arrayOffset()
     throw( decaf::lang::exceptions::UnsupportedOperationException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -189,7 +197,7 @@ CharBuffer& CharArrayBuffer::compact()  throw( decaf::nio::ReadOnlyBufferExcepti
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+        for( int ix = 0; ix < this->remaining(); ++ix ) {
             this->put( ix, this->get( this->position() + ix ) );
         }
 
@@ -226,12 +234,17 @@ char CharArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-char CharArrayBuffer::get( std::size_t index ) const
+char CharArrayBuffer::get( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( ( index ) >= this->limit() ) {
+        if( index < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "index < 0" );
+        }
+
+        if( index >= this->limit() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "CharArrayBuffer::get - Not enough data to fill request." );
@@ -260,7 +273,7 @@ CharBuffer& CharArrayBuffer::put( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharArrayBuffer::put( std::size_t index, char value )
+CharBuffer& CharArrayBuffer::put( int index, char value )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -270,6 +283,11 @@ CharBuffer& CharArrayBuffer::put( std::size_t index, char value )
             throw decaf::nio::ReadOnlyBufferException(
                 __FILE__, __LINE__,
                 "CharArrayBuffer::put(i,i) - Buffer is Read Only." );
+        }
+
+        if( index < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "index < 0" );
         }
 
         if( index >= this->limit() ) {
@@ -293,7 +311,7 @@ CharBuffer* CharArrayBuffer::slice() const {
 
     try{
 
-        return new CharArrayBuffer( *(this->_array),
+        return new CharArrayBuffer( this->_array,
                                     this->offset + this->position(),
                                     this->remaining(),
                                     this->isReadOnly() );
@@ -303,10 +321,20 @@ CharBuffer* CharArrayBuffer::slice() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharSequence* CharArrayBuffer::subSequence( std::size_t start, std::size_t end ) const
+CharSequence* CharArrayBuffer::subSequence( int start, int end ) const
     throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
+
+        if( start < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "start index < 0" );
+        }
+
+        if( end < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "end index < 0" );
+        }
 
         if( start > end ) {
             throw IndexOutOfBoundsException(

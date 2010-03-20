@@ -66,7 +66,7 @@ int InputStream::read() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::read( unsigned char* buffer, std::size_t size )
+int InputStream::read( unsigned char* buffer, int size )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException ) {
 
@@ -79,8 +79,8 @@ int InputStream::read( unsigned char* buffer, std::size_t size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::read( unsigned char* buffer, std::size_t size,
-                       std::size_t offset, std::size_t length )
+int InputStream::read( unsigned char* buffer, int size,
+                       int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -95,7 +95,7 @@ int InputStream::read( unsigned char* buffer, std::size_t size,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t InputStream::skip( std::size_t num )
+long long InputStream::skip( long long num )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::UnsupportedOperationException ) {
 
@@ -105,17 +105,17 @@ std::size_t InputStream::skip( std::size_t num )
             return 0;
         }
 
-        std::size_t skipped = 0;
+        long long skipped = 0;
 
         // Lets not try and buffer every byte since it could be as large as
         // whatever size_t is on this platform, read the data in reasonable
         // chunks until finished.
-        std::size_t toRead = num < 4096 ? num : 4096;
+        int toRead = num < 4096 ? num : 4096;
         std::vector<unsigned char> buffer( toRead );
 
         while( skipped < num ) {
 
-            int read = doReadArrayBounded( &buffer[0], buffer.size(), 0, toRead );
+            int read = doReadArrayBounded( &buffer[0], (int)buffer.size(), 0, toRead );
 
             // Is it EOF?
             if( read == -1 ) {
@@ -124,11 +124,11 @@ std::size_t InputStream::skip( std::size_t num )
 
             skipped += read;
 
-            if( (std::size_t)read < toRead ) {
+            if( read < toRead ) {
                 return skipped;
             }
             if( num - skipped < toRead ) {
-                toRead = num - skipped;
+                toRead = (int)( num - skipped );
             }
         }
         return skipped;
@@ -139,8 +139,9 @@ std::size_t InputStream::skip( std::size_t num )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::doReadArray( unsigned char* buffer, std::size_t size )
+int InputStream::doReadArray( unsigned char* buffer, int size )
     throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
 
     try{
@@ -152,8 +153,8 @@ int InputStream::doReadArray( unsigned char* buffer, std::size_t size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                     std::size_t offset, std::size_t length )
+int InputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                     int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -174,7 +175,7 @@ int InputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
                 __FILE__, __LINE__, "Offset + Length given exceeds Buffer size." );
         }
 
-        for( std::size_t i = 0; i < length; i++ ) {
+        for( int i = 0; i < length; i++ ) {
 
             int c;
             try {

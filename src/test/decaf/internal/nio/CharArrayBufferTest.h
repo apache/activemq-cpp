@@ -72,61 +72,9 @@ namespace nio{
         decaf::nio::CharBuffer* testBuffer1;
         char* testData1;
 
-        static const std::size_t testData1Size = 100;
-        static const std::size_t SMALL_TEST_LENGTH = 5;
-        static const std::size_t BUFFER_LENGTH = 250;
-
-        class MyCharSequence : public lang::CharSequence {
-        private:
-
-            std::string value;
-
-        public:
-
-            MyCharSequence( std::string value ) {
-                this->value = value;
-            }
-
-            virtual ~MyCharSequence() {}
-
-            virtual std::size_t length() const {
-                return this->value.length();
-            }
-
-            virtual char charAt( std::size_t index ) const
-                throw( lang::exceptions::IndexOutOfBoundsException ) {
-
-                if( index > this->value.length() ) {
-                    throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "MyCharSequence::charAt - index is to big: %d", index );
-                }
-
-                return this->value.at( index );
-            }
-
-            virtual CharSequence* subSequence( std::size_t start, std::size_t end ) const
-                throw( lang::exceptions::IndexOutOfBoundsException ) {
-
-                if( start > end ) {
-                    throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "CharArrayBuffer::subSequence - start > end" );
-                }
-
-                if( start > this->length() || end > this->length() ) {
-                    throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "CharArrayBuffer::subSequence - Sequence exceed limit" );
-                }
-
-                return new MyCharSequence( this->value.substr( start, end - start ) );
-            }
-
-            virtual std::string toString() const {
-                return this->value;
-            }
-        };
+        static const int testData1Size;
+        static const int SMALL_TEST_LENGTH;
+        static const int BUFFER_LENGTH;
 
     public:
 
@@ -137,7 +85,7 @@ namespace nio{
             testBuffer1 = decaf::nio::CharBuffer::allocate( testData1Size );
 
             testData1 = new char[testData1Size];
-            for( std::size_t i = 0; i < testData1Size; ++i ){
+            for( int i = 0; i < testData1Size; ++i ){
                 testData1[i] = (char)i;
             }
         }

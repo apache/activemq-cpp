@@ -61,7 +61,7 @@ const std::vector<unsigned char>& ByteArrayOutputStream::toByteArrayRef() const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayOutputStream::size() const {
+long long ByteArrayOutputStream::size() const {
     return activeBuffer->size();
 }
 
@@ -83,8 +83,7 @@ void ByteArrayOutputStream::doWriteByte( unsigned char c )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                                 std::size_t offset, std::size_t length )
+void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -95,20 +94,30 @@ void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, st
 
     if( buffer == NULL ) {
         throw NullPointerException(
-            __FILE__, __LINE__,
-            "ByteArrayOutputStream::write - passed buffer is null" );
+            __FILE__, __LINE__, "passed buffer is null" );
     }
 
-    if( ( offset + length ) > size ) {
-        throw decaf::lang::exceptions::IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            "ByteArrayOutputStream::write - given offset + length is greater than buffer size.");
+    if( size < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    }
+
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
     }
 
     try{
         activeBuffer->insert( activeBuffer->end(), buffer + offset, buffer + offset + length );
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
@@ -134,8 +143,7 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
 
         if( out == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "ByteArrayOutputStream::writeTo - Passed stream pointer is null" );
+                __FILE__, __LINE__, "Passed stream pointer is null" );
         }
 
         out->write( this->toByteArray(), this->size() );

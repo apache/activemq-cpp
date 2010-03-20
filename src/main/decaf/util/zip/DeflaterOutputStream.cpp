@@ -54,7 +54,7 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
-                                            std::size_t bufferSize, bool own )
+                                            int bufferSize, bool own )
  :  FilterOutputStream( outputStream, own ) {
 
     if( deflater == NULL ) {
@@ -96,7 +96,7 @@ void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
             return;
         }
 
-        std::size_t result;
+        int result;
         this->deflater->finish();
 
         while( !this->deflater->finished() ) {
@@ -140,8 +140,8 @@ void DeflaterOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                                std::size_t offset, std::size_t length )
+void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                                int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -158,9 +158,19 @@ void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, std
                 __FILE__, __LINE__, "Buffer passed was NULL." );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + length exceeds the buffer size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         if( length == 0 ) {
@@ -192,10 +202,10 @@ void DeflaterOutputStream::deflate() throw ( decaf::io::IOException ) {
 
     try{
 
-        std::size_t result;
+        int result;
         do{
-            result = this->deflater->deflate( &buf[0], buf.size(), 0, buf.size() );
-            this->outputStream->write( &buf[0], buf.size(), 0, result );
+            result = this->deflater->deflate( &buf[0], (int)buf.size(), 0, (int)buf.size() );
+            this->outputStream->write( &buf[0], (int)buf.size(), 0, result );
         } while( !this->deflater->needsInput() );
     }
     DECAF_CATCH_RETHROW( IOException )

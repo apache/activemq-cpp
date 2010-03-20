@@ -21,10 +21,11 @@
 #include <decaf/nio/ByteBuffer.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/nio/BufferUnderflowException.h>
 #include <decaf/nio/BufferOverflowException.h>
 #include <decaf/nio/ReadOnlyBufferException.h>
-#include <decaf/internal/nio/ByteArrayPerspective.h>
+#include <decaf/internal/util/ByteArrayAdapter.h>
 
 #include <decaf/nio/CharBuffer.h>
 #include <decaf/nio/DoubleBuffer.h>
@@ -33,9 +34,13 @@
 #include <decaf/nio/IntBuffer.h>
 #include <decaf/nio/LongBuffer.h>
 
+#include <decaf/lang/Pointer.h>
+
 namespace decaf{
 namespace internal{
 namespace nio{
+
+    using decaf::internal::util::ByteArrayAdapter;
 
     /**
      * This class defines six categories of operations upon byte buffers:
@@ -94,6 +99,7 @@ namespace nio{
      *   contiguous sequences of values between a buffer and an array or some other
      *   buffer of the same type; and
      *
+     * @since 1.0
      */
     class DECAF_API ByteArrayBuffer : public decaf::nio::ByteBuffer {
     private:
@@ -102,10 +108,13 @@ namespace nio{
         bool readOnly;
 
         // The reference array object that backs this buffer.
-        internal::nio::ByteArrayPerspective* _array;
+        decaf::lang::Pointer<ByteArrayAdapter> _array;
 
         // Offset into the array that we are to start from
-        std::size_t offset;
+        int offset;
+
+        // The number of bytes we are limited to.
+        int length;
 
     public:
 
@@ -113,591 +122,341 @@ namespace nio{
          * Creates a ByteArrayBuffer object that has its backing array allocated internally
          * and is then owned and deleted when this object is deleted.  The array is
          * initially created with all elements initialized to zero.
-         * @param capacity - size of the array, this is the limit we read and write to.
-         * @param readOnly - should this buffer be read-only, default as false
+         *
+         * @param capacity
+         *      The size of the array, this is the limit we read and write to.
+         * @param readOnly
+         *      Should this buffer be read-only, default as false
+         *
+         * @throws IllegalArguementException if the capacity value is negative.
          */
-        ByteArrayBuffer( std::size_t capacity, bool readOnly = false );
+        ByteArrayBuffer( int capacity, bool readOnly = false )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
-         * Creates a ByteArrayBuffer object that wraps the given array.  If the own flag
-         * is set then it will delete this array when this object is deleted.
-         * @param array - array to wrap
-         * @param offset - the position that is this buffers start pos.
-         * @param capacity - size of the array, this is the limit we read and write to.
-         * @param readOnly - should this buffer be read-only, default as false
+         * Creates a ByteArrayBuffer object that wraps the given array.
+         *
+         * @param array
+         *      The array to wrap.
+         * @param size
+         *      The size of the array passed.
+         * @param offset
+         *      The position that is this buffers start position.
+         * @param length
+         *      The size of the sub-array, this is the limit we read and write to.
+         * @param readOnly
+         *      Should this buffer be read-only, default as false.
+         *
          * @throws NullPointerException if buffer is NULL
+         * @throws IndexOutOfBoundsException if the preconditions of size, offset and
+         *         length are violated.
          */
-        ByteArrayBuffer( unsigned char* array, std::size_t offset,
-                         std::size_t capacity, bool readOnly = false )
-            throw( decaf::lang::exceptions::NullPointerException );
+        ByteArrayBuffer( unsigned char* array, int size, int offset, int length,
+                         bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Creates a byte buffer that wraps the passed ByteArrayPerspective and
+         * Creates a byte buffer that wraps the passed ByteArrayAdapter and
          * start at the given offset.  The capacity and limit of the new ByteArrayBuffer
          * will be that of the remaining capacity of the passed buffer.
-         * @param array - the ByteArrayPerspective to wrap
-         * @param offset - the offset into array where the buffer starts
-         * @param length - the length of the array we are wrapping or limit.
-         * @param readOnly - is this a readOnly buffer.
+         *
+         * @param array
+         *      The ByteArrayAdapter to wrap
+         * @param offset
+         *      The offset into array where the buffer starts
+         * @param length
+         *      The length of the array we are wrapping or limit.
+         * @param readOnly
+         *      Boolean indicating if this a readOnly buffer.
+         *
+         * @throws NullPointerException if array is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
-        ByteArrayBuffer( ByteArrayPerspective& array,
-                         std::size_t offset, std::size_t length,
-                         bool readOnly = false )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array,
+                         int offset, int length, bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Create a ByteArrayBuffer that mirrors this one, meaning it shares a
-         * reference to this buffers ByteArrayPerspective and when changes
+         * reference to this buffers ByteArrayAdapter and when changes
          * are made to that data it is reflected in both.
-         * @param other - the ByteArrayBuffer this one is to mirror.
+         *
+         * @param other
+         *      The ByteArrayBuffer this one is to mirror.
          */
         ByteArrayBuffer( const ByteArrayBuffer& other );
 
         virtual ~ByteArrayBuffer();
 
+    public:
+
         /**
-         * Tells whether or not this buffer is read-only.
-         * @returns true if, and only if, this buffer is read-only
+         * {@inheritDoc}
          */
         virtual bool isReadOnly() const {
             return this->readOnly;
         }
 
         /**
-         * Returns the byte array that backs this buffer
-         * <p>
-         * Modifications to this buffer's content will cause the returned array's
-         * content to be modified, and vice versa.
-         * <p>
-         * Invoke the hasArray method before invoking this method in order to ensure
-         * that this buffer has an accessible backing array.
-         * @returns The array that backs this buffer
-         * @throws ReadOnlyBufferException - If this buffer is backed by an array but
-         * is read-only
-         * @throws UnsupportedOperationException - If this buffer is not backed by an
-         * accessible array
+         * {@inheritDoc}
          */
         virtual unsigned char* array()
             throw( decaf::nio::ReadOnlyBufferException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * Returns the offset within this buffer's backing array of the first element
-         * of the buffer.
-         * <p>
-         * If this buffer is backed by an array then buffer position p corresponds to
-         * array index p + arrayOffset().
-         * <p>
-         * Invoke the hasArray method before invoking this method in order to ensure
-         * that this buffer has an accessible backing array.
-         * @returns The offset within this buffer's array of the first element of
-         * the buffer
-         * @throws ReadOnlyBufferException - If this buffer is backed by an array but
-         * is read-only
-         * @throws UnsupportedOperationException - If this buffer is not backed by an
-         * accessible array
+         * {@inheritDoc}
          */
-        virtual std::size_t arrayOffset() const
+        virtual int arrayOffset() const
             throw( decaf::nio::ReadOnlyBufferException,
-                   lang::exceptions::UnsupportedOperationException );
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * Tells whether or not this buffer is backed by an accessible byte array.
-         * If this method returns true then the array and arrayOffset methods may safely
-         * be invoked.  Subclasses should override this method if they do not have a
-         * backing array as this class always returns true.
-         * @returns true if, and only if, this buffer is backed by an array and is not
-         * read-only
+         * {@inheritDoc}
          */
         virtual bool hasArray() const { return true; }
 
     public:   // Abstract Methods
 
         /**
-         * Creates a view of this byte buffer as a char buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer, and its mark will be undefined.
-         * The new buffer will be read-only if, and only if, this buffer is read-only.
-         * @returns the new Char Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::CharBuffer* asCharBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a view of this byte buffer as a double buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer divided by eight, and its mark
-         * will be undefined. The new buffer will be read-only if, and only if, this
-         * buffer is read-only.
-         * @returns the new double Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::DoubleBuffer* asDoubleBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a view of this byte buffer as a float buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer divided by four, and its mark
-         * will be undefined. The new buffer will be read-only if, and only if, this
-         * buffer is read-only.
-         * @returns the new float Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::FloatBuffer* asFloatBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a view of this byte buffer as a int buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer divided by four, and its mark
-         * will be undefined. The new buffer will be read-only if, and only if, this
-         * buffer is read-only.
-         * @returns the new int Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::IntBuffer* asIntBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a view of this byte buffer as a long buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer divided by eight, and its mark
-         * will be undefined. The new buffer will be read-only if, and only if, this
-         * buffer is read-only.
-         * @returns the new long Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::LongBuffer* asLongBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a view of this byte buffer as a short buffer.
-         * <p>
-         * The content of the new buffer will start at this buffer's current position.
-         * Changes to this buffer's content will be visible in the new buffer, and vice
-         * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be
-         * the number of bytes remaining in this buffer divided by two, and its mark
-         * will be undefined. The new buffer will be read-only if, and only if, this
-         * buffer is read-only.
-         * @returns the new short Buffer, which the caller then owns.
+         * {@inheritDoc}
          */
         virtual decaf::nio::ShortBuffer* asShortBuffer() const { return NULL; } //TODO
 
         /**
-         * Creates a new, read-only byte buffer that shares this buffer's content.
-         * <p>
-         * The content of the new buffer will be that of this buffer. Changes to this
-         * buffer's content will be visible in the new buffer; the new buffer itself,
-         * however, will be read-only and will not allow the shared content to be
-         * modified. The two buffers' position, limit, and mark values will be
-         * independent.
-         * <p>
-         * If this buffer is itself read-only then this method behaves in exactly the
-         * same way as the duplicate method.
-         * <p>
-         * The new buffer's capacity, limit, position, and mark values will be
-         * identical to those of this buffer.
-         * @return The new, read-only byte buffer which the caller then owns.
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer* asReadOnlyBuffer() const;
 
         /**
-         * Compacts this buffer
-         * <p>
-         * The bytes between the buffer's current position and its limit, if any, are
-         * copied to the beginning of the buffer. That is, the byte at index
-         * p = position() is copied to index zero, the byte at index p + 1 is copied
-         * to index one, and so forth until the byte at index limit() - 1 is copied
-         * to index n = limit() - 1 - p. The buffer's position is then set to n+1 and
-         * its limit is set to its capacity. The mark, if defined, is discarded.
-         * <p>
-         * The buffer's position is set to the number of bytes copied, rather than to
-         * zero, so that an invocation of this method can be followed immediately by
-         * an invocation of another relative put method.
-         * @returns a reference to this ByteArrayBuffer
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& compact() throw( decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Creates a new byte buffer that shares this buffer's content.
-         * <p>
-         * The content of the new buffer will be that of this buffer. Changes to this
-         * buffer's content will be visible in the new buffer, and vice versa; the two
-         * buffers' position, limit, and mark values will be independent.
-         * <p>
-         * The new buffer's capacity, limit, position, and mark values will be identical
-         * to those of this buffer. The new buffer will be read-only if, and only if,
-         * this buffer is read-only.
-         * @returns a new Byte Buffer which the caller owns.
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer* duplicate();
 
         /**
-         * Relative get method. Reads the byte at this buffer's current position, and
-         * then increments the position.
-         * @returns The byte at the buffer's current position
-         * @throws BufferUnderflowException - If the buffer's current position is not
-         * smaller than its limit
+         * {@inheritDoc}
          */
         virtual unsigned char get() const throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Absolute get method. Reads the byte at the given index.
-         * @param index - the index in the Buffer where the byte is to be read
-         * @returns the byte that is located at the given index
-         * @throws IndexOutOfBoundsException - If index is not smaller than the
-         * buffer's limit
+         * {@inheritDoc}
          */
-        virtual unsigned char get( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual unsigned char get( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Reads the next byte at this buffer's current position, and then increments
-         * the position by one
-         * @returns the next char in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual char getChar() throw( decaf::nio::BufferUnderflowException ) {
             return (char)this->get();
         }
 
         /**
-         * Reads one byte at the given index and returns it
-         * @param index - the index in the Buffer where the byte is to be read
-         * @returns the char at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If index is not smaller than the
-         * buffer's limit
+         * {@inheritDoc}
          */
-        virtual char getChar( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) {
+        virtual char getChar( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
             return (char)this->get( index );
         }
 
         /**
-         * Reads the next eight bytes at this buffer's current position, and then
-         * increments the position by that amount.
-         * @returns the next double in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual double getDouble() throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Reads eight bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the double at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * {@inheritDoc}
          */
-        virtual double getDouble( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual double getDouble( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Reads the next four bytes at this buffer's current position, and then
-         * increments the position by that amount.
-         * @returns the next float in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual float getFloat() throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Reads four bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the float at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * {@inheritDoc}
          */
-        virtual float getFloat( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual float getFloat( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Reads the next eight bytes at this buffer's current position, and then
-         * increments the position by that amount.
-         * @returns the next long long in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual long long getLong() throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Reads eight bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the long long at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * {@inheritDoc}
          */
-        virtual long long getLong( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual long long getLong( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Reads the next four bytes at this buffer's current position, and then
-         * increments the position by that amount.
-         * @returns the next int in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual int getInt() throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Reads four bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the int at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * {@inheritDoc}
          */
-        virtual int getInt( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual int getInt( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Reads the next two bytes at this buffer's current position, and then
-         * increments the position by that amount.
-         * @returns the next short in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         * {@inheritDoc}
          */
         virtual short getShort() throw( decaf::nio::BufferUnderflowException );
 
         /**
-         * Reads two bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the short at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * {@inheritDoc}
          */
-        virtual short getShort( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException );
+        virtual short getShort( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
-         * Writes the given byte into this buffer at the current position, and then
-         * increments the position.
-         * @param value - the byte value to be written
-         * @returns a reference to this buffer
-         * @throws BufferOverflowException - If this buffer's current position is not
-         * smaller than its limit
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& put( unsigned char value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes the given byte into this buffer at the given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the byte to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& put( std::size_t index, unsigned char value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                    decaf::nio::ReadOnlyBufferException );
+        virtual ByteArrayBuffer& put( int index, unsigned char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes one byte containing the given value, into this buffer at the
-         * current position, and then increments the position by one.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putChar( char value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes one byte containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putChar( std::size_t index, char value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putChar( int index, char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes eight bytes containing the given value, into this buffer at the
-         * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putDouble( double value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes eight bytes containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putDouble( std::size_t index, double value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putDouble( int index, double value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes four bytes containing the given value, into this buffer at the
-         * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putFloat( float value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes four bytes containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putFloat( std::size_t index, float value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putFloat( int index, float value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes eight bytes containing the given value, into this buffer at the
-         * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putLong( long long value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes eight bytes containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putLong( std::size_t index, long long value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putLong( int index, long long value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes four bytes containing the given value, into this buffer at the
-         * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putInt( int value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes four bytes containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putInt( std::size_t index, int value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putInt( int index, int value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes two bytes containing the given value, into this buffer at the
-         * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer& putShort( short value )
             throw( decaf::nio::BufferOverflowException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Writes two bytes containing the given value, into this buffer at the
-         * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putShort( std::size_t index, short value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
+        virtual ByteArrayBuffer& putShort( int index, short value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::nio::ReadOnlyBufferException );
 
         /**
-         * Creates a new byte buffer whose content is a shared subsequence of this
-         * buffer's content.  The content of the new buffer will start at this buffer's
-         * current position. Changes to this buffer's content will be visible in the new
-         * buffer, and vice versa; the two buffers' position, limit, and mark values will
-         * be independent.
-         * <p>
-         * The new buffer's position will be zero, its capacity and its limit will be the
-         * number of bytes remaining in this buffer, and its mark will be undefined. The
-         * new buffer will be read-only if, and only if, this buffer is read-only.
-         * @returns the newly create ByteArrayBuffer which the caller owns.
+         * {@inheritDoc}
          */
         virtual ByteArrayBuffer* slice() const;
 
     protected:
 
         /**
-         * Sets this ByteArrayBuffer as Read-Only.
-         * @param value - true if this buffer is to be read-only.
+         * Sets this ByteArrayBuffer as Read-Only or not Read-Only.
+         *
+         * @param value
+         *      Boolean value, true if this buffer is to be read-only, false otherwise.
          */
         virtual void setReadOnly( bool value ) {
             this->readOnly = value;

@@ -30,53 +30,70 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( std::size_t capacity, bool readOnly )
- : decaf::nio::ByteBuffer( capacity ) {
+ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : decaf::nio::ByteBuffer( size ) {
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
-    this->_array = new ByteArrayPerspective( capacity );
+    this->_array.reset( new ByteArrayAdapter( size ) );
     this->offset = 0;
+    this->length = size;
     this->readOnly = readOnly;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, std::size_t offset,
-                                  std::size_t capacity, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException )
-    : decaf::nio::ByteBuffer( capacity ) {
+ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) :
+    decaf::nio::ByteBuffer( length ) {
 
     try{
 
+        if( offset < 0 || offset > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = new ByteArrayPerspective( array, capacity, false );
+        this->_array.reset( new ByteArrayAdapter( array, size, false ) );
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( ByteArrayPerspective& array, std::size_t offset,
-                                  std::size_t length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException )
-    : decaf::nio::ByteBuffer( length ) {
+ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) : decaf::nio::ByteBuffer( length ) {
 
     try{
-        if( offset > array.getCapacity() ) {
+
+        if( offset < 0 || offset > array->getCapacity() ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "ByteArrayBuffer::ByteArrayBuffer - offset %d is greater than capacity %d",
-                offset, array.getCapacity() );
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
         }
 
-        // Allocate using the ByteArray, not read-only initially.
-        this->_array = array.takeRef();
+        if( length < 0 || offset + length > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+
+        this->_array = array;
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
@@ -86,8 +103,9 @@ ByteArrayBuffer::ByteArrayBuffer( const ByteArrayBuffer& other )
     : decaf::nio::ByteBuffer( other ) {
 
     // get the byte buffer of the caller and take a reference
-    this->_array = other._array->takeRef();
+    this->_array = other._array;
     this->offset = other.offset;
+    this->length = other.length;
     this->readOnly = other.readOnly;
 }
 
@@ -95,16 +113,6 @@ ByteArrayBuffer::ByteArrayBuffer( const ByteArrayBuffer& other )
 ByteArrayBuffer::~ByteArrayBuffer() {
 
     try{
-
-        // Return this object's reference to the buffer.
-        this->_array->returnRef();
-
-        // If there are no other Buffers out there that reference it then we
-        // delete it now, the internal unsigned char* array will be deleted
-        // if we where the owner.
-        if( this->_array->getReferences() == 0 ) {
-            delete this->_array;
-        }
     }
     DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
@@ -137,7 +145,7 @@ unsigned char* ByteArrayBuffer::array()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayBuffer::arrayOffset() const
+int ByteArrayBuffer::arrayOffset() const
     throw( decaf::nio::ReadOnlyBufferException,
            lang::exceptions::UnsupportedOperationException ) {
 
@@ -190,7 +198,7 @@ ByteArrayBuffer& ByteArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferExc
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+        for( int ix = 0; ix < this->remaining(); ++ix ) {
             this->put( ix, this->get( this->position() + ix ) );
         }
 
@@ -227,7 +235,7 @@ unsigned char ByteArrayBuffer::get() const throw( decaf::nio::BufferUnderflowExc
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayBuffer::get( std::size_t index ) const
+unsigned char ByteArrayBuffer::get( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -259,7 +267,7 @@ double ByteArrayBuffer::getDouble() throw( decaf::nio::BufferUnderflowException 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayBuffer::getDouble( std::size_t index ) const
+double ByteArrayBuffer::getDouble( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -286,7 +294,7 @@ float ByteArrayBuffer::getFloat() throw( decaf::nio::BufferUnderflowException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayBuffer::getFloat( std::size_t index ) const
+float ByteArrayBuffer::getFloat( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -314,12 +322,12 @@ long long ByteArrayBuffer::getLong() throw( decaf::nio::BufferUnderflowException
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayBuffer::getLong( std::size_t index ) const
+long long ByteArrayBuffer::getLong( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( (offset + index + sizeof(long long)) > this->limit() ) {
+        if( ( offset + index + (int)sizeof(long long) ) > this->limit() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayBuffer::getLong(i) - Not enough data to fill a long long." );
@@ -347,12 +355,12 @@ int ByteArrayBuffer::getInt() throw( decaf::nio::BufferUnderflowException )  {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayBuffer::getInt( std::size_t index ) const
+int ByteArrayBuffer::getInt( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( (offset + index + sizeof(int)) > this->limit() ) {
+        if( (offset + index + (int)sizeof(int)) > this->limit() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayBuffer::getInt(i) - Not enough data to fill an int." );
@@ -380,12 +388,12 @@ short ByteArrayBuffer::getShort() throw( decaf::nio::BufferUnderflowException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayBuffer::getShort( std::size_t index ) const
+short ByteArrayBuffer::getShort( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException )  {
 
     try{
 
-        if( (offset + index + sizeof(short)) > this->limit() ) {
+        if( (offset + index + (int)sizeof(short)) > this->limit() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__,
                 "ByteArrayBuffer::getShort(i) - Not enough data to fill a short." );
@@ -414,7 +422,7 @@ ByteArrayBuffer& ByteArrayBuffer::put( unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::put( std::size_t index, unsigned char value )
+ByteArrayBuffer& ByteArrayBuffer::put( int index, unsigned char value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -458,7 +466,7 @@ ByteArrayBuffer& ByteArrayBuffer::putChar( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putChar( std::size_t index, char value )
+ByteArrayBuffer& ByteArrayBuffer::putChar( int index, char value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -490,7 +498,7 @@ ByteArrayBuffer& ByteArrayBuffer::putDouble( double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putDouble( std::size_t index, double value )
+ByteArrayBuffer& ByteArrayBuffer::putDouble( int index, double value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -522,7 +530,7 @@ ByteArrayBuffer& ByteArrayBuffer::putFloat( float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putFloat( std::size_t index, float value )
+ByteArrayBuffer& ByteArrayBuffer::putFloat( int index, float value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -554,7 +562,7 @@ ByteArrayBuffer& ByteArrayBuffer::putLong( long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putLong( std::size_t index, long long value )
+ByteArrayBuffer& ByteArrayBuffer::putLong( int index, long long value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -593,7 +601,7 @@ ByteArrayBuffer& ByteArrayBuffer::putInt( int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putInt( std::size_t index, int value )
+ByteArrayBuffer& ByteArrayBuffer::putInt( int index, int value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -632,7 +640,7 @@ ByteArrayBuffer& ByteArrayBuffer::putShort( short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putShort( std::size_t index, short value )
+ByteArrayBuffer& ByteArrayBuffer::putShort( int index, short value )
     throw( lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -659,7 +667,7 @@ ByteArrayBuffer* ByteArrayBuffer::slice() const {
 
     try{
 
-        return new ByteArrayBuffer( *(this->_array),
+        return new ByteArrayBuffer( this->_array,
                                     this->offset + this->position(),
                                     this->remaining(),
                                     this->isReadOnly() );

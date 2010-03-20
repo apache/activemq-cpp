@@ -50,15 +50,15 @@ void CRC32::update( const std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+void CRC32::update( const std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
-    if( offset + length > buffer.size() ) {
+    if( offset + length > (int)buffer.size() ) {
         throw IndexOutOfBoundsException(
             __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
     }
 
-    this->update( &buffer[0], buffer.size(), offset, length );
+    this->update( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ void CRC32::update( int byte ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void CRC32::update( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 

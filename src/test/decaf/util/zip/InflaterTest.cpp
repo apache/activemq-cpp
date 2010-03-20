@@ -619,8 +619,8 @@ void InflaterTest::testSetInputBIII() {
 
     static const std::size_t SIZE = 12;
     unsigned char byteArray[] = { 2, 3, 4, 't', 'y', 'u', 'e', 'w', 7, 6, 5, 9 };
-    std::size_t offSet = 6;
-    std::size_t length = 6;
+    int offSet = 6;
+    int length = 6;
 
     Inflater inflate;
     inflate.setInput( byteArray, SIZE, offSet, length );
@@ -657,8 +657,8 @@ void InflaterTest::testGetBytesRead() {
     def.finish();
     def.deflate( output );
     inf.setInput( output );
-    std::size_t compressedDataLength = inf.inflate( input );
-    CPPUNIT_ASSERT_EQUAL( compressedDataLength, (std::size_t)inf.getBytesWritten() );
+    int compressedDataLength = inf.inflate( input );
+    CPPUNIT_ASSERT_EQUAL( (long long)compressedDataLength, inf.getBytesWritten() );
     CPPUNIT_ASSERT_EQUAL( 16LL, inf.getBytesRead() );
 }
 
@@ -680,9 +680,9 @@ void InflaterTest::testGetBytesWritten() {
     def.finish();
     def.deflate( output );
     inf.setInput( output );
-    std::size_t compressedDataLength = inf.inflate( input );
+    int compressedDataLength = inf.inflate( input );
     CPPUNIT_ASSERT_EQUAL( 16LL, inf.getBytesRead() );
-    CPPUNIT_ASSERT_EQUAL( compressedDataLength, (std::size_t)inf.getBytesWritten() );
+    CPPUNIT_ASSERT_EQUAL( compressedDataLength, (int)inf.getBytesWritten() );
     CPPUNIT_ASSERT_EQUAL( 14LL, inf.getBytesWritten() );
 }
 
@@ -691,7 +691,7 @@ void InflaterTest::testInflate() {
 
     Inflater inf;
     std::vector<unsigned char> empty(0);
-    std::size_t res = inf.inflate( empty );
+    int res = inf.inflate( empty );
 
     CPPUNIT_ASSERT_EQUAL( 0, (int)res );
 
@@ -733,7 +733,7 @@ void InflaterTest::testInflate() {
 ////////////////////////////////////////////////////////////////////////////////
 void InflaterTest::testSetDictionaryB() {
 
-    std::size_t i = 0;
+    int i = 0;
     std::string inputString = "blah string contains blahblahblahblah and blah";
     std::vector<unsigned char> input( inputString.begin(), inputString.end() );
     std::string dictionary1String = "blah";
@@ -760,9 +760,9 @@ void InflaterTest::testSetDictionaryB() {
     defDict1.finish();
     defDict2.finish();
 
-    std::size_t dataLenNo = defDictNo.deflate( outputNo );
-    std::size_t dataLen1 = defDict1.deflate( output1 );
-    std::size_t dataLen2 = defDict2.deflate( output2 );
+    int dataLenNo = defDictNo.deflate( outputNo );
+    int dataLen1 = defDict1.deflate( output1 );
+    int dataLen2 = defDict2.deflate( output2 );
 
     bool passNo1 = false;
     bool passNo2 = false;
@@ -796,7 +796,7 @@ void InflaterTest::testSetDictionaryB() {
     Inflater infl2;
 
     std::vector<unsigned char> result(100);
-    std::size_t decLen;
+    int decLen;
 
     inflNo.setInput( outputNo, 0, dataLenNo );
     decLen = inflNo.inflate( result );
@@ -852,7 +852,7 @@ void InflaterTest::testSetDictionaryB() {
 ////////////////////////////////////////////////////////////////////////////////
 void InflaterTest::testSetDictionaryBIII() {
 
-    std::size_t i = 0;
+    int i = 0;
     std::string inputString = "blah string contains blahblahblahblah and blah";
     std::vector<unsigned char> input( inputString.begin(), inputString.end() );
     std::string dictionary1String = "blah";
@@ -880,9 +880,9 @@ void InflaterTest::testSetDictionaryBIII() {
     defDict2.finish();
     defDict3.finish();
 
-    std::size_t dataLen1 = defDict1.deflate( output1 );
-    std::size_t dataLen2 = defDict2.deflate( output2 );
-    std::size_t dataLen3 = defDict3.deflate( output3 );
+    int dataLen1 = defDict1.deflate( output1 );
+    int dataLen2 = defDict2.deflate( output2 );
+    int dataLen3 = defDict3.deflate( output3 );
 
     bool pass12 = false;
     bool pass23 = false;
@@ -916,7 +916,7 @@ void InflaterTest::testSetDictionaryBIII() {
     Inflater infl3;
 
     std::vector<unsigned char> result(100);
-    std::size_t decLen;
+    int decLen;
 
     infl1.setInput( output1, 0, dataLen1 );
     decLen = infl1.inflate( result );

@@ -29,6 +29,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int ByteArrayBufferTest::testData1Size = 100;
+const int ByteArrayBufferTest::SMALL_TEST_LENGTH = 5;
+const int ByteArrayBufferTest::BUFFER_LENGTH = 250;
+
+////////////////////////////////////////////////////////////////////////////////
 void ByteArrayBufferTest::test() {
 
     // Check that we have setup the array and our initial assumptions on state
@@ -48,12 +53,12 @@ void ByteArrayBufferTest::test() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayBufferTest::testArray() {
 
-    testBuffer1->put( testData1, 0, testData1Size );
+    testBuffer1->put( testData1, testData1Size, 0, testData1Size );
     testBuffer1->position( 0 );
 
     testBuffer1->mark();
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {
         CPPUNIT_ASSERT( testBuffer1->get() == testData1[ix] );
     }
 
@@ -62,7 +67,7 @@ void ByteArrayBufferTest::testArray() {
     unsigned char* array = testBuffer1->array();
     CPPUNIT_ASSERT( array != NULL );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {
         CPPUNIT_ASSERT( array[ix] == testData1[ix] );
     }
 }
@@ -70,7 +75,7 @@ void ByteArrayBufferTest::testArray() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayBufferTest::testArrayOffset() {
 
-    testBuffer1->put( testData1, 0, testData1Size );
+    testBuffer1->put( testData1, testData1Size, 0, testData1Size );
     CPPUNIT_ASSERT( testBuffer1->arrayOffset() == 0 );
     testBuffer1->rewind();
     CPPUNIT_ASSERT( testBuffer1->arrayOffset() == 0 );
@@ -146,7 +151,7 @@ void ByteArrayBufferTest::testCompact() {
     testBuffer1->clear();
     testBuffer1->mark();
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
@@ -156,7 +161,7 @@ void ByteArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix] );
     }
 
@@ -176,7 +181,7 @@ void ByteArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix] );
     }
 
@@ -194,7 +199,7 @@ void ByteArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == SMALL_TEST_LENGTH - 1  );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < SMALL_TEST_LENGTH - 1; ix++ ) {
+    for( int ix = 0; ix < SMALL_TEST_LENGTH - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix + 1] );
     }
 
@@ -214,11 +219,11 @@ void ByteArrayBufferTest::testCompareTo() {
     testBuffer1->clear();
     ByteBuffer* other = ByteBuffer::allocate( testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         other->put( ix, testData1[ix] );
     }
 
@@ -238,7 +243,7 @@ void ByteArrayBufferTest::testCompareTo() {
     unsigned char* data = new unsigned char[21];
     memset( data, 0, 21 );
     ByteBuffer* empty = ByteBuffer::allocate(21);
-    ByteBuffer* wrapped = ByteBuffer::wrap( data, (std::size_t)0, (std::size_t)21 );
+    ByteBuffer* wrapped = ByteBuffer::wrap( data, 21, 0, 21 );
 
     CPPUNIT_ASSERT( wrapped->compareTo( *empty ) == 0 );
 
@@ -255,7 +260,7 @@ void ByteArrayBufferTest::testDuplicate() {
     testBuffer1->mark();
     testBuffer1->position( testBuffer1->limit() );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
@@ -266,7 +271,7 @@ void ByteArrayBufferTest::testDuplicate() {
     CPPUNIT_ASSERT( testBuffer1->limit() == duplicate->limit() );
     CPPUNIT_ASSERT( testBuffer1->isReadOnly() == duplicate->isReadOnly() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == duplicate->get( ix ) );
     }
 
@@ -310,7 +315,7 @@ void ByteArrayBufferTest::testGet() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -328,7 +333,7 @@ void ByteArrayBufferTest::testGetbyteArray() {
     array.resize( 1 );
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         ByteBuffer& ret = testBuffer1->get( array );
@@ -351,26 +356,26 @@ void ByteArrayBufferTest::testGetbyteArray2() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a BufferUnderflowException",
-        testBuffer1->get( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->get( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferUnderflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->get( array, testBuffer1->capacity(), 0 );
+    testBuffer1->get( array, testBuffer1->capacity(), testBuffer1->capacity(), 0 );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->get( NULL, 0, 1 ),
+        testBuffer1->get( NULL, 0, 0, 1 ),
         NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     testBuffer1->clear();
-    ByteBuffer& ret = testBuffer1->get( array, 0, testBuffer1->capacity() );
+    ByteBuffer& ret = testBuffer1->get( array, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == array[ix] );
     }
 
@@ -385,7 +390,7 @@ void ByteArrayBufferTest::testGetWithIndex() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -411,7 +416,7 @@ void ByteArrayBufferTest::testPutbyte() {
     delete readOnly;
 
     testBuffer1->clear();
-    for( size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         ByteBuffer& ret = testBuffer1->put( (unsigned char)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == i );
@@ -439,7 +444,7 @@ void ByteArrayBufferTest::testPutbyteArray() {
     delete readOnly;
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         array[0] = (unsigned char)i;
         ByteBuffer& ret = testBuffer1->put( array );
@@ -460,10 +465,10 @@ void ByteArrayBufferTest::testPutbyteArray2() {
     unsigned char* array = new unsigned char[testBuffer1->capacity()];
     unsigned char* array2 = new unsigned char[testBuffer1->capacity() + 1];
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ){
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ){
         array[ix] = 0;
     }
-    for( std::size_t ix = 0; ix < testBuffer1->capacity()+1; ++ix ){
+    for( int ix = 0; ix < testBuffer1->capacity()+1; ++ix ){
         array2[ix] = 0;
     }
 
@@ -471,33 +476,33 @@ void ByteArrayBufferTest::testPutbyteArray2() {
     readOnly->clear();
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a ReadOnlyBufferException",
-        readOnly->put( array, 0, testBuffer1->capacity() ),
+        readOnly->put( array, testBuffer1->capacity(), 0, testBuffer1->capacity() ),
         ReadOnlyBufferException );
     delete readOnly;
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a BufferOverflowException",
-        testBuffer1->put( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->put( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferOverflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
-    testBuffer1->put( array, testBuffer1->capacity(), 0 );
+    testBuffer1->put( array, testBuffer1->capacity(), testBuffer1->capacity(), 0 );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->put( NULL, 2, Integer::MAX_VALUE ),
+        testBuffer1->put( NULL, 0, 2, Integer::MAX_VALUE ),
         NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
-    ByteBuffer& ret = testBuffer1->put( array, 0, testBuffer1->capacity() );
+    ByteBuffer& ret = testBuffer1->put( array, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == array[ix] );
     }
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -532,7 +537,7 @@ void ByteArrayBufferTest::testPutByteBuffer() {
         BufferOverflowException );
     delete toBig;
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         other->put( ix, testData1[ix] );
     }
     other->clear();
@@ -541,7 +546,7 @@ void ByteArrayBufferTest::testPutByteBuffer() {
     ByteBuffer& ret = testBuffer1->put( *other );
     CPPUNIT_ASSERT( other->position() == other->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == other->get( ix ) );
     }
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -562,7 +567,7 @@ void ByteArrayBufferTest::testPutIndexed() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         ByteBuffer& ret = testBuffer1->put( i, (unsigned char)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == i );
@@ -594,11 +599,11 @@ void ByteArrayBufferTest::testSlice() {
         InvalidMarkException );
 
     // slice share the same content with buf
-    for( std::size_t ix = 0; ix < slice->capacity(); ++ix ){
+    for( int ix = 0; ix < slice->capacity(); ++ix ){
         slice->put( ix, testData1[ix] );
     }
 
-    for( std::size_t ix = 0; ix < slice->capacity(); ix++ ) {
+    for( int ix = 0; ix < slice->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix + 1 ) == slice->get( ix ) );
     }
     testBuffer1->put( 2, 100 );
@@ -621,13 +626,13 @@ void ByteArrayBufferTest::testToString() {
 void ByteArrayBufferTest::testGetChar() {
 
     std::vector<char> chars;
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         testBuffer1->put( i, (char)i);
         chars.push_back( (char)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() != 0; i++ ) {
+    for( int i = 0; testBuffer1->remaining() != 0; i++ ) {
         CPPUNIT_ASSERT( testBuffer1->getChar() == chars[i] );
     }
 
@@ -641,13 +646,13 @@ void ByteArrayBufferTest::testGetChar() {
 void ByteArrayBufferTest::testGetChar2() {
 
     std::vector<char> chars;
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         testBuffer1->put( i, (char)i);
         chars.push_back( (char)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->getChar( i ) == chars[i] );
     }
 
@@ -670,7 +675,7 @@ void ByteArrayBufferTest::testPutChar() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() > 0; i++ ) {
+    for( int i = 0; testBuffer1->remaining() > 0; i++ ) {
 
         testBuffer1->mark();
         testBuffer1->putChar( (char)i );
@@ -697,7 +702,7 @@ void ByteArrayBufferTest::testPutChar2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1->capacity(); i++ ) {
 
         testBuffer1->mark();
@@ -716,14 +721,14 @@ void ByteArrayBufferTest::testPutChar2() {
 void ByteArrayBufferTest::testGetDouble() {
 
     std::vector<double> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( double ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( double ); i++ ) {
         testBuffer1->putDouble( (double)i );
         values.push_back( (double)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0;
-         testBuffer1->remaining() >= sizeof( double ); i++ ) {
+    for( int i = 0;
+         testBuffer1->remaining() >= (int)sizeof( double ); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->getDouble() == values[i] );
     }
@@ -738,7 +743,7 @@ void ByteArrayBufferTest::testGetDouble() {
 void ByteArrayBufferTest::testGetDouble2() {
 
     std::vector<double> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( double ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( double ); i++ ) {
         testBuffer1->putDouble( (double)i );
         values.push_back( (double)i );
     }
@@ -747,7 +752,7 @@ void ByteArrayBufferTest::testGetDouble2() {
     std::size_t i = 0;
     std::size_t j = 0;
 
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( double ); i += sizeof( double ), j++ ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( double ); i += (int)sizeof( double ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getDouble( i ) == values[j] );
     }
 
@@ -770,7 +775,7 @@ void ByteArrayBufferTest::testPutDouble() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() >= sizeof( double );
+    for( int i = 0; testBuffer1->remaining() >= (int)sizeof( double );
          i += sizeof( double ) ) {
 
         testBuffer1->mark();
@@ -800,7 +805,7 @@ void ByteArrayBufferTest::testPutDouble2() {
     testBuffer1->clear();
 
     std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( double ); i += sizeof( double ) ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( double ); i += (int)sizeof( double ) ) {
 
         testBuffer1->mark();
         testBuffer1->putDouble( i, i + 99.99 );
@@ -819,14 +824,14 @@ void ByteArrayBufferTest::testPutDouble2() {
 void ByteArrayBufferTest::testGetFloat() {
 
     std::vector<float> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( float ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( float ); i++ ) {
         testBuffer1->putFloat( (float)i );
         values.push_back( (float)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0;
-         testBuffer1->remaining() >= sizeof( float ); i++ ) {
+    for( int i = 0;
+         testBuffer1->remaining() >= (int)sizeof( float ); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->getFloat() == values[i] );
     }
@@ -841,7 +846,7 @@ void ByteArrayBufferTest::testGetFloat() {
 void ByteArrayBufferTest::testGetFloat2() {
 
     std::vector<float> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( float ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( float ); i++ ) {
         testBuffer1->putFloat( (float)i );
         values.push_back( (float)i );
     }
@@ -850,7 +855,7 @@ void ByteArrayBufferTest::testGetFloat2() {
     std::size_t i = 0;
     std::size_t j = 0;
 
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( float ); i += sizeof( float ), j++ ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( float ); i += (int)sizeof( float ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getFloat( i ) == values[j] );
     }
 
@@ -873,7 +878,7 @@ void ByteArrayBufferTest::testPutFloat() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() >= sizeof( float );
+    for( int i = 0; testBuffer1->remaining() >= (int)sizeof( float );
          i += sizeof( float ) ) {
 
         testBuffer1->mark();
@@ -903,7 +908,7 @@ void ByteArrayBufferTest::testPutFloat2() {
     testBuffer1->clear();
 
     std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( float ); i += sizeof( float ) ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( float ); i += sizeof( float ) ) {
 
         testBuffer1->mark();
         testBuffer1->putFloat( i, i + 99.99f );
@@ -922,14 +927,14 @@ void ByteArrayBufferTest::testPutFloat2() {
 void ByteArrayBufferTest::testGetLong() {
 
     std::vector<long long> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( long long ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( long long ); i++ ) {
         testBuffer1->putLong( (long long)i );
         values.push_back( (long long)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0;
-         testBuffer1->remaining() >= sizeof( long long ); i++ ) {
+    for( int i = 0;
+         testBuffer1->remaining() >= (int)sizeof( long long ); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->getLong() == values[i] );
     }
@@ -944,7 +949,7 @@ void ByteArrayBufferTest::testGetLong() {
 void ByteArrayBufferTest::testGetLong2() {
 
     std::vector<long long> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( long long ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( long long ); i++ ) {
         testBuffer1->putLong( (long long)i );
         values.push_back( (long long)i );
     }
@@ -953,7 +958,7 @@ void ByteArrayBufferTest::testGetLong2() {
     std::size_t i = 0;
     std::size_t j = 0;
 
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( long long ); i += sizeof( long long ), j++ ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( long long ); i += (int)sizeof( long long ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getLong( i ) == values[j] );
     }
 
@@ -976,7 +981,7 @@ void ByteArrayBufferTest::testPutLong() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() >= sizeof( long long );
+    for( int i = 0; testBuffer1->remaining() >= (int)sizeof( long long );
          i += sizeof( long long ) ) {
 
         testBuffer1->mark();
@@ -1005,7 +1010,7 @@ void ByteArrayBufferTest::testPutLong2() {
     testBuffer1->clear();
 
     std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( long long ); i += sizeof( long long ) ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( long long ); i += (int)sizeof( long long ) ) {
 
         testBuffer1->mark();
         testBuffer1->putLong( i, i + 99 );
@@ -1023,14 +1028,14 @@ void ByteArrayBufferTest::testPutLong2() {
 void ByteArrayBufferTest::testGetInt() {
 
     std::vector<int> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( int ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( int ); i++ ) {
         testBuffer1->putInt( (int)i );
         values.push_back( (int)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0;
-         testBuffer1->remaining() >= sizeof( int ); i++ ) {
+    for( int i = 0;
+         testBuffer1->remaining() >= (int)sizeof( int ); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->getInt() == values[i] );
     }
@@ -1045,7 +1050,7 @@ void ByteArrayBufferTest::testGetInt() {
 void ByteArrayBufferTest::testGetInt2() {
 
     std::vector<int> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( int ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( int ); i++ ) {
         testBuffer1->putInt( (int)i );
         values.push_back( (int)i );
     }
@@ -1054,7 +1059,7 @@ void ByteArrayBufferTest::testGetInt2() {
     std::size_t i = 0;
     std::size_t j = 0;
 
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( int ); i += sizeof( int ), j++ ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( int ); i += (int)sizeof( int ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getInt( i ) == values[j] );
     }
 
@@ -1077,7 +1082,7 @@ void ByteArrayBufferTest::testPutInt() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() >= sizeof( int );
+    for( int i = 0; testBuffer1->remaining() >= (int)sizeof( int );
          i += sizeof( int ) ) {
 
         testBuffer1->mark();
@@ -1106,7 +1111,7 @@ void ByteArrayBufferTest::testPutInt2() {
     testBuffer1->clear();
 
     std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( int ); i += sizeof( int ) ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( int ); i += sizeof( int ) ) {
 
         testBuffer1->mark();
         testBuffer1->putInt( i, (int)i + 99 );
@@ -1124,14 +1129,14 @@ void ByteArrayBufferTest::testPutInt2() {
 void ByteArrayBufferTest::testGetShort() {
 
     std::vector<short> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( short ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( short ); i++ ) {
         testBuffer1->putShort( (short)i );
         values.push_back( (short)i );
     }
     testBuffer1->clear();
 
-    for( std::size_t i = 0;
-         testBuffer1->remaining() >= sizeof( short ); i++ ) {
+    for( int i = 0;
+         testBuffer1->remaining() >= (int)sizeof( short ); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->getShort() == values[i] );
     }
@@ -1146,7 +1151,7 @@ void ByteArrayBufferTest::testGetShort() {
 void ByteArrayBufferTest::testGetShort2() {
 
     std::vector<short> values;
-    for( std::size_t i = 0; i < testBuffer1->capacity() / sizeof( short ); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity() / (int)sizeof( short ); i++ ) {
         testBuffer1->putShort( (short)i );
         values.push_back( (short)i );
     }
@@ -1155,7 +1160,7 @@ void ByteArrayBufferTest::testGetShort2() {
     std::size_t i = 0;
     std::size_t j = 0;
 
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( short ); i += sizeof( short ), j++ ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( short ); i += (int)sizeof( short ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getShort( i ) == values[j] );
     }
 
@@ -1178,7 +1183,7 @@ void ByteArrayBufferTest::testPutShort() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; testBuffer1->remaining() >= sizeof( short );
+    for( int i = 0; testBuffer1->remaining() >= (int)sizeof( short );
          i += sizeof( short ) ) {
 
         testBuffer1->mark();
@@ -1207,7 +1212,7 @@ void ByteArrayBufferTest::testPutShort2() {
     testBuffer1->clear();
 
     std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= sizeof( short ); i += sizeof( short ) ) {
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( short ); i += (int)sizeof( short ) ) {
 
         testBuffer1->mark();
         testBuffer1->putShort( i, (short)(i + 99) );
@@ -1226,6 +1231,6 @@ void ByteArrayBufferTest::testWrapNullArray() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->wrap( NULL, 0, 3 ),
+        testBuffer1->wrap( NULL, 0, 0, 3 ),
         NullPointerException );
 }

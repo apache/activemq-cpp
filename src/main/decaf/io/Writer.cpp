@@ -48,7 +48,7 @@ void Writer::write( const std::vector<char>& buffer ) throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::write( const char* buffer, std::size_t size )
+void Writer::write( const char* buffer, int size )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException ) {
 
@@ -61,7 +61,7 @@ void Writer::write( const char* buffer, std::size_t size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::write( const char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void Writer::write( const char* buffer, int size, int offset, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -86,12 +86,12 @@ void Writer::write( const std::string& str ) throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::write( const std::string& str, std::size_t offset, std::size_t length )
+void Writer::write( const std::string& str, int offset, int length )
     throw( IOException, IndexOutOfBoundsException ) {
 
     try {
 
-        if( ( offset + length ) > str.length() ) {
+        if( ( offset + length ) > (int)str.length() ) {
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__, "Given Offset + Length value greater than the String length." );
         }
@@ -125,7 +125,7 @@ Appendable& Writer::append( const decaf::lang::CharSequence* csq )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Appendable& Writer::append( const decaf::lang::CharSequence* csq, std::size_t start, std::size_t end )
+Appendable& Writer::append( const decaf::lang::CharSequence* csq, int start, int end )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
@@ -159,7 +159,7 @@ void Writer::doWriteVector( const std::vector<char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::doWriteArray( const char* buffer, std::size_t size )
+void Writer::doWriteArray( const char* buffer, int size )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException ) {
 
@@ -182,7 +182,7 @@ void Writer::doWriteString( const std::string& str ) throw( decaf::io::IOExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Writer::doWriteStringBounded( const std::string& str, std::size_t offset, std::size_t length )
+void Writer::doWriteStringBounded( const std::string& str, int offset, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
@@ -225,7 +225,7 @@ decaf::lang::Appendable& Writer::doAppendCharSequence( const decaf::lang::CharSe
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Appendable& Writer::doAppendCharSequenceStartEnd( const decaf::lang::CharSequence* csq,
-                                                               std::size_t start, std::size_t end )
+                                                               int start, int end )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 

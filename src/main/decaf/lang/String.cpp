@@ -74,7 +74,7 @@ String::~String() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t String::length() const {
+int String::length() const {
     return this->contents->offset + this->contents->length;
 }
 
@@ -84,14 +84,14 @@ bool String::isEmpty() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char String::charAt( std::size_t index ) const
+char String::charAt( int index ) const
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
-        if( index >= this->length() ) {
+        if( index < 0 || index >= this->length() ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Index given exceeds length of this String." );
+                __FILE__, __LINE__, "Index given is out of bounds: %d.", index );
         }
 
         return this->contents->value[this->contents->offset + index];
@@ -101,7 +101,7 @@ char String::charAt( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharSequence* String::subSequence( std::size_t start DECAF_UNUSED, std::size_t end DECAF_UNUSED ) const
+CharSequence* String::subSequence( int start DECAF_UNUSED, int end DECAF_UNUSED ) const
     throw( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{

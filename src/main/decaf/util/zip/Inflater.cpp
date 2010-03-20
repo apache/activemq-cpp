@@ -150,7 +150,7 @@ Inflater::~Inflater() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setInput( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void Inflater::setInput( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
@@ -182,7 +182,7 @@ void Inflater::setInput( const unsigned char* buffer, std::size_t size, std::siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setInput( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+void Inflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException ) {
 
@@ -205,7 +205,7 @@ void Inflater::setInput( const std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Inflater::getRemaining() const {
+int Inflater::getRemaining() const {
 
     if( this->data->stream != NULL ) {
         return this->data->stream->avail_in;
@@ -215,7 +215,7 @@ std::size_t Inflater::getRemaining() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setDictionary( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+void Inflater::setDictionary( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalArgumentException,
@@ -257,7 +257,7 @@ void Inflater::setDictionary( const unsigned char* buffer, std::size_t size, std
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setDictionary( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+void Inflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException,
            decaf::lang::exceptions::IllegalArgumentException ) {
@@ -307,7 +307,7 @@ bool Inflater::finished() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Inflater::inflate( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int Inflater::inflate( unsigned char* buffer, int size, int offset, int length )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException,
@@ -325,12 +325,22 @@ std::size_t Inflater::inflate( unsigned char* buffer, std::size_t size, std::siz
                 __FILE__, __LINE__, "The Inflater end method has already been called." );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "The offset + length given is greater than the specified buffer size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        std::size_t outStart = this->data->stream->total_out;
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
         this->data->stream->avail_out = (uInt)length;
@@ -363,7 +373,7 @@ std::size_t Inflater::inflate( unsigned char* buffer, std::size_t size, std::siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Inflater::inflate( std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+int Inflater::inflate( std::vector<unsigned char>& buffer, int offset, int length )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::IllegalStateException,
            decaf::util::zip::DataFormatException ) {
@@ -376,7 +386,7 @@ std::size_t Inflater::inflate( std::vector<unsigned char>& buffer, std::size_t o
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Inflater::inflate( std::vector<unsigned char>& buffer )
+int Inflater::inflate( std::vector<unsigned char>& buffer )
     throw( decaf::lang::exceptions::IllegalStateException,
            decaf::util::zip::DataFormatException ){
 

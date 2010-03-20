@@ -130,7 +130,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual std::size_t available() const throw ( decaf::io::IOException ) {
+        virtual int available() const throw ( decaf::io::IOException ) {
             return 0;
         }
 
@@ -177,7 +177,7 @@ namespace io{
          * @throws IOException if an I/O error occurs.
          * @throws NullPointerException if buffer passed is NULL.
          */
-        virtual int read( unsigned char* buffer, std::size_t size )
+        virtual int read( unsigned char* buffer, int size )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException );
 
@@ -226,8 +226,7 @@ namespace io{
          * @throws NullPointerException if buffer passed is NULL.
          * @throws IndexOutOfBoundsException if length > size - offset.
          */
-        virtual int read( unsigned char* buffer, std::size_t size,
-                          std::size_t offset, std::size_t length )
+        virtual int read( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );
@@ -245,7 +244,7 @@ namespace io{
          * implementation of this method.
          *
          * @param num
-         *       The number of bytes to skip
+         *       The number of bytes to skip.
          *
          * @returns total bytes skipped
          *
@@ -253,7 +252,7 @@ namespace io{
          * @throws UnsupportedOperationException if the concrete stream class does
          *         not support skipping bytes.
          */
-        virtual std::size_t skip( std::size_t num )
+        virtual long long skip( long long num )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -270,12 +269,12 @@ namespace io{
 
         virtual int doReadByte() throw( decaf::io::IOException ) = 0;
 
-        virtual int doReadArray( unsigned char* buffer, std::size_t size )
+        virtual int doReadArray( unsigned char* buffer, int size )
             throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

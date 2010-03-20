@@ -94,7 +94,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        void setInput( const unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
@@ -113,7 +113,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        void setInput( const std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalStateException );
 
@@ -135,7 +135,7 @@ namespace zip {
          *
          * @returns the total number of bytes remaining in the input buffer
          */
-        std::size_t getRemaining() const;
+        int getRemaining() const;
 
         /**
          * Sets the preset dictionary to the given array of bytes. Should be called when inflate()
@@ -158,7 +158,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        void setDictionary( const unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalArgumentException,
@@ -182,7 +182,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        void setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::IllegalArgumentException,
                    decaf::lang::exceptions::IllegalStateException );
@@ -246,7 +246,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        std::size_t inflate( unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        int inflate( unsigned char* buffer, int size, int offset, int length )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalStateException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
@@ -269,7 +269,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        std::size_t inflate( std::vector<unsigned char>& buffer, std::size_t offset, std::size_t length )
+        int inflate( std::vector<unsigned char>& buffer, int offset, int length )
             throw( decaf::lang::exceptions::IllegalStateException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::util::zip::DataFormatException );
@@ -286,7 +286,7 @@ namespace zip {
          * @throws IllegalStateException if in the end state.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        std::size_t inflate( std::vector<unsigned char>& buffer )
+        int inflate( std::vector<unsigned char>& buffer )
             throw( decaf::lang::exceptions::IllegalStateException,
                    decaf::util::zip::DataFormatException );
 

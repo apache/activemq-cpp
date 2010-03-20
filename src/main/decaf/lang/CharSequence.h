@@ -41,16 +41,16 @@ namespace lang{
         /**
          * @returns the length of the underlying character sequence.
          */
-        virtual std::size_t length() const = 0;
+        virtual int length() const = 0;
 
         /**
          * Returns the Char at the specified index so long as the index is not
          * greater than the length of the sequence.
          * @param index - position to return the char at.
          * @returns the char at the given position
-         * @throws IndexOutOfBoundsException if index is > than length()
+         * @throws IndexOutOfBoundsException if index is > than length() or negative
          */
-        virtual char charAt( std::size_t index ) const
+        virtual char charAt( int index ) const
             throw( lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
@@ -61,9 +61,9 @@ namespace lang{
          * @param start - the start index, inclusive
          * @param end - the end index, exclusive
          * @returns a new CharSequence
-         * @throws IndexOutOfBoundsException if start or end > length()
+         * @throws IndexOutOfBoundsException if start or end > length() or start or end are negative.
          */
-        virtual CharSequence* subSequence( std::size_t start, std::size_t end ) const
+        virtual CharSequence* subSequence( int start, int end ) const
             throw( lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**

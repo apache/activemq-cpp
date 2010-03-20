@@ -71,7 +71,6 @@ cc_sources = \
     decaf/internal/net/URIHelperTest.cpp \
     decaf/internal/nio/BufferFactoryTest.cpp \
     decaf/internal/nio/ByteArrayBufferTest.cpp \
-    decaf/internal/nio/ByteArrayPerspectiveTest.cpp \
     decaf/internal/nio/CharArrayBufferTest.cpp \
     decaf/internal/nio/DoubleArrayBufferTest.cpp \
     decaf/internal/nio/FloatArrayBufferTest.cpp \
@@ -218,7 +217,6 @@ h_sources = \
     decaf/internal/net/URIHelperTest.h \
     decaf/internal/nio/BufferFactoryTest.h \
     decaf/internal/nio/ByteArrayBufferTest.h \
-    decaf/internal/nio/ByteArrayPerspectiveTest.h \
     decaf/internal/nio/CharArrayBufferTest.h \
     decaf/internal/nio/DoubleArrayBufferTest.h \
     decaf/internal/nio/FloatArrayBufferTest.h \

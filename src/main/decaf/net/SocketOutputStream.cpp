@@ -61,8 +61,7 @@ void SocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                              std::size_t offset, std::size_t length )
+void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -85,10 +84,19 @@ void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::
                 "SocketOutputStream::write - This Stream has been closed." );
         }
 
-        if( ( offset + length ) > size ) {
-            throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "SocketOutputStream::write - given offset + length is greater than buffer size.");
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         apr_size_t remaining = (apr_size_t)length;

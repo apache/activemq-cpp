@@ -40,13 +40,13 @@ void ByteArrayInputStreamTest::testConstructor() {
     testBuffer.push_back('s');
     testBuffer.push_back('t');
 
-    ByteArrayInputStream stream_a( &testBuffer[0], testBuffer.size());
+    ByteArrayInputStream stream_a( &testBuffer[0], (int)testBuffer.size());
     ByteArrayInputStream stream_b( testBuffer );
 
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
-                            stream_a.available() == testBuffer.size() );
+                            stream_a.available() == (int)testBuffer.size() );
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
-                            stream_b.available() == testBuffer.size() );
+                            stream_b.available() == (int)testBuffer.size() );
 
     ByteArrayInputStream nullStream;
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -89,7 +89,7 @@ void ByteArrayInputStreamTest::testAvailable() {
 
     // Test for method int ByteArrayInputStream.available()
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect number of available bytes",
-                            bis.available() == ( testBuffer.size() - 10 ) );
+                            bis.available() == ( (int)testBuffer.size() - 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

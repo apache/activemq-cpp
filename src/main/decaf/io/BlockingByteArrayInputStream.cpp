@@ -32,8 +32,7 @@ BlockingByteArrayInputStream::BlockingByteArrayInputStream(){
 
 ////////////////////////////////////////////////////////////////////////////////
 BlockingByteArrayInputStream::BlockingByteArrayInputStream(
-    const unsigned char* buffer,
-    std::size_t bufferSize ){
+    const unsigned char* buffer, int bufferSize ){
 
     closing = false;
     setByteArray( buffer, bufferSize );
@@ -44,8 +43,8 @@ BlockingByteArrayInputStream::~BlockingByteArrayInputStream(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
-                                                 std::size_t lbufferSize ){
+void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer, int lbufferSize ){
+
     synchronized( this ){
 
         // Remove old data
@@ -64,8 +63,8 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BlockingByteArrayInputStream::available() const throw ( decaf::io::IOException ){
-    return std::distance( pos, buffer.end() );
+int BlockingByteArrayInputStream::available() const throw ( decaf::io::IOException ){
+    return (int)std::distance( pos, buffer.end() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,8 +110,7 @@ int BlockingByteArrayInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                                      std::size_t offset, std::size_t length )
+int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -127,17 +125,26 @@ int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std
             "BlockingByteArrayInputStream::read - Passed buffer is Null" );
     }
 
-    if( length > size - offset ) {
+    if( size < 0 ) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    }
+
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
     }
 
     try {
 
         synchronized( this ){
 
-            std::size_t ix = 0;
+            int ix = 0;
 
             for( ; ix < length && !closing; ++ix ) {
 
@@ -170,10 +177,10 @@ int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, std
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BlockingByteArrayInputStream::skip( std::size_t num )
+long long BlockingByteArrayInputStream::skip( long long num )
     throw ( io::IOException, lang::exceptions::UnsupportedOperationException ){
 
-    std::size_t ix = 0;
+    long long ix = 0;
 
     synchronized( this ){
 

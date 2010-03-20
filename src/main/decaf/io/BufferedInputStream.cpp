@@ -35,15 +35,15 @@ namespace io{
     private:
 
         unsigned char* buffer;
-        std::size_t bufferSize;
-        std::size_t pos;
-        std::size_t count;
-        std::size_t markLimit;
-        long long markPos;
+        int bufferSize;
+        int pos;
+        int count;
+        int markLimit;
+        int markPos;
 
     public:
 
-        StreamBuffer( std::size_t bufferSize ) {
+        StreamBuffer( int bufferSize ) {
 
             this->buffer = new unsigned char[bufferSize];
             this->bufferSize = bufferSize;
@@ -57,7 +57,7 @@ namespace io{
             delete [] this->buffer;
         }
 
-        void resize( std::size_t newSize ) {
+        void resize( int newSize ) {
             unsigned char* temp = new unsigned char[newSize];
             System::arraycopy( temp, 0, buffer, 0, count );
             std::swap( temp, buffer );
@@ -65,11 +65,11 @@ namespace io{
             this->bufferSize = newSize;
         }
 
-        std::size_t getUnusedBytes() const{
+        int getUnusedBytes() const{
             return bufferSize - count;
         }
 
-        std::size_t available() const {
+        int available() const {
             return this->count - this->pos;
         }
 
@@ -77,19 +77,19 @@ namespace io{
             return this->buffer[this->pos++];
         }
 
-        void advance( std::size_t amount ) {
+        void advance( int amount ) {
             this->pos += amount;
         }
 
-        void reverse( std::size_t amount ) {
+        void reverse( int amount ) {
             this->pos -= amount;
         }
 
-        void advanceTail( std::size_t amount ) {
+        void advanceTail( int amount ) {
             this->count += amount;
         }
 
-        std::size_t getBufferSize() {
+        int getBufferSize() {
             return this->bufferSize;
         }
 
@@ -97,19 +97,19 @@ namespace io{
             return this->buffer;
         }
 
-        std::size_t getCount() const{
+        int getCount() const{
             return count;
         }
 
-        void setCount( std::size_t count ) {
+        void setCount( int count ) {
             this->count = count;
         }
 
-        std::size_t getPos() const{
+        int getPos() const{
             return pos;
         }
 
-        void setPos( std::size_t pos ) {
+        void setPos( int pos ) {
             this->pos = pos;
         }
 
@@ -126,7 +126,7 @@ namespace io{
         }
 
         void reset() {
-            this->pos = (std::size_t)this->markPos;
+            this->pos = this->markPos;
         }
 
         void normalizeBuffer() {
@@ -149,15 +149,15 @@ namespace io{
             return pos - markPos >= markLimit;
         }
 
-        std::size_t getMarkPos() const {
-            return (std::size_t)this->markPos;
+        int getMarkPos() const {
+            return this->markPos;
         }
 
-        void setMarkPos( std::size_t markPos ) {
+        void setMarkPos( int markPos ) {
             this->markPos = markPos;
         }
 
-        std::size_t getMarkLimit() const {
+        int getMarkLimit() const {
             return this->markLimit;
         }
     };
@@ -173,13 +173,12 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedInputStream::BufferedInputStream( InputStream* stream, std::size_t bufferSize, bool own )
+BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, bool own )
     throw ( lang::exceptions::IllegalArgumentException ) : FilterInputStream( stream, own ) {
 
-    if( bufferSize == 0 ) {
+    if( bufferSize < 0 ) {
         throw new IllegalArgumentException(
-            __FILE__, __LINE__,
-            "BufferedInputStream::init - Size must be greater than zero");
+            __FILE__, __LINE__, "Size must be greater than zero");
     }
 
     this->buffer.reset( new StreamBuffer( bufferSize ) );
@@ -202,11 +201,11 @@ void BufferedInputStream::close() throw( IOException ) {
 
     // Free the class reference, read operation may still be
     // holding onto the buffer while blocked.
-    this->buffer.release();
+    this->buffer.reset( NULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BufferedInputStream::available() const throw ( IOException ) {
+int BufferedInputStream::available() const throw ( IOException ) {
 
     if( buffer == NULL || this->isClosed() ) {
         throw IOException(
@@ -280,8 +279,8 @@ int BufferedInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                             std::size_t offset, std::size_t length )
+int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                             int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -302,10 +301,19 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                 "Buffer passed was NULL." );
         }
 
-        if( offset + length > size ) {
+        if( offset > size || offset < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Buffer pointer passed was NULL." );
         }
 
         // For zero, do nothing
@@ -321,14 +329,14 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                 __FILE__, __LINE__, "Stream is closed" );
         }
 
-        std::size_t required = 0;
+        int required = 0;
 
         // There are bytes available in the buffer so use them up first and
         // then we check to see if any are available on the stream, if not
         // then just return what we had.
         if( !streamBuffer->isEmpty() ) {
 
-            std::size_t copylength =
+            int copylength =
                 streamBuffer->available() >= length ? length : streamBuffer->available();
 
             System::arraycopy( streamBuffer->getBuffer(), streamBuffer->getPos(),
@@ -397,7 +405,7 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BufferedInputStream::skip( std::size_t amount )
+long long BufferedInputStream::skip( long long amount )
     throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     try{
@@ -421,7 +429,7 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
             return amount;
         }
 
-        int read = (int)streamBuffer->available();
+        int read = streamBuffer->available();
 
         streamBuffer->advance( streamBuffer->getCount() );
 
@@ -439,7 +447,7 @@ std::size_t BufferedInputStream::skip( std::size_t amount )
                 }
 
                 // Couldn't get all the bytes, skip what we read
-                read += (int)streamBuffer->available();
+                read += streamBuffer->available();
                 streamBuffer->advance( streamBuffer->getCount() );
 
                 return read;
@@ -470,13 +478,13 @@ int BufferedInputStream::bufferData( InputStream* inputStream, Pointer<StreamBuf
             return result;
         }
 
-        std::size_t markPos = buffer->getMarkPos();
-        std::size_t markLimit = buffer->getMarkLimit();
+        int markPos = buffer->getMarkPos();
+        int markLimit = buffer->getMarkLimit();
 
         if( markPos == 0 && markLimit > buffer->getBufferSize() ) {
 
             // Increase buffer size to accommodate the readlimit.
-            std::size_t newLength = buffer->getBufferSize() * 2;
+            int newLength = buffer->getBufferSize() * 2;
             if( newLength > markLimit ) {
                 newLength = markLimit;
             }

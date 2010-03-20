@@ -26,54 +26,72 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( std::size_t capacity, bool readOnly )
-    : LongBuffer( capacity ){
+LongArrayBuffer::LongArrayBuffer( int size, bool readOnly )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : LongBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
-    this->_array = new ByteArrayPerspective( capacity * sizeof(long long) );
+    this->_array.reset( new ByteArrayAdapter( size * sizeof(long long) ) );
     this->offset = 0;
+    this->length = size;
     this->readOnly = readOnly;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( long long* array, std::size_t offset,
-                                      std::size_t capacity, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException ) : LongBuffer( capacity ) {
+LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
 
     try{
 
+        if( offset < 0 || offset > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = new ByteArrayPerspective( array, capacity, false );
+        this->_array.reset( new ByteArrayAdapter( array, size, false ) );
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( ByteArrayPerspective& array,
-                                      std::size_t offset, std::size_t capacity,
-                                      bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException )
-    : LongBuffer( capacity ) {
+LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array,
+                                  int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
 
     try{
-        if( offset > array.getCapacity() ) {
+
+        if( offset < 0 || offset > array->getCapacity() ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "LongArrayBuffer::LongArrayBuffer - offset %d is greater than capacity %d",
-                offset, array.getCapacity() );
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
 
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = array.takeRef();
+        this->_array = array;
         this->offset = offset;
+        this->length = length;
         this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
@@ -83,8 +101,9 @@ LongArrayBuffer::LongArrayBuffer( const LongArrayBuffer& other )
     : LongBuffer( other ) {
 
     // get the byte buffer of the caller and take a reference
-    this->_array = other._array->takeRef();
+    this->_array = other._array;
     this->offset = other.offset;
+    this->length = other.length;
     this->readOnly = other.readOnly;
 }
 
@@ -92,16 +111,6 @@ LongArrayBuffer::LongArrayBuffer( const LongArrayBuffer& other )
 LongArrayBuffer::~LongArrayBuffer() {
 
     try{
-
-        // Return this object's reference to the buffer.
-        this->_array->returnRef();
-
-        // If there are no other Buffers out there that reference it then we
-        // delete it now, the internal unsigned char* array will be deleted
-        // if we where the owner.
-        if( this->_array->getReferences() == 0 ) {
-            delete this->_array;
-        }
     }
     DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
@@ -135,7 +144,7 @@ long long* LongArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::size_t LongArrayBuffer::arrayOffset()
+int LongArrayBuffer::arrayOffset()
     throw( decaf::lang::exceptions::UnsupportedOperationException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -188,7 +197,7 @@ LongBuffer& LongArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferExceptio
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+        for( int ix = 0; ix < this->remaining(); ++ix ) {
             this->put( ix, this->get( this->position() + ix ) );
         }
 
@@ -225,7 +234,7 @@ long long LongArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long LongArrayBuffer::get( std::size_t index ) const
+long long LongArrayBuffer::get( int index ) const
     throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
@@ -259,7 +268,7 @@ LongBuffer& LongArrayBuffer::put( long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::put( std::size_t index, long long value )
+LongBuffer& LongArrayBuffer::put( int index, long long value )
     throw( decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::nio::ReadOnlyBufferException ) {
 
@@ -292,10 +301,10 @@ LongBuffer* LongArrayBuffer::slice() const {
 
     try{
 
-        return new LongArrayBuffer( *(this->_array),
-                                     this->offset + this->position(),
-                                     this->remaining(),
-                                     this->isReadOnly() );
+        return new LongArrayBuffer( this->_array,
+                                    this->offset + this->position(),
+                                    this->remaining(),
+                                    this->isReadOnly() );
     }
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )

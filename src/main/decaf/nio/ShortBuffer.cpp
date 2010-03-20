@@ -29,16 +29,16 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer::ShortBuffer( std::size_t capacity )
- :  Buffer( capacity ) {
+ShortBuffer::ShortBuffer( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* ShortBuffer::allocate( std::size_t capacity ) {
+ShortBuffer* ShortBuffer::allocate( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
-
         return BufferFactory::createShortBuffer( capacity );
     }
     DECAF_CATCH_RETHROW( Exception )
@@ -46,8 +46,9 @@ ShortBuffer* ShortBuffer::allocate( std::size_t capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* ShortBuffer::wrap( short* buffer, std::size_t offset, std::size_t length )
-    throw( lang::exceptions::NullPointerException ) {
+ShortBuffer* ShortBuffer::wrap( short* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -57,7 +58,7 @@ ShortBuffer* ShortBuffer::wrap( short* buffer, std::size_t offset, std::size_t l
                 "ShortBuffer::wrap - Passed Buffer is Null.");
         }
 
-        return BufferFactory::createShortBuffer( buffer, offset, length );
+        return BufferFactory::createShortBuffer( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -75,7 +76,7 @@ ShortBuffer* ShortBuffer::wrap( std::vector<short>& buffer ) {
                 "ShortBuffer::wrap - Passed Buffer is Empty.");
         }
 
-        return BufferFactory::createShortBuffer( &buffer[0], 0, buffer.size() );
+        return BufferFactory::createShortBuffer( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -102,7 +103,7 @@ ShortBuffer& ShortBuffer::get( std::vector<short> buffer )
     try{
 
         if( !buffer.empty() ) {
-            this->get( &buffer[0], 0, buffer.size() );
+            this->get( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
         return *this;
     }
@@ -112,9 +113,10 @@ ShortBuffer& ShortBuffer::get( std::vector<short> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::get( short* buffer, std::size_t offset, std::size_t length )
+ShortBuffer& ShortBuffer::get( short* buffer, int size, int offset, int length )
     throw( BufferUnderflowException,
-           lang::exceptions::NullPointerException ) {
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -128,19 +130,26 @@ ShortBuffer& ShortBuffer::get( short* buffer, std::size_t offset, std::size_t le
                 "ShortBuffer::get - Passed Buffer is Null" );
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > remaining() ) {
             throw BufferUnderflowException(
                 __FILE__, __LINE__,
                 "ShortBuffer::get - Not enough data to fill length = %d", length );
         }
 
-        for( std::size_t ix = 0; ix < length; ++ix ){
+        for( int ix = 0; ix < length; ++ix ){
             buffer[offset + ix] = this->get();
         }
 
         return *this;
     }
     DECAF_CATCH_RETHROW( BufferUnderflowException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferUnderflowException )
     DECAF_CATCHALL_THROW( BufferUnderflowException )
 }
@@ -184,9 +193,10 @@ ShortBuffer& ShortBuffer::put( ShortBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::put( const short* buffer, std::size_t offset, std::size_t length )
+ShortBuffer& ShortBuffer::put( const short* buffer, int size, int offset, int length )
     throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::NullPointerException ) {
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -206,6 +216,11 @@ ShortBuffer& ShortBuffer::put( const short* buffer, std::size_t offset, std::siz
                 "ShortBuffer::put - Passed Buffer is Null.");
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > this->remaining() ) {
             throw BufferOverflowException(
                 __FILE__, __LINE__,
@@ -213,7 +228,7 @@ ShortBuffer& ShortBuffer::put( const short* buffer, std::size_t offset, std::siz
         }
 
         // read length bytes starting from the offset
-        for( std::size_t ix = 0; ix < length; ++ix ) {
+        for( int ix = 0; ix < length; ++ix ) {
             this->put( buffer[ix + offset] );
         }
 
@@ -222,6 +237,7 @@ ShortBuffer& ShortBuffer::put( const short* buffer, std::size_t offset, std::siz
     DECAF_CATCH_RETHROW( BufferOverflowException )
     DECAF_CATCH_RETHROW( ReadOnlyBufferException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferOverflowException )
     DECAF_CATCHALL_THROW( BufferOverflowException )
 }
@@ -233,7 +249,7 @@ ShortBuffer& ShortBuffer::put( std::vector<short>& buffer )
     try{
 
         if( !buffer.empty() ) {
-            this->put( &buffer[0], 0, buffer.size() );
+            this->put( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
 
         return *this;
@@ -249,8 +265,8 @@ int ShortBuffer::compareTo( const ShortBuffer& value ) const {
 
     int compareRemaining = Math::min( (int)remaining(), (int)value.remaining() );
 
-    std::size_t thisPos = this->position();
-    std::size_t otherPos = value.position();
+    int thisPos = this->position();
+    int otherPos = value.position();
     short thisVal, otherVal;
 
     while( compareRemaining > 0 ) {
@@ -281,8 +297,8 @@ bool ShortBuffer::equals( const ShortBuffer& value ) const {
         return false;
     }
 
-    std::size_t myPosition = this->position();
-    std::size_t otherPosition = value.position();
+    int myPosition = this->position();
+    int otherPosition = value.position();
     bool equalSoFar = true;
 
     while( equalSoFar && ( myPosition < this->limit() ) ) {

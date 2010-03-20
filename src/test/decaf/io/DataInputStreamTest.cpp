@@ -58,7 +58,7 @@ void DataInputStreamTest::testRead1() {
     try {
 
         std::vector<unsigned char> test( testData.begin(), testData.end() );
-        os->write( test );
+        os->write( &test[0], (int)test.size() );
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result;
@@ -75,7 +75,9 @@ void DataInputStreamTest::testRead1() {
 void DataInputStreamTest::testRead2() {
     try {
 
-        os->write( std::vector<unsigned char>( testData.begin(), testData.end() ) );
+        std::vector<unsigned char> temp( testData.begin(), testData.end() );
+
+        os->write( &temp[0], (int)temp.size() );
         os->close();
         openDataInputStream();
         unsigned char* result = new unsigned char[ testData.length() ];
@@ -152,54 +154,85 @@ void DataInputStreamTest::test_readFloat() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamTest::test_readFully1() {
-    try {
-        os->write( std::vector<unsigned char>( testData.begin(), testData.end() ) );
-        os->close();
-        openDataInputStream();
-        std::vector<unsigned char> result;
-        result.resize( testData.length() );
-        is->readFully( &result[0], testData.length() );
 
-        string expected = "";
-        for( size_t ix = 0; ix < result.size(); ++ix ) {
-            expected += (char)result[ix];
-        }
+    std::vector<unsigned char> temp( testData.begin(), testData.end() );
+    os->write( &temp[0], temp.size() );
+    os->close();
+    openDataInputStream();
+    std::vector<unsigned char> result;
+    result.resize( testData.length() );
+    is->readFully( &result[0], testData.length() );
 
-        CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
-
-    } catch( IOException &e ) {
-        CPPUNIT_FAIL("IOException during readFully test : " + e.getMessage());
+    string expected = "";
+    for( size_t ix = 0; ix < result.size(); ++ix ) {
+        expected += (char)result[ix];
     }
+
+    CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &result[0], -1 ),
+        IndexOutOfBoundsException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamTest::test_readFully2() {
 
-    try {
-        os->write( std::vector<unsigned char>( testData.begin(), testData.end() ) );
-        os->close();
-        openDataInputStream();
-        unsigned char* rbytes = new unsigned char[ testData.length() ];
-        is->readFully( rbytes, testData.length() );
+    std::vector<unsigned char> temp( testData.begin(), testData.end() );
+    os->write( &temp[0], temp.size() );
+    openDataInputStream();
+    unsigned char* rbytes = new unsigned char[ testData.length() ];
+    is->readFully( rbytes, testData.length() );
 
-        string expected = "";
-        for( size_t ix = 0; ix < testData.length(); ++ix ) {
-            expected += (char)rbytes[ix];
-        }
-
-        CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
-
-        delete [] rbytes;
-    } catch( IOException &e ) {
-        CPPUNIT_FAIL("IOException during readFully test : " + e.getMessage());
+    string expected = "";
+    for( size_t ix = 0; ix < testData.length(); ++ix ) {
+        expected += (char)rbytes[ix];
     }
+
+    CPPUNIT_ASSERT_MESSAGE("Incorrect data read", expected == testData );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), -1, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), 0, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), 1, -1 ),
+        IndexOutOfBoundsException );
+
+    is->readFully( &temp[0], temp.size(), -1, 0 );
+    is->readFully( &temp[0], temp.size(), 0, 0 );
+    is->readFully( &temp[0], temp.size(), 1, 0 );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), -1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), 0, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "should throw IndexOutOfBoundsException",
+        is->readFully( &temp[0], temp.size(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    delete [] rbytes;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamTest::test_readFullyNullArray() {
     std::vector<unsigned char> test( 5000 );
-    DataInputStream is(
-        new ByteArrayInputStream( test ), true );
+    DataInputStream is( new ByteArrayInputStream( test ), true );
 
     unsigned char* nullByteArray = NULL;
 
@@ -333,7 +366,8 @@ void DataInputStreamTest::test_readUnsignedShort() {
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamTest::test_skipBytes() {
     try {
-        os->write( std::vector<unsigned char>( testData.begin(), testData.end() ) );
+        std::vector<unsigned char> temp( testData.begin(), testData.end() );
+        os->write( &temp[0], temp.size() );
         os->close();
         openDataInputStream();
         is->skip( 100 );

@@ -57,9 +57,9 @@ namespace nio{
         decaf::nio::LongBuffer* testBuffer1;
         long long* testData1;
 
-        static const std::size_t testData1Size = 100;
-        static const std::size_t SMALL_TEST_LENGTH = 5;
-        static const std::size_t BUFFER_LENGTH = 250;
+        static const int testData1Size;
+        static const int SMALL_TEST_LENGTH;
+        static const int BUFFER_LENGTH;
 
     public:
 
@@ -70,7 +70,7 @@ namespace nio{
             testBuffer1 = decaf::nio::LongBuffer::allocate( testData1Size );
 
             testData1 = new long long[testData1Size];
-            for( std::size_t i = 0; i < testData1Size; ++i ){
+            for( int i = 0; i < testData1Size; ++i ){
                 testData1[i] = (long long)i;
             }
         }
@@ -105,36 +105,36 @@ namespace nio{
 
     protected:
 
-        void loadTestData1( long long* array, std::size_t offset, std::size_t length ) {
-            for( std::size_t i = 0; i < length; i++ ) {
+        void loadTestData1( long long* array, int offset, int length ) {
+            for( int i = 0; i < length; i++ ) {
                 array[offset + i] = (long long)i;
             }
         }
 
-        void loadTestData2( long long* array, std::size_t offset, std::size_t length ) {
-            for( std::size_t i = 0; i < length; i++ ) {
+        void loadTestData2( long long* array, int offset, int length ) {
+            for( int i = 0; i < length; i++ ) {
                 array[offset + i] = (long long)length - i;
             }
         }
 
         void loadTestData1( decaf::nio::LongBuffer* buf ) {
             buf->clear();
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 buf->put( i, (long long)i );
             }
         }
 
         void loadTestData2( decaf::nio::LongBuffer* buf ) {
             buf->clear();
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 buf->put(i, (long long) buf->capacity() - i);
             }
         }
 
         void assertContentEquals( decaf::nio::LongBuffer* buf, long long* array,
-                                  std::size_t offset, std::size_t length) {
+                                  int offset, int length) {
 
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get(i) == array[offset + i] );
             }
         }
@@ -142,17 +142,17 @@ namespace nio{
         void assertContentEquals( decaf::nio::LongBuffer* buf,
                                   decaf::nio::LongBuffer* other ) {
             CPPUNIT_ASSERT( buf->capacity() == other->capacity() );
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 CPPUNIT_ASSERT(buf->get(i) == other->get(i) );
             }
         }
 
         void assertContentLikeTestData1(
-            decaf::nio::LongBuffer* buf, std::size_t startIndex,
-            long long startValue, std::size_t length ) {
+            decaf::nio::LongBuffer* buf, int startIndex,
+            long long startValue, int length ) {
 
             long long value = startValue;
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get( startIndex + i ) == value );
                 value = value + 1;
             }

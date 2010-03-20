@@ -325,15 +325,20 @@ std::string DataInputStream::readUTF()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, std::size_t size )
-    throw ( decaf::io::IOException, decaf::io::EOFException ) {
+void DataInputStream::readFully( unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::io::EOFException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
+
         if( size == 0 ) {
             return;
         }
+
         this->readFully( buffer, size, 0, size );
     }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -384,13 +389,12 @@ std::string DataInputStream::readLine() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, std::size_t size,
-                                 std::size_t offset, std::size_t length )
+void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::io::EOFException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException )
-{
+            decaf::lang::exceptions::NullPointerException ) {
+
     try {
 
         if( length == 0 ) {
@@ -399,40 +403,48 @@ void DataInputStream::readFully( unsigned char* buffer, std::size_t size,
 
         if( buffer == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Buffer is null" );
+                __FILE__, __LINE__, "Buffer is null" );
         }
 
         if( inputStream == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Base input stream is null" );
+                __FILE__, __LINE__, "Base input stream is null" );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + Length is greater than the size of the Buffer." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        std::size_t n = 0;
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int n = 0;
         while( n < length ) {
             int count = inputStream->read( buffer, length, offset + n, length - n );
             if( count == -1 ) {
                 throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readFully - Reached EOF" );
+                    __FILE__, __LINE__, "Reached EOF" );
             }
             n += count;
         }
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::skipBytes( std::size_t num )
+long long DataInputStream::skipBytes( long long num )
     throw( decaf::io::IOException ) {
 
     try {
@@ -443,8 +455,8 @@ std::size_t DataInputStream::skipBytes( std::size_t num )
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        std::size_t total = 0;
-        std::size_t cur = 0;
+        long long total = 0;
+        long long cur = 0;
 
         while( ( total < num ) &&
                ( ( cur = inputStream->skip( num-total ) ) > 0 ) ) {
@@ -458,17 +470,23 @@ std::size_t DataInputStream::skipBytes( std::size_t num )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readAllData( unsigned char* buffer, std::size_t length )
+void DataInputStream::readAllData( unsigned char* buffer, int length )
     throw ( decaf::io::IOException, decaf::io::EOFException ) {
 
-    std::size_t n = 0;
-    do{
-        int count = inputStream->read( buffer, length, n, length - n );
-        if( count == -1 ) {
-            throw EOFException(
-                __FILE__, __LINE__,
-                "DataInputStream::readLong - Reached EOF" );
-        }
-        n += count;
-    } while( n < length );
+    try{
+
+        int n = 0;
+        do{
+            int count = inputStream->read( buffer, length, n, length - n );
+            if( count == -1 ) {
+                throw EOFException(
+                    __FILE__, __LINE__,
+                    "DataInputStream::readLong - Reached EOF" );
+            }
+            n += count;
+        } while( n < length );
+    }
+    DECAF_CATCH_RETHROW( EOFException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

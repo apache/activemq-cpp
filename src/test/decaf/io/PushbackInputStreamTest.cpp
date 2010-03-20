@@ -90,7 +90,7 @@ void PushbackInputStreamTest::testMark() {
 
     std::vector<unsigned char> temp( 1 );
     ByteArrayInputStream bais( temp );
-    PushbackInputStream pb( &bais, (std::size_t)2 );
+    PushbackInputStream pb( &bais, 2 );
 
     pb.mark( Integer::MAX_VALUE );
     pb.mark( 0 );
@@ -126,7 +126,7 @@ void PushbackInputStreamTest::testConstructor2() {
 
     std::vector<unsigned char> temp( testString.begin(), testString.end() );
     ByteArrayInputStream bais( temp );
-    PushbackInputStream pb( &bais, (std::size_t)5 );
+    PushbackInputStream pb( &bais, 5 );
 
     unsigned char un[] = { 'h', 'e', 'l', 'l', 'o', 's' };
 
@@ -139,7 +139,7 @@ void PushbackInputStreamTest::testConstructor2() {
 ////////////////////////////////////////////////////////////////////////////////
 void PushbackInputStreamTest::testConstructor3() {
 
-    PushbackInputStream pb( NULL, (std::size_t)1 );
+    PushbackInputStream pb( NULL, 1 );
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw an IOException",
         pb.read(),
@@ -154,7 +154,7 @@ void PushbackInputStreamTest::testAvailable() {
         PushbackInputStream pb( &bais );
 
         CPPUNIT_ASSERT_EQUAL_MESSAGE( "Should have been testString.length available.",
-                                      testString.length(), pb.available() );
+                                      (int)testString.length(), pb.available() );
     } catch( IOException& e ) {
         CPPUNIT_FAIL( std::string() + "Exception during available test: " + e.getMessage() );
     }
@@ -206,7 +206,7 @@ void PushbackInputStreamTest::testSkip() {
 
     std::vector<unsigned char> temp( testString.begin(), testString.end() );
     ByteArrayInputStream bais( temp );
-    PushbackInputStream pb( &bais, (std::size_t) 65535 );
+    PushbackInputStream pb( &bais, 65535 );
 
     unsigned char buf[50];
     pb.skip( 50 );
@@ -228,7 +228,7 @@ void PushbackInputStreamTest::testUnreadBI() {
 
         std::vector<unsigned char> temp( testString.begin(), testString.end() );
         ByteArrayInputStream bais( temp );
-        PushbackInputStream pb( &bais, (std::size_t) 65535 );
+        PushbackInputStream pb( &bais, 65535 );
 
         unsigned char buf[100];
         pb.read(buf, 100, 0, 100 );
@@ -248,7 +248,7 @@ void PushbackInputStreamTest::testUnreadBIII() {
 
     std::vector<unsigned char> temp( testString.begin(), testString.end() );
     ByteArrayInputStream bais( temp );
-    PushbackInputStream pb( &bais, (std::size_t) 65535 );
+    PushbackInputStream pb( &bais, 65535 );
 
     unsigned char buf[100];
     pb.read( buf, 100, 0, 100 );

@@ -43,14 +43,37 @@ namespace io {
     private:
 
         unsigned char* buffer;
-        std::size_t bufferSize;
-        std::size_t pos;
+        int bufferSize;
+        int pos;
 
     public:
 
+        /**
+         * Creates a PushbackInputStream  and saves its argument, the input stream in, for later
+         * use. Initially, there is no pushed-back byte.
+         *
+         * @param stream
+         *      The InputStream instance to wrap.
+         * @param
+         *      Boolean value indicating if this FilterInputStream owns the wrapped stream.
+         */
         PushbackInputStream( InputStream* stream, bool own = false );
 
-        PushbackInputStream( InputStream* stream, std::size_t bufSize, bool own = false );
+        /**
+         * Creates a PushbackInputStream  and saves its argument, the input stream in, for later
+         * use. Initially, there is no pushed-back byte.
+         *
+         * @param stream
+         *      The InputStream instance to wrap.
+         * @param bufSize
+         *      The number of byte to allocate for pushback into this stream.
+         * @param
+         *      Boolean value indicating if this FilterInputStream owns the wrapped stream.
+         *
+         * @throws IllegalArgumentException if the bufSize argument is < zero.
+         */
+        PushbackInputStream( InputStream* stream, int bufSize, bool own = false )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         virtual ~PushbackInputStream();
 
@@ -77,11 +100,13 @@ namespace io {
          *      The size of the array to be copied.
          *
          * @throws NullPointerException if the buffer passed is NULL.
+         * @throws IndexOutOfBoundsException if the size value given is negative.
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, std::size_t size )
+        void unread( const unsigned char* buffer, int size )
             throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::NullPointerException );
 
         /**
@@ -102,18 +127,18 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+        void unread( const unsigned char* buffer, int size, int offset, int length )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::IndexOutOfBoundsException,
                    decaf::lang::exceptions::NullPointerException );
 
         /**
-         * {@inheritdoc}
+         * {@inheritDoc}
          *
          * Returns the sum of the number of pushed back bytes if any and the amount of bytes
          * available in the underlying stream via a call to available.
          */
-        virtual std::size_t available() const throw ( decaf::io::IOException );
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -122,7 +147,7 @@ namespace io {
          * complete the request by calling the underlying stream skip method with the remainder
          * of bytes that needs to be skipped.
          */
-        virtual std::size_t skip( std::size_t num )
+        virtual long long skip( long long num )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -153,8 +178,7 @@ namespace io {
 
         virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

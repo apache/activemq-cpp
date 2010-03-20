@@ -486,7 +486,6 @@ cc_sources = \
     decaf/internal/net/URIHelper.cpp \
     decaf/internal/nio/BufferFactory.cpp \
     decaf/internal/nio/ByteArrayBuffer.cpp \
-    decaf/internal/nio/ByteArrayPerspective.cpp \
     decaf/internal/nio/CharArrayBuffer.cpp \
     decaf/internal/nio/DoubleArrayBuffer.cpp \
     decaf/internal/nio/FloatArrayBuffer.cpp \
@@ -1138,7 +1137,6 @@ h_sources = \
     decaf/internal/net/URIType.h \
     decaf/internal/nio/BufferFactory.h \
     decaf/internal/nio/ByteArrayBuffer.h \
-    decaf/internal/nio/ByteArrayPerspective.h \
     decaf/internal/nio/CharArrayBuffer.h \
     decaf/internal/nio/DoubleArrayBuffer.h \
     decaf/internal/nio/FloatArrayBuffer.h \

@@ -38,7 +38,7 @@ Reader::~Reader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Reader::mark( std::size_t readAheadLimit DECAF_UNUSED )
+void Reader::mark( int readAheadLimit DECAF_UNUSED )
     throw( decaf::io::IOException ) {
 
     throw IOException(
@@ -60,19 +60,19 @@ void Reader::reset() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Reader::skip( std::size_t count )
+long long Reader::skip( long long count )
     throw( decaf::io::IOException ) {
 
     try{
 
-        std::size_t skipped = 0;
+        long long skipped = 0;
         int toRead = count < 512 ? (int)count : 512;
 
         std::vector<char> charsSkipped( toRead );
 
         while( skipped < count ) {
 
-            int read = this->doReadArrayBounded( &charsSkipped[0], charsSkipped.size(), 0, toRead );
+            int read = this->doReadArrayBounded( &charsSkipped[0], (int)charsSkipped.size(), 0, toRead );
 
             if( read == -1 ) {
                 return skipped;
@@ -84,7 +84,7 @@ std::size_t Reader::skip( std::size_t count )
                 return skipped;
             }
 
-            if( count - skipped < (std::size_t)toRead ) {
+            if( count - skipped < (long long)toRead ) {
                 toRead = (int)( count - skipped );
             }
         }
@@ -106,7 +106,7 @@ int Reader::read( std::vector<char>& buffer ) throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, std::size_t length )
+int Reader::read( char* buffer, int length )
    throw( decaf::io::IOException,
           decaf::lang::exceptions::NullPointerException ) {
 
@@ -118,7 +118,7 @@ int Reader::read( char* buffer, std::size_t length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, std::size_t size, std::size_t offset, std::size_t length )
+int Reader::read( char* buffer, int size, int offset, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::NullPointerException ) {
@@ -173,7 +173,7 @@ int Reader::doReadVector( std::vector<char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadArray( char* buffer, std::size_t length )
+int Reader::doReadArray( char* buffer, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::NullPointerException ) {
 
@@ -230,7 +230,7 @@ int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer )
         length = Math::min( length, this->doReadVector( buffer ) );
 
         if( length > 0 ) {
-            charBuffer->put( &buffer[0], 0, length );
+            charBuffer->put( &buffer[0], buffer.size() , 0, length );
         }
 
         return length;

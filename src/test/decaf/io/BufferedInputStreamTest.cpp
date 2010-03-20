@@ -82,7 +82,7 @@ namespace {
     class MyInputStream : public InputStream{
     private:
         std::string data;
-        std::size_t pos;
+        int pos;
         bool throwOnRead;
         bool closed;
 
@@ -108,13 +108,13 @@ namespace {
             return this->closed;
         }
 
-        virtual std::size_t available() const throw (IOException){
+        virtual int available() const throw (IOException){
             if( isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
                     "MyInputStream::read - Stream already closed." );
             }
-            std::size_t len = data.length();
+            int len = (int)data.length();
             return len - pos;
         }
 
@@ -125,20 +125,19 @@ namespace {
                     "MyInputStream::read - Throw on Read on." );
             }
 
-            if( pos >= data.length() ){
+            if( pos >= (int)data.length() ){
                 return -1;
             }
 
             return data.c_str()[pos++];
         }
 
-        virtual int doReadArrayOffsetAndLength( unsigned char* buffer, std::size_t size,
-                                                std::size_t offset, std::size_t length )
+        virtual int doReadArrayOffsetAndLength( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException ) {
 
-            std::size_t numToRead = std::min( length, available() );
+            int numToRead = std::min( length, available() );
 
             if( this->isThrowOnRead() ) {
                 throw IOException(
@@ -152,7 +151,7 @@ namespace {
             }
 
             const char* str = data.c_str();
-            for( std::size_t ix=0; ix<numToRead; ++ix ){
+            for( int ix=0; ix<numToRead; ++ix ){
                 buffer[ix+offset] = str[pos+ix];
             }
 
@@ -165,8 +164,10 @@ namespace {
             this->closed = true;
         }
 
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-            return ( pos += std::min( num, available() ) );
+        virtual long long skip( long long num )
+            throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+
+            return ( pos += std::min( num, (long long)available() ) );
         }
 
     };
@@ -180,7 +181,7 @@ void BufferedInputStreamTest::testConstructor() {
     MyInputStream myStream( testStr );
 
     // Create buffer with exact size of data
-    BufferedInputStream is( &myStream, testStr.length() );
+    BufferedInputStream is( &myStream, (int)testStr.length() );
 
     // Ensure buffer gets filled by evaluating one read
     CPPUNIT_ASSERT( is.read() != -1 );
@@ -200,7 +201,7 @@ void BufferedInputStreamTest::testConstructor() {
             IOException );
     }
     {
-        BufferedInputStream nullStream( NULL, (std::size_t)1 );
+        BufferedInputStream nullStream( NULL, 1 );
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should have thrown an IOException",
             nullStream.read(),
@@ -214,12 +215,12 @@ void BufferedInputStreamTest::testAvailable() {
     std::string testStr = "TEST12345678910";
     MyInputStream myStream( testStr );
     // Create buffer with exact size of data
-    BufferedInputStream is( &myStream, testStr.length() );
+    BufferedInputStream is( &myStream, (int)testStr.length() );
 
     // Test for method int BufferedInputStream.available()
     try {
         CPPUNIT_ASSERT_MESSAGE( "Returned incorrect number of available bytes",
-                                 is.available() == testStr.length() );
+                                 is.available() == (int)testStr.length() );
     } catch( IOException& e ) {
         CPPUNIT_ASSERT_MESSAGE("Exception during available test", false );
     }
@@ -227,9 +228,9 @@ void BufferedInputStreamTest::testAvailable() {
     // Test that a closed stream throws an IOE for available()
     std::string testStr2 = "hello world";
     MyInputStream myStream2( testStr2 );
-    BufferedInputStream bis( &myStream2, testStr2.length() );
+    BufferedInputStream bis( &myStream2, (int)testStr2.length() );
 
-    std::size_t available;
+    int available;
 
     try {
         available = bis.available();
@@ -261,7 +262,7 @@ void BufferedInputStreamTest::testClose() {
 
         // Test a null stream
         MyInputStream* ptr = NULL;
-        BufferedInputStream buf( ptr, (std::size_t)5 );
+        BufferedInputStream buf( ptr, 5 );
         buf.close();
     } catch(...) {
         CPPUNIT_FAIL("Close shouldn't throw an error here" );
@@ -282,7 +283,7 @@ void BufferedInputStreamTest::testRead() {
         std::string testStr = "TEST12345678910";
         MyInputStream myStream( testStr );
         // Create buffer with exact size of data
-        BufferedInputStream is( &myStream, testStr.length() );
+        BufferedInputStream is( &myStream, (int)(int)testStr.length() );
 
         char c = is.read();
         CPPUNIT_ASSERT_MESSAGE( "read returned incorrect char",
@@ -298,13 +299,13 @@ void BufferedInputStreamTest::testRead() {
 
     // New stream, owns the inner one.
     BufferedInputStream is(
-        new ByteArrayInputStream( &bytes[0], (std::size_t)256 ), (std::size_t)12, true );
+        new ByteArrayInputStream( &bytes[0], 256 ), 12, true );
 
     try {
         CPPUNIT_ASSERT_MESSAGE( "Wrong initial byte", 0 == is.read() );
         // Fill the buffer
         unsigned char buf[14];
-        is.read( &buf[0], 14, 0, (std::size_t)14 );
+        is.read( &buf[0], 14, 0, 14 );
 
         // Read greater than the buffer
         CPPUNIT_ASSERT_MESSAGE( "Wrong block read data",
@@ -326,7 +327,7 @@ void BufferedInputStreamTest::testRead2() {
     testStr.append( "B", 1000 );
     MyInputStream myStream( testStr );
     // Create buffer with exact size of data
-    BufferedInputStream is( &myStream, testStr.length() );
+    BufferedInputStream is( &myStream, (int)testStr.length() );
 
     // Test for method int BufferedInputStream.read(byte [], int,
     // int)
@@ -373,35 +374,35 @@ void BufferedInputStreamTest::testSmallerBuffer(){
 
     std::string testStr = "TEST12345678910";
     MyInputStream myStream( testStr );
-    BufferedInputStream bufStream( &myStream, (std::size_t)1 );
+    BufferedInputStream bufStream( &myStream, 1 );
 
-    std::size_t available = bufStream.available();
-    CPPUNIT_ASSERT( available == testStr.length() );
+    int available = bufStream.available();
+    CPPUNIT_ASSERT( available == (int)testStr.length() );
 
     unsigned char dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 1) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 1) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'E' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 2 ) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'S' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 3 ) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     unsigned char dummyBuf[20];
     memset( dummyBuf, 0, 20 );
-    std::size_t numRead = bufStream.read( dummyBuf, 20, 0, 10 );
+    int numRead = bufStream.read( dummyBuf, 20, 0, 10 );
     CPPUNIT_ASSERT( numRead == 10 );
     CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );
 
@@ -414,35 +415,35 @@ void BufferedInputStreamTest::testBiggerBuffer(){
 
     std::string testStr = "TEST12345678910";
     MyInputStream myStream( testStr );
-    BufferedInputStream bufStream( &myStream, (std::size_t)10 );
+    BufferedInputStream bufStream( &myStream, 10 );
 
-    std::size_t available = bufStream.available();
-    CPPUNIT_ASSERT( available == testStr.length() );
+    int available = bufStream.available();
+    CPPUNIT_ASSERT( available == (int)testStr.length() );
 
     unsigned char dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 1 ) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 1 ) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'E' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 2 ) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'S' );
 
     available = bufStream.available();
-    CPPUNIT_ASSERT( available == (testStr.length() - 3 ) );
+    CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
 
     dummy = bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     unsigned char dummyBuf[20];
     memset( dummyBuf, 0, 20 );
-    std::size_t numRead = bufStream.read( dummyBuf, 20, 0, 10 );
+    int numRead = bufStream.read( dummyBuf, 20, 0, 10 );
     CPPUNIT_ASSERT( numRead == 10 );
     CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );
 
@@ -453,8 +454,8 @@ void BufferedInputStreamTest::testBiggerBuffer(){
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStreamTest::testSkipNullInputStream() {
 
-    BufferedInputStream buf( NULL, (std::size_t)5 );
-    CPPUNIT_ASSERT_EQUAL( (std::size_t)0, buf.skip( 0 ) );
+    BufferedInputStream buf( NULL, 5 );
+    CPPUNIT_ASSERT_EQUAL( 0LL, buf.skip( 0 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -487,7 +488,7 @@ void BufferedInputStreamTest::testMarkI() {
     {
         ByteArrayInputStream bais;
         bais.setByteArray( bytes, 256 );
-        BufferedInputStream in( &bais, (std::size_t)12 );
+        BufferedInputStream in( &bais, 12 );
 
         in.skip( 6 );
         in.mark( 14 );
@@ -500,7 +501,7 @@ void BufferedInputStreamTest::testMarkI() {
     {
         ByteArrayInputStream bais;
         bais.setByteArray( bytes, 256 );
-        BufferedInputStream in( &bais, (std::size_t)12 );
+        BufferedInputStream in( &bais, 12 );
 
         in.skip( 6 );
         in.mark( 8 );
@@ -512,7 +513,7 @@ void BufferedInputStreamTest::testMarkI() {
         unsigned char temp[] = { 0, 1, 2, 3, 4 };
         ByteArrayInputStream bais;
         bais.setByteArray( temp, 5 );
-        BufferedInputStream buf( &bais, (std::size_t)2 );
+        BufferedInputStream buf( &bais, 2 );
 
         buf.mark( 3 );
         unsigned char bitBucket[3];
@@ -527,7 +528,7 @@ void BufferedInputStreamTest::testMarkI() {
         unsigned char temp[] = { 0, 1, 2, 3, 4 };
         ByteArrayInputStream bais;
         bais.setByteArray( temp, 5 );
-        BufferedInputStream buf( &bais, (std::size_t)2 );
+        BufferedInputStream buf( &bais, 2 );
 
         buf.mark( 3 );
         unsigned char bitBucket[4];
@@ -545,7 +546,7 @@ void BufferedInputStreamTest::testMarkI() {
         unsigned char temp[] = { 0, 1, 2, 3, 4 };
         ByteArrayInputStream bais;
         bais.setByteArray( temp, 5 );
-        BufferedInputStream buf( &bais, (std::size_t)2 );
+        BufferedInputStream buf( &bais, 2 );
 
         buf.mark( Integer::MAX_VALUE );
         buf.read();
@@ -659,7 +660,7 @@ void BufferedInputStreamTest::testSkipJ() {
                                   testString.substr( 1000, 10 ) );
 
     // throws IOException with message "stream is closed"
-    BufferedInputStream buf( NULL, (std::size_t)5 );
+    BufferedInputStream buf( NULL, 5 );
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "should throw IOException",
         buf.skip( 10 ),

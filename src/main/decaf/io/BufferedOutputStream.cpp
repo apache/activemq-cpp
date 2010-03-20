@@ -35,8 +35,8 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream, std::size_t bufSize, bool own )
- : FilterOutputStream( stream, own ) {
+BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own )
+    throw( IllegalArgumentException ) : FilterOutputStream( stream, own ) {
 
     try {
         this->init( bufSize );
@@ -61,7 +61,12 @@ BufferedOutputStream::~BufferedOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::init( std::size_t bufSize ) {
+void BufferedOutputStream::init( int bufSize ) {
+
+    if( bufSize < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Size of Buffer cannot be negative." );
+    }
 
     this->bufferSize = bufSize;
 
@@ -128,7 +133,7 @@ void BufferedOutputStream::doWriteByte( const unsigned char c )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteArray( const unsigned char* buffer, std::size_t size )
+void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size )
     throw ( decaf::io::IOException ) {
 
     try{
@@ -150,8 +155,8 @@ void BufferedOutputStream::doWriteArray( const unsigned char* buffer, std::size_
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                                std::size_t offset, std::size_t length )
+void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                                int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -174,22 +179,30 @@ void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, std
                 "BufferedOutputStream::write - Buffer passed is Null.");
         }
 
-        if( ( offset + length ) > size ) {
-            throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         // Iterate until all the data is written.
-        for( std::size_t pos=0; pos < length; ){
+        for( int pos = 0; pos < length; ){
 
             if( tail >= bufferSize ){
                 emptyBuffer();
             }
 
             // Get the number of bytes left to write.
-            std::size_t bytesToWrite = Math::min( (int)( bufferSize - tail ),
-                                                  (int)( length - pos ) );
+            int bytesToWrite = Math::min( bufferSize - tail, length - pos );
 
             System::arraycopy( buffer, offset + pos, this->buffer, this->tail, bytesToWrite );
 

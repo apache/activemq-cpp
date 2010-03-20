@@ -98,11 +98,12 @@ namespace io{
 
         virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
 
-        virtual void doWriteArray( const unsigned char* buffer, std::size_t size )
-            throw( decaf::io::IOException );
+        virtual void doWriteArray( const unsigned char* buffer, int size )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, std::size_t size,
-                                          std::size_t offset, std::size_t length )
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException,
                     decaf::lang::exceptions::IndexOutOfBoundsException );

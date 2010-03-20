@@ -49,25 +49,24 @@ namespace net{
         virtual ~SocketInputStream();
 
         /**
-         * Returns the number of bytes available on the socket to
-         * be read right now.
-         * @return The number of bytes currently available to
-         * be read on the socket.
+         * {@inheritDoc}
          */
-        virtual std::size_t available() const throw ( io::IOException );
+        virtual int available() const throw ( io::IOException );
 
         /**
          * Close - does nothing.  It is the responsibility of the owner
          * of the socket object to close it.
-         * @throws IOException
+         *
+         * {@inheritDoc}
          */
         virtual void close() throw( decaf::io::IOException );
 
         /**
          * Not supported.
-         * @throws an UnsupportedOperationException.
+         *
+         * {@inheritDoc}
          */
-        virtual std::size_t skip( std::size_t num )
+        virtual long long skip( long long num )
             throw ( io::IOException,
                     lang::exceptions::UnsupportedOperationException );
 
@@ -75,8 +74,7 @@ namespace net{
 
         virtual int doReadByte() throw ( io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                        std::size_t offset, std::size_t length )
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::IndexOutOfBoundsException,
                     decaf::lang::exceptions::NullPointerException );

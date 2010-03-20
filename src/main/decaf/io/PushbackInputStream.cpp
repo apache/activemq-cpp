@@ -32,8 +32,14 @@ PushbackInputStream::PushbackInputStream( InputStream* stream, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PushbackInputStream::PushbackInputStream( InputStream* stream, std::size_t bufSize, bool own )
+PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool own )
+    throw( decaf::lang::exceptions::IllegalArgumentException )
  :  FilterInputStream( stream, own ), bufferSize( bufSize ), pos( bufSize ) {
+
+    if( bufSize < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Size of Push Back buffer cannot be negative." );
+    }
 
     this->buffer = new unsigned char[bufSize];
 }
@@ -50,7 +56,7 @@ PushbackInputStream::~PushbackInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t PushbackInputStream::available() const throw ( decaf::io::IOException ) {
+int PushbackInputStream::available() const throw ( decaf::io::IOException ) {
 
     try{
         return ( this->bufferSize - this->pos ) + inputStream->available();
@@ -60,13 +66,13 @@ std::size_t PushbackInputStream::available() const throw ( decaf::io::IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t PushbackInputStream::skip( std::size_t num )
+long long PushbackInputStream::skip( long long num )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
-        if( num == 0 ) {
+        if( num <= 0 ) {
             return 0;
         }
 
@@ -75,12 +81,12 @@ std::size_t PushbackInputStream::skip( std::size_t num )
                 __FILE__, __LINE__, "Stream is closed" );
         }
 
-        std::size_t unread = bufferSize - pos;
-        std::size_t numSkipped = 0;
+        long long unread = bufferSize - pos;
+        long long numSkipped = 0;
 
         if( unread != 0 ) {
             numSkipped += ( num < unread ) ? num : unread;
-            pos += numSkipped;
+            pos += (int)numSkipped;
         }
 
         if( numSkipped < num ) {
@@ -122,11 +128,18 @@ void PushbackInputStream::unread( unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, std::size_t size )
+void PushbackInputStream::unread( const unsigned char* buffer, int size )
     throw( decaf::io::IOException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::NullPointerException ) {
 
     try{
+
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Given size of the buffer was negatiev." );
+        }
+
         this->unread( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( IOException )
@@ -135,8 +148,7 @@ void PushbackInputStream::unread( const unsigned char* buffer, std::size_t size 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, std::size_t size,
-                                  std::size_t offset, std::size_t length )
+void PushbackInputStream::unread( const unsigned char* buffer, int size, int offset, int length )
     throw( decaf::io::IOException,
            decaf::lang::exceptions::IndexOutOfBoundsException,
            decaf::lang::exceptions::NullPointerException ) {
@@ -148,9 +160,19 @@ void PushbackInputStream::unread( const unsigned char* buffer, std::size_t size,
                 __FILE__, __LINE__, "No Space left in the unread buffer." );
         }
 
-        if( offset > size || offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + length exceeds supplied buffer's size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         if( buffer == NULL ) {
@@ -188,8 +210,7 @@ int PushbackInputStream::doReadByte() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                             std::size_t offset, std::size_t length )
+int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -206,14 +227,24 @@ int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                 __FILE__, __LINE__, "Buffer pointer passed was NULL." );
         }
 
-        if( offset > size || offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset + length exceeds supplied buffer's size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
         }
 
-        std::size_t copiedBytes = 0;
-        std::size_t copyLength = 0;
-        std::size_t newOffset = offset;
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int copiedBytes = 0;
+        int copyLength = 0;
+        int newOffset = offset;
 
         // Are there pushback bytes available?
         if( pos < bufferSize ) {
@@ -227,19 +258,19 @@ int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
 
         // Have we copied enough?
         if( copyLength == length ) {
-            return (int)length;
+            return length;
         }
 
         int inCopied = inputStream->read( buffer, size, newOffset, length - copiedBytes );
         if( inCopied > 0 ) {
-            return (int)( inCopied + copiedBytes );
+            return inCopied + copiedBytes;
         }
 
         if( copiedBytes == 0 ) {
             return inCopied;
         }
 
-        return (int)copiedBytes;
+        return copiedBytes;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

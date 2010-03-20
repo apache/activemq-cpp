@@ -48,8 +48,8 @@ int LoggingInputStream::doReadByte() throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                            std::size_t offset, std::size_t length )
+int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                            int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -72,7 +72,7 @@ int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t s
                 "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
         }
 
-        std::size_t numRead = FilterInputStream::doReadArrayBounded( buffer, size, offset, length );
+        int numRead = FilterInputStream::doReadArrayBounded( buffer, size, offset, length );
 
         log( buffer, numRead );
 
@@ -85,16 +85,16 @@ int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingInputStream::log( const unsigned char* buffer, size_t len ) {
+void LoggingInputStream::log( const unsigned char* buffer, int len ) {
 
     ostringstream ostream;
 
     ostream << "TCP Trace: Reading: " << endl << "[";
 
-    for( size_t ix=0; ix<len; ++ix ){
-        ostream << setw(2) << setfill('0') << std::hex << (int)buffer[ix];
+    for( int ix = 0; ix < len; ++ix ) {
+        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
 
-        if( ((ix+1) % 2) == 0 ){
+        if( ( ( ix + 1 ) % 2 ) == 0 ) {
             ostream << ' ';
         }
     }

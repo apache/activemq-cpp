@@ -80,7 +80,7 @@ void FilterOutputStreamTest::testWrite1() {
         ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
-                                bais.available() == testString.length() );
+                                bais.available() == (int)testString.length() );
         unsigned char* wbytes = new unsigned char[ testString.length() ];
         bais.read( wbytes, testString.length(), 0, testString.length() );
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",

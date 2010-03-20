@@ -35,7 +35,7 @@ namespace io{
     protected:
 
         // The number of bytes written to the data output stream so far.
-        std::size_t written;
+        long long written;
 
         // Buffer used for storing byte values to write to the stream
         unsigned char buffer[8];
@@ -55,177 +55,83 @@ namespace io{
         /**
          * Returns the current value of the counter written, the number of
          * bytes written to this data output stream so far. If the counter
-         * overflows, it will be wrapped to Integer.MAX_VALUE.
+         * overflows, it will be wrapped to decaf::lang::Long::MAX_VALUE.
+         *
          * @return the value of the written field.
          */
-        virtual std::size_t size() const {
+        virtual long long size() const {
             return written;
         }
 
         /**
-         * Writes a single byte to the output stream.  If no exception is
-         * thrown, the counter written is incremented by 1.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( unsigned char c ) throw ( IOException );
-
-        /**
-         * Writes an array of bytes to the output stream in order starting at buffer[offset]
-         * and proceeding until the number of bytes specified by the length argument are
-         * written or an error occurs.
-         *
-         * @param buffer
-         *      The array of bytes to write.
-         * @param size
-         *      The size of the buffer array passed.
-         * @param offset
-         *      The position to start writing in buffer.
-         * @param length
-         *      The number of bytes from the buffer to be written.
-         *
-         * @throws IOException if an I/O error occurs.
-         * @throws NullPointerException thrown if buffer is Null.
-         * @throws IndexOutOfBoundsException if the offset + length > size.
-         */
-        virtual void write( const unsigned char* buffer, std::size_t size,
-                            std::size_t offset, std::size_t length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
-
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException );
-
-        /**
-         * Writes a boolean to the underlying output stream as a 1-byte value. The
-         * value true is written out as the value (byte)1; the value false
-         * is written out as the value (byte)0. If no exception is thrown,
-         * the counter written is incremented by 1.
-         * @param value the boolean to write.
-         * @throws IOException
-         *
+         * {@inheritDoc}
          */
         virtual void writeBoolean( bool value ) throw ( IOException );
 
         /**
-         * Writes out a byte to the underlying output stream as a 1-byte
-         * value. If no exception is thrown, the counter written is
-         * incremented by 1.
-         * @param value the unsigned char value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
-        virtual void writeByte( unsigned char value ) throw ( IOException );
+       virtual void writeByte( unsigned char value ) throw ( IOException );
 
         /**
-         * Writes a short to the underlying output stream as two bytes, high
-         * byte first. If no exception is thrown, the counter written is
-         * incremented by 2.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeShort( short value ) throw ( IOException );
 
         /**
-         * Writes a unsigned short to the bytes message stream as a 2 byte value
-         * @param value - unsigned short to write to the stream
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeUnsignedShort( unsigned short value ) throw ( IOException );
 
         /**
-         * Writes out a char to the underlying output stream as a one byte
-         * value If no exception is thrown, the counter written is
-         * incremented by 1.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeChar( char value ) throw ( IOException );
 
         /**
-         * Writes an int to the underlying output stream as four bytes, high
-         * byte first. If no exception is thrown, the counter written is
-         * incremented by 4.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeInt( int value ) throw ( IOException );
 
         /**
-         * Writes an 64 bit long to the underlying output stream as eight
-         * bytes, high byte first. If no exception is thrown, the counter
-         * written is incremented by 8.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeLong( long long value ) throw ( IOException );
 
         /**
-         * Converts the float argument to an int using the floatToIntBits
-         * method in class Float, and then writes that int value to the
-         * underlying output stream as a 4-byte quantity, high byte first.
-         * If no exception is thrown, the counter written is incremented
-         * by 4.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeFloat( float value ) throw ( IOException );
 
         /**
-         * Converts the double argument to a long using the doubleToLongBits
-         * method in class Double, and then writes that long value to the
-         * underlying output stream as an 8-byte quantity, high byte first.
-         * If no exception is thrown, the counter written is incremented
-         * by 8.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeDouble( double value ) throw ( IOException );
 
         /**
-         * Writes out the string to the underlying output stream as a
-         * sequence of bytes. Each character in the string is written out,
-         * in sequence, by discarding its high eight bits. If no exception
-         * is thrown, the counter written is incremented by the length of
-         * value.  The value written does not include a trailing null as that
-         * is not part of the sequence of bytes, if the null is needed, then use
-         * the writeChars method.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeBytes( const std::string& value ) throw ( IOException );
 
         /**
-         * Writes a string to the underlying output stream as a sequence of
-         * characters. Each character is written to the data output stream
-         * as if by the writeChar method. If no exception is thrown, the
-         * counter written is incremented by the length of value.  The trailing
-         * NULL character is written by this method.
-         * @param value the value to write.
-         * @throws IOException
+         * {@inheritDoc}
          */
         virtual void writeChars( const std::string& value ) throw ( IOException );
 
         /**
-         * Writes out the string to the underlying output stream as a modeified UTF-8
-         * encoded sequence of bytes.  The first two bytes written are indicate its
-         * encoded length followed by the rest of the string's characters encoded as
-         * modified UTF-8.  The length represent the encoded length of the data not the
-         * actual length of the string.
-         *
-         * @param value
-         *        the value to write.
-         *
-         * @throws IOException - on a write error
-         * @throws UTFDataFormatException - if encoded size if greater than 65535
+         * {@inheritDoc}
          */
         virtual void writeUTF( const std::string& value )
             throw ( IOException, UTFDataFormatException );
+
+    protected:
+
+        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
+
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     private:
 

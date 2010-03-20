@@ -57,7 +57,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater,
-                                          std::size_t bufferSize, bool own )
+                                          int bufferSize, bool own )
  :  FilterInputStream( inputStream, own ) {
 
     if( inflater == NULL ) {
@@ -65,7 +65,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
              __FILE__, __LINE__, "Inflater passed was NULL." );
     }
 
-    if( bufferSize == 0 ) {
+    if( bufferSize <= 0 ) {
         throw IllegalArgumentException(
              __FILE__, __LINE__, "Cannot create a zero sized buffer." );
     }
@@ -106,14 +106,18 @@ void InflaterInputStream::mark( int readLimit DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t InflaterInputStream::skip( std::size_t num )
+long long InflaterInputStream::skip( long long num )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
-        std::size_t count = 0;
-        std::size_t remaining = (std::size_t)Math::min( (long long)num, (long long)buff.size() );
+        if( num <= 0 ) {
+            return 0;
+        }
+
+        long long count = 0;
+        long long remaining = (std::size_t)Math::min( num, (long long)buff.size() );
 
         std::vector<unsigned char> buffer( remaining );
 
@@ -123,7 +127,7 @@ std::size_t InflaterInputStream::skip( std::size_t num )
                 return count;
             }
             count += x;
-            remaining = ( num - count ) < buffer.size() ? num - count : buffer.size();
+            remaining = ( num - count ) < (long long)buffer.size() ? num - count : buffer.size();
         }
 
         return count;
@@ -148,7 +152,7 @@ void InflaterInputStream::close() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t InflaterInputStream::available() const throw ( decaf::io::IOException ) {
+int InflaterInputStream::available() const throw ( decaf::io::IOException ) {
 
     try{
 
@@ -184,8 +188,7 @@ int InflaterInputStream::doReadByte() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t size,
-                                             std::size_t offset, std::size_t length )
+int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -197,9 +200,19 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                 __FILE__, __LINE__, "Buffer passed was NULL." );
         }
 
-        if( offset + length > size ) {
+        if( size < 0 ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Offset plus Length exceeds Buffer Size." );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         if( length == 0 ) {
@@ -225,12 +238,12 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
             // It may also be true if the next read() should return -1.
             try {
 
-                std::size_t result = inflater->inflate( buffer, size, offset, length );
+                int result = inflater->inflate( buffer, size, offset, length );
 
                 atEOF = inflater->finished();
 
                 if( result > 0 ) {
-                    return (int)result;
+                    return result;
                 } else if( atEOF ) {
                     return -1;
                 } else if( inflater->needsDictionary() ) {
@@ -251,7 +264,7 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, std::size_t 
                 }
 
                 IOException ex( __FILE__, __LINE__, "Error from Inflater" );
-                ex.initCause( e.clone() );
+                ex.initCause( &e );
                 throw ex;
             }
 
