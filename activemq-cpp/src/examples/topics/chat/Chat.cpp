@@ -134,7 +134,7 @@ void Chat::run() {
 #endif
             else if( strlen(s) > 0 ) {
 
-                int cch = this->username.length() + strlen(s) + strlen(": ") + 1;
+                int cch = (int)( this->username.length() + strlen(s) + strlen(": ") + 1 );
                 char *text = new char[cch];
 
                 if( text != NULL ) {

@@ -50,7 +50,7 @@ namespace {
 
         MockReader( std::vector<char>& data ) : Reader() {
             this->contents = data;
-            this->length = contents.size();
+            this->length = (int)contents.size();
             this->current_offset = 0;
         }
 
@@ -73,7 +73,7 @@ namespace {
                 return -1;
             }
 
-            length = Math::min( (long long)length, (long long)( this->length - current_offset ) );
+            length = Math::min( length, this->length - current_offset );
             for( int i = 0; i < length; i++ ) {
                 buffer[offset + i] = contents[current_offset + i];
             }
@@ -217,7 +217,7 @@ void ReaderTest::testReset() {
 void ReaderTest::testSkip() {
     std::string s = "MY TEST STRING";
     std::vector<char> srcBuffer( s.begin(), s.end() );
-    int length = srcBuffer.size();
+    int length = (int)srcBuffer.size();
     MockReader mockReader( srcBuffer );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Should be equal to \'M\'", (int)'M', mockReader.read() );
 

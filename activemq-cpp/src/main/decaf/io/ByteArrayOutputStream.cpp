@@ -146,7 +146,7 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
                 __FILE__, __LINE__, "Passed stream pointer is null" );
         }
 
-        out->write( this->toByteArray(), this->size() );
+        out->write( this->toByteArray(), (int)this->size() );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )

@@ -98,7 +98,7 @@ void SocketTest::testTx() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "don't reply";
-        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), (int)msg.length(), 0, (int)msg.length() );
 
         Thread::sleep( 10 );
 
@@ -152,7 +152,7 @@ void SocketTest::testTrx() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "reply";
-        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), (int)msg.length(), 0, (int)msg.length() );
 
         synchronized(&serverThread.mutex)
         {
@@ -256,7 +256,7 @@ void SocketTest::testTrxNoDelay() {
         io::OutputStream* stream = client.getOutputStream();
 
         std::string msg = "reply";
-        stream->write( (unsigned char*)msg.c_str(), msg.length(), 0, msg.length() );
+        stream->write( (unsigned char*)msg.c_str(), (int)msg.length() );
 
         synchronized(&serverThread.mutex)
         {

@@ -149,7 +149,7 @@ void WriterTest::testWriteStringOffsetCount() {
     std::string testString = "My Test String";
     MockWriter writer( 20 );
 
-    writer.write( testString, 0, testString.length() );
+    writer.write( testString, 0, (int)testString.length() );
 
     std::vector<char> result = writer.getContents();
     CPPUNIT_ASSERT_EQUAL( testString, std::string( result.begin(), result.end() ) );
@@ -174,7 +174,7 @@ void WriterTest::testAppendCharSequence() {
     std::string testString = "My Test String";
     MockWriter writer( 20 );
 
-    CharBuffer* buffer = CharBuffer::allocate( testString.size() );
+    CharBuffer* buffer = CharBuffer::allocate( (int)testString.size() );
     buffer->put( testString );
     buffer->rewind();
 
@@ -194,7 +194,7 @@ void WriterTest::testAppendCharSequenceIntInt() {
     std::string testString = "My Test String";
     MockWriter writer(20);
 
-    CharBuffer* buffer = CharBuffer::allocate( testString.size() );
+    CharBuffer* buffer = CharBuffer::allocate( (int)testString.size() );
     buffer->put( testString );
     buffer->rewind();
 

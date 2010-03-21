@@ -95,7 +95,7 @@ void InputStreamReaderTest::testRead() {
     CPPUNIT_ASSERT_EQUAL( ' ', (char) this->reader1->read() );
 
     std::vector<char> buffer( TEST_STRING.length() - 5 );
-    this->reader1->read( &buffer[0], buffer.size(), 0, TEST_STRING.length() - 5 );
+    this->reader1->read( &buffer[0], (int)buffer.size(), 0, (int)TEST_STRING.length() - 5 );
     CPPUNIT_ASSERT_EQUAL( -1, this->reader1->read() );
 
     this->reader1->close();

@@ -195,7 +195,7 @@ namespace cmsutil {
 
         virtual cms::BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            std::size_t bytesSize )
+            int bytesSize )
                 throw ( cms::CMSException) {
             return session->createBytesMessage( bytes, bytesSize );
         }

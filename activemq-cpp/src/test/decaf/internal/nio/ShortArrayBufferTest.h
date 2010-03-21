@@ -154,7 +154,7 @@ namespace nio{
             short value = startValue;
             for( int i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get( startIndex + i ) == value );
-                value = value + 1;
+                value = (short)( value + 1 );
             }
         }
 

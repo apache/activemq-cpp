@@ -98,7 +98,7 @@ void PartialCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
         dataOut->writeInt( info->getCommandId() );
         if( bs->readBoolean() ) {
             dataOut->writeInt( (int)info->getData().size() );
-            dataOut->write( (const unsigned char*)(&info->getData()[0]), info->getData().size(), 0, info->getData().size() );
+            dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size(), 0, (int)info->getData().size() );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
@@ -135,7 +135,7 @@ void PartialCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
         dataOut->write( info->getData().size() != 0 );
         if( info->getData().size() != 0 ) {
             dataOut->writeInt( (int)info->getData().size() );
-            dataOut->write( (const unsigned char*)(&info->getData()[0]), info->getData().size(), 0, info->getData().size() );
+            dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size(), 0, (int)info->getData().size() );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )

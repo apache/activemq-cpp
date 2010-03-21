@@ -51,6 +51,9 @@ namespace commands{
         bool faultTolerant;
         bool resume;
         bool suspend;
+        std::string connectedBrokers;
+        std::string reconnectTo;
+        bool rebalanceConnection;
 
     public:
 
@@ -117,6 +120,17 @@ namespace commands{
 
         virtual bool isSuspend() const;
         virtual void setSuspend( bool suspend );
+
+        virtual const std::string& getConnectedBrokers() const;
+        virtual std::string& getConnectedBrokers();
+        virtual void setConnectedBrokers( const std::string& connectedBrokers );
+
+        virtual const std::string& getReconnectTo() const;
+        virtual std::string& getReconnectTo();
+        virtual void setReconnectTo( const std::string& reconnectTo );
+
+        virtual bool isRebalanceConnection() const;
+        virtual void setRebalanceConnection( bool rebalanceConnection );
 
         /**
          * Allows a Visitor to visit this command and return a response to the

@@ -390,10 +390,8 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual BytesMessage* createBytesMessage(
-            const unsigned char* bytes,
-            std::size_t bytesSize )
-                throw ( CMSException) = 0;
+        virtual BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize )
+            throw ( CMSException) = 0;
 
         /**
          * Creates a new StreamMessage

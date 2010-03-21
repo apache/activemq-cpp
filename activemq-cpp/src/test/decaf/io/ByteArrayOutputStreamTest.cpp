@@ -54,7 +54,7 @@ void ByteArrayOutputStreamTest::testClose() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testReset() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 0, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     baos.reset();
     CPPUNIT_ASSERT_MESSAGE("reset failed", 0 == baos.size() );
 }
@@ -62,7 +62,7 @@ void ByteArrayOutputStreamTest::testReset() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testSize() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 0, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     CPPUNIT_ASSERT_MESSAGE("size test failed", 100 == baos.size());
     baos.reset();
     CPPUNIT_ASSERT_MESSAGE("size test failed", 0 == baos.size());
@@ -72,7 +72,7 @@ void ByteArrayOutputStreamTest::testSize() {
 void ByteArrayOutputStreamTest::testToByteArray() {
     const unsigned char* bytes = NULL;
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 0, testString.length() );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.length() );
     bytes = baos.toByteArray();
     for( std::size_t i = 0; i < testString.length(); i++) {
         CPPUNIT_ASSERT_MESSAGE("Error in byte array", bytes[i] == testString.at(i) );
@@ -83,7 +83,7 @@ void ByteArrayOutputStreamTest::testToByteArray() {
 void ByteArrayOutputStreamTest::testToString() {
 
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 0, testString.length() );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.length() );
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect String",
                             baos.toString() == testString );
 }
@@ -101,7 +101,7 @@ void ByteArrayOutputStreamTest::testWrite1() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testWrite2() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 0, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     const unsigned char* bytes = baos.toByteArray();
     CPPUNIT_ASSERT_MESSAGE("Wrote incorrect bytes",
             string((const char*)bytes, baos.size() ) == testString.substr(0, 100) );
@@ -110,7 +110,7 @@ void ByteArrayOutputStreamTest::testWrite2() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testWrite3() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], testString.size(), 50, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 50, 100 );
     const unsigned char* bytes = baos.toByteArray();
     CPPUNIT_ASSERT_MESSAGE("Wrote incorrect bytes",
             string((const char*)bytes, baos.size() ) == testString.substr(50, 100) );
@@ -120,7 +120,7 @@ void ByteArrayOutputStreamTest::testWrite3() {
 void ByteArrayOutputStreamTest::testWriteToDecaf_io_OutputStream() {
     ByteArrayOutputStream baos1;
     ByteArrayOutputStream baos2;
-    baos1.write( (unsigned char*)&testString[0], testString.size(), 0, 100 );
+    baos1.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     baos1.writeTo( &baos2 );
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect String",
                             baos2.toString() == testString.substr(0, 100) );

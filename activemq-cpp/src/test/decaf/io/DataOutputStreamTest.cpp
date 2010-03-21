@@ -49,7 +49,7 @@ void DataOutputStreamTest::testFlush() {
 void DataOutputStreamTest::testSize() {
 
     try {
-        os->write( (unsigned char*)&testData[0], testData.size(), 0, 150 );
+        os->write( (unsigned char*)&testData[0], (int)testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char rbuf[150];
@@ -65,7 +65,7 @@ void DataOutputStreamTest::testSize() {
 void DataOutputStreamTest::testWrite1() {
 
     try {
-        os->write( (unsigned char*)&testData[0], testData.size(), 0, 150 );
+        os->write( (unsigned char*)&testData[0], (int)testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char* rbuf = new unsigned char[150];
@@ -131,7 +131,7 @@ void DataOutputStreamTest::testWriteBytes() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( &result[0], testData.size() );
+        is->read( &result[0], (int)testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );
@@ -166,7 +166,7 @@ void DataOutputStreamTest::testWriteChars() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( &result[0], testData.size() );
+        is->read( &result[0], (int)testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );
@@ -376,35 +376,35 @@ void DataOutputStreamTest::test(){
 
     unsigned char tempByte = buffer[ix];
     CPPUNIT_ASSERT( tempByte == byteVal );
-    ix += sizeof( tempByte );
+    ix += (int)sizeof( tempByte );
 
     unsigned short tempShort = 0;
     memcpy( &tempShort, buffer+ix, sizeof( unsigned short ) );
     tempShort = util::Endian::byteSwap( tempShort );
     CPPUNIT_ASSERT( tempShort == shortVal );
-    ix += sizeof( tempShort );
+    ix += (int)sizeof( tempShort );
 
     unsigned int tempInt = 0;
     memcpy( &tempInt, buffer+ix, sizeof( unsigned int ) );
     tempInt = util::Endian::byteSwap( tempInt );
     CPPUNIT_ASSERT( tempInt == intVal );
-    ix += sizeof( tempInt );
+    ix += (int)sizeof( tempInt );
 
     unsigned long long tempLong = 0;
     memcpy( &tempLong, buffer+ix, sizeof( unsigned long long ) );
     tempLong = util::Endian::byteSwap( tempLong );
     CPPUNIT_ASSERT( tempLong == longVal );
-    ix += sizeof( tempLong );
+    ix += (int)sizeof( tempLong );
 
     float tempFloat = 0;
     memcpy( &tempFloat, buffer+ix, sizeof( float ) );
     tempFloat = util::Endian::byteSwap( tempFloat );
     CPPUNIT_ASSERT( tempFloat == floatVal );
-    ix += sizeof( tempFloat );
+    ix += (int)sizeof( tempFloat );
 
     double tempDouble = 0;
     memcpy( &tempDouble, buffer+ix, sizeof( double ) );
     tempDouble = util::Endian::byteSwap( tempDouble );
     CPPUNIT_ASSERT( tempDouble == doubleVal );
-    ix += sizeof( tempDouble );
+    ix += (int)sizeof( tempDouble );
 }

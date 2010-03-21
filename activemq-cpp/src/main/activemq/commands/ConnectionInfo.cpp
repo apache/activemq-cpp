@@ -46,6 +46,7 @@ ConnectionInfo::ConnectionInfo() : BaseCommand() {
     this->brokerMasterConnector = false;
     this->manageable = false;
     this->clientMaster = false;
+    this->faultTolerant = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +90,7 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     this->setBrokerMasterConnector( srcPtr->isBrokerMasterConnector() );
     this->setManageable( srcPtr->isManageable() );
     this->setClientMaster( srcPtr->isClientMaster() );
+    this->setFaultTolerant( srcPtr->isFaultTolerant() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +140,8 @@ std::string ConnectionInfo::toString() const {
     stream << "Manageable = " << this->isManageable();
     stream << ", ";
     stream << "ClientMaster = " << this->isClientMaster();
+    stream << ", ";
+    stream << "FaultTolerant = " << this->isFaultTolerant();
     stream << " }";
 
     return stream.str();
@@ -188,6 +192,9 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->isClientMaster() != valuePtr->isClientMaster() ) {
+        return false;
+    }
+    if( this->isFaultTolerant() != valuePtr->isFaultTolerant() ) {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
@@ -299,6 +306,16 @@ bool ConnectionInfo::isClientMaster() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionInfo::setClientMaster( bool clientMaster ) {
     this->clientMaster = clientMaster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionInfo::isFaultTolerant() const {
+    return faultTolerant;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionInfo::setFaultTolerant( bool faultTolerant ) {
+    this->faultTolerant = faultTolerant;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

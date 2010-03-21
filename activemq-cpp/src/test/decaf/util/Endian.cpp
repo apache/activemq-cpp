@@ -53,8 +53,8 @@ unsigned short Endian::byteSwap( unsigned short value ){
         return value;
     #endif
 
-    return (((unsigned short)value & 0xFF00 ) >> 8 ) |
-           (((unsigned short)value & 0x00FF ) << 8 );
+    return (unsigned short)((value & 0xFF00 ) >> 8 ) |
+           (unsigned short)((value & 0x00FF ) << 8 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

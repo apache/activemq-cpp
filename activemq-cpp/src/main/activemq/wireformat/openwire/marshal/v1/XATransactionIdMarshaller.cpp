@@ -101,11 +101,11 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
         dataOut->writeInt( info->getFormatId() );
         if( bs->readBoolean() ) {
             dataOut->writeInt( (int)info->getGlobalTransactionId().size() );
-            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size(), 0, info->getGlobalTransactionId().size() );
+            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size() );
         }
         if( bs->readBoolean() ) {
             dataOut->writeInt( (int)info->getBranchQualifier().size() );
-            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), info->getBranchQualifier().size(), 0, info->getBranchQualifier().size() );
+            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size() );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
@@ -143,12 +143,12 @@ void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
         dataOut->write( info->getGlobalTransactionId().size() != 0 );
         if( info->getGlobalTransactionId().size() != 0 ) {
             dataOut->writeInt( (int)info->getGlobalTransactionId().size() );
-            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size(), 0, info->getGlobalTransactionId().size() );
+            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size() );
         }
         dataOut->write( info->getBranchQualifier().size() != 0 );
         if( info->getBranchQualifier().size() != 0 ) {
             dataOut->writeInt( (int)info->getBranchQualifier().size() );
-            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), info->getBranchQualifier().size(), 0, info->getBranchQualifier().size() );
+            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size() );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )

@@ -63,7 +63,7 @@ void ByteArrayInputStreamBenchmark::run(){
     for( int iy = 0; iy < numRuns; ++iy ){
 
         for( int iz = 0; iz < bufferSize; ++iz ) {
-            bucket[iy] = bis.read();
+            bucket[iy] = (unsigned char)bis.read();
         }
         bis.reset();
     }

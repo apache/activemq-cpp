@@ -46,7 +46,7 @@ long long CRC32::getValue() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void CRC32::update( const std::vector<unsigned char>& buffer ) {
-    this->update( &buffer[0], buffer.size(), 0, buffer.size() );
+    this->update( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

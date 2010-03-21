@@ -116,7 +116,7 @@ namespace io{
                          unsigned char* expect, int expectLength );
 
         void openDataInputStream() {
-            this->bais.reset( new ByteArrayInputStream( baos->toByteArray(), baos->size() ) );
+            this->bais.reset( new ByteArrayInputStream( baos->toByteArray(), (int)baos->size() ) );
             this->is.reset( new DataInputStream( bais.get() ) );
         }
 

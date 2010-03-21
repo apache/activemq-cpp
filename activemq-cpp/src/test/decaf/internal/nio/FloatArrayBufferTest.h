@@ -113,7 +113,7 @@ namespace nio{
 
         void loadTestData2( float* array, int offset, int length ) {
             for( int i = 0; i < length; i++ ) {
-                array[offset + i] = (float)length - i;
+                array[offset + i] = (float)length - (float)i;
             }
         }
 
@@ -127,7 +127,7 @@ namespace nio{
         void loadTestData2( decaf::nio::FloatBuffer* buf ) {
             buf->clear();
             for( int i = 0; i < buf->capacity(); i++ ) {
-                buf->put(i, (float) buf->capacity() - i);
+                buf->put(i, (float) buf->capacity() - (float)i );
             }
         }
 

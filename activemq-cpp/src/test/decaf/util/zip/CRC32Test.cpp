@@ -150,19 +150,19 @@ void CRC32Test::testUpdateArray() {
 ////////////////////////////////////////////////////////////////////////////////
 void CRC32Test::testUpdateArrayIndexed() {
 
-    static const std::size_t SIZE = 3;
+    static const int SIZE = 3;
     unsigned char byteArray[] = {1, 2, 3};
     CRC32 crc;
 
-    std::size_t off = 2;// accessing the 2nd element of byteArray
-    std::size_t len = 1;
-    std::size_t lenError = 3;
-    std::size_t offError = 4;
+    int off = 2;// accessing the 2nd element of byteArray
+    int len = 1;
+    int lenError = 3;
+    int offError = 4;
     crc.update( byteArray, SIZE, off, len );
 
     // Ran JDK and discovered that the value of the CRC should be
     // 1259060791
-    CPPUNIT_ASSERT_EQUAL_MESSAGE( "update(unsigned char[],std::size_t,std::size_t) failed to update the checksum to the correct value ",
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "update(unsigned char[],int,int) failed to update the checksum to the correct value ",
                                   1259060791LL, crc.getValue() );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(

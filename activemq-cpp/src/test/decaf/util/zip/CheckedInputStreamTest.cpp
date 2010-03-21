@@ -67,7 +67,7 @@ void CheckedInputStreamTest::testGetChecksum() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "the checkSum value of an empty file is not zero",
                                   0LL, checkEmpty.getChecksum()->getValue() );
 
-    static const std::size_t SIZE = 10;
+    static const int SIZE = 10;
     unsigned char byteArray[] = { 1, 3, 4, 7, 8, 'e', 'r', 't', 'y', '5' };
 
     std::vector<unsigned char> outPutBuf( 500 );
@@ -92,10 +92,10 @@ void CheckedInputStreamTest::testGetChecksum() {
 ////////////////////////////////////////////////////////////////////////////////
 void CheckedInputStreamTest::testSkip() {
 
-    static const std::size_t SIZE = 256;
+    static const int SIZE = 256;
     std::vector<unsigned char> byteArray( SIZE );
-    for( std::size_t i = 0; i < SIZE; ++i ) {
-        byteArray[i] = i;
+    for( int i = 0; i < SIZE; ++i ) {
+        byteArray[i] = (unsigned char)i;
     }
     std::vector<unsigned char> outPutBuf( 500 );
 
@@ -121,10 +121,10 @@ void CheckedInputStreamTest::testSkip() {
 ////////////////////////////////////////////////////////////////////////////////
 void CheckedInputStreamTest::testRead() {
 
-    static const std::size_t SIZE = 256;
+    static const int SIZE = 256;
     std::vector<unsigned char> byteArray( SIZE );
-    for( std::size_t i = 0; i < SIZE; ++i ) {
-        byteArray[i] = i;
+    for( int i = 0; i < SIZE; ++i ) {
+        byteArray[i] = (unsigned char)i;
     }
     std::vector<unsigned char> outPutBuf( 500 );
 
@@ -151,10 +151,10 @@ void CheckedInputStreamTest::testRead() {
 ////////////////////////////////////////////////////////////////////////////////
 void CheckedInputStreamTest::testReadBIII() {
 
-    static const std::size_t SIZE = 256;
+    static const int SIZE = 256;
     std::vector<unsigned char> byteArray( SIZE );
-    for( std::size_t i = 0; i < SIZE; ++i ) {
-        byteArray[i] = i;
+    for( int i = 0; i < SIZE; ++i ) {
+        byteArray[i] = (unsigned char)i;
     }
     std::vector<unsigned char> outPutBuf( 500 );
 

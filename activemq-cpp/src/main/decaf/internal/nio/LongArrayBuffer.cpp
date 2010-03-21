@@ -31,7 +31,7 @@ LongArrayBuffer::LongArrayBuffer( int size, bool readOnly )
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
-    this->_array.reset( new ByteArrayAdapter( size * sizeof(long long) ) );
+    this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(long long) ) );
     this->offset = 0;
     this->length = size;
     this->readOnly = readOnly;

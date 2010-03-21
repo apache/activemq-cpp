@@ -122,12 +122,12 @@ void InflaterInputStreamTest::setUp() {
 
     Deflater deflater;
 
-    deflater.setInput( (const unsigned char*)testString.c_str(), testString.size(), 0, testString.size() );
+    deflater.setInput( (const unsigned char*)testString.c_str(), (int)testString.size(), 0, (int)testString.size() );
     deflater.finish();
 
     int x = 0;
     while( !deflater.finished() ) {
-        x += deflater.deflate( deflatedData, x, deflatedData.size() - x );
+        x += deflater.deflate( deflatedData, x, (int)deflatedData.size() - x );
     }
 
     this->deflatedData.resize( x + 1 );
@@ -372,7 +372,7 @@ void InflaterInputStreamTest::testSkip2() {
     int i = 0;
     int result = 0;
     while( ( result = iis2.read() ) != -1 ) {
-        buffer[i] = result;
+        buffer[i] = (unsigned char)result;
         i++;
     }
 

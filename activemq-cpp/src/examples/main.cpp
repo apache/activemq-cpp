@@ -186,10 +186,10 @@ private:
 public:
 
     HelloWorldConsumer( const std::string& brokerURI,
-                        long numMessages,
+                        int numMessages,
                         bool useTopic = false,
                         bool sessionTransacted = false,
-                        long waitMillis = 30000 )
+                        int waitMillis = 30000 )
                          : latch(1), doneLatch(numMessages){
         this->connection = NULL;
         this->session = NULL;
@@ -407,7 +407,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     consumerThread.join();
 
     long long endTime = System::currentTimeMillis();
-    double totalTime = (endTime - startTime) / 1000.0;
+    double totalTime = (double)(endTime - startTime) / 1000.0;
 
     consumer.close();
     producer.close();

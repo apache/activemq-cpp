@@ -61,7 +61,7 @@ void DeflaterTest::testDeflateVector() {
     std::vector<unsigned char> outPutBuf( 50 );
     std::vector<unsigned char> outPutInf( 50 );
 
-    std::size_t x = 0;
+    int x = 0;
 
     Deflater defl;
     defl.setInput( byteArray, 5, 0, 5 );
@@ -108,8 +108,8 @@ void DeflaterTest::testDeflateVector() {
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterTest::testDeflateArray() {
 
-    static const std::size_t BUFFER_SIZE = 50;
-    static const std::size_t INPUT_SIZE = 5;
+    static const int BUFFER_SIZE = 50;
+    static const int INPUT_SIZE = 5;
 
     unsigned char outPutBuf[BUFFER_SIZE];
     memset( outPutBuf, 0, BUFFER_SIZE );
@@ -117,9 +117,9 @@ void DeflaterTest::testDeflateArray() {
     unsigned char outPutInf[BUFFER_SIZE];
     memset( outPutInf, 0, BUFFER_SIZE );
 
-    std::size_t offSet = 1;
-    std::size_t length = BUFFER_SIZE - 1;
-    std::size_t x = 0;
+    int offSet = 1;
+    int length = BUFFER_SIZE - 1;
+    int x = 0;
 
     Deflater defl;
 
@@ -135,8 +135,8 @@ void DeflaterTest::testDeflateArray() {
 
     long long totalOut = defl.getBytesWritten();
     long long totalIn = defl.getBytesRead();
-    CPPUNIT_ASSERT_EQUAL( x, (std::size_t)totalOut );
-    CPPUNIT_ASSERT_EQUAL( INPUT_SIZE, (std::size_t)totalIn );
+    CPPUNIT_ASSERT_EQUAL( x, (int)totalOut );
+    CPPUNIT_ASSERT_EQUAL( INPUT_SIZE, (int)totalIn );
     defl.end();
 
     Inflater infl;
@@ -151,7 +151,7 @@ void DeflaterTest::testDeflateArray() {
 
     CPPUNIT_ASSERT_EQUAL( totalIn, infl.getBytesWritten() );
     CPPUNIT_ASSERT_EQUAL( totalOut, infl.getBytesRead() );
-    for( std::size_t i = 0; i < INPUT_SIZE; i++ ) {
+    for( int i = 0; i < INPUT_SIZE; i++ ) {
         CPPUNIT_ASSERT_EQUAL( byteArray[i], outPutInf[i] );
     }
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Final decompressed data contained more bytes than original",
@@ -211,7 +211,7 @@ void DeflaterTest::testFinish() {
     std::vector<unsigned char> outPutBuf(100);
     std::vector<unsigned char> outPutInf(100);
 
-    std::size_t x = 0;
+    int x = 0;
     Deflater defl;
     defl.setInput( byteArray, 5, 0, 5 );
     defl.finish();
@@ -325,11 +325,11 @@ void DeflaterTest::testReset() {
     unsigned char byteArray[] = { 1, 3, 4, 7, 8 };
     unsigned char byteArray2[] = { 8, 7, 4, 3, 1 };
 
-    std::size_t x = 0;
-    std::size_t orgValue = 0;
+    int x = 0;
+    int orgValue = 0;
     Deflater defl;
 
-    for( std::size_t i = 0; i < 3; i++ ) {
+    for( int i = 0; i < 3; i++ ) {
 
         if( i == 0 ) {
             memcpy( curArray, byteArray, 5 );
@@ -346,7 +346,7 @@ void DeflaterTest::testReset() {
         }
 
         if( i == 0 ) {
-            CPPUNIT_ASSERT_EQUAL( x, (std::size_t)defl.getBytesWritten() );
+            CPPUNIT_ASSERT_EQUAL( x, (int)defl.getBytesWritten() );
         } else if( i == 1 ) {
             CPPUNIT_ASSERT_EQUAL( x, orgValue );
         } else {
@@ -373,7 +373,7 @@ void DeflaterTest::testReset() {
             memcpy( curArray, byteArray, 5 );
         }
 
-        for( std::size_t j = 0; j < 5; j++ ) {
+        for( int j = 0; j < 5; j++ ) {
             CPPUNIT_ASSERT_EQUAL( curArray[j], outPutInf[j] );
         }
 
@@ -441,8 +441,8 @@ void DeflaterTest::testSetDictionaryBIII() {
                                   '3', 'w', 'r', 't', 'u', 'i', 'o', 4, 5, 6, 7 };
     std::vector<unsigned char> outPutBuf( 100 );
 
-    std::size_t offSet = 4;
-    std::size_t length = 5;
+    int offSet = 4;
+    int length = 5;
 
     Deflater defl;
     long long deflAdler = defl.getAdler();
@@ -473,7 +473,7 @@ void DeflaterTest::testSetDictionaryBIII() {
 
     // boundary check
     Deflater defl2;
-    for( std::size_t i = 0; i < 2; i++ ) {
+    for( int i = 0; i < 2; i++ ) {
 
         if( i == 0 ) {
             offSet = 0;
@@ -528,10 +528,10 @@ void DeflaterTest::testSetInputVector() {
         CPPUNIT_FAIL("Invalid input to be decompressed");
     }
 
-    for( std::size_t i = 0; i < byteVector.size(); i++ ) {
+    for( int i = 0; i < (int)byteVector.size(); i++ ) {
         CPPUNIT_ASSERT_EQUAL( byteVector[i], outPutInf[i] );
     }
-    CPPUNIT_ASSERT_EQUAL( byteVector.size(), (std::size_t)infl.getBytesWritten() );
+    CPPUNIT_ASSERT_EQUAL( (long long)byteVector.size(), infl.getBytesWritten() );
     infl.end();
 }
 
@@ -544,8 +544,8 @@ void DeflaterTest::testSetInputBIII() {
     std::vector<unsigned char> outPutBuf( 50 );
     std::vector<unsigned char> outPutInf( 50 );
 
-    std::size_t offSet = 1;
-    std::size_t length = 3;
+    int offSet = 1;
+    int length = 3;
 
     Deflater defl;
     defl.setInput( byteArray, SIZE, offSet, length);
@@ -568,15 +568,15 @@ void DeflaterTest::testSetInputBIII() {
         infl.inflate( outPutInf );
     }
 
-    for( std::size_t i = 0; i < length; i++ ) {
+    for( int i = 0; i < length; i++ ) {
         CPPUNIT_ASSERT_EQUAL( byteArray[i + offSet], outPutInf[i] );
     }
-    CPPUNIT_ASSERT_EQUAL( length, (std::size_t)infl.getBytesWritten() );
+    CPPUNIT_ASSERT_EQUAL( length, (int)infl.getBytesWritten() );
     infl.end();
 
     // boundary check
     Deflater defl2;
-    for( std::size_t i = 0; i < 2; i++ ) {
+    for( int i = 0; i < 2; i++ ) {
 
         if( i == 0 ) {
             offSet = 0;
@@ -601,14 +601,14 @@ void DeflaterTest::testSetInputBIII() {
 void DeflaterTest::testSetLevel() {
 
     std::vector<unsigned char> byteArray( 100 );
-    for( std::size_t ix = 0; ix < 100; ++ix ) {
-        byteArray[ix] = ix + 1;
+    for( int ix = 0; ix < 100; ++ix ) {
+        byteArray[ix] = (unsigned char)( ix + 1 );
     }
 
     std::vector<unsigned char> outPutBuf( 500 );
 
     long long totalOut;
-    for( std::size_t i = 0; i < 10; i++ ) {
+    for( int i = 0; i < 10; i++ ) {
 
         {
             Deflater defl;
@@ -659,11 +659,11 @@ void DeflaterTest::testSetLevel() {
 void DeflaterTest::testSetStrategy() {
 
     std::vector<unsigned char> byteArray( 100 );
-    for( std::size_t ix = 0; ix < 100; ++ix ) {
-        byteArray[ix] = ix + 1;
+    for( int ix = 0; ix < 100; ++ix ) {
+        byteArray[ix] = (unsigned char)( ix + 1 );
     }
 
-    for( std::size_t i = 0; i < 3; i++ ) {
+    for( int i = 0; i < 3; i++ ) {
 
         std::vector<unsigned char> outPutBuf( 500 );
         Deflater mdefl;
@@ -712,8 +712,8 @@ void DeflaterTest::testSetStrategy() {
 void DeflaterTest::testConstructor() {
 
     std::vector<unsigned char> byteArray( 100 );
-    for( std::size_t ix = 0; ix < 100; ++ix ) {
-        byteArray[ix] = ix + 1;
+    for( int ix = 0; ix < 100; ++ix ) {
+        byteArray[ix] = (unsigned char)( ix + 1 );
     }
 
     Deflater defl;
@@ -747,7 +747,7 @@ void DeflaterTest::testConstructor() {
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterTest::testConstructorIB() {
 
-    static const std::size_t ARRAY_SIZE = 15;
+    static const int ARRAY_SIZE = 15;
 
     unsigned char byteArray[] = { 4, 5, 3, 2, 'a', 'b', 6, 7, 8, 9, 0, 's', '3', 'w', 'r' };
 
@@ -804,7 +804,7 @@ void DeflaterTest::testConstructorIB() {
         }
         infl.inflate( outPutInf );
     }
-    for( std::size_t i = 0; i < ARRAY_SIZE; i++ ) {
+    for( int i = 0; i < ARRAY_SIZE; i++ ) {
         CPPUNIT_ASSERT_EQUAL( byteArray[i], outPutInf[i] );
     }
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "final decompressed data contained more bytes than original - constructorIZ",
@@ -814,7 +814,7 @@ void DeflaterTest::testConstructorIB() {
     {
         Inflater infl( false );
         outPutBuf.assign( outPutBuf.size(), 0 );
-        std::size_t r = 0;
+        int r = 0;
         try {
             while( !infl.finished() ) {
                 if( infl.needsInput() ) {
@@ -846,8 +846,8 @@ void DeflaterTest::testConstructorIB() {
 void DeflaterTest::testConstructorI() {
 
     std::vector<unsigned char> byteArray( 100 );
-    for( std::size_t ix = 0; ix < 100; ++ix ) {
-        byteArray[ix] = ix + 1;
+    for( int ix = 0; ix < 100; ++ix ) {
+        byteArray[ix] = (unsigned char)( ix + 1 );
     }
 
     std::vector<unsigned char> outPutBuf( 500 );
@@ -977,7 +977,7 @@ void DeflaterTest::testGetBytesRead() {
     // Compress the bytes
     std::vector<unsigned char> output( 100 );
 
-    def.setInput( (unsigned char*)inputString.c_str(), inputString.size(), 0, inputString.size() );
+    def.setInput( (unsigned char*)inputString.c_str(), (int)inputString.size(), 0, (int)inputString.size() );
     def.finish();
 
     long long compressedDataLength = (long long)def.deflate( output );
@@ -999,7 +999,7 @@ void DeflaterTest::testGetBytesWritten() {
     // Compress the bytes
     std::vector<unsigned char> output( 100 );
 
-    def.setInput( (unsigned char*)inputString.c_str(), inputString.size(), 0, inputString.size() );
+    def.setInput( (unsigned char*)inputString.c_str(), (int)inputString.size(), 0, (int)inputString.size() );
     def.finish();
 
     long long compressedDataLength = (long long)def.deflate( output );

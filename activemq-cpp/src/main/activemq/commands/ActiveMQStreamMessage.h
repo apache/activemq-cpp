@@ -202,7 +202,7 @@ namespace commands{
          * @throw MessageFormatException - if this type conversion is invalid.
          * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
+        virtual int readBytes( std::vector<unsigned char>& value ) const
             throw ( cms::MessageEOFException,
                     cms::MessageFormatException,
                     cms::MessageNotReadableException,
@@ -253,7 +253,7 @@ namespace commands{
          * @throw MessageFormatException - if this type conversion is invalid.
          * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::size_t readBytes( unsigned char* buffer, std::size_t length ) const
+        virtual int readBytes( unsigned char* buffer, int length ) const
             throw ( cms::MessageEOFException,
                     cms::MessageFormatException,
                     cms::MessageNotReadableException,
@@ -273,7 +273,7 @@ namespace commands{
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const unsigned char* value, std::size_t offset, std::size_t length )
+        virtual void writeBytes( const unsigned char* value, int offset, int length )
             throw ( cms::MessageNotWriteableException,
                     cms::CMSException );
 

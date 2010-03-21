@@ -305,5 +305,5 @@ void OpenwireSimpleTest::tesstStreamMessage() {
     CPPUNIT_ASSERT( rcvStreamMessage->readLong() == longValue );
     CPPUNIT_ASSERT( rcvStreamMessage->readFloat() == floatValue );
     CPPUNIT_ASSERT( rcvStreamMessage->readDouble() == doubleValue );
-    CPPUNIT_ASSERT( rcvStreamMessage->readBytes( readBytes ) == bytes.size() );
+    CPPUNIT_ASSERT( rcvStreamMessage->readBytes( readBytes ) == (int)bytes.size() );
 }

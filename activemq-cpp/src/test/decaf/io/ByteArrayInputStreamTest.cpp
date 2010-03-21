@@ -211,21 +211,21 @@ void ByteArrayInputStreamTest::testStream()
     testBuffer.push_back('s');
     testBuffer.push_back('t');
 
-    ByteArrayInputStream stream_a(&testBuffer[0], testBuffer.size());
+    ByteArrayInputStream stream_a(&testBuffer[0], (int)testBuffer.size());
 
     CPPUNIT_ASSERT( stream_a.available() == 4 );
 
-    char a = stream_a.read();
-    char b = stream_a.read();
-    char c = stream_a.read();
-    char d = stream_a.read();
+    char a = (char)stream_a.read();
+    char b = (char)stream_a.read();
+    char c = (char)stream_a.read();
+    char d = (char)stream_a.read();
 
     CPPUNIT_ASSERT( a == 't' && b == 'e' && c == 's' && d == 't' );
     CPPUNIT_ASSERT( stream_a.available() == 0 );
 
     testBuffer.push_back('e');
 
-    stream_a.setByteArray(&testBuffer[0], testBuffer.size());
+    stream_a.setByteArray(&testBuffer[0], (int)testBuffer.size());
 
     CPPUNIT_ASSERT( stream_a.available() == 5 );
 
@@ -237,7 +237,7 @@ void ByteArrayInputStreamTest::testStream()
     CPPUNIT_ASSERT( std::string((const char*)buffer) == std::string("teste") );
     CPPUNIT_ASSERT( stream_a.available() == 0 );
 
-    stream_a.setByteArray(&testBuffer[0], testBuffer.size());
+    stream_a.setByteArray(&testBuffer[0], (int)testBuffer.size());
 
     memset(buffer, 0, 6);
 

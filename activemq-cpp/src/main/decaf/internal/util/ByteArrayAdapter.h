@@ -227,7 +227,7 @@ namespace util{
          * @return the size the array.
          */
         virtual int getDoubleCapacity() const {
-            return this->size / sizeof( double );
+            return this->size / (int)sizeof( double );
         }
 
         /**
@@ -235,7 +235,7 @@ namespace util{
          * @return the size the array.
          */
         virtual int getFloatCapacity() const {
-            return this->size / sizeof( float );
+            return this->size / (int)sizeof( float );
         }
 
         /**
@@ -243,7 +243,7 @@ namespace util{
          * @return the size the array.
          */
         virtual int getLongCapacity() const {
-            return this->size / sizeof( long long );
+            return this->size / (int)sizeof( long long );
         }
 
         /**
@@ -251,7 +251,7 @@ namespace util{
          * @return the size the array.
          */
         virtual int getIntCapacity() const {
-            return this->size / sizeof( int );
+            return this->size / (int)sizeof( int );
         }
 
         /**
@@ -259,7 +259,7 @@ namespace util{
          * @return the size the array.
          */
         virtual int getShortCapacity() const {
-            return this->size / sizeof( short );
+            return this->size / (int)sizeof( short );
         }
 
         /**

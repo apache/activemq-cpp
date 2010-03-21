@@ -88,7 +88,7 @@ void ActiveMQMapMessageTest::testBytesConversion() {
 
     bigString.reserve( 1024 * 1024 );
     for( int i = 0; i < 1024 * 1024; i++ ) {
-        bigString += ( (char)'a' + i % 26 );
+        bigString += (char)( (int)'a' + i % 26 );
     }
 
     msg.setString( "bigString", bigString );

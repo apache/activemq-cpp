@@ -205,19 +205,19 @@ void InflaterTest::testInflateVector() {
     outPutBuf.resize( 500 );
     outPutInf.assign( outPutInf.size(), 0 );
     std::vector<unsigned char> emptyArray( 11, 0 );
-    std::size_t x = 0;
+    int x = 0;
     Deflater defEmpty( 3 );
     defEmpty.setInput( emptyArray );
     while( !( defEmpty.needsInput() ) ) {
-        x += defEmpty.deflate( outPutBuf, x, outPutBuf.size() - x );
+        x += defEmpty.deflate( outPutBuf, x, (int)outPutBuf.size() - x );
     }
     defEmpty.finish();
     while( !( defEmpty.finished() ) ) {
-        x += defEmpty.deflate( outPutBuf, x, outPutBuf.size() - x );
+        x += defEmpty.deflate( outPutBuf, x, (int)outPutBuf.size() - x );
     }
     CPPUNIT_ASSERT_MESSAGE( "the total number of unsigned char from deflate did not equal "
                             "getTotalOut - inflate(unsigned char)",
-                            x == (std::size_t)defEmpty.getBytesWritten() );
+                            (long long)x == defEmpty.getBytesWritten() );
     CPPUNIT_ASSERT_MESSAGE(
                 "the number of input unsigned char from the array did not correspond with getTotalIn - inflate(unsigned char)",
                 (std::size_t)defEmpty.getBytesRead() == emptyArray.size() );
@@ -297,14 +297,14 @@ void InflaterTest::testInflateBII() {
 
     std::vector<unsigned char> outPutBuf( byteArray, byteArray + SIZE );
     std::vector<unsigned char> outPutInf( 100 );
-    std::size_t y = 0;
+    int y = 0;
     Inflater inflate;
     try {
         while( !( inflate.finished() ) ) {
             if( inflate.needsInput() ) {
                 inflate.setInput( outPutBuf );
             }
-            y += inflate.inflate( outPutInf, y, outPutInf.size() - y );
+            y += inflate.inflate( outPutInf, y, (int)outPutInf.size() - y );
         }
     } catch( DataFormatException& e ) {
         CPPUNIT_FAIL("Invalid input to be decompressed");
@@ -320,8 +320,8 @@ void InflaterTest::testInflateBII() {
     // test boundary checks
     inflate.reset();
     int r = 0;
-    std::size_t offSet = 0;
-    std::size_t lengthError = 101;
+    int offSet = 0;
+    int lengthError = 101;
     try {
         if( inflate.needsInput() ) {
             inflate.setInput( outPutBuf );
@@ -401,9 +401,9 @@ void InflaterTest::testConstructorZ() {
     deflater.setInput( byteArray, SIZE, 0, SIZE );
     deflater.finish();
 
-    std::size_t read = 0;
+    int read = 0;
     while( !deflater.finished() ) {
-        read = deflater.deflate( outPutBuf, read, outPutBuf.size() - read );
+        read = deflater.deflate( outPutBuf, read, (int)outPutBuf.size() - read );
     }
     deflater.end();
 
@@ -549,14 +549,14 @@ void InflaterTest::testReset() {
     deflater.setInput( byteArray, SIZE, 0, SIZE );
     deflater.finish();
 
-    std::size_t read = 0;
+    int read = 0;
     while( !deflater.finished() ) {
-        read = deflater.deflate( outPutBuf, read, outPutBuf.size() - read );
+        read = deflater.deflate( outPutBuf, read, (int)outPutBuf.size() - read );
     }
     deflater.end();
 
     std::vector<unsigned char> outPutInf( 100 );
-    std::size_t y = 0;
+    int y = 0;
     Inflater inflate;
     try {
 
@@ -564,7 +564,7 @@ void InflaterTest::testReset() {
             if( inflate.needsInput() ) {
                 inflate.setInput( outPutBuf );
             }
-            y += inflate.inflate( outPutInf, y, outPutInf.size() - y );
+            y += inflate.inflate( outPutInf, y, (int)outPutInf.size() - y );
         }
 
     } catch( DataFormatException& e ) {

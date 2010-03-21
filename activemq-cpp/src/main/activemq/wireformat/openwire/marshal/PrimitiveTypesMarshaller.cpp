@@ -279,19 +279,20 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
         } else if( value.getType() == PrimitiveValueNode::STRING_TYPE ) {
 
             std::string data = value.getString();
+            int size = (int)data.size();
 
             // is the string big??
-            if( data.size() == 0 ) {
+            if( size == 0 ) {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
-                dataOut.writeShort( (short)data.size() );
+                dataOut.writeShort( (short)size );
             } else if( data.size() > Short::MAX_VALUE / 4 ) {
                 dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
-                dataOut.writeInt( (int)data.size() );
-                dataOut.write( (unsigned char*)data.c_str(), data.length(), 0, data.length() );
+                dataOut.writeInt( size );
+                dataOut.write( (unsigned char*)data.c_str(), size, 0, size );
             } else {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
-                dataOut.writeShort( (short)data.size() );
-                dataOut.write( (unsigned char*)data.c_str(), data.length(), 0, data.length() );
+                dataOut.writeShort( (short)size );
+                dataOut.write( (unsigned char*)data.c_str(), size, 0, size );
             }
 
         } else if( value.getType() == PrimitiveValueNode::LIST_TYPE ) {

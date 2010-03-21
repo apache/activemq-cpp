@@ -35,7 +35,7 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize )
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, long long bufferSize )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
@@ -58,7 +58,7 @@ void ByteArrayInputStream::setBuffer( const vector<unsigned char>& buffer ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize )
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, long long bufferSize )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
