@@ -42,6 +42,8 @@ namespace atomic{
             this->counter->incrementAndGet();
         }
 
+        virtual ~AtomicRefCounter() {}
+
     protected:
 
         /**
