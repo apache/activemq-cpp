@@ -300,7 +300,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 else {
                     out.println("        if( bs->readBoolean() ) {");
                     out.println("            dataOut->writeInt( (int)" + getter + ".size() );");
-                    out.println("            dataOut->write( (const unsigned char*)(&" + getter + "[0]), " + getter + ".size(), 0, " + getter + ".size() );");
+                    out.println("            dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size() );");
                     out.println("        }");
                 }
             }
@@ -467,7 +467,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                     out.println("        dataOut->write( " + getter + ".size() != 0 );");
                     out.println("        if( " + getter + ".size() != 0 ) {");
                     out.println("            dataOut->writeInt( (int)" + getter + ".size() );");
-                    out.println("            dataOut->write( (const unsigned char*)(&" + getter + "[0]), " + getter + ".size(), 0, " + getter + ".size() );");
+                    out.println("            dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size() );");
                     out.println("        }");
                 }
             }
