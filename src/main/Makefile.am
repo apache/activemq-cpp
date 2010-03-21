@@ -568,6 +568,7 @@ cc_sources = \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
+    decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
     decaf/util/concurrent/PooledThread.cpp \
     decaf/util/concurrent/Semaphore.cpp \
