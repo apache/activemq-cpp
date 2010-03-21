@@ -127,6 +127,17 @@ namespace cms{
          */
         virtual const char* what() const throw();
 
+    protected:
+
+        /**
+         * Overridden assignment operator.  We don't allow CMSExceptions to be assigned to one
+         * another so this method is left unimplemented.
+         *
+         * @param other
+         *      The CMSException to assign to this instance.
+         */
+        CMSException& operator= ( const cms::CMSException& other );
+
     };
 
 }
