@@ -94,7 +94,7 @@ void OutputStreamWriterTest::testWriteCharArrayIntIntInt() {
 
     CPPUNIT_ASSERT_EQUAL( std::string("es"), this->buffer1->toString() );
 
-    this->writer1->write( TEST_STRING.c_str(), 0, TEST_STRING.length() );
+    this->writer1->write( TEST_STRING.c_str(), 0, (int)TEST_STRING.length() );
     this->writer1->flush();
 
     CPPUNIT_ASSERT_EQUAL( std::string("es") + TEST_STRING, this->buffer1->toString() );
@@ -149,7 +149,7 @@ void OutputStreamWriterTest::testWriteStringIntInt() {
     this->writer1->flush();
     CPPUNIT_ASSERT_EQUAL( std::string( "bc" ), this->buffer1->toString() );
 
-    this->writer1->write( TEST_STRING, 0, TEST_STRING.length() );
+    this->writer1->write( TEST_STRING, 0, (int)TEST_STRING.length() );
     this->writer1->flush();
     CPPUNIT_ASSERT_EQUAL( std::string( "bc" ) + TEST_STRING, this->buffer1->toString() );
 
@@ -182,7 +182,7 @@ void OutputStreamWriterTest::testWriteString() {
     this->writer1->flush();
     CPPUNIT_ASSERT_EQUAL( std::string( "abc" ), this->buffer1->toString() );
 
-    this->writer1->write( TEST_STRING, 0, TEST_STRING.length() );
+    this->writer1->write( TEST_STRING, 0, (int)TEST_STRING.length() );
     this->writer1->flush();
     CPPUNIT_ASSERT_EQUAL( std::string( "abc" ) + TEST_STRING, this->buffer1->toString() );
 

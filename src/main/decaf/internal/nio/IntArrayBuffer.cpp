@@ -31,7 +31,7 @@ IntArrayBuffer::IntArrayBuffer( int size, bool readOnly )
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The size is the given size times the size of the stored datatype
-    this->_array.reset( new ByteArrayAdapter( size * sizeof(int) ) );
+    this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(int) ) );
     this->offset = 0;
     this->length = size;
     this->readOnly = readOnly;

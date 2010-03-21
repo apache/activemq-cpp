@@ -826,10 +826,10 @@ void CharArrayBufferTest::testPutStringWithArgs() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
-        testBuffer1->put( str, str.length() + 1, str.length() + 2 ),
+        testBuffer1->put( str, (int)str.length() + 1, (int)str.length() + 2 ),
         IndexOutOfBoundsException );
 
-    testBuffer1->put( str, str.length(), str.length() );
+    testBuffer1->put( str, (int)str.length(), (int)str.length() );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -839,14 +839,14 @@ void CharArrayBufferTest::testPutStringWithArgs() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
-        testBuffer1->put( str, 2, str.length() + 1 ),
+        testBuffer1->put( str, 2, (int)str.length() + 1 ),
         IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     str.resize( testBuffer1->capacity() );
 
-    CharBuffer& ret = testBuffer1->put( str, 0, str.length() );
+    CharBuffer& ret = testBuffer1->put( str, 0, (int)str.length() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
 
     for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {

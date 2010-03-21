@@ -578,9 +578,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage(
-    const unsigned char* bytes,
-    std::size_t bytesSize )
+cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* bytes, int bytesSize )
         throw ( cms::CMSException ) {
 
     try{

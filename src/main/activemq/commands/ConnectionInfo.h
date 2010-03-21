@@ -57,6 +57,7 @@ namespace commands{
         bool brokerMasterConnector;
         bool manageable;
         bool clientMaster;
+        bool faultTolerant;
 
     public:
 
@@ -139,6 +140,9 @@ namespace commands{
 
         virtual bool isClientMaster() const;
         virtual void setClientMaster( bool clientMaster );
+
+        virtual bool isFaultTolerant() const;
+        virtual void setFaultTolerant( bool faultTolerant );
 
         /**
          * @return an answer of true to the isConnectionInfo() query.

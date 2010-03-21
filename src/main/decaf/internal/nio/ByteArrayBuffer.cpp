@@ -313,7 +313,7 @@ long long ByteArrayBuffer::getLong() throw( decaf::nio::BufferUnderflowException
     try{
 
         long long value = this->getLong( this->_position );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return value;
     }
     DECAF_CATCH_RETHROW( decaf::nio::BufferUnderflowException )
@@ -346,7 +346,7 @@ int ByteArrayBuffer::getInt() throw( decaf::nio::BufferUnderflowException )  {
     try{
 
         int value = this->getInt( this->_position );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return value;
     }
     DECAF_CATCH_RETHROW( decaf::nio::BufferUnderflowException )
@@ -379,7 +379,7 @@ short ByteArrayBuffer::getShort() throw( decaf::nio::BufferUnderflowException ) 
     try{
 
         short value = this->getShort( this->_position );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return value;
     }
     DECAF_CATCH_RETHROW( decaf::nio::BufferUnderflowException )
@@ -488,7 +488,7 @@ ByteArrayBuffer& ByteArrayBuffer::putDouble( double value )
     try{
 
         this->putDouble( this->_position, value );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return *this;
     }
     DECAF_CATCH_RETHROW( decaf::nio::ReadOnlyBufferException )
@@ -520,7 +520,7 @@ ByteArrayBuffer& ByteArrayBuffer::putFloat( float value )
     try{
 
         this->putFloat( this->_position, value );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return *this;
     }
     DECAF_CATCH_RETHROW( decaf::nio::ReadOnlyBufferException )
@@ -552,7 +552,7 @@ ByteArrayBuffer& ByteArrayBuffer::putLong( long long value )
     try{
 
         this->putLong( this->_position, value );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return *this;
     }
     DECAF_CATCH_RETHROW( decaf::nio::ReadOnlyBufferException )
@@ -591,7 +591,7 @@ ByteArrayBuffer& ByteArrayBuffer::putInt( int value )
     try{
 
         this->putInt( this->_position, value );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return *this;
     }
     DECAF_CATCH_RETHROW( decaf::nio::ReadOnlyBufferException )
@@ -630,7 +630,7 @@ ByteArrayBuffer& ByteArrayBuffer::putShort( short value )
     try{
 
         this->putShort( this->_position, value );
-        this->_position += sizeof(value);
+        this->_position += (int)sizeof(value);
         return *this;
     }
     DECAF_CATCH_RETHROW( decaf::nio::ReadOnlyBufferException )

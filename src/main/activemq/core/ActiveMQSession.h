@@ -383,10 +383,8 @@ namespace core{
          *
          * @throws CMSException
          */
-        virtual cms::BytesMessage* createBytesMessage(
-            const unsigned char* bytes,
-            std::size_t bytesSize )
-                throw ( cms::CMSException );
+        virtual cms::BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize )
+            throw ( cms::CMSException );
 
         /**
          * Creates a new StreamMessage

@@ -382,7 +382,7 @@ int Deflater::deflate( unsigned char* buffer, int size, int offset, int length )
                 __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
-        int outStart = this->data->stream->total_out;
+        ulong outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
         this->data->stream->avail_out = (uInt)length;
@@ -394,7 +394,7 @@ int Deflater::deflate( unsigned char* buffer, int size, int offset, int length )
             this->data->finished = true;
         }
 
-        return this->data->stream->total_out - outStart;
+        return (int)( this->data->stream->total_out - outStart );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IllegalStateException )

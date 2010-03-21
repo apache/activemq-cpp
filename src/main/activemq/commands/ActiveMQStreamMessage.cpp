@@ -260,7 +260,7 @@ void ActiveMQStreamMessage::writeByte( unsigned char value ) throw ( cms::Messag
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value ) const
+int ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value ) const
     throw ( cms::MessageEOFException,
             cms::MessageFormatException,
             cms::MessageNotReadableException,
@@ -270,7 +270,7 @@ std::size_t ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value 
         return 0;
     }
 
-    return this->readBytes( &value[0], value.size() );
+    return this->readBytes( &value[0], (int)value.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value 
     initializeWriting();
     try{
 
-        std::size_t size = value.size();
+        int size = (int)value.size();
         this->dataOut->write( PrimitiveValueNode::BYTE_ARRAY_TYPE );
         this->dataOut->writeInt( (int)size );
         this->dataOut->write( &value[0], size, 0, size );
@@ -290,7 +290,7 @@ void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t length ) const
+int ActiveMQStreamMessage::readBytes( unsigned char* buffer, int length ) const
     throw ( cms::MessageEOFException,
             cms::MessageFormatException,
             cms::MessageNotReadableException,
@@ -323,7 +323,7 @@ std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t
             return -1;
         }
 
-        if( length <= (size_t)this->remainingBytes ) {
+        if( length <= this->remainingBytes ) {
             // small buffer
             this->remainingBytes -= (int)length;
             this->dataIn->readFully( buffer, length );
@@ -345,10 +345,8 @@ std::size_t ActiveMQStreamMessage::readBytes( unsigned char* buffer, std::size_t
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeBytes( const unsigned char* value,
-                                        std::size_t offset,
-                                        std::size_t length ) throw ( cms::MessageNotWriteableException,
-                                                                     cms::CMSException ) {
+void ActiveMQStreamMessage::writeBytes( const unsigned char* value, int offset, int length )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
 
     initializeWriting();
     try{

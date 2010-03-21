@@ -44,7 +44,7 @@ void FilterOutputStreamTest::testClose() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], testString.size(), 0, 500 );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -60,7 +60,7 @@ void FilterOutputStreamTest::testFlush() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], testString.size(), 0, 500 );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -76,13 +76,13 @@ void FilterOutputStreamTest::testWrite1() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], testString.size(), 0, testString.size() );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.size() );
         ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 bais.available() == (int)testString.length() );
         unsigned char* wbytes = new unsigned char[ testString.length() ];
-        bais.read( wbytes, testString.length(), 0, testString.length() );
+        bais.read( wbytes, (int)testString.length(), 0, (int)testString.length() );
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             testString == string( (const char*)wbytes, testString.length() ) );
 

@@ -749,8 +749,8 @@ void ByteArrayBufferTest::testGetDouble2() {
     }
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( double ); i += (int)sizeof( double ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getDouble( i ) == values[j] );
@@ -776,7 +776,7 @@ void ByteArrayBufferTest::testPutDouble() {
     testBuffer1->clear();
 
     for( int i = 0; testBuffer1->remaining() >= (int)sizeof( double );
-         i += sizeof( double ) ) {
+         i += (int)sizeof( double ) ) {
 
         testBuffer1->mark();
         testBuffer1->putDouble( i + 48.25136 );
@@ -804,7 +804,7 @@ void ByteArrayBufferTest::testPutDouble2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( double ); i += (int)sizeof( double ) ) {
 
         testBuffer1->mark();
@@ -852,8 +852,8 @@ void ByteArrayBufferTest::testGetFloat2() {
     }
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( float ); i += (int)sizeof( float ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getFloat( i ) == values[j] );
@@ -879,13 +879,13 @@ void ByteArrayBufferTest::testPutFloat() {
     testBuffer1->clear();
 
     for( int i = 0; testBuffer1->remaining() >= (int)sizeof( float );
-         i += sizeof( float ) ) {
+         i += (int)sizeof( float ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putFloat( i + 48.25136f );
+        testBuffer1->putFloat( (float)i + 48.25136f );
         testBuffer1->reset();
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1->getFloat() ) ==
-                        Float::floatToIntBits( 48.25136f + i ) );
+                        Float::floatToIntBits( 48.25136f + (float)i ) );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -907,14 +907,14 @@ void ByteArrayBufferTest::testPutFloat2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( float ); i += sizeof( float ) ) {
+    int i = 0;
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( float ); i += (int)sizeof( float ) ) {
 
         testBuffer1->mark();
-        testBuffer1->putFloat( i, i + 99.99f );
+        testBuffer1->putFloat( i, (float)i + 99.99f );
         testBuffer1->reset();
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1->getFloat( i ) )==
-                        Float::floatToIntBits( 99.99f + i ) );
+                        Float::floatToIntBits( 99.99f + (float)i ) );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -955,8 +955,8 @@ void ByteArrayBufferTest::testGetLong2() {
     }
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( long long ); i += (int)sizeof( long long ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getLong( i ) == values[j] );
@@ -982,7 +982,7 @@ void ByteArrayBufferTest::testPutLong() {
     testBuffer1->clear();
 
     for( int i = 0; testBuffer1->remaining() >= (int)sizeof( long long );
-         i += sizeof( long long ) ) {
+         i += (int)sizeof( long long ) ) {
 
         testBuffer1->mark();
         testBuffer1->putLong( i + 48 );
@@ -1009,7 +1009,7 @@ void ByteArrayBufferTest::testPutLong2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( long long ); i += (int)sizeof( long long ) ) {
 
         testBuffer1->mark();
@@ -1056,8 +1056,8 @@ void ByteArrayBufferTest::testGetInt2() {
     }
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( int ); i += (int)sizeof( int ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getInt( i ) == values[j] );
@@ -1083,7 +1083,7 @@ void ByteArrayBufferTest::testPutInt() {
     testBuffer1->clear();
 
     for( int i = 0; testBuffer1->remaining() >= (int)sizeof( int );
-         i += sizeof( int ) ) {
+         i += (int)sizeof( int ) ) {
 
         testBuffer1->mark();
         testBuffer1->putInt( (int)i + 48 );
@@ -1110,8 +1110,8 @@ void ByteArrayBufferTest::testPutInt2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( int ); i += sizeof( int ) ) {
+    int i = 0;
+    for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( int ); i += (int)sizeof( int ) ) {
 
         testBuffer1->mark();
         testBuffer1->putInt( i, (int)i + 99 );
@@ -1157,8 +1157,8 @@ void ByteArrayBufferTest::testGetShort2() {
     }
     testBuffer1->clear();
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( short ); i += (int)sizeof( short ), j++ ) {
         CPPUNIT_ASSERT( testBuffer1->getShort( i ) == values[j] );
@@ -1184,7 +1184,7 @@ void ByteArrayBufferTest::testPutShort() {
     testBuffer1->clear();
 
     for( int i = 0; testBuffer1->remaining() >= (int)sizeof( short );
-         i += sizeof( short ) ) {
+         i += (int)sizeof( short ) ) {
 
         testBuffer1->mark();
         testBuffer1->putShort( (short)( i + 48 ) );
@@ -1211,7 +1211,7 @@ void ByteArrayBufferTest::testPutShort2() {
 
     testBuffer1->clear();
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; ( testBuffer1->capacity() - i ) >= (int)sizeof( short ); i += (int)sizeof( short ) ) {
 
         testBuffer1->mark();

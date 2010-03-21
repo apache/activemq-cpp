@@ -79,7 +79,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws MessageNotWriteableException - if in Read Only Mode.
          */
-        virtual void setBodyBytes( const unsigned char* buffer, std::size_t numBytes )
+        virtual void setBodyBytes( const unsigned char* buffer, int numBytes )
             throw( cms::MessageNotWriteableException, cms::CMSException ) = 0;
 
         /**
@@ -105,7 +105,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws MessageNotReadableException - If the message is in Write Only Mode.
          */
-        virtual std::size_t getBodyLength() const
+        virtual int getBodyLength() const
             throw( cms::MessageNotReadableException, cms::CMSException ) = 0;
 
         /**
@@ -196,7 +196,7 @@ namespace cms{
          * @throws MessageEOFException - if unexpected end of bytes stream has been reached.
          * @throws MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
+        virtual int readBytes( std::vector<unsigned char>& value ) const
             throw ( cms::MessageEOFException,
                     cms::MessageNotReadableException,
                     cms::CMSException ) = 0;
@@ -247,7 +247,7 @@ namespace cms{
          * @throws MessageEOFException - if unexpected end of bytes stream has been reached.
          * @throws MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual std::size_t readBytes( unsigned char* buffer, std::size_t length ) const
+        virtual int readBytes( unsigned char* buffer, int length ) const
             throw ( cms::MessageEOFException,
                     cms::MessageNotReadableException,
                     cms::CMSException ) = 0;
@@ -267,7 +267,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const unsigned char* value, std::size_t offset, std::size_t length )
+        virtual void writeBytes( const unsigned char* value, int offset, int length )
             throw ( cms::MessageNotWriteableException, cms::CMSException ) = 0;
 
         /**

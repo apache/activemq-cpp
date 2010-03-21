@@ -121,10 +121,10 @@ void BufferedOutputStreamTest::testWrite() {
 
         CPPUNIT_ASSERT_MESSAGE( "Bytes written, not buffered", NULL == baos.toByteArray() );
         os.flush();
-        ByteArrayInputStream bais2( baos.toByteArray(), baos.size() );
+        ByteArrayInputStream bais2( baos.toByteArray(), (int)baos.size() );
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush", 500 == bais2.available() );
-        os.write( (unsigned char*)&testString[500], testString.size(), 0, 514 );
-        ByteArrayInputStream bais3( baos.toByteArray(), baos.size() );
+        os.write( (unsigned char*)&testString[500], (int)testString.size(), 0, 514 );
+        ByteArrayInputStream bais3( baos.toByteArray(), (int)baos.size() );
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written when buffer full",
                                 bais3.available() >= 1000);
         unsigned char wbytes[1014] = {0};
@@ -245,7 +245,7 @@ void BufferedOutputStreamTest::testWriteI() {
         CPPUNIT_ASSERT_MESSAGE( "Byte written, not buffered", NULL == baos.toByteArray() );
         os.flush();
 
-        ByteArrayInputStream bais2( baos.toByteArray(), baos.size() );
+        ByteArrayInputStream bais2( baos.toByteArray(), (int)baos.size() );
         CPPUNIT_ASSERT_MESSAGE( "Byte not written after flush", 1 == bais2.available() );
         unsigned char wbytes[10];
         bais2.read( wbytes, 10, 0, 1 );

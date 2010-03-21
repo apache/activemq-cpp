@@ -84,7 +84,7 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
     complexMarshaller->looseMarshal( &openWireFormat, dataStructure, &looseOut );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+    ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
     DataInputStream looseIn( &bais );
 
     unsigned char dataType = looseIn.readByte();
@@ -135,7 +135,7 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     complexMarshaller->tightMarshal2( &openWireFormat, dataStructure, &dataOut, &bs );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+    ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
     DataInputStream dataIn( &bais );
 
     unsigned char dataType = dataIn.readByte();

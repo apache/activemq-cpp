@@ -82,7 +82,7 @@ ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own )
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          size * sizeof( double ), own );
+                          size * (int)sizeof( double ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -96,7 +96,7 @@ ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own )
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          size * sizeof( float ), own );
+                          size * (int)sizeof( float ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -110,7 +110,7 @@ ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own )
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          size * sizeof( long long ), own );
+                          size * (int)sizeof( long long ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -124,7 +124,7 @@ ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own )
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          size * sizeof( int ), own );
+                          size * (int)sizeof( int ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -138,7 +138,7 @@ ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own )
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
-                          size * sizeof( short ), own );
+                          size * (int)sizeof( short ), own );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )

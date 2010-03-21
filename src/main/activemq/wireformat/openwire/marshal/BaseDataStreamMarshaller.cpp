@@ -694,7 +694,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
         if( bs->readBoolean() ) {
             int size = dataIn->readInt();
             data.resize( size );
-            dataIn->readFully( &data[0], data.size() );
+            dataIn->readFully( &data[0], (int)data.size() );
         }
 
         return data;
@@ -715,7 +715,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
             int size = dataIn->readInt();
             std::vector<unsigned char> data;
             data.resize( size );
-            dataIn->readFully( &data[0], data.size() );
+            dataIn->readFully( &data[0], (int)data.size() );
             return data;
         }
 
@@ -736,7 +736,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArra
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( &data[0], data.size() );
+        dataIn->readFully( &data[0], (int)data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -753,7 +753,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( &data[0], data.size() );
+        dataIn->readFully( &data[0], (int)data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )

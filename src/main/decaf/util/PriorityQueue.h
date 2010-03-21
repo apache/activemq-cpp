@@ -435,7 +435,7 @@ namespace util {
                 capacity = 1;
                 elements = new E[capacity];
             } else {
-                capacity = (std::size_t) lang::Math::ceil( c.size() * 1.1 );
+                capacity = (std::size_t) lang::Math::ceil( (double)c.size() * 1.1 );
                 elements = new E[capacity];
             }
         }

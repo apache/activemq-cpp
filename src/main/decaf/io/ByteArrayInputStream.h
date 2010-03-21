@@ -81,7 +81,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize )
+        ByteArrayInputStream( const unsigned char* buffer, long long bufferSize )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
@@ -112,7 +112,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize )
+        virtual void setByteArray( const unsigned char* buffer, long long bufferSize )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalArgumentException );
 

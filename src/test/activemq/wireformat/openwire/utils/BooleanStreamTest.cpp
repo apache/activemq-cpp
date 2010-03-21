@@ -51,7 +51,7 @@ void BooleanStreamTest::test() {
 
     BooleanStream b2Stream;
     decaf::io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
-                                               baoStream.size() );
+                                               (int)baoStream.size() );
     decaf::io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );
@@ -85,7 +85,7 @@ void BooleanStreamTest::test2(){
 
     BooleanStream b2Stream;
     io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
-                                        baoStream.size() );
+                                        (int)baoStream.size() );
     io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );

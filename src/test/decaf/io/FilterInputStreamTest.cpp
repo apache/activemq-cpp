@@ -71,7 +71,7 @@ namespace {
             this->closed = true;
         }
         virtual long long skip( long long num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-            return ( pos += std::min( num, (long long)available() ) );
+            return ( pos += (int)std::min( num, (long long)available() ) );
         }
 
     protected:
@@ -172,7 +172,7 @@ void FilterInputStreamTest::testRead() {
     MyInputStream myStream( testStr );
     FilterInputStream is( &myStream );
 
-    char c = is.read();
+    char c = (char)is.read();
     CPPUNIT_ASSERT_MESSAGE( "read returned incorrect char",
                             c == testStr.at(0) );
 }

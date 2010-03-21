@@ -114,13 +114,13 @@ void DeflaterOutputStreamTest::setUp() {
     deflate.setInput( byteArray, 5, 0, 5 );
 
     while( !( deflate.needsInput() ) ) {
-        x += deflate.deflate( outputBuffer, x, outputBuffer.size() - x );
+        x += deflate.deflate( outputBuffer, x, (int)outputBuffer.size() - x );
     }
 
     deflate.finish();
 
     while( !( deflate.finished() ) ) {
-        x = x + deflate.deflate( outputBuffer, x, outputBuffer.size() - x );
+        x = x + deflate.deflate( outputBuffer, x, (int)outputBuffer.size() - x );
     }
 
     deflate.end();
@@ -160,7 +160,7 @@ void DeflaterOutputStreamTest::testConstructorOutputStream() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Buffer Size",
                                   (std::size_t)512, dos.getProtectedBuf().size() );
 
-    dos.write( &outputBuffer[0], outputBuffer.size() );
+    dos.write( &outputBuffer[0], (int)outputBuffer.size() );
     dos.close();
 }
 
@@ -251,7 +251,7 @@ void DeflaterOutputStreamTest::testWriteI() {
     DeflaterOutputStream dos( &baos );
 
     for( int i = 0; i < 3; i++ ) {
-        dos.write( i );
+        dos.write( (unsigned char)i );
     }
     dos.close();
 
@@ -312,7 +312,7 @@ void DeflaterOutputStreamTest::testDeflate() {
     MyDeflaterOutputStream dos( &baos );
     CPPUNIT_ASSERT( !dos.getDaflateFlag() );
     for( int i = 0; i < 3; i++ ) {
-        dos.write( i );
+        dos.write( (unsigned char)i );
     }
     CPPUNIT_ASSERT( dos.getDaflateFlag() );
     dos.close();

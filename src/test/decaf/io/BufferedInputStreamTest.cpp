@@ -167,7 +167,7 @@ namespace {
         virtual long long skip( long long num )
             throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
 
-            return ( pos += std::min( num, (long long)available() ) );
+            return ( pos += (int)std::min( num, (long long)available() ) );
         }
 
     };
@@ -285,7 +285,7 @@ void BufferedInputStreamTest::testRead() {
         // Create buffer with exact size of data
         BufferedInputStream is( &myStream, (int)(int)testStr.length() );
 
-        char c = is.read();
+        char c = (char)is.read();
         CPPUNIT_ASSERT_MESSAGE( "read returned incorrect char",
                                 c == testStr.at(0) );
     } catch( IOException& e ) {
@@ -379,25 +379,25 @@ void BufferedInputStreamTest::testSmallerBuffer(){
     int available = bufStream.available();
     CPPUNIT_ASSERT( available == (int)testStr.length() );
 
-    unsigned char dummy = bufStream.read();
+    unsigned char dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 1) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'E' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'S' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     unsigned char dummyBuf[20];
@@ -420,25 +420,25 @@ void BufferedInputStreamTest::testBiggerBuffer(){
     int available = bufStream.available();
     CPPUNIT_ASSERT( available == (int)testStr.length() );
 
-    unsigned char dummy = bufStream.read();
+    unsigned char dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 1 ) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'E' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'S' );
 
     available = bufStream.available();
     CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
 
-    dummy = bufStream.read();
+    dummy = (unsigned char)bufStream.read();
     CPPUNIT_ASSERT( dummy == 'T' );
 
     unsigned char dummyBuf[20];
@@ -462,7 +462,7 @@ void BufferedInputStreamTest::testSkipNullInputStream() {
 void BufferedInputStreamTest::testMarkI() {
 
     ByteArrayInputStream stream;
-    stream.setByteArray( (const unsigned char*)testString.c_str(), testString.length() );
+    stream.setByteArray( (const unsigned char*)testString.c_str(), (int)testString.length() );
 
     BufferedInputStream is( &stream );
 
@@ -612,7 +612,7 @@ void BufferedInputStreamTest::testResetException() {
 void BufferedInputStreamTest::testReset() {
 
     ByteArrayInputStream stream;
-    stream.setByteArray( (const unsigned char*)testString.c_str(), testString.length() );
+    stream.setByteArray( (const unsigned char*)testString.c_str(), (int)testString.length() );
 
     BufferedInputStream is( &stream );
 
@@ -646,7 +646,7 @@ void BufferedInputStreamTest::testReset() {
 void BufferedInputStreamTest::testSkipJ() {
 
     ByteArrayInputStream stream;
-    stream.setByteArray( (const unsigned char*)testString.c_str(), testString.length() );
+    stream.setByteArray( (const unsigned char*)testString.c_str(), (int)testString.length() );
 
     BufferedInputStream is( &stream );
 

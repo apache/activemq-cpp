@@ -114,7 +114,7 @@ namespace net{
 
                             if( strcmp( (char*)buf, "reply" ) == 0 ){
                                 io::OutputStream* output = socket->getOutputStream();
-                                output->write( (unsigned char*)"hello", strlen("hello"), 0, strlen("hello") );
+                                output->write( (unsigned char*)"hello", (int)strlen("hello"), 0, (int)strlen("hello") );
 
                                   synchronized(&mutex) {
                                      mutex.notifyAll();

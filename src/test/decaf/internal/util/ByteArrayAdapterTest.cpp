@@ -51,7 +51,7 @@ void ByteArrayAdapterTest::testRead(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256 );
@@ -74,7 +74,7 @@ void ByteArrayAdapterTest::testWrite(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( (int)256 );
@@ -130,7 +130,7 @@ void ByteArrayAdapterTest::testClear(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( (int)256 );
@@ -161,7 +161,7 @@ void ByteArrayAdapterTest::testReszie(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( (int)256 );
@@ -195,7 +195,7 @@ void ByteArrayAdapterTest::testOperators(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256 );
@@ -214,7 +214,7 @@ void ByteArrayAdapterTest::testReadExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
@@ -240,7 +240,7 @@ void ByteArrayAdapterTest::testWriteExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
@@ -263,7 +263,7 @@ void ByteArrayAdapterTest::testOperatorsExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
@@ -279,7 +279,7 @@ void ByteArrayAdapterTest::testPut() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     int i = 0;
-    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(unsigned char); i+=sizeof(unsigned char) ) {
+    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(unsigned char); i += (int)sizeof(unsigned char) ) {
         testBuffer1.put( i, (unsigned char)(i + 99) );
         CPPUNIT_ASSERT( testBuffer1.get( i ) == (unsigned char)(i + 99) );
     }
@@ -296,7 +296,7 @@ void ByteArrayAdapterTest::testPutChar() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     int i = 0;
-    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(char); i+=sizeof(char) ) {
+    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(char); i += (int)sizeof(char) ) {
         testBuffer1.putChar( i, (char)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getChar( i ) == (char)(i + 99) );
     }
@@ -383,7 +383,7 @@ void ByteArrayAdapterTest::testPutFloat() {
 
     int i = 0;
     for( ; i < testBuffer1.getFloatCapacity(); ++i  ) {
-        testBuffer1.putFloat( i, i + 99.025f );
+        testBuffer1.putFloat( i, (float)i + 99.025f );
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1.getFloat( i ) ) ==
                         Float::floatToIntBits( (float)(i + 99.025) ) );
     }
