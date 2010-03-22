@@ -48,7 +48,7 @@ namespace internal{
 ////////////////////////////////////////////////////////////////////////////////
 DecafRuntime::DecafRuntime() {
 
-    this->runtimeData.reset( new RuntimeData() );
+    this->runtimeData = new RuntimeData();
 
     // Initializes the APR Runtime from within a library.
     apr_initialize();
@@ -61,11 +61,19 @@ DecafRuntime::DecafRuntime() {
 ////////////////////////////////////////////////////////////////////////////////
 DecafRuntime::~DecafRuntime() {
 
-    // Destroy the Global Thread Memory Pool
-    apr_pool_destroy( this->runtimeData->aprPool );
+    try{
 
-    // Cleans up APR data structures.
-    apr_terminate();
+        // Destroy the Global Thread Memory Pool
+        apr_pool_destroy( this->runtimeData->aprPool );
+
+        // Cleans up APR data structures.
+        apr_terminate();
+
+        // Destroy the Runtime Data
+        delete this->runtimeData;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

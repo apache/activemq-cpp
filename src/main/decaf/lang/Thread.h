@@ -23,7 +23,6 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
-#include <decaf/lang/Pointer.h>
 #include <decaf/util/Config.h>
 
 namespace decaf{
@@ -70,7 +69,7 @@ namespace lang{
         /**
          * The internal data necessary to manage a Thread instance.
          */
-        decaf::lang::Pointer<ThreadProperties> properties;
+        ThreadProperties* properties;
 
     public:
 
@@ -132,6 +131,11 @@ namespace lang{
             virtual void uncaughtException( const Thread* thread, const Throwable& error ) throw() = 0;
 
         };
+
+    protected:
+
+        Thread( const Thread& );
+        Thread& operator= ( const Thread& );
 
     public:
 

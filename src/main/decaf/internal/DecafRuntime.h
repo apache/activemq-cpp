@@ -21,7 +21,6 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/Runtime.h>
 
-#include <memory>
 #include <apr_pools.h>
 
 namespace decaf {
@@ -35,7 +34,7 @@ namespace internal {
     class DECAF_API DecafRuntime : public decaf::lang::Runtime {
     private:
 
-        std::auto_ptr<RuntimeData> runtimeData;
+       RuntimeData* runtimeData;
 
     public:
 

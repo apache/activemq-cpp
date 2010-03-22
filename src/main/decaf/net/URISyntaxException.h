@@ -51,12 +51,10 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        URISyntaxException( const URISyntaxException& ex ) throw() : Exception() {
+        URISyntaxException( const URISyntaxException& ex ) throw()
+            : Exception(), reason( ex.getReason() ), input( ex.getInput() ), index( ex.getIndex() ) {
 
             *(Exception*)this = ex;
-            this->reason = ex.getReason();
-            this->input = ex.getInput();
-            this->index = ex.getIndex();
         }
 
         /**
