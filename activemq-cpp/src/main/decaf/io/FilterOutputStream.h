@@ -58,6 +58,11 @@ namespace io{
         // Indicates that this stream was closed
         volatile bool closed;
 
+    protected:
+
+        FilterOutputStream( const FilterOutputStream& );
+        FilterOutputStream& operator= ( const FilterOutputStream& );
+
     public:
 
         /**

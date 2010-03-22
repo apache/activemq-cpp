@@ -340,7 +340,7 @@ int Inflater::inflate( unsigned char* buffer, int size, int offset, int length )
                 __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
-        ulong outStart = this->data->stream->total_out;
+        unsigned long outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
         this->data->stream->avail_out = (uInt)length;

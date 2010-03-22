@@ -291,29 +291,29 @@ Thread* Thread::createForeignThreadInstance( const std::string& name ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread() {
+Thread::Thread() : Runnable(), properties( NULL ) {
     this->initialize( this, "" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task ) {
+Thread::Thread( Runnable* task ): Runnable(), properties( NULL ) {
     this->initialize( task, "" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( const std::string& name ) {
+Thread::Thread( const std::string& name ): Runnable(), properties( NULL ) {
     this->initialize( this, name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task, const std::string& name ) {
+Thread::Thread( Runnable* task, const std::string& name ): Runnable(), properties( NULL ) {
     this->initialize( task, name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::initialize( Runnable* task, const std::string& name ) {
 
-    this->properties.reset( new ThreadProperties() );
+    this->properties = new ThreadProperties();
 
     if( name == "" ) {
         this->properties->name = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
@@ -330,6 +330,11 @@ void Thread::initialize( Runnable* task, const std::string& name ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::~Thread() {
+    try{
+        delete this->properties;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -359,7 +364,7 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
             #ifdef HAVE_PTHREAD_H
                 int result = pthread_create( &( properties->handle ),
                                              &( properties->attributes ),
-                                             threadWorker, properties.get() );
+                                             threadWorker, properties );
 
                 if( result != 0 ) {
                     throw RuntimeException(
@@ -373,7 +378,7 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
                 #ifndef _WIN32_WCE
 
                     properties->handle = (HANDLE)_beginthreadex(
-                         NULL, (DWORD)0, threadWorker, properties.get(), 0, &threadId );
+                         NULL, (DWORD)0, threadWorker, properties, 0, &threadId );
 
                 #else
 

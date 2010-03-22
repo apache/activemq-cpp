@@ -47,7 +47,7 @@ namespace inactivity {
     private:
 
         // Internal Class used to house the data structures for this object
-        Pointer<InactivityMonitorData> members;
+        InactivityMonitorData* members;
 
         friend class ReadChecker;
         friend class AsyncSignalReadErrorkTask;

@@ -77,7 +77,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer, long long 
 
     // Remove old data
     this->defaultBuffer.clear();
-    this->defaultBuffer.reserve( bufferSize );
+    this->defaultBuffer.reserve( (std::size_t)bufferSize );
 
     // Copy data to internal buffer.
     this->defaultBuffer.insert( this->defaultBuffer.begin(), buffer, buffer + bufferSize );

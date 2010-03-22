@@ -20,6 +20,8 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
+#include <typeinfo>
+
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
