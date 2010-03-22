@@ -23748,6 +23748,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Lock.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Lock.h"
 						>
 					</File>
