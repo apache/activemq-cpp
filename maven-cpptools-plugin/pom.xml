@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>maven-cpptools-plugin</artifactId>
