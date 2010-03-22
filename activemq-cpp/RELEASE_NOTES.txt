@@ -12,6 +12,7 @@ Bug
                      tempdest_advisory_producer example
     * [AMQCPP-290] - Authentication error leads to pure virtual call/kaboom in CMS 3.1.1
     * [AMQCPP-291] - Crash on sending a message with length = 0
+    * [AMQCPP-292] - transacted sessions over shared failover connection throws exceptions
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.1.1                               ==
