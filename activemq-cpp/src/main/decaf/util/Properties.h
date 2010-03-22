@@ -53,7 +53,7 @@ namespace util{
     class DECAF_API Properties{
     private:
 
-        decaf::lang::Pointer<PropertiesInternal> internal;
+        PropertiesInternal* internal;
 
     protected:
 

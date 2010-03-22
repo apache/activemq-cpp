@@ -53,8 +53,8 @@ namespace cmsutil {
 
     protected:
 
-        SessionPool( const SessionPool& );
-        SessionPool& operator= ( const SessionPool& );
+        SessionPool( const SessionPool& ) {}
+        SessionPool& operator= ( const SessionPool& ) { return *this; }
 
     public:
 

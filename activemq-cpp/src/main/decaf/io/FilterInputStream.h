@@ -49,8 +49,8 @@ namespace io{
 
     protected:
 
-        FilterInputStream( const FilterInputStream& );
-        FilterInputStream& operator= ( const FilterInputStream& );
+        FilterInputStream( const FilterInputStream& ) {}
+        FilterInputStream& operator= ( const FilterInputStream& ) { return *this; }
 
     public:
 

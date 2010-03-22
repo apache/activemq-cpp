@@ -192,13 +192,17 @@ namespace util{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-Timer::Timer() {
-    this->internal.reset( new TimerImpl() );
+Timer::Timer() : internal( new TimerImpl() ) {
     this->internal->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Timer::~Timer() {
+    try{
+        delete this->internal;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -549,7 +553,7 @@ void Timer::scheduleTask( const Pointer<TimerTask>& task, long long delay, long 
             __FILE__, __LINE__, "Task pointer passed in was Null" );
     }
 
-    synchronized( this->internal.get() ) {
+    synchronized( this->internal ) {
 
         if( this->internal->cancelled ) {
             throw IllegalStateException(

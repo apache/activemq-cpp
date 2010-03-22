@@ -44,8 +44,8 @@ namespace cmsutil {
 
         protected:
 
-            SessionResolver( const SessionResolver& );
-            SessionResolver& operator= ( const SessionResolver& );
+            SessionResolver( const SessionResolver& ) {}
+            SessionResolver& operator= ( const SessionResolver& ) { return *this; }
 
         public:
 
@@ -79,8 +79,8 @@ namespace cmsutil {
 
     protected:
 
-        DynamicDestinationResolver( const DynamicDestinationResolver& );
-        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& );
+        DynamicDestinationResolver( const DynamicDestinationResolver& ) {}
+        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& ) { return *this; }
 
     public:
 

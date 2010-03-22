@@ -56,7 +56,7 @@ namespace util {
     class DECAF_API Timer {
     private:
 
-        std::auto_ptr<TimerImpl> internal;
+        TimerImpl* internal;
 
     public:
 

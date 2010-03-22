@@ -132,10 +132,10 @@ namespace lang{
 
         };
 
-    protected:
+    private:
 
-        Thread( const Thread& );
-        Thread& operator= ( const Thread& );
+        Thread( const Thread& ) {}
+        Thread& operator= ( const Thread& ) { return *this; }
 
     public:
 

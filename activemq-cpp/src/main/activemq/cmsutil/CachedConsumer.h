@@ -34,8 +34,8 @@ namespace cmsutil {
 
     protected:
 
-        CachedConsumer( const CachedConsumer& );
-        CachedConsumer& operator= ( const CachedConsumer& );
+        CachedConsumer( const CachedConsumer& ) {}
+        CachedConsumer& operator= ( const CachedConsumer& ) { return *this; }
 
     public:
 
