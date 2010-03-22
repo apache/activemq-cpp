@@ -67,10 +67,10 @@ namespace transport{
          */
         void fire( const Pointer<Command>& command );
 
-    protected:
+    private:
 
-        TransportFilter( const TransportFilter& );
-        TransportFilter operator= ( const TransportFilter& );
+        TransportFilter( const TransportFilter& ) {}
+        TransportFilter operator= ( const TransportFilter& ) { return *this; }
 
     public:
 

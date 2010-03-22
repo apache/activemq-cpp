@@ -47,8 +47,8 @@ namespace cmsutil {
 
     protected:
 
-        PooledSession( const PooledSession& );
-        PooledSession& operator= ( const PooledSession& );
+        PooledSession( const PooledSession& ) {}
+        PooledSession& operator= ( const PooledSession& ) { return *this; }
 
     public:
 

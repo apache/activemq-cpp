@@ -48,8 +48,8 @@ namespace cmsutil {
 
     protected:
 
-        CmsAccessor( const CmsAccessor& );
-        CmsAccessor& operator= ( const CmsAccessor& );
+        CmsAccessor( const CmsAccessor& ) {}
+        CmsAccessor& operator= ( const CmsAccessor& ) { return *this; }
 
     public:
 

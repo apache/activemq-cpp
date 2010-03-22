@@ -98,8 +98,8 @@ namespace cmsutil {
 
         protected:
 
-            ProducerExecutor( const ProducerExecutor& );
-            ProducerExecutor& operator= ( const ProducerExecutor& );
+            ProducerExecutor( const ProducerExecutor& ) : SessionCallback() {}
+            ProducerExecutor& operator= ( const ProducerExecutor& ) { return *this; }
 
         public:
 
@@ -131,8 +131,7 @@ namespace cmsutil {
 
         protected:
 
-            ResolveProducerExecutor( const ResolveProducerExecutor& );
-            ResolveProducerExecutor& operator= ( const ResolveProducerExecutor& );
+            ResolveProducerExecutor& operator= ( const ResolveProducerExecutor& ) { return *this; }
 
         public:
 
@@ -161,8 +160,8 @@ namespace cmsutil {
 
         protected:
 
-            SendExecutor( const SendExecutor& );
-            SendExecutor& operator= ( const SendExecutor& );
+            SendExecutor( const SendExecutor& ) : ProducerCallback() {}
+            SendExecutor& operator= ( const SendExecutor& ) { return *this; }
 
         public:
 
@@ -195,8 +194,8 @@ namespace cmsutil {
 
         protected:
 
-            ReceiveExecutor( const ReceiveExecutor& );
-            ReceiveExecutor& operator= ( const ReceiveExecutor& );
+            ReceiveExecutor( const ReceiveExecutor& ) : SessionCallback() {}
+            ReceiveExecutor& operator= ( const ReceiveExecutor& )  { return *this; }
 
         public:
 
@@ -239,8 +238,7 @@ namespace cmsutil {
 
         protected:
 
-            ResolveReceiveExecutor( const ResolveReceiveExecutor& );
-            ResolveReceiveExecutor& operator= ( const ResolveReceiveExecutor& );
+            ResolveReceiveExecutor& operator= ( const ResolveReceiveExecutor& ) { return *this; }
 
         public:
 
@@ -290,8 +288,8 @@ namespace cmsutil {
 
     protected:
 
-        CmsTemplate( const CmsTemplate& );
-        CmsTemplate& operator= ( const CmsTemplate& );
+        CmsTemplate( const CmsTemplate& ) : CmsDestinationAccessor() {}
+        CmsTemplate& operator= ( const CmsTemplate& ) { return *this; }
 
     public:
 

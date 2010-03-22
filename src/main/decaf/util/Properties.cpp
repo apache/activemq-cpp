@@ -110,13 +110,12 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties() {
-    this->internal.reset( new PropertiesInternal() );
+Properties::Properties() : internal( new PropertiesInternal() ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties( const Properties& src ) {
-    this->internal.reset( new PropertiesInternal() );
+Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ) {
+
     this->internal->properties.copy( src.internal->properties );
 
     if( src.defaults.get() != NULL ) {
@@ -126,6 +125,11 @@ Properties::Properties( const Properties& src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Properties::~Properties() {
+    try{
+        delete this->internal;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

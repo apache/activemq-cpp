@@ -34,8 +34,8 @@ namespace cmsutil {
 
     protected:
 
-        CachedProducer( const CachedProducer& );
-        CachedProducer& operator= ( const CachedProducer& );
+        CachedProducer( const CachedProducer& ) {}
+        CachedProducer& operator= ( const CachedProducer& ) { return *this; }
 
     public:
 
