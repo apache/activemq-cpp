@@ -36,7 +36,7 @@ namespace lang {
      *
      * @since 1.0
      */
-    class Readable {
+    class DECAF_API Readable {
     public:
 
         virtual ~Readable() {}
