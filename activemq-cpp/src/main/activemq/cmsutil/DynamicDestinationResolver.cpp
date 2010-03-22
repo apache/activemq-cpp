@@ -73,6 +73,11 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+DynamicDestinationResolver::DynamicDestinationResolver()
+    : DestinationResolver(), sessionResolverMap(), resourceLifecycleManager( NULL ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 DynamicDestinationResolver::~DynamicDestinationResolver() {
 
     destroy();

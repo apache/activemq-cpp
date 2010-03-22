@@ -42,13 +42,19 @@ namespace cmsutil {
             decaf::util::StlMap<std::string, cms::Topic*> topicMap;
             decaf::util::StlMap<std::string, cms::Queue*> queueMap;
 
+        protected:
+
+            SessionResolver( const SessionResolver& );
+            SessionResolver& operator= ( const SessionResolver& );
+
         public:
 
-            SessionResolver(cms::Session* session,
-                ResourceLifecycleManager* resourceLifecycleManager ) {
-
-                this->session = session;
-                this->resourceLifecycleManager = resourceLifecycleManager;
+            SessionResolver( cms::Session* session,
+                             ResourceLifecycleManager* resourceLifecycleManager )
+                : resourceLifecycleManager( resourceLifecycleManager ),
+                  session( session ),
+                  topicMap(),
+                  queueMap() {
             }
 
             virtual ~SessionResolver() {}
@@ -71,7 +77,14 @@ namespace cmsutil {
          */
         ResourceLifecycleManager* resourceLifecycleManager;
 
+    protected:
+
+        DynamicDestinationResolver( const DynamicDestinationResolver& );
+        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& );
+
     public:
+
+        DynamicDestinationResolver();
 
         virtual ~DynamicDestinationResolver();
 

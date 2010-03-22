@@ -32,10 +32,14 @@ namespace cmsutil {
 
         cms::MessageProducer* producer;
 
+    protected:
+
+        CachedProducer( const CachedProducer& );
+        CachedProducer& operator= ( const CachedProducer& );
+
     public:
 
-        CachedProducer( cms::MessageProducer* producer ) {
-            this->producer = producer;
+        CachedProducer( cms::MessageProducer* producer ) : producer( producer ) {
         }
 
         virtual ~CachedProducer() {}

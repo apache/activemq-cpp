@@ -25,8 +25,9 @@ using namespace activemq::exceptions;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsAccessor::CmsAccessor() {
-    sessionAcknowledgeMode = cms::Session::AUTO_ACKNOWLEDGE;
+CmsAccessor::CmsAccessor() : resourceLifecycleManager(),
+                             connectionFactory( NULL ),
+                             sessionAcknowledgeMode( cms::Session::AUTO_ACKNOWLEDGE ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

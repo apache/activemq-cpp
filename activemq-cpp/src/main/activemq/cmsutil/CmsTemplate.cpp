@@ -65,12 +65,18 @@ using namespace std;
     }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate() {
+const long long CmsTemplate::RECEIVE_TIMEOUT_NO_WAIT = -1;
+const long long CmsTemplate::RECEIVE_TIMEOUT_INDEFINITE_WAIT = 0;
+const int CmsTemplate::DEFAULT_PRIORITY = 4;
+const long long CmsTemplate::DEFAULT_TIME_TO_LIVE = 0;
+
+////////////////////////////////////////////////////////////////////////////////
+CmsTemplate::CmsTemplate() : CmsDestinationAccessor() {
     initDefaults();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) {
+CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDestinationAccessor() {
     initDefaults();
     setConnectionFactory(connectionFactory);
 }

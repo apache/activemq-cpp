@@ -51,6 +51,11 @@ namespace cmsutil {
 
         cms::Session::AcknowledgeMode acknowledgeMode;
 
+    protected:
+
+        SessionPool( const SessionPool& );
+        SessionPool& operator= ( const SessionPool& );
+
     public:
 
         /**
