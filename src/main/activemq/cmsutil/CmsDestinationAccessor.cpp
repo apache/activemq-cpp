@@ -21,13 +21,12 @@ using namespace activemq::cmsutil;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsDestinationAccessor::CmsDestinationAccessor() {
+CmsDestinationAccessor::CmsDestinationAccessor() : CmsAccessor(),
+                                                   defaultDestinationResolver(),
+                                                   destinationResolver( &defaultDestinationResolver ),
+                                                   pubSubDomain( false ) {
 
-    // Default to using queues.
-    pubSubDomain = false;
-
-    // Start with the default destinationResolver.
-    destinationResolver = &defaultDestinationResolver;
+    // Default to using queues, and start with the default destinationResolver.
 }
 
 ////////////////////////////////////////////////////////////////////////////////

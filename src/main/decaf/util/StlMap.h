@@ -47,14 +47,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlMap() : Map<K,V,COMPARATOR>() {}
+        StlMap() : Map<K,V,COMPARATOR>(), valueMap(), mutex() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
             copy( source );
         }
 
@@ -63,7 +63,7 @@ namespace util{
          * one.
          * @param source The source map.
          */
-        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
             copy( source );
         }
 

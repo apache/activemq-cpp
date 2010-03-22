@@ -49,6 +49,11 @@ namespace cmsutil {
         ProducerList producers;
         ConsumerList consumers;
 
+    protected:
+
+        ResourceLifecycleManager( const ResourceLifecycleManager& );
+        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& );
+
     public:
 
         ResourceLifecycleManager();

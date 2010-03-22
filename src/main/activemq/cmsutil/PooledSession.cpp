@@ -26,9 +26,8 @@ using namespace activemq::cmsutil;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession::PooledSession( SessionPool* pool, cms::Session* session ) {
-    this->session = session;
-    this->pool = pool;
+PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
+    : pool( pool ), session( session ), producerCache(), consumerCache() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -65,22 +65,22 @@ namespace cmsutil {
          * Timeout value indicating that a receive operation should
          * check if a message is immediately available without blocking.
          */
-        static const long long RECEIVE_TIMEOUT_NO_WAIT = -1;
+        static const long long RECEIVE_TIMEOUT_NO_WAIT;
 
         /**
          * Timeout value indicating a blocking receive without timeout.
          */
-        static const long long RECEIVE_TIMEOUT_INDEFINITE_WAIT = 0;
+        static const long long RECEIVE_TIMEOUT_INDEFINITE_WAIT;
 
         /**
          * Default message priority.
          */
-        static const int DEFAULT_PRIORITY = 4;
+        static const int DEFAULT_PRIORITY;
 
         /**
          * My default, messages should live forever.
          */
-        static const long long DEFAULT_TIME_TO_LIVE = 0;
+        static const long long DEFAULT_TIME_TO_LIVE;
 
     public:
 
@@ -96,15 +96,17 @@ namespace cmsutil {
             CmsTemplate* parent;
             cms::Destination* destination;
 
+        protected:
+
+            ProducerExecutor( const ProducerExecutor& );
+            ProducerExecutor& operator= ( const ProducerExecutor& );
+
         public:
 
             ProducerExecutor( ProducerCallback* action,
                               CmsTemplate* parent,
-                              cms::Destination* destination ){
-
-                this->action = action;
-                this->parent = parent;
-                this->destination = destination;
+                              cms::Destination* destination )
+            : SessionCallback(), action( action ), parent( parent ), destination( destination ) {
             }
 
             virtual ~ProducerExecutor() {}
@@ -127,15 +129,17 @@ namespace cmsutil {
 
             std::string destinationName;
 
+        protected:
+
+            ResolveProducerExecutor( const ResolveProducerExecutor& );
+            ResolveProducerExecutor& operator= ( const ResolveProducerExecutor& );
+
         public:
 
             ResolveProducerExecutor( ProducerCallback* action,
                                      CmsTemplate* parent,
                                      const std::string& destinationName )
-            :
-                ProducerExecutor( action, parent, NULL ) {
-
-                this->destinationName = destinationName;
+            : ProducerExecutor( action, parent, NULL ), destinationName( destinationName ) {
             }
 
             virtual ~ResolveProducerExecutor() {}
@@ -155,12 +159,16 @@ namespace cmsutil {
             MessageCreator* messageCreator;
             CmsTemplate* parent;
 
+        protected:
+
+            SendExecutor( const SendExecutor& );
+            SendExecutor& operator= ( const SendExecutor& );
+
         public:
 
             SendExecutor( MessageCreator* messageCreator,
-                          CmsTemplate* parent ) {
-                this->messageCreator = messageCreator;
-                this->parent = parent;
+                          CmsTemplate* parent )
+            : ProducerCallback(), messageCreator( messageCreator ), parent( parent ) {
             }
 
             virtual ~SendExecutor() {}
@@ -185,17 +193,23 @@ namespace cmsutil {
             cms::Message* message;
             CmsTemplate* parent;
 
+        protected:
+
+            ReceiveExecutor( const ReceiveExecutor& );
+            ReceiveExecutor& operator= ( const ReceiveExecutor& );
+
         public:
 
             ReceiveExecutor( CmsTemplate* parent,
                              cms::Destination* destination,
                              const std::string& selector,
-                             bool noLocal ) {
-                this->parent = parent;
-                this->destination = destination;
-                this->selector = selector;
-                this->noLocal = noLocal;
-                this->message = NULL;
+                             bool noLocal )
+            : SessionCallback(),
+              destination( destination ),
+              selector( selector ),
+              noLocal( noLocal ),
+              message( NULL ),
+              parent( parent ) {
             }
 
             virtual ~ReceiveExecutor() {}
@@ -223,16 +237,19 @@ namespace cmsutil {
 
             std::string destinationName;
 
+        protected:
+
+            ResolveReceiveExecutor( const ResolveReceiveExecutor& );
+            ResolveReceiveExecutor& operator= ( const ResolveReceiveExecutor& );
+
         public:
 
             ResolveReceiveExecutor( CmsTemplate* parent,
                                     const std::string& selector,
                                     bool noLocal,
                                     const std::string& destinationName )
-            :
-                ReceiveExecutor( parent, NULL, selector, noLocal ) {
+            : ReceiveExecutor( parent, NULL, selector, noLocal ), destinationName( destinationName ) {
 
-                this->destinationName = destinationName;
             }
 
             virtual ~ResolveReceiveExecutor() {}
@@ -270,6 +287,11 @@ namespace cmsutil {
         long long timeToLive;
 
         bool initialized;
+
+    protected:
+
+        CmsTemplate( const CmsTemplate& );
+        CmsTemplate& operator= ( const CmsTemplate& );
 
     public:
 

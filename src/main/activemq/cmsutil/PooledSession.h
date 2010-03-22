@@ -45,6 +45,11 @@ namespace cmsutil {
 
         decaf::util::StlMap<std::string, CachedConsumer*> consumerCache;
 
+    protected:
+
+        PooledSession( const PooledSession& );
+        PooledSession& operator= ( const PooledSession& );
+
     public:
 
         PooledSession( SessionPool* pool, cms::Session* session );

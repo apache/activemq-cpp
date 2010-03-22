@@ -46,6 +46,11 @@ namespace cmsutil {
 
         cms::Session::AcknowledgeMode sessionAcknowledgeMode;
 
+    protected:
+
+        CmsAccessor( const CmsAccessor& );
+        CmsAccessor& operator= ( const CmsAccessor& );
+
     public:
 
         CmsAccessor();
