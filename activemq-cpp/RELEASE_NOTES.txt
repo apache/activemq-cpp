@@ -1,4 +1,19 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.1.2                               ==
+=========================================================================
+
+This release is a minor patch release that resolves a few memory leaks and
+other small bugs found since the 3.1.1 release.  The changes in this release
+should not break compatibility with the previous version.
+
+Bug
+
+    * [AMQCPP-273] - Segmentation violation after pure virtual method called in
+                     tempdest_advisory_producer example
+    * [AMQCPP-290] - Authentication error leads to pure virtual call/kaboom in CMS 3.1.1
+    * [AMQCPP-291] - Crash on sending a message with length = 0
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.1.1                               ==
 =========================================================================
 
