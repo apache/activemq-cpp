@@ -64,10 +64,10 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         generateProperties( out );
 
         if( !isAssignable() ) {
-            out.println("    protected:");
+            out.println("    private:");
             out.println("");
             out.println("        "+getClassName()+"( const "+getClassName()+"& );");
-            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& ) { return *this; };");
+            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& );");
             out.println("");
         }
 

@@ -59,13 +59,15 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         generateDefaultConstructorBody(out);
         out.println("}");
         out.println("");
-        out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other )");
-        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
-        out.println("");
-        out.println("    this->copyDataStructure( &other );");
-        out.println("}");
-        out.println("");
+        if( isAssignable() ) {
+            out.println("////////////////////////////////////////////////////////////////////////////////");
+            out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other )");
+            out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+            out.println("");
+            out.println("    this->copyDataStructure( &other );");
+            out.println("}");
+            out.println("");
+        }
         generateAdditionalConstructors(out);
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println(""+getClassName()+"::~"+getClassName()+"() {");
