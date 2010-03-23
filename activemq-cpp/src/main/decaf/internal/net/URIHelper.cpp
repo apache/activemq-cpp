@@ -93,7 +93,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         if( result.getScheme() == "" ) {
             throw URISyntaxException(
                 __FILE__, __LINE__,
-                uri, "Scheme not specified.", index );
+                uri, "Scheme not specified.", (int)index );
         }
 
         validateScheme( uri, result.getScheme(), 0 );
@@ -102,7 +102,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         if( result.getSchemeSpecificPart() == "" ) {
             throw URISyntaxException(
                 __FILE__, __LINE__,
-                uri, "Scheme specific part is invalid..", index + 1 );
+                uri, "Scheme specific part is invalid..", (int)index + 1 );
         }
 
     } else {
@@ -141,7 +141,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
 
                     throw URISyntaxException(
                         __FILE__, __LINE__,
-                        uri, "Scheme specific part is invalid..", uri.length() );
+                        uri, "Scheme specific part is invalid..", (int)uri.length() );
                 }
             }
 
@@ -190,7 +190,7 @@ void URIHelper::validateScheme( const std::string& uri, const std::string& schem
     if( !Character::isLetter( scheme.at(0) ) ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Schema must start with a Letter.", index );
+            uri, "Schema must start with a Letter.", (int)index );
     }
 
     try {
@@ -198,7 +198,7 @@ void URIHelper::validateScheme( const std::string& uri, const std::string& schem
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid Schema", index + e.getIndex() );
+            uri, "Invalid Schema", (int)index + e.getIndex() );
     }
 }
 
@@ -212,7 +212,7 @@ void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid URI Ssp", index + e.getIndex() );
+            uri, "Invalid URI Ssp", (int)index + e.getIndex() );
     }
 }
 
@@ -227,7 +227,7 @@ void URIHelper::validateAuthority( const std::string& uri, const std::string& au
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid URI Authority", index + e.getIndex() );
+            uri, "Invalid URI Authority", (int)index + e.getIndex() );
     }
 }
 
@@ -242,7 +242,7 @@ void URIHelper::validatePath( const std::string& uri, const std::string& path,
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid URI Path", index + e.getIndex() );
+            uri, "Invalid URI Path", (int)index + e.getIndex() );
     }
 }
 
@@ -256,7 +256,7 @@ void URIHelper::validateQuery( const std::string& uri, const std::string& query,
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid URI Query", index + e.getIndex() );
+            uri, "Invalid URI Query", (int)index + e.getIndex() );
     }
 }
 
@@ -270,7 +270,7 @@ void URIHelper::validateFragment( const std::string& uri, const std::string& fra
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
-            uri, "Invalid URI Fragment", index + e.getIndex() );
+            uri, "Invalid URI Fragment", (int)index + e.getIndex() );
     }
 }
 
@@ -317,7 +317,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
                             throw URISyntaxException(
                                 __FILE__, __LINE__,
                                 authority, "Port number is missing",
-                                hostindex + index + 1 );
+                                (int)hostindex + (int)index + 1 );
                         }
 
                         return result;
@@ -329,7 +329,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
                         throw URISyntaxException(
                             __FILE__, __LINE__,
                             authority, "Port number is malformed.",
-                            hostindex + index + 1 );
+                            (int)hostindex + (int)index + 1 );
                     }
 
                     return result;
@@ -344,7 +344,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
             if( forceServer ) {
                 throw URISyntaxException(
                     __FILE__, __LINE__,
-                    authority, "Host name is empty", hostindex );
+                    authority, "Host name is empty", (int)hostindex );
             }
             return result;
         }
@@ -381,7 +381,7 @@ void URIHelper::validateUserinfo( const std::string& uri, const std::string& use
         if( ch == ']' || ch == '[' ) {
             throw URISyntaxException(
                 __FILE__, __LINE__,
-                uri, "User Info cannot contain '[' or ']'", index + i );
+                uri, "User Info cannot contain '[' or ']'", (int)( index + i ) );
         }
     }
 }
