@@ -53,18 +53,19 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println(" */");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println(""+getClassName()+"::"+getClassName()+"() : " + getBaseClassName() + "() {");
+        out.println(""+getClassName()+"::"+getClassName()+"() " );
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         generateDefaultConstructorBody(out);
         out.println("}");
         out.println("");
-        if( isAssignable() ) {
-            out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other ) : " + getBaseClassName() + "() {");
-            out.println("    this->copyDataStructure( &other );");
-            out.println("}");
-            out.println("");
-        }
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
+        out.println("    this->copyDataStructure( &other );");
+        out.println("}");
+        out.println("");
         generateAdditionalConstructors(out);
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println(""+getClassName()+"::~"+getClassName()+"() {");
@@ -196,18 +197,47 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
     }
 
     protected void generateDefaultConstructorBody( PrintWriter out ) {
+//        for( JProperty property : getProperties() ) {
+//            String type = toCppType(property.getType());
+//            String value = toCppDefaultValue(property.getType());
+//            String propertyName = property.getSimpleName();
+//            String parameterName = decapitalize(propertyName);
+//
+//            if( property.getType().isPrimitiveType() ||
+//                type.startsWith("std::string") ) {
+//
+//                out.println("    this->"+parameterName+" = "+value+";");
+//            }
+//        }
+    }
+
+    protected String generateInitializerList(String current) {
+
+        StringBuilder result = new StringBuilder();
+        int lastLineEnds = 0;
+
+        if( current != null ) {
+            result.append(current);
+        }
+
         for( JProperty property : getProperties() ) {
             String type = toCppType(property.getType());
             String value = toCppDefaultValue(property.getType());
             String propertyName = property.getSimpleName();
             String parameterName = decapitalize(propertyName);
 
-            if( property.getType().isPrimitiveType() ||
-                type.startsWith("std::string") ) {
+            result.append(", ");
 
-                out.println("    this->"+parameterName+" = "+value+";");
+            int currentLength = result.toString().length();
+            if( ( currentLength - lastLineEnds ) >= 120 ) {
+                lastLineEnds = currentLength;
+                result.append("\n");
+                result.append("      ");
             }
+            result.append(parameterName + "(" + value + ")" );
         }
+
+        return result.toString();
     }
 
     protected void generateDestructorBody( PrintWriter out ) {

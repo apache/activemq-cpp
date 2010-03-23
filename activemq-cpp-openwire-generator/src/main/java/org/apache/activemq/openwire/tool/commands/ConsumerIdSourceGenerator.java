@@ -21,6 +21,32 @@ import java.util.Set;
 
 public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
 
+    protected void generateAdditionalConstructors( PrintWriter out ) {
+
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("ConsumerId::ConsumerId( const SessionId& sessionId, long long consumerIdd )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
+        out.println("    this->connectionId = sessionId.getConnectionId();");
+        out.println("    this->sessionId = sessionId.getValue();");
+        out.println("    this->value = consumerIdd;");
+        out.println("}");
+        out.println("");
+
+        super.generateAdditionalConstructors(out);
+    }
+
+    protected String generateInitializerList(String current) {
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", parentId()");
+
+        return super.generateInitializerList(result.toString());
+    }
+
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("const Pointer<SessionId>& ConsumerId::getParentId() const {");

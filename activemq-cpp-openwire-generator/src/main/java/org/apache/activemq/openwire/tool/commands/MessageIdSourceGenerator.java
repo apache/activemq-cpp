@@ -24,30 +24,49 @@ public class MessageIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("MessageId::MessageId( const std::string& messageKey ) {");
+        out.println("MessageId::MessageId( const std::string& messageKey )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
         out.println("    this->setValue( messageKey );");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("MessageId::MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId ) {");
+        out.println("MessageId::MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
         out.println("    this->producerId = producerInfo->getProducerId();");
         out.println("    this->producerSequenceId = producerSequenceId;");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("MessageId::MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId ) {");
+        out.println("MessageId::MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
         out.println("    this->producerId = producerId;");
         out.println("    this->producerSequenceId = producerSequenceId;");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("MessageId::MessageId( const std::string& producerId, long long producerSequenceId ) {");
+        out.println("MessageId::MessageId( const std::string& producerId, long long producerSequenceId )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
         out.println("    this->producerId.reset( new ProducerId( producerId ) );");
         out.println("    this->producerSequenceId = producerSequenceId;");
         out.println("}");
         out.println("");
 
         super.generateAdditionalConstructors(out);
+    }
+
+    protected String generateInitializerList(String current) {
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", key(\"\")");
+
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateAdditionalMethods( PrintWriter out ) {

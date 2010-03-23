@@ -24,14 +24,17 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ProducerId::ProducerId( const SessionId& sessionId, long long consumerId ) {");
+        out.println("ProducerId::ProducerId( const SessionId& sessionId, long long consumerId )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
+        out.println("");
         out.println("    this->connectionId = sessionId.getConnectionId();");
         out.println("    this->sessionId = sessionId.getValue();");
         out.println("    this->value = consumerId;");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ProducerId::ProducerId( std::string producerKey ) {");
+        out.println("ProducerId::ProducerId( std::string producerKey )");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         out.println("    // Parse off the producerId");
         out.println("    std::size_t p = producerKey.rfind( ':' );");
@@ -46,6 +49,17 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
         out.println("");
 
         super.generateAdditionalConstructors(out);
+    }
+
+    protected String generateInitializerList(String current) {
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", parentId()");
+
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateAdditionalMethods( PrintWriter out ) {
