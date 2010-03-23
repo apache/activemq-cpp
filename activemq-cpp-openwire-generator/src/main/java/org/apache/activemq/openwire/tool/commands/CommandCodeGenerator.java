@@ -214,6 +214,10 @@ public abstract class CommandCodeGenerator {
             return "false";
         } else if( name.equals("String") ) {
             return "\"\"";
+        } else if( name.equals("ByteSequence") ) {
+            return "";
+        } else if( type.isArrayType() ) {
+            return "";
         } else if( !type.isPrimitiveType() ) {
             return "NULL";
         } else {

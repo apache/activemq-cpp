@@ -199,18 +199,6 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
     }
 
     protected void generateDefaultConstructorBody( PrintWriter out ) {
-//        for( JProperty property : getProperties() ) {
-//            String type = toCppType(property.getType());
-//            String value = toCppDefaultValue(property.getType());
-//            String propertyName = property.getSimpleName();
-//            String parameterName = decapitalize(propertyName);
-//
-//            if( property.getType().isPrimitiveType() ||
-//                type.startsWith("std::string") ) {
-//
-//                out.println("    this->"+parameterName+" = "+value+";");
-//            }
-//        }
     }
 
     protected String generateInitializerList(String current) {
