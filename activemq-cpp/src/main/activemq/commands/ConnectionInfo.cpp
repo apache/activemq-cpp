@@ -38,15 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionInfo::ConnectionInfo() : BaseCommand() {
+ConnectionInfo::ConnectionInfo() 
+    : BaseCommand(), connectionId(NULL), clientId(""), password(""), userName(""), brokerPath(NULL), brokerMasterConnector(false), 
+      manageable(false), clientMaster(false), faultTolerant(false) {
 
-    this->clientId = "";
-    this->password = "";
-    this->userName = "";
-    this->brokerMasterConnector = false;
-    this->manageable = false;
-    this->clientMaster = false;
-    this->faultTolerant = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

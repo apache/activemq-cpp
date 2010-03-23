@@ -56,10 +56,10 @@ namespace commands{
 
         const static unsigned char ID_TRANSACTIONINFO = 7;
 
-    protected:
+    private:
 
-        TransactionInfo( const TransactionInfo& ) : BaseCommand() {};
-        TransactionInfo& operator= ( const TransactionInfo& ) { return *this; };
+        TransactionInfo( const TransactionInfo& );
+        TransactionInfo& operator= ( const TransactionInfo& );
 
     public:
 

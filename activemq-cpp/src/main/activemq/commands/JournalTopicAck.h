@@ -60,10 +60,10 @@ namespace commands{
 
         const static unsigned char ID_JOURNALTOPICACK = 50;
 
-    protected:
+    private:
 
-        JournalTopicAck( const JournalTopicAck& ) : BaseDataStructure() {};
-        JournalTopicAck& operator= ( const JournalTopicAck& ) { return *this; };
+        JournalTopicAck( const JournalTopicAck& );
+        JournalTopicAck& operator= ( const JournalTopicAck& );
 
     public:
 

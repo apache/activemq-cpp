@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerInfo::ProducerInfo() : BaseCommand() {
+ProducerInfo::ProducerInfo() 
+    : BaseCommand(), producerId(NULL), destination(NULL), brokerPath(NULL), dispatchAsync(false), windowSize(0) {
 
-    this->dispatchAsync = false;
-    this->windowSize = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

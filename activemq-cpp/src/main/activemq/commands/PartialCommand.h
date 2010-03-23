@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_PARTIALCOMMAND = 60;
 
-    protected:
+    private:
 
-        PartialCommand( const PartialCommand& ) : BaseDataStructure() {};
-        PartialCommand& operator= ( const PartialCommand& ) { return *this; };
+        PartialCommand( const PartialCommand& );
+        PartialCommand& operator= ( const PartialCommand& );
 
     public:
 

@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_DISCOVERYEVENT = 40;
 
-    protected:
+    private:
 
-        DiscoveryEvent( const DiscoveryEvent& ) : BaseDataStructure() {};
-        DiscoveryEvent& operator= ( const DiscoveryEvent& ) { return *this; };
+        DiscoveryEvent( const DiscoveryEvent& );
+        DiscoveryEvent& operator= ( const DiscoveryEvent& );
 
     public:
 

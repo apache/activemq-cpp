@@ -115,10 +115,10 @@ namespace commands{
 
         const static unsigned char ID_MESSAGE = 0;
 
-    protected:
+    private:
 
-        Message( const Message& ) : BaseCommand() {};
-        Message& operator= ( const Message& ) { return *this; };
+        Message( const Message& );
+        Message& operator= ( const Message& );
 
     public:
 

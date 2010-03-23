@@ -57,10 +57,10 @@ namespace commands{
 
         const static unsigned char ID_SUBSCRIPTIONINFO = 55;
 
-    protected:
+    private:
 
-        SubscriptionInfo( const SubscriptionInfo& ) : BaseDataStructure() {};
-        SubscriptionInfo& operator= ( const SubscriptionInfo& ) { return *this; };
+        SubscriptionInfo( const SubscriptionInfo& );
+        SubscriptionInfo& operator= ( const SubscriptionInfo& );
 
     public:
 

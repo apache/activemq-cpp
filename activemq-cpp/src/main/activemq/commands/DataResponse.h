@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_DATARESPONSE = 32;
 
-    protected:
+    private:
 
-        DataResponse( const DataResponse& ) : Response() {};
-        DataResponse& operator= ( const DataResponse& ) { return *this; };
+        DataResponse( const DataResponse& );
+        DataResponse& operator= ( const DataResponse& );
 
     public:
 

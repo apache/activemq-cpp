@@ -51,10 +51,10 @@ namespace commands{
 
         const static unsigned char ID_SHUTDOWNINFO = 11;
 
-    protected:
+    private:
 
-        ShutdownInfo( const ShutdownInfo& ) : BaseCommand() {};
-        ShutdownInfo& operator= ( const ShutdownInfo& ) { return *this; };
+        ShutdownInfo( const ShutdownInfo& );
+        ShutdownInfo& operator= ( const ShutdownInfo& );
 
     public:
 

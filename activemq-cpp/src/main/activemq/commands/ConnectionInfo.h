@@ -63,10 +63,10 @@ namespace commands{
 
         const static unsigned char ID_CONNECTIONINFO = 3;
 
-    protected:
+    private:
 
-        ConnectionInfo( const ConnectionInfo& ) : BaseCommand() {};
-        ConnectionInfo& operator= ( const ConnectionInfo& ) { return *this; };
+        ConnectionInfo( const ConnectionInfo& );
+        ConnectionInfo& operator= ( const ConnectionInfo& );
 
     public:
 

@@ -51,10 +51,10 @@ namespace commands{
 
         const static unsigned char ID_FLUSHCOMMAND = 15;
 
-    protected:
+    private:
 
-        FlushCommand( const FlushCommand& ) : BaseCommand() {};
-        FlushCommand& operator= ( const FlushCommand& ) { return *this; };
+        FlushCommand( const FlushCommand& );
+        FlushCommand& operator= ( const FlushCommand& );
 
     public:
 

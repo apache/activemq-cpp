@@ -43,31 +43,38 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId() : BaseDataStructure() {
+SessionId::SessionId() 
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
-    this->connectionId = "";
-    this->value = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const SessionId& other ) : BaseDataStructure() {
+SessionId::SessionId( const SessionId& other )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
+
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ConnectionId* connectionId, long long sessionId ) {
+SessionId::SessionId( const ConnectionId* connectionId, long long sessionId )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
+
     this->connectionId = connectionId->getValue();
     this->value = sessionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ProducerId* producerId ) {
+SessionId::SessionId( const ProducerId* producerId )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
+
     this->connectionId = producerId->getConnectionId();
     this->value = producerId->getSessionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ConsumerId* consumerId ) {
+SessionId::SessionId( const ConsumerId* consumerId )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
+
     this->connectionId = consumerId->getConnectionId();
     this->value = consumerId->getSessionId();
 }

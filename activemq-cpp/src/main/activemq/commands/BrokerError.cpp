@@ -26,6 +26,10 @@ using namespace activemq::commands;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+BrokerError::BrokerError() : BaseCommand(), message(), exceptionClass(), stackTraceElements(), cause() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 BrokerError::~BrokerError() {
     this->stackTraceElements.clear();
 }

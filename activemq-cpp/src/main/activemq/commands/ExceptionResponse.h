@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_EXCEPTIONRESPONSE = 31;
 
-    protected:
+    private:
 
-        ExceptionResponse( const ExceptionResponse& ) : Response() {};
-        ExceptionResponse& operator= ( const ExceptionResponse& ) { return *this; };
+        ExceptionResponse( const ExceptionResponse& );
+        ExceptionResponse& operator= ( const ExceptionResponse& );
 
     public:
 

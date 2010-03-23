@@ -33,10 +33,7 @@ using namespace activemq::wireformat::openwire::marshal;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatInfo::WireFormatInfo()
-{
-    // Init to our preferred version
-    this->version = 2;
+WireFormatInfo::WireFormatInfo() : BaseCommand(), magic(), marshalledProperties(), properties(), version(5) {
 
     // Initialize the MAGIC buffer.
     magic.push_back( 'A' );

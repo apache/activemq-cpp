@@ -55,10 +55,10 @@ namespace commands{
 
         const static unsigned char ID_JOURNALQUEUEACK = 52;
 
-    protected:
+    private:
 
-        JournalQueueAck( const JournalQueueAck& ) : BaseDataStructure() {};
-        JournalQueueAck& operator= ( const JournalQueueAck& ) { return *this; };
+        JournalQueueAck( const JournalQueueAck& );
+        JournalQueueAck& operator= ( const JournalQueueAck& );
 
     public:
 

@@ -50,6 +50,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQTEMPDESTINATION = 0;
 
+    private:
+
+        ActiveMQTempDestination( const ActiveMQTempDestination& ) : ActiveMQDestination(), connection(NULL) {};
+        ActiveMQTempDestination& operator= ( const ActiveMQTempDestination& ) { return *this; };
+
     public:
 
         ActiveMQTempDestination();

@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTransaction::JournalTransaction() : BaseDataStructure() {
+JournalTransaction::JournalTransaction() 
+    : BaseDataStructure(), transactionId(NULL), type(0), wasPrepared(false) {
 
-    this->type = 0;
-    this->wasPrepared = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -38,11 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTopicAck::JournalTopicAck() : BaseDataStructure() {
+JournalTopicAck::JournalTopicAck() 
+    : BaseDataStructure(), destination(NULL), messageId(NULL), messageSequenceId(0), subscritionName(""), clientId(""), transactionId(NULL) {
 
-    this->messageSequenceId = 0;
-    this->subscritionName = "";
-    this->clientId = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

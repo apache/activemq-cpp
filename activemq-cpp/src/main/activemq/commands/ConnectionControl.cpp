@@ -38,16 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionControl::ConnectionControl() : BaseCommand() {
+ConnectionControl::ConnectionControl() 
+    : BaseCommand(), close(false), exit(false), faultTolerant(false), resume(false), suspend(false), connectedBrokers(""), reconnectTo(""), 
+      rebalanceConnection(false) {
 
-    this->close = false;
-    this->exit = false;
-    this->faultTolerant = false;
-    this->resume = false;
-    this->suspend = false;
-    this->connectedBrokers = "";
-    this->reconnectTo = "";
-    this->rebalanceConnection = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -59,10 +59,10 @@ namespace commands{
 
         const static unsigned char ID_SESSIONINFO = 4;
 
-    protected:
+    private:
 
-        SessionInfo( const SessionInfo& ) : BaseCommand() {};
-        SessionInfo& operator= ( const SessionInfo& ) { return *this; };
+        SessionInfo( const SessionInfo& );
+        SessionInfo& operator= ( const SessionInfo& );
 
     public:
 

@@ -38,21 +38,11 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo::ConsumerInfo() : BaseCommand() {
+ConsumerInfo::ConsumerInfo() 
+    : BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false), 
+      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(NULL), 
+      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath(NULL) {
 
-    this->browser = false;
-    this->prefetchSize = 0;
-    this->maximumPendingMessageLimit = 0;
-    this->dispatchAsync = false;
-    this->selector = "";
-    this->subscriptionName = "";
-    this->noLocal = false;
-    this->exclusive = false;
-    this->retroactive = false;
-    this->priority = 0;
-    this->networkSubscription = false;
-    this->optimizedAcknowledge = false;
-    this->noRangeAcks = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

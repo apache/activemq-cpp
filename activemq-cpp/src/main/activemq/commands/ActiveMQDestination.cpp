@@ -50,24 +50,25 @@ const std::string ActiveMQDestination::TOPIC_QUALIFIED_PREFIX = "topic://";
 const std::string ActiveMQDestination::TEMP_QUEUE_QUALIFED_PREFIX = "temp-queue://";
 const std::string ActiveMQDestination::TEMP_TOPIC_QUALIFED_PREFIX = "temp-topic://";
 
-////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::ActiveMQDestination() {
+bool exclusive;
+bool ordered;
+bool advisory;
+std::string orderedTarget;
 
-    this->physicalName = "";
-    this->orderedTarget = DEFAULT_ORDERED_TARGET;
-    this->exclusive = false;
-    this->ordered = false;
-    this->advisory = false;
+std::string physicalName;
+util::ActiveMQProperties options;
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination::ActiveMQDestination() :
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) {
+ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) :
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
 
     this->setPhysicalName( physicalName );
-    this->orderedTarget = DEFAULT_ORDERED_TARGET;
-    this->exclusive = false;
-    this->ordered = false;
-    this->advisory = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

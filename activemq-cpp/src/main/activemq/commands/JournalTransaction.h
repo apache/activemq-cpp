@@ -55,10 +55,10 @@ namespace commands{
 
         const static unsigned char ID_JOURNALTRANSACTION = 54;
 
-    protected:
+    private:
 
-        JournalTransaction( const JournalTransaction& ) : BaseDataStructure() {};
-        JournalTransaction& operator= ( const JournalTransaction& ) { return *this; };
+        JournalTransaction( const JournalTransaction& );
+        JournalTransaction& operator= ( const JournalTransaction& );
 
     public:
 
