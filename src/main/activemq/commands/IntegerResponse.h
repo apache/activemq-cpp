@@ -52,10 +52,10 @@ namespace commands{
 
         const static unsigned char ID_INTEGERRESPONSE = 34;
 
-    protected:
+    private:
 
-        IntegerResponse( const IntegerResponse& ) : Response() {};
-        IntegerResponse& operator= ( const IntegerResponse& ) { return *this; };
+        IntegerResponse( const IntegerResponse& );
+        IntegerResponse& operator= ( const IntegerResponse& );
 
     public:
 

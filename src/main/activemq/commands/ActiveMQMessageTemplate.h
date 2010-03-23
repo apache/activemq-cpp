@@ -45,7 +45,7 @@ namespace commands {
 
     public:
 
-        ActiveMQMessageTemplate() : commands::Message() {
+        ActiveMQMessageTemplate() : commands::Message(), propertiesInterceptor() {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
                     this, &this->getMessageProperties() ) );

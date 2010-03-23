@@ -51,10 +51,10 @@ namespace commands{
 
         const static unsigned char ID_LASTPARTIALCOMMAND = 61;
 
-    protected:
+    private:
 
-        LastPartialCommand( const LastPartialCommand& ) : PartialCommand() {};
-        LastPartialCommand& operator= ( const LastPartialCommand& ) { return *this; };
+        LastPartialCommand( const LastPartialCommand& );
+        LastPartialCommand& operator= ( const LastPartialCommand& );
 
     public:
 

@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-LastPartialCommand::LastPartialCommand() : PartialCommand() {
+LastPartialCommand::LastPartialCommand() 
+    : PartialCommand() {
 
 }
 

@@ -52,10 +52,10 @@ namespace commands{
 
         const static unsigned char ID_CONTROLCOMMAND = 14;
 
-    protected:
+    private:
 
-        ControlCommand( const ControlCommand& ) : BaseCommand() {};
-        ControlCommand& operator= ( const ControlCommand& ) { return *this; };
+        ControlCommand( const ControlCommand& );
+        ControlCommand& operator= ( const ControlCommand& );
 
     public:
 

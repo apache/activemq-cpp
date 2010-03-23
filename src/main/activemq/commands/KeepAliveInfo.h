@@ -51,10 +51,10 @@ namespace commands{
 
         const static unsigned char ID_KEEPALIVEINFO = 10;
 
-    protected:
+    private:
 
-        KeepAliveInfo( const KeepAliveInfo& ) : BaseCommand() {};
-        KeepAliveInfo& operator= ( const KeepAliveInfo& ) { return *this; };
+        KeepAliveInfo( const KeepAliveInfo& );
+        KeepAliveInfo& operator= ( const KeepAliveInfo& );
 
     public:
 

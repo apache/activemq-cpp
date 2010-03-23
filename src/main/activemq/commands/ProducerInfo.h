@@ -60,10 +60,10 @@ namespace commands{
 
         const static unsigned char ID_PRODUCERINFO = 6;
 
-    protected:
+    private:
 
-        ProducerInfo( const ProducerInfo& ) : BaseCommand() {};
-        ProducerInfo& operator= ( const ProducerInfo& ) { return *this; };
+        ProducerInfo( const ProducerInfo& );
+        ProducerInfo& operator= ( const ProducerInfo& );
 
     public:
 

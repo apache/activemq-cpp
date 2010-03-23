@@ -60,10 +60,10 @@ namespace commands{
 
         const static unsigned char ID_CONSUMERCONTROL = 17;
 
-    protected:
+    private:
 
-        ConsumerControl( const ConsumerControl& ) : BaseCommand() {};
-        ConsumerControl& operator= ( const ConsumerControl& ) { return *this; };
+        ConsumerControl( const ConsumerControl& );
+        ConsumerControl& operator= ( const ConsumerControl& );
 
     public:
 

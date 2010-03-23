@@ -58,7 +58,7 @@ using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQStreamMessage::ActiveMQStreamMessage() :
-    ActiveMQMessageTemplate< cms::StreamMessage >() {
+    ActiveMQMessageTemplate< cms::StreamMessage >(), bytesOut(NULL), dataIn(), dataOut(), remainingBytes(-1) {
 
     this->clearBody();
 }

@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveInfo::RemoveInfo() : BaseCommand() {
+RemoveInfo::RemoveInfo() 
+    : BaseCommand(), objectId(NULL), lastDeliveredSequenceId(0) {
 
-    this->lastDeliveredSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

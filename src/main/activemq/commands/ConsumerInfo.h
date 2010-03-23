@@ -74,10 +74,10 @@ namespace commands{
 
         const static unsigned char ID_CONSUMERINFO = 5;
 
-    protected:
+    private:
 
-        ConsumerInfo( const ConsumerInfo& ) : BaseCommand() {};
-        ConsumerInfo& operator= ( const ConsumerInfo& ) { return *this; };
+        ConsumerInfo( const ConsumerInfo& );
+        ConsumerInfo& operator= ( const ConsumerInfo& );
 
     public:
 

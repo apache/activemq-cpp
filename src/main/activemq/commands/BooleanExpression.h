@@ -27,7 +27,7 @@ namespace commands{
     class AMQCPP_API BooleanExpression : public BaseDataStructure {
     public:
 
-        BooleanExpression() {}
+        BooleanExpression() : BaseDataStructure() {}
         virtual ~BooleanExpression() {}
 
         /**

@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveSubscriptionInfo::RemoveSubscriptionInfo() : BaseCommand() {
+RemoveSubscriptionInfo::RemoveSubscriptionInfo() 
+    : BaseCommand(), connectionId(NULL), subcriptionName(""), clientId("") {
 
-    this->subcriptionName = "";
-    this->clientId = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

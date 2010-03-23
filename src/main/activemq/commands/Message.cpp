@@ -43,27 +43,14 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Message::Message() : BaseCommand() {
+Message::Message() 
+    : BaseCommand(), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL), producerId(NULL), 
+      destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
+      groupID(""), groupSequence(0), correlationId(""), persistent(false), expiration(0), priority(0), replyTo(NULL), timestamp(0), 
+      type(""), content(NULL), marshalledProperties(NULL), dataStructure(NULL), targetConsumerId(NULL), compressed(false), 
+      redeliveryCounter(0), brokerPath(NULL), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(NULL), 
+      brokerInTime(0), brokerOutTime(0) {
 
-    this->readOnlyBody = false;
-    this->readOnlyProperties = false;
-    this->connection = NULL;
-    this->groupID = "";
-    this->groupSequence = 0;
-    this->correlationId = "";
-    this->persistent = false;
-    this->expiration = 0;
-    this->priority = 0;
-    this->timestamp = 0;
-    this->type = "";
-    this->compressed = false;
-    this->redeliveryCounter = 0;
-    this->arrival = 0;
-    this->userID = "";
-    this->recievedByDFBridge = false;
-    this->droppable = false;
-    this->brokerInTime = 0;
-    this->brokerOutTime = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

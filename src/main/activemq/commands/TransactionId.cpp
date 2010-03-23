@@ -39,12 +39,15 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId::TransactionId() : BaseDataStructure() {
+TransactionId::TransactionId() 
+    : BaseDataStructure() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId::TransactionId( const TransactionId& other ) : BaseDataStructure() {
+TransactionId::TransactionId( const TransactionId& other )
+    : BaseDataStructure() {
+
     this->copyDataStructure( &other );
 }
 

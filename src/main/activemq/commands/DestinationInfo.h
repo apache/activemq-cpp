@@ -59,10 +59,10 @@ namespace commands{
 
         const static unsigned char ID_DESTINATIONINFO = 8;
 
-    protected:
+    private:
 
-        DestinationInfo( const DestinationInfo& ) : BaseCommand() {};
-        DestinationInfo& operator= ( const DestinationInfo& ) { return *this; };
+        DestinationInfo( const DestinationInfo& );
+        DestinationInfo& operator= ( const DestinationInfo& );
 
     public:
 

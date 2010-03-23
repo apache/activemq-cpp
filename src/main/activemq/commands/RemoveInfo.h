@@ -54,10 +54,10 @@ namespace commands{
 
         const static unsigned char ID_REMOVEINFO = 12;
 
-    protected:
+    private:
 
-        RemoveInfo( const RemoveInfo& ) : BaseCommand() {};
-        RemoveInfo& operator= ( const RemoveInfo& ) { return *this; };
+        RemoveInfo( const RemoveInfo& );
+        RemoveInfo& operator= ( const RemoveInfo& );
 
     public:
 

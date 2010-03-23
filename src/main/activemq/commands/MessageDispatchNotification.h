@@ -58,10 +58,10 @@ namespace commands{
 
         const static unsigned char ID_MESSAGEDISPATCHNOTIFICATION = 90;
 
-    protected:
+    private:
 
-        MessageDispatchNotification( const MessageDispatchNotification& ) : BaseCommand() {};
-        MessageDispatchNotification& operator= ( const MessageDispatchNotification& ) { return *this; };
+        MessageDispatchNotification( const MessageDispatchNotification& );
+        MessageDispatchNotification& operator= ( const MessageDispatchNotification& );
 
     public:
 

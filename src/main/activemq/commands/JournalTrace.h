@@ -52,10 +52,10 @@ namespace commands{
 
         const static unsigned char ID_JOURNALTRACE = 53;
 
-    protected:
+    private:
 
-        JournalTrace( const JournalTrace& ) : BaseDataStructure() {};
-        JournalTrace& operator= ( const JournalTrace& ) { return *this; };
+        JournalTrace( const JournalTrace& );
+        JournalTrace& operator= ( const JournalTrace& );
 
     public:
 

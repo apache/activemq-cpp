@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ExceptionResponse::ExceptionResponse() : Response() {
+ExceptionResponse::ExceptionResponse() 
+    : Response(), exception(NULL) {
 
 }
 

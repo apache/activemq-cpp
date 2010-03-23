@@ -41,36 +41,45 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId() : BaseDataStructure() {
+MessageId::MessageId() 
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
 
-    this->producerSequenceId = 0;
-    this->brokerSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const MessageId& other ) : BaseDataStructure() {
+MessageId::MessageId( const MessageId& other )
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
+
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const std::string& messageKey ) {
+MessageId::MessageId( const std::string& messageKey )
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
+
     this->setValue( messageKey );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId ) {
+MessageId::MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId )
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
+
     this->producerId = producerInfo->getProducerId();
     this->producerSequenceId = producerSequenceId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId ) {
+MessageId::MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId )
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
+
     this->producerId = producerId;
     this->producerSequenceId = producerSequenceId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId::MessageId( const std::string& producerId, long long producerSequenceId ) {
+MessageId::MessageId( const std::string& producerId, long long producerSequenceId )
+    : BaseDataStructure(), key(""), producerId(NULL), producerSequenceId(0), brokerSequenceId(0) {
+
     this->producerId.reset( new ProducerId( producerId ) );
     this->producerSequenceId = producerSequenceId;
 }

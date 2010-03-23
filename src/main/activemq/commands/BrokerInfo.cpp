@@ -38,18 +38,11 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerInfo::BrokerInfo() : BaseCommand() {
+BrokerInfo::BrokerInfo() 
+    : BaseCommand(), brokerId(NULL), brokerURL(""), peerBrokerInfos(NULL), brokerName(""), slaveBroker(false), masterBroker(false), 
+      faultTolerantConfiguration(false), duplexConnection(false), networkConnection(false), connectionId(0), brokerUploadUrl(""), 
+      networkProperties("") {
 
-    this->brokerURL = "";
-    this->brokerName = "";
-    this->slaveBroker = false;
-    this->masterBroker = false;
-    this->faultTolerantConfiguration = false;
-    this->duplexConnection = false;
-    this->networkConnection = false;
-    this->connectionId = 0;
-    this->brokerUploadUrl = "";
-    this->networkProperties = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

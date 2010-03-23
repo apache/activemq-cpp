@@ -54,10 +54,10 @@ namespace commands{
 
         const static unsigned char ID_NETWORKBRIDGEFILTER = 91;
 
-    protected:
+    private:
 
-        NetworkBridgeFilter( const NetworkBridgeFilter& ) : BaseDataStructure() {};
-        NetworkBridgeFilter& operator= ( const NetworkBridgeFilter& ) { return *this; };
+        NetworkBridgeFilter( const NetworkBridgeFilter& );
+        NetworkBridgeFilter& operator= ( const NetworkBridgeFilter& );
 
     public:
 

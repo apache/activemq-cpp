@@ -53,7 +53,8 @@ namespace commands{
 
     public:
 
-        BrokerError() {}
+        BrokerError();
+
         virtual ~BrokerError();
 
         /**

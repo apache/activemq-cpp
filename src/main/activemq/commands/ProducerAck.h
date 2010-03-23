@@ -54,10 +54,10 @@ namespace commands{
 
         const static unsigned char ID_PRODUCERACK = 19;
 
-    protected:
+    private:
 
-        ProducerAck( const ProducerAck& ) : BaseCommand() {};
-        ProducerAck& operator= ( const ProducerAck& ) { return *this; };
+        ProducerAck( const ProducerAck& );
+        ProducerAck& operator= ( const ProducerAck& );
 
     public:
 

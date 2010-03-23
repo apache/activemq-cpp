@@ -44,6 +44,11 @@ namespace{
 
         int* length;
 
+    private:
+
+        ByteCounterOutputStream( const ByteCounterOutputStream& );
+        ByteCounterOutputStream operator= ( const ByteCounterOutputStream& );
+
     public:
 
         ByteCounterOutputStream( int* length, OutputStream* stream, bool own = false )
@@ -82,7 +87,7 @@ namespace{
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() :
-    ActiveMQMessageTemplate< cms::BytesMessage >(), length( 0 ) {
+    ActiveMQMessageTemplate<cms::BytesMessage>(), bytesOut(NULL), dataIn(), dataOut(), length(0) {
 
     this->clearBody();
 }

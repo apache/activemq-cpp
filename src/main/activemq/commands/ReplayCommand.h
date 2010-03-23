@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_REPLAYCOMMAND = 65;
 
-    protected:
+    private:
 
-        ReplayCommand( const ReplayCommand& ) : BaseCommand() {};
-        ReplayCommand& operator= ( const ReplayCommand& ) { return *this; };
+        ReplayCommand( const ReplayCommand& );
+        ReplayCommand& operator= ( const ReplayCommand& );
 
     public:
 

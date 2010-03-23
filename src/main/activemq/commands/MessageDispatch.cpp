@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatch::MessageDispatch() : BaseCommand() {
+MessageDispatch::MessageDispatch() 
+    : BaseCommand(), consumerId(NULL), destination(NULL), message(NULL), redeliveryCounter(0) {
 
-    this->redeliveryCounter = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

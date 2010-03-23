@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ReplayCommand::ReplayCommand() : BaseCommand() {
+ReplayCommand::ReplayCommand() 
+    : BaseCommand(), firstNakNumber(0), lastNakNumber(0) {
 
-    this->firstNakNumber = 0;
-    this->lastNakNumber = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

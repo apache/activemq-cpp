@@ -38,10 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck::MessageAck() : BaseCommand() {
+MessageAck::MessageAck() 
+    : BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
+      messageCount(0) {
 
-    this->ackType = 0;
-    this->messageCount = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

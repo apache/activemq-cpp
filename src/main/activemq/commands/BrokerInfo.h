@@ -65,10 +65,10 @@ namespace commands{
 
         const static unsigned char ID_BROKERINFO = 2;
 
-    protected:
+    private:
 
-        BrokerInfo( const BrokerInfo& ) : BaseCommand() {};
-        BrokerInfo& operator= ( const BrokerInfo& ) { return *this; };
+        BrokerInfo( const BrokerInfo& );
+        BrokerInfo& operator= ( const BrokerInfo& );
 
     public:
 

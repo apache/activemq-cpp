@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DataArrayResponse::DataArrayResponse() : Response() {
+DataArrayResponse::DataArrayResponse() 
+    : Response(), data(NULL) {
 
 }
 

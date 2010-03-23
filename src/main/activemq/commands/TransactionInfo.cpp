@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionInfo::TransactionInfo() : BaseCommand() {
+TransactionInfo::TransactionInfo() 
+    : BaseCommand(), connectionId(NULL), transactionId(NULL), type(0) {
 
-    this->type = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,9 +26,15 @@ using namespace activemq::commands;
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQBlobMessage::BINARY_MIME_TYPE = "application/octet-stream";
 
+std::string remoteBlobUrl;
+std::string mimeType;
+std::string name;
+bool deletedByBroker;
+
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBlobMessage::ActiveMQBlobMessage() :
-    mimeType( ActiveMQBlobMessage::BINARY_MIME_TYPE ), deletedByBroker( false ) {
+ActiveMQBlobMessage::ActiveMQBlobMessage() : ActiveMQMessageTemplate<cms::Message>(),
+                                             remoteBlobUrl(), mimeType( ActiveMQBlobMessage::BINARY_MIME_TYPE ),
+                                             name(), deletedByBroker( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

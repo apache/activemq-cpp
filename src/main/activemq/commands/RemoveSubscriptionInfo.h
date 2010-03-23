@@ -55,10 +55,10 @@ namespace commands{
 
         const static unsigned char ID_REMOVESUBSCRIPTIONINFO = 9;
 
-    protected:
+    private:
 
-        RemoveSubscriptionInfo( const RemoveSubscriptionInfo& ) : BaseCommand() {};
-        RemoveSubscriptionInfo& operator= ( const RemoveSubscriptionInfo& ) { return *this; };
+        RemoveSubscriptionInfo( const RemoveSubscriptionInfo& );
+        RemoveSubscriptionInfo& operator= ( const RemoveSubscriptionInfo& );
 
     public:
 

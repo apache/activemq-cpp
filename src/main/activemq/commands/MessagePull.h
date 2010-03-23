@@ -59,10 +59,10 @@ namespace commands{
 
         const static unsigned char ID_MESSAGEPULL = 20;
 
-    protected:
+    private:
 
-        MessagePull( const MessagePull& ) : BaseCommand() {};
-        MessagePull& operator= ( const MessagePull& ) { return *this; };
+        MessagePull( const MessagePull& );
+        MessagePull& operator= ( const MessagePull& );
 
     public:
 

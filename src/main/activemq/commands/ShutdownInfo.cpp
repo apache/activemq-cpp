@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ShutdownInfo::ShutdownInfo() : BaseCommand() {
+ShutdownInfo::ShutdownInfo() 
+    : BaseCommand() {
 
 }
 

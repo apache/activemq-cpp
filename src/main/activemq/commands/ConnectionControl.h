@@ -59,10 +59,10 @@ namespace commands{
 
         const static unsigned char ID_CONNECTIONCONTROL = 18;
 
-    protected:
+    private:
 
-        ConnectionControl( const ConnectionControl& ) : BaseCommand() {};
-        ConnectionControl& operator= ( const ConnectionControl& ) { return *this; };
+        ConnectionControl( const ConnectionControl& );
+        ConnectionControl& operator= ( const ConnectionControl& );
 
     public:
 

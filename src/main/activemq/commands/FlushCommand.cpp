@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-FlushCommand::FlushCommand() : BaseCommand() {
+FlushCommand::FlushCommand() 
+    : BaseCommand() {
 
 }
 

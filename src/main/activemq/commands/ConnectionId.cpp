@@ -42,28 +42,36 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId() : BaseDataStructure() {
+ConnectionId::ConnectionId() 
+    : BaseDataStructure(), value("") {
 
-    this->value = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ConnectionId& other ) : BaseDataStructure() {
+ConnectionId::ConnectionId( const ConnectionId& other )
+    : BaseDataStructure(), value("") {
+
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const SessionId* sessionId ) {
+ConnectionId::ConnectionId( const SessionId* sessionId )
+    : BaseDataStructure(), value("") {
+
     this->value = sessionId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ProducerId* producerId ) {
+ConnectionId::ConnectionId( const ProducerId* producerId )
+    : BaseDataStructure(), value("") {
+
     this->value = producerId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ConsumerId* consumerId ) {
+ConnectionId::ConnectionId( const ConsumerId* consumerId )
+    : BaseDataStructure(), value("") {
+
     this->value = consumerId->getConnectionId();
 }
 

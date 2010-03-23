@@ -38,13 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerControl::ConsumerControl() : BaseCommand() {
+ConsumerControl::ConsumerControl() 
+    : BaseCommand(), destination(NULL), close(false), consumerId(NULL), prefetch(0), flush(false), start(false), stop(false) {
 
-    this->close = false;
-    this->prefetch = 0;
-    this->flush = false;
-    this->start = false;
-    this->stop = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

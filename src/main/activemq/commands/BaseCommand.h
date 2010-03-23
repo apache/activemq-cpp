@@ -32,9 +32,7 @@ namespace commands{
 
     public:
 
-        BaseCommand() {
-            this->commandId = 0;
-            this->responseRequired = false;
+        BaseCommand() : Command(), responseRequired(false), commandId(0) {
         }
 
         virtual ~BaseCommand() {}

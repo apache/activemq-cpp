@@ -52,10 +52,10 @@ namespace commands{
 
         const static unsigned char ID_RESPONSE = 30;
 
-    protected:
+    private:
 
-        Response( const Response& ) : BaseCommand() {};
-        Response& operator= ( const Response& ) { return *this; };
+        Response( const Response& );
+        Response& operator= ( const Response& );
 
     public:
 

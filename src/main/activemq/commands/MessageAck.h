@@ -62,10 +62,10 @@ namespace commands{
 
         const static unsigned char ID_MESSAGEACK = 22;
 
-    protected:
+    private:
 
-        MessageAck( const MessageAck& ) : BaseCommand() {};
-        MessageAck& operator= ( const MessageAck& ) { return *this; };
+        MessageAck( const MessageAck& );
+        MessageAck& operator= ( const MessageAck& );
 
     public:
 

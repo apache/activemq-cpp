@@ -68,11 +68,7 @@ namespace commands{
 
         ConsumerId( const ConsumerId& other );
 
-        ConsumerId( const SessionId& sessionId, long long consumerIdd ) {
-            this->connectionId = sessionId.getConnectionId();
-            this->sessionId = sessionId.getValue();
-            this->value = consumerIdd;
-        }
+        ConsumerId( const SessionId& sessionId, long long consumerIdd );
 
         virtual ~ConsumerId();
 

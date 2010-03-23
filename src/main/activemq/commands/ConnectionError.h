@@ -55,10 +55,10 @@ namespace commands{
 
         const static unsigned char ID_CONNECTIONERROR = 16;
 
-    protected:
+    private:
 
-        ConnectionError( const ConnectionError& ) : BaseCommand() {};
-        ConnectionError& operator= ( const ConnectionError& ) { return *this; };
+        ConnectionError( const ConnectionError& );
+        ConnectionError& operator= ( const ConnectionError& );
 
     public:
 
