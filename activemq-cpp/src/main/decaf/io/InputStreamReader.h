@@ -51,6 +51,11 @@ namespace io {
         // Has the reader been closed.
         bool closed;
 
+    private:
+
+        InputStreamReader( const InputStreamReader& );
+        InputStreamReader& operator= ( const InputStreamReader& );
+
     public:
 
         /**

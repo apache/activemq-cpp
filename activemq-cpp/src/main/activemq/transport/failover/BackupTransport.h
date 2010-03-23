@@ -49,6 +49,11 @@ namespace failover {
         // Indicates that the contained transport is not valid any longer.
         bool closed;
 
+    private:
+
+        BackupTransport( const BackupTransport& );
+        BackupTransport& operator= ( const BackupTransport& );
+
     public:
 
         BackupTransport( BackupTransportPool* failover );

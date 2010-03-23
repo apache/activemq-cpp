@@ -60,6 +60,11 @@ namespace core {
 
         mutable ActiveMQConsumer* browser;
 
+    private:
+
+        ActiveMQQueueBrowser( const ActiveMQQueueBrowser& );
+        ActiveMQQueueBrowser& operator= ( const ActiveMQQueueBrowser& );
+
     public:
 
         ActiveMQQueueBrowser( ActiveMQSession* session,

@@ -47,9 +47,8 @@ Message::Message()
     : BaseCommand(), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL), producerId(NULL), 
       destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
       groupID(""), groupSequence(0), correlationId(""), persistent(false), expiration(0), priority(0), replyTo(NULL), timestamp(0), 
-      type(""), content(NULL), marshalledProperties(NULL), dataStructure(NULL), targetConsumerId(NULL), compressed(false), 
-      redeliveryCounter(0), brokerPath(NULL), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(NULL), 
-      brokerInTime(0), brokerOutTime(0) {
+      type(""), content(), marshalledProperties(), dataStructure(NULL), targetConsumerId(NULL), compressed(false), redeliveryCounter(0), 
+      brokerPath(), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(), brokerInTime(0), brokerOutTime(0) {
 
 }
 

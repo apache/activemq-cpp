@@ -39,6 +39,11 @@ namespace io{
      */
     class DECAF_API Reader : public virtual decaf::io::Closeable,
                              public virtual decaf::lang::Readable {
+    private:
+
+        Reader( const Reader& );
+        Reader& operator= ( const Reader& );
+
     protected:
 
         Reader();

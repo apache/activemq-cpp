@@ -40,9 +40,15 @@ namespace core {
 
         mutable decaf::util::StlQueue< Pointer<MessageDispatch> > channel;
 
+    private:
+
+        MessageDispatchChannel( const MessageDispatchChannel& );
+        MessageDispatchChannel& operator= ( const MessageDispatchChannel& );
+
     public:
 
         MessageDispatchChannel();
+
         virtual ~MessageDispatchChannel();
 
         /**

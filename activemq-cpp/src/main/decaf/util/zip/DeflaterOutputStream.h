@@ -54,6 +54,11 @@ namespace zip {
 
         static const std::size_t DEFAULT_BUFFER_SIZE;
 
+    private:
+
+        DeflaterOutputStream( const DeflaterOutputStream& );
+        DeflaterOutputStream& operator= ( const DeflaterOutputStream& );
+
     public:
 
         /**

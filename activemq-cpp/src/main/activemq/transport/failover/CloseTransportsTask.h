@@ -39,8 +39,9 @@ namespace failover {
 
     public:
 
-        CloseTransportsTask() {}
-        virtual ~CloseTransportsTask() {}
+        CloseTransportsTask();
+
+        virtual ~CloseTransportsTask();
 
         /**
          * Add a new Transport to close.

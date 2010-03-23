@@ -46,6 +46,11 @@ namespace io {
         int bufferSize;
         int pos;
 
+    private:
+
+        PushbackInputStream( const PushbackInputStream& );
+        PushbackInputStream& operator= ( const PushbackInputStream& );
+
     public:
 
         /**

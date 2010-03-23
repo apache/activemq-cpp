@@ -51,6 +51,11 @@ namespace core{
         /** The Dispatcher TaskRunner */
         Pointer<activemq::threads::TaskRunner> taskRunner;
 
+    private:
+
+        ActiveMQSessionExecutor( const ActiveMQSessionExecutor& );
+        ActiveMQSessionExecutor& operator= ( const ActiveMQSessionExecutor& );
+
     public:
 
         /**

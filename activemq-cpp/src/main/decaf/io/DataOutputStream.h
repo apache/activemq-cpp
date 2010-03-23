@@ -40,6 +40,11 @@ namespace io{
         // Buffer used for storing byte values to write to the stream
         unsigned char buffer[8];
 
+    private:
+
+        DataOutputStream( const DataOutputStream& );
+        DataOutputStream& operator= ( const DataOutputStream& );
+
     public:
 
         /**

@@ -43,6 +43,11 @@ namespace io{
         // Synchronization object.
         util::concurrent::Mutex mutex;
 
+    private:
+
+        InputStream( const InputStream& );
+        InputStream& operator= ( const InputStream& );
+
     public:
 
         InputStream();

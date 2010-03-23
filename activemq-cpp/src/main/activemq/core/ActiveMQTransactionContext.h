@@ -81,6 +81,11 @@ namespace core{
         // Time to wait before starting delivery again.
         long long redeliveryDelay;
 
+    private:
+
+        ActiveMQTransactionContext( const ActiveMQTransactionContext& );
+        ActiveMQTransactionContext& operator= ( const ActiveMQTransactionContext& );
+
     public:
 
         /**

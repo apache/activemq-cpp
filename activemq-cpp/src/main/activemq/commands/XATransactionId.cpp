@@ -40,13 +40,13 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId::XATransactionId() 
-    : TransactionId(), formatId(0), globalTransactionId(NULL), branchQualifier(NULL) {
+    : TransactionId(), formatId(0), globalTransactionId(), branchQualifier() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId::XATransactionId( const XATransactionId& other )
-    : TransactionId(), formatId(0), globalTransactionId(NULL), branchQualifier(NULL) {
+    : TransactionId(), formatId(0), globalTransactionId(), branchQualifier() {
 
     this->copyDataStructure( &other );
 }

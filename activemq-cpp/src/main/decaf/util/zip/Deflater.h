@@ -99,6 +99,11 @@ namespace zip {
         // Class internal data used during compression.
         DeflaterData* data;
 
+    private:
+
+        Deflater( const Deflater& );
+        Deflater operator= ( const Deflater& );
+
     public:
 
         /**

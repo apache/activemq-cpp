@@ -40,6 +40,11 @@ namespace failover {
         // The Transport that created this listener
         FailoverTransport* parent;
 
+    private:
+
+        FailoverTransportListener( const FailoverTransportListener& );
+        FailoverTransportListener& operator= ( const FailoverTransportListener& );
+
     public:
 
         FailoverTransportListener( FailoverTransport* parent );

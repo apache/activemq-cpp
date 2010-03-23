@@ -45,6 +45,11 @@ namespace io {
         // Closed flag
         volatile bool closed;
 
+    private:
+
+        OutputStreamWriter( const OutputStreamWriter& );
+        OutputStreamWriter& operator= ( const OutputStreamWriter& );
+
     public:
 
         /**

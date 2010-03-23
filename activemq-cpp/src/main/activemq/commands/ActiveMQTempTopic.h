@@ -39,6 +39,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQTEMPTOPIC = 103;
 
+    private:
+
+        ActiveMQTempTopic( const ActiveMQTempTopic& );
+        ActiveMQTempTopic& operator= ( const ActiveMQTempTopic& );
+
     public:
 
         ActiveMQTempTopic();

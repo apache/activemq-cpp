@@ -26,7 +26,7 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-Adler32::Adler32() {
+Adler32::Adler32() : Checksum(), value(0) {
     this->reset();
 }
 

@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo::BrokerInfo() 
-    : BaseCommand(), brokerId(NULL), brokerURL(""), peerBrokerInfos(NULL), brokerName(""), slaveBroker(false), masterBroker(false), 
+    : BaseCommand(), brokerId(NULL), brokerURL(""), peerBrokerInfos(), brokerName(""), slaveBroker(false), masterBroker(false), 
       faultTolerantConfiguration(false), duplexConnection(false), networkConnection(false), connectionId(0), brokerUploadUrl(""), 
       networkProperties("") {
 

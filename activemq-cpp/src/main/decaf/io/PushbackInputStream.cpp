@@ -26,15 +26,14 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 PushbackInputStream::PushbackInputStream( InputStream* stream, bool own )
- :  FilterInputStream( stream, own ), bufferSize( 1 ), pos( 1 ) {
+ :  FilterInputStream( stream, own ), buffer( new unsigned char[1] ), bufferSize( 1 ), pos( 1 ) {
 
-    this->buffer = new unsigned char[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool own )
     throw( decaf::lang::exceptions::IllegalArgumentException )
- :  FilterInputStream( stream, own ), bufferSize( bufSize ), pos( bufSize ) {
+ :  FilterInputStream( stream, own ), buffer( NULL ), bufferSize( bufSize ), pos( bufSize ) {
 
     if( bufSize < 0 ) {
         throw IllegalArgumentException(

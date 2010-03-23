@@ -26,7 +26,7 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-CRC32::CRC32() {
+CRC32::CRC32() : Checksum(), value(0) {
     this->reset();
 }
 

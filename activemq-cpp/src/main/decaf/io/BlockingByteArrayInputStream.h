@@ -48,6 +48,11 @@ namespace io{
          */
         bool closing;
 
+    private:
+
+        BlockingByteArrayInputStream( const BlockingByteArrayInputStream& );
+        BlockingByteArrayInputStream& operator= ( const BlockingByteArrayInputStream& );
+
     public:
 
         /**

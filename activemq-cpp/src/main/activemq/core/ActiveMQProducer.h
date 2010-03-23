@@ -73,6 +73,11 @@ namespace core{
         // The Destination assigned at creation, NULL if not assigned.
         Pointer<cms::Destination> destination;
 
+    private:
+
+        ActiveMQProducer( const ActiveMQProducer& );
+        ActiveMQProducer& operator= ( const ActiveMQProducer& );
+
     public:
 
         /**

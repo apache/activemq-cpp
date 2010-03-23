@@ -129,6 +129,11 @@ namespace core{
          */
         long long lastDeliveredSequenceId;
 
+    private:
+
+        ActiveMQSession( const ActiveMQSession& );
+        ActiveMQSession& operator= ( const ActiveMQSession& );
+
     public:
 
         ActiveMQSession( const Pointer<commands::SessionInfo>& sessionInfo,

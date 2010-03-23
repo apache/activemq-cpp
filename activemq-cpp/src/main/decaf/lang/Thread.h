@@ -134,8 +134,8 @@ namespace lang{
 
     private:
 
-        Thread( const Thread& ) {}
-        Thread& operator= ( const Thread& ) { return *this; }
+        Thread( const Thread& );
+        Thread& operator= ( const Thread& );
 
     public:
 

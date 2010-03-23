@@ -41,6 +41,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQTOPIC = 101;
 
+    private:
+
+        ActiveMQTopic( const ActiveMQTopic& );
+        ActiveMQTopic& operator= ( const ActiveMQTopic& );
+
     public:
 
         ActiveMQTopic();

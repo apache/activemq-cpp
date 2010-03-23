@@ -37,6 +37,11 @@ namespace commands{
 
         static const unsigned char ID_ACTIVEMQMESSAGE = 23;
 
+    private:
+
+        ActiveMQMessage( const ActiveMQMessage& );
+        ActiveMQMessage& operator= ( const ActiveMQMessage& );
+
     public:
 
         ActiveMQMessage();

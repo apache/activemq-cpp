@@ -56,6 +56,11 @@ namespace zip {
 
         InflaterData* data;
 
+    private:
+
+        Inflater( const Inflater& );
+        Inflater& operator=( const Inflater& );
+
     public:
 
         /**

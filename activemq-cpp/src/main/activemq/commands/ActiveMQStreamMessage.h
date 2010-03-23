@@ -55,6 +55,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;
 
+    private:
+
+        ActiveMQStreamMessage( const ActiveMQStreamMessage& );
+        ActiveMQStreamMessage& operator= ( const ActiveMQStreamMessage& );
+
     public:
 
         ActiveMQStreamMessage();

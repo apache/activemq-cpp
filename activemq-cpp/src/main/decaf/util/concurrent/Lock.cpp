@@ -25,7 +25,7 @@ using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Lock::Lock( Synchronizable* object, const bool intiallyLocked ) : syncObject( object ), locked( false ) {
+Lock::Lock( Synchronizable* object, const bool intiallyLocked ) : locked( false ), syncObject( object ) {
 
     try{
         if( intiallyLocked ) {

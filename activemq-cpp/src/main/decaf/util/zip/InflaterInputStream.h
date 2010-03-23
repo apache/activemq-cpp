@@ -58,6 +58,11 @@ namespace zip {
 
         static const int DEFAULT_BUFFER_SIZE;
 
+    private:
+
+        InflaterInputStream( const InflaterInputStream& );
+        InflaterInputStream& operator= ( const InflaterInputStream& );
+
     public:
 
         /**

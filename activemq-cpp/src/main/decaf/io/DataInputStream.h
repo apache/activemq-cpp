@@ -50,6 +50,11 @@ namespace io{
         // higher order C++ primitives.
         unsigned char buffer[8];
 
+    private:
+
+        DataInputStream( const DataInputStream& );
+        DataInputStream& operator= ( const DataInputStream& );
+
     public:
 
         /**

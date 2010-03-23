@@ -45,7 +45,14 @@ namespace io{
         // Synchronization object.
         util::concurrent::Mutex mutex;
 
+    private:
+
+        OutputStream( const OutputStream& );
+        OutputStream& operator= ( const OutputStream& );
+
     public:
+
+        OutputStream();
 
         virtual ~OutputStream();
 

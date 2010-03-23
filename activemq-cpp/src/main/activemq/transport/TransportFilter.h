@@ -69,8 +69,8 @@ namespace transport{
 
     private:
 
-        TransportFilter( const TransportFilter& ) {}
-        TransportFilter operator= ( const TransportFilter& ) { return *this; }
+        TransportFilter( const TransportFilter& );
+        TransportFilter& operator= ( const TransportFilter& );
 
     public:
 
