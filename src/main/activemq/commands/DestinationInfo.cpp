@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DestinationInfo::DestinationInfo() 
-    : BaseCommand(), connectionId(NULL), destination(NULL), operationType(0), timeout(0), brokerPath(NULL) {
+    : BaseCommand(), connectionId(NULL), destination(NULL), operationType(0), timeout(0), brokerPath() {
 
 }
 

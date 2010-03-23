@@ -60,8 +60,8 @@ namespace io{
 
     private:
 
-        FilterOutputStream( const FilterOutputStream& ) {}
-        FilterOutputStream& operator= ( const FilterOutputStream& ) { return *this; }
+        FilterOutputStream( const FilterOutputStream& );
+        FilterOutputStream& operator= ( const FilterOutputStream& );
 
     public:
 

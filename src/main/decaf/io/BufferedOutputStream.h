@@ -51,6 +51,11 @@ namespace io{
          */
         int tail;
 
+    private:
+
+        BufferedOutputStream( const BufferedOutputStream& );
+        BufferedOutputStream& operator= ( const BufferedOutputStream& );
+
     public:
 
         /**

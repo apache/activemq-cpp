@@ -38,6 +38,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQOBJECTMESSAGE = 26;
 
+    private:
+
+        ActiveMQObjectMessage( const ActiveMQObjectMessage& );
+        ActiveMQObjectMessage& operator= ( const ActiveMQObjectMessage& );
+
     public:
 
         ActiveMQObjectMessage();

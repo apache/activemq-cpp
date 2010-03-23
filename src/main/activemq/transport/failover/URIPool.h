@@ -51,7 +51,7 @@ namespace failover {
          */
         URIPool( const decaf::util::List<URI>& uris );
 
-        virtual ~URIPool();
+        ~URIPool();
 
         /**
          * Fetches the next available URI from the pool, if there are no more

@@ -41,9 +41,16 @@ namespace io{
     class DECAF_API Writer : public decaf::io::Closeable,
                              public decaf::io::Flushable,
                              public decaf::lang::Appendable {
+    private:
+
+        Writer( const Writer& );
+        Writer& operator= ( const Writer& );
+
     public:
 
-        virtual ~Writer(){};
+        Writer();
+
+        virtual ~Writer();
 
         /**
          * Writes an single byte char value.

@@ -56,6 +56,11 @@ namespace io{
          */
         std::vector<unsigned char>::const_iterator markpos;
 
+    private:
+
+        ByteArrayInputStream( const ByteArrayInputStream& );
+        ByteArrayInputStream& operator= ( const ByteArrayInputStream& );
+
     public:
 
         ByteArrayInputStream();

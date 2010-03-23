@@ -41,6 +41,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQQUEUE = 100;
 
+    private:
+
+        ActiveMQQueue( const ActiveMQQueue& );
+        ActiveMQQueue& operator= ( const ActiveMQQueue& );
+
     public:
 
         ActiveMQQueue();

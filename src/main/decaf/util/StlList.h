@@ -53,14 +53,20 @@ namespace util{
             typename std::list<E>::iterator prev;
             typename std::list<E>* list;
 
+        private:
+
+            StlListIterator( const StlListIterator& ) :
+                ListIterator<E>(), current(), prev(), list( NULL ) {}
+            StlListIterator operator= ( const StlListIterator& ) { return *this; }
+
         public:
 
-            StlListIterator( typename std::list<E>* list, std::size_t index ) {
-                this->current = list->begin();
+            StlListIterator( typename std::list<E>* list, std::size_t index ) :
+                current( list->begin() ), prev( list->end() ), list( list ) {
+
                 std::advance( this->current, index );
-                this->prev = list->end();
-                this->list = list;
             }
+
             virtual ~StlListIterator() {}
 
             virtual E next() throw( lang::exceptions::NoSuchElementException ){
@@ -153,14 +159,20 @@ namespace util{
             typename std::list<E>::const_iterator prev;
             const typename std::list<E>* list;
 
+        private:
+
+            ConstStlListIterator( const ConstStlListIterator& ) :
+                ListIterator<E>(), current(), prev(), list( NULL ) {}
+            ConstStlListIterator operator= ( const ConstStlListIterator& ) { return *this; }
+
         public:
 
-            ConstStlListIterator( const typename std::list<E>* list, std::size_t index ) {
-                this->current = list->begin();
+            ConstStlListIterator( const typename std::list<E>* list, std::size_t index ) :
+                ListIterator<E>(), current( list->begin() ), prev( list->end() ), list( list ) {
+
                 std::advance( this->current, index );
-                this->prev = list->end();
-                this->list = list;
             }
+
             virtual ~ConstStlListIterator() {}
 
             virtual E next() throw( lang::exceptions::NoSuchElementException ){
@@ -242,14 +254,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlList() {}
+        StlList() : List<E>(), values() {}
 
         /**
          * Copy constructor - copies the content of the given set into this
          * one.
          * @param source The source set.
          */
-        StlList( const StlList& source ) : List<E>() {
+        StlList( const StlList& source ) : List<E>(), values() {
             copy( source );
         }
 
@@ -258,7 +270,7 @@ namespace util{
          * one.
          * @param source The source set.
          */
-        StlList( const Collection<E>& source ) : List<E>() {
+        StlList( const Collection<E>& source ) : List<E>(), values() {
             List<E>::copy( source );
         }
 

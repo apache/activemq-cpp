@@ -42,6 +42,11 @@ namespace io{
         // on access to invalid memory.
         decaf::lang::Pointer<StreamBuffer> buffer;
 
+    private:
+
+        BufferedInputStream( const BufferedInputStream& );
+        BufferedInputStream& operator= ( const BufferedInputStream& );
+
     public:
 
         /**

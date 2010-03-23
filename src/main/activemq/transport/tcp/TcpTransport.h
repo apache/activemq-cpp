@@ -67,6 +67,11 @@ namespace tcp{
          */
         std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
 
+    private:
+
+        TcpTransport( const TcpTransport& );
+        TcpTransport& operator= ( const TcpTransport& );
+
     public:
 
         /**

@@ -47,10 +47,10 @@ namespace io{
         // Indicates that this stream was closed
         volatile bool closed;
 
-    protected:
+    private:
 
-        FilterInputStream( const FilterInputStream& ) {}
-        FilterInputStream& operator= ( const FilterInputStream& ) { return *this; }
+        FilterInputStream( const FilterInputStream& );
+        FilterInputStream& operator= ( const FilterInputStream& );
 
     public:
 

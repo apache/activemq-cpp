@@ -151,6 +151,11 @@ namespace core{
          */
         Pointer<CountDownLatch> transportInterruptionProcessingComplete;
 
+    private:
+
+        ActiveMQConnection( const ActiveMQConnection& );
+        ActiveMQConnection& operator= ( const ActiveMQConnection& );
+
     public:
 
         /**

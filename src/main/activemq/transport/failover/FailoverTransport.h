@@ -95,9 +95,15 @@ namespace failover {
         Pointer<TransportListener> myTransportListener;
         TransportListener* transportListener;
 
+    private:
+
+        FailoverTransport( const FailoverTransport& );
+        FailoverTransport& operator= ( const FailoverTransport& );
+
     public:
 
         FailoverTransport();
+
         virtual ~FailoverTransport();
 
         /**

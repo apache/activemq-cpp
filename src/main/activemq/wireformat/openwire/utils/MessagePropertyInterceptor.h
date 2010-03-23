@@ -50,6 +50,11 @@ namespace utils {
         commands::Message* message;
         util::PrimitiveMap* properties;
 
+    private:
+
+        MessagePropertyInterceptor( const MessagePropertyInterceptor& );
+        MessagePropertyInterceptor& operator= ( const MessagePropertyInterceptor& );
+
     public:
 
         /**

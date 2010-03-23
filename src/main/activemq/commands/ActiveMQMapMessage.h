@@ -47,6 +47,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQMAPMESSAGE = 25;
 
+    private:
+
+        ActiveMQMapMessage( const ActiveMQMapMessage& );
+        ActiveMQMapMessage& operator= ( const ActiveMQMapMessage& );
+
     public:
 
         ActiveMQMapMessage();

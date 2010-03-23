@@ -41,6 +41,8 @@ namespace util{
 
     public:
 
+        ActiveMQProperties();
+
         virtual ~ActiveMQProperties();
 
         virtual decaf::util::Properties& getProperties() {

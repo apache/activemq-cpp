@@ -39,6 +39,11 @@ namespace zip {
         // The Checksom instance used by this stream, not owned by the stream.
         Checksum* sum;
 
+    private:
+
+        CheckedOutputStream( const CheckedOutputStream& );
+        CheckedOutputStream& operator= ( const CheckedOutputStream& );
+
     public:
 
         /**

@@ -28,10 +28,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ){
-    this->outputStream = outputStream;
-    this->own = own;
-    this->closed = outputStream == NULL ? true : false;
+FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ) :
+    OutputStream(), outputStream( outputStream ), own( own ), closed( outputStream == NULL ? true : false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

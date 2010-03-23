@@ -30,6 +30,16 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
+CloseTransportsTask::CloseTransportsTask() : transports() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+CloseTransportsTask::~CloseTransportsTask() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void CloseTransportsTask::add( const Pointer<Transport>& transport ) {
     synchronized( &transports ) {
         transports.push( transport );
@@ -38,14 +48,14 @@ void CloseTransportsTask::add( const Pointer<Transport>& transport ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CloseTransportsTask::isPending() const {
-    
-	bool result = false;
-	
-	synchronized( &transports ) {
+
+    bool result = false;
+
+    synchronized( &transports ) {
         result = !transports.empty();
     }
 
-	return result;
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

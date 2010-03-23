@@ -28,10 +28,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatchChannel::MessageDispatchChannel() {
-
-    this->running = false;
-    this->closed = false;
+MessageDispatchChannel::MessageDispatchChannel() : closed( false ), running( false ), channel() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +57,7 @@ bool MessageDispatchChannel::isEmpty() const {
         return channel.empty();
     }
 
-	return false;
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +82,7 @@ Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout )
         return channel.pop();
     }
 
-	return Pointer<MessageDispatch>();
+    return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +94,7 @@ Pointer<MessageDispatch> MessageDispatchChannel::dequeueNoWait() {
         return channel.pop();
     }
 
-	return Pointer<MessageDispatch>();
+    return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +106,7 @@ Pointer<MessageDispatch> MessageDispatchChannel::peek() const {
         return channel.front();
     }
 
-	return Pointer<MessageDispatch>();
+    return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,14 +151,14 @@ int MessageDispatchChannel::size() const {
         return (int)channel.size();
     }
 
-	return 0;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< Pointer<MessageDispatch> > MessageDispatchChannel::removeAll() {
     std::vector< Pointer<MessageDispatch> > result;
-	
-	synchronized( &channel ) {
+
+    synchronized( &channel ) {
         result = channel.toArray();
         channel.clear();
     }

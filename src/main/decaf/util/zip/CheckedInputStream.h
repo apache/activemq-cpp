@@ -40,6 +40,11 @@ namespace zip {
         // of the Checksum pointer is not taken by this class.
         Checksum* sum;
 
+    private:
+
+        CheckedInputStream( const CheckedInputStream& );
+        CheckedInputStream& operator= ( const CheckedInputStream& );
+
     public:
 
         /**

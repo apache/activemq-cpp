@@ -77,11 +77,10 @@ namespace util{
 
         public:
 
-            QueueIterator( typename std::list<T>* queue ) {
-                this->current = queue->begin();
-                this->previous = queue->end();
-                this->queue = queue;
+            QueueIterator( typename std::list<T>* queue ) :
+                current( queue->begin() ), previous( queue->end() ), queue( queue ) {
             }
+
             virtual ~QueueIterator() {}
 
             virtual T next() throw( lang::exceptions::NoSuchElementException ){
@@ -114,7 +113,8 @@ namespace util{
 
     public:
 
-        StlQueue() {}
+        StlQueue() : queue(), mutex() {}
+
         virtual ~StlQueue() {}
 
         /**

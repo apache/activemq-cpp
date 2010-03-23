@@ -52,11 +52,10 @@ namespace util{
 
         public:
 
-            SetIterator( typename std::set<E>* set ) {
-                this->current = set->begin();
-                this->previous = set->end();
-                this->set = set;
+            SetIterator( typename std::set<E>* set ) :
+                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
             }
+
             virtual ~SetIterator() {}
 
             virtual E next() throw( lang::exceptions::NoSuchElementException ){
@@ -96,11 +95,10 @@ namespace util{
 
         public:
 
-            ConstSetIterator( const typename std::set<E>* set ) {
-                this->current = set->begin();
-                this->previous = set->end();
-                this->set = set;
+            ConstSetIterator( const typename std::set<E>* set ) :
+                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
             }
+
             virtual ~ConstSetIterator() {}
 
             virtual E next() throw( lang::exceptions::NoSuchElementException ){
@@ -131,14 +129,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlSet() {}
+        StlSet() : AbstractSet<E>(), values() {}
 
         /**
          * Copy constructor - copies the content of the given set into this
          * one.
          * @param source The source set.
          */
-        StlSet( const StlSet& source ){
+        StlSet( const StlSet& source ) : AbstractSet<E>(), values() {
             copy( source );
         }
 
@@ -147,7 +145,7 @@ namespace util{
          * one.
          * @param source The source set.
          */
-        StlSet( const Collection<E>& source ){
+        StlSet( const Collection<E>& source ) : AbstractSet<E>(), values() {
             copy( source );
         }
 

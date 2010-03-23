@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo::ConnectionInfo() 
-    : BaseCommand(), connectionId(NULL), clientId(""), password(""), userName(""), brokerPath(NULL), brokerMasterConnector(false), 
+    : BaseCommand(), connectionId(NULL), clientId(""), password(""), userName(""), brokerPath(), brokerMasterConnector(false), 
       manageable(false), clientMaster(false), faultTolerant(false) {
 
 }

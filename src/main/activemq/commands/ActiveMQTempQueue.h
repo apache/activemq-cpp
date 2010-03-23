@@ -39,6 +39,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQTEMPQUEUE = 102;
 
+    private:
+
+        ActiveMQTempQueue( const ActiveMQTempQueue& );
+        ActiveMQTempQueue& operator= ( const ActiveMQTempQueue& );
+
     public:
 
         ActiveMQTempQueue();

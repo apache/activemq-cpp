@@ -34,6 +34,9 @@ namespace core {
     class AMQCPP_API ActiveMQConnectionMetaData : public cms::ConnectionMetaData {
     private:
 
+        ActiveMQConnectionMetaData( const ActiveMQConnectionMetaData& );
+        ActiveMQConnectionMetaData& operator= ( const ActiveMQConnectionMetaData& );
+
     public:
 
         ActiveMQConnectionMetaData();

@@ -65,9 +65,15 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQBYTESMESSAGE = 24;
 
+    private:
+
+        ActiveMQBytesMessage( const ActiveMQBytesMessage& );
+        ActiveMQBytesMessage& operator= ( const ActiveMQBytesMessage& );
+
     public:
 
         ActiveMQBytesMessage();
+
         virtual ~ActiveMQBytesMessage();
 
         virtual unsigned char getDataStructureType() const;

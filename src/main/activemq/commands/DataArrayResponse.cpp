@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataArrayResponse::DataArrayResponse() 
-    : Response(), data(NULL) {
+    : Response(), data() {
 
 }
 

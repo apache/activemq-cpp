@@ -125,6 +125,11 @@ namespace core{
          */
         bool clearDispatchList;
 
+    private:
+
+        ActiveMQConsumer( const ActiveMQConsumer& );
+        ActiveMQConsumer& operator= ( const ActiveMQConsumer& );
+
     public:
 
         /**

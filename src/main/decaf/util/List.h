@@ -46,6 +46,8 @@ namespace util{
     class DECAF_API List : public decaf::util::AbstractCollection<E> {
     public:
 
+        List() : AbstractCollection<E>() {}
+
         virtual ~List() {}
 
         /**

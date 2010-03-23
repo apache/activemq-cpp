@@ -47,6 +47,11 @@ namespace commands {
         static const unsigned char ID_ACTIVEMQBLOBMESSAGE = 29;
         static const std::string BINARY_MIME_TYPE;
 
+    private:
+
+        ActiveMQBlobMessage( const ActiveMQBlobMessage& );
+        ActiveMQBlobMessage& operator= ( const ActiveMQBlobMessage& );
+
     public:
 
         ActiveMQBlobMessage();

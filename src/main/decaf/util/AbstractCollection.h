@@ -62,6 +62,8 @@ namespace util {
 
     public:
 
+        AbstractCollection() : Collection<E>(), mutex() {}
+
         virtual ~AbstractCollection() {}
 
         /**

@@ -37,6 +37,11 @@ namespace io{
          */
         std::vector<unsigned char>* activeBuffer;
 
+    private:
+
+        ByteArrayOutputStream( const ByteArrayOutputStream& );
+        ByteArrayOutputStream& operator= ( const ByteArrayOutputStream& );
+
     public:
 
         /**

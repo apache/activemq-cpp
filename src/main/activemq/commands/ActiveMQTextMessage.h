@@ -41,6 +41,11 @@ namespace commands{
 
         mutable std::auto_ptr<std::string> text;
 
+    private:
+
+        ActiveMQTextMessage( const ActiveMQTextMessage& );
+        ActiveMQTextMessage& operator= ( const ActiveMQTextMessage& );
+
     public:
 
         ActiveMQTextMessage();

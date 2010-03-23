@@ -31,11 +31,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool() {
+URIPool::URIPool() : uriPool(), randomize( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool( const decaf::util::List<URI>& uris ) {
+URIPool::URIPool( const decaf::util::List<URI>& uris ) : uriPool(), randomize( false ) {
     this->uriPool.copy( uris );
 }
 
@@ -49,17 +49,17 @@ URI URIPool::getURI() throw ( decaf::lang::exceptions::NoSuchElementException ) 
     synchronized( &uriPool ) {
         if( !uriPool.isEmpty() ) {
 
-			int index = 0;  // Take the first one in the list unless random is on.
+            int index = 0;  // Take the first one in the list unless random is on.
 
-			if( isRandomize() ) {
+            if( isRandomize() ) {
 
-				Random rand;
-				rand.setSeed( decaf::lang::System::currentTimeMillis() );
-				index = rand.nextInt( (int)uriPool.size() );
-			}
+                Random rand;
+                rand.setSeed( decaf::lang::System::currentTimeMillis() );
+                index = rand.nextInt( (int)uriPool.size() );
+            }
 
-			return uriPool.remove( index );
-		}
+            return uriPool.remove( index );
+        }
     }
 
     throw NoSuchElementException(

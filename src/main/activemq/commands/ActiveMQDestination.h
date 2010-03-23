@@ -93,6 +93,11 @@ namespace commands{
 
         const static unsigned char ID_ACTIVEMQDESTINATION = 0;
 
+    private:
+
+        ActiveMQDestination( const ActiveMQDestination& );
+        ActiveMQDestination& operator= ( const ActiveMQDestination& );
+
     public:
 
         ActiveMQDestination();
