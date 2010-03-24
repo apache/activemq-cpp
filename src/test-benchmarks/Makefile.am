@@ -18,6 +18,7 @@
 cc_sources = \
     activemq/util/PrimitiveMapBenchmark.cpp \
     benchmark/PerformanceTimer.cpp \
+    decaf/io/BufferedInputStreamBenchmark.cpp \
     decaf/io/ByteArrayInputStreamBenchmark.cpp \
     decaf/io/ByteArrayOutputStreamBenchmark.cpp \
     decaf/io/DataInputStreamBenchmark.cpp \
@@ -36,6 +37,7 @@ h_sources = \
     activemq/util/PrimitiveMapBenchmark.h \
     benchmark/BenchmarkBase.h \
     benchmark/PerformanceTimer.h \
+    decaf/io/BufferedInputStreamBenchmark.h \
     decaf/io/ByteArrayInputStreamBenchmark.h \
     decaf/io/ByteArrayOutputStreamBenchmark.h \
     decaf/io/DataInputStreamBenchmark.h \

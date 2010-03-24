@@ -36,6 +36,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamBenchmark );
 #include <decaf/io/ByteArrayInputStreamBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayInputStreamBenchmark );
+#include <decaf/io/BufferedInputStreamBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamBenchmark );
 #include <decaf/io/DataInputStreamBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamBenchmark );
 #include <decaf/io/DataOutputStreamBenchmark.h>
