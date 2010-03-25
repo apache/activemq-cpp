@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_NET_TCPSOCKET_H_
-#define _DECAF_NET_TCPSOCKET_H_
+#ifndef _DECAF_INTERNAL_NET_TCP_TCPSOCKET_H_
+#define _DECAF_INTERNAL_NET_TCP_TCPSOCKET_H_
 
 #include <decaf/net/SocketException.h>
 #include <decaf/net/Socket.h>
@@ -24,17 +24,19 @@
 #include <decaf/util/Config.h>
 #include <decaf/internal/AprPool.h>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace internal {
+namespace net {
+namespace tcp {
 
     // Forward declarations
-    class SocketInputStream;
-    class SocketOutputStream;
+    class TcpSocketInputStream;
+    class TcpSocketOutputStream;
 
     /**
      * Platform-independent implementation of the socket interface.
      */
-    class DECAF_API TcpSocket : public Socket {
+    class DECAF_API TcpSocket : public decaf::net::Socket {
     private:
 
         /**
@@ -45,22 +47,27 @@ namespace net{
         /**
          * The handle for this socket.
          */
-        SocketHandle socketHandle;
+        decaf::net::Socket::SocketHandle socketHandle;
 
         /**
          * The Address info for this Socket
          */
-        SocketAddress socketAddress;
+        decaf::net::Socket::SocketAddress socketAddress;
 
         /**
          * The input stream for reading this socket.
          */
-        SocketInputStream* inputStream;
+        TcpSocketInputStream* inputStream;
 
         /**
          * The output stream for writing to this socket.
          */
-        SocketOutputStream* outputStream;
+        TcpSocketOutputStream* outputStream;
+
+        /**
+         * Configured Connect Timeout, -1 means no timeout.
+         */
+        int connectTimeout;
 
     public:
 
@@ -69,14 +76,14 @@ namespace net{
          * @throws SocketException thrown one windows if the static initialization
          * call to WSAStartup was not successful.
          */
-        TcpSocket() throw ( SocketException );
+        TcpSocket() throw ( decaf::net::SocketException );
 
         /**
          * Construct a connected or bound socket based on given
          * socket handle.
          * @param socketHandle a socket handle to wrap in the object
          */
-        TcpSocket( SocketHandle socketHandle );
+        TcpSocket( decaf::net::Socket::SocketHandle socketHandle );
 
         /**
          * Releases the socket handle but not gracefully shut down the connection.
@@ -87,7 +94,7 @@ namespace net{
          * Gets the handle for the socket.
          * @return SocketHabler for this Socket, can be NULL
          */
-        SocketHandle getSocketHandle () {
+        decaf::net::Socket::SocketHandle getSocketHandle () {
             return socketHandle;
         }
 
@@ -96,21 +103,10 @@ namespace net{
          * connected to another destination.
          * @param host The host of the server to connect to.
          * @param port The port of the server to connect to.
-         * @param timeout of socket in microseconds
          * @throws SocketException Thrown if a failure occurred in the connect.
          */
-        void connect( const char* host, int port, int timeout ) throw( SocketException );
-
-        /**
-         * Connects to the specified destination. Closes this socket if
-         * connected to another destination.
-         * @param host The host of the server to connect to.
-         * @param port The port of the server to connect to.
-         * @throws SocketException Thrown if a failure occurred in the connect.
-         */
-        virtual void connect( const char* host, int port ) throw( SocketException ) {
-            connect(host,port,-1);
-        }
+        virtual void connect( const char* host, int port )
+            throw( decaf::net::SocketException );
 
         /**
          * Indicates whether or not this socket is connected to a destination.
@@ -137,84 +133,84 @@ namespace net{
          * @return The linger time in seconds.
          * @throws SocketException if the operation fails.
          */
-        virtual int getSoLinger() const throw( SocketException );
+        virtual int getSoLinger() const throw( decaf::net::SocketException );
 
         /**
          * Sets the linger time.
          * @param linger The linger time in seconds.  If 0, linger is off.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSoLinger( int linger ) throw( SocketException );
+        virtual void setSoLinger( int linger ) throw( decaf::net::SocketException );
 
         /**
          * Gets the keep alive flag.
          * @return True if keep alive is enabled.
          * @throws SocketException if the operation fails.
          */
-        virtual bool getKeepAlive() const throw( SocketException );
+        virtual bool getKeepAlive() const throw( decaf::net::SocketException );
 
         /**
          * Enables/disables the keep alive flag.
          * @param keepAlive If true, enables the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setKeepAlive( bool keepAlive ) throw( SocketException );
+        virtual void setKeepAlive( bool keepAlive ) throw( decaf::net::SocketException );
 
         /**
          * Gets the receive buffer size.
          * @return the receive buffer size in bytes.
          * @throws SocketException if the operation fails.
          */
-        virtual int getReceiveBufferSize() const throw( SocketException );
+        virtual int getReceiveBufferSize() const throw( decaf::net::SocketException );
 
         /**
          * Sets the recieve buffer size.
          * @param size Number of bytes to set the receive buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReceiveBufferSize( int size ) throw( SocketException );
+        virtual void setReceiveBufferSize( int size ) throw( decaf::net::SocketException );
 
         /**
          * Gets the reuse address flag.
          * @return True if the address can be reused.
          * @throws SocketException if the operation fails.
          */
-        virtual bool getReuseAddress() const throw( SocketException );
+        virtual bool getReuseAddress() const throw( decaf::net::SocketException );
 
         /**
          * Sets the reuse address flag.
          * @param reuse If true, sets the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReuseAddress( bool reuse ) throw( SocketException );
+        virtual void setReuseAddress( bool reuse ) throw( decaf::net::SocketException );
 
         /**
          * Gets the send buffer size.
          * @return the size in bytes of the send buffer.
          * @throws SocketException if the operation fails.
          */
-        virtual int getSendBufferSize() const throw( SocketException );
+        virtual int getSendBufferSize() const throw( decaf::net::SocketException );
 
         /**
          * Sets the send buffer size.
          * @param size The number of bytes to set the send buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSendBufferSize( int size ) throw( SocketException );
+        virtual void setSendBufferSize( int size ) throw( decaf::net::SocketException );
 
         /**
          * Gets the timeout for socket operations.
          * @return The timeout in milliseconds for socket operations.
          * @throws SocketException Thrown if unable to retrieve the information.
          */
-        virtual int getSoTimeout() const throw( SocketException );
+        virtual int getSoTimeout() const throw( decaf::net::SocketException );
 
         /**
          * Sets the timeout for socket operations.
          * @param timeout The timeout in milliseconds for socket operations.<p>
          * @throws SocketException Thrown if unable to set the information.
          */
-        virtual void setSoTimeout( int timeout ) throw(SocketException);
+        virtual void setSoTimeout( int timeout ) throw( decaf::net::SocketException );
 
         /**
          * Closes this object and deallocates the appropriate resources.
@@ -222,28 +218,49 @@ namespace net{
          */
         virtual void close() throw( decaf::io::IOException );
 
-    public:
-
         /**
          * Gets the Status of the TCP_NODELAY param for this socket as a Bool
          * @returns true if TCP_NODELAY is enabled
          * @throws Exception
          */
-        virtual bool getTcpNoDelay() const throw ( lang::Exception );
+        virtual bool getTcpNoDelay() const throw ( decaf::lang::Exception );
 
         /**
          * Sets the Status of the TCP_NODELAY param for this socket as a Bool
          * @param value - true if TCP_NODELAY is to be enabled
          * @throws Exception
          */
-        virtual void setTcpNoDelay( bool value ) throw ( lang::Exception );
+        virtual void setTcpNoDelay( bool value ) throw ( decaf::lang::Exception );
+
+        /**
+         * Gets the set Connect timeout, Socket implementations that support this
+         * setting will throw an SocketException if they cannot connect within the
+         * specified timeout.
+         *
+         * @returns The time in Milliseconds to wait for a connection to be made.
+         *
+         * @throws SocketException if the operation fails.
+         */
+        virtual int getConnectTimeout() const throw( decaf::net::SocketException );
+
+        /**
+         * Sets the set Connect timeout, Socket implementations that support this
+         * setting will throw an SocketException if they cannot connect within the
+         * specified timeout.
+         *
+         * @param timeout
+         *      The time in Milliseconds to wait for a connection to be made.
+         *
+         * @throws SocketException if the operation fails.
+         */
+        virtual void setConnectTimeout( int timeout ) throw( decaf::net::SocketException );
 
     protected:
 
-        void checkResult( apr_status_t value ) const throw (SocketException);
+        void checkResult( apr_status_t value ) const throw( decaf::net::SocketException );
 
     };
 
-}}
+}}}}
 
-#endif /*_DECAF_NET_TCPSOCKET_H_*/
+#endif /*_DECAF_INTERNAL_NET_TCP_TCPSOCKET_H_*/

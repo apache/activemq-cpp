@@ -18,6 +18,8 @@
 #include "ServerSocket.h"
 #include "SocketError.h"
 
+#include <decaf/internal/net/tcp/TcpSocket.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -28,6 +30,7 @@
 
 using namespace decaf;
 using namespace decaf::net;
+using namespace decaf::internal::net::tcp;
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::ServerSocket() {

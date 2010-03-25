@@ -15,16 +15,18 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_SOCKETINPUTSTREAM_H_
-#define _DECAF_NET_SOCKETINPUTSTREAM_H_
+#ifndef _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
+#define _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
 
 #include <decaf/io/InputStream.h>
 #include <decaf/net/Socket.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace internal {
+namespace net {
+namespace tcp {
 
     /**
      * Input stream for performing reads on a socket.  This class will only
@@ -32,10 +34,10 @@ namespace net{
      *
      * @since 1.0
      */
-    class DECAF_API SocketInputStream : public io::InputStream {
+    class DECAF_API TcpSocketInputStream : public decaf::io::InputStream {
     private:
 
-        Socket::SocketHandle socket;
+        decaf::net::Socket::SocketHandle socket;
         bool closed;
 
     public:
@@ -44,14 +46,14 @@ namespace net{
          * Constructor.
          * @param socket the socket handle.
          */
-        SocketInputStream( Socket::SocketHandle socket );
+        TcpSocketInputStream( decaf::net::Socket::SocketHandle socket );
 
-        virtual ~SocketInputStream();
+        virtual ~TcpSocketInputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual int available() const throw ( io::IOException );
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * Close - does nothing.  It is the responsibility of the owner
@@ -67,8 +69,8 @@ namespace net{
          * {@inheritDoc}
          */
         virtual long long skip( long long num )
-            throw ( io::IOException,
-                    lang::exceptions::UnsupportedOperationException );
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
     protected:
 
@@ -81,6 +83,6 @@ namespace net{
 
     };
 
-}}
+}}}}
 
-#endif /*_DECAF_NET_SOCKETINPUTSTREAM_H_*/
+#endif /*_DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_*/

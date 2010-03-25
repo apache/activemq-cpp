@@ -28,8 +28,7 @@
 namespace decaf{
 namespace net{
 
-    class DECAF_API Socket : public decaf::io::Closeable
-    {
+    class DECAF_API Socket : public decaf::io::Closeable {
     public:
 
         /**
@@ -73,6 +72,29 @@ namespace net{
          * @return the OutputStream for this socket.  NULL if not connected.
          */
         virtual io::OutputStream* getOutputStream() = 0;
+
+        /**
+         * Gets the set Connect timeout, Socket implementations that support this
+         * setting will throw an SocketException if they cannot connect within the
+         * specified timeout.
+         *
+         * @returns The time in Milliseconds to wait for a connection to be made.
+         *
+         * @throws SocketException if the operation fails.
+         */
+        virtual int getConnectTimeout() const throw( SocketException ) = 0;
+
+        /**
+         * Sets the set Connect timeout, Socket implementations that support this
+         * setting will throw an SocketException if they cannot connect within the
+         * specified timeout.
+         *
+         * @param timeout
+         *      The time in Milliseconds to wait for a connection to be made.
+         *
+         * @throws SocketException if the operation fails.
+         */
+        virtual void setConnectTimeout( int timeout ) throw( SocketException ) = 0;
 
         /**
          * Gets the linger time.
@@ -157,6 +179,20 @@ namespace net{
          * @throws SocketException Thrown if unable to set the information.
          */
         virtual void setSoTimeout( int timeout ) throw( SocketException ) = 0;
+
+        /**
+         * Gets the Status of the TCP_NODELAY param for this socket as a Bool
+         * @returns true if TCP_NODELAY is enabled
+         * @throws Exception
+         */
+        virtual bool getTcpNoDelay() const throw ( decaf::lang::Exception ) = 0;
+
+        /**
+         * Sets the Status of the TCP_NODELAY param for this socket as a Bool
+         * @param value - true if TCP_NODELAY is to be enabled
+         * @throws Exception
+         */
+        virtual void setTcpNoDelay( bool value ) throw ( decaf::lang::Exception ) = 0;
 
     };
 

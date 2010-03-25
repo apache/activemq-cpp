@@ -15,27 +15,31 @@
  * limitations under the License.
  */
 
-#include "SocketOutputStream.h"
-#include <decaf/util/Config.h>
+#include "TcpSocketOutputStream.h"
+
 #include <decaf/lang/Character.h>
-#include "SocketError.h"
+
+#include <decaf/net/SocketError.h>
 
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::util;
+using namespace decaf::internal;
+using namespace decaf::internal::net;
+using namespace decaf::internal::net::tcp;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket ) {
+TcpSocketOutputStream::TcpSocketOutputStream( decaf::net::Socket::SocketHandle socket ) {
     this->socket = socket;
     this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::~SocketOutputStream() {
+TcpSocketOutputStream::~TcpSocketOutputStream() {
     try{
         this->close();
     }
@@ -44,12 +48,12 @@ SocketOutputStream::~SocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::close() throw( decaf::io::IOException ) {
+void TcpSocketOutputStream::close() throw( decaf::io::IOException ) {
     this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
+void TcpSocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
 
     try{
 
@@ -61,7 +65,7 @@ void SocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+void TcpSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::NullPointerException,
             decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -75,13 +79,13 @@ void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int s
         if( buffer == NULL ) {
             throw NullPointerException(
                 __FILE__, __LINE__,
-                "SocketOutputStream::write - passed buffer is null" );
+                "TcpSocketOutputStream::write - passed buffer is null" );
         }
 
         if( closed ) {
             throw IOException(
                 __FILE__, __LINE__,
-                "SocketOutputStream::write - This Stream has been closed." );
+                "TcpSocketOutputStream::write - This Stream has been closed." );
         }
 
         if( size < 0 ) {
@@ -112,7 +116,7 @@ void SocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int s
             if( result != APR_SUCCESS || closed ) {
                 throw IOException(
                     __FILE__, __LINE__,
-                    "decaf::net::SocketOutputStream::write - %s",
+                    "decaf::net::TcpSocketOutputStream::write - %s",
                     SocketError::getErrorString().c_str() );
             }
 

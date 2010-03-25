@@ -14,15 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <decaf/util/Config.h>
 
 #include "TcpSocket.h"
-#include "SocketInputStream.h"
-#include "SocketOutputStream.h"
-#include "SocketError.h"
+
+#include <decaf/internal/net/tcp/TcpSocketInputStream.h>
+#include <decaf/internal/net/tcp/TcpSocketOutputStream.h>
+
+#include <decaf/net/SocketError.h>
 
 using namespace decaf;
 using namespace decaf::internal;
+using namespace decaf::internal::net;
+using namespace decaf::internal::net::tcp;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
@@ -31,22 +34,16 @@ using namespace decaf::lang;
 TcpSocket::TcpSocket() throw ( SocketException )
   : socketHandle( NULL ),
     inputStream( NULL ),
-    outputStream( NULL ) {
+    outputStream( NULL ),
+    connectTimeout( -1 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket( SocketHandle socketHandle )
- :  socketHandle( NULL ),
-    inputStream( NULL ),
-    outputStream( NULL ) {
-
-    try {
-        this->socketHandle = socketHandle;
-        this->inputStream = new SocketInputStream( socketHandle );
-        this->outputStream = new SocketOutputStream( socketHandle );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+ :  socketHandle( socketHandle ),
+    inputStream( new TcpSocketInputStream( socketHandle ) ),
+    outputStream( new TcpSocketOutputStream( socketHandle ) ),
+    connectTimeout( -1 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +51,7 @@ TcpSocket::~TcpSocket() {
 
     try{
 
-        // No shutdown, just close - dont want blocking destructor.
+        // No shutdown, just close - don't want a blocking destructor.
         close();
 
         // Destroy the input stream.
@@ -84,7 +81,7 @@ OutputStream* TcpSocket::getOutputStream(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketException ) {
+void TcpSocket::connect( const char* host, int port ) throw ( SocketException ) {
 
     try{
 
@@ -114,8 +111,8 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
         // If we have a connection timeout specified, temporarily set the socket to
         // non-blocking so that we can timeout the connect operation.  We'll restore
         // to blocking mode right after we connect.
-        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (timeout>0)?1:0 );
-        apr_socket_timeout_set( socketHandle, timeout );
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (this->connectTimeout > 0 ) ? 1 : 0 );
+        apr_socket_timeout_set( socketHandle, connectTimeout );
 
         // try to Connect to the provided address.
         checkResult(apr_socket_connect( socketHandle, socketAddress ));
@@ -125,8 +122,8 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
         apr_socket_timeout_set( socketHandle, -1 );
 
         // Create an input/output stream for this socket.
-        inputStream = new SocketInputStream( socketHandle );
-        outputStream = new SocketOutputStream( socketHandle );
+        inputStream = new TcpSocketInputStream( socketHandle );
+        outputStream = new TcpSocketOutputStream( socketHandle );
 
     } catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -324,6 +321,16 @@ void TcpSocket::setTcpNoDelay( bool value ) throw ( lang::Exception ) {
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::setConnectTimeout( int timeout ) throw( decaf::net::SocketException ) {
+    this->connectTimeout = timeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpSocket::getConnectTimeout() const throw( decaf::net::SocketException ) {
+    return this->connectTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

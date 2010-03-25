@@ -19,7 +19,8 @@
 
 #include <decaf/util/Properties.h>
 #include <decaf/net/SocketFactory.h>
-#include <decaf/net/TcpSocket.h>
+
+#include <memory>
 
 using namespace decaf;
 using namespace decaf::net;
@@ -37,16 +38,10 @@ void SocketFactoryTest::test()
 
         Thread::sleep( 500 );
 
-        util::Properties properties;
+        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", port ) );
 
-        std::ostringstream ostream;
-
-        ostream << "127.0.0.1:" << port;
-
-        properties.setProperty("soLinger", "false");
-
-        Socket* client = SocketFactory::createSocket(
-            ostream.str(), properties );
+        client->setSoLinger( 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -74,12 +69,9 @@ void SocketFactoryTest::test()
 
         serverThread.stop();
         serverThread.join();
-
-        delete client;
     }
     catch(lang::Exception ex)
     {
-        std::cout << "SocketFactoryTest::test - Caught Exception." << std::endl;
         ex.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
@@ -95,21 +87,13 @@ void SocketFactoryTest::testNoDelay()
 
         Thread::sleep( 40 );
 
-        util::Properties properties;
+        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", port ) );
 
-        std::ostringstream ostream;
+        client->setSoLinger( 0 );
+        client->setTcpNoDelay( true );
 
-        ostream << "127.0.0.1:" << port;
-
-        properties.setProperty( "soLinger", "false" );
-        properties.setProperty( "tcpNoDelay", "true" );
-
-        Socket* client = SocketFactory::createSocket(
-            ostream.str(), properties );
-
-        TcpSocket* tcpSock = dynamic_cast<TcpSocket*>( client );
-        CPPUNIT_ASSERT( tcpSock != NULL );
-        CPPUNIT_ASSERT( tcpSock->getTcpNoDelay() == true );
+        CPPUNIT_ASSERT( client->getTcpNoDelay() == true );
 
         synchronized(&serverThread.mutex)
         {
@@ -137,8 +121,6 @@ void SocketFactoryTest::testNoDelay()
 
         serverThread.stop();
         serverThread.join();
-
-        delete client;
     }
     catch(lang::Exception ex)
     {
