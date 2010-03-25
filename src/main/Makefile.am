@@ -484,6 +484,10 @@ cc_sources = \
     decaf/internal/io/StandardOutputStream.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
+    decaf/internal/net/tcp/DefaultSocketFactory.cpp \
+    decaf/internal/net/tcp/TcpSocket.cpp \
+    decaf/internal/net/tcp/TcpSocketInputStream.cpp \
+    decaf/internal/net/tcp/TcpSocketOutputStream.cpp \
     decaf/internal/nio/BufferFactory.cpp \
     decaf/internal/nio/ByteArrayBuffer.cpp \
     decaf/internal/nio/CharArrayBuffer.cpp \
@@ -545,9 +549,6 @@ cc_sources = \
     decaf/net/ServerSocket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
-    decaf/net/SocketInputStream.cpp \
-    decaf/net/SocketOutputStream.cpp \
-    decaf/net/TcpSocket.cpp \
     decaf/net/URI.cpp \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
@@ -1136,6 +1137,10 @@ h_sources = \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/tcp/DefaultSocketFactory.h \
+    decaf/internal/net/tcp/TcpSocket.h \
+    decaf/internal/net/tcp/TcpSocketInputStream.h \
+    decaf/internal/net/tcp/TcpSocketOutputStream.h \
     decaf/internal/nio/BufferFactory.h \
     decaf/internal/nio/ByteArrayBuffer.h \
     decaf/internal/nio/CharArrayBuffer.h \
@@ -1244,10 +1249,7 @@ h_sources = \
     decaf/net/SocketError.h \
     decaf/net/SocketException.h \
     decaf/net/SocketFactory.h \
-    decaf/net/SocketInputStream.h \
-    decaf/net/SocketOutputStream.h \
     decaf/net/SocketTimeoutException.h \
-    decaf/net/TcpSocket.h \
     decaf/net/URI.h \
     decaf/net/URISyntaxException.h \
     decaf/net/URL.h \

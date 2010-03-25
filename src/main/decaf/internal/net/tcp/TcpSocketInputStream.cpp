@@ -35,8 +35,9 @@
 #include <sys/filio.h>
 #endif
 
-#include <decaf/net/SocketInputStream.h>
+#include <decaf/internal/net/tcp/TcpSocketInputStream.h>
 #include <decaf/net/SocketError.h>
+#include <decaf/net/Socket.h>
 #include <decaf/io/IOException.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -51,32 +52,35 @@ using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::util;
+using namespace decaf::internal;
+using namespace decaf::internal::net;
+using namespace decaf::internal::net::tcp;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket ) : InputStream() {
+TcpSocketInputStream::TcpSocketInputStream( decaf::net::Socket::SocketHandle socket ) : InputStream() {
     this->socket = socket;
     this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::~SocketInputStream(){}
+TcpSocketInputStream::~TcpSocketInputStream(){}
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketInputStream::close() throw( decaf::io::IOException ){
+void TcpSocketInputStream::close() throw( decaf::io::IOException ){
     this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::available() const throw ( io::IOException ){
+int TcpSocketInputStream::available() const throw ( io::IOException ){
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
         throw IOException(
             __FILE__, __LINE__,
-            "decaf::io::SocketInputStream::available - The stream is closed" );
+            "decaf::io::TcpSocketInputStream::available - The stream is closed" );
     }
 
     // Convert to an OS level socket.
@@ -136,13 +140,13 @@ int SocketInputStream::available() const throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::doReadByte() throw ( IOException ){
+int TcpSocketInputStream::doReadByte() throw ( IOException ){
 
     // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
         throw IOException(
             __FILE__, __LINE__,
-            "decaf::io::SocketInputStream::read - The Stream has been closed" );
+            "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
     }
 
     apr_status_t result = APR_SUCCESS;
@@ -153,14 +157,14 @@ int SocketInputStream::doReadByte() throw ( IOException ){
 
     if( ( size != sizeof(c) && !closed ) || result != APR_SUCCESS ){
         throw IOException( __FILE__, __LINE__,
-            "activemq::io::SocketInputStream::read - failed reading a byte");
+            "activemq::io::TcpSocketInputStream::read - failed reading a byte");
     }
 
     return c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
     throw ( decaf::io::IOException,
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
@@ -169,7 +173,7 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int 
     if( closed ){
         throw IOException(
             __FILE__, __LINE__,
-            "decaf::io::SocketInputStream::read - The Stream has been closed" );
+            "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
     }
 
     if( length == 0 ) {
@@ -179,7 +183,7 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int 
     if( buffer == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__,
-            "SocketInputStream::read - Buffer passed is Null" );
+            "TcpSocketInputStream::read - Buffer passed is Null" );
     }
 
     if( size < 0 ) {
@@ -215,14 +219,14 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int 
     if( closed ){
         throw IOException(
             __FILE__, __LINE__,
-            "decaf::io::SocketInputStream::read - The connection is broken" );
+            "decaf::io::TcpSocketInputStream::read - The connection is broken" );
     }
 
     // Check for error.
     if( result != APR_SUCCESS ){
         throw IOException(
             __FILE__, __LINE__,
-            "decaf::net::SocketInputStream::read - %s",
+            "decaf::net::TcpSocketInputStream::read - %s",
             SocketError::getErrorString().c_str() );
     }
 
@@ -230,10 +234,10 @@ int SocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long SocketInputStream::skip( long long num DECAF_UNUSED )
+long long TcpSocketInputStream::skip( long long num DECAF_UNUSED )
     throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
 
     throw lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,
-        "SocketInputStream::skip() method is not supported");
+        "TcpSocketInputStream::skip() method is not supported");
 }

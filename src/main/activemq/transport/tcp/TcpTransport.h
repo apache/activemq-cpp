@@ -137,6 +137,10 @@ namespace tcp{
         void initialize( const decaf::net::URI& uri,
                          const decaf::util::Properties& properties );
 
+        void configureSocket( decaf::net::Socket& socket,
+                              const decaf::net::URI& uri,
+                              const decaf::util::Properties& properties );
+
     };
 
 }}}

@@ -21,13 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/net/ServerSocket.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/lang/Thread.h>
-#include <list>
-#include <string.h>
-
 namespace decaf{
 namespace net{
 
@@ -44,107 +37,6 @@ namespace net{
     public:
 
         static const int port = 23232;
-
-        class MyServerThread : public lang::Thread{
-        private:
-
-            bool done;
-            int numClients;
-            std::string lastMessage;
-
-        public:
-
-            util::concurrent::Mutex mutex;
-
-        public:
-
-            MyServerThread(){
-                done = false;
-                numClients = 0;
-            }
-
-            virtual ~MyServerThread(){
-                stop();
-            }
-
-            std::string getLastMessage(){
-                return lastMessage;
-            }
-
-            int getNumClients(){
-                return numClients;
-            }
-
-            virtual void stop(){
-                done = true;
-            }
-
-            virtual void run(){
-                try{
-                    unsigned char buf[1000];
-
-                    ServerSocket server;
-                    server.bind( "127.0.0.1", port );
-
-                    Socket* socket = server.accept();
-                    server.close();
-
-                    //socket->setSoTimeout( 10 );
-                    socket->setSoLinger( false );
-                    numClients++;
-
-                    synchronized(&mutex)
-                    {
-                       mutex.notifyAll();
-                    }
-
-                    while( !done && socket != NULL ){
-
-                        io::InputStream* stream = socket->getInputStream();
-
-                        memset( buf, 0, 1000 );
-                        try{
-
-                            if( stream->read( buf, 1000, 0, 1000 ) == -1 ) {
-                                done = true;
-                                continue;
-                            }
-
-                            lastMessage = (char*)buf;
-
-                            if( strcmp( (char*)buf, "reply" ) == 0 ){
-                                io::OutputStream* output = socket->getOutputStream();
-                                output->write( (unsigned char*)"hello", (int)strlen("hello"), 0, (int)strlen("hello") );
-
-                                  synchronized(&mutex) {
-                                     mutex.notifyAll();
-                                  }
-                            }
-
-                        }catch( io::IOException& ex ){
-                            done = true;
-                        }
-                    }
-
-                    socket->close();
-                    delete socket;
-
-                    numClients--;
-
-                    synchronized(&mutex)
-                    {
-                        mutex.notifyAll();
-                    }
-
-                }catch( io::IOException& ex ){
-                    printf("%s\n", ex.getMessage().c_str() );
-                    CPPUNIT_ASSERT( false );
-                }catch( ... ){
-                    CPPUNIT_ASSERT( false );
-                }
-            }
-
-        };
 
     public:
 

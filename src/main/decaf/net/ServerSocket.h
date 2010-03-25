@@ -17,7 +17,6 @@
 #ifndef _DECAF_NET_SERVERSOCKETIMPL_H_
 #define _DECAF_NET_SERVERSOCKETIMPL_H_
 
-#include <decaf/net/TcpSocket.h>
 #include <decaf/net/SocketException.h>
 #include <decaf/util/Config.h>
 #include <decaf/internal/AprPool.h>
@@ -27,11 +26,12 @@
 namespace decaf{
 namespace net{
 
+    class Socket;
+
     /**
      * A server socket class (for testing purposes).
      */
-    class DECAF_API ServerSocket
-    {
+    class DECAF_API ServerSocket {
     public:
 
         typedef apr_socket_t* SocketHandle;
@@ -61,20 +61,31 @@ namespace net{
 
         /**
          * Bind and listen to given IP/dns and port.
-         * @param host IP address or host name.
-         * @param port TCP port between 1..655535
+         *
+         * @param host
+         *      The IP address or host name.
+         * @param port
+         *      The TCP port between 1..655535.
+         *
+         * @throws SocketException if an I/O error occurs while binding the socket.
          */
-        virtual void bind( const char* host, int port ) throw ( SocketException );
+        virtual void bind( const char* host, int port )
+            throw ( SocketException );
 
         /**
          * Bind and listen to given IP/dns and port.
-         * @param host IP address or host name.
-         * @param port TCP port between 1..655535
-         * @param backlog Size of listen backlog.
+         *
+         * @param host
+         *      The IP address or host name.
+         * @param port
+         *      The TCP port between 1..655535.
+         * @param backlog
+         *      The size of listen backlog.
+         *
+         * @throws SocketException if an I/O error occurs while binding the socket.
          */
-        virtual void bind( const char* host,
-                           int port,
-                           int backlog ) throw ( SocketException );
+        virtual void bind( const char* host, int port, int backlog )
+            throw ( SocketException );
 
         /**
          * Blocks until a client connects to the bound socket.

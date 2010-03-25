@@ -22,6 +22,11 @@
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
 
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
+
+#include <memory>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::io;
@@ -30,6 +35,7 @@ using namespace activemq::transport::tcp;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::net;
+using namespace decaf::util;
 using namespace decaf::io;
 using namespace decaf::lang;
 
@@ -94,10 +100,11 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
 
     try {
 
-        // Create the IO device we will be communicating over the
-        // wire with.  This may need to change if we add more types
-        // of sockets, such as SSL.
-        socket.reset( SocketFactory::createSocket( uri.getAuthority(), properties ) );
+        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+
+        socket.reset( factory->createSocket() );
+
+        this->configureSocket( *socket, uri, properties );
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
@@ -108,6 +115,14 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
                 "TcpTransport::TcpTransport - "
                 "transport must be of type IOTransport");
         }
+
+        // Get the read buffer size.
+        int inputBufferSize = Integer::parseInt(
+            properties.getProperty( "inputBufferSize", "8192" ) );
+
+        // Get the write buffer size.
+        int outputBufferSize = Integer::parseInt(
+            properties.getProperty( "outputBufferSize", "8192" ) );
 
         InputStream* inputStream = socket->getInputStream();
         OutputStream* outputStream = socket->getOutputStream();
@@ -120,14 +135,14 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
             outputStream = new LoggingOutputStream( outputStream );
 
             // Now wrap with the Buffered streams, we own the source streams
-            inputStream = new BufferedInputStream( inputStream, true );
-            outputStream = new BufferedOutputStream( outputStream, true );
+            inputStream = new BufferedInputStream( inputStream, inputBufferSize, true );
+            outputStream = new BufferedOutputStream( outputStream, outputBufferSize, true );
 
         } else {
 
             // Wrap with the Buffered streams, we don't own the source streams
-            inputStream = new BufferedInputStream( inputStream );
-            outputStream = new BufferedOutputStream( outputStream );
+            inputStream = new BufferedInputStream( inputStream, inputBufferSize );
+            outputStream = new BufferedOutputStream( outputStream, outputBufferSize );
         }
 
         // Now wrap the Buffered Streams with DataInput based streams.  We own
@@ -143,4 +158,63 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::configureSocket( Socket& socket, const URI& uri, const Properties& properties ) {
+
+    try {
+
+        // Ensure something is actually passed in for the URI
+        if( uri.getAuthority() == "" ) {
+            throw SocketException( __FILE__, __LINE__,
+                "SocketTransport::start() - uri not provided" );
+        }
+
+        string host = uri.getHost();
+        int port = uri.getPort();
+
+        // Get the linger flag.
+        int soLinger = Integer::parseInt(
+            properties.getProperty( "soLinger", "0" ) );
+
+        // Get the keepAlive flag.
+        bool soKeepAlive = Boolean::parseBoolean(
+            properties.getProperty( "soKeepAlive", "false" ) );
+
+        // Get the socket receive buffer size.
+        int soReceiveBufferSize = Integer::parseInt(
+            properties.getProperty( "soReceiveBufferSize", "-1" ) );
+
+        // Get the socket send buffer size.
+        int soSendBufferSize = Integer::parseInt(
+            properties.getProperty( "soSendBufferSize", "-1" ) );
+
+        // Get the socket TCP_NODELAY flag.
+        bool tcpNoDelay = Boolean::parseBoolean(
+            properties.getProperty( "tcpNoDelay", "true" ) );
+
+        // Get the socket connect timeout in microseconds.
+        socket.setConnectTimeout(
+            Integer::parseInt( properties.getProperty( "soConnectTimeout", "-1" ) ) );
+
+        // Connect the socket.
+        socket.connect( host.c_str(), port );
+
+        // Set the socket options.
+        socket.setSoLinger( soLinger );
+        socket.setKeepAlive( soKeepAlive );
+        socket.setTcpNoDelay( tcpNoDelay );
+
+        if( soReceiveBufferSize > 0 ){
+            socket.setReceiveBufferSize( soReceiveBufferSize );
+        }
+
+        if( soSendBufferSize > 0 ){
+            socket.setSendBufferSize( soSendBufferSize );
+        }
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
