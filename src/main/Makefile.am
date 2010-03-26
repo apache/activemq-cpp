@@ -548,6 +548,8 @@ cc_sources = \
     decaf/net/ServerSocket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
+    decaf/net/SocketImpl.cpp \
+    decaf/net/SocketOptions.cpp \
     decaf/net/URI.cpp \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
@@ -1247,6 +1249,8 @@ h_sources = \
     decaf/net/SocketError.h \
     decaf/net/SocketException.h \
     decaf/net/SocketFactory.h \
+    decaf/net/SocketImpl.h \
+    decaf/net/SocketOptions.h \
     decaf/net/SocketTimeoutException.h \
     decaf/net/URI.h \
     decaf/net/URISyntaxException.h \
