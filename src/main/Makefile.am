@@ -545,7 +545,6 @@ cc_sources = \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
-    decaf/net/BufferedSocket.cpp \
     decaf/net/ServerSocket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
@@ -1237,7 +1236,6 @@ h_sources = \
     decaf/lang/exceptions/RuntimeException.h \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
-    decaf/net/BufferedSocket.h \
     decaf/net/ConnectException.h \
     decaf/net/HttpRetryException.h \
     decaf/net/MalformedURLException.h \
