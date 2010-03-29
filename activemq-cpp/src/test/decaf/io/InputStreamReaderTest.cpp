@@ -41,7 +41,7 @@ InputStreamReaderTest::~InputStreamReaderTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void InputStreamReaderTest::setUp() {
 
-    this->buffer1 = new ByteArrayInputStream( (unsigned char*)TEST_STRING.c_str(), TEST_STRING.length() );
+    this->buffer1 = new ByteArrayInputStream( (unsigned char*)TEST_STRING.c_str(), (int)TEST_STRING.length() );
     this->reader1 = new InputStreamReader( this->buffer1 );
 }
 
