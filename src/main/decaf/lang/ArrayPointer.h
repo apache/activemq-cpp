@@ -181,8 +181,9 @@ namespace lang {
          *          out of scope.
          */
         T* release() {
-            T* temp = this->value;
-            this->array = NULL;
+            T* temp = this->array->value;
+            this->array->value = NULL;
+            this->array->length = 0;
             return temp;
         }
 
