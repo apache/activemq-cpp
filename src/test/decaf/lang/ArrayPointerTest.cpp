@@ -172,7 +172,7 @@ void ArrayPointerTest::testBasics() {
 ////////////////////////////////////////////////////////////////////////////////
 void ArrayPointerTest::testAssignment() {
 
-    const std::size_t SIZE = 50;
+    const int SIZE = 50;
 
     TestClassA* thePointerA = new TestClassA[SIZE];
     TestClassB* thePointerB = new TestClassB[SIZE + SIZE];
