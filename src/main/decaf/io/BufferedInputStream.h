@@ -41,8 +41,9 @@ namespace io{
         int bufferSize;
         unsigned char* buff;
 
-        // Used to swap the active buffer with so it can be safely deleted later.
-        unsigned char* deleteBuff;
+        // Proxy to the actual buffer, when NULL it signals this stream is closed.
+        // the actual buffer is deleted in the destructor.
+        unsigned char* proxyBuffer;
 
     private:
 

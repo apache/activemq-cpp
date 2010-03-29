@@ -31,7 +31,7 @@ using namespace decaf::lang::exceptions;
 BufferedInputStream::BufferedInputStream( InputStream* stream, bool own ) :
     FilterInputStream( stream, own ),
     pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(8192),
-    buff( new unsigned char[bufferSize] ), deleteBuff(NULL) {
+    buff( new unsigned char[bufferSize] ), proxyBuffer( buff ) {
 
 }
 
@@ -39,7 +39,7 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, bool own ) :
 BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, bool own )
     throw ( lang::exceptions::IllegalArgumentException ) :
         FilterInputStream( stream, own ),
-        pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(bufferSize), buff(NULL), deleteBuff(NULL) {
+        pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(bufferSize), buff(NULL), proxyBuffer(NULL) {
 
     if( bufferSize < 0 ) {
         throw new IllegalArgumentException(
@@ -47,13 +47,14 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, b
     }
 
     this->buff = new unsigned char[bufferSize];
+    this->proxyBuffer = this->buff;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedInputStream::~BufferedInputStream() {
     try{
         this->close();
-        delete [] this->deleteBuff;
+        delete [] this->buff;
     }
     DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
@@ -62,21 +63,18 @@ BufferedInputStream::~BufferedInputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::close() throw( IOException ) {
 
-    if( !this->isClosed() ) {
+    // let parent close the inputStream
+    FilterInputStream::close();
 
-        // let parent close the inputStream
-        FilterInputStream::close();
-
-        // Free the class reference, read operation may still be
-        // holding onto the buffer while blocked.
-        std::swap( this->buff, this->deleteBuff );
-    }
+    // Clear the proxy to the buffer, but don't actually delete the buffer yet since
+    // other methods holding onto the buffer while blocked.
+    this->proxyBuffer = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int BufferedInputStream::available() const throw ( IOException ) {
 
-    if( buff == NULL || this->isClosed() ) {
+    if( this->proxyBuffer == NULL || this->isClosed() ) {
         throw IOException(
             __FILE__, __LINE__,
             "BufferedInputStream::available - Buffer was closed");
@@ -88,7 +86,7 @@ int BufferedInputStream::available() const throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::mark( int readLimit ) {
 
-    if( this->buff != NULL ) {
+    if( this->proxyBuffer != NULL ) {
         this->markLimit = readLimit;
         this->markPos = this->pos;
     }
@@ -97,7 +95,7 @@ void BufferedInputStream::mark( int readLimit ) {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::reset() throw ( IOException ) {
 
-    if( this->buff == NULL ) {
+    if( this->proxyBuffer == NULL ) {
         throw IOException(
             __FILE__, __LINE__,
             "BufferedInputStream::reset - This stream has been closed." );
@@ -119,7 +117,7 @@ int BufferedInputStream::doReadByte() throw ( IOException ){
 
         // Use a local reference in case of unsynchronized close.
         InputStream* inputStream = this->inputStream;
-        unsigned char* buffer = this->buff;
+        unsigned char* buffer = this->proxyBuffer;
 
         if( isClosed() || buffer == NULL ){
             throw IOException(
@@ -158,7 +156,7 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
     try{
 
         // Use a local reference in case of unsynchronized close.
-        unsigned char* lbuffer = this->buff;
+        unsigned char* lbuffer = this->proxyBuffer;
 
         if( lbuffer == NULL ){
             throw IOException(
@@ -236,7 +234,7 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
                 }
 
                 // Stream might have closed while we were buffering.
-                if( isClosed() || this->buff == NULL ){
+                if( isClosed() || this->proxyBuffer == NULL ){
                     throw IOException(
                         __FILE__, __LINE__,
                         "BufferedInputStream::bufferData - Stream is closed" );
@@ -279,7 +277,7 @@ long long BufferedInputStream::skip( long long amount )
 
         // Use a local reference in case of unsynchronized close.
         InputStream* inputStream = this->inputStream;
-        unsigned char* lbuffer = this->buff;
+        unsigned char* lbuffer = this->proxyBuffer;
 
         if( isClosed() || lbuffer == NULL ){
             throw IOException(
@@ -356,8 +354,9 @@ int BufferedInputStream::bufferData( InputStream* inputStream, unsigned char*& b
             delete [] temp;
             this->bufferSize = newLength;
 
-            if( this->buff != NULL ) {
+            if( this->proxyBuffer != NULL ) {
                 this->buff = buffer;
+                this->proxyBuffer = this->buff;
             }
 
         } else if( this->markPos > 0 ) {
