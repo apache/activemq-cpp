@@ -892,10 +892,16 @@ void ActiveMQStreamMessage::writeString( const std::string& value ) throw ( cms:
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQStreamMessage::storeContent() {
 
-    if( this->dataOut.get() != NULL ) {
+    if( this->dataOut.get() != NULL) {
 
         this->dataOut->close();
-        this->setContent( this->bytesOut->toByteArrayRef() );
+
+        if( this->bytesOut->size() > 0 ) {
+            std::pair<const unsigned char*, int> array = this->bytesOut->toByteArray();
+            this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
+            delete [] array.first;
+        }
+
         this->dataOut.reset( NULL );
         this->bytesOut = NULL;
     }

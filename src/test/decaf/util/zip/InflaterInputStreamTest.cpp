@@ -269,7 +269,8 @@ void InflaterInputStreamTest::testReadBIII() {
     dos.write( test, 507 );
     dos.close();
 
-    ByteArrayInputStream bais( baos.toByteArrayRef() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second, true );
     InflaterInputStream iis( &bais );
     unsigned char outBuf[530];
 

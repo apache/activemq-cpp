@@ -208,7 +208,8 @@ void DeflaterOutputStreamTest::testClose() {
     dos.write( byteArray, 4 );
     dos.close();
 
-    ByteArrayInputStream bais( baos.toByteArrayRef() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second, true );
     InflaterInputStream iis( &bais );
 
     // Test to see if the finish method wrote the bytes to the file.
@@ -255,7 +256,8 @@ void DeflaterOutputStreamTest::testWriteI() {
     }
     dos.close();
 
-    ByteArrayInputStream bais( baos.toByteArrayRef() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second, true );
     InflaterInputStream iis( &bais );
 
     for( int i = 0; i < 3; i++ ) {
@@ -277,7 +279,8 @@ void DeflaterOutputStreamTest::testWriteBIII() {
     dos1.write( byteArray, 7, 2, 3 );
     dos1.close();
 
-    ByteArrayInputStream bais( baos.toByteArrayRef() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second, true );
     InflaterInputStream iis( &bais );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", 4, iis.read() );
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Incorrect Byte Returned.", 7, iis.read() );

@@ -50,8 +50,8 @@ void BooleanStreamTest::test() {
     b1Stream.marshal( &daoStream );
 
     BooleanStream b2Stream;
-    decaf::io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
-                                               (int)baoStream.size() );
+    std::pair<const unsigned char*, int> array = baoStream.toByteArray();
+    decaf::io::ByteArrayInputStream baiStream( array.first, array.second );
     decaf::io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );
@@ -65,6 +65,7 @@ void BooleanStreamTest::test() {
     CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
     CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
 
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,8 +85,8 @@ void BooleanStreamTest::test2(){
     b1Stream.marshal( &daoStream );
 
     BooleanStream b2Stream;
-    io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
-                                        (int)baoStream.size() );
+    std::pair<const unsigned char*, int> array = baoStream.toByteArray();
+    decaf::io::ByteArrayInputStream baiStream( array.first, array.second );
     io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );
@@ -95,4 +96,6 @@ void BooleanStreamTest::test2(){
         CPPUNIT_ASSERT( b2Stream.readBoolean() == value );
         value = !value;
     }
+
+    delete [] array.first;
 }

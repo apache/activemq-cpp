@@ -88,7 +88,8 @@ void JournalTopicAckMarshallerTest::testLooseMarshal() {
         marshaller.looseMarshal( &openWireFormat, &outCommand, &dataOut );
 
         // Now read it back in and make sure it's all right.
-        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         DataInputStream dataIn( &bais );
         unsigned char dataType = dataIn.readByte();
         CPPUNIT_ASSERT( dataType == outCommand.getDataStructureType() );
@@ -134,7 +135,8 @@ void JournalTopicAckMarshallerTest::testTightMarshal() {
         marshaller.tightMarshal2( &openWireFormat, &outCommand, &dataOut, &bs );
 
         // Now read it back in and make sure it's all right.
-        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         DataInputStream dataIn( &bais );
 
         unsigned char dataType = dataIn.readByte();

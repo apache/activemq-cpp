@@ -116,7 +116,10 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
             DataOutputStream dataOut( os, true );
             PrimitiveTypesMarshaller::marshalMap( map.get(), dataOut );
             dataOut.close();
-            setContent( bytesOut->toByteArrayRef() );
+
+            std::pair<const unsigned char*, int> array = bytesOut->toByteArray();
+            this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
+            delete [] array.first;
 
         } else {
             clearBody();

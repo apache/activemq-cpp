@@ -53,7 +53,7 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, b
 BufferedInputStream::~BufferedInputStream() {
     try{
         this->close();
-        delete this->deleteBuff;
+        delete [] this->deleteBuff;
     }
     DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
@@ -62,12 +62,15 @@ BufferedInputStream::~BufferedInputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::close() throw( IOException ) {
 
-    // let parent close the inputStream
-    FilterInputStream::close();
+    if( !this->isClosed() ) {
 
-    // Free the class reference, read operation may still be
-    // holding onto the buffer while blocked.
-    std::swap( this->buff, this->deleteBuff );
+        // let parent close the inputStream
+        FilterInputStream::close();
+
+        // Free the class reference, read operation may still be
+        // holding onto the buffer while blocked.
+        std::swap( this->buff, this->deleteBuff );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

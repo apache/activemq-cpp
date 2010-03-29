@@ -18,8 +18,12 @@
 #ifndef _DECAF_IO_BYTEARRAYOUTPUTSTREAM_H_
 #define _DECAF_IO_BYTEARRAYOUTPUTSTREAM_H_
 
+#include <decaf/util/Config.h>
+
 #include <decaf/io/OutputStream.h>
-#include <vector>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
+#include <utility>
 
 namespace decaf{
 namespace io{
@@ -28,14 +32,19 @@ namespace io{
     private:
 
         /**
-         * Default buffer to use, if none provided.
+         * The internal buffer used to hold written bytes.
          */
-        std::vector<unsigned char> defaultBuffer;
+        unsigned char* buffer;
 
         /**
-         * Reference to the buffer being used by this stream.
+         * Current Size of the buffer.
          */
-        std::vector<unsigned char>* activeBuffer;
+        int bufferSize;
+
+        /**
+         * The number of bytes currently held in the buffer.
+         */
+        int count;
 
     private:
 
@@ -45,44 +54,41 @@ namespace io{
     public:
 
         /**
-         * Default Constructor - uses a default internal buffer
+         * Default Constructor - uses a default internal buffer of 32 bytes, the size
+         * increases as the need for more room arises.
          */
         ByteArrayOutputStream();
 
         /**
-         * Uses the given buffer as the target.  Calls setBuffer.
-         * @param buffer the target buffer.
+         * Creates a ByteArrayOutputStream with an internal buffer allocated with the
+         * given size.
+         *
+         * @param bufferSize
+         *      The size to use for the internal buffer.
+         *
+         * @throw IllegalArgumentException if the size is less than or equal to zero.
          */
-        ByteArrayOutputStream( std::vector<unsigned char>& buffer );
+        ByteArrayOutputStream( int bufferSize )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         virtual ~ByteArrayOutputStream();
 
         /**
-         * Sets the internal buffer.  This input stream will wrap around
-         * the given buffer and all writes will be performed directly on
-         * the buffer.  This object does not retain control of the buffer's
-         * lifetime however - this is the job of the caller.
-         * @param buffer The target buffer.
+         * Creates a newly allocated byte array. Its size is the current size of this output
+         * stream and the valid contents of the buffer have been copied into it.  The newly
+         * allocated array and its size are returned inside an STL pair structure, the caller
+         * is responsible for freeing the returned array.
+         *
+         * @return an STL pair containing the copied array and its size.
          */
-        virtual void setBuffer( std::vector<unsigned char>& buffer );
+        std::pair<const unsigned char*, int> toByteArray() const;
 
         /**
-         * Get a snapshot of the data
-         * @return pointer to the data
+         * Gets the current count of bytes written into this ByteArrayOutputStream.
+         *
+         * @return the number of valid bytes contained in the ByteArrayOutputStream.
          */
-        virtual const unsigned char* toByteArray() const;
-
-        /**
-         * Get a snapshot of the data
-         * @return reference to the underlying data as a const std::vector<unsigned char>&
-         */
-        virtual const std::vector<unsigned char>& toByteArrayRef() const;
-
-        /**
-         * Get the Size of the Internal Buffer
-         * @return size of the internal buffer
-         */
-        virtual long long size() const;
+        long long size() const;
 
         /**
          * Clear current Stream contents
@@ -113,6 +119,11 @@ namespace io{
             throw ( decaf::io::IOException,
                     decaf::lang::exceptions::NullPointerException,
                     decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    private:
+
+        // Expands the buffer if there's not enough room for the needed length.
+        void checkExpandSize( int needed );
 
     };
 

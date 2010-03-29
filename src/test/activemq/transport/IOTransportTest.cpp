@@ -328,14 +328,17 @@ void IOTransportTest::testWrite(){
     cmd->c = '5';
     transport.oneway( cmd );
 
-    const unsigned char* bytes = os.toByteArray();
-    std::size_t size = os.size();
+    std::pair<const unsigned char*, int> array = os.toByteArray();
+    const unsigned char* bytes = array.first;
+    std::size_t size = array.second;
     CPPUNIT_ASSERT( size >= 5 );
     CPPUNIT_ASSERT( bytes[0] == '1' );
     CPPUNIT_ASSERT( bytes[1] == '2' );
     CPPUNIT_ASSERT( bytes[2] == '3' );
     CPPUNIT_ASSERT( bytes[3] == '4' );
     CPPUNIT_ASSERT( bytes[4] == '5' );
+
+    delete [] array.first;
 
     transport.close();
 }

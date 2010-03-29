@@ -229,7 +229,12 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                 if( !sizePrefixDisabled ) {
                     looseOut->close();
                     dataOut->writeInt( (int)baos->size() );
-                    dataOut->write( baos->toByteArray(), (int)baos->size(), 0, (int)baos->size() );
+
+                    if( baos->size() > 0 ) {
+                        std::pair<const unsigned char*, int> array = baos->toByteArray();
+                        dataOut->write( array.first, array.second );
+                        delete [] array.first;
+                    }
 
                     // Delete allocated resource
                     delete baos;

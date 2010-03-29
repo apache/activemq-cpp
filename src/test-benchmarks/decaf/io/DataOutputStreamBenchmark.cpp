@@ -37,10 +37,9 @@ void DataOutputStreamBenchmark::setUp(){
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStreamBenchmark::run(){
 
-    std::vector<unsigned char> outputBuffer;
     int numRuns = 500;
 
-    ByteArrayOutputStream bos( outputBuffer );
+    ByteArrayOutputStream bos;
     DataOutputStream dos( &bos );
 
     for( int iy = 0; iy < numRuns * 40; ++iy ){
@@ -65,20 +64,20 @@ void DataOutputStreamBenchmark::run(){
         dos.writeFloat( 32.4f );
     }
 
-    outputBuffer.clear();
+    bos.reset();
 
     for( int iy = 0; iy < numRuns; ++iy ){
         dos.writeChars( testString );
-        outputBuffer.clear();
+        bos.reset();
     }
     for( int iy = 0; iy < numRuns; ++iy ){
         dos.writeBytes( testString );
-        outputBuffer.clear();
+        bos.reset();
     }
     for( int iy = 0; iy < numRuns; ++iy ){
         dos.writeUTF( testString );
-        outputBuffer.clear();
+        bos.reset();
     }
 
-    outputBuffer.clear();
+    bos.reset();
 }

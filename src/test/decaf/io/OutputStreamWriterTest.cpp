@@ -197,6 +197,7 @@ void OutputStreamWriterTest::testWriteString() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void OutputStreamWriterTest::openInputStream() {
+    std::pair<const unsigned char*, int> array = this->buffer1->toByteArray();
     this->reader = new InputStreamReader(
-        new ByteArrayInputStream( this->buffer1->toByteArrayRef() ), true );
+        new ByteArrayInputStream( array.first, array.second, true ), true );
 }

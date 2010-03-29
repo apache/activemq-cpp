@@ -621,12 +621,16 @@ void ActiveMQBytesMessage::storeContent() {
 
     try {
 
-        if( this->dataOut.get() != NULL ) {
+        if( this->dataOut.get() != NULL && this->bytesOut->size() > 0 ) {
 
             this->dataOut->close();
 
             if( !this->compressed ) {
-                this->setContent( this->bytesOut->toByteArrayRef() );
+
+                std::pair<const unsigned char*, int> array = this->bytesOut->toByteArray();
+                this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
+                delete [] array.first;
+
             } else {
 
                 ByteArrayOutputStream buffer;
@@ -639,7 +643,9 @@ void ActiveMQBytesMessage::storeContent() {
                 this->bytesOut->writeTo( &doBuffer );
 
                 // Now store the annotated content.
-                this->setContent( buffer.toByteArrayRef() );
+                std::pair<const unsigned char*, int> array = buffer.toByteArray();
+                this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
+                delete [] array.first;
             }
 
             this->dataOut.reset( NULL );

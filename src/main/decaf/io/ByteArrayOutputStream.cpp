@@ -17,6 +17,10 @@
 
 #include "ByteArrayOutputStream.h"
 
+#include <decaf/lang/System.h>
+
+#include <algorithm>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::io;
@@ -24,51 +28,53 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayOutputStream::ByteArrayOutputStream() : OutputStream() {
-    activeBuffer = &defaultBuffer;
+ByteArrayOutputStream::ByteArrayOutputStream() :
+    OutputStream(), buffer( new unsigned char[32] ), bufferSize( 32 ), count( 0 ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ByteArrayOutputStream::ByteArrayOutputStream( int bufferSize )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) :
+        OutputStream(), buffer( NULL ), bufferSize( bufferSize ), count( 0 ) {
+
+    if( bufferSize <= 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Buffer size given was invalid: %d", bufferSize );
+    }
+
+    this->buffer = new unsigned char[bufferSize];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayOutputStream::~ByteArrayOutputStream() {
+    try{
+        delete [] buffer;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayOutputStream::ByteArrayOutputStream( vector<unsigned char>& buffer) {
-    setBuffer( buffer );
-}
+std::pair<const unsigned char*, int> ByteArrayOutputStream::toByteArray() const {
 
-////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::setBuffer( vector<unsigned char>& buffer) {
-    activeBuffer = &buffer;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const unsigned char* ByteArrayOutputStream::toByteArray() const {
-    if( activeBuffer == NULL || activeBuffer->size() == 0 ){
-        return NULL;
+    if( this->count == 0 ) {
+        return std::pair<const unsigned char*, int>( NULL, 0 );
     }
 
-    return &(*activeBuffer)[0];
-}
+    unsigned char* temp = new unsigned char[this->count];
+    System::arraycopy( this->buffer, 0, temp, 0, this->count );
 
-////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char>& ByteArrayOutputStream::toByteArrayRef() const {
-    if( activeBuffer == NULL ){
-        return defaultBuffer;
-    }
-
-    return *activeBuffer;
+    return std::make_pair( temp, this->count );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long ByteArrayOutputStream::size() const {
-    return activeBuffer->size();
+    return this->count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStream::reset() throw ( IOException ) {
-    // Empty the contents of the buffer to the output stream.
-    activeBuffer->clear();
+    this->count = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +82,12 @@ void ByteArrayOutputStream::doWriteByte( unsigned char c )
     throw ( IOException ) {
 
     try{
-        activeBuffer->push_back( c );
+
+        if( this->count == this->bufferSize ) {
+            checkExpandSize( 1 );
+        }
+
+        this->buffer[this->count++] = c;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -113,7 +124,11 @@ void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, in
     }
 
     try{
-        activeBuffer->insert( activeBuffer->end(), buffer + offset, buffer + offset + length );
+
+        checkExpandSize( length );
+
+        System::arraycopy( buffer, offset, this->buffer, this->count, length );
+        this->count += length;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -124,11 +139,11 @@ void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, in
 ////////////////////////////////////////////////////////////////////////////////
 std::string ByteArrayOutputStream::toString() const {
 
-    if( this->activeBuffer->empty() ) {
+    if( this->count == 0 ) {
         return "";
     }
 
-    return string( (const char*)this->toByteArray(), (std::size_t)this->size() );
+    return string( (const char*)this->buffer, this->count );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +152,7 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
 
     try{
 
-        if( this->size() == 0 ) {
+        if( this->count == 0 ) {
             return;
         }
 
@@ -146,9 +161,33 @@ void ByteArrayOutputStream::writeTo( OutputStream* out ) const
                 __FILE__, __LINE__, "Passed stream pointer is null" );
         }
 
-        out->write( this->toByteArray(), (int)this->size() );
+        out->write( this->buffer, this->count );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayOutputStream::checkExpandSize( int needed ) {
+
+    try{
+
+        if( this->count + needed <= this->bufferSize ) {
+            return;
+        }
+
+        int newSize = ( this->count + needed ) * 2;
+        unsigned char* temp = new unsigned char[newSize];
+        System::arraycopy( this->buffer, 0, temp, 0, this->count );
+
+        std::swap( temp, this->buffer );
+
+        this->bufferSize = newSize;
+
+        delete [] temp;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
