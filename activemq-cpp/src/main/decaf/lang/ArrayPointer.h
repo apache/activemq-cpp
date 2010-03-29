@@ -51,10 +51,20 @@ namespace lang {
 
         struct ArrayData {
             T* value;
-            std::size_t length;
+            int length;
 
             ArrayData() : value( NULL ), length( 0 ) {}
-            ArrayData( T* value, std::size_t length ) : value( value ), length( length ) {}
+            ArrayData( T* value, int length ) : value( value ), length( length ) {
+                if( value != NULL && length <= 0 ) {
+                    throw decaf::lang::exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__, "Non-NULL array pointer cannot have a size <= zero" );
+                }
+
+                if( value == NULL && length > 0 ) {
+                    throw decaf::lang::exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__, "NULL array pointer cannot have a size > zero" );
+                }
+            }
         };
 
         typedef void (*deletionFuncPtr)(ArrayData* p);
@@ -89,7 +99,7 @@ namespace lang {
          * @param size
          *      The size of the array to allocate for this ArrayPointer instance.
          */
-        ArrayPointer( std::size_t size ) :
+        ArrayPointer( int size ) :
             REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
 
             if( size == 0 ) {
@@ -117,8 +127,18 @@ namespace lang {
          * @param size
          *      The size of the array this object is taking ownership of.
          */
-        explicit ArrayPointer( const PointerType value, std::size_t size ) :
-            REFCOUNTER(), array( new ArrayData( value, size ) ), onDelete( onDeleteFunc ) {
+        explicit ArrayPointer( const PointerType value, int size ) :
+            REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
+
+            try{
+                this->array = new ArrayData( value, size );
+            } catch( std::exception& ex ) {
+                REFCOUNTER::release();
+                throw ex;
+            } catch(...) {
+                REFCOUNTER::release();
+                throw std::bad_alloc();
+            }
         }
 
         /**
@@ -145,7 +165,7 @@ namespace lang {
          * @param size
          *      The size of the new array value this object now contains.
          */
-        void reset( T* value, std::size_t size = 0 ) {
+        void reset( T* value, int size = 0 ) {
             ArrayPointer( value, size ).swap( *this );
         }
 
@@ -184,7 +204,7 @@ namespace lang {
          *
          * @returns the size of the array or zero if the array is NULL
          */
-        std::size_t length() const {
+        int length() const {
             return this->array->length;
         }
 
@@ -229,26 +249,26 @@ namespace lang {
          *
          * @throws NullPointerException if the contained value is Null
          */
-        ReferenceType operator[]( std::size_t index ) {
+        ReferenceType operator[]( int index ) {
             if( this->array->value == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
             }
 
-            if( this->array->length <= index ) {
+            if( index < 0 || this->array->length <= index ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Array Index %d is out of bounds for this array.", this->array->length );
             }
 
             return this->array->value[index];
         }
-        ReferenceType operator[]( std::size_t index ) const {
+        ReferenceType operator[]( int index ) const {
             if( this->array->value == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
             }
 
-            if( this->array->length <= index ) {
+            if( index < 0 || this->array->length <= index ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Array Index %d is out of bounds for this array.", *( this->array->length ) );
             }
