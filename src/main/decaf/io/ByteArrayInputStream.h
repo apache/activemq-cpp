@@ -21,7 +21,6 @@
 #include <decaf/io/InputStream.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <vector>
-#include <algorithm>
 
 namespace decaf{
 namespace io{
