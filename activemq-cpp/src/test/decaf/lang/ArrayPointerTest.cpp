@@ -167,6 +167,12 @@ void ArrayPointerTest::testBasics() {
         ArrayPointer<ExceptionThrowingClass> ex( 1 );
         CPPUNIT_FAIL( "Should Have Thrown." );
     } catch(...) {}
+
+    {
+        ArrayPointer<unsigned char> array( 50 );
+        unsigned char* buffer = array.release();
+        delete [] buffer;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
