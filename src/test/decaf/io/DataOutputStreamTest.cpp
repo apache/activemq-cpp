@@ -293,7 +293,7 @@ void DataOutputStreamTest::testWriteUTFStringLength() {
     DataOutputStream dataOut( &byteOut );
     dataOut.writeUTF( "" );
     CPPUNIT_ASSERT( dataOut.size() == 2 );
-    byteIn.setByteArray( byteOut.toByteArray(), byteOut.size() );
+    byteIn.setByteArray( byteOut.toByteArray(), (int)byteOut.size() );
     CPPUNIT_ASSERT( dataIn.readUnsignedShort() == 0 );
 }
 

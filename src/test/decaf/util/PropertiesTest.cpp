@@ -227,7 +227,7 @@ void PropertiesTest::testLoadInputStream() {
     {
         Properties properties;
         string value(" a= b");
-        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), (int)value.size() );
         properties.load( &stream );
         CPPUNIT_ASSERT( string( "b" ) == properties.getProperty( "a" ) );
     }
@@ -235,7 +235,7 @@ void PropertiesTest::testLoadInputStream() {
     {
         Properties properties;
         string value(" a b");
-        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), (int)value.size() );
         properties.load( &stream );
         CPPUNIT_ASSERT( string( "b" ) == properties.getProperty( "a" ) );
     }
@@ -243,7 +243,7 @@ void PropertiesTest::testLoadInputStream() {
     {
         Properties properties;
         string value("#comment\na=value");
-        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), (int)value.size() );
         properties.load( &stream );
         CPPUNIT_ASSERT( string( "value" ) == properties.getProperty( "a" ) );
     }
@@ -251,7 +251,7 @@ void PropertiesTest::testLoadInputStream() {
     {
         Properties properties;
         string value("#properties file\r\nfred=1\r\n#last comment");
-        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), value.size() );
+        ByteArrayInputStream stream( (const unsigned char*)value.c_str(), (int)value.size() );
         properties.load( &stream );
         CPPUNIT_ASSERT( string( "1" ) == properties.getProperty( "fred" ) );
     }
@@ -335,7 +335,7 @@ void PropertiesTest::testStoreOutputStream() {
         myProps.store( &out, "A Header" );
         out.close();
 
-        ByteArrayInputStream in( out.toByteArray(), out.size() );
+        ByteArrayInputStream in( out.toByteArray(), (int)out.size() );
         myProps2.load( &in );
         in.close();
 

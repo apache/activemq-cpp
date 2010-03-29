@@ -40,19 +40,13 @@ void ByteArrayInputStreamTest::testConstructor() {
     testBuffer.push_back('s');
     testBuffer.push_back('t');
 
-    ByteArrayInputStream stream_a( &testBuffer[0], (int)testBuffer.size());
+    ByteArrayInputStream stream_a( &testBuffer[0], (int)testBuffer.size() );
     ByteArrayInputStream stream_b( testBuffer );
 
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
                             stream_a.available() == (int)testBuffer.size() );
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
                             stream_b.available() == (int)testBuffer.size() );
-
-    ByteArrayInputStream nullStream;
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should have thrown an IO Exception",
-        nullStream.read(),
-        IOException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

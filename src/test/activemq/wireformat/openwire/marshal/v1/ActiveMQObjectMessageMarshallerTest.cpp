@@ -100,7 +100,7 @@ void ActiveMQObjectMessageMarshallerTest::testLooseMarshal() {
         marshaller.looseMarshal( &openWireFormat, &outCommand, &dataOut );
 
         // Now read it back in and make sure it's all right.
-        ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
         DataInputStream dataIn( &bais );
         unsigned char dataType = dataIn.readByte();
         CPPUNIT_ASSERT( dataType == outCommand.getDataStructureType() );
@@ -158,7 +158,7 @@ void ActiveMQObjectMessageMarshallerTest::testTightMarshal() {
         marshaller.tightMarshal2( &openWireFormat, &outCommand, &dataOut, &bs );
 
         // Now read it back in and make sure it's all right.
-        ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
         DataInputStream dataIn( &bais );
 
         unsigned char dataType = dataIn.readByte();
