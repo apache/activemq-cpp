@@ -287,13 +287,14 @@ void DataOutputStreamTest::testWriteUTFStringLength() {
         UTFDataFormatException );
 
     // Test that a zero length string write the zero size marker.
-    ByteArrayInputStream byteIn;
     ByteArrayOutputStream byteOut;
-    DataInputStream dataIn( &byteIn );
     DataOutputStream dataOut( &byteOut );
     dataOut.writeUTF( "" );
     CPPUNIT_ASSERT( dataOut.size() == 2 );
-    byteIn.setByteArray( byteOut.toByteArray(), (int)byteOut.size() );
+
+    std::pair<const unsigned char*, int> array = byteOut.toByteArray();
+    ByteArrayInputStream byteIn( array.first, array.second, true );
+    DataInputStream dataIn( &byteIn );
     CPPUNIT_ASSERT( dataIn.readUnsignedShort() == 0 );
 }
 
@@ -304,16 +305,18 @@ void DataOutputStreamTest::testHelper( unsigned char* input, int inputLength,
     std::string testStr( (char*)input, inputLength );
     os->writeUTF( testStr );
 
-    const unsigned char* result = baos->toByteArray();
+    std::pair<const unsigned char*, int> array = baos->toByteArray();
 
-    CPPUNIT_ASSERT( result[0] == 0x00 );
-    CPPUNIT_ASSERT( result[1] == (unsigned char)( expectLength ) );
+    CPPUNIT_ASSERT( array.first[0] == 0x00 );
+    CPPUNIT_ASSERT( array.first[1] == (unsigned char)( expectLength ) );
 
-    for( int i = 2; i < baos->size(); ++i ) {
-        CPPUNIT_ASSERT( result[i] == expect[i-2] );
+    for( int i = 2; i < array.second; ++i ) {
+        CPPUNIT_ASSERT( array.first[i] == expect[i-2] );
     }
 
     baos->reset();
+
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -371,40 +374,42 @@ void DataOutputStreamTest::test(){
     writer.writeDouble( doubleVal );
     writer.write( arrayVal, 3, 0, 3 );
 
-    const unsigned char* buffer = myStream.toByteArray();
+    std::pair<const unsigned char*, int> buffer = myStream.toByteArray();
     int ix = 0;
 
-    unsigned char tempByte = buffer[ix];
+    unsigned char tempByte = buffer.first[ix];
     CPPUNIT_ASSERT( tempByte == byteVal );
     ix += (int)sizeof( tempByte );
 
     unsigned short tempShort = 0;
-    memcpy( &tempShort, buffer+ix, sizeof( unsigned short ) );
+    memcpy( &tempShort, buffer.first+ix, sizeof( unsigned short ) );
     tempShort = util::Endian::byteSwap( tempShort );
     CPPUNIT_ASSERT( tempShort == shortVal );
     ix += (int)sizeof( tempShort );
 
     unsigned int tempInt = 0;
-    memcpy( &tempInt, buffer+ix, sizeof( unsigned int ) );
+    memcpy( &tempInt, buffer.first+ix, sizeof( unsigned int ) );
     tempInt = util::Endian::byteSwap( tempInt );
     CPPUNIT_ASSERT( tempInt == intVal );
     ix += (int)sizeof( tempInt );
 
     unsigned long long tempLong = 0;
-    memcpy( &tempLong, buffer+ix, sizeof( unsigned long long ) );
+    memcpy( &tempLong, buffer.first+ix, sizeof( unsigned long long ) );
     tempLong = util::Endian::byteSwap( tempLong );
     CPPUNIT_ASSERT( tempLong == longVal );
     ix += (int)sizeof( tempLong );
 
     float tempFloat = 0;
-    memcpy( &tempFloat, buffer+ix, sizeof( float ) );
+    memcpy( &tempFloat, buffer.first+ix, sizeof( float ) );
     tempFloat = util::Endian::byteSwap( tempFloat );
     CPPUNIT_ASSERT( tempFloat == floatVal );
     ix += (int)sizeof( tempFloat );
 
     double tempDouble = 0;
-    memcpy( &tempDouble, buffer+ix, sizeof( double ) );
+    memcpy( &tempDouble, buffer.first+ix, sizeof( double ) );
     tempDouble = util::Endian::byteSwap( tempDouble );
     CPPUNIT_ASSERT( tempDouble == doubleVal );
     ix += (int)sizeof( tempDouble );
+
+    delete [] buffer.first;
 }

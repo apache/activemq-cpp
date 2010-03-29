@@ -27,12 +27,12 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream() :
-    InputStream(), buffer( NULL ), size( 0 ), count( 0 ), pos( 0 ), markpos( 0 ){
+    InputStream(), buffer( NULL ), size( 0 ), own( false ), count( 0 ), pos( 0 ), markpos( 0 ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer ) :
-    InputStream(), buffer( NULL ), size( 0 ), count( 0 ), pos( 0 ), markpos( 0 ) {
+    InputStream(), buffer( NULL ), size( 0 ), own( false ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     if( buffer.size() > 0 ) {
         setByteArray( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
@@ -40,25 +40,31 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize )
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalArgumentException ) :
-               InputStream(), buffer( NULL ), size( 0 ), count( 0 ), pos( 0 ), markpos( 0 ){
+               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, 0, bufferSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length )
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalArgumentException ) :
-               InputStream(), buffer( NULL ), size( 0 ), count( 0 ), pos( 0 ), markpos( 0 ){
+               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::~ByteArrayInputStream(){
+    try{
+        if( this->own ) {
+            delete [] this->buffer;
+        }
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

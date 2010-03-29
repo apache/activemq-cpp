@@ -77,7 +77,9 @@ void FilterOutputStreamTest::testWrite1() {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
         os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.size() );
-        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
+
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 bais.available() == (int)testString.length() );
@@ -99,7 +101,8 @@ void FilterOutputStreamTest::testWrite2() {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
         os.write('t');
-        ByteArrayInputStream bais( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Byte not written after flush", 1 == bais.available() );
         unsigned char wbytes[1];

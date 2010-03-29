@@ -43,13 +43,19 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<uns
 
     try {
 
-        ByteArrayOutputStream bytesOut( buffer );
+        ByteArrayOutputStream bytesOut;
         DataOutputStream dataOut( &bytesOut );
 
         if( map == NULL ) {
             dataOut.writeInt( -1 );
         } else {
             PrimitiveTypesMarshaller::marshalPrimitiveMap( dataOut, *map );
+        }
+
+        if( bytesOut.size() > 0 ) {
+            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            buffer.insert( buffer.begin(), array.first, array.first + array.second );
+            delete [] array.first;
         }
     }
     AMQ_CATCH_RETHROW( decaf::lang::Exception )
@@ -83,13 +89,19 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<u
 
     try {
 
-        ByteArrayOutputStream bytesOut( buffer );
+        ByteArrayOutputStream bytesOut;
         DataOutputStream dataOut( &bytesOut );
 
         if( list == NULL ) {
             dataOut.writeInt( -1 );
         } else {
             PrimitiveTypesMarshaller::marshalPrimitiveList( dataOut, *list );
+        }
+
+        if( bytesOut.size() > 0 ) {
+            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            buffer.insert( buffer.begin(), array.first, array.first + array.second );
+            delete [] array.first;
         }
     }
     AMQ_CATCH_RETHROW( decaf::lang::Exception )

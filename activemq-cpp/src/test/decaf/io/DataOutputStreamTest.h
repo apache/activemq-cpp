@@ -104,7 +104,8 @@ namespace io{
                          unsigned char* expect, int expectLength );
 
         void openDataInputStream() {
-            this->bais.reset( new ByteArrayInputStream( baos->toByteArray(), (int)baos->size() ) );
+            std::pair<const unsigned char*, int> array = baos->toByteArray();
+            this->bais.reset( new ByteArrayInputStream( array.first, array.second, true ) );
             this->is.reset( new DataInputStream( bais.get() ) );
         }
 

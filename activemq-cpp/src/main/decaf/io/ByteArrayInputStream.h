@@ -31,7 +31,9 @@ namespace io{
      * the stream. An internal counter keeps track of the next byte to be supplied by the read method.
      * The ByteArrayInputStream never copies the supplied buffers, only points to them, therefore the
      * caller must ensure that the supplied buffer remain in scope, or is not deleted before this
-     * ByteArrayInputStream is freed.
+     * ByteArrayInputStream is freed.  If the own argument of one of the constructors that accepts an
+     * array pointer is set to true than the ByteArrayInputStream instance will take ownership of the
+     * supplied pointer and delete it when that instance is destroyed.
      *
      * Closing a ByteArrayInputStream has no effect. The methods in this class can be called after
      * the stream has been closed without generating an IOException.
@@ -52,6 +54,11 @@ namespace io{
          * The Size of the input buffer.
          */
         int size;
+
+        /**
+         * Does this object own the supplied pointer.
+         */
+        bool own;
 
         /**
          * The index one greater than the last valid character in the input stream buffer. This
@@ -109,11 +116,13 @@ namespace io{
          *      The initial byte array to use to read from.
          * @param bufferSize
          *      The size of the buffer.
+         * @param own
+         *      Indicates if this object should take ownership of the array, default is false.
          *
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize )
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own = false )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
@@ -129,11 +138,13 @@ namespace io{
          *      The offset into the buffer to begin reading from.
          * @param length
          *      The number of bytes to read past the offset.
+         * @param own
+         *      Indicates if this object should take ownership of the array, default is false.
          *
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length )
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalArgumentException );
 

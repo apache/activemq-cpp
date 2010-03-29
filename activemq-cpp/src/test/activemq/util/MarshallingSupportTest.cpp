@@ -193,10 +193,13 @@ void MarshallingSupportTest::testWriteString() {
 
         MarshallingSupport::writeString( writer, "" );
 
-        bais.setByteArray( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        bais.setByteArray( array.first, array.second );
 
         CPPUNIT_ASSERT( dataIn.read() == PrimitiveValueNode::STRING_TYPE );
         CPPUNIT_ASSERT( dataIn.readShort() == 0 );
+
+        delete [] array.first;
     }
     {
         ByteArrayOutputStream baos;
@@ -206,10 +209,13 @@ void MarshallingSupportTest::testWriteString() {
 
         MarshallingSupport::writeString( writer, "Hello World" );
 
-        bais.setByteArray( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        bais.setByteArray( array.first, array.second );
 
         CPPUNIT_ASSERT( dataIn.read() == PrimitiveValueNode::STRING_TYPE );
         CPPUNIT_ASSERT( dataIn.readShort() == 11 );
+
+        delete [] array.first;
     }
     {
         ByteArrayOutputStream baos;
@@ -219,10 +225,13 @@ void MarshallingSupportTest::testWriteString() {
 
         MarshallingSupport::writeString( writer, std::string( Short::MAX_VALUE, 'A' ) );
 
-        bais.setByteArray( baos.toByteArray(), (int)baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        bais.setByteArray( array.first, array.second );
 
         CPPUNIT_ASSERT( dataIn.read() == PrimitiveValueNode::BIG_STRING_TYPE );
         CPPUNIT_ASSERT( dataIn.readInt() == Short::MAX_VALUE );
+
+        delete [] array.first;
     }
 }
 
@@ -236,9 +245,13 @@ void MarshallingSupportTest::testWriteString16() {
         DataInputStream dataIn( &bais );
 
         MarshallingSupport::writeString16( writer, "Hello World" );
-        bais.setByteArray( baos.toByteArray(), (int)baos.size() );
+
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        bais.setByteArray( array.first, array.second );
 
         CPPUNIT_ASSERT( dataIn.readShort() == 11 );
+
+        delete [] array.first;
     }
 }
 
@@ -252,9 +265,13 @@ void MarshallingSupportTest::testWriteString32() {
         DataInputStream dataIn( &bais );
 
         MarshallingSupport::writeString32( writer, "Hello World" );
-        bais.setByteArray( baos.toByteArray(), (int)baos.size() );
+
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        bais.setByteArray( array.first, array.second );
 
         CPPUNIT_ASSERT( dataIn.readInt() == 11 );
+
+        delete [] array.first;
     }
 }
 
@@ -272,7 +289,8 @@ void MarshallingSupportTest::testReadString16() {
     MarshallingSupport::writeString( dataOut, testStr );
 
     // Move the output back to the input.
-    bytesIn.setByteArray( bytesOut.toByteArray(), (int)bytesOut.size() );
+    std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+    bytesIn.setByteArray( array.first, array.second );
 
     string resultStr = "";
     int type = dataIn.read();
@@ -284,6 +302,8 @@ void MarshallingSupportTest::testReadString16() {
         resultStr = MarshallingSupport::readString16( dataIn ) );
 
     CPPUNIT_ASSERT( testStr == resultStr );
+
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,7 +320,8 @@ void MarshallingSupportTest::testReadString32() {
     MarshallingSupport::writeString( dataOut, testStr );
 
     // Move the output back to the input.
-    bytesIn.setByteArray( bytesOut.toByteArray(), (int)bytesOut.size() );
+    std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+    bytesIn.setByteArray( array.first, array.second );
 
     string resultStr = "";
     int type = dataIn.read();
@@ -312,4 +333,6 @@ void MarshallingSupportTest::testReadString32() {
         resultStr = MarshallingSupport::readString32( dataIn ) );
 
     CPPUNIT_ASSERT( testStr == resultStr );
+
+    delete [] array.first;
 }

@@ -335,7 +335,8 @@ void PropertiesTest::testStoreOutputStream() {
         myProps.store( &out, "A Header" );
         out.close();
 
-        ByteArrayInputStream in( out.toByteArray(), (int)out.size() );
+        std::pair<const unsigned char*, int> array = out.toByteArray();
+        ByteArrayInputStream in( array.first, array.second, true );
         myProps2.load( &in );
         in.close();
 
