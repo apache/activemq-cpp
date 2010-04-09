@@ -18,13 +18,16 @@
 #ifndef _DECAF_INTERNAL_NET_TCP_TCPSOCKETOUTPUTSTREAM_H_
 #define _DECAF_INTERNAL_NET_TCP_TCPSOCKETOUTPUTSTREAM_H_
 
+#include <decaf/util/Config.h>
+
 #include <decaf/io/OutputStream.h>
-#include <decaf/net/Socket.h>
 
 namespace decaf {
 namespace internal {
 namespace net {
 namespace tcp {
+
+    class TcpSocket;
 
     /**
      * Output stream for performing write operations on a socket.
@@ -34,7 +37,7 @@ namespace tcp {
     class DECAF_API TcpSocketOutputStream : public decaf::io::OutputStream {
     private:
 
-        decaf::net::Socket::SocketHandle socket;
+        TcpSocket* socket;
         volatile bool closed;
 
     public:
@@ -43,9 +46,9 @@ namespace tcp {
          * Create a new instance of a Socket OutputStream class.
          *
          * @param socket
-         *      The socket handle to use to write out the data.
+         *      The socket to use to write out the data.
          */
-        TcpSocketOutputStream( decaf::net::Socket::SocketHandle socket );
+        TcpSocketOutputStream( TcpSocket* socket );
 
         virtual ~TcpSocketOutputStream();
 

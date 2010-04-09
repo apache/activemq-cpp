@@ -34,7 +34,7 @@ namespace net {
          * Disable Nagle's algorithm for this connection. Written data to the network is not
          * buffered pending acknowledgment of previously written data.  Valid for TCP sockets.
          */
-        static const int TCP_NODELAY;
+        static const int SOCKET_OPTION_TCP_NODELAY;
 
         /**
          * Fetch the local address binding of a socket (this option cannot be "set" only "gotten",
@@ -45,13 +45,13 @@ namespace net {
          * specify its return address to the peer (for a Socket or DatagramSocket). The parameter
          * of this option is an InetAddress.
          */
-        static const int SO_BINDADDR;
+        static const int SOCKET_OPTION_BINDADDR;
 
         /**
          * Sets SO_REUSEADDR for a socket. This is used only for MulticastSockets in decaf, and it is
          * set by default for MulticastSockets.
          */
-        static const int SO_REUSEADDR;
+        static const int SOCKET_OPTION_REUSEADDR;
 
         /**
          * Sets SO_BROADCAST for a socket. This option enables and disables the ability of the process
@@ -59,7 +59,7 @@ namespace net {
          * that support the concept of a broadcast message (e.g. Ethernet, token ring, etc.), and it
          * is set by default for DatagramSockets.
          */
-        static const int SO_BROADCAST;
+        static const int SOCKET_OPTION_BROADCAST;
 
         /**
          * Set which outgoing interface on which to send multicast packets. Useful on hosts with
@@ -68,26 +68,26 @@ namespace net {
          *
          * Valid for Multicast: DatagramSocketImpl.
          */
-        static const int IP_MULTICAST_IF;
+        static const int SOCKET_OPTION_IP_MULTICAST_IF;
 
         /**
          * Same as above. This option is introduced so that the behaviour with IP_MULTICAST_IF will
          * be kept the same as before, while this new option can support setting outgoing interfaces
          * with either IPv4 and IPv6 addresses.
          */
-        static const int IP_MULTICAST_IF2;
+        static const int SOCKET_OPTION_IP_MULTICAST_IF2;
 
         /**
          * This option enables or disables local loopback of multicast datagrams. This option is enabled
          * by default for Multicast Sockets.
          */
-        static const int IP_MULTICAST_LOOP;
+        static const int SOCKET_OPTION_IP_MULTICAST_LOOP;
 
         /**
          * This option sets the type-of-service or traffic class field in the IP header for a TCP or
          * UDP socket.
          */
-        static const int IP_TOS;
+        static const int SOCKET_OPTION_IP_TOS;
 
         /**
          * Specify a linger-on-close timeout. This option disables/enables immediate return from a
@@ -100,13 +100,13 @@ namespace net {
          *
          * Valid only for TCP: SocketImpl
          */
-        static const int SO_LINGER;
+        static const int SOCKET_OPTION_LINGER;
 
         /**
          * Set a timeout on blocking Socket operations.  The option must be set prior to entering a
          * blocking operation to take effect.
          */
-        static const int SO_TIMEOUT;
+        static const int SOCKET_OPTION_TIMEOUT;
 
         /**
          * Set a hint the size of the underlying buffers used by the platform for outgoing network
@@ -115,7 +115,7 @@ namespace net {
          * must return the size of the buffer actually used by the platform when sending out data
          * on this socket. Valid for all sockets: SocketImpl, DatagramSocketImpl
          */
-        static const int SO_SNDBUF;
+        static const int SOCKET_OPTION_SNDBUF;
 
         /**
          * Set a hint the size of the underlying buffers used by the platform for incoming network
@@ -124,7 +124,7 @@ namespace net {
          * this must return the size of the buffer actually used by the platform when receiving in
          * data on this socket. Valid for all sockets: SocketImpl, DatagramSocketImpl.
          */
-        static const int SO_RCVBUF;
+        static const int SOCKET_OPTION_RCVBUF;
 
         /**
          * When the keepalive option is set for a TCP socket and no data has been exchanged across
@@ -139,14 +139,14 @@ namespace net {
          *
          * Valid only for TCP socket: SocketImpl
          */
-        static const int SO_KEEPALIVE;
+        static const int SOCKET_OPTION_KEEPALIVE;
 
         /**
          * When the OOBINLINE option is set, any TCP urgent data received on the socket will be
          * received through the socket input stream. When the option is disabled (which is the default)
          * urgent data is silently discarded.
          */
-        static const int SO_OOBINLINE;
+        static const int SOCKET_OPTION_OOBINLINE;
 
     public:
 

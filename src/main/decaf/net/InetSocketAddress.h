@@ -15,44 +15,27 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_SOCKETFACTORYTEST_H_
-#define _DECAF_NET_SOCKETFACTORYTEST_H_
+#ifndef _DECAF_NET_INETSOCKETADDRESS_H_
+#define _DECAF_NET_INETSOCKETADDRESS_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/Config.h>
 
-#include <decaf/net/Socket.h>
-#include <decaf/net/ServerSocket.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/lang/Thread.h>
+#include <decaf/net/SocketAddress.h>
 
-#include <sstream>
+#include <string>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
 
-    class SocketFactoryTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( SocketFactoryTest );
-        CPPUNIT_TEST( test );
-        CPPUNIT_TEST( testNoDelay );
-        CPPUNIT_TEST_SUITE_END();
-
+    class DECAF_API InetSocketAddress : public SocketAddress {
     public:
 
-        static const int DEFAULT_PORT;
+        InetSocketAddress();
 
-    public:
-
-        SocketFactoryTest() {}
-        virtual ~SocketFactoryTest() {}
-
-        void test();
-        void testNoDelay();
+        virtual ~InetSocketAddress();
 
     };
 
 }}
 
-#endif /*_DECAF_NET_SOCKETFACTORYTEST_H_*/
+#endif /* _DECAF_NET_INETSOCKETADDRESS_H_ */

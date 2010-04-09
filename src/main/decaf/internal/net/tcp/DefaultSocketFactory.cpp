@@ -44,7 +44,14 @@ DefaultSocketFactory::~DefaultSocketFactory() {
 Socket* DefaultSocketFactory::createSocket()
     throw( decaf::io::IOException ) {
 
-    return new TcpSocket();
+    try{
+
+        std::auto_ptr<Socket> theSocket( new Socket( new TcpSocket() ) );
+
+        return theSocket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,12 +69,13 @@ Socket* DefaultSocketFactory::createSocket( const std::string& hostname, int por
             throw SocketException( __FILE__, __LINE__, "valid port not provided" );
         }
 
-        std::auto_ptr<TcpSocket> tcpSocket( new TcpSocket() );
+        std::auto_ptr<SocketImpl> tcpSocket( new TcpSocket() );
+        std::auto_ptr<Socket> socket( new Socket( tcpSocket.release() ) );
 
         // Connect the socket.
-        tcpSocket->connect( hostname.c_str(), port );
+        socket->connect( hostname.c_str(), port );
 
-        return tcpSocket.release();
+        return socket.release();
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )

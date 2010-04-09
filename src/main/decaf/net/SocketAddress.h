@@ -15,44 +15,27 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_SOCKETFACTORYTEST_H_
-#define _DECAF_NET_SOCKETFACTORYTEST_H_
+#ifndef _DECAF_NET_SOCKETADDRESS_H_
+#define _DECAF_NET_SOCKETADDRESS_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/Config.h>
 
-#include <decaf/net/Socket.h>
-#include <decaf/net/ServerSocket.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/lang/Thread.h>
+namespace decaf {
+namespace net {
 
-#include <sstream>
-
-namespace decaf{
-namespace net{
-
-    class SocketFactoryTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( SocketFactoryTest );
-        CPPUNIT_TEST( test );
-        CPPUNIT_TEST( testNoDelay );
-        CPPUNIT_TEST_SUITE_END();
-
+    /**
+     * Base class for protocol specific Socket addresses.  These classes provide an
+     * immutable address object that is used by the Socket classes.
+     *
+     * @since 1.0
+     */
+    class DECAF_API SocketAddress {
     public:
 
-        static const int DEFAULT_PORT;
-
-    public:
-
-        SocketFactoryTest() {}
-        virtual ~SocketFactoryTest() {}
-
-        void test();
-        void testNoDelay();
+        virtual ~SocketAddress() {}
 
     };
 
 }}
 
-#endif /*_DECAF_NET_SOCKETFACTORYTEST_H_*/
+#endif /* _DECAF_NET_SOCKETADDRESS_H_ */
