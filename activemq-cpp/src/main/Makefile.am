@@ -545,7 +545,12 @@ cc_sources = \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
+    decaf/net/Inet4Address.cpp \
+    decaf/net/Inet6Address.cpp \
+    decaf/net/InetAddress.cpp \
+    decaf/net/InetSocketAddress.cpp \
     decaf/net/ServerSocket.cpp \
+    decaf/net/Socket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
     decaf/net/SocketImpl.cpp \
@@ -1242,16 +1247,22 @@ h_sources = \
     decaf/net/BindException.h \
     decaf/net/ConnectException.h \
     decaf/net/HttpRetryException.h \
+    decaf/net/Inet4Address.h \
+    decaf/net/Inet6Address.h \
+    decaf/net/InetAddress.h \
+    decaf/net/InetSocketAddress.h \
     decaf/net/MalformedURLException.h \
     decaf/net/NoRouteToHostException.h \
     decaf/net/PortUnreachableException.h \
     decaf/net/ProtocolException.h \
     decaf/net/ServerSocket.h \
     decaf/net/Socket.h \
+    decaf/net/SocketAddress.h \
     decaf/net/SocketError.h \
     decaf/net/SocketException.h \
     decaf/net/SocketFactory.h \
     decaf/net/SocketImpl.h \
+    decaf/net/SocketImplFactory.h \
     decaf/net/SocketOptions.h \
     decaf/net/SocketTimeoutException.h \
     decaf/net/URI.h \

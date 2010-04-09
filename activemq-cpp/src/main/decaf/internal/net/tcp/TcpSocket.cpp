@@ -21,6 +21,33 @@
 #include <decaf/internal/net/tcp/TcpSocketOutputStream.h>
 
 #include <decaf/net/SocketError.h>
+#include <decaf/net/SocketOptions.h>
+#include <decaf/lang/Character.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <stdlib.h>
+#include <string>
+#include <stdio.h>
+#include <iostream>
+
+#include <apr_portable.h>
+
+#if !defined(HAVE_WINSOCK2_H)
+    #include <sys/select.h>
+    #include <sys/socket.h>
+#else
+    #include <Winsock2.h>
+#endif
+
+#ifdef HAVE_SYS_IOCTL_H
+#define BSD_COMP /* Get FIONREAD on Solaris2. */
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif
+
+// Pick up FIONREAD on Solaris 2.5.
+#ifdef HAVE_SYS_FILIO_H
+#include <sys/filio.h>
+#endif
 
 using namespace decaf;
 using namespace decaf::internal;
@@ -29,21 +56,16 @@ using namespace decaf::internal::net::tcp;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
   : socketHandle( NULL ),
     inputStream( NULL ),
     outputStream( NULL ),
-    connectTimeout( -1 ) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket( SocketHandle socketHandle )
- :  socketHandle( socketHandle ),
-    inputStream( new TcpSocketInputStream( socketHandle ) ),
-    outputStream( new TcpSocketOutputStream( socketHandle ) ),
-    connectTimeout( -1 ) {
+    inputShutdown( false ),
+    outputShutdown( false ),
+    closed( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,33 +93,139 @@ TcpSocket::~TcpSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStream* TcpSocket::getInputStream(){
+void TcpSocket::create() throw( decaf::io::IOException ) {
+
+    try{
+
+        if( this->socketHandle != NULL ) {
+            throw IOException(
+                __FILE__, __LINE__, "The System level socket has already been created." );
+        }
+
+        // Create the actual socket.
+        checkResult( apr_socket_create( &socketHandle, AF_INET, SOCK_STREAM,
+                                        APR_PROTO_TCP, apr_pool.getAprPool() ) );
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::accept( SocketImpl* socket ) throw( decaf::io::IOException ) {
+
+    try{
+
+        if( socket == NULL ) {
+            throw IOException(
+                __FILE__, __LINE__, "SocketImpl instance passed was null." );
+        }
+
+        TcpSocket* impl = dynamic_cast<TcpSocket*>( socket );
+        if( impl == NULL ) {
+            throw IOException(
+                __FILE__, __LINE__, "SocketImpl instance passed was not a TcpSocket." );
+        }
+
+        apr_status_t result = APR_SUCCESS;
+
+        // Loop to ignore any signal interruptions that occur during the operation.
+        do {
+            result = apr_socket_accept( &impl->socketHandle, socketHandle, apr_pool.getAprPool() );
+        } while( result == APR_EINTR );
+
+        if( result != APR_SUCCESS ) {
+            throw SocketException(
+                  __FILE__, __LINE__,
+                  "ServerSocket::accept - %s",
+                  SocketError::getErrorString().c_str() );
+        }
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InputStream* TcpSocket::getInputStream() throw( IOException ) {
     return inputStream;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStream* TcpSocket::getOutputStream(){
+OutputStream* TcpSocket::getOutputStream() throw( IOException ) {
     return outputStream;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::connect( const char* host, int port ) throw ( SocketException ) {
+void TcpSocket::bind( const std::string& ipaddress, int port )
+    throw( decaf::io::IOException ) {
+
+    try{
+
+        const char* host = ipaddress.empty() ? NULL : ipaddress.c_str();
+
+        // Create the Address Info for the Socket
+        apr_status_t result = apr_sockaddr_info_get(
+            &localAddress, host, APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() );
+
+        if( result != APR_SUCCESS ) {
+            socketHandle = NULL;
+            throw SocketException(
+                  __FILE__, __LINE__,
+                  SocketError::getErrorString().c_str() );
+        }
+
+        // Set the socket to reuse the address and default as blocking
+        apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, 1 );
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
+        apr_socket_timeout_set( socketHandle, -1 );
+
+        // Bind to the Socket, this may be where we find out if the port is in use.
+        result = apr_socket_bind( socketHandle, localAddress );
+
+        if( result != APR_SUCCESS ) {
+            close();
+            throw SocketException(
+                  __FILE__, __LINE__,
+                  "ServerSocket::bind - %s",
+                  SocketError::getErrorString().c_str() );
+        }
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::connect( const std::string& hostname, int port, int timeout )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
 
         if( isConnected() ) {
             throw SocketException( __FILE__, __LINE__,
-                "Socket::connect - Socket already connected.  host: %s, port: %d", host, port );
+                "Socket::connect - Socket already connected.  host: %s, port: %d", hostname.c_str(), port );
+        }
+
+        if( port < 0 || port > 65535 ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "Given port is out of range: %d", port );
+        }
+
+        if( timeout < 0 ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "Given timeout is out of range: %d", timeout );
+        }
+
+        if( this->socketHandle == NULL ) {
+            throw IOException(
+                __FILE__, __LINE__, "The socket was not yet created." );
         }
 
         // Create the Address data
         checkResult( apr_sockaddr_info_get(
-            &socketAddress, host, APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() ) );
-
-        // Create the actual socket.
-        checkResult( apr_socket_create(
-            &socketHandle, socketAddress->family, SOCK_STREAM,
-            APR_PROTO_TCP, apr_pool.getAprPool() ) );
+            &remoteAddress, hostname.c_str(), APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() ) );
 
         // To make blocking-with-timeout sockets, we have to set it to
         // 'APR_SO_NONBLOCK==1(on) and timeout>0'. On Unix, we have no
@@ -111,19 +239,19 @@ void TcpSocket::connect( const char* host, int port ) throw ( SocketException ) 
         // If we have a connection timeout specified, temporarily set the socket to
         // non-blocking so that we can timeout the connect operation.  We'll restore
         // to blocking mode right after we connect.
-        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (this->connectTimeout > 0 ) ? 1 : 0 );
-        apr_socket_timeout_set( socketHandle, connectTimeout );
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (timeout > 0 ) ? 1 : 0 );
+        apr_socket_timeout_set( socketHandle, timeout );
 
         // try to Connect to the provided address.
-        checkResult(apr_socket_connect( socketHandle, socketAddress ));
+        checkResult(apr_socket_connect( socketHandle, remoteAddress ));
 
         // Now that we are connected, we want to go back to blocking.
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
         apr_socket_timeout_set( socketHandle, -1 );
 
         // Create an input/output stream for this socket.
-        inputStream = new TcpSocketInputStream( socketHandle );
-        outputStream = new TcpSocketOutputStream( socketHandle );
+        inputStream = new TcpSocketInputStream( this );
+        outputStream = new TcpSocketOutputStream( this );
 
     } catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -138,9 +266,116 @@ void TcpSocket::connect( const char* host, int port ) throw ( SocketException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string TcpSocket::getLocalAddress() const {
+
+    if( !isClosed() ) {
+        SocketAddress addr;
+        checkResult( apr_socket_addr_get( &addr, APR_LOCAL, this->socketHandle ) );
+        char ipStr[20] = {0};
+        checkResult( apr_sockaddr_ip_getbuf( ipStr, 20, addr ) );
+
+        return std::string( ipStr, 20 );
+    }
+
+    return "0.0.0.0";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::listen( int backlog ) throw( decaf::io::IOException ) {
+
+    try{
+
+        if( isClosed() ){
+            throw IOException(
+                __FILE__, __LINE__, "The stream is closed" );
+        }
+
+        // Setup the listen for incoming connection requests
+        apr_status_t result = apr_socket_listen( socketHandle, backlog );
+
+        if( result != APR_SUCCESS ) {
+            close();
+            throw SocketException(
+                __FILE__, __LINE__, "Error on Bind - %s",
+                SocketError::getErrorString().c_str() );
+        }
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpSocket::available() throw( decaf::io::IOException ) {
+
+    if( isClosed() ){
+        throw IOException(
+            __FILE__, __LINE__, "The stream is closed" );
+    }
+
+    // Convert to an OS level socket.
+    apr_os_sock_t oss;
+    apr_os_sock_get( (apr_os_sock_t*)&oss, socketHandle );
+
+// The windows version
+#if defined(HAVE_WINSOCK2_H)
+
+    unsigned long numBytes = 0;
+
+    if( ::ioctlsocket( oss, FIONREAD, &numBytes ) == SOCKET_ERROR ){
+        throw SocketException( __FILE__, __LINE__, "ioctlsocket failed" );
+    }
+
+    return numBytes;
+
+#else // !defined(HAVE_WINSOCK2_H)
+
+    // If FIONREAD is defined - use ioctl to find out how many bytes
+    // are available.
+    #if defined(FIONREAD)
+
+        int numBytes = 0;
+        if( ::ioctl( oss, FIONREAD, &numBytes ) != -1 ){
+            return numBytes;
+        }
+
+    #endif
+
+    // If we didn't get anything we can use select.  This is a little
+    // less functional.  We will poll on the socket - if there is data
+    // available, we'll return 1, otherwise we'll return zero.
+    #if defined(HAVE_SELECT)
+
+        fd_set rd;
+        FD_ZERO(&rd);
+        FD_SET( oss, &rd );
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+        int returnCode = ::select( oss+1, &rd, NULL, NULL, &tv );
+        if( returnCode == -1 ){
+            throw IOException(
+                __FILE__, __LINE__,
+                SocketError::getErrorString().c_str() );
+        }
+        return (returnCode == 0) ? 0 : 1;
+
+    #else
+
+        return 0;
+
+    #endif /* HAVE_SELECT */
+
+#endif // !defined(HAVE_WINSOCK2_H)
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::close() throw( decaf::io::IOException ) {
 
     try{
+
+        this->closed = true;
+
         // Destroy the input stream.
         if( inputStream != NULL ){
             inputStream->close();
@@ -165,172 +400,84 @@ void TcpSocket::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSoLinger() const throw( SocketException ){
+void TcpSocket::shutdownInput() throw( decaf::io::IOException ) {
 
-   try{
-        int value = 0;
-        checkResult( apr_socket_opt_get( socketHandle, APR_SO_LINGER, &value ) );
-        return value;
+    if( isClosed() ){
+        throw IOException(
+            __FILE__, __LINE__, "The stream is closed" );
     }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+
+    this->inputShutdown = true;
+    apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READ );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
+void TcpSocket::shutdownOutput() throw( decaf::io::IOException ) {
+
+    if( isClosed() ){
+        throw IOException(
+            __FILE__, __LINE__, "The stream is closed" );
+    }
+
+    this->outputShutdown = true;
+    apr_socket_shutdown( socketHandle, APR_SHUTDOWN_WRITE );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
 
     try{
-        checkResult( apr_socket_opt_set( socketHandle, APR_SO_LINGER, dolinger ) );
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__, "The Socket is closed." );
+        }
+
+        apr_int32_t aprId = 0;
+        apr_int32_t value = 0;
+
+        if( option == SocketOptions::SOCKET_OPTION_TIMEOUT ) {
+
+            // Time in APR on socket is stored in microseconds.
+            apr_interval_time_t tvalue = 0;
+            checkResult( apr_socket_timeout_get( socketHandle, &tvalue ) );
+            return (int)( tvalue / 1000 );
+
+        } else {
+        }
+
+        checkResult( apr_socket_opt_get( socketHandle, aprId, &value ) );
+
+        return (int)value;
     }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getKeepAlive() const throw( SocketException ){
+void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException ) {
 
     try{
-        int value = 0;
-        checkResult( apr_socket_opt_get( socketHandle, APR_SO_KEEPALIVE, &value ) );
-        return value != 0;
+
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__, "The Socket is closed." );
+        }
+
+        apr_int32_t aprId = 0;
+
+        if( option == SocketOptions::SOCKET_OPTION_TIMEOUT ) {
+
+            // Time in APR for sockets is in microseconds so multiply by 1000.
+            checkResult( apr_socket_timeout_set( socketHandle, value * 1000 ) );
+
+        } else {
+        }
+
+        checkResult( apr_socket_opt_set( socketHandle, aprId, (apr_int32_t)value ) );
     }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
-
-    try{
-        int value = keepAlive ? 1 : 0;
-        checkResult( apr_socket_opt_set( socketHandle, APR_SO_KEEPALIVE, value ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
-
-    try{
-        int value;
-        checkResult( apr_socket_opt_get( socketHandle, APR_SO_RCVBUF, &value ) );
-        return value;
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
-
-    try{
-        checkResult( apr_socket_opt_set( socketHandle, APR_SO_RCVBUF, size ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getReuseAddress() const throw( SocketException ){
-
-    try{
-        int value;
-        checkResult( apr_socket_opt_get( socketHandle, APR_SO_REUSEADDR, &value ) );
-        return value != 0;
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
-
-    try{
-        int value = reuse ? 1 : 0;
-        checkResult( apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, value ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSendBufferSize() const throw( SocketException ){
-
-    try{
-        int value;
-        checkResult( apr_socket_opt_get( socketHandle, APR_SO_SNDBUF, &value ) );
-        return value;
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
-
-    try{
-        checkResult( apr_socket_opt_set( socketHandle, APR_SO_SNDBUF, size ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException ) {
-
-    try{
-        // Time is in microseconds so multiply by 1000.
-        checkResult( apr_socket_timeout_set( socketHandle, millisecs * 1000 ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSoTimeout() const throw( SocketException ) {
-
-    try{
-        // Time is in microseconds so divide by 1000.
-        apr_interval_time_t value = 0;
-        checkResult( apr_socket_timeout_get( socketHandle, &value ) );
-        return (int)( value / 1000 );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getTcpNoDelay() const throw ( lang::Exception ) {
-
-    try{
-        int value;
-        checkResult( apr_socket_opt_get( socketHandle, APR_TCP_NODELAY, &value ) );
-        return value != 0;
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setTcpNoDelay( bool value ) throw ( lang::Exception ) {
-
-    try{
-        int ivalue = value ? 1 : 0;
-        checkResult( apr_socket_opt_set( socketHandle, APR_TCP_NODELAY, ivalue ) );
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setConnectTimeout( int timeout ) throw( decaf::net::SocketException ) {
-    this->connectTimeout = timeout;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getConnectTimeout() const throw( decaf::net::SocketException ) {
-    return this->connectTimeout;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -341,4 +488,149 @@ void TcpSocket::checkResult( apr_status_t value ) const throw ( SocketException 
             __FILE__, __LINE__,
             SocketError::getErrorString().c_str() );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpSocket::read( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
+
+    try{
+        if( this->isClosed() ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
+        }
+
+        if( this->inputShutdown == true ) {
+            return -1;
+        }
+
+        if( length == 0 ) {
+            return 0;
+        }
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__,
+                "TcpSocketInputStream::read - Buffer passed is Null" );
+        }
+
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        apr_size_t aprSize = (apr_size_t)length;
+        apr_status_t result = APR_SUCCESS;
+
+        // Read data from the socket, size on input is size of buffer, when done
+        // size is the number of bytes actually read, can be <= bufferSize.
+        result = apr_socket_recv( socketHandle, (char*)buffer + offset, &aprSize );
+
+        // Check for EOF, on windows we only get size==0 so check that to, if we
+        // were closed though then we throw an IOException so the caller knows we
+        // aren't usable anymore.
+        if( ( APR_STATUS_IS_EOF( result ) || aprSize == 0 ) && !closed ) {
+            this->inputShutdown = true;
+            return -1;
+        }
+
+        if( isClosed() ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "decaf::io::TcpSocketInputStream::read - The connection is broken" );
+        }
+
+        if( result != APR_SUCCESS ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "decaf::net::TcpSocketInputStream::read - %s",
+                SocketError::getErrorString().c_str() );
+        }
+
+        return (int)aprSize;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::write( const unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
+
+    try{
+
+        if( length == 0 ) {
+            return;
+        }
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__,
+                "TcpSocketOutputStream::write - passed buffer is null" );
+        }
+
+        if( closed ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "TcpSocketOutputStream::write - This Stream has been closed." );
+        }
+
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        apr_size_t remaining = (apr_size_t)length;
+        apr_status_t result = APR_SUCCESS;
+
+        const unsigned char* lbuffer = buffer + offset;
+
+        while( remaining > 0 && !closed ) {
+            // On input remaining is the bytes to send, after return remaining
+            // is the amount actually sent.
+            result = apr_socket_send( socketHandle, (const char*)lbuffer, &remaining );
+
+            if( result != APR_SUCCESS || closed ) {
+                throw IOException(
+                    __FILE__, __LINE__,
+                    "decaf::net::TcpSocketOutputStream::write - %s",
+                    SocketError::getErrorString().c_str() );
+            }
+
+            // move us to next position to write, or maybe end.
+            lbuffer += remaining;
+            remaining = length - remaining;
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCHALL_THROW( IOException )
 }

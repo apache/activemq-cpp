@@ -18,23 +18,23 @@
 #include "SocketOptions.h"
 
 using namespace decaf;
-using namespace net;
+using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-const int SocketOptions::IP_MULTICAST_IF = 16;
-const int SocketOptions::IP_MULTICAST_IF2 = 31;
-const int SocketOptions::IP_MULTICAST_LOOP = 18;
-const int SocketOptions::IP_TOS = 3;
-const int SocketOptions::SO_BINDADDR = 15;
-const int SocketOptions::SO_BROADCAST = 32;
-const int SocketOptions::SO_KEEPALIVE = 8;
-const int SocketOptions::SO_LINGER = 128;
-const int SocketOptions::SO_OOBINLINE = 4099;
-const int SocketOptions::SO_RCVBUF = 4098;
-const int SocketOptions::SO_REUSEADDR = 4;
-const int SocketOptions::SO_SNDBUF = 4097;
-const int SocketOptions::SO_TIMEOUT = 4102;
-const int SocketOptions::TCP_NODELAY = 1;
+const int SocketOptions::SOCKET_OPTION_TCP_NODELAY = 1;
+const int SocketOptions::SOCKET_OPTION_BINDADDR = 2;
+const int SocketOptions::SOCKET_OPTION_REUSEADDR = 3;
+const int SocketOptions::SOCKET_OPTION_BROADCAST = 4;
+const int SocketOptions::SOCKET_OPTION_IP_MULTICAST_IF = 5;
+const int SocketOptions::SOCKET_OPTION_IP_MULTICAST_LOOP = 6;
+const int SocketOptions::SOCKET_OPTION_IP_MULTICAST_IF2 = 7;
+const int SocketOptions::SOCKET_OPTION_IP_TOS = 8;
+const int SocketOptions::SOCKET_OPTION_LINGER = 9;
+const int SocketOptions::SOCKET_OPTION_TIMEOUT = 10;
+const int SocketOptions::SOCKET_OPTION_SNDBUF = 11;
+const int SocketOptions::SOCKET_OPTION_RCVBUF = 12;
+const int SocketOptions::SOCKET_OPTION_KEEPALIVE = 13;
+const int SocketOptions::SOCKET_OPTION_OOBINLINE = 14;
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketOptions::~SocketOptions() {

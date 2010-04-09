@@ -18,15 +18,19 @@
 #ifndef _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
 #define _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
 
+#include <decaf/util/Config.h>
+
 #include <decaf/io/InputStream.h>
-#include <decaf/net/Socket.h>
-#include <decaf/lang/Exception.h>
+#include <decaf/io/IOException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf {
 namespace internal {
 namespace net {
 namespace tcp {
+
+    class TcpSocket;
 
     /**
      * Input stream for performing reads on a socket.  This class will only
@@ -37,16 +41,19 @@ namespace tcp {
     class DECAF_API TcpSocketInputStream : public decaf::io::InputStream {
     private:
 
-        decaf::net::Socket::SocketHandle socket;
+        TcpSocket* socket;
+
         bool closed;
 
     public:
 
         /**
-         * Constructor.
-         * @param socket the socket handle.
+         * Create a new InputStream to use for reading from the TCP/IP socket.
+         *
+         * @param socket
+         *      The parent SocketImpl for this stream.
          */
-        TcpSocketInputStream( decaf::net::Socket::SocketHandle socket );
+        TcpSocketInputStream( TcpSocket* socket );
 
         virtual ~TcpSocketInputStream();
 

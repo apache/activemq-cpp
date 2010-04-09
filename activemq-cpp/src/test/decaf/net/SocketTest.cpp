@@ -80,7 +80,7 @@ namespace {
                 server.close();
 
                 //socket->setSoTimeout( 10 );
-                socket->setSoLinger( false );
+                socket->setSoLinger( false, 0 );
                 numClients++;
 
                 synchronized(&mutex)
@@ -151,7 +151,7 @@ void SocketTest::testConnect() {
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect( "127.0.0.1", port );
-        client->setSoLinger( false );
+        client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -197,7 +197,7 @@ void SocketTest::testTx() {
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", port);
-        client->setSoLinger( false );
+        client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -252,7 +252,7 @@ void SocketTest::testTrx() {
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", port);
-        client->setSoLinger(false);
+        client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -306,7 +306,7 @@ void SocketTest::testRxFail() {
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", port);
-        client->setSoLinger( false );
+        client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -355,7 +355,7 @@ void SocketTest::testTrxNoDelay() {
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", port);
-        client->setSoLinger(false);
+        client->setSoLinger( false, 0 );
         client->setTcpNoDelay(true);
 
         CPPUNIT_ASSERT( client->getTcpNoDelay() == true );

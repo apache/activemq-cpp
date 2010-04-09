@@ -16,139 +16,365 @@
  */
 
 #include "ServerSocket.h"
-#include "SocketError.h"
+
+#include <decaf/net/SocketImpl.h>
+#include <decaf/net/Socket.h>
+#include <decaf/net/SocketOptions.h>
 
 #include <decaf/internal/net/tcp/TcpSocket.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <sys/types.h>
-#include <assert.h>
-#include <string>
+#include <memory>
 
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::net;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+using namespace decaf::internal;
+using namespace decaf::internal::net;
 using namespace decaf::internal::net::tcp;
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket() {
-    socketHandle = NULL;
+SocketImplFactory* ServerSocket::factory = NULL;
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocket::ServerSocket() : impl(NULL), created(false), closed(false), bound(false) {
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocket::ServerSocket( int port )
+    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+        impl(NULL), created(false), closed(false), bound(false) {
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
+
+    if( port < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Port value was invalid: %d", port );
+    }
+
+    this->setupSocketImpl( "", port, getDefaultBacklog() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocket::ServerSocket( int port, int backlog )
+    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+        impl(NULL), created(false), closed(false), bound(false) {
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
+
+    if( port < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Port value was invalid: %d", port );
+    }
+
+    this->setupSocketImpl( "", port, backlog );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocket::ServerSocket( const std::string& ipAddress, int port, int backlog )
+    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+        impl(NULL), created(false), closed(false), bound(false) {
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
+
+    if( port < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Port value was invalid: %d", port );
+    }
+
+    this->setupSocketImpl( ipAddress, port, backlog );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::~ServerSocket() {
-    // No shutdown, just close - dont want blocking destructor.
-    close();
+    try{
+        close();
+
+        delete this->impl;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const char* host, int port ) throw ( SocketException ) {
-    this->bind( host, port, SOMAXCONN );
+void ServerSocket::setupSocketImpl( const std::string ipAddress, int port, int backlog ) {
+
+    try{
+
+        this->impl->create();
+        this->created = true;
+
+        try {
+            this->impl->bind( ipAddress, port );
+            this->bound = true;
+            this->impl->listen( backlog > 0 ? backlog : getDefaultBacklog() );
+        } catch( IOException& ex ) {
+            close();
+            throw ex;
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const char* host,
-                         int port,
-                         int backlog ) throw ( SocketException ) {
+void ServerSocket::bind( const std::string& host, int port )
+    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) {
 
-    apr_status_t result = APR_SUCCESS;
+    try{
+        this->bind( host, port, getDefaultBacklog() );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::bind( const std::string& address, int port, int backlog )
+    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) {
+
+    checkClosed();
+
+    if( port < 0 || port > 65535 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Specified port value is out of range: %d", port );
+    }
 
     if( isBound() ) {
-        throw SocketException ( __FILE__, __LINE__,
-            "ServerSocket::bind - Socket already bound" );
+        throw IOException(
+            __FILE__, __LINE__, "ServerSocket is already bound." );
     }
 
-    // Verify the port value.
-    if( port <= 0 || port > 65535 ) {
-        throw SocketException(
-            __FILE__, __LINE__,
-            "ServerSocket::bind - Port out of range: %d", port );
+    try{
+
+        ensureCreated();
+
+        try {
+            this->impl->bind( address, port );
+            this->bound = true;
+            this->impl->listen( backlog > 0 ? backlog : getDefaultBacklog() );
+        } catch( IOException& ex ) {
+            close();
+            throw ex;
+        }
     }
-
-    // Create the Address Info for the Socket
-    result = apr_sockaddr_info_get(
-        &socketAddress, host, APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() );
-
-    if( result != APR_SUCCESS ) {
-        socketHandle = NULL;
-        throw SocketException(
-              __FILE__, __LINE__,
-              SocketError::getErrorString().c_str() );
-    }
-
-    // Create the socket.
-    result = apr_socket_create(
-        &socketHandle, APR_INET, SOCK_STREAM, APR_PROTO_TCP, apr_pool.getAprPool() );
-
-    if( result != APR_SUCCESS ) {
-        socketHandle = NULL;
-        throw SocketException(
-              __FILE__, __LINE__,
-              SocketError::getErrorString().c_str() );
-    }
-
-    // Set the socket to reuse the address and default as blocking
-    apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, 1 );
-    apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0);
-    apr_socket_timeout_set( socketHandle, -1 );
-
-    // Bind to the Socket, this may be where we find out if the port is in use.
-    result = apr_socket_bind( socketHandle, socketAddress );
-
-    if( result != APR_SUCCESS ) {
-        close();
-        throw SocketException(
-              __FILE__, __LINE__,
-              "ServerSocket::bind - %s",
-              SocketError::getErrorString().c_str() );
-    }
-
-    // Setup the listen for incoming connection requests
-    result = apr_socket_listen( socketHandle, backlog );
-
-    if( result != APR_SUCCESS ) {
-        close();
-        throw SocketException(
-              __FILE__, __LINE__,
-              "ServerSocket::bind - %s",
-              SocketError::getErrorString().c_str() );
-    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::close() throw ( lang::Exception ){
+void ServerSocket::close() throw ( decaf::io::IOException ){
 
-    if( isBound() ) {
-        apr_socket_close( socketHandle );
-        socketHandle = NULL;
+    try{
+        if( !this->closed ) {
+            this->closed = true;
+            this->impl->close();
+        }
     }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ServerSocket::isBound() const {
-    return this->socketHandle != NULL;
+    return this->bound;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* ServerSocket::accept() throw (SocketException)
-{
-    SocketHandle incoming = NULL;
-    apr_status_t result = APR_SUCCESS;
+bool ServerSocket::isClosed() const {
+    return this->closed;
+}
 
-    // Loop to ignore any signal interruptions that occur during the operation.
-    do {
-        result = apr_socket_accept( &incoming, socketHandle, apr_pool.getAprPool() );
-    } while( result == APR_EINTR );
+////////////////////////////////////////////////////////////////////////////////
+Socket* ServerSocket::accept() throw( decaf::io::IOException, decaf::net::SocketTimeoutException ) {
 
-    if( result != APR_SUCCESS ) {
-        std::cout << "Failed to accept New Connection:" << std::endl;
-        throw SocketException(
-              __FILE__, __LINE__,
-              "ServerSocket::accept - %s",
-              SocketError::getErrorString().c_str() );
+    checkClosed();
+
+    if( !isBound() ) {
+        throw IOException(
+            __FILE__, __LINE__, "The ServerSocket has not yet been bound." );
     }
 
-    return new TcpSocket( incoming );
+    try{
+        ensureCreated();
+        std::auto_ptr<Socket> newSocket( new Socket() );
+        this->implAccept( newSocket.get() );
+        return newSocket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::implAccept( Socket* socket ) throw( decaf::io::IOException ) {
+
+    try{
+        this->impl->accept( socket->impl );
+        socket->accepted();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ServerSocket::getReceiveBufferSize() const throw( SocketException ) {
+
+    checkClosed();
+
+    try{
+        ensureCreated();
+        return this->impl->getOption( SocketOptions::SOCKET_OPTION_RCVBUF );
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::setReceiveBufferSize( int size )
+    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+
+    checkClosed();
+
+    if( size <= 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Buffer size given was invalid: %d", size );
+    }
+
+    try{
+        ensureCreated();
+        this->impl->setOption( SocketOptions::SOCKET_OPTION_RCVBUF, size );
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ServerSocket::getReuseAddress() const throw( SocketException ) {
+
+    checkClosed();
+
+    try{
+        ensureCreated();
+        return this->impl->getOption( SocketOptions::SOCKET_OPTION_REUSEADDR ) == 0 ? false : true;
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::setReuseAddress( bool reuse ) throw( SocketException ) {
+
+    checkClosed();
+
+    try{
+        ensureCreated();
+        this->impl->setOption( SocketOptions::SOCKET_OPTION_REUSEADDR, reuse ? 1 : 0 );
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ServerSocket::getSoTimeout() const throw( SocketException ) {
+
+    checkClosed();
+
+    try{
+        ensureCreated();
+        return this->impl->getOption( SocketOptions::SOCKET_OPTION_TIMEOUT );
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::setSoTimeout( int timeout )
+    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+
+    checkClosed();
+
+    if( timeout < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Socket timeout given was invalid: %d", timeout );
+    }
+
+    try{
+        ensureCreated();
+        this->impl->setOption( SocketOptions::SOCKET_OPTION_TIMEOUT, timeout );
+    }
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::setSocketImplFactory( SocketImplFactory* factory )
+    throw( decaf::io::IOException,
+           decaf::net::SocketException ) {
+
+    if( Socket::factory != NULL ) {
+        throw SocketException(
+            __FILE__, __LINE__, "A SocketInplFactory was already set." );
+    }
+
+    Socket::factory = factory;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ServerSocket::toString() const {
+
+    std::ostringstream str;
+
+    str << "ServerSocket[";
+
+    if( !isBound() ) {
+        str << "unbound]";
+    } else {
+
+    }
+
+    return str.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::checkClosed() const throw( decaf::io::IOException ) {
+    if( this->closed ) {
+        throw IOException( __FILE__, __LINE__, "ServerSocket already closed." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocket::ensureCreated() const throw( decaf::io::IOException ) {
+
+    try{
+        if( !this->created ) {
+            this->impl->create();
+            this->created = true;
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ServerSocket::getDefaultBacklog() {
+    return 50;
 }

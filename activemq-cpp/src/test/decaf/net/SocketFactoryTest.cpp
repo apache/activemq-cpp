@@ -20,6 +20,10 @@
 #include <decaf/util/Properties.h>
 #include <decaf/net/SocketFactory.h>
 
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+
 #include <memory>
 
 using namespace decaf;
@@ -27,6 +31,104 @@ using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
+
+////////////////////////////////////////////////////////////////////////////////
+const int SocketFactoryTest::DEFAULT_PORT = 23232;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace{
+
+    class MyServerThread : public lang::Thread{
+    private:
+
+        bool done;
+        int numClients;
+        std::string lastMessage;
+
+    public:
+
+        util::concurrent::Mutex mutex;
+
+    public:
+
+        MyServerThread(){
+            done = false;
+            numClients = 0;
+        }
+        virtual ~MyServerThread(){
+            stop();
+        }
+
+        std::string getLastMessage(){
+            return lastMessage;
+        }
+
+        int getNumClients(){
+            return numClients;
+        }
+
+        virtual void stop(){
+            done = true;
+        }
+
+        virtual void run(){
+            try{
+                unsigned char buf[1000];
+
+                ServerSocket server;
+                server.bind( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT );
+
+                net::Socket* socket = server.accept();
+                server.close();
+
+                socket->setSoLinger( false, 0 );
+
+                synchronized(&mutex)
+                {
+                    numClients++;
+                    mutex.notifyAll();
+                }
+
+                while( !done && socket != NULL ){
+
+                    io::InputStream* stream = socket->getInputStream();
+                    memset( buf, 0, 1000 );
+                    try{
+                        if( stream->read( buf, 1000, 0, 1000 ) == -1 ) {
+                            done = true;
+                            continue;
+                        }
+
+                        lastMessage = (char*)buf;
+
+                        if( strcmp( (char*)buf, "reply" ) == 0 ){
+                            io::OutputStream* output = socket->getOutputStream();
+                            output->write( (unsigned char*)"hello", (int)strlen("hello"), 0, (int)strlen("hello") );
+                        }
+
+                    }catch( io::IOException& ex ){
+                        done = true;
+                    }
+                }
+
+                socket->close();
+                delete socket;
+
+                numClients--;
+
+                synchronized(&mutex) {
+                    mutex.notifyAll();
+                }
+
+            }catch( io::IOException& ex ){
+                printf("%s\n", ex.getMessage().c_str() );
+                CPPUNIT_ASSERT( false );
+            }catch( ... ){
+                CPPUNIT_ASSERT( false );
+            }
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void SocketFactoryTest::test()
@@ -39,9 +141,9 @@ void SocketFactoryTest::test()
         Thread::sleep( 500 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
-        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", port ) );
+        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
 
-        client->setSoLinger( 0 );
+        client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
         {
@@ -88,9 +190,9 @@ void SocketFactoryTest::testNoDelay()
         Thread::sleep( 40 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
-        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", port ) );
+        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
 
-        client->setSoLinger( 0 );
+        client->setSoLinger( false, 0 );
         client->setTcpNoDelay( true );
 
         CPPUNIT_ASSERT( client->getTcpNoDelay() == true );

@@ -15,38 +15,11 @@
  * limitations under the License.
  */
 
-#include <decaf/util/Config.h>
-
-#if !defined(HAVE_WINSOCK2_H)
-    #include <sys/select.h>
-    #include <sys/socket.h>
-#else
-    #include <Winsock2.h>
-#endif
-
-#ifdef HAVE_SYS_IOCTL_H
-#define BSD_COMP /* Get FIONREAD on Solaris2. */
-#include <sys/ioctl.h>
-#include <unistd.h>
-#endif
-
-// Pick up FIONREAD on Solaris 2.5.
-#ifdef HAVE_SYS_FILIO_H
-#include <sys/filio.h>
-#endif
-
 #include <decaf/internal/net/tcp/TcpSocketInputStream.h>
-#include <decaf/net/SocketError.h>
+
 #include <decaf/net/Socket.h>
 #include <decaf/io/IOException.h>
-#include <decaf/lang/Character.h>
-#include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <stdlib.h>
-#include <string>
-#include <stdio.h>
-#include <iostream>
-
-#include <apr_portable.h>
+#include <decaf/internal/net/tcp/TcpSocket.h>
 
 using namespace decaf;
 using namespace decaf::net;
@@ -60,107 +33,53 @@ using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocketInputStream::TcpSocketInputStream( decaf::net::Socket::SocketHandle socket ) : InputStream() {
-    this->socket = socket;
-    this->closed = false;
+TcpSocketInputStream::TcpSocketInputStream( TcpSocket* socket ) :
+    InputStream(), socket( socket ), closed( false ) {
+
+    if( socket == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "TcpSocket instance passed was NULL." );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocketInputStream::~TcpSocketInputStream(){}
+TcpSocketInputStream::~TcpSocketInputStream() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketInputStream::close() throw( decaf::io::IOException ){
+void TcpSocketInputStream::close() throw( decaf::io::IOException ) {
     this->closed = true;
+    this->socket->close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int TcpSocketInputStream::available() const throw ( io::IOException ){
 
-    // Check for a closed call from socket class, if closed then this read fails.
-    if( closed ){
+    if( this->closed ){
         throw IOException(
-            __FILE__, __LINE__,
-            "decaf::io::TcpSocketInputStream::available - The stream is closed" );
+            __FILE__, __LINE__, "The stream is closed" );
     }
 
-    // Convert to an OS level socket.
-    apr_os_sock_t oss;
-    apr_os_sock_get( (apr_os_sock_t*)&oss, socket );
-
-// The windows version
-#if defined(HAVE_WINSOCK2_H)
-
-    unsigned long numBytes = 0;
-
-    if( ::ioctlsocket( oss, FIONREAD, &numBytes ) == SOCKET_ERROR ){
-        throw SocketException( __FILE__, __LINE__, "ioctlsocket failed" );
-    }
-
-    return numBytes;
-
-#else // !defined(HAVE_WINSOCK2_H)
-
-    // If FIONREAD is defined - use ioctl to find out how many bytes
-    // are available.
-    #if defined(FIONREAD)
-
-        int numBytes = 0;
-        if( ::ioctl( oss, FIONREAD, &numBytes ) != -1 ){
-            return numBytes;
-        }
-
-    #endif
-
-    // If we didn't get anything we can use select.  This is a little
-    // less functional.  We will poll on the socket - if there is data
-    // available, we'll return 1, otherwise we'll return zero.
-    #if defined(HAVE_SELECT)
-
-        fd_set rd;
-        FD_ZERO(&rd);
-        FD_SET( oss, &rd );
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        int returnCode = ::select( oss+1, &rd, NULL, NULL, &tv );
-        if( returnCode == -1 ){
-            throw IOException(
-                __FILE__, __LINE__,
-                SocketError::getErrorString().c_str() );
-        }
-        return (returnCode == 0) ? 0 : 1;
-
-    #else
-
-        return 0;
-
-    #endif /* HAVE_SELECT */
-
-#endif // !defined(HAVE_WINSOCK2_H)
+    return this->socket->available();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int TcpSocketInputStream::doReadByte() throw ( IOException ){
 
-    // Check for a closed call from socket class, if closed then this read fails.
-    if( closed ){
+    if( this->closed ){
         throw IOException(
-            __FILE__, __LINE__,
-            "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
+            __FILE__, __LINE__, "The stream is closed" );
     }
 
-    apr_status_t result = APR_SUCCESS;
-    char c;
-    apr_size_t size = 1;
+    try{
 
-    result = apr_socket_recv( socket, &c, &size );
-
-    if( ( size != sizeof(c) && !closed ) || result != APR_SUCCESS ){
-        throw IOException( __FILE__, __LINE__,
-            "activemq::io::TcpSocketInputStream::read - failed reading a byte");
+        unsigned char buffer[1];
+        int result = this->socket->read( buffer, 1, 0, 1 );
+        return result == -1 ? result : buffer[0];
     }
-
-    return c;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,75 +88,40 @@ int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, i
             decaf::lang::exceptions::IndexOutOfBoundsException,
             decaf::lang::exceptions::NullPointerException ) {
 
-    // Check for a closed call from socket class, if closed then this read fails.
     if( closed ){
         throw IOException(
-            __FILE__, __LINE__,
-            "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
-    }
-
-    if( length == 0 ) {
-        return 0;
+            __FILE__, __LINE__, "The stream is closed" );
     }
 
     if( buffer == NULL ) {
         throw NullPointerException(
-            __FILE__, __LINE__,
-            "TcpSocketInputStream::read - Buffer passed is Null" );
+            __FILE__, __LINE__, "Buffer passed was NULL." );
     }
 
-    if( size < 0 ) {
-        throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    try{
+        return this->socket->read( buffer, size, offset, length );
     }
-
-    if( offset > size || offset < 0 ) {
-        throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
-    }
-
-    if( length < 0 || length > size - offset ) {
-        throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
-    }
-
-    apr_size_t aprSize = (apr_size_t)length;
-    apr_status_t result = APR_SUCCESS;
-
-    // Read data from the socket, size on input is size of buffer, when done
-    // size is the number of bytes actually read, can be <= bufferSize.
-    result = apr_socket_recv( socket, (char*)buffer + offset, &aprSize );
-
-    // Check for EOF, on windows we only get size==0 so check that to, if we
-    // were closed though then we throw an IOException so the caller knows we
-    // aren't usable anymore.
-    if( ( APR_STATUS_IS_EOF( result ) || aprSize == 0 ) && !closed ) {
-        return -1;
-    }
-
-    // Check for a closed call from socket class, if closed then this read fails.
-    if( closed ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "decaf::io::TcpSocketInputStream::read - The connection is broken" );
-    }
-
-    // Check for error.
-    if( result != APR_SUCCESS ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "decaf::net::TcpSocketInputStream::read - %s",
-            SocketError::getErrorString().c_str() );
-    }
-
-    return (int)aprSize;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long TcpSocketInputStream::skip( long long num DECAF_UNUSED )
-    throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+long long TcpSocketInputStream::skip( long long num )
+    throw ( IOException, UnsupportedOperationException ) {
 
-    throw lang::exceptions::UnsupportedOperationException(
-        __FILE__, __LINE__,
-        "TcpSocketInputStream::skip() method is not supported");
+    try{
+
+        if( num == 0 ) {
+            return 0;
+        }
+
+        return InputStream::skip( num );
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( UnsupportedOperationException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

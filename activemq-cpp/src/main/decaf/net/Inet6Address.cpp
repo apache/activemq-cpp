@@ -15,34 +15,15 @@
  * limitations under the License.
  */
 
-#include "SocketImpl.h"
-
-#include <decaf/lang/Integer.h>
+#include "Inet6Address.h"
 
 using namespace decaf;
 using namespace decaf::net;
-using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::SocketImpl() : port(0), localPort(0), address() {
+Inet6Address::Inet6Address() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::~SocketImpl() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string SocketImpl::toString() const {
-
-    std::string result = std::string( "Socket[addr=" ) + this->address +
-                         ",port=" + Integer::toString( this->port ) + "]";
-
-    return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void SocketImpl::sendUrgentData( int data ) throw( decaf::io::IOException ) {
-
-    throw decaf::io::IOException(
-        __FILE__, __LINE__, "Urgent Data not supported by this implementation." );
+Inet6Address::~Inet6Address() {
 }

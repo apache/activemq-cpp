@@ -41,7 +41,8 @@ namespace net {
     private:
 
         int port;
-        std::string hostname;
+        int localPort;
+        std::string address;
 
     public:
 
@@ -49,7 +50,15 @@ namespace net {
 
         virtual ~SocketImpl();
 
-    protected:
+    public:
+
+        /**
+         * Creates the underlying platform Socket data structures which allows for
+         * Socket options to be applied.  The created socket is in an unconnected state.
+         *
+         * @throws IOException if an I/O error occurs while attempting this operation.
+         */
+        virtual void create() throw( decaf::io::IOException ) = 0;
 
         /**
          * Accepts a new connection on the given Socket.
@@ -68,11 +77,15 @@ namespace net {
          *      The name of the host to connect to, or IP address.
          * @param port
          *      The port number on the host to connect to.
+         * @param timeout
+         *      Time in milliseconds to wait for a connection, 0 indicates forever.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
+         * @throws IllegalArguementException if a parameter has an illegal value.
          */
-        virtual void connect( const std::string& hostname, int port )
-            throw( decaf::io::IOException ) = 0;
+        virtual void connect( const std::string& hostname, int port, int timeout )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Binds this Socket instance to the local ip address and port number given.
@@ -157,13 +170,63 @@ namespace net {
         virtual void shutdownOutput() throw( decaf::io::IOException ) = 0;
 
         /**
+         * Gets the specified Socket option.
+         *
+         * @param option
+         *      The Socket options whose value is to be retrieved.
+         *
+         * @returns the value of the given socket option.
+         *
+         * @throws IOException if an I/O error occurs while performing this operation.
+         */
+        virtual int getOption( int option ) const throw( decaf::io::IOException ) = 0;
+
+        /**
+         * Sets the specified option on the Socket if supported.
+         *
+         * @param option
+         *      The Socket option to set.
+         * @param value
+         *      The value of the socket option to apply to the socket.
+         *
+         * @throws IOException if an I/O error occurs while performing this operation.
+         */
+        virtual void setOption( int option, int value ) throw( decaf::io::IOException ) = 0;
+
+        /**
          * Gets the port that this socket has been assigned.
          *
          * @return the Socket's port number.
          */
-         int getPort() {
+         int getPort() const {
              return this->port;
          }
+
+         /**
+          * Gets the value of this SocketImpl's local port field.
+          *
+          * @returns the value of localPort.
+          */
+         int getLocalPort() const {
+             return this->localPort;
+         }
+
+         /**
+          * Gets the value of this SocketImpl's address field.
+          *
+          * @returns the value of the address field.
+          */
+         std::string getInetAddress() const {
+             return this->address;
+         }
+
+         /**
+          * Gets the value of the local Inet address the Socket is bound to if bound, otherwise
+          * return the InetAddress ANY value "0.0.0.0".
+          *
+          * @returns the local address bound to, or ANY.
+          */
+         virtual std::string getLocalAddress() const = 0;
 
          /**
           * Returns a string containing the address and port of this Socket instance.
@@ -171,6 +234,24 @@ namespace net {
           * @returns a string containing the address and port of this socket.
           */
          std::string toString() const;
+
+         /**
+          * @returns true if this SocketImpl supports sending Urgent Data.  The default
+          *          implementation always returns false.
+          */
+         virtual bool supportsUrgentData() const {
+             return false;
+         }
+
+         /**
+          * Sends on byte of urgent data to the Socket.
+          *
+          * @param data
+          *      The value to write as urgent data, only the lower eight bits are sent.
+          *
+          * @throws IOException if an I/O error occurs while performing this operation.
+          */
+         virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
 
     };
 

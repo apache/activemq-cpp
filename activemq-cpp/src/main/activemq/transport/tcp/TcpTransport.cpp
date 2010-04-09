@@ -176,7 +176,7 @@ void TcpTransport::configureSocket( Socket& socket, const URI& uri, const Proper
 
         // Get the linger flag.
         int soLinger = Integer::parseInt(
-            properties.getProperty( "soLinger", "0" ) );
+            properties.getProperty( "soLinger", "-1" ) );
 
         // Get the keepAlive flag.
         bool soKeepAlive = Boolean::parseBoolean(
@@ -194,17 +194,19 @@ void TcpTransport::configureSocket( Socket& socket, const URI& uri, const Proper
         bool tcpNoDelay = Boolean::parseBoolean(
             properties.getProperty( "tcpNoDelay", "true" ) );
 
-        // Get the socket connect timeout in microseconds.
-        socket.setConnectTimeout(
-            Integer::parseInt( properties.getProperty( "soConnectTimeout", "-1" ) ) );
+        // Get the socket connect timeout in microseconds. (default to infinite wait).
+        int connectTimeout = Integer::parseInt( properties.getProperty( "soConnectTimeout", "0" ) );
 
         // Connect the socket.
-        socket.connect( host.c_str(), port );
+        socket.connect( host, port, connectTimeout );
 
         // Set the socket options.
-        socket.setSoLinger( soLinger );
         socket.setKeepAlive( soKeepAlive );
         socket.setTcpNoDelay( tcpNoDelay );
+
+        if( soLinger > 0 ) {
+            socket.setSoLinger( true, soLinger );
+        }
 
         if( soReceiveBufferSize > 0 ){
             socket.setReceiveBufferSize( soReceiveBufferSize );
