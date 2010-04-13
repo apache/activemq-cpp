@@ -52,8 +52,8 @@ namespace commands{
 
     private:
 
-        ActiveMQTempDestination( const ActiveMQTempDestination& ) : ActiveMQDestination(), connection(NULL) {};
-        ActiveMQTempDestination& operator= ( const ActiveMQTempDestination& ) { return *this; };
+        ActiveMQTempDestination( const ActiveMQTempDestination& );
+        ActiveMQTempDestination& operator= ( const ActiveMQTempDestination& );
 
     public:
 
