@@ -102,9 +102,13 @@ void TcpSocket::create() throw( decaf::io::IOException ) {
                 __FILE__, __LINE__, "The System level socket has already been created." );
         }
 
+        std::cout << "TcpSocket::create - Creating new Socket instance." << std::endl;
+
         // Create the actual socket.
         checkResult( apr_socket_create( &socketHandle, AF_INET, SOCK_STREAM,
                                         APR_PROTO_TCP, apr_pool.getAprPool() ) );
+
+        std::cout << "TcpSocket::create - Created new Socket instance." << std::endl;
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -129,10 +133,16 @@ void TcpSocket::accept( SocketImpl* socket ) throw( decaf::io::IOException ) {
 
         apr_status_t result = APR_SUCCESS;
 
+        std::cout << "TcpSocket::accept - Accepting new Socket instance." << std::endl;
+
         // Loop to ignore any signal interruptions that occur during the operation.
         do {
             result = apr_socket_accept( &impl->socketHandle, socketHandle, apr_pool.getAprPool() );
         } while( result == APR_EINTR );
+
+        if( result == APR_EAGAIN ) {
+            std::cout << "Server Socket Accept indicates it would block." << std::endl;
+        }
 
         if( result != APR_SUCCESS ) {
             throw SocketException(
@@ -140,6 +150,8 @@ void TcpSocket::accept( SocketImpl* socket ) throw( decaf::io::IOException ) {
                   "ServerSocket::accept - %s",
                   SocketError::getErrorString().c_str() );
         }
+
+        std::cout << "TcpSocket::accept - Accepted new Socket instance." << std::endl;
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -163,6 +175,10 @@ void TcpSocket::bind( const std::string& ipaddress, int port )
     try{
 
         const char* host = ipaddress.empty() ? NULL : ipaddress.c_str();
+
+        std::cout << "Attempting to Bind Socket to IPAddress: "
+                  << ( ipaddress.empty() ? "NULL" : ipaddress )
+                  << ", on port: " << port << std::endl;
 
         // Create the Address Info for the Socket
         apr_status_t result = apr_sockaddr_info_get(
@@ -190,6 +206,20 @@ void TcpSocket::bind( const std::string& ipaddress, int port )
                   "ServerSocket::bind - %s",
                   SocketError::getErrorString().c_str() );
         }
+
+        // Only incur the overhead of a lookup if we don't already know the local port.
+        if( port != 0 ) {
+            this->localPort = port;
+        } else {
+            apr_sockaddr_t* localAddress;
+            checkResult( apr_socket_addr_get( &localAddress, APR_LOCAL, socketHandle ) );
+            this->localPort = localAddress->port;
+        }
+
+        std::cout << "Successfully bound Socket to IPAddress: "
+                  << this->getLocalAddress()
+                  << ", on port: "
+                  << this->getLocalPort() << std::endl;
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -203,19 +233,9 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
 
     try{
 
-        if( isConnected() ) {
-            throw SocketException( __FILE__, __LINE__,
-                "Socket::connect - Socket already connected.  host: %s, port: %d", hostname.c_str(), port );
-        }
-
         if( port < 0 || port > 65535 ) {
             throw IllegalArgumentException(
                 __FILE__, __LINE__, "Given port is out of range: %d", port );
-        }
-
-        if( timeout < 0 ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__, "Given timeout is out of range: %d", timeout );
         }
 
         if( this->socketHandle == NULL ) {
@@ -223,9 +243,17 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
                 __FILE__, __LINE__, "The socket was not yet created." );
         }
 
+        std::cout << "TcpSocket::connect - Attempting to aqire address info for IPAddress: "
+                  << ( hostname.empty() ? "NULL" : hostname )
+                  << ", on port: " << port << std::endl;
+
         // Create the Address data
         checkResult( apr_sockaddr_info_get(
             &remoteAddress, hostname.c_str(), APR_INET, (apr_port_t)port, 0, apr_pool.getAprPool() ) );
+
+        std::cout << "TcpSocket::connect - Attempting to Connect Socket to IPAddress: "
+                  << ( hostname.empty() ? "NULL" : hostname )
+                  << ", on port: " << port << std::endl;
 
         // To make blocking-with-timeout sockets, we have to set it to
         // 'APR_SO_NONBLOCK==1(on) and timeout>0'. On Unix, we have no
@@ -252,6 +280,10 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
         // Create an input/output stream for this socket.
         inputStream = new TcpSocketInputStream( this );
         outputStream = new TcpSocketOutputStream( this );
+
+        std::cout << "TcpSocket::connect - Connected new Socket to IPAddress: "
+                  << ( hostname.empty() ? "NULL" : hostname )
+                  << ", on port: " << port << std::endl;
 
     } catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -290,6 +322,8 @@ void TcpSocket::listen( int backlog ) throw( decaf::io::IOException ) {
                 __FILE__, __LINE__, "The stream is closed" );
         }
 
+        std::cout << "TcpSocket::listen - Setting up listen on Socket: backlog = " << backlog << std::endl;
+
         // Setup the listen for incoming connection requests
         apr_status_t result = apr_socket_listen( socketHandle, backlog );
 
@@ -299,6 +333,8 @@ void TcpSocket::listen( int backlog ) throw( decaf::io::IOException ) {
                 __FILE__, __LINE__, "Error on Bind - %s",
                 SocketError::getErrorString().c_str() );
         }
+
+        std::cout << "TcpSocket::listen - Now listening on Socket:" << std::endl;
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -444,9 +480,8 @@ int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
             return (int)( tvalue / 1000 );
 
         } else {
+            checkResult( apr_socket_opt_get( socketHandle, aprId, &value ) );
         }
-
-        checkResult( apr_socket_opt_get( socketHandle, aprId, &value ) );
 
         return (int)value;
     }
@@ -470,11 +505,9 @@ void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException
 
             // Time in APR for sockets is in microseconds so multiply by 1000.
             checkResult( apr_socket_timeout_set( socketHandle, value * 1000 ) );
-
         } else {
+            checkResult( apr_socket_opt_set( socketHandle, aprId, (apr_int32_t)value ) );
         }
-
-        checkResult( apr_socket_opt_set( socketHandle, aprId, (apr_int32_t)value ) );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
