@@ -40,6 +40,26 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace activemq{
+namespace core{
+
+    class FactorySettings {
+    public:
+
+        std::string username;
+        std::string password;
+        std::string brokerURL;
+
+        cms::ExceptionListener* defaultListener;
+
+        FactorySettings() : brokerURL("failover:(tcp://localhost:61616)"), defaultListener( NULL ) {
+        }
+
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
     throw ( cms::CMSException ) {
 
@@ -47,29 +67,24 @@ cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory() {
-
-    brokerURL = "failover:(tcp://localhost:61616)";
-    this->username = "";
-    this->password = "";
+ActiveMQConnectionFactory::ActiveMQConnectionFactory() : settings( new FactorySettings() ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory(
-    const std::string& url,
-    const std::string& username,
-    const std::string& password ) {
+ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
+                                                      const std::string& username,
+                                                      const std::string& password ) : settings( new FactorySettings() ) {
 
-    brokerURL = url;
-    this->username = username;
-    this->password = password;
+    settings->brokerURL = url;
+    settings->username = username;
+    settings->password = password;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection()
     throw ( cms::CMSException ) {
 
-    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
+    return createConnection( settings->brokerURL, settings->username, settings->password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +93,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& password )
         throw ( cms::CMSException ) {
 
-    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
+    return createConnection( settings->brokerURL, username, password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,16 +103,15 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& clientId )
         throw ( cms::CMSException ) {
 
-    return createConnection( brokerURL, username, password, clientId );
+    return createConnection( settings->brokerURL, username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& url,
-    const std::string& username,
-    const std::string& password,
-    const std::string& clientId )
-       throw ( cms::CMSException ) {
+cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::string& url,
+                                                                const std::string& username,
+                                                                const std::string& password,
+                                                                const std::string& clientId )
+    throw ( cms::CMSException ) {
 
     Pointer<Transport> transport;
     Pointer<Properties> properties( new Properties() );
@@ -159,4 +173,57 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     } catch(...) {
         throw cms::CMSException( "Caught Unknown Exception", NULL );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* ActiveMQConnectionFactory::createConnection(
+    const std::string& url,
+    const std::string& username,
+    const std::string& password,
+    const std::string& clientId )
+       throw ( cms::CMSException ) {
+
+    ActiveMQConnectionFactory factory;
+
+    return factory.doCreateConnection( url, username, password, clientId );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setUsername( const std::string& username ) {
+    settings->username = username;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ActiveMQConnectionFactory::getUsername() const {
+    return settings->username;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setPassword( const std::string& password ){
+    settings->password = password;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ActiveMQConnectionFactory::getPassword() const {
+    return settings->password;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setBrokerURL( const std::string& brokerURL ){
+    settings->brokerURL = brokerURL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ActiveMQConnectionFactory::getBrokerURL() const {
+    return settings->brokerURL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setExceptionListener( cms::ExceptionListener* listener ) {
+    this->settings->defaultListener = listener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::ExceptionListener* ActiveMQConnectionFactory::getExceptionListener() const {
+    return this->settings->defaultListener;
 }
