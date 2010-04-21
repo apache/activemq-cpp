@@ -38,7 +38,7 @@ namespace net {
      * @since 1.0
      */
     class DECAF_API SocketImpl : public SocketOptions {
-    private:
+    protected:
 
         int port;
         int localPort;

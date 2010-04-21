@@ -107,8 +107,10 @@ void ServerSocket::setupSocketImpl( const std::string ipAddress, int port, int b
         this->impl->create();
         this->created = true;
 
+        std::string bindAddr = ipAddress.empty() ? "0.0.0.0" : ipAddress;
+
         try {
-            this->impl->bind( ipAddress, port );
+            this->impl->bind( bindAddr, port );
             this->bound = true;
             this->impl->listen( backlog > 0 ? backlog : getDefaultBacklog() );
         } catch( IOException& ex ) {
@@ -322,6 +324,16 @@ void ServerSocket::setSoTimeout( int timeout )
     DECAF_CATCH_RETHROW( IllegalArgumentException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
     DECAF_CATCHALL_THROW( SocketException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ServerSocket::getLocalPort() const {
+
+    if( this->impl == NULL ) {
+        return -1;
+    }
+
+    return this->impl->getLocalPort();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
