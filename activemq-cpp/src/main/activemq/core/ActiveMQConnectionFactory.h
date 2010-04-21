@@ -25,18 +25,13 @@
 namespace activemq{
 namespace core{
 
+    class FactorySettings;
+
     class AMQCPP_API ActiveMQConnectionFactory : public cms::ConnectionFactory {
     private:
 
-        // The user name this factory will use to connect
-        std::string username;
-
-        // The password this factory will use to connect
-        std::string password;
-
-        // The URL of the Broker, the default is:
-        // "tcp://localhost:61616"
-        std::string brokerURL;
+        // d-Pointer holding pre-configured factory settings
+        FactorySettings* settings;
 
     public:
 
@@ -106,53 +101,59 @@ namespace core{
          * Sets the username that should be used when creating a new connection
          * @param username string
          */
-        virtual void setUsername( const std::string& username ){
-            this->username = username;
-        }
+        virtual void setUsername( const std::string& username );
 
         /**
          * Gets the username that this factory will use when creating a new
          * connection instance.
          * @return username string, "" for default credentials
          */
-        virtual const std::string& getUsername() const {
-            return username;
-        }
+        virtual const std::string& getUsername() const;
 
         /**
          * Sets the password that should be used when creating a new connection
          * @param password string
          */
-        virtual void setPassword( const std::string& password ){
-            this->password = password;
-        }
+        virtual void setPassword( const std::string& password );
 
         /**
          * Gets the password that this factory will use when creating a new
          * connection instance.
          * @return password string, "" for default credentials
          */
-        virtual const std::string& getPassword() const {
-            return password;
-        }
+        virtual const std::string& getPassword() const;
 
         /**
          * Sets the Broker URL that should be used when creating a new
          * connection instance
          * @param brokerURL string
          */
-        virtual void setBrokerURL( const std::string& brokerURL ){
-            this->brokerURL = brokerURL;
-        }
+        virtual void setBrokerURL( const std::string& brokerURL );
 
         /**
          * Gets the Broker URL that this factory will use when creating a new
          * connection instance.
          * @return brokerURL string
          */
-        virtual const std::string& getBrokerURL() const {
-            return brokerURL;
-        }
+        virtual const std::string& getBrokerURL() const;
+
+        /**
+         * Set an CMS ExceptionListener that will be set on eat connection once it has been
+         * created.  The factory des not take ownership of this pointer, the client must ensure
+         * that its lifetime is scoped to the connection that it is applied to.
+         *
+         * @param listener
+         * 		The listener to set on the connection or NULL for no listener.
+         */
+        virtual void setExceptionListener( cms::ExceptionListener* listener );
+
+        /**
+         * Returns the currently set ExceptionListener that will be set on any new Connection
+         * instance that is created by this factory.
+         *
+         * @return a pointer to a CMS ExceptionListener instance or NULL if not set.
+         */
+        virtual cms::ExceptionListener* getExceptionListener() const;
 
     public:
 
@@ -170,6 +171,14 @@ namespace core{
                                                   const std::string& username,
                                                   const std::string& password,
                                                   const std::string& clientId = "" )
+            throw ( cms::CMSException );
+
+    public:
+
+        virtual cms::Connection* doCreateConnection( const std::string& url,
+                                                     const std::string& username,
+                                                     const std::string& password,
+                                                     const std::string& clientId )
             throw ( cms::CMSException );
 
     };
