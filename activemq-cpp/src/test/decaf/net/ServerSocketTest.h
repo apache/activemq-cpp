@@ -15,44 +15,53 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_SOCKETFACTORYTEST_H_
-#define _DECAF_NET_SOCKETFACTORYTEST_H_
+#ifndef _DECAF_NET_SERVERSOCKETTEST_H_
+#define _DECAF_NET_SERVERSOCKETTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/net/Socket.h>
-#include <decaf/net/ServerSocket.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Thread.h>
 
-#include <sstream>
+namespace decaf {
+namespace net {
 
-namespace decaf{
-namespace net{
+    class Socket;
 
-    class SocketFactoryTest : public CppUnit::TestFixture {
+    class ServerSocketTest  : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( SocketFactoryTest );
-        //CPPUNIT_TEST( test );
-        //CPPUNIT_TEST( testNoDelay );
+        CPPUNIT_TEST_SUITE( ServerSocketTest );
+        CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testClose );
+        CPPUNIT_TEST( testGetLocalPort );
+        CPPUNIT_TEST( testGetSoTimeout );
         CPPUNIT_TEST_SUITE_END();
 
+    private:
+
+        Socket* ssconn;
+
+        decaf::lang::Thread* theThread;
+
     public:
 
-        static const int DEFAULT_PORT;
+        ServerSocketTest();
+        virtual ~ServerSocketTest();
 
-    public:
+        void setUp();
+        void tearDown();
 
-        SocketFactoryTest() {}
-        virtual ~SocketFactoryTest() {}
+        void testConstructor();
+        void testClose();
+        void testGetLocalPort();
+        void testGetSoTimeout();
 
-        void test();
-        void testNoDelay();
+    protected:
+
+        void startClient( int port );
 
     };
 
 }}
 
-#endif /*_DECAF_NET_SOCKETFACTORYTEST_H_*/
+#endif /* _DECAF_NET_SERVERSOCKETTEST_H_ */

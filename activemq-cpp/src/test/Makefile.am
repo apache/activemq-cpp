@@ -111,6 +111,7 @@ cc_sources = \
     decaf/lang/StringTest.cpp \
     decaf/lang/SystemTest.cpp \
     decaf/lang/ThreadTest.cpp \
+    decaf/net/ServerSocketTest.cpp \
     decaf/net/SocketFactoryTest.cpp \
     decaf/net/SocketTest.cpp \
     decaf/net/URISyntaxExceptionTest.cpp \
@@ -257,6 +258,7 @@ h_sources = \
     decaf/lang/StringTest.h \
     decaf/lang/SystemTest.h \
     decaf/lang/ThreadTest.h \
+    decaf/net/ServerSocketTest.h \
     decaf/net/SocketFactoryTest.h \
     decaf/net/SocketTest.h \
     decaf/net/URISyntaxExceptionTest.h \
