@@ -478,10 +478,21 @@ int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
             apr_interval_time_t tvalue = 0;
             checkResult( apr_socket_timeout_get( socketHandle, &tvalue ) );
             return (int)( tvalue / 1000 );
-
-        } else {
-            checkResult( apr_socket_opt_get( socketHandle, aprId, &value ) );
         }
+
+        if( option == SocketOptions::SOCKET_OPTION_REUSEADDR ) {
+            aprId = APR_SO_REUSEADDR;
+        } else if( option == SocketOptions::SOCKET_OPTION_SNDBUF ) {
+            aprId = APR_SO_SNDBUF;
+        } else if( option == SocketOptions::SOCKET_OPTION_RCVBUF ) {
+            aprId = APR_SO_RCVBUF;
+        } else {
+            throw IOException(
+                __FILE__, __LINE__,
+                "Socket Option is not valid for this Socket type." );
+        }
+
+        checkResult( apr_socket_opt_get( socketHandle, aprId, &value ) );
 
         return (int)value;
     }
@@ -502,12 +513,24 @@ void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException
         apr_int32_t aprId = 0;
 
         if( option == SocketOptions::SOCKET_OPTION_TIMEOUT ) {
-
             // Time in APR for sockets is in microseconds so multiply by 1000.
             checkResult( apr_socket_timeout_set( socketHandle, value * 1000 ) );
-        } else {
-            checkResult( apr_socket_opt_set( socketHandle, aprId, (apr_int32_t)value ) );
+            return;
         }
+
+        if( option == SocketOptions::SOCKET_OPTION_REUSEADDR ) {
+            aprId = APR_SO_REUSEADDR;
+        } else if( option == SocketOptions::SOCKET_OPTION_SNDBUF ) {
+            aprId = APR_SO_SNDBUF;
+        } else if( option == SocketOptions::SOCKET_OPTION_RCVBUF ) {
+            aprId = APR_SO_RCVBUF;
+        } else {
+            throw IOException(
+                __FILE__, __LINE__,
+                "Socket Option is not valid for this Socket type." );
+        }
+
+        checkResult( apr_socket_opt_set( socketHandle, aprId, (apr_int32_t)value ) );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
