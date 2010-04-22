@@ -35,6 +35,8 @@ namespace net {
         CPPUNIT_TEST( testClose );
         CPPUNIT_TEST( testGetLocalPort );
         CPPUNIT_TEST( testGetSoTimeout );
+        CPPUNIT_TEST( testGetReuseAddress );
+        CPPUNIT_TEST( testGetReceiveBufferSize );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -55,6 +57,8 @@ namespace net {
         void testClose();
         void testGetLocalPort();
         void testGetSoTimeout();
+        void testGetReuseAddress();
+        void testGetReceiveBufferSize();
 
     protected:
 

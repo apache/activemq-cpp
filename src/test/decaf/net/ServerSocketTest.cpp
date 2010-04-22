@@ -176,6 +176,34 @@ void ServerSocketTest::testGetSoTimeout() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ServerSocketTest::testGetReuseAddress() {
+
+    try{
+        ServerSocket s;
+        s.setReuseAddress( true );
+        CPPUNIT_ASSERT_EQUAL_MESSAGE( "Reuse Address doesnt match what was set.", true, s.getReuseAddress() );
+        s.setReuseAddress( false );
+        CPPUNIT_ASSERT_EQUAL_MESSAGE( "Reuse Address doesnt match what was set.", false, s.getReuseAddress() );
+    } catch( Exception& ex ) {
+        ex.printStackTrace();
+        throw ex;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocketTest::testGetReceiveBufferSize() {
+
+    try{
+        ServerSocket s;
+        //CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be zero.", 0 != s.getReceiveBufferSize() );
+        //CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be negative.", 0 < s.getReceiveBufferSize() );
+    } catch( Exception& ex ) {
+        ex.printStackTrace();
+        throw ex;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ServerSocketTest::startClient( int port ) {
 
     client = new SocketClient( port );
