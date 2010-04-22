@@ -29,9 +29,45 @@
 
 using namespace std;
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::lang;
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testConnectUnknownHost() {
+
+    // TODO - Should throw an UnknownHostException
+    Socket s;
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "IOException should have been thrown",
+        s.connect( "unknown.host", 45 ),
+        IOException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testConstructor() {
+
+    // create the socket and then validate some basic state
+    Socket s;
+    CPPUNIT_ASSERT_MESSAGE("new socket should not be connected", !s.isConnected());
+    CPPUNIT_ASSERT_MESSAGE("new socket should not be bound", !s.isBound());
+    CPPUNIT_ASSERT_MESSAGE("new socket should not be closed", !s.isClosed());
+    CPPUNIT_ASSERT_MESSAGE("new socket should not be in InputShutdown", !s.isInputShutdown());
+    CPPUNIT_ASSERT_MESSAGE("new socket should not be in OutputShutdown", !s.isOutputShutdown());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetReuseAddress() {
+
+    Socket s;
+    s.setReuseAddress( true );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Socket Reuse Address value not what was expected.", true, s.getReuseAddress() );
+    s.setReuseAddress( false );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Socket Reuse Address value not what was expected.", false, s.getReuseAddress() );
+}
+
+// TODO - Remove or replace old tests
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
