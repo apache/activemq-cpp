@@ -27,7 +27,9 @@ namespace net{
     class SocketTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( SocketTest );
-//        CPPUNIT_TEST( testConnect );
+        CPPUNIT_TEST( testConnectUnknownHost );
+        CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testGetReuseAddress );
 //        CPPUNIT_TEST( testTx );
 //        CPPUNIT_TEST( testTrx );
 //        CPPUNIT_TEST( testTrxNoDelay );
@@ -42,6 +44,11 @@ namespace net{
 
         virtual ~SocketTest() {}
 
+        void testConnectUnknownHost();
+        void testConstructor();
+        void testGetReuseAddress();
+
+        // Old Tests
         void testConnect();
         void testTx();
         void testTrx();
