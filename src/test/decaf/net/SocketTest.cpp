@@ -67,6 +67,120 @@ void SocketTest::testGetReuseAddress() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE( "Socket Reuse Address value not what was expected.", false, s.getReuseAddress() );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testClose() {
+
+    ServerSocket ss(0);
+    Socket client( "localhost", ss.getLocalPort() );
+
+    CPPUNIT_ASSERT_NO_THROW_MESSAGE( "Exception on setSoLinger unexpected", client.setSoLinger( false, 100 ) );
+
+    client.close();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+         "Should have thrown an IOException",
+         client.getOutputStream(),
+         IOException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetInputStream() {
+
+    ServerSocket ss(0);
+    Socket client( "localhost", ss.getLocalPort() );
+
+    InputStream* is = client.getInputStream();
+
+    CPPUNIT_ASSERT( is != NULL );
+
+    is->close();
+    client.close();
+    ss.close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetKeepAlive() {
+
+    try {
+
+        ServerSocket ss(0);
+        Socket client( "localhost", ss.getLocalPort() );
+
+        client.setKeepAlive( true );
+
+        CPPUNIT_ASSERT_MESSAGE( "getKeepAlive false when it should be true",
+                                client.getKeepAlive() );
+
+        client.setKeepAlive( false );
+
+        CPPUNIT_ASSERT_MESSAGE( "getKeepAlive true when it should be False",
+                                !client.getKeepAlive() );
+
+    } catch (Exception e) {
+        CPPUNIT_FAIL( "Error during test of Get SO_KEEPALIVE" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetLocalPort() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    CPPUNIT_ASSERT_MESSAGE( "Returned incorrect port", 0 != client.getLocalPort() );
+
+    client.close();
+    server.close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetSoLinger() {
+
+    try {
+
+        ServerSocket ss(0);
+        Socket client( "localhost", ss.getLocalPort() );
+
+        client.setSoLinger( true, 100 );
+
+        CPPUNIT_ASSERT_MESSAGE( "getSoLinger returned incorrect value",
+                                100 == client.getSoLinger() );
+
+        client.setSoLinger( false, 100 );
+
+        CPPUNIT_ASSERT_MESSAGE( "getSoLinger returned incorrect value",
+                                -1 == client.getSoLinger() );
+
+    } catch (Exception e) {
+        CPPUNIT_FAIL( "Error during test of Get SO_LINGER" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetSoTimeout() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    client.setSoTimeout( 100 );
+    CPPUNIT_ASSERT_MESSAGE( "Returned incorrect timeout", 100 == client.getSoTimeout() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetTcpNoDelay() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    client.setTcpNoDelay( true );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Returned incorrect TCP_NODELAY value, should be true",
+                                  true, client.getTcpNoDelay() );
+
+    client.setTcpNoDelay( false );
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Returned incorrect TCP_NODELAY value, should be false",
+                                  false, client.getTcpNoDelay() );
+}
+
 // TODO - Remove or replace old tests
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +348,7 @@ void SocketTest::testTx() {
 
         client->connect("127.0.0.1", port);
         client->setSoLinger( false, 0 );
+        client->setTcpNoDelay( true );
 
         synchronized(&serverThread.mutex)
         {

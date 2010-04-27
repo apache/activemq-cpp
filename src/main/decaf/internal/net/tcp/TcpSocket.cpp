@@ -69,7 +69,8 @@ TcpSocket::TcpSocket() throw ( SocketException )
     outputShutdown( false ),
     closed( false ),
     trafficClass( 0 ),
-    soTimeout( -1 ) {
+    soTimeout( -1 ),
+    soLinger( -1 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,12 +154,50 @@ void TcpSocket::accept( SocketImpl* socket )
 
 ////////////////////////////////////////////////////////////////////////////////
 InputStream* TcpSocket::getInputStream() throw( IOException ) {
-    return inputStream;
+
+    if( this->socketHandle == NULL || this->closed ) {
+        throw IOException( __FILE__, __LINE__, "The Socket is not Connected." );
+    }
+
+    if( this->inputShutdown ) {
+        throw IOException( __FILE__, __LINE__, "Input has been shut down on this Socket." );
+    }
+
+    try{
+
+        if( this->inputStream == NULL ) {
+            this->inputStream = new TcpSocketInputStream( this );
+        }
+
+        return inputStream;
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OutputStream* TcpSocket::getOutputStream() throw( IOException ) {
-    return outputStream;
+
+    if( this->socketHandle == NULL || this->closed ) {
+        throw IOException( __FILE__, __LINE__, "The Socket is not Connected." );
+    }
+
+    if( this->outputShutdown ) {
+        throw IOException( __FILE__, __LINE__, "Output has been shut down on this Socket." );
+    }
+
+    try{
+
+        if( this->outputStream == NULL ) {
+            this->outputStream = new TcpSocketOutputStream( this );
+        }
+
+        return outputStream;
+    }
+    DECAF_CATCH_RETHROW( decaf::io::IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
+    DECAF_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -254,10 +293,6 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
         // Now that we are connected, we want to go back to old settings.
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, oldNonblockSetting );
         apr_socket_timeout_set( socketHandle, oldTimeoutSetting );
-
-        // Create an input/output stream for this socket.
-        inputStream = new TcpSocketInputStream( this );
-        outputStream = new TcpSocketOutputStream( this );
 
     } catch( IOException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -456,6 +491,18 @@ int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
             apr_interval_time_t tvalue = 0;
             checkResult( apr_socket_timeout_get( socketHandle, &tvalue ) );
             return (int)( tvalue / 1000 );
+        } else if( option == SocketOptions::SOCKET_OPTION_LINGER ) {
+
+            checkResult( apr_socket_opt_get( socketHandle, APR_SO_LINGER, &value ) );
+
+            // In case the socket linger is on by default we reset to match,
+            // we just use one since we really don't know what the linger time is
+            // with APR.
+            if( value == 1 && this->soLinger == -1 ) {
+                this->soLinger = 1;
+            }
+
+            return this->soLinger;
         }
 
         if( option == SocketOptions::SOCKET_OPTION_REUSEADDR ) {
@@ -464,6 +511,10 @@ int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
             aprId = APR_SO_SNDBUF;
         } else if( option == SocketOptions::SOCKET_OPTION_RCVBUF ) {
             aprId = APR_SO_RCVBUF;
+        } else if( option == SocketOptions::SOCKET_OPTION_TCP_NODELAY ) {
+            aprId = APR_TCP_NODELAY;
+        } else if( option == SocketOptions::SOCKET_OPTION_KEEPALIVE ) {
+            aprId = APR_SO_KEEPALIVE;
         } else {
             throw IOException(
                 __FILE__, __LINE__,
@@ -496,6 +547,15 @@ void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException
             checkResult( apr_socket_timeout_set( socketHandle, value * 1000 ) );
             this->soTimeout = value;
             return;
+        } else if( option == SocketOptions::SOCKET_OPTION_LINGER ) {
+
+            // Store the real setting for later.
+            this->soLinger = value;
+
+            // Now use the APR API to set it to the boolean state that APR expects
+            value = value <= 0 ? 0 : 1;
+            checkResult( apr_socket_opt_set( socketHandle, APR_SO_LINGER, (apr_int32_t)value ) );
+            return;
         }
 
         if( option == SocketOptions::SOCKET_OPTION_REUSEADDR ) {
@@ -504,6 +564,10 @@ void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException
             aprId = APR_SO_SNDBUF;
         } else if( option == SocketOptions::SOCKET_OPTION_RCVBUF ) {
             aprId = APR_SO_RCVBUF;
+        } else if( option == SocketOptions::SOCKET_OPTION_TCP_NODELAY ) {
+            aprId = APR_TCP_NODELAY;
+        } else if( option == SocketOptions::SOCKET_OPTION_KEEPALIVE ) {
+            aprId = APR_SO_KEEPALIVE;
         } else {
             throw IOException(
                 __FILE__, __LINE__,
