@@ -181,6 +181,121 @@ void SocketTest::testGetTcpNoDelay() {
                                   false, client.getTcpNoDelay() );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testIsConnected() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    std::auto_ptr<Socket> worker( server.accept() );
+
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated  not connected when it should be",
+                            client.isConnected() );
+
+    client.close();
+    worker->close();
+    server.close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testIsClosed() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    std::auto_ptr<Socket> worker( server.accept() );
+
+    // validate isClosed returns expected values
+    CPPUNIT_ASSERT_MESSAGE( "Socket should indicate it is not closed(1):",
+                            !client.isClosed() );
+    client.close();
+    CPPUNIT_ASSERT_MESSAGE( "Socket should indicate it is closed(1):",
+                            client.isClosed() );
+
+    // validate that isClosed works ok for sockets returned from
+    // ServerSocket.accept()
+    CPPUNIT_ASSERT_MESSAGE( "Accepted Socket should indicate it is not closed:",
+                            !worker->isClosed() );
+    worker->close();
+    CPPUNIT_ASSERT_MESSAGE( "Accepted Socket should indicate it is closed:",
+                            worker->isClosed() );
+
+    // and finally for the server socket
+    CPPUNIT_ASSERT_MESSAGE( "Server Socket should indicate it is not closed:",
+                            !server.isClosed() );
+    server.close();
+    CPPUNIT_ASSERT_MESSAGE( "Server Socket should indicate it is closed:",
+                            server.isClosed() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testIsInputShutdown() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    std::auto_ptr<Socket> worker( server.accept() );
+
+    InputStream* theInput = client.getInputStream();
+    OutputStream* theOutput = worker->getOutputStream();
+
+    // make sure we get the right answer with newly connected socket
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated input shutdown when it should not have",
+                            !client.isInputShutdown() );
+
+    // shutdown the output
+    client.shutdownInput();
+
+    // make sure we get the right answer once it is shut down
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated input was NOT shutdown when it should have been",
+                            client.isInputShutdown() );
+
+    client.close();
+    worker->close();
+    server.close();
+
+    // make sure we get the right answer for closed sockets
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated input was shutdown when socket was closed",
+                            !worker->isInputShutdown() );
+
+    theInput->close();
+    theOutput->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testIsOutputShutdown() {
+
+    ServerSocket server(0);
+    Socket client( "localhost", server.getLocalPort() );
+
+    std::auto_ptr<Socket> worker( server.accept() );
+
+    InputStream* theInput = client.getInputStream();
+    OutputStream* theOutput = worker->getOutputStream();
+
+    // make sure we get the right answer with newly connected socket
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated output shutdown when it should not have",
+                            !worker->isOutputShutdown() );
+
+    // shutdown the output
+    worker->shutdownOutput();
+
+    // make sure we get the right answer once it is shut down
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated output was NOT shutdown when it should have been",
+                            worker->isOutputShutdown() );
+
+    client.close();
+    worker->close();
+    server.close();
+
+    // make sure we get the right answer for closed sockets
+    CPPUNIT_ASSERT_MESSAGE( "Socket indicated output was output shutdown when the socket was closed",
+                            !client.isOutputShutdown() );
+
+    theInput->close();
+    theOutput->close();
+}
+
 // TODO - Remove or replace old tests
 
 ////////////////////////////////////////////////////////////////////////////////
