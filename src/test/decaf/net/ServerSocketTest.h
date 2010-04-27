@@ -33,6 +33,7 @@ namespace net {
         CPPUNIT_TEST_SUITE( ServerSocketTest );
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testClose );
+        CPPUNIT_TEST( testAccept );
         CPPUNIT_TEST( testGetLocalPort );
         CPPUNIT_TEST( testGetSoTimeout );
         CPPUNIT_TEST( testGetReuseAddress );
@@ -55,6 +56,7 @@ namespace net {
 
         void testConstructor();
         void testClose();
+        void testAccept();
         void testGetLocalPort();
         void testGetSoTimeout();
         void testGetReuseAddress();
