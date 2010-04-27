@@ -19,6 +19,7 @@
 
 #include <decaf/net/Socket.h>
 #include <decaf/net/ServerSocket.h>
+#include <decaf/lang/System.h>
 #include <decaf/lang/Thread.h>
 
 using namespace decaf;
@@ -33,7 +34,7 @@ namespace {
     class SocketClient : public Runnable {
     public:
 
-        Socket* clientS;
+        std::auto_ptr<Socket> clientS;
         int port;
 
         SocketClient( int port ) : Runnable(), clientS( NULL ), port( port ) {
@@ -44,14 +45,11 @@ namespace {
 
             try{
                 Thread::sleep( 1000 );
-                this->clientS = new Socket( "127.0.0.1", port );
+                this->clientS.reset( new Socket( "127.0.0.1", port ) );
                 Thread::sleep( 1000 );
             } catch( InterruptedException& ex ) {
             } catch( Exception& ex ) {
                 ex.printStackTrace();
-                if( clientS != NULL ) {
-                    delete clientS;
-                }
             }
         }
 
@@ -105,9 +103,7 @@ void ServerSocketTest::testConstructor() {
         //s.setSoTimeout( 20000 );
         startClient( s.getLocalPort() );
         this->ssconn = s.accept();
-
-        // DEBUG
-        Thread::sleep( 1000 );
+        this->ssconn->close();
 
     } catch( InterruptedException& ex ) {
     } catch( Exception& ex ) {
@@ -145,6 +141,103 @@ void ServerSocketTest::testClose() {
         "Should throw an IOException",
         s.accept(),
         IOException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace{
+
+    class TestAcceptRunnable : public Runnable {
+    private:
+
+        bool* interrupted;
+        ServerSocket* ss;
+
+    public:
+
+        TestAcceptRunnable( bool* interrupted, ServerSocket* ss ) : interrupted( interrupted ), ss( ss ) {
+        }
+
+        virtual void run() {
+            try{
+                std::auto_ptr<Socket> socket( ss->accept() );
+            } catch( IOException& ex ) {
+                *interrupted = true;
+            } catch(...) {
+            }
+        }
+
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ServerSocketTest::testAccept() {
+
+    ServerSocket s(0);
+    try {
+        //s.setSoTimeout( 10000 );
+        startClient( s.getLocalPort() );
+        this->ssconn = s.accept();
+        int localPort1 = s.getLocalPort();
+        int localPort2 = this->ssconn->getLocalPort();
+        this->ssconn->close();
+        CPPUNIT_ASSERT_EQUAL_MESSAGE( "Bad local port value", localPort1, localPort2 );
+    } catch(...) {
+        s.close();
+    }
+
+//   try {
+//        bool interrupted = false;
+//        ServerSocket ss(0);
+//        ss.setSoTimeout(12000);
+//        TestAcceptRunnable runnable( &interrupted, &ss );
+//        Thread thread( &runnable );
+//        thread.start();
+//
+//        try {
+//            do {
+//                Thread::sleep( 500 );
+//            } while( !thread.isAlive() );
+//        } catch( InterruptedException& e ) {
+//        }
+//
+//        ss.close();
+//
+//        int c = 0;
+//        do {
+//            try {
+//                Thread::sleep( 500 );
+//            } catch( InterruptedException& e ) {
+//            }
+//
+//            if( interrupted ) {
+//                CPPUNIT_FAIL( "accept interrupted" );
+//            }
+//            if( ++c > 4 ) {
+//                CPPUNIT_FAIL( "accept call did not exit" );
+//            }
+//        } while( thread.isAlive() );
+//
+//        interrupted = false;
+//
+//        ServerSocket ss2(0);
+//        ss2.setSoTimeout( 500 );
+//        long long start = System::currentTimeMillis();
+//
+//        try {
+//            ss2.accept();
+//        } catch( IOException& e ) {
+//            interrupted = true;
+//        }
+//
+//        CPPUNIT_ASSERT_MESSAGE( "accept not interrupted", interrupted );
+//        long long finish = System::currentTimeMillis();
+//        int delay = (int)( finish - start );
+//        CPPUNIT_ASSERT_MESSAGE( "timeout too soon: ", delay >= 490);
+//        ss2.close();
+//
+//    } catch( IOException& e ) {
+//        CPPUNIT_FAIL( "Unexpected IOException : " + e.getMessage() );
+//    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -195,8 +288,8 @@ void ServerSocketTest::testGetReceiveBufferSize() {
 
     try{
         ServerSocket s;
-        //CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be zero.", 0 != s.getReceiveBufferSize() );
-        //CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be negative.", 0 < s.getReceiveBufferSize() );
+//        CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be zero.", 0 != s.getReceiveBufferSize() );
+//        CPPUNIT_ASSERT_MESSAGE( "Receive Buffer should never be negative.", 0 < s.getReceiveBufferSize() );
     } catch( Exception& ex ) {
         ex.printStackTrace();
         throw ex;
