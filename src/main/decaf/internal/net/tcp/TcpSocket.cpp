@@ -63,7 +63,6 @@ TcpSocket::TcpSocket() throw ( SocketException )
   : socketHandle( NULL ),
     localAddress( NULL ),
     remoteAddress( NULL ),
-    pollSet( NULL ),
     inputStream( NULL ),
     outputStream( NULL ),
     inputShutdown( false ),
@@ -110,9 +109,6 @@ void TcpSocket::create() throw( decaf::io::IOException ) {
         // Create the actual socket.
         checkResult( apr_socket_create( &socketHandle, AF_INET, SOCK_STREAM,
                                         APR_PROTO_TCP, apr_pool.getAprPool() ) );
-
-        // Create the pollset for the socket.
-        checkResult( apr_pollset_create( &pollSet, 1, apr_pool.getAprPool(), APR_POLLSET_NOCOPY ) );
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -120,7 +116,8 @@ void TcpSocket::create() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::accept( SocketImpl* socket ) throw( decaf::io::IOException ) {
+void TcpSocket::accept( SocketImpl* socket )
+    throw( decaf::io::IOException ) {
 
     try{
 
@@ -136,49 +133,6 @@ void TcpSocket::accept( SocketImpl* socket ) throw( decaf::io::IOException ) {
         }
 
         apr_status_t result = APR_SUCCESS;
-
-        if( this->soTimeout == -1 ) {
-
-            // ensure we are in a blocking accept mode.
-            apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
-            apr_socket_timeout_set( socketHandle, -1 );
-
-        } else {
-
-            // ensure we are in a non-blocking accept mode.
-            apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 1 );
-            apr_socket_timeout_set( socketHandle, 0 );
-
-            int num = 0;
-            const apr_pollfd_t* signalled = NULL;
-            apr_pollfd_t pfd = { apr_pool.getAprPool(),
-                                 APR_POLL_SOCKET,
-                                 APR_POLLIN | APR_POLLERR,
-                                 0, { NULL }, NULL };
-
-            pfd.desc.s = socketHandle;
-
-            // Add the socket to pollset to check APR_POLLOUT(writable)
-            apr_pollset_add( pollSet, &pfd );
-
-            // Poll for the specified timeout, the value in APR is taken as Microseconds.
-            result = apr_pollset_poll( pollSet, soTimeout * 1000, &num, &signalled );
-
-            // Check for async close event.
-            if( closed ) {
-                return;
-            }
-
-            // Remove the socket from the pollset now.
-            apr_pollset_remove( pollSet, &pfd );
-
-            if( result == APR_TIMEUP ) {
-                close();
-                throw SocketTimeoutException(
-                     __FILE__, __LINE__,
-                     "Timed out while waiting for Socket to Connect." );
-            }
-        }
 
         // Loop to ignore any signal interruptions that occur during the operation.
         do {
@@ -226,7 +180,7 @@ void TcpSocket::bind( const std::string& ipaddress, int port )
                   SocketError::getErrorString().c_str() );
         }
 
-        // Set the socket to reuse the address and default as blocking
+        // Set the socket to reuse the address and default as blocking with no timeout.
         apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, 1 );
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
         apr_socket_timeout_set( socketHandle, -1 );
@@ -259,7 +213,6 @@ void TcpSocket::bind( const std::string& ipaddress, int port )
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::connect( const std::string& hostname, int port, int timeout )
     throw( decaf::io::IOException,
-           decaf::net::SocketTimeoutException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
@@ -285,58 +238,18 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
         apr_socket_opt_get( socketHandle, APR_SO_NONBLOCK, &oldNonblockSetting );
         apr_socket_timeout_get( socketHandle, &oldTimeoutSetting );
 
+        // Temporarily make it what we want, blocking.
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
+
         // Timeout and non-timeout case require very different logic.
         if( timeout <= 0 ) {
-
-            // Temporarily make it what we want, blocking with no timeout.
-            apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
             apr_socket_timeout_set( socketHandle, -1 );
-
-            // try to Connect to the provided address.
-            checkResult( apr_socket_connect( socketHandle, remoteAddress ) );
-
         } else {
-
-            // Temporarily make it what we want, blocking with no timeout.
-            apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 1 );
-            apr_socket_timeout_set( socketHandle, 0 );
-
-            apr_status_t result = apr_socket_connect( socketHandle, remoteAddress );
-
-            // Special case, it connected, usually doesn't happen.
-            if( result == APR_SUCCESS ) {
-                return;
-            } else if( APR_STATUS_IS_EINPROGRESS( result ) ) {
-
-                int num = 0;
-                const apr_pollfd_t* signalled = NULL;
-                apr_pollfd_t pfd = { apr_pool.getAprPool(), APR_POLL_SOCKET, APR_POLLOUT, 0, { NULL }, NULL };
-
-                pfd.desc.s = socketHandle;
-
-                // Add the socket to pollset to check APR_POLLOUT(writable)
-                apr_pollset_add( pollSet, &pfd );
-
-                // Poll for the specified timeout, the value in APR is taken as Microseconds.
-                result = apr_pollset_poll( pollSet, timeout * 1000, &num, &signalled );
-
-                // Remove the socket from the pollset now.
-                apr_pollset_remove( pollSet, &pfd );
-
-                if( result != APR_SUCCESS || num == 0 ) {
-                    close();
-                    throw SocketTimeoutException(
-                         __FILE__, __LINE__,
-                         "Timed out while waiting for Socket to Connect." );
-                }
-
-            } else {
-                close();
-                throw SocketException(
-                    __FILE__, __LINE__, "Error while attempting to connect to remote host.",
-                    SocketError::getErrorString().c_str() );
-            }
+            apr_socket_timeout_set( socketHandle, timeout * 1000 );
         }
+
+        // try to Connect to the provided address.
+        checkResult( apr_socket_connect( socketHandle, remoteAddress ) );
 
         // Now that we are connected, we want to go back to old settings.
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, oldNonblockSetting );
@@ -494,12 +407,6 @@ void TcpSocket::close() throw( decaf::io::IOException ) {
             apr_socket_close( socketHandle );
             socketHandle = NULL;
         }
-
-        // Destroy the pollset
-        if( pollSet != NULL ) {
-            apr_pollset_destroy( pollSet );
-            pollSet = NULL;
-        }
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -584,6 +491,7 @@ void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException
         apr_int32_t aprId = 0;
 
         if( option == SocketOptions::SOCKET_OPTION_TIMEOUT ) {
+            checkResult( apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 ) );
             // Time in APR for sockets is in microseconds so multiply by 1000.
             checkResult( apr_socket_timeout_set( socketHandle, value * 1000 ) );
             this->soTimeout = value;

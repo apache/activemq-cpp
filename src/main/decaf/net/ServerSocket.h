@@ -205,10 +205,10 @@ namespace net{
          *         the caller and must be explicitly freed by them.
          *
          * @throws IOException if an I/O error occurs while binding the socket.
+         * @throws SocketException if an error occurs while blocking on the accept call.
          * @throws SocketTimeoutException if the SO_TIMEOUT option was used and the accept timed out.
          */
-        Socket* accept()
-            throw( decaf::io::IOException, decaf::net::SocketTimeoutException );
+        Socket* accept() throw( decaf::io::IOException );
 
         /**
          * Closes the server socket, causing any Threads blocked on an accept call to
