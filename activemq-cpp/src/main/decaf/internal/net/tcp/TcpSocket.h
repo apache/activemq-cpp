@@ -25,7 +25,6 @@
 #include <decaf/internal/AprPool.h>
 
 #include <apr_network_io.h>
-#include <apr_poll.h>
 
 #include <decaf/io/IOException.h>
 #include <decaf/net/SocketTimeoutException.h>
@@ -78,11 +77,6 @@ namespace tcp {
          * Address of the remoute connection portion of the Socket.
          */
         SocketAddress remoteAddress;
-
-        /**
-         * APR Pollset used for connect and accept when soTimeout is set.
-         */
-        apr_pollset_t* pollSet;
 
         /**
          * The input stream for reading this socket.
@@ -168,7 +162,8 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual void accept( SocketImpl* socket ) throw( decaf::io::IOException );
+        virtual void accept( SocketImpl* socket )
+            throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -181,7 +176,6 @@ namespace tcp {
          */
         virtual void connect( const std::string& hostname, int port, int timeout )
             throw( decaf::io::IOException,
-                   decaf::net::SocketTimeoutException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
         /**

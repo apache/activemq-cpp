@@ -222,7 +222,6 @@ void Socket::connect( const std::string& host, int port )
 ////////////////////////////////////////////////////////////////////////////////
 void Socket::connect( const std::string& host, int port, int timeout )
     throw( decaf::io::IOException,
-           decaf::net::SocketTimeoutException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
     checkClosed();
@@ -261,7 +260,6 @@ void Socket::connect( const std::string& host, int port, int timeout )
             throw ex;
         }
     }
-    DECAF_CATCH_RETHROW( SocketTimeoutException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IllegalArgumentException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )

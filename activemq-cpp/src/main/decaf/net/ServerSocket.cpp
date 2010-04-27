@@ -196,7 +196,7 @@ bool ServerSocket::isClosed() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* ServerSocket::accept() throw( decaf::io::IOException, decaf::net::SocketTimeoutException ) {
+Socket* ServerSocket::accept() throw( decaf::io::IOException ) {
 
     checkClosed();
 

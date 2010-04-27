@@ -25,6 +25,7 @@
 #include <decaf/io/OutputStream.h>
 
 #include <decaf/net/SocketException.h>
+#include <decaf/net/SocketTimeoutException.h>
 #include <decaf/net/SocketOptions.h>
 
 #include <string>
@@ -67,8 +68,13 @@ namespace net {
          *      The accepted connection.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
+         * @throws SocketException if an error occurs while performing an Accept on the socket.
+         * @throws SocketTimeoutException if the accept call times out due to SO_TIMEOUT being set.
          */
-        virtual void accept( SocketImpl* socket ) throw( decaf::io::IOException ) = 0;
+        virtual void accept( SocketImpl* socket )
+            throw( decaf::io::IOException,
+                   decaf::net::SocketException,
+                   decaf::net::SocketTimeoutException ) = 0;
 
         /**
          * Connects this socket to the given host and port.
@@ -81,10 +87,12 @@ namespace net {
          *      Time in milliseconds to wait for a connection, 0 indicates forever.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
+         * @throws SocketTimeoutException if the connect call times out due to timeout being set.
          * @throws IllegalArguementException if a parameter has an illegal value.
          */
         virtual void connect( const std::string& hostname, int port, int timeout )
             throw( decaf::io::IOException,
+                   decaf::net::SocketTimeoutException,
                    decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**

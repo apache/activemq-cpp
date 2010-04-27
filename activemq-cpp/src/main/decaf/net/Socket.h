@@ -179,7 +179,6 @@ namespace net{
          */
         virtual void connect( const std::string& host, int port, int timeout )
             throw( decaf::io::IOException,
-                   decaf::net::SocketTimeoutException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
         /**
