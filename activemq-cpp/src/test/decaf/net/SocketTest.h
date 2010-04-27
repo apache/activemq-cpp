@@ -30,10 +30,18 @@ namespace net{
         CPPUNIT_TEST( testConnectUnknownHost );
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testGetReuseAddress );
-//        CPPUNIT_TEST( testTx );
-//        CPPUNIT_TEST( testTrx );
-//        CPPUNIT_TEST( testTrxNoDelay );
-//        CPPUNIT_TEST( testRxFail );
+        CPPUNIT_TEST( testClose );
+        CPPUNIT_TEST( testGetInputStream );
+        CPPUNIT_TEST( testGetKeepAlive );
+        CPPUNIT_TEST( testGetLocalPort );
+        CPPUNIT_TEST( testGetSoLinger );
+        CPPUNIT_TEST( testGetSoTimeout );
+        CPPUNIT_TEST( testGetTcpNoDelay );
+
+        CPPUNIT_TEST( testTx );
+        CPPUNIT_TEST( testTrx );
+        CPPUNIT_TEST( testTrxNoDelay );
+        CPPUNIT_TEST( testRxFail );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,6 +55,13 @@ namespace net{
         void testConnectUnknownHost();
         void testConstructor();
         void testGetReuseAddress();
+        void testClose();
+        void testGetInputStream();
+        void testGetKeepAlive();
+        void testGetLocalPort();
+        void testGetSoLinger();
+        void testGetSoTimeout();
+        void testGetTcpNoDelay();
 
         // Old Tests
         void testConnect();

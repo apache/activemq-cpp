@@ -113,6 +113,12 @@ namespace tcp {
          */
         int soTimeout;
 
+        /**
+         * value of soLinger, used to return a meaningful answer since APR
+         * only returns the on / off state.
+         */
+        mutable int soLinger;
+
     public:
 
         /**
