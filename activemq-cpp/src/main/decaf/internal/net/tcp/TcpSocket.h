@@ -25,8 +25,10 @@
 #include <decaf/internal/AprPool.h>
 
 #include <apr_network_io.h>
+#include <apr_poll.h>
 
 #include <decaf/io/IOException.h>
+#include <decaf/net/SocketTimeoutException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
@@ -78,6 +80,11 @@ namespace tcp {
         SocketAddress remoteAddress;
 
         /**
+         * APR Pollset used for connect and accept when soTimeout is set.
+         */
+        apr_pollset_t* pollSet;
+
+        /**
          * The input stream for reading this socket.
          */
         TcpSocketInputStream* inputStream;
@@ -107,12 +114,17 @@ namespace tcp {
          */
         int trafficClass;
 
+        /**
+         * value of soTimeout used to handle timeout on accept calls.
+         */
+        int soTimeout;
+
     public:
 
         /**
          * Construct a non-connected socket.
-         * @throws SocketException thrown one windows if the static initialization
-         * call to WSAStartup was not successful.
+         *
+         * @throws SocketException thrown if an error occurs while creating the Socket.
          */
         TcpSocket() throw ( decaf::net::SocketException );
 
@@ -169,6 +181,7 @@ namespace tcp {
          */
         virtual void connect( const std::string& hostname, int port, int timeout )
             throw( decaf::io::IOException,
+                   decaf::net::SocketTimeoutException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
         /**

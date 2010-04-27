@@ -178,9 +178,7 @@ void Socket::bind( const std::string& ipaddress, int port )
         ensureCreated();
 
         try {
-            std::cout << "Socket::bind - Binding to " << ipaddress << ":" << port << std::endl;
             this->impl->bind( ipaddress, port );
-            std::cout << "Socket::bind - Bound to " << ipaddress << ":" << port << std::endl;
             this->bound = true;
         } catch( IOException& e ) {
             this->impl->close();
@@ -255,10 +253,8 @@ void Socket::connect( const std::string& host, int port, int timeout )
                 this->bound = true;
             }
 
-            std::cout << "Socket::connect - Connecting to " << host << ":" << port << std::endl;
             this->impl->connect( host, port, timeout );
             this->connected = true;
-            std::cout << "Socket::connect - Connected to " << host << ":" << port << std::endl;
 
         } catch( IOException& ex ) {
             this->impl->close();
