@@ -37,6 +37,10 @@ namespace net{
         CPPUNIT_TEST( testGetSoLinger );
         CPPUNIT_TEST( testGetSoTimeout );
         CPPUNIT_TEST( testGetTcpNoDelay );
+        CPPUNIT_TEST( testIsConnected );
+        CPPUNIT_TEST( testIsClosed );
+        CPPUNIT_TEST( testIsInputShutdown );
+        CPPUNIT_TEST( testIsOutputShutdown );
 
         CPPUNIT_TEST( testTx );
         CPPUNIT_TEST( testTrx );
@@ -62,6 +66,10 @@ namespace net{
         void testGetSoLinger();
         void testGetSoTimeout();
         void testGetTcpNoDelay();
+        void testIsConnected();
+        void testIsClosed();
+        void testIsInputShutdown();
+        void testIsOutputShutdown();
 
         // Old Tests
         void testConnect();
