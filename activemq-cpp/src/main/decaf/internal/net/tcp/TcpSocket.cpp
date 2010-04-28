@@ -294,6 +294,9 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, oldNonblockSetting );
         apr_socket_timeout_set( socketHandle, oldTimeoutSetting );
 
+        // Now that we connected, cache the port value for later lookups.
+        this->port = port;
+
     } catch( IOException& ex ) {
         ex.setMark( __FILE__, __LINE__);
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
@@ -441,6 +444,8 @@ void TcpSocket::close() throw( decaf::io::IOException ) {
             apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READWRITE );
             apr_socket_close( socketHandle );
             socketHandle = NULL;
+            port = 0;
+            localPort = 0;
         }
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )

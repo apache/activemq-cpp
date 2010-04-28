@@ -31,6 +31,7 @@ namespace net{
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testGetReuseAddress );
         CPPUNIT_TEST( testClose );
+        CPPUNIT_TEST( testGetPort );
         CPPUNIT_TEST( testGetInputStream );
         CPPUNIT_TEST( testGetKeepAlive );
         CPPUNIT_TEST( testGetLocalPort );
@@ -50,16 +51,13 @@ namespace net{
 
     public:
 
-        static const int port = 23232;
-
-    public:
-
         virtual ~SocketTest() {}
 
         void testConnectUnknownHost();
         void testConstructor();
         void testGetReuseAddress();
         void testClose();
+        void testGetPort();
         void testGetInputStream();
         void testGetKeepAlive();
         void testGetLocalPort();

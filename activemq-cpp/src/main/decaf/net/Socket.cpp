@@ -74,7 +74,7 @@ Socket::Socket( const std::string& host, int port ) : impl(NULL), created(false)
             this->impl = new TcpSocket();
         }
 
-        this->initSocketImpl( host, port, "", 0 );
+        this->initSocketImpl( host, port, "0.0.0.0", 0 );
     }
     DECAF_CATCH_RETHROW( UnknownHostException )
     DECAF_CATCH_RETHROW( IOException )
@@ -127,7 +127,7 @@ void Socket::initSocketImpl( const std::string& host, int port, const std::strin
         ensureCreated();
 
         try {
-            //this->impl->bind( localAddress, localPort );
+            this->impl->bind( localAddress, localPort );
             this->bound = true;
             this->impl->connect( host, port, -1 );
             this->connected = true;
