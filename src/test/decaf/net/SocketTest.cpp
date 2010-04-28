@@ -84,6 +84,19 @@ void SocketTest::testClose() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetPort() {
+
+    ServerSocket server(0);
+    int serverPort = server.getLocalPort();
+    Socket client( "localhost", serverPort );
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE( "Returned incorrect port", serverPort, client.getPort() );
+
+    client.close();
+    server.close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SocketTest::testGetInputStream() {
 
     ServerSocket ss(0);
@@ -307,7 +320,7 @@ namespace {
         bool done;
         int numClients;
         std::string lastMessage;
-        int port;
+        std::auto_ptr<ServerSocket> server;
 
     public:
 
@@ -315,11 +328,20 @@ namespace {
 
     public:
 
-        MyServerThread( int port ) : Thread(), done( false ), numClients( 0 ), lastMessage(), port( port ) {
+        MyServerThread() : Thread(), done( false ), numClients( 0 ), lastMessage() {
+            server.reset( new ServerSocket(0) );
         }
 
         virtual ~MyServerThread(){
             stop();
+        }
+
+        int getLocalPort() {
+            if( this->server.get() != NULL ) {
+                return server->getLocalPort();
+            }
+
+            return 0;
         }
 
         std::string getLastMessage(){
@@ -338,11 +360,8 @@ namespace {
             try{
                 unsigned char buf[1000];
 
-                ServerSocket server;
-                server.bind( "127.0.0.1", port );
-
-                Socket* socket = server.accept();
-                server.close();
+                std::auto_ptr<Socket> socket( server->accept() );
+                server->close();
 
                 //socket->setSoTimeout( 10 );
                 socket->setSoLinger( false, 0 );
@@ -353,7 +372,7 @@ namespace {
                    mutex.notifyAll();
                 }
 
-                while( !done && socket != NULL ){
+                while( !done && socket.get() != NULL ){
 
                     io::InputStream* stream = socket->getInputStream();
 
@@ -382,7 +401,6 @@ namespace {
                 }
 
                 socket->close();
-                delete socket;
 
                 numClients--;
 
@@ -407,23 +425,22 @@ void SocketTest::testConnect() {
 
     try{
 
-        MyServerThread serverThread( port );
+        MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 40 );
+        Thread::sleep( 100 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
         std::auto_ptr<Socket> client( factory->createSocket() );
 
-        client->connect( "127.0.0.1", port );
+        client->connect( "127.0.0.1", serverThread.getLocalPort() );
         client->setSoLinger( false, 0 );
 
-        synchronized(&serverThread.mutex)
-        {
-           if(serverThread.getNumClients() != 1)
-           {
-              serverThread.mutex.wait(1000);
-           }
+        synchronized( &serverThread.mutex ) {
+
+            if( serverThread.getNumClients() != 1 ) {
+                serverThread.mutex.wait(1000);
+            }
         }
 
         CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
@@ -453,15 +470,15 @@ void SocketTest::testTx() {
 
     try{
 
-        MyServerThread serverThread( port );
+        MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 10 );
+        Thread::sleep( 100 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
         std::auto_ptr<Socket> client( factory->createSocket() );
 
-        client->connect("127.0.0.1", port);
+        client->connect("127.0.0.1", serverThread.getLocalPort() );
         client->setSoLinger( false, 0 );
         client->setTcpNoDelay( true );
 
@@ -509,15 +526,15 @@ void SocketTest::testTrx() {
 
     try{
 
-        MyServerThread serverThread( port );
+        MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 10 );
+        Thread::sleep( 100 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
         std::auto_ptr<Socket> client( factory->createSocket() );
 
-        client->connect("127.0.0.1", port);
+        client->connect( "127.0.0.1", serverThread.getLocalPort() );
         client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
@@ -563,15 +580,15 @@ void SocketTest::testRxFail() {
 
     try{
 
-        MyServerThread serverThread( port );
+        MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 10 );
+        Thread::sleep( 100 );
 
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
         std::auto_ptr<Socket> client( factory->createSocket() );
 
-        client->connect("127.0.0.1", port);
+        client->connect("127.0.0.1", serverThread.getLocalPort() );
         client->setSoLinger( false, 0 );
 
         synchronized(&serverThread.mutex)
@@ -612,7 +629,7 @@ void SocketTest::testTrxNoDelay() {
 
     try{
 
-        MyServerThread serverThread( port );
+        MyServerThread serverThread;
         serverThread.start();
 
         Thread::sleep( 10 );
@@ -620,7 +637,7 @@ void SocketTest::testTrxNoDelay() {
         std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
         std::auto_ptr<Socket> client( factory->createSocket() );
 
-        client->connect("127.0.0.1", port);
+        client->connect("127.0.0.1", serverThread.getLocalPort() );
         client->setSoLinger( false, 0 );
         client->setTcpNoDelay(true);
 
