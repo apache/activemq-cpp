@@ -50,6 +50,11 @@ TcpSocketOutputStream::~TcpSocketOutputStream() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocketOutputStream::close() throw( decaf::io::IOException ) {
+
+    if( this->closed ) {
+        return;
+    }
+
     try{
         this->closed = true;
         this->socket->close();
