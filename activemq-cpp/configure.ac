@@ -198,9 +198,22 @@ fi
 ## DECAF_CONFIGURE_DECAF - Future use for decaf as a standalone lib
 ## Flags for building the decaf cpp library
 ## find and configure the APR, and APR Utils
+## find and configure the OpenSSL library if present
+
+AC_ARG_ENABLE([ssl],
+             [AS_HELP_STRING([--disable-ssl],
+                [disable SSL support (default is enabled if the OpenSSL libraries and headers are found)])],
+             [use_ssl=$enableval],
+             [use_ssl=yes])
+
 DECAF_CONFIGURE_APR
-DECAF_CXXFLAGS="$APR_CPPFLAGS $APR_INCLUDES $APU_INCLUDES"
-DECAF_LIBS="$APR_LIBS $APR_LDFLAGS $APU_LIBS $APU_LDFLAGS"
+
+if test "$use_ssl" = "yes"; then
+    DECAF_CONFIGURE_SSL
+fi
+
+DECAF_CXXFLAGS="$APR_CPPFLAGS $APR_INCLUDES $APU_INCLUDES $OPENSSL_INCLUDES"
+DECAF_LIBS="$APR_LIBS $APR_LDFLAGS $APU_LIBS $APU_LDFLAGS $OPENSSL_LIBS $OPENSSL_LDFLAGS"
 
 AC_SUBST([DECAF_CXXFLAGS])
 AC_SUBST([DECAF_LIBS])
