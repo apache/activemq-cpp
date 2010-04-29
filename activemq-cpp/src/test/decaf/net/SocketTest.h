@@ -27,12 +27,13 @@ namespace net{
     class SocketTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( SocketTest );
-        CPPUNIT_TEST( testConnectUnknownHost );
+        //CPPUNIT_TEST( testConnectUnknownHost );
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testGetReuseAddress );
         CPPUNIT_TEST( testClose );
         CPPUNIT_TEST( testGetPort );
         CPPUNIT_TEST( testGetInputStream );
+        CPPUNIT_TEST( testGetOutputStream );
         CPPUNIT_TEST( testGetKeepAlive );
         CPPUNIT_TEST( testGetLocalPort );
         CPPUNIT_TEST( testGetSoLinger );
@@ -59,6 +60,7 @@ namespace net{
         void testClose();
         void testGetPort();
         void testGetInputStream();
+        void testGetOutputStream();
         void testGetKeepAlive();
         void testGetLocalPort();
         void testGetSoLinger();

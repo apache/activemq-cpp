@@ -17,6 +17,8 @@
 
 #include "SocketTest.h"
 
+#include <apr_signal.h>
+
 #include <decaf/net/Socket.h>
 #include <decaf/net/SocketFactory.h>
 
@@ -33,6 +35,7 @@ using namespace decaf::io;
 using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 void SocketTest::testConnectUnknownHost() {
@@ -307,6 +310,129 @@ void SocketTest::testIsOutputShutdown() {
 
     theInput->close();
     theOutput->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class GetOutputStreamRunnable : public Runnable {
+    private:
+
+        ServerSocket* server;
+
+    public:
+
+        GetOutputStreamRunnable( ServerSocket* server ) : server( server ) {
+
+        }
+
+        virtual void run() {
+
+            try {
+                std::auto_ptr<Socket> worker( server->accept() );
+                server->close();
+                InputStream* in = worker->getInputStream();
+                in->read();
+                in->close();
+                worker->close();
+                worker.reset( NULL );
+            } catch( IOException& e ) {
+                e.printStackTrace();
+            }
+        }
+
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testGetOutputStream() {
+
+    // Remove the SIGPIPE so that the CPPUNIT tests don't quit when sockets are broken.
+    apr_signal_block( SIGPIPE );
+
+    {
+        // Simple fetch test
+        ServerSocket server(0);
+        Socket client( "127.0.0.1", server.getLocalPort() );
+        OutputStream* os = client.getOutputStream();
+        CPPUNIT_ASSERT_MESSAGE( "Failed to get stream", os != NULL );
+        os->close();
+        client.close();
+        server.close();
+    }
+
+    // Simple read/write test over the IO streams
+    ServerSocket server1(0);
+    GetOutputStreamRunnable runnable( &server1 );
+    Thread thread( &runnable );
+    thread.start();
+
+    Socket pingClient( "127.0.0.1", server1.getLocalPort() );
+
+    // Busy wait until the client is connected.
+    int c = 0;
+    while( !pingClient.isConnected() ) {
+
+        try {
+            Thread::sleep( 200 );
+        } catch( InterruptedException& e ) {
+        }
+
+        if( ++c > 5 ) {
+            CPPUNIT_FAIL( "thread is not alive" );
+        }
+    }
+
+    Thread::sleep( 200 );
+
+    // Write some data to the server
+    OutputStream* out = pingClient.getOutputStream();
+    unsigned char buffer[250];
+    out->write( buffer, 1 );
+
+    // Wait for the server to finish
+    Thread::yield();
+    c = 0;
+    while( thread.isAlive() ) {
+
+        try {
+            Thread::sleep( 200 );
+        } catch( InterruptedException& e ) {
+        }
+
+        if( ++c > 5 ) {
+            CPPUNIT_FAIL( "read call did not exit" );
+        }
+    }
+
+    // Subsequent writes should throw an exception
+    try {
+
+        // The output buffer may remain valid until the close completes
+        for( int i = 0; i < 400; i++ ) {
+            out->write( buffer, 1 );
+        }
+        CPPUNIT_FAIL( "write to closed socket did not cause exception" );
+    } catch( IOException& e ) {
+    }
+
+    out->close();
+    pingClient.close();
+    server1.close();
+
+    {
+        // Test for exception on get when socket has its output shutdown.
+        ServerSocket ss2(0);
+        Socket s( "127.0.0.1", ss2.getLocalPort() );
+        std::auto_ptr<Socket> worker( ss2.accept() );
+        s.shutdownOutput();
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should have thrown an IOException",
+            s.getOutputStream(),
+            IOException );
+    }
 }
 
 // TODO - Remove or replace old tests

@@ -48,8 +48,17 @@ TcpSocketInputStream::~TcpSocketInputStream() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocketInputStream::close() throw( decaf::io::IOException ) {
-    this->closed = true;
-    this->socket->close();
+
+    if( this->closed ) {
+        return;
+    }
+
+    try{
+        this->closed = true;
+        this->socket->close();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -718,6 +718,7 @@ void TcpSocket::write( const unsigned char* buffer, int size, int offset, int le
         const unsigned char* lbuffer = buffer + offset;
 
         while( remaining > 0 && !closed ) {
+
             // On input remaining is the bytes to send, after return remaining
             // is the amount actually sent.
             result = apr_socket_send( socketHandle, (const char*)lbuffer, &remaining );

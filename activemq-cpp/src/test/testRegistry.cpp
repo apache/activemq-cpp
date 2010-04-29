@@ -228,10 +228,10 @@
 //#include <decaf/lang/StringTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
 
-#include <decaf/net/SocketFactoryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
-#include <decaf/net/ServerSocketTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::ServerSocketTest );
+//#include <decaf/net/SocketFactoryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
+//#include <decaf/net/ServerSocketTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::ServerSocketTest );
 #include <decaf/net/SocketTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 //#include <decaf/net/URITest.h>
