@@ -484,6 +484,7 @@ cc_sources = \
     decaf/internal/io/StandardOutputStream.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
+    decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
     decaf/internal/net/tcp/DefaultSocketFactory.cpp \
     decaf/internal/net/tcp/TcpSocket.cpp \
     decaf/internal/net/tcp/TcpSocketInputStream.cpp \
@@ -559,7 +560,6 @@ cc_sources = \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
-    decaf/net/ssl/DefaultSSLSocketFactory.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
     decaf/nio/ByteBuffer.cpp \
@@ -1145,6 +1145,7 @@ h_sources = \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
     decaf/internal/net/tcp/DefaultSocketFactory.h \
     decaf/internal/net/tcp/TcpSocket.h \
     decaf/internal/net/tcp/TcpSocketInputStream.h \
@@ -1272,7 +1273,6 @@ h_sources = \
     decaf/net/URLEncoder.h \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
-    decaf/net/ssl/DefaultSSLSocketFactory.h \
     decaf/net/ssl/SSLSocketFactory.h \
     decaf/nio/Buffer.h \
     decaf/nio/BufferOverflowException.h \

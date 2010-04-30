@@ -35,6 +35,10 @@ namespace ssl {
      * @since 1.0
      */
     class DECAF_API SSLSocketFactory : public SocketFactory {
+    protected:
+
+        SSLSocketFactory();
+
     public:
 
         virtual ~SSLSocketFactory();
