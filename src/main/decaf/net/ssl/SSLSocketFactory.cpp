@@ -17,9 +17,16 @@
 
 #include "SSLSocketFactory.h"
 
+#include <decaf/internal/net/ssl/DefaultSSLSocketFactory.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
+using namespace decaf::internal::net::ssl;
+
+////////////////////////////////////////////////////////////////////////////////
+SSLSocketFactory::SSLSocketFactory() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLSocketFactory::~SSLSocketFactory() {
@@ -27,6 +34,5 @@ SSLSocketFactory::~SSLSocketFactory() {
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketFactory* SSLSocketFactory::getDefault() {
-
-    return NULL;
+    return new DefaultSSLSocketFactory( "SSL Support is not enabled in this build." );
 }
