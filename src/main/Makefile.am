@@ -523,6 +523,7 @@ cc_sources = \
     decaf/io/ByteArrayOutputStream.cpp \
     decaf/io/DataInputStream.cpp \
     decaf/io/DataOutputStream.cpp \
+    decaf/io/FileDescriptor.cpp \
     decaf/io/FilterInputStream.cpp \
     decaf/io/FilterOutputStream.cpp \
     decaf/io/InputStream.cpp \
@@ -560,6 +561,8 @@ cc_sources = \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
+    decaf/net/ssl/SSLContent.cpp \
+    decaf/net/ssl/SSLSocket.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
     decaf/nio/ByteBuffer.cpp \
@@ -1192,6 +1195,7 @@ h_sources = \
     decaf/io/DataOutput.h \
     decaf/io/DataOutputStream.h \
     decaf/io/EOFException.h \
+    decaf/io/FileDescriptor.h \
     decaf/io/FilterInputStream.h \
     decaf/io/FilterOutputStream.h \
     decaf/io/Flushable.h \
@@ -1273,6 +1277,8 @@ h_sources = \
     decaf/net/URLEncoder.h \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
+    decaf/net/ssl/SSLContent.h \
+    decaf/net/ssl/SSLSocket.h \
     decaf/net/ssl/SSLSocketFactory.h \
     decaf/nio/Buffer.h \
     decaf/nio/BufferOverflowException.h \

@@ -682,3 +682,13 @@ void Socket::accepted() {
     this->bound = true;
     this->connected = true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Socket::toString() const {
+
+    if( !isConnected() ) {
+        return "Socket[unconnected]";
+    }
+
+    return impl->toString();
+}
