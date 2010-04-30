@@ -282,7 +282,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        void shutdownInput() throw( decaf::io::IOException );
+        virtual void shutdownInput() throw( decaf::io::IOException );
 
         /**
          * Shuts down the OutputStream for this socket, any data already written to the socket will
@@ -290,7 +290,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        void shutdownOutput() throw( decaf::io::IOException );
+        virtual void shutdownOutput() throw( decaf::io::IOException );
 
         /**
          * Gets the linger time for the socket, SO_LINGER.  A return value of -1 indicates that
@@ -478,7 +478,7 @@ namespace net{
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
-        bool getOOBInline() const throw( SocketException );
+        virtual bool getOOBInline() const throw( SocketException );
 
         /**
          * Sets the value of the OOBINLINE for this socket, by default this option is disabled.  If
@@ -488,7 +488,7 @@ namespace net{
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
-        void setOOBInline( bool value ) throw( SocketException );
+        virtual void setOOBInline( bool value ) throw( SocketException );
 
         /**
          * Sends on byte of urgent data to the Socket.
@@ -498,12 +498,12 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        void sendUrgentData( int data ) throw( decaf::io::IOException );
+        virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
 
         /**
          * @returns a string representing this Socket.
          */
-        std::string toString() const;
+        virtual std::string toString() const;
 
     public:
 
