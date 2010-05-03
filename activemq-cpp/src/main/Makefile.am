@@ -564,6 +564,7 @@ cc_sources = \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
     decaf/net/ssl/SSLContent.cpp \
+    decaf/net/ssl/SSLParameters.cpp \
     decaf/net/ssl/SSLSocket.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
@@ -1282,6 +1283,7 @@ h_sources = \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
     decaf/net/ssl/SSLContent.h \
+    decaf/net/ssl/SSLParameters.h \
     decaf/net/ssl/SSLSocket.h \
     decaf/net/ssl/SSLSocketFactory.h \
     decaf/nio/Buffer.h \
