@@ -26,6 +26,7 @@
 
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/tcp/TcpTransportFactory.h>
+#include <activemq/transport/tcp/SslTransportFactory.h>
 #include <activemq/transport/failover/FailoverTransportFactory.h>
 
 using namespace activemq;
@@ -80,6 +81,8 @@ void ActiveMQCPP::registerTransports() {
 
     TransportRegistry::getInstance().registerFactory(
         "tcp", new TcpTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "ssl", new SslTransportFactory() );
     TransportRegistry::getInstance().registerFactory(
         "mock", new MockTransportFactory() );
     TransportRegistry::getInstance().registerFactory(

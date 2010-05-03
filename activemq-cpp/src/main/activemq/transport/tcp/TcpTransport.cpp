@@ -17,13 +17,14 @@
 
 #include "TcpTransport.h"
 
-#include <decaf/lang/Integer.h>
-#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Boolean.h>
+#include <decaf/net/SocketFactory.h>
 
 #include <memory>
 
@@ -38,12 +39,13 @@ using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const decaf::net::URI& uri,
                             const decaf::util::Properties& properties,
                             const Pointer<Transport>& next )
-:   TransportFilter( next ) {
+:   TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
 
     this->initialize( uri, properties );
 }
@@ -51,7 +53,7 @@ TcpTransport::TcpTransport( const decaf::net::URI& uri,
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const decaf::util::Properties& properties,
                             const Pointer<Transport>& next )
-:   TransportFilter( next ) {
+:   TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
 
     if( !properties.hasProperty( "transport.uri" ) ) {
         throw ActiveMQException(
@@ -100,11 +102,22 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
 
     try {
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        socket.reset( this->createSocket() );
 
-        socket.reset( factory->createSocket() );
+        // Set all Socket Options from the URI options.
+        this->configureSocket( socket.get(), properties );
 
-        this->configureSocket( *socket, uri, properties );
+        // Ensure something is actually passed in for the URI
+        if( uri.getAuthority() == "" ) {
+            throw SocketException( __FILE__, __LINE__,
+                "Connection URI was not provided or is invalid: %s", uri.toString().c_str() );
+        }
+
+        // Connect the socket.
+        string host = uri.getHost();
+        int port = uri.getPort();
+
+        socket->connect( host, port, connectTimeout );
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
@@ -161,18 +174,21 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::configureSocket( Socket& socket, const URI& uri, const Properties& properties ) {
+Socket* TcpTransport::createSocket() {
 
     try {
+        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        return factory->createSocket();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
 
-        // Ensure something is actually passed in for the URI
-        if( uri.getAuthority() == "" ) {
-            throw SocketException( __FILE__, __LINE__,
-                "SocketTransport::start() - uri not provided" );
-        }
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::configureSocket( Socket* socket, const Properties& properties ) {
 
-        string host = uri.getHost();
-        int port = uri.getPort();
+    try {
 
         // Get the linger flag.
         int soLinger = Integer::parseInt(
@@ -195,27 +211,27 @@ void TcpTransport::configureSocket( Socket& socket, const URI& uri, const Proper
             properties.getProperty( "tcpNoDelay", "true" ) );
 
         // Get the socket connect timeout in microseconds. (default to infinite wait).
-        int connectTimeout = Integer::parseInt( properties.getProperty( "soConnectTimeout", "0" ) );
-
-        // Connect the socket.
-        socket.connect( host, port, connectTimeout );
+        this->connectTimeout = Integer::parseInt(
+            properties.getProperty( "soConnectTimeout", "0" ) );
 
         // Set the socket options.
-        socket.setKeepAlive( soKeepAlive );
-        socket.setTcpNoDelay( tcpNoDelay );
+        socket->setKeepAlive( soKeepAlive );
+        socket->setTcpNoDelay( tcpNoDelay );
 
         if( soLinger > 0 ) {
-            socket.setSoLinger( true, soLinger );
+            socket->setSoLinger( true, soLinger );
         }
 
         if( soReceiveBufferSize > 0 ){
-            socket.setReceiveBufferSize( soReceiveBufferSize );
+            socket->setReceiveBufferSize( soReceiveBufferSize );
         }
 
         if( soSendBufferSize > 0 ){
-            socket.setSendBufferSize( soSendBufferSize );
+            socket->setSendBufferSize( soSendBufferSize );
         }
     }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
     DECAF_CATCHALL_THROW( SocketException )
