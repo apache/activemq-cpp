@@ -48,6 +48,11 @@ namespace tcp{
     private:
 
         /**
+         * Stores the URI configured Socket connect timeout.
+         */
+        int connectTimeout;
+
+        /**
          * has close been called.
          */
         bool closed;
@@ -75,7 +80,9 @@ namespace tcp{
     public:
 
         /**
-         * Constructor
+         * Creates a new instance of the TcpTransport, the Broker URI is assumed
+         * to be set in the property "transport.uri".
+         *
          * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
          */
@@ -83,7 +90,9 @@ namespace tcp{
                       const Pointer<Transport>& next );
 
         /**
-         * Constructor
+         * Creates a new instance of the TcpTransport, the uri instance specifies the
+         * host and port to connect to.
+         *
          * @param uri - The URI containing the host to connect to.
          * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
@@ -132,14 +141,39 @@ namespace tcp{
             return this->closed;
         }
 
+    protected:
+
+        /**
+         * Create an unconnected Socket instance to be used by the transport to communicate
+         * with the broker.
+         *
+         * @return a newly created unconnected Socket instance.
+         *
+         * @throw IOException if there is an error while creating the unconnected Socket.
+         */
+        virtual decaf::net::Socket* createSocket();
+
+        /**
+         * Using options from configuration URI, configure the socket options before the
+         * Socket instance is connected to the Server.  Subclasses can override this option
+         * to set more configuration options, they should called the base class version to
+         * allow the default set of Socket options to also be configured.
+         *
+         * @param socket
+         *      The Socket instance to configure using options from the given Properties.
+         *
+         * @throw NullPointerException if the Socket instance is null.
+         * @throw IllegalArgumentException if the socket instance is not handled by the class.
+         * @throw SocketException if there is an error while setting one of the Socket options.
+         */
+        virtual void configureSocket( decaf::net::Socket* socket,
+                                      const decaf::util::Properties& properties );
+
     private:
 
         void initialize( const decaf::net::URI& uri,
                          const decaf::util::Properties& properties );
 
-        void configureSocket( decaf::net::Socket& socket,
-                              const decaf::net::URI& uri,
-                              const decaf::util::Properties& properties );
 
     };
 

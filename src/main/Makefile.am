@@ -128,6 +128,8 @@ cc_sources = \
     activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
+    activemq/transport/tcp/SslTransport.cpp \
+    activemq/transport/tcp/SslTransportFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
     activemq/util/ActiveMQProperties.cpp \
@@ -757,6 +759,8 @@ h_sources = \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/mock/ResponseBuilder.h \
+    activemq/transport/tcp/SslTransport.h \
+    activemq/transport/tcp/SslTransportFactory.h \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/tcp/TcpTransportFactory.h \
     activemq/util/ActiveMQProperties.h \
