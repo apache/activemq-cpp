@@ -117,6 +117,8 @@ namespace lang{
 
             #ifdef HAVE_PTHREAD_H
                 pthread_attr_destroy( &attributes );
+            #else
+                ::CloseHandle( handle );
             #endif
         }
 
@@ -205,17 +207,13 @@ namespace{
 
             ::TlsSetValue( currentThreadKey, NULL );
 
+            properties->state = Thread::TERMINATED;
+
             #ifndef _WIN32_WCE
                 _endthreadex( 0 );
             #else
                 ExitThread( 0 );
             #endif
-
-            ::CloseHandle( properties->handle );
-
-            properties->state = Thread::TERMINATED;
-
-            return NULL;
         }
 
     #endif
@@ -415,7 +413,7 @@ void Thread::join() throw( decaf::lang::exceptions::InterruptedException ) {
             void* theReturn = 0;
             pthread_join( properties->handle, &theReturn );
         #else
-            Thread::join( INFINITE, 0 );
+            ::WaitForSingleObject( properties->handle, INFINITE );
         #endif
     }
 }
