@@ -85,16 +85,6 @@ namespace util{
         bool nextBoolean();
 
         /**
-         * Modifies the byte array by a random sequence of bytes generated
-         * by this random number generator.
-         *
-         * @param buf non-null array to contain the new random bytes
-         *
-         * @see #next
-         */
-        void nextBytes( std::vector<unsigned char>& buf );
-
-        /**
          * Generates a normally distributed random double number between
          * 0.0 inclusively and 1.0 exclusively.
          *
@@ -164,6 +154,18 @@ namespace util{
          */
         long long nextLong();
 
+    public:  // Virtual Methods
+
+        /**
+         * Modifies the byte array by a random sequence of bytes generated
+         * by this random number generator.
+         *
+         * @param buf non-null array to contain the new random bytes
+         *
+         * @see #next
+         */
+        virtual void nextBytes( std::vector<unsigned char>& buf );
+
         /**
          * Modifies the seed using linear congruential formula presented
          * in <i>The Art of Computer Programming, Volume 2</i>, Section
@@ -176,9 +178,9 @@ namespace util{
          * @see #Random()
          * @see #Random(long)
          */
-        void setSeed( unsigned long long seed );
+        virtual void setSeed( unsigned long long seed );
 
-    protected:
+    protected:  // Virtual method used by all non-virtual methods in Random.
 
         /**
          * Answers a pseudo-random uniformly distributed <code>int</code>
