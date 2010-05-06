@@ -15,37 +15,35 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_SECURITY_GENERALSECURITYEXCEPTION_H_
-#define _DECAF_SECURITY_GENERALSECURITYEXCEPTION_H_
+#ifndef _DECAF_SECURITY_KEYMANAGEMENTEXCEPTION_H_
+#define _DECAF_SECURITY_KEYMANAGEMENTEXCEPTION_H_
 
 #include <decaf/util/Config.h>
-#include <decaf/lang/Exception.h>
+#include <decaf/security/KeyException.h>
 
 namespace decaf{
 namespace security{
 
     /*
-     * The GeneralSecurityException class is a generic security exception class
-     * that provides type safety for all the security-related exception classes
-     * that extend from it.
+     * A basic key exception
      */
-    class DECAF_API GeneralSecurityException : public decaf::lang::Exception {
+    class DECAF_API KeyManagementException : public KeyException {
     public:
 
         /**
          * Default Constructor
          */
-        GeneralSecurityException() throw() {};
+        KeyManagementException() throw() {};
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex
          *      An exception that should become this type of Exception
          */
-        GeneralSecurityException( const decaf::lang::Exception& ex ) throw()
-        : decaf::lang::Exception()
+        KeyManagementException(const Exception& ex) throw()
+        : KeyException()
         {
-            *(decaf::lang::Exception*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
@@ -53,10 +51,10 @@ namespace security{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        GeneralSecurityException(const GeneralSecurityException& ex) throw()
-        : decaf::lang::Exception()
+        KeyManagementException(const KeyManagementException& ex) throw()
+        : KeyException()
         {
-            *(decaf::lang::Exception*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
@@ -69,9 +67,9 @@ namespace security{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        GeneralSecurityException( const char* file, const int lineNumber,
-                                  const std::exception* cause,
-                                  const char* msg, ... ) throw() : decaf::lang::Exception( cause )
+        KeyManagementException( const char* file, const int lineNumber,
+                                const std::exception* cause,
+                                const char* msg, ... ) throw() : KeyException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -86,7 +84,7 @@ namespace security{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        GeneralSecurityException( const std::exception* cause ) throw() : decaf::lang::Exception( cause ) {}
+        KeyManagementException( const std::exception* cause ) throw() : KeyException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -102,17 +100,15 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        GeneralSecurityException( const char* file,
-                                  const int lineNumber,
-                                  const char* msg, ...) throw()
-        : decaf::lang::Exception()
+        KeyManagementException( const char* file, const int lineNumber, const char* msg, ...) throw()
+        : KeyException()
         {
             va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
+            va_start(vargs, msg);
+            buildMessage(msg, vargs);
 
             // Set the first mark for this exception.
-            setMark( file, lineNumber );
+            setMark(file, lineNumber);
         }
 
         /**
@@ -122,14 +118,14 @@ namespace security{
          *
          * @return A deep copy of this exception.
          */
-        virtual GeneralSecurityException* clone() const{
-            return new GeneralSecurityException( *this );
+        virtual KeyManagementException* clone() const{
+            return new KeyManagementException(*this);
         }
 
-        virtual ~GeneralSecurityException() throw() {}
+        virtual ~KeyManagementException() throw() {}
 
    };
 
 }}
 
-#endif /*_DECAF_SECURITY_GENERALSECURITYEXCEPTION_H_*/
+#endif /*_DECAF_SECURITY_KEYMANAGEMENTEXCEPTION_H_*/
