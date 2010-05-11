@@ -25,6 +25,7 @@
 #include <decaf/io/IOException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -194,9 +195,9 @@ int OpenSSLSocket::read( unsigned char* buffer, int size, int offset, int length
         }
 
         // Read data from the socket.
-        int result = SSL_read( ssl, buffer, bufferSize );
+        int result = SSL_read( this->data->ssl, buffer + offset, length );
 
-        switch( SSL_get_error( ssl, result ) ) {
+        switch( SSL_get_error( this->data->ssl, result ) ) {
             case SSL_ERROR_NONE:
                 return result;
             case SSL_ERROR_ZERO_RETURN:
@@ -254,9 +255,9 @@ void OpenSSLSocket::write( const unsigned char* buffer, int size, int offset, in
 
         while( remaining > 0 && !isClosed() ) {
 
-            int written = SSL_write( ssl, buffer + offset, remaining );
+            int written = SSL_write( this->data->ssl, buffer + offset, remaining );
 
-            switch( SSL_get_error( ssl, written ) ) {
+            switch( SSL_get_error( this->data->ssl, written ) ) {
                 case SSL_ERROR_NONE:
                     offset += written;
                     remaining -= written;
