@@ -15,34 +15,11 @@
  * limitations under the License.
  */
 
-#include "SocketImpl.h"
-
-#include <decaf/lang/Integer.h>
+#include "SecureRandomSpi.h"
 
 using namespace decaf;
-using namespace decaf::net;
-using namespace decaf::lang;
+using namespace decaf::security;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::SocketImpl() : port(0), localPort(0), address(), fd(NULL) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-SocketImpl::~SocketImpl() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string SocketImpl::toString() const {
-
-    std::string result = std::string( "Socket[addr=" ) + this->address +
-                         ",port=" + Integer::toString( this->port ) + "]";
-
-    return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void SocketImpl::sendUrgentData( int data ) throw( decaf::io::IOException ) {
-
-    throw decaf::io::IOException(
-        __FILE__, __LINE__, "Urgent Data not supported by this implementation." );
+SecureRandomSpi::~SecureRandomSpi() {
 }

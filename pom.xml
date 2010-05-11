@@ -136,7 +136,6 @@
                   <includes>**\*.c</includes>
                 </includes>
                 <excludes>
-                  <exclude>**/decaf/security/**\*.cpp</exclude>
                   <exclude>**/decaf/security_provider/**\*.cpp</exclude>
                   <exclude>**/decaf/internal/**/windows/**\*.cpp</exclude>
                 </excludes>
@@ -147,7 +146,6 @@
                   <includes>**\*.h</includes>
                 </includes>
                 <excludes>
-                  <exclude>**/decaf/security/**\*.h</exclude>
                   <exclude>**/decaf/security_provider/**\*.h</exclude>
                 </excludes>
               </headers>

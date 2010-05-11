@@ -15,28 +15,28 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_SSL_SSLCONTENT_H_
-#define _DECAF_NET_SSL_SSLCONTENT_H_
+#ifndef _DECAF_INTERNAL_UTIL_RESOURCE_H_
+#define _DECAF_INTERNAL_UTIL_RESOURCE_H_
 
 #include <decaf/util/Config.h>
 
 namespace decaf {
-namespace net {
-namespace ssl {
+namespace internal {
+namespace util {
 
     /**
+     * Interface for all Managed Resources in Decaf, these objects are added to the
+     * Runtime System and are destroyed at shutdown.
      *
      * @since 1.0
      */
-    class DECAF_API SSLContent {
+    class DECAF_API Resource {
     public:
 
-        SSLContent();
-
-        virtual ~SSLContent();
+        virtual ~Resource();
 
     };
 
 }}}
 
-#endif /* _DECAF_NET_SSL_SSLCONTENT_H_ */
+#endif /* _DECAF_INTERNAL_UTIL_RESOURCE_H_ */

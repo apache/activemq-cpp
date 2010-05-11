@@ -46,8 +46,6 @@ namespace net{
         // Factory for creating sockets, if not set a Plan TCP Socket is created
         static SocketImplFactory* factory;
 
-        // The actual Socket that this Socket represents.
-        mutable SocketImpl* impl;
         mutable volatile bool created;
 
         bool connected;
@@ -57,6 +55,11 @@ namespace net{
         bool outputShutdown;
 
         friend class ServerSocket;
+
+    protected:
+
+        // The actual Socket that this Socket represents.
+        mutable SocketImpl* impl;
 
     public:
 

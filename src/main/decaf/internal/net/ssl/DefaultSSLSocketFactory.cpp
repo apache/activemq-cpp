@@ -64,8 +64,7 @@ std::vector<std::string> DefaultSSLSocketFactory::getSupportedCipherSuites() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* DefaultSSLSocketFactory::createSocket( Socket* socket DECAF_UNUSED, std::string host DECAF_UNUSED,
-                                               int port DECAF_UNUSED, bool autoClose DECAF_UNUSED )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+                                               int port DECAF_UNUSED, bool autoClose DECAF_UNUSED ) {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }

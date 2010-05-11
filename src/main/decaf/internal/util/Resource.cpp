@@ -15,17 +15,12 @@
  * limitations under the License.
  */
 
-#include "SSLContent.h"
+#include "Resource.h"
 
 using namespace decaf;
-using namespace decaf::net;
-using namespace decaf::net::ssl;
+using namespace decaf::internal;
+using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLContent::SSLContent() {
+Resource::~Resource() {
 }
-
-////////////////////////////////////////////////////////////////////////////////
-SSLContent::~SSLContent() {
-}
-

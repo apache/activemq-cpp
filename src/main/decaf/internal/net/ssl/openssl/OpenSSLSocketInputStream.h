@@ -15,47 +15,37 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
-#define _DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_
+#ifndef _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETINPUTSTREAM_H_
+#define _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETINPUTSTREAM_H_
 
 #include <decaf/util/Config.h>
 
 #include <decaf/io/InputStream.h>
-#include <decaf/io/IOException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
-#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf {
 namespace internal {
 namespace net {
-namespace tcp {
+namespace ssl {
+namespace openssl {
 
-    class TcpSocket;
+    class OpenSSLSocket;
 
     /**
-     * Input stream for performing reads on a socket.  This class will only
-     * work properly for blocking sockets.
+     * An output stream for reading data from an OpenSSL Socket instance.
      *
      * @since 1.0
      */
-    class DECAF_API TcpSocketInputStream : public decaf::io::InputStream {
+    class DECAF_API OpenSSLSocketInputStream : public decaf::io::InputStream {
     private:
 
-        TcpSocket* socket;
-
+        OpenSSLSocket* socket;
         volatile bool closed;
 
     public:
 
-        /**
-         * Create a new InputStream to use for reading from the TCP/IP socket.
-         *
-         * @param socket
-         *      The parent SocketImpl for this stream.
-         */
-        TcpSocketInputStream( TcpSocket* socket );
+        OpenSSLSocketInputStream( OpenSSLSocket* socket );
 
-        virtual ~TcpSocketInputStream();
+        virtual ~OpenSSLSocketInputStream();
 
         /**
          * {@inheritDoc}
@@ -90,6 +80,6 @@ namespace tcp {
 
     };
 
-}}}}
+}}}}}
 
-#endif /*_DECAF_INTERNAL_NET_TCP_TCPSOCKETINPUTSTREAM_H_*/
+#endif /* _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETINPUTSTREAM_H_ */

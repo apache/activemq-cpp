@@ -15,34 +15,54 @@
  * limitations under the License.
  */
 
-#include "SocketImpl.h"
+#include "ResourceLifecycleManager.h"
 
-#include <decaf/lang/Integer.h>
+#include <decaf/lang/Exception.h>
+
+#include <decaf/util/Iterator.h>
 
 using namespace decaf;
-using namespace decaf::net;
+using namespace decaf::internal;
+using namespace decaf::internal::util;
 using namespace decaf::lang;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::SocketImpl() : port(0), localPort(0), address(), fd(NULL) {
+ResourceLifecycleManager::ResourceLifecycleManager() : resources() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::~SocketImpl() {
+ResourceLifecycleManager::~ResourceLifecycleManager() {
+    try{
+        this->destroyResources();
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string SocketImpl::toString() const {
+void ResourceLifecycleManager::addResource( Resource* value ) {
 
-    std::string result = std::string( "Socket[addr=" ) + this->address +
-                         ",port=" + Integer::toString( this->port ) + "]";
+    if( value == NULL ) {
+        return;
+    }
 
-    return result;
+    this->resources.add( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketImpl::sendUrgentData( int data ) throw( decaf::io::IOException ) {
+void ResourceLifecycleManager::destroyResources() {
 
-    throw decaf::io::IOException(
-        __FILE__, __LINE__, "Urgent Data not supported by this implementation." );
+    try{
+
+        std::auto_ptr< Iterator<Resource*> > iterator( this->resources.iterator() );
+
+        while( iterator->hasNext() ) {
+            delete iterator->next();
+        }
+
+        this->resources.clear();
+    }
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }

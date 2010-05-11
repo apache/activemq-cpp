@@ -23,6 +23,7 @@
 #include <decaf/io/IOException.h>
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/io/FileDescriptor.h>
 
 #include <decaf/net/SocketException.h>
 #include <decaf/net/SocketTimeoutException.h>
@@ -41,9 +42,25 @@ namespace net {
     class DECAF_API SocketImpl : public SocketOptions {
     protected:
 
+        /**
+         * The remote port that this Socket is connected to.
+         */
         int port;
+
+        /**
+         * The port on the Local Machine that this Socket is Bound to.
+         */
         int localPort;
+
+        /**
+         * The Remote Address that the Socket is connected to.
+         */
         std::string address;
+
+        /**
+         * The File Descriptor for this Socket.
+         */
+        io::FileDescriptor* fd;
 
     public:
 
@@ -226,6 +243,16 @@ namespace net {
           */
          std::string getInetAddress() const {
              return this->address;
+         }
+
+         /**
+          * Gets the FileDescriptor for this Socket, the Object is owned by this Socket and
+          * should not be deleted by the caller.
+          *
+          * @returns a pointer to this Socket's FileDescriptor object.
+          */
+         const decaf::io::FileDescriptor* getFileDescriptor() const {
+             return this->fd;
          }
 
          /**
