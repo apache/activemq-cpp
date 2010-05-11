@@ -484,9 +484,17 @@ cc_sources = \
     decaf/internal/io/StandardErrorOutputStream.cpp \
     decaf/internal/io/StandardInputStream.cpp \
     decaf/internal/io/StandardOutputStream.cpp \
+    decaf/internal/net/Network.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
+    decaf/internal/net/ssl/DefaultSSLContext.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLContextSpi.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocket.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketException.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.cpp \
     decaf/internal/net/tcp/DefaultSocketFactory.cpp \
     decaf/internal/net/tcp/TcpSocket.cpp \
     decaf/internal/net/tcp/TcpSocketInputStream.cpp \
@@ -501,6 +509,8 @@ cc_sources = \
     decaf/internal/nio/ShortArrayBuffer.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
+    decaf/internal/util/Resource.cpp \
+    decaf/internal/util/ResourceLifecycleManager.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
@@ -563,7 +573,8 @@ cc_sources = \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
-    decaf/net/ssl/SSLContent.cpp \
+    decaf/net/ssl/SSLContext.cpp \
+    decaf/net/ssl/SSLContextSpi.cpp \
     decaf/net/ssl/SSLParameters.cpp \
     decaf/net/ssl/SSLSocket.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
@@ -575,6 +586,8 @@ cc_sources = \
     decaf/nio/IntBuffer.cpp \
     decaf/nio/LongBuffer.cpp \
     decaf/nio/ShortBuffer.cpp \
+    decaf/security/SecureRandom.cpp \
+    decaf/security/SecureRandomSpi.cpp \
     decaf/util/Date.cpp \
     decaf/util/Properties.cpp \
     decaf/util/Random.cpp \
@@ -1150,10 +1163,18 @@ h_sources = \
     decaf/internal/io/StandardErrorOutputStream.h \
     decaf/internal/io/StandardInputStream.h \
     decaf/internal/io/StandardOutputStream.h \
+    decaf/internal/net/Network.h \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/ssl/DefaultSSLContext.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
+    decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocket.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketException.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.h \
     decaf/internal/net/tcp/DefaultSocketFactory.h \
     decaf/internal/net/tcp/TcpSocket.h \
     decaf/internal/net/tcp/TcpSocketInputStream.h \
@@ -1167,7 +1188,10 @@ h_sources = \
     decaf/internal/nio/LongArrayBuffer.h \
     decaf/internal/nio/ShortArrayBuffer.h \
     decaf/internal/util/ByteArrayAdapter.h \
+    decaf/internal/util/GenericResource.h \
     decaf/internal/util/HexStringParser.h \
+    decaf/internal/util/Resource.h \
+    decaf/internal/util/ResourceLifecycleManager.h \
     decaf/internal/util/TimerTaskHeap.h \
     decaf/internal/util/concurrent/ConditionImpl.h \
     decaf/internal/util/concurrent/MutexImpl.h \
@@ -1282,7 +1306,8 @@ h_sources = \
     decaf/net/URLEncoder.h \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
-    decaf/net/ssl/SSLContent.h \
+    decaf/net/ssl/SSLContext.h \
+    decaf/net/ssl/SSLContextSpi.h \
     decaf/net/ssl/SSLParameters.h \
     decaf/net/ssl/SSLSocket.h \
     decaf/net/ssl/SSLSocketFactory.h \
@@ -1298,6 +1323,26 @@ h_sources = \
     decaf/nio/LongBuffer.h \
     decaf/nio/ReadOnlyBufferException.h \
     decaf/nio/ShortBuffer.h \
+    decaf/security/GeneralSecurityException.h \
+    decaf/security/InvalidKeyException.h \
+    decaf/security/Key.h \
+    decaf/security/KeyException.h \
+    decaf/security/KeyManagementException.h \
+    decaf/security/NoSuchAlgorithmException.h \
+    decaf/security/NoSuchProviderException.h \
+    decaf/security/Principal.h \
+    decaf/security/PublicKey.h \
+    decaf/security/SecureRandom.h \
+    decaf/security/SecureRandomSpi.h \
+    decaf/security/SignatureException.h \
+    decaf/security/auth/x500/X500Principal.h \
+    decaf/security/cert/Certificate.h \
+    decaf/security/cert/CertificateEncodingException.h \
+    decaf/security/cert/CertificateException.h \
+    decaf/security/cert/CertificateExpiredException.h \
+    decaf/security/cert/CertificateNotYetValidException.h \
+    decaf/security/cert/CertificateParsingException.h \
+    decaf/security/cert/X509Certificate.h \
     decaf/util/AbstractCollection.h \
     decaf/util/AbstractList.h \
     decaf/util/AbstractMap.h \

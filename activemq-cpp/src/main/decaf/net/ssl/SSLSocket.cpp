@@ -17,9 +17,13 @@
 
 #include "SSLSocket.h"
 
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLSocket::SSLSocket() {
@@ -27,4 +31,41 @@ SSLSocket::SSLSocket() {
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLSocket::~SSLSocket() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+SSLParameters SSLSocket::getSSLParameters() const {
+
+    SSLParameters params( this->getEnabledCipherSuites(),
+                          this->getEnabledProtocols() );
+
+    params.setWantClientAuth( this->getWantClientAuth() );
+    params.setNeedClientAuth( this->getNeedClientAuth() );
+
+    return params;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SSLSocket::setSSLParameters( const SSLParameters& value ) {
+
+    try{
+
+        if( !value.getCipherSuites().empty() ) {
+            this->setEnabledCipherSuites( value.getCipherSuites() );
+        }
+
+        if( !value.getProtocols().empty() ) {
+            this->setEnabledProtocols( value.getProtocols() );
+        }
+
+        if( value.getWantClientAuth() || value.getNeedClientAuth() ) {
+            this->setNeedClientAuth( value.getNeedClientAuth() );
+            this->setWantClientAuth( value.getWantClientAuth() );
+        } else {
+            this->setWantClientAuth( false );
+        }
+    }
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
+    DECAF_CATCHALL_THROW( IllegalArgumentException )
 }

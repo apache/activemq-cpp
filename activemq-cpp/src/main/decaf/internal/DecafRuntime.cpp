@@ -22,9 +22,11 @@
 #include <apr_pools.h>
 
 #include <decaf/lang/Thread.h>
+#include <decaf/internal/net/Network.h>
 
 using namespace decaf;
 using namespace decaf::internal;
+using namespace decaf::internal::net;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +100,9 @@ void Runtime::initializeRuntime( int argc DECAF_UNUSED, char **argv DECAF_UNUSED
 
     // Initialize any Platform specific Threading primitives
     Thread::initThreading();
+
+    // Initialize the Networking layer.
+    Network::initializeNetworking();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,5 +112,12 @@ void Runtime::initializeRuntime() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Runtime::shutdownRuntime() {
+
+    // Shutdown the networking layer before Threading, many network routines need
+    // to be thread safe and require Threading primitives.
+    Network::shutdownNetworking();
+
+    // Threading is the last to by shutdown since most other parts of the Runtime
+    // need to make use of Thread primitives.
     Thread::shutdownThreading();
 }

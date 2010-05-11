@@ -35,11 +35,13 @@ namespace ssl {
      * @since 1.0
      */
     class DECAF_API SSLSocketFactory : public SocketFactory {
-    protected:
+    private:
 
-        SSLSocketFactory();
+        static SocketFactory* defaultSocketFactory;
 
     public:
+
+        SSLSocketFactory();
 
         virtual ~SSLSocketFactory();
 
@@ -52,7 +54,7 @@ namespace ssl {
          * that is successful and the object is an instance of SSLSocketFactory, it is made the
          * default SSL socket factory.
          *
-         * Otherwise, this method returns SSLContext::getDefault().getSocketFactory(). If that
+         * Otherwise, this method returns SSLContext::getDefault()->getSocketFactory(). If that
          * call fails, an non-functional factory is returned.
          *
          * @returns the default SSL SocketFactory pointer.
@@ -105,8 +107,7 @@ namespace ssl {
          * @throws IOException if an I/O exception occurs while performing this operation.
          * @throws UnknownHostException if the host is unknown.
          */
-        virtual Socket* createSocket( Socket* socket, std::string host, int port, bool autoClose )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
+        virtual Socket* createSocket( Socket* socket, std::string host, int port, bool autoClose ) = 0;
 
     };
 

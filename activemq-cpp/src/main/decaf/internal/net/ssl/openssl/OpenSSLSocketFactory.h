@@ -15,44 +15,41 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_NET_SSL_DEFAULTSSLSOCKETFACTORY_H_
-#define _DECAF_INTERNAL_NET_SSL_DEFAULTSSLSOCKETFACTORY_H_
+#ifndef _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETFACTORY_H_
+#define _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETFACTORY_H_
 
 #include <decaf/util/Config.h>
 
 #include <decaf/net/ssl/SSLSocketFactory.h>
 
-#include <string>
-#include <vector>
-
 namespace decaf {
 namespace internal {
 namespace net {
 namespace ssl {
+namespace openssl {
+
+    class OpenSSLContextSpi;
 
     /**
-     * Default implementation of the SSLSocketFactory, this factory throws an Exception
-     * from all its create methods to indicate that SSL is not supported, this factory
-     * is used when OpenSSL is not enabled in the builds.
+     * Client Socket Factory that creates SSL based client sockets using the OpenSSL library.
      *
      * @since 1.0
      */
-    class DECAF_API DefaultSSLSocketFactory : public decaf::net::ssl::SSLSocketFactory {
+    class DECAF_API OpenSSLSocketFactory : public decaf::net::ssl::SSLSocketFactory {
     private:
 
-        std::string errorMessage;
+        OpenSSLContextSpi* parent;
 
     public:
 
-        DefaultSSLSocketFactory( const std::string& errorMessage );
+        OpenSSLSocketFactory( OpenSSLContextSpi* parent );
 
-        virtual ~DefaultSSLSocketFactory();
+        virtual ~OpenSSLSocketFactory();
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket()
-            throw( decaf::io::IOException );
+        virtual decaf::net::Socket* createSocket() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -73,10 +70,11 @@ namespace ssl {
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket( decaf::net::Socket* socket, std::string host, int port, bool autoClose );
+        virtual decaf::net::Socket* createSocket( decaf::net::Socket* socket, std::string host,
+                                                  int port, bool autoClose );
 
     };
 
-}}}}
+}}}}}
 
-#endif /* _DECAF_INTERNAL_NET_SSL_DEFAULTSSLSOCKETFACTORY_H_ */
+#endif /* _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSOCKETFACTORY_H_ */

@@ -15,54 +15,59 @@
  * limitations under the License.
  */
 
-#include "SSLSocketFactory.h"
+#include "DefaultSSLContext.h"
 
+#include <decaf/io/IOException.h>
+
+#include <decaf/security/SecureRandom.h>
 #include <decaf/internal/net/Network.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h>
 
-#include <decaf/internal/net/ssl/DefaultSSLContext.h>
-#include <decaf/internal/net/ssl/DefaultSSLSocketFactory.h>
+#include <memory>
 
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
+using namespace decaf::security;
+using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
+using namespace decaf::internal::net::ssl::openssl;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory* SSLSocketFactory::defaultSocketFactory = NULL;
+SSLContext* DefaultSSLContext::defaultSSLContext = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLSocketFactory::SSLSocketFactory() {
+DefaultSSLContext::DefaultSSLContext() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLSocketFactory::~SSLSocketFactory() {
+DefaultSSLContext::~DefaultSSLContext() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory* SSLSocketFactory::getDefault() {
+SSLContext* DefaultSSLContext::getContext() {
 
-    if( SSLSocketFactory::defaultSocketFactory != NULL ) {
-        return SSLSocketFactory::defaultSocketFactory;
+#ifdef HAVE_OPENSSL
+
+    if( defaultSSLContext == NULL ) {
+
+        std::auto_ptr<SecureRandom> random( new SecureRandom() );
+        std::auto_ptr<SSLContextSpi> contextSpi( new OpenSSLContextSpi() );
+
+        // TODO - This should eventually move to a call to SSLContext::init();
+        contextSpi->providerInit( random.release() );
+
+        // Update the default, this is the Application default from now on.
+        defaultSSLContext = new SSLContext( contextSpi.release() );
+
+        // Store the default in the Network Runtime, it will be destroyed when the
+        // Application calls the Decaf shutdownLibrary method.
+        Network::getNetworkRuntime()->addAsResource( defaultSSLContext );
     }
 
-    // Check the DefaultSSLContext to see if any SSL Providers are enabled
-    SSLContext* context = DefaultSSLContext::getContext();
-    if( context != NULL ) {
+#endif
 
-        // The SSLContext owns the Factory returned here, no need to manage it.
-        SSLSocketFactory::defaultSocketFactory = context->getSocketFactory();
-    }
-
-    // Non found, use the non-functional default one.
-    if( SSLSocketFactory::defaultSocketFactory == NULL ) {
-        SSLSocketFactory::defaultSocketFactory =
-            new DefaultSSLSocketFactory( "SSL Support is not enabled in this build." );
-
-        // Since we created this one we need to make sure it is destroyed when the Network
-        // Runtime is shutdown.
-        Network::getNetworkRuntime()->addAsResource( SSLSocketFactory::defaultSocketFactory );
-    }
-
-    return SSLSocketFactory::defaultSocketFactory;
+    return defaultSSLContext;
 }

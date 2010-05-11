@@ -59,6 +59,22 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class SocketFileDescriptor : public FileDescriptor {
+    public:
+
+        SocketFileDescriptor( apr_socket_t* socket ) : FileDescriptor() {
+            apr_os_sock_t osSocket = -1;
+            apr_os_sock_get( &osSocket, socket );
+            this->descriptor = (int)osSocket;
+        }
+
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
   : socketHandle( NULL ),
     localAddress( NULL ),
@@ -110,6 +126,9 @@ void TcpSocket::create() throw( decaf::io::IOException ) {
         // Create the actual socket.
         checkResult( apr_socket_create( &socketHandle, AF_INET, SOCK_STREAM,
                                         APR_PROTO_TCP, apr_pool.getAprPool() ) );
+
+        // Initialize the Socket's FileDescriptor
+        this->fd = new SocketFileDescriptor( socketHandle );
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -441,11 +460,15 @@ void TcpSocket::close() throw( decaf::io::IOException ) {
         // When connected we first shutdown, which breaks our reads and writes
         // then we close to free APR resources.
         if( isConnected() ) {
+            // Destory the allocated resources.
             apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READWRITE );
             apr_socket_close( socketHandle );
-            socketHandle = NULL;
-            port = 0;
-            localPort = 0;
+            delete this->fd;
+
+            // Clear out the member data.
+            this->socketHandle = NULL;
+            this->port = 0;
+            this->localPort = 0;
         }
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
@@ -604,8 +627,7 @@ int TcpSocket::read( unsigned char* buffer, int size, int offset, int length )
     try{
         if( this->isClosed() ){
             throw IOException(
-                __FILE__, __LINE__,
-                "decaf::io::TcpSocketInputStream::read - The Stream has been closed" );
+                __FILE__, __LINE__, "The Stream has been closed" );
         }
 
         if( this->inputShutdown == true ) {
@@ -618,8 +640,7 @@ int TcpSocket::read( unsigned char* buffer, int size, int offset, int length )
 
         if( buffer == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "TcpSocketInputStream::read - Buffer passed is Null" );
+                __FILE__, __LINE__, "Buffer passed is Null" );
         }
 
         if( size < 0 ) {
@@ -654,14 +675,13 @@ int TcpSocket::read( unsigned char* buffer, int size, int offset, int length )
 
         if( isClosed() ){
             throw IOException(
-                __FILE__, __LINE__,
-                "decaf::io::TcpSocketInputStream::read - The connection is broken" );
+                __FILE__, __LINE__, "The connection is closed" );
         }
 
         if( result != APR_SUCCESS ){
             throw IOException(
                 __FILE__, __LINE__,
-                "decaf::net::TcpSocketInputStream::read - %s",
+                "Socket Read Error - %s",
                 SocketError::getErrorString().c_str() );
         }
 

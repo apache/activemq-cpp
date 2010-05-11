@@ -15,34 +15,40 @@
  * limitations under the License.
  */
 
-#include "SocketImpl.h"
-
-#include <decaf/lang/Integer.h>
+#include "SecureRandom.h"
 
 using namespace decaf;
-using namespace decaf::net;
-using namespace decaf::lang;
+using namespace decaf::security;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::SocketImpl() : port(0), localPort(0), address(), fd(NULL) {
+SecureRandom::SecureRandom() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketImpl::~SocketImpl() {
+SecureRandom::SecureRandom( const std::vector<unsigned char>& seed DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string SocketImpl::toString() const {
-
-    std::string result = std::string( "Socket[addr=" ) + this->address +
-                         ",port=" + Integer::toString( this->port ) + "]";
-
-    return result;
+SecureRandom::~SecureRandom() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketImpl::sendUrgentData( int data ) throw( decaf::io::IOException ) {
+void SecureRandom::nextBytes( std::vector<unsigned char>& buf ) {
+    Random::nextBytes( buf );
+}
 
-    throw decaf::io::IOException(
-        __FILE__, __LINE__, "Urgent Data not supported by this implementation." );
+////////////////////////////////////////////////////////////////////////////////
+void SecureRandom::setSeed( unsigned long long seed ) {
+
+    Random::setSeed( seed );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SecureRandom::setSeed( const std::vector<unsigned char>& seed DECAF_UNUSED ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int SecureRandom::next( int bits ) {
+    return Random::next( bits );
 }
