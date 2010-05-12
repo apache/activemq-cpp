@@ -176,6 +176,27 @@ void ArrayPointerTest::testBasics() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ArrayPointerTest::testClone() {
+
+    const int SIZE = 50;
+
+    ArrayPointer<int> original( SIZE );
+
+    for( int ix = 0; ix < SIZE; ix++ ) {
+        original[ix] = ix + 10;
+    }
+
+    ArrayPointer<int> copy = original.clone();
+
+    CPPUNIT_ASSERT_EQUAL( SIZE, copy.length() );
+    CPPUNIT_ASSERT( original.get() != copy.get() );
+
+    for( int ix = 0; ix < SIZE; ix++ ) {
+        CPPUNIT_ASSERT_EQUAL( original[ix], copy[ix] );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ArrayPointerTest::testAssignment() {
 
     const int SIZE = 50;
