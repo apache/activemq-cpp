@@ -23,6 +23,8 @@
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocket.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h>
 
+#include <memory>
+
 #ifdef HAVE_OPENSSL
 #include <openssl/ssl.h>
 #endif
@@ -32,6 +34,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::net;
+using namespace decaf::net::ssl;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
@@ -81,11 +84,24 @@ Socket* OpenSSLSocketFactory::createSocket() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* OpenSSLSocketFactory::createSocket( const std::string& name, int port )
+Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port )
     throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
 
-    return NULL;
-}
+    try{
+
+#ifdef HAVE_OPENSSL
+        // Create a new SSL object for the Socket then create a new unconnected Socket.
+        SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
+        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( SSL_new( ctx ) ) );
+        socket->connect( hostname, port );
+        return socket.release();
+#else
+        return NULL;
+#endif
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )}
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLSocketFactory::createSocket( Socket* socket DECAF_UNUSED,
