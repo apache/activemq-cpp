@@ -58,44 +58,54 @@ namespace lang{
          * @throws NullPointerException if src or dest are NULL.
          */
         static void arraycopy( const unsigned char* src, std::size_t srcPos,
-                               unsigned char* dest, std::size_t destPos, std::size_t length )
-            throw( decaf::lang::exceptions::NullPointerException );
+                               unsigned char* dest, std::size_t destPos, std::size_t length );
+        static void arraycopy( const int* src, std::size_t srcPos,
+                               int* dest, std::size_t destPos, std::size_t length );
 
         /**
          * Enumerates the system environment and returns a map of env variable
          * names to the string values they hold.
+         *
          * @return A Map of all environment variables.
-         * @throw Exception if an error occurs
+         *
+         * @throw Exception if an error occurs while getting the Environment Map.
          */
-        static const util::Map<std::string, std::string>& getenv()
-            throw ( lang::Exception );
+        static const util::Map<std::string, std::string>& getenv();
 
         /**
          * Reads an environment value from the system and returns it as a
          * string object
-         * @param name - the env var to read
-         * @return a string with the value from the var or ""
+         *
+         * @param name
+         *      The environment variable to read.
+         *
+         * @return a string with the value from the variables or ""
+         *
          * @throws an Exception if an error occurs while reading the Env.
          */
-        static std::string getenv( const std::string& name )
-            throw ( lang::Exception );
+        static std::string getenv( const std::string& name );
 
         /**
-         * Clears a set env value if one is set.
-         * @param name - the env var to clear
-         * @throws an Exception if an error occurs while reading the Env.
+         * Clears a set environment value if one is set.
+         *
+         * @param name
+         *      The environment variables to clear.
+         *
+         * @throws an Exception if an error occurs while reading the environment.
          */
-        static void unsetenv( const std::string& name )
-            throw ( lang::Exception );
+        static void unsetenv( const std::string& name );
 
         /**
-         * Sets the specified system property to the value given
-         * @param name - name of the env val to set
-         * @param value - value to assign to name
-         * @throws an Exception if an error occurs
+         * Sets the specified system property to the value given.
+         *
+         * @param name
+         *      The name of the environment variables to set.
+         * @param value
+         *      The value to assign to name.
+         *
+         * @throws an Exception if an error occurs when setting the environment variable.
          */
-        static void setenv( const std::string& name, const std::string& value )
-            throw ( lang::Exception );
+        static void setenv( const std::string& name, const std::string& value );
 
         /**
          * Returns the current time in milliseconds. Note that while the unit of time of
@@ -136,7 +146,7 @@ namespace lang{
         static long long nanoTime();
 
         /**
-         * Returns the number of processors available for exection of Decaf Threads.
+         * Returns the number of processors available for execution of Decaf Threads.
          *
          * This value may change during a particular execution of a Decaf based application. Applications
          * that are sensitive to the number of available processors should therefore occasionally poll
@@ -152,12 +162,15 @@ namespace lang{
          * Enumerates the environment and return an array of strings
          * with the values.  Caller owns the array.  The array is terminated
          * by an element that holds the value NULL
-         * @returns a vector of env name=value paris.
+         *
+         * @returns a vector of environment name / value pairs.
          */
         static std::vector< std::string > getEnvArray();
 
         /**
          * Gets the one and only APR Pool instance
+         *
+         * @returns a reference to the global APR Pool.
          */
         static internal::AprPool& getAprPool();
 
