@@ -19,6 +19,7 @@
 #define _DECAF_LANG_ARRAYPOINTER_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/System.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -219,6 +220,23 @@ namespace lang {
         }
 
         /**
+         * Creates a new ArrayPointer instance that is a clone of the value contained in this
+         * ArrayPointer.
+         *
+         * @return an ArrayPointer that contains a copy of the data in this ArrayPointer.
+         */
+        ArrayPointer clone() {
+
+            if( this->array->length == 0 ){
+                return ArrayPointer();
+            }
+
+            ArrayPointer copy( this->array->length );
+            decaf::lang::System::arraycopy( this->array->value, 0, copy.get(), 0, this->array->length );
+            return copy;
+        }
+
+        /**
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
@@ -263,7 +281,7 @@ namespace lang {
 
             return this->array->value[index];
         }
-        ReferenceType operator[]( int index ) const {
+        const ReferenceType operator[]( int index ) const {
             if( this->array->value == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
@@ -271,7 +289,7 @@ namespace lang {
 
             if( index < 0 || this->array->length <= index ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__, "Array Index %d is out of bounds for this array.", *( this->array->length ) );
+                    __FILE__, __LINE__, "Array Index %d is out of bounds for this array.", this->array->length );
             }
 
             return this->array->value[index];

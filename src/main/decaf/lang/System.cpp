@@ -73,8 +73,7 @@ AprPool& System::getAprPool() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void System::arraycopy( const unsigned char* src, std::size_t srcPos,
-                        unsigned char* dest, std::size_t destPos, std::size_t length )
-    throw( decaf::lang::exceptions::NullPointerException ){
+                        unsigned char* dest, std::size_t destPos, std::size_t length ) {
 
     if( src == NULL ) {
         throw NullPointerException(
@@ -95,7 +94,29 @@ void System::arraycopy( const unsigned char* src, std::size_t srcPos,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void System::unsetenv( const std::string& name ) throw ( lang::Exception ) {
+void System::arraycopy( const int* src, std::size_t srcPos,
+                        int* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length * sizeof( int ) );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length * sizeof( int ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::unsetenv( const std::string& name ) {
 
     apr_status_t result = APR_SUCCESS;
 
@@ -115,7 +136,7 @@ void System::unsetenv( const std::string& name ) throw ( lang::Exception ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string System::getenv( const std::string& name ) throw ( Exception ) {
+std::string System::getenv( const std::string& name ) {
 
     char* value = NULL;
     apr_status_t result = APR_SUCCESS;
@@ -145,8 +166,7 @@ std::string System::getenv( const std::string& name ) throw ( Exception ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void System::setenv( const std::string& name, const std::string& value )
-    throw ( lang::Exception ) {
+void System::setenv( const std::string& name, const std::string& value ) {
 
     apr_status_t result = APR_SUCCESS;
 
@@ -217,7 +237,7 @@ long long System::nanoTime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const Map<string, string>& System::getenv() throw ( Exception ) {
+const Map<string, string>& System::getenv() {
 
     static StlMap<string, string> values;
     values.clear();
