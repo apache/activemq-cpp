@@ -225,7 +225,7 @@ namespace lang {
          *
          * @return an ArrayPointer that contains a copy of the data in this ArrayPointer.
          */
-        ArrayPointer clone() {
+        ArrayPointer clone() const {
 
             if( this->array->length == 0 ){
                 return ArrayPointer();

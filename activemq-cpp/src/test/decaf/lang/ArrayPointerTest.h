@@ -28,6 +28,7 @@ namespace lang {
 
         CPPUNIT_TEST_SUITE( ArrayPointerTest );
         CPPUNIT_TEST( testBasics );
+        CPPUNIT_TEST( testClone );
         CPPUNIT_TEST( testAssignment );
         CPPUNIT_TEST( testComparisons );
         CPPUNIT_TEST( testThreaded1 );
@@ -44,6 +45,7 @@ namespace lang {
         virtual ~ArrayPointerTest() {}
 
         void testBasics();
+        void testClone();
         void testAssignment();
         void testComparisons();
         void testThreaded1();
