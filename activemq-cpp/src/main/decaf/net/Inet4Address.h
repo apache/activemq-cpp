@@ -26,11 +26,89 @@ namespace decaf {
 namespace net {
 
     class DECAF_API Inet4Address : public InetAddress {
-    public:
+    private:
+
+        friend class InetAddress;
+
+    protected:
 
         Inet4Address();
+        Inet4Address( const unsigned char* ipAddress, int numBytes );
+        Inet4Address( const std::string& hostname, const unsigned char* ipAddress, int numBytes );
+
+    public:
 
         virtual ~Inet4Address();
+
+        /**
+         * Check if this InetAddress is a valid wildcard address.
+         *
+         * @return true if the address is a wildcard address.
+         */
+        virtual bool isAnyLocalAddress() const;
+
+        /**
+         * Check if this InetAddress is a valid loopback address.
+         *
+         * @return true if the address is a loopback address.
+         */
+        virtual bool isLoopbackAddress() const;
+
+        /**
+         * Check if this InetAddress is a valid Multicast address.
+         *
+         * @return true if the address is a Multicast address.
+         */
+        virtual bool isMulticastAddress() const;
+
+        /**
+         * Check if this InetAddress is a valid link local address.
+         *
+         * @return true if the address is a link local address.
+         */
+        virtual bool isLinkLocalAddress() const;
+
+        /**
+         * Check if this InetAddress is a valid site local address.
+         *
+         * @return true if the address is a site local address.
+         */
+        virtual bool isSiteLocalAddress() const;
+
+        /**
+         * Check if this InetAddress is Multicast and has Global scope.
+         *
+         * @return true if the address is Multicast and has Global scope.
+         */
+        virtual bool isMCGlobal() const;
+
+        /**
+         * Check if this InetAddress is Multicast and has Node Local scope.
+         *
+         * @return true if the address is Multicast and has Node Local scope.
+         */
+        virtual bool isMCNodeLocal() const;
+
+        /**
+         * Check if this InetAddress is Multicast and has Link Local scope.
+         *
+         * @return true if the address is Multicast and has Link Local scope.
+         */
+        virtual bool isMCLinkLocal() const;
+
+        /**
+         * Check if this InetAddress is Multicast and has Site Local scope.
+         *
+         * @return true if the address is Multicast and has Site Local scope.
+         */
+        virtual bool isMCSiteLocal() const;
+
+        /**
+         * Check if this InetAddress is Multicast and has Organization scope.
+         *
+         * @return true if the address is Multicast and has Organization scope.
+         */
+        virtual bool isMCOrgLocal() const;
 
     };
 

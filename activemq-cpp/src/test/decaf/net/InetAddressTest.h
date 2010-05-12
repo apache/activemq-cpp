@@ -15,33 +15,32 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_API_INET6ADDRESS_H_
-#define _DECAF_API_INET6ADDRESS_H_
+#ifndef _DECAF_NET_INETADDRESSTEST_H_
+#define _DECAF_NET_INETADDRESSTEST_H_
 
-#include <decaf/util/Config.h>
-
-#include <decaf/net/InetAddress.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace decaf {
 namespace net {
 
-    class DECAF_API Inet6Address : public InetAddress {
-    private:
+    class InetAddressTest : public CppUnit::TestFixture {
 
-        friend class InetAddress;
-
-    protected:
-
-        Inet6Address();
-        Inet6Address( const unsigned char* ipAddress, int numBytes );
-        Inet6Address( const std::string& hostname, const unsigned char* ipAddress, int numBytes );
+        CPPUNIT_TEST_SUITE( InetAddressTest );
+        CPPUNIT_TEST( testGetByAddress );
+        CPPUNIT_TEST( testGetHostAddress );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        virtual ~Inet6Address();
+        InetAddressTest();
+        virtual ~InetAddressTest();
+
+        void testGetByAddress();
+        void testGetHostAddress();
 
     };
 
 }}
 
-#endif /* _DECAF_API_INET6ADDRESS_H_ */
+#endif /* _DECAF_NET_INETADDRESSTEST_H_ */
