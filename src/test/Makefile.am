@@ -111,6 +111,9 @@ cc_sources = \
     decaf/lang/StringTest.cpp \
     decaf/lang/SystemTest.cpp \
     decaf/lang/ThreadTest.cpp \
+    decaf/net/Inet4AddressTest.cpp \
+    decaf/net/Inet6AddressTest.cpp \
+    decaf/net/InetAddressTest.cpp \
     decaf/net/ServerSocketTest.cpp \
     decaf/net/SocketFactoryTest.cpp \
     decaf/net/SocketTest.cpp \
@@ -258,6 +261,9 @@ h_sources = \
     decaf/lang/StringTest.h \
     decaf/lang/SystemTest.h \
     decaf/lang/ThreadTest.h \
+    decaf/net/Inet4AddressTest.h \
+    decaf/net/Inet6AddressTest.h \
+    decaf/net/InetAddressTest.h \
     decaf/net/ServerSocketTest.h \
     decaf/net/SocketFactoryTest.h \
     decaf/net/SocketTest.h \

@@ -15,25 +15,49 @@
  * limitations under the License.
  */
 
-#include "Inet6Address.h"
+#include "InetAddressTest.h"
+
+#include <decaf/net/InetAddress.h>
+#include <decaf/net/UnknownHostException.h>
 
 using namespace decaf;
 using namespace decaf::net;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Inet6Address::Inet6Address() {
+InetAddressTest::InetAddressTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Inet6Address::Inet6Address( const unsigned char* ipAddress, int numBytes ) :
-    InetAddress( ipAddress, numBytes ) {
+InetAddressTest::~InetAddressTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Inet6Address::Inet6Address( const std::string& hostname, const unsigned char* ipAddress, int numBytes ) :
-    InetAddress( hostname, ipAddress, numBytes ) {
+void InetAddressTest::testGetByAddress() {
+
+    const unsigned char bytes[] = { 127, 0, 0, 1 };
+    InetAddress address = InetAddress::getByAddress( bytes, 4 );
+
+    ArrayPointer<unsigned char> value = address.getAddress();
+
+    CPPUNIT_ASSERT( value.get() != NULL );
+    CPPUNIT_ASSERT_EQUAL( bytes[0], value[0] );
+    CPPUNIT_ASSERT_EQUAL( bytes[1], value[1] );
+    CPPUNIT_ASSERT_EQUAL( bytes[2], value[2] );
+    CPPUNIT_ASSERT_EQUAL( bytes[3], value[3] );
+
+    const unsigned char invalid[] = { 1 };
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an UnknownHostException",
+        InetAddress::getByAddress( invalid, 1 ),
+        UnknownHostException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Inet6Address::~Inet6Address() {
+void InetAddressTest::testGetHostAddress() {
+
+    const unsigned char bytes[] = { 127, 0, 0, 1 };
+    InetAddress address = InetAddress::getByAddress( bytes, 4 );
+    CPPUNIT_ASSERT_EQUAL( std::string( "127.0.0.1" ), address.getHostAddress() );
 }

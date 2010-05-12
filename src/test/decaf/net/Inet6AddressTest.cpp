@@ -15,33 +15,22 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_API_INET6ADDRESS_H_
-#define _DECAF_API_INET6ADDRESS_H_
+#include "Inet6AddressTest.h"
 
-#include <decaf/util/Config.h>
+#include <decaf/net/Inet4Address.h>
 
-#include <decaf/net/InetAddress.h>
+using namespace decaf;
+using namespace decaf::net;
 
-namespace decaf {
-namespace net {
+////////////////////////////////////////////////////////////////////////////////
+Inet6AddressTest::Inet6AddressTest() {
+}
 
-    class DECAF_API Inet6Address : public InetAddress {
-    private:
+////////////////////////////////////////////////////////////////////////////////
+Inet6AddressTest::~Inet6AddressTest() {
+}
 
-        friend class InetAddress;
+////////////////////////////////////////////////////////////////////////////////
+void Inet6AddressTest::testGetByAddress() {
 
-    protected:
-
-        Inet6Address();
-        Inet6Address( const unsigned char* ipAddress, int numBytes );
-        Inet6Address( const std::string& hostname, const unsigned char* ipAddress, int numBytes );
-
-    public:
-
-        virtual ~Inet6Address();
-
-    };
-
-}}
-
-#endif /* _DECAF_API_INET6ADDRESS_H_ */
+}

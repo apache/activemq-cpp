@@ -223,11 +223,17 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
 //#include <decaf/lang/PointerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
-//#include <decaf/lang/ArrayPointerTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
+#include <decaf/lang/ArrayPointerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
 //#include <decaf/lang/StringTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
 
+#include <decaf/net/InetAddressTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::InetAddressTest );
+#include <decaf/net/Inet4AddressTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::InetAddressTest );
+#include <decaf/net/Inet6AddressTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::InetAddressTest );
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
 //#include <decaf/net/ServerSocketTest.h>
