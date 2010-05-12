@@ -17,6 +17,7 @@
 
 #include "TcpSocket.h"
 
+#include <decaf/internal/net/SocketFileDescriptor.h>
 #include <decaf/internal/net/tcp/TcpSocketInputStream.h>
 #include <decaf/internal/net/tcp/TcpSocketOutputStream.h>
 
@@ -57,22 +58,6 @@ using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
-
-////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    class SocketFileDescriptor : public FileDescriptor {
-    public:
-
-        SocketFileDescriptor( apr_socket_t* socket ) : FileDescriptor() {
-            apr_os_sock_t osSocket = -1;
-            apr_os_sock_get( &osSocket, socket );
-            this->descriptor = (int)osSocket;
-        }
-
-    };
-
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
@@ -128,7 +113,9 @@ void TcpSocket::create() throw( decaf::io::IOException ) {
                                         APR_PROTO_TCP, apr_pool.getAprPool() ) );
 
         // Initialize the Socket's FileDescriptor
-        this->fd = new SocketFileDescriptor( socketHandle );
+        apr_os_sock_t osSocket = -1;
+        apr_os_sock_get( &osSocket, socketHandle );
+        this->fd = new SocketFileDescriptor( osSocket );
     }
     DECAF_CATCH_RETHROW( decaf::io::IOException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )

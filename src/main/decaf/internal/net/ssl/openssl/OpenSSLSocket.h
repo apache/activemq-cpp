@@ -22,6 +22,9 @@
 
 #include <decaf/net/ssl/SSLSocket.h>
 
+#include <decaf/io/InputStream.h>
+#include <decaf/io/OutputStream.h>
+
 namespace decaf {
 namespace internal {
 namespace net {
@@ -39,7 +42,14 @@ namespace openssl {
     class DECAF_API OpenSSLSocket : public decaf::net::ssl::SSLSocket {
     private:
 
+        // Private data related to the OpenSSL Socket impl.
         SocketData* data;
+
+        // The InputStream owned by this Socket
+        decaf::io::InputStream* input;
+
+        // The OutputStream owned by this Socket
+        decaf::io::OutputStream* output;
 
     public:
 
@@ -47,7 +57,51 @@ namespace openssl {
 
         virtual ~OpenSSLSocket();
 
-    public:
+    public:  // Socket Overrides.
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void connect( const std::string& host, int port, int timeout )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void close() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::io::InputStream* getInputStream() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::io::OutputStream* getOutputStream() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void shutdownInput() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void shutdownOutput() throw( decaf::io::IOException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setOOBInline( bool value ) throw( decaf::net::SocketException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
+
+    public:  // SSLSocket Overrides
 
         /**
          * {@inheritDoc}
@@ -147,6 +201,12 @@ namespace openssl {
          * @throws IOException if an I/O error occurs while performing this operation.
          */
         int available();
+
+    private:
+
+        // Perform some additional checks on the Server's Certificate to ensure that
+        // its really valid.
+        void verifyServerCert( const std::string& serverName );
 
     };
 

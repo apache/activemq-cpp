@@ -54,7 +54,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket( const std::string& name, int port )
+        virtual decaf::net::Socket* createSocket( const std::string& hostname, int port )
             throw( decaf::io::IOException, decaf::net::UnknownHostException );
 
         /**

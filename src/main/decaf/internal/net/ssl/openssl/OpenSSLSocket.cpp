@@ -19,13 +19,22 @@
 
 #ifdef HAVE_OPENSSL
     #include <openssl/ssl.h>
+    #include <openssl/x509.h>
+    #include <openssl/x509v3.h>
+    #include <openssl/bio.h>
 #endif
+
+#include <apr_strings.h>
 
 #include <decaf/net/SocketImpl.h>
 #include <decaf/io/IOException.h>
+#include <decaf/net/SocketException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/internal/net/SocketFileDescriptor.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -74,7 +83,8 @@ namespace openssl {
 }}}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocket::OpenSSLSocket( void* ssl ) : SSLSocket(), data( new SocketData() ) {
+OpenSSLSocket::OpenSSLSocket( void* ssl ) :
+    SSLSocket(), data( new SocketData() ), input( NULL ), output( NULL ) {
 
     if( ssl == NULL ) {
         throw NullPointerException(
@@ -100,9 +110,143 @@ OpenSSLSocket::~OpenSSLSocket() {
 #endif
 
         delete data;
+        delete input;
+        delete output;
     }
     DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
+
+    try{
+
+        SSLSocket::connect( host, port, timeout );
+        if( isConnected() ) {
+
+            BIO* bio = BIO_new( BIO_s_socket() );
+            if( !bio ) {
+                throw SocketException(
+                    __FILE__, __LINE__, "Failed to create SSL IO Bindings");
+            }
+
+            const SocketFileDescriptor* fd =
+                dynamic_cast<const SocketFileDescriptor*>( this->impl->getFileDescriptor() );
+
+            if( fd == NULL ) {
+                throw SocketException(
+                    __FILE__, __LINE__, "Invalid File Descriptor returned from Socket" );
+            }
+
+            BIO_set_fd( bio, (int)fd->getValue(), BIO_NOCLOSE );
+            SSL_set_bio( this->data->ssl, bio, bio );
+
+            int result = SSL_connect( this->data->ssl );
+
+            switch( SSL_get_error( this->data->ssl, result ) ) {
+                case SSL_ERROR_NONE:
+                    verifyServerCert( host );
+                    return;
+                case SSL_ERROR_SSL:
+                case SSL_ERROR_ZERO_RETURN:
+                case SSL_ERROR_SYSCALL:
+                    SSLSocket::close();
+                    throw OpenSSLSocketException( __FILE__, __LINE__ );
+            }
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::close() throw( decaf::io::IOException ) {
+
+    try{
+
+        if( isClosed() ) {
+            return;
+        }
+
+        SSLSocket::close();
+
+        if( this->input != NULL ) {
+            this->input->close();
+        }
+        if( this->output != NULL ) {
+            this->output->close();
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::io::InputStream* OpenSSLSocket::getInputStream() throw( decaf::io::IOException ) {
+
+    checkClosed();
+
+    try{
+        if( this->input == NULL ) {
+            this->input = new OpenSSLSocketInputStream( this );
+        }
+
+        return this->input;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::io::OutputStream* OpenSSLSocket::getOutputStream() throw( decaf::io::IOException ) {
+
+    checkClosed();
+
+    try{
+        if( this->output == NULL ) {
+            this->output = new OpenSSLSocketOutputStream( this );
+        }
+
+        return this->output;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::shutdownInput() throw( decaf::io::IOException ) {
+
+    throw SocketException(
+        __FILE__, __LINE__, "Not supported for SSL Sockets" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::shutdownOutput() throw( decaf::io::IOException ) {
+
+    throw SocketException(
+        __FILE__, __LINE__, "Not supported for SSL Sockets" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::setOOBInline( bool value DECAF_UNUSED ) throw( SocketException ) {
+
+    throw SocketException(
+        __FILE__, __LINE__, "Not supported for SSL Sockets" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) throw( decaf::io::IOException ) {
+
+    throw SocketException(
+        __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +395,7 @@ void OpenSSLSocket::write( const unsigned char* buffer, int size, int offset, in
                 __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
-        std::size_t remaining = length;
+        int remaining = length;
 
         while( remaining > 0 && !isClosed() ) {
 
@@ -290,4 +434,84 @@ int OpenSSLSocket::available() {
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
+
+    X509* cert = SSL_get_peer_certificate( this->data->ssl );
+
+    if( cert == NULL ) {
+        this->close();
+        throw OpenSSLSocketException(
+            __FILE__, __LINE__,
+            "No server certificate for verify for host: %s", serverName.c_str() );
+    }
+
+    class Finalizer {
+    private:
+
+        X509* cert;
+
+    public:
+
+        Finalizer( X509* cert ) : cert( cert ) {
+        }
+
+        ~Finalizer() {
+            if( cert != NULL ) {
+                X509_free( cert );
+            }
+        }
+    };
+
+    // We check the extensions first since newer x509v3 Certificates are recommended
+    // to store the FQDN in the dsnName field of the subjectAltName extension.  If we
+    // don't find it there then we can check the commonName field which is where older
+    // Certificates placed the FQDN.
+    int extensions = X509_get_ext_count( cert );
+
+    for( int ix = 0; ix < extensions; ix++ ) {
+
+        X509_EXTENSION* extension = X509_get_ext( cert, ix );
+        const char* extensionName = OBJ_nid2sn( OBJ_obj2nid( X509_EXTENSION_get_object( extension ) ) );
+
+        if( apr_strnatcmp( "subjectAltName", extensionName ) == 0 ) {
+
+            const X509V3_EXT_METHOD* method = X509V3_EXT_get( extension );
+            if( method == NULL ) {
+                break;
+            }
+
+            const unsigned char* data = extension->value->data;
+            STACK_OF(CONF_VALUE)* confValue =
+                method->i2v( method, method->d2i( NULL, &data, extension->value->length ), NULL );
+
+            CONF_VALUE* value = NULL;
+
+            for( int iy = 0; iy < sk_CONF_VALUE_num( confValue ); iy++ ) {
+                value = sk_CONF_VALUE_value( confValue, iy );
+                if( ( apr_strnatcmp( value->name, "DNS" ) == 0 ) &&
+                      apr_strnatcmp( value->value, serverName.c_str() ) == 0 ) {
+
+                    // Found it.
+                    return;
+                }
+            }
+        }
+    }
+
+    X509_NAME* subject = X509_get_subject_name( cert );
+    char buffer[256];
+
+    if( subject != NULL && X509_NAME_get_text_by_NID( subject, NID_commonName, buffer, 256 ) > 0 ) {
+        buffer[255] = 0;
+        if( apr_strnatcmp( buffer, serverName.c_str() ) == 0 ) {
+            return;
+        }
+    }
+
+    // We got here so no match to serverName in the Certificate
+    throw OpenSSLSocketException(
+        __FILE__, __LINE__, "Server Certificate Name doesn't match the URI Host Name value." );
 }
