@@ -136,6 +136,7 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
 
     try{
 
+#ifdef HAVE_OPENSSL
         SSLSocket::connect( host, port, timeout );
         if( isConnected() ) {
 
@@ -177,6 +178,9 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
                     throw OpenSSLSocketException( __FILE__, __LINE__ );
             }
         }
+#else
+        throw SocketException( __FILE__, __LINE__, "Not Supported" );
+#endif
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( IllegalArgumentException )
@@ -358,6 +362,7 @@ int OpenSSLSocket::read( unsigned char* buffer, int size, int offset, int length
                 __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
+#ifdef HAVE_OPENSSL
         // Read data from the socket.
         int result = SSL_read( this->data->ssl, buffer + offset, length );
 
@@ -372,6 +377,9 @@ int OpenSSLSocket::read( unsigned char* buffer, int size, int offset, int length
             default:
                 throw OpenSSLSocketException( __FILE__, __LINE__ );
         }
+#else
+        throw SocketException( __FILE__, __LINE__, "Not Supported" );
+#endif
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -415,6 +423,7 @@ void OpenSSLSocket::write( const unsigned char* buffer, int size, int offset, in
                 __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
+#ifdef HAVE_OPENSSL
         int remaining = length;
 
         while( remaining > 0 && !isClosed() ) {
@@ -434,6 +443,9 @@ void OpenSSLSocket::write( const unsigned char* buffer, int size, int offset, in
                     throw OpenSSLSocketException( __FILE__, __LINE__ );
             }
         }
+#else
+        throw SocketException( __FILE__, __LINE__, "Not Supported" );
+#endif
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -446,9 +458,13 @@ int OpenSSLSocket::available() {
 
     try{
 
+#ifdef HAVE_OPENSSL
         if( !isClosed() ) {
             return SSL_pending( this->data->ssl );
         }
+#else
+        throw SocketException( __FILE__, __LINE__, "Not Supported" );
+#endif
 
         return -1;
     }
@@ -459,6 +475,7 @@ int OpenSSLSocket::available() {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
+#ifdef HAVE_OPENSSL
     X509* cert = SSL_get_peer_certificate( this->data->ssl );
 
     if( cert == NULL ) {
@@ -537,4 +554,5 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
     // We got here so no match to serverName in the Certificate
     throw OpenSSLSocketException(
         __FILE__, __LINE__, "Server Certificate Name doesn't match the URI Host Name value." );
+#endif
 }
