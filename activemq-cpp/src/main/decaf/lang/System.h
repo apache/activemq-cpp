@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/util/Map.h>
+#include <decaf/util/Properties.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/internal/AprPool.h>
@@ -28,7 +29,20 @@
 namespace decaf{
 namespace lang{
 
+    class Runtime;
+    class SystemData;
+
+    /**
+     * The System class provides static methods for accessing system level resources and performing
+     * some system dependent tasks such as looking up environment values and copying memory and arrays.
+     *
+     * @since 1.0
+     */
     class DECAF_API System {
+    private:
+
+        static SystemData* sys;
+
     protected:
 
         System();
@@ -59,8 +73,69 @@ namespace lang{
          */
         static void arraycopy( const unsigned char* src, std::size_t srcPos,
                                unsigned char* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const short* src, std::size_t srcPos,
+                               short* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
         static void arraycopy( const int* src, std::size_t srcPos,
                                int* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const long long* src, std::size_t srcPos,
+                               long long* dest, std::size_t destPos, std::size_t length );
 
         /**
          * Enumerates the system environment and returns a map of env variable
@@ -156,6 +231,77 @@ namespace lang{
          */
         static int availableProcessors();
 
+        /**
+         * Gets the Properties object that holds the Properties accessed from calls to
+         * getProperty and setProperty.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+         *
+         * @returns a reference to the static system Properties object.
+         */
+        static decaf::util::Properties& getProperties();
+
+        /**
+         * Gets the specified System property if set, otherwise returns an empty string.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+
+         * @param key
+         *      The key name of the desired system property to retrieve.
+         *
+         * @returns an empty string if the named property is not set, otherwise returns the value.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string getProperty( const std::string& key );
+
+        /**
+         * Gets the specified System property if set, otherwise returns the specified default value.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+         *
+         * @param key
+         *      The key name of the desired system property to retrieve.
+         * @param defaultValue
+         *      The default value to return if the key is not set in the System properties.
+         *
+         * @returns the value of the named system property or the defaultValue if the property isn't set..
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string getProperty( const std::string& key, const std::string& defaultValue );
+
+        /**
+         * Sets the System Property to the specified value.
+         *
+         * @param key
+         *      The key name of the system property to set to the given value.
+         * @param value
+         *      The value to assign to the key.
+         *
+         * @returns the previous value of the property named by key if there was one, otherwise
+         *          returns an empty string.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string setProperty( const std::string& key, const std::string& value );
+
+        /**
+         * Clear any value associated with the system property specified.
+         *
+         * @param key
+         *      The key name of the system property to clear.
+         *
+         * @returns the previous value of the property named by key if there was one, otherwise
+         *          returns an empty string.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string clearProperty( const std::string& key );
+
     private:
 
         /**
@@ -173,6 +319,13 @@ namespace lang{
          * @returns a reference to the global APR Pool.
          */
         static internal::AprPool& getAprPool();
+
+    private:
+
+        friend class decaf::lang::Runtime;
+
+        static void initSystem( int argc, char **argv );
+        static void shutdownSystem();
 
     };
 

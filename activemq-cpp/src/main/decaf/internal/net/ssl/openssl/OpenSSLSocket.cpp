@@ -465,6 +465,9 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
         }
     };
 
+    // Store the Certificate to be cleaned up when the method returns
+    Finalizer final( cert );
+
     // We check the extensions first since newer x509v3 Certificates are recommended
     // to store the FQDN in the dsnName field of the subjectAltName extension.  If we
     // don't find it there then we can check the commonName field which is where older

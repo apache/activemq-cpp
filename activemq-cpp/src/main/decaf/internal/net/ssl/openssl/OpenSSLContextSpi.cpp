@@ -194,6 +194,14 @@ void OpenSSLContextSpi::providerInit( SecureRandom* random ) {
             throw OpenSSLSocketException( __FILE__, __LINE__ );
         }
 
+        // Here we load the configured KeyStore and TrustStore files
+        std::string keyStorePath = System::getenv( "decaf.net.ssl.keyStore" );
+        std::string keyStoreFile = System::getenv( "decaf.net.ssl.keyStoreFile" );
+        std::string keyStorePassword = System::getenv( "decaf.net.ssl.keyStorePassword" );
+        std::string trustStorePath = System::getenv( "decaf.net.ssl.trustStore" );
+        std::string trustStoreFile = System::getenv( "decaf.net.ssl.trustStoreFile" );
+        std::string trustStorePassword = System::getenv( "decaf.net.ssl.trustStorePassword" );
+
         // Now seed the OpenSSL RNG.
         std::vector<unsigned char> seed( 128 );
         random->nextBytes( seed );

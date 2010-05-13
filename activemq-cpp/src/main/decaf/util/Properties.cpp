@@ -193,12 +193,20 @@ std::string Properties::getProperty( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::setProperty( const std::string& name,
-                              const std::string& value ){
+std::string Properties::setProperty( const std::string& name, const std::string& value ){
+
+    std::string oldValue;
 
     synchronized( &( internal->properties ) ) {
+
+        if( internal->properties.containsKey( name ) ) {
+            oldValue = internal->properties.get( name );
+        }
+
         internal->properties.put( name, value );
     }
+
+    return oldValue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,12 +220,18 @@ bool Properties::hasProperty( const std::string& name ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::remove( const std::string& name ){
+std::string Properties::remove( const std::string& name ){
+
+    std::string oldValue;
+
     synchronized( &( internal->properties ) ) {
         if( this->internal->properties.containsKey( name ) ) {
+            oldValue = this->internal->properties.get( name );
             this->internal->properties.remove( name );
         }
     }
+
+    return oldValue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

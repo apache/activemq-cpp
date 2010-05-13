@@ -21,6 +21,7 @@
 #include <apr_general.h>
 #include <apr_pools.h>
 
+#include <decaf/lang/System.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/internal/net/Network.h>
 
@@ -92,7 +93,7 @@ Runtime* Runtime::getRuntime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Runtime::initializeRuntime( int argc DECAF_UNUSED, char **argv DECAF_UNUSED ) {
+void Runtime::initializeRuntime( int argc, char **argv ) {
 
     // Do this for now, once we remove APR we can do this in a way that
     // makes more sense.
@@ -100,6 +101,9 @@ void Runtime::initializeRuntime( int argc DECAF_UNUSED, char **argv DECAF_UNUSED
 
     // Initialize any Platform specific Threading primitives
     Thread::initThreading();
+
+    // Initialize the System Class to make things like Properties available.
+    System::initSystem( argc, argv );
 
     // Initialize the Networking layer.
     Network::initializeNetworking();
@@ -116,6 +120,10 @@ void Runtime::shutdownRuntime() {
     // Shutdown the networking layer before Threading, many network routines need
     // to be thread safe and require Threading primitives.
     Network::shutdownNetworking();
+
+    // Shutdown the System class so that the Properties and other resources are
+    // cleaned up.
+    System::shutdownSystem();
 
     // Threading is the last to by shutdown since most other parts of the Runtime
     // need to make use of Thread primitives.

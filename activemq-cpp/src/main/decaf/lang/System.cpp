@@ -24,6 +24,7 @@
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/concurrent/TimeUnit.h>
+#include <decaf/util/Properties.h>
 #include <apr.h>
 #include <apr_errno.h>
 #include <apr_env.h>
@@ -62,7 +63,46 @@ using namespace decaf::internal;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace decaf {
+namespace lang {
+
+    class SystemData {
+    public:
+
+        Properties systemProperties;
+
+    public:
+
+        SystemData() : systemProperties() {
+        }
+
+        ~SystemData() {
+        }
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+SystemData* System::sys = NULL;
+
+////////////////////////////////////////////////////////////////////////////////
 System::System() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::initSystem( int argc DECAF_UNUSED, char **argv DECAF_UNUSED ) {
+
+    // TODO - Parse out properties specified at the Command Line level.
+
+    // Create the System Data class.
+    System::sys = new SystemData();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::shutdownSystem() {
+
+    // Destroy the System Data class.
+    delete System::sys;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +134,28 @@ void System::arraycopy( const unsigned char* src, std::size_t srcPos,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( const short* src, std::size_t srcPos,
+                        short* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length * sizeof( short ) );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length * sizeof( short ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void System::arraycopy( const int* src, std::size_t srcPos,
                         int* dest, std::size_t destPos, std::size_t length ) {
 
@@ -112,6 +174,28 @@ void System::arraycopy( const int* src, std::size_t srcPos,
         ::memcpy( dest + destPos, src + srcPos, length * sizeof( int ) );
     } else {
         ::memmove( dest + destPos, src + srcPos, length * sizeof( int ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( const long long* src, std::size_t srcPos,
+                        long long* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length * sizeof( long long ) );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length * sizeof( long long ) );
     }
 }
 
@@ -374,4 +458,60 @@ int System::availableProcessors() {
     }
 
     return numCpus;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::util::Properties& System::getProperties() {
+    return System::sys->systemProperties;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string System::getProperty( const std::string& key ) {
+
+    if( key.empty() ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Cannot pass an empty key to getProperty." );
+    }
+
+    return System::sys->systemProperties.getProperty( key, "" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string System::getProperty( const std::string& key, const std::string& defaultValue ) {
+
+    if( key.empty() ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Cannot pass an empty key to getProperty." );
+    }
+
+    return System::sys->systemProperties.getProperty( key, defaultValue );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string System::setProperty( const std::string& key, const std::string& value ) {
+
+    if( key.empty() ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Cannot pass an empty key to setProperty." );
+    }
+
+    if( value == "" ) {
+        return System::clearProperty( key );
+    }
+
+    return System::sys->systemProperties.setProperty( key, value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string System::clearProperty( const std::string& key ) {
+
+    if( key.empty() ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Cannot pass an empty key to clearProperty." );
+    }
+
+    std::string oldValue = System::sys->systemProperties.getProperty( key, "" );
+    System::sys->systemProperties.remove( key );
+
+    return oldValue;
 }
