@@ -194,13 +194,39 @@ void OpenSSLContextSpi::providerInit( SecureRandom* random ) {
             throw OpenSSLSocketException( __FILE__, __LINE__ );
         }
 
-        // Here we load the configured KeyStore and TrustStore files
-        std::string keyStorePath = System::getenv( "decaf.net.ssl.keyStore" );
-        std::string keyStoreFile = System::getenv( "decaf.net.ssl.keyStoreFile" );
-        std::string keyStorePassword = System::getenv( "decaf.net.ssl.keyStorePassword" );
-        std::string trustStorePath = System::getenv( "decaf.net.ssl.trustStore" );
-        std::string trustStoreFile = System::getenv( "decaf.net.ssl.trustStoreFile" );
-        std::string trustStorePassword = System::getenv( "decaf.net.ssl.trustStorePassword" );
+        // Here we load the configured KeyStore, this is where the client and server certificate are
+        // stored, a client doesn't necessary need this if the server doesn't enforce client authentication.
+        std::string keyStorePath = System::getProperty( "decaf.net.ssl.keyStore" );
+        this->data->password = System::getProperty( "decaf.net.ssl.keyStorePassword" );
+
+        // We assume the Public and Private keys are in the same file.
+        if( !keyStorePath.empty() ) {
+            if( SSL_CTX_use_certificate_chain_file( this->data->openSSLContext, keyStorePath.c_str() ) != 1 ) {
+                throw OpenSSLSocketException( __FILE__, __LINE__ );
+            }
+            if( SSL_CTX_use_PrivateKey_file( this->data->openSSLContext, keyStorePath.c_str(), SSL_FILETYPE_PEM ) != 1 ) {
+                throw OpenSSLSocketException( __FILE__, __LINE__ );
+            }
+        }
+
+        // Here we load the configured TrustStore, this is where the trusted certificates are stored
+        // and are used to validate that we trust the Certificate sent by the server or client.
+        // A server might not need this if its not going to enforce client authentication.
+        std::string trustStorePath = System::getProperty( "decaf.net.ssl.trustStore" );
+
+        // OpenSSL sort of assumes that the trust store files won't require a password so we just
+        // ignore the trustStorePassword for now.
+        // std::string trustStorePassword = System::getProperty( "decaf.net.ssl.trustStorePassword" );
+
+        // We only consider trust store's that consist of a PEM encoded file, we could try and
+        // check for the extension and assume its a directory if not there, but the OpenSSL
+        // directory restrictions for Certificates make using a directory rather complicated
+        // for the user so only do it if someone asks really nicely.
+        if( !trustStorePath.empty() ) {
+            if( SSL_CTX_load_verify_locations( this->data->openSSLContext, trustStorePath.c_str(), NULL ) != 1 ) {
+                throw OpenSSLSocketException( __FILE__, __LINE__ );
+            }
+        }
 
         // Now seed the OpenSSL RNG.
         std::vector<unsigned char> seed( 128 );
