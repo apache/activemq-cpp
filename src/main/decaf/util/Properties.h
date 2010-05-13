@@ -82,7 +82,8 @@ namespace util{
         Properties& operator= ( const Properties& src );
 
         /**
-         * Returns true if the properties object is empty
+         * Returns true if the properties object is empty.
+         *
          * @return true if empty
          */
         bool isEmpty() const;
@@ -94,44 +95,60 @@ namespace util{
 
         /**
          * Looks up the value for the given property.
-         * @param name The name of the property to be looked up.
+         *
+         * @param name
+         *      The name of the property to be looked up.
+         *
          * @return the value of the property with the given name, if it
-         * exists.  If it does not exist, returns NULL.
+         *         exists.  If it does not exist, returns NULL.
          */
         const char* getProperty( const std::string& name ) const;
 
         /**
          * Looks up the value for the given property.
-         * @param name the name of the property to be looked up.
-         * @param defaultValue The value to be returned if the given
-         * property does not exist.
+         *
+         * @param name
+         *      The name of the property to be looked up.
+         * @param defaultValue
+         *      The value to be returned if the given property does not exist.
+         *
          * @return The value of the property specified by <code>name</code>, if it
-         * exists, otherwise the <code>defaultValue</code>.
+         *         exists, otherwise the <code>defaultValue</code>.
          */
-        std::string getProperty( const std::string& name,
-                                 const std::string& defaultValue ) const;
+        std::string getProperty( const std::string& name, const std::string& defaultValue ) const;
 
         /**
          * Sets the value for a given property.  If the property already
          * exists, overwrites the value.
-         * @param name The name of the value to be written.
-         * @param value The value to be written.
+         *
+         * @param name
+         *      The name of the value to be written.
+         * @param value
+         *      The value to be written.
+         *
+         * @returns the old value of the property or empty string if not set.
          */
-        void setProperty( const std::string& name,
-                          const std::string& value );
+        std::string setProperty( const std::string& name, const std::string& value );
 
         /**
-         * Check to see if the Property exists in the set
-         * @param name - property name to check for in this properties set.
+         * Check to see if the Property exists in the set.
+         *
+         * @param name
+         *      The property name to check for in this properties set.
+         *
          * @return true if property exists, false otherwise.
          */
         bool hasProperty( const std::string& name ) const;
 
         /**
          * Removes the property with the given name.
-         * @param name the name of the property to remove.
+         *
+         * @param name
+         *      The name of the property to remove.
+         *
+         * @returns the previous value of the property if set, or empty string.
          */
-        void remove( const std::string& name );
+        std::string remove( const std::string& name );
 
         /**
          * Returns an enumeration of all the keys in this property list, including distinct keys
@@ -144,10 +161,10 @@ namespace util{
         std::vector<std::string> propertyNames() const;
 
         /**
-         * Method that serializes the contents of the property map to
-         * an array.
+         * Method that serializes the contents of the property map to an array.
+         *
          * @return list of pairs where the first is the name and the second
-         * is the value.
+         *         is the value.
          */
         std::vector< std::pair< std::string, std::string > > toArray() const;
 
@@ -187,8 +204,8 @@ namespace util{
         bool equals( const Properties& source ) const;
 
         /**
-         * Formats the contents of the Properties Object into a string
-         * that can be logged, etc.
+         * Formats the contents of the Properties Object into a string that can be logged, etc.
+         *
          * @returns string value of this object.
          */
         std::string toString() const;
