@@ -78,6 +78,18 @@ namespace openssl {
             } catch(...) {}
         }
 
+#ifdef HAVE_OPENSSL
+        static int verifyCallback( int verified, X509_STORE_CTX* store ) {
+
+            if( !verified ) {
+
+                // Trap debug info here about why the Certificate failed to validate.
+            }
+
+            return verified;
+        }
+#endif
+
     };
 
 }}}}}
@@ -144,8 +156,16 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
             BIO_set_fd( bio, (int)fd->getValue(), BIO_NOCLOSE );
             SSL_set_bio( this->data->ssl, bio, bio );
 
+            // Since we are a client we want to enforce peer verification, we set a
+            // callback so we can collect data on why a verify failed for debugging.
+            SSL_set_verify( this->data->ssl, SSL_VERIFY_PEER, SocketData::verifyCallback );
+
             int result = SSL_connect( this->data->ssl );
 
+            // Checks the error status, when things go right we still perform a deeper
+            // check on the provided certificate to ensure that it matches the host name
+            // that we connected to, this prevents someone from using any certificate
+            // signed by a signing authority that we trust.
             switch( SSL_get_error( this->data->ssl, result ) ) {
                 case SSL_ERROR_NONE:
                     verifyServerCert( host );
