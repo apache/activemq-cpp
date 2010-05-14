@@ -42,27 +42,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const decaf::net::URI& uri,
-                            const decaf::util::Properties& properties,
-                            const Pointer<Transport>& next )
-:   TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
+TcpTransport::TcpTransport( const Pointer<Transport>& next ) :
+    TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
 
-    this->initialize( uri, properties );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const decaf::util::Properties& properties,
-                            const Pointer<Transport>& next )
-:   TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
-
-    if( !properties.hasProperty( "transport.uri" ) ) {
-        throw ActiveMQException(
-            __FILE__, __LINE__,
-            "TcpTransport::TcpTransport - "
-            "No URI set for this transport to connect to.");
-    }
-
-    this->initialize( URI( properties.getProperty( "transport.uri" ) ), properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,8 +79,8 @@ void TcpTransport::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::initialize( const decaf::net::URI& uri,
-                               const decaf::util::Properties& properties ) {
+void TcpTransport::connect( const decaf::net::URI& uri,
+                            const decaf::util::Properties& properties ) {
 
     try {
 

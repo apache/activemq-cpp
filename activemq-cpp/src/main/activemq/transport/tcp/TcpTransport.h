@@ -80,31 +80,32 @@ namespace tcp{
     public:
 
         /**
-         * Creates a new instance of the TcpTransport, the Broker URI is assumed
-         * to be set in the property "transport.uri".
+         * Creates a new instance of a TcpTransport, the transport is left unconnected
+         * and is in a unusable state until the connect method is called.
          *
-         * @param properties the configuration properties for this transport
-         * @param next the next transport in the chain
+         * @param next
+         *      The next transport in the chain
          */
-        TcpTransport( const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
-
-        /**
-         * Creates a new instance of the TcpTransport, the uri instance specifies the
-         * host and port to connect to.
-         *
-         * @param uri - The URI containing the host to connect to.
-         * @param properties the configuration properties for this transport
-         * @param next the next transport in the chain
-         */
-        TcpTransport( const decaf::net::URI& uri,
-                      const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
+        TcpTransport( const Pointer<Transport>& next );
 
         virtual ~TcpTransport();
 
         /**
+         * Creates a Socket and configures it before attempting to connect to the location specified
+         * by the URI passed in.  The Socket is configured using parameters in the properties that
+         * are passed to this method.
+         *
+         * @param uri
+         *      The URI that the Transport is to connect to once initialized.
+         * @param properties
+         *      The Properties that have been parsed from the URI or from configuration files.
+         */
+        void connect( const decaf::net::URI& uri,
+                      const decaf::util::Properties& properties );
+
+        /**
          * Delegates to the superclass and then closes the socket.
+         *
          * @throws IOException if errors occur.
          */
         virtual void close() throw( decaf::io::IOException );
@@ -168,12 +169,6 @@ namespace tcp{
          */
         virtual void configureSocket( decaf::net::Socket* socket,
                                       const decaf::util::Properties& properties );
-
-    private:
-
-        void initialize( const decaf::net::URI& uri,
-                         const decaf::util::Properties& properties );
-
 
     };
 

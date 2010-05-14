@@ -24,9 +24,6 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
-#include <memory>
-
-using namespace std;
 using namespace activemq;
 using namespace activemq::io;
 using namespace activemq::transport;
@@ -41,16 +38,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-SslTransport::SslTransport( const decaf::net::URI& uri,
-                            const decaf::util::Properties& properties,
-                            const Pointer<Transport>& next ) :
-   TcpTransport( uri, properties, next ) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-SslTransport::SslTransport( const decaf::util::Properties& properties,
-                            const Pointer<Transport>& next ) :
-    TcpTransport( properties, next ) {
+SslTransport::SslTransport( const Pointer<Transport>& next ) : TcpTransport( next ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +49,8 @@ SslTransport::~SslTransport() {
 Socket* SslTransport::createSocket() {
 
     try {
-        std::auto_ptr<SocketFactory> factory( SSLSocketFactory::getDefault() );
+        // The pointer returned from getDefault is owned by the SSLSocketFactory
+        SocketFactory* factory = SSLSocketFactory::getDefault();
         return factory->createSocket();
     }
     DECAF_CATCH_RETHROW( IOException )

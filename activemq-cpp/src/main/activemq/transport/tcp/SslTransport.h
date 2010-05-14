@@ -42,26 +42,12 @@ namespace tcp {
     public:
 
         /**
-         * Creates a new instance of the SslTransport, the Broker URI is assumed
-         * to be set in the property "transport.uri".
+         * Creates a new instance of the SslTransport, the transport will not attempt to
+         * connect to a remote host until the connect method is called.
          *
-         * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
          */
-        SslTransport( const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
-
-        /**
-         * Creates a new instance of the SslTransport, the uri instance specifies the
-         * host and port to connect to.
-         *
-         * @param uri - The URI containing the host to connect to.
-         * @param properties the configuration properties for this transport
-         * @param next the next transport in the chain
-         */
-        SslTransport( const decaf::net::URI& uri,
-                      const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
+        SslTransport( const Pointer<Transport>& next );
 
         virtual ~SslTransport();
 
@@ -76,6 +62,7 @@ namespace tcp {
          * {@inheritDoc}
          */
         virtual void configureSocket( decaf::net::Socket* socket, decaf::util::Properties& properties );
+
 
     };
 
