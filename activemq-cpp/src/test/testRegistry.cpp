@@ -141,6 +141,9 @@
 //#include <decaf/internal/util/TimerTaskHeapTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::TimerTaskHeapTest );
 //
+#include <decaf/internal/net/ssl/DefaultSSLSocketFactoryTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::net::ssl::DefaultSSLSocketFactoryTest );
+//
 //#include <decaf/internal/nio/ByteArrayBufferTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::nio::ByteArrayBufferTest );
 //#include <decaf/internal/nio/BufferFactoryTest.h>
