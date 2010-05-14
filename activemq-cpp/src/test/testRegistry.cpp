@@ -249,6 +249,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 //#include <decaf/net/URLDecoderTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 //
+#include <decaf/net/ssl/SSLSocketFactoryTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::ssl::SSLSocketFactoryTest );
+//
 //#include <decaf/util/concurrent/ConcurrentStlMapTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest );
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
