@@ -69,6 +69,7 @@ cc_sources = \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.cpp \
     decaf/internal/net/URIEncoderDecoderTest.cpp \
     decaf/internal/net/URIHelperTest.cpp \
+    decaf/internal/net/ssl/DefaultSSLSocketFactoryTest.cpp \
     decaf/internal/nio/BufferFactoryTest.cpp \
     decaf/internal/nio/ByteArrayBufferTest.cpp \
     decaf/internal/nio/CharArrayBufferTest.cpp \
@@ -220,6 +221,7 @@ h_sources = \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
     decaf/internal/net/URIEncoderDecoderTest.h \
     decaf/internal/net/URIHelperTest.h \
+    decaf/internal/net/ssl/DefaultSSLSocketFactoryTest.h \
     decaf/internal/nio/BufferFactoryTest.h \
     decaf/internal/nio/ByteArrayBufferTest.h \
     decaf/internal/nio/CharArrayBufferTest.h \
