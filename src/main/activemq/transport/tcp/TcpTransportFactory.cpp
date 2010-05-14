@@ -96,7 +96,10 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
     try {
 
         Pointer<Transport> transport( new TcpTransport(
-            location, properties, Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+            Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+
+        // Initialize the Transport, creates Sockets and configures defaults.
+        transport.dynamicCast<TcpTransport>()->connect( location, properties );
 
         if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );

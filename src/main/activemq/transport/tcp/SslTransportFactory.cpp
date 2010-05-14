@@ -50,7 +50,9 @@ Pointer<Transport> SslTransportFactory::doCreateComposite( const decaf::net::URI
     try {
 
         Pointer<Transport> transport( new SslTransport(
-            location, properties, Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+            Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+
+        transport.dynamicCast<SslTransport>()->connect( location, properties );
 
         if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
