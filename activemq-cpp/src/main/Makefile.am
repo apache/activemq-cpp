@@ -491,6 +491,8 @@ cc_sources = \
     decaf/internal/net/ssl/DefaultSSLContext.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLContextSpi.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocket.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocketFactory.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLSocket.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLSocketException.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.cpp \
@@ -1172,6 +1174,8 @@ h_sources = \
     decaf/internal/net/ssl/DefaultSSLContext.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
     decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocket.h \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocketFactory.h \
     decaf/internal/net/ssl/openssl/OpenSSLSocket.h \
     decaf/internal/net/ssl/openssl/OpenSSLSocketException.h \
     decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.h \
