@@ -17,10 +17,9 @@
 
 #include "DefaultSocketFactory.h"
 
+#include <decaf/net/InetAddress.h>
 #include <decaf/net/Socket.h>
 #include <decaf/net/SocketException.h>
-
-#include <decaf/internal/net/tcp/TcpSocket.h>
 
 #include <memory>
 
@@ -30,7 +29,6 @@ using namespace decaf::net;
 using namespace decaf::lang;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
-using namespace decaf::internal::net::tcp;
 
 ////////////////////////////////////////////////////////////////////////////////
 DefaultSocketFactory::DefaultSocketFactory() : SocketFactory() {
@@ -46,9 +44,9 @@ Socket* DefaultSocketFactory::createSocket()
 
     try{
 
-        std::auto_ptr<Socket> theSocket( new Socket( new TcpSocket() ) );
+        std::auto_ptr<Socket> socket( new Socket() );
 
-        return theSocket.release();
+        return socket.release();
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -69,11 +67,32 @@ Socket* DefaultSocketFactory::createSocket( const std::string& hostname, int por
             throw SocketException( __FILE__, __LINE__, "valid port not provided" );
         }
 
-        std::auto_ptr<SocketImpl> tcpSocket( new TcpSocket() );
-        std::auto_ptr<Socket> socket( new Socket( tcpSocket.release() ) );
+        std::auto_ptr<Socket> socket( new Socket( hostname, port ) );
 
-        // Connect the socket.
-        socket->connect( hostname.c_str(), port );
+        return socket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Socket* DefaultSocketFactory::createSocket( const std::string& hostname, int port,
+                                            const InetAddress* ifAddress, int localPort )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    try {
+
+        // Ensure something is actually passed in for the URI
+        if( hostname == "" ) {
+            throw SocketException( __FILE__, __LINE__, "uri not provided" );
+        }
+
+        if( port <= 0 ) {
+            throw SocketException( __FILE__, __LINE__, "valid port not provided" );
+        }
+
+        std::auto_ptr<Socket> socket( new Socket( hostname, port, ifAddress, localPort ) );
 
         return socket.release();
     }

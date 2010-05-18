@@ -55,7 +55,7 @@ ServerSocket::ServerSocket( int port )
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
 
-    this->setupSocketImpl( "", port, getDefaultBacklog() );
+    this->setupSocketImpl( port, getDefaultBacklog(), NULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,11 +70,11 @@ ServerSocket::ServerSocket( int port, int backlog )
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
 
-    this->setupSocketImpl( "", port, backlog );
+    this->setupSocketImpl( port, backlog, NULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket( const std::string& ipAddress, int port, int backlog )
+ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress )
     throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
@@ -85,7 +85,7 @@ ServerSocket::ServerSocket( const std::string& ipAddress, int port, int backlog 
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
 
-    this->setupSocketImpl( ipAddress, port, backlog );
+    this->setupSocketImpl( port, backlog, ifAddress );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,14 +100,18 @@ ServerSocket::~ServerSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::setupSocketImpl( const std::string ipAddress, int port, int backlog ) {
+void ServerSocket::setupSocketImpl( int port, int backlog, const InetAddress* ifAddress ) {
 
     try{
 
         this->impl->create();
         this->created = true;
 
-        std::string bindAddr = ipAddress.empty() ? "0.0.0.0" : ipAddress;
+        std::string bindAddr = "0.0.0.0";
+
+        if( ifAddress != NULL ) {
+            bindAddr = ifAddress->getHostAddress();
+        }
 
         try {
             this->impl->bind( bindAddr, port );

@@ -51,6 +51,14 @@ decaf::net::Socket* DefaultSSLSocketFactory::createSocket( const std::string& na
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+decaf::net::Socket* DefaultSSLSocketFactory::createSocket( const std::string& name DECAF_UNUSED, int port DECAF_UNUSED,
+                                                           const InetAddress* ifAddress DECAF_UNUSED, int localPort DECAF_UNUSED )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> DefaultSSLSocketFactory::getDefaultCipherSuites() {
 
     return std::vector<std::string>();

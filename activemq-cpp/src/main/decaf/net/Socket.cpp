@@ -74,7 +74,7 @@ Socket::Socket( const std::string& host, int port ) : impl(NULL), created(false)
             this->impl = new TcpSocket();
         }
 
-        this->initSocketImpl( host, port, "0.0.0.0", 0 );
+        this->initSocketImpl( host, port, NULL, 0 );
     }
     DECAF_CATCH_RETHROW( UnknownHostException )
     DECAF_CATCH_RETHROW( IOException )
@@ -83,7 +83,7 @@ Socket::Socket( const std::string& host, int port ) : impl(NULL), created(false)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket::Socket( const std::string& host, int port, const std::string& localAddress, int localPort ) :
+Socket::Socket( const std::string& host, int port, const InetAddress* localAddress, int localPort ) :
     impl(NULL), created(false), connected(false), closed(false), bound(false),
     inputShutdown(false), outputShutdown(false) {
 
@@ -119,15 +119,21 @@ Socket::~Socket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::initSocketImpl( const std::string& host, int port, const std::string& localAddress, int localPort )
+void Socket::initSocketImpl( const std::string& host, int port, const InetAddress* localAddress, int localPort )
     throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
 
     try{
 
         ensureCreated();
 
+        std::string bindAddress = "0.0.0.0";
+
+        if( localAddress != NULL ) {
+            bindAddress = localAddress->getHostAddress();
+        }
+
         try {
-            this->impl->bind( localAddress, localPort );
+            this->impl->bind( bindAddress, localPort );
             this->bound = true;
             this->impl->connect( host, port, -1 );
             this->connected = true;

@@ -26,6 +26,7 @@ namespace decaf{
 namespace net{
 
     class Socket;
+    class InetAddress;
 
     /**
      * The SocketFactory is used to create Socket objects and can be sub-classed to
@@ -36,13 +37,17 @@ namespace net{
      * @since 1.0
      */
     class DECAF_API SocketFactory {
+    private:
+
+        static SocketFactory* defaultFactory;
+
     protected:
 
         SocketFactory();
 
     public:
 
-        virtual ~SocketFactory() {}
+        virtual ~SocketFactory();
 
         /**
          * Creates an unconnected Socket object.
@@ -71,10 +76,34 @@ namespace net{
             throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
 
         /**
-         * Creates and returns an instance of the environments default SocketFactory
-         * type.
+         * Creates a new Socket object and connects it to the specified remote host and
+         * port using the configuration of this SocketFactory.
          *
-         * @throws SocketException.
+         * @param host
+         *      The host name or IP address to connect the socket to.
+         * @param port
+         *      The port on the remote host to connect to.
+         * @param ifAddress
+         *      The address on the local machine to bind the Socket to.
+         * @param localPort
+         *      The local port to bind the Socket to.
+         *
+         * @return a new Socket object, caller must free this object when done.
+         *
+         * @throws IOException if an I/O error occurs while creating the Socket object.
+         * @throws UnknownHostException if the host name is not known.
+         */
+        virtual Socket* createSocket( const std::string& name, int port, const InetAddress* ifAddress, int localPort )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
+
+        /**
+         * Returns an pointer to the default SocketFactory for this Application, there is only one
+         * default SocketFactory per application, the pointer returned by this method is owned by
+         * the SocketFactory class and in not to be deleted by the caller.
+         *
+         * @returns pointer to the applications default SocketFactory.
+         *
+         * @throws SocketException if an error occurs while getting the default instance.
          */
         static SocketFactory* getDefault();
 
