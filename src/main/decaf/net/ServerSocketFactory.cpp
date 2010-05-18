@@ -14,9 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <decaf/net/SocketFactory.h>
 
-#include <decaf/internal/net/DefaultSocketFactory.h>
+#include "ServerSocketFactory.h"
+
+#include <decaf/net/ServerSocket.h>
+#include <decaf/internal/net/DefaultServerSocketFactory.h>
+#include <decaf/io/IOException.h>
 #include <decaf/internal/net/Network.h>
 
 using namespace decaf;
@@ -27,32 +30,32 @@ using namespace decaf::util::concurrent;
 using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory* SocketFactory::defaultFactory = NULL;
+ServerSocketFactory* ServerSocketFactory::defaultFactory = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory::SocketFactory() {
+ServerSocketFactory::ServerSocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory::~SocketFactory() {
+ServerSocketFactory::~ServerSocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* SocketFactory::createSocket() throw( decaf::io::IOException ) {
+ServerSocket* ServerSocketFactory::createServerSocket() {
 
     throw IOException(
         __FILE__, __LINE__, "Unconnected Sockets not implemented for this Socket Type." );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketFactory* SocketFactory::getDefault() {
+ServerSocketFactory* ServerSocketFactory::getDefault() {
 
     Network* networkRuntime = Network::getNetworkRuntime();
 
     synchronized( networkRuntime->getRuntimeLock() ) {
 
         if( defaultFactory == NULL ) {
-            defaultFactory = new DefaultSocketFactory();
+            defaultFactory = new DefaultServerSocketFactory();
             networkRuntime->addAsResource( defaultFactory );
         }
     }

@@ -60,6 +60,13 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
+        virtual decaf::net::Socket* createSocket( const std::string& name, int port,
+                                                  const decaf::net::InetAddress* ifAddress, int localPort )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+
+        /**
+         * {@inheritDoc}
+         */
         virtual std::vector<std::string> getDefaultCipherSuites();
 
         /**

@@ -17,6 +17,7 @@
 #ifndef _DECAF_NET_SOCKET_H_
 #define _DECAF_NET_SOCKET_H_
 
+#include <decaf/net/InetAddress.h>
 #include <decaf/net/SocketImplFactory.h>
 #include <decaf/net/SocketException.h>
 #include <decaf/io/InputStream.h>
@@ -41,6 +42,11 @@ namespace net{
      * @since 1.0
      */
     class DECAF_API Socket : public decaf::io::Closeable {
+    protected:
+
+        // The actual Socket that this Socket represents.
+        mutable SocketImpl* impl;
+
     private:
 
         // Factory for creating sockets, if not set a Plan TCP Socket is created
@@ -55,11 +61,6 @@ namespace net{
         bool outputShutdown;
 
         friend class ServerSocket;
-
-    protected:
-
-        // The actual Socket that this Socket represents.
-        mutable SocketImpl* impl;
 
     public:
 
@@ -119,7 +120,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while connecting the Socket.
          * @throws IllegalArgumentException if the port if not in range [0...65535]
          */
-        Socket( const std::string& host, int port, const std::string& localAddress, int localPort );
+        Socket( const std::string& host, int port, const InetAddress* localAddress, int localPort );
 
         virtual ~Socket();
 
@@ -532,7 +533,7 @@ namespace net{
         void accepted();
 
         // Sets up a connected socket for the constructors that take connection arguments.
-        void initSocketImpl( const std::string& address, int port, const std::string& localAddress, int localPort )
+        void initSocketImpl( const std::string& address, int port, const InetAddress* localAddress, int localPort )
             throw( decaf::io::IOException, decaf::net::UnknownHostException );
 
         // Check for already closed and throw an error if so.

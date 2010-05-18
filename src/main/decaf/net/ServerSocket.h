@@ -19,6 +19,7 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/net/InetAddress.h>
 #include <decaf/net/SocketImpl.h>
 #include <decaf/net/SocketImplFactory.h>
 
@@ -114,8 +115,8 @@ namespace net{
 
         /**
          * Creates a new ServerSocket bound to the specified port, if the value of port is 0, then
-         * any free port is chosen.  If the value of the ipAddress is empty then the ANY address is
-         * used.
+         * any free port is chosen.  If the value of the ifAddress is empty or NULL then the ANY address
+         * is used.
          *
          * When this constructor is called the size of the backlog queue is set at backlog, connections
          * that arrive after the backlog has been reached are refused.  If backlog is zero or negative
@@ -124,17 +125,17 @@ namespace net{
          * If a SocketImplFactory is registered then the createSocketImpl method on the factory
          * will be called otherwise a default SocketImpl is created.
          *
-         * @param ipAddress
-         *      The IP Address to bind to on the local machine.
          * @param port
          *      The port to bind the ServerSocket to.
          * @param backlog
          *      The the number of incoming connection attempts to queue before connections are refused.
+         * @param ifAddress
+         *      The IP Address to bind to on the local machine.
          *
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        ServerSocket( const std::string& ipAddress, int port, int backlog )
+        ServerSocket( int port, int backlog, const InetAddress* address )
             throw( decaf::io::IOException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
@@ -350,7 +351,7 @@ namespace net{
         void ensureCreated() const throw( decaf::io::IOException );
 
         // Binds and sets up the Listen for this Server Socket
-        void setupSocketImpl( const std::string ipAddress, int port, int backlog );
+        void setupSocketImpl( int port, int backlog, const InetAddress* ifAddress );
 
     };
 

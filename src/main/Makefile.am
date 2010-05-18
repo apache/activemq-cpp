@@ -484,6 +484,8 @@ cc_sources = \
     decaf/internal/io/StandardErrorOutputStream.cpp \
     decaf/internal/io/StandardInputStream.cpp \
     decaf/internal/io/StandardOutputStream.cpp \
+    decaf/internal/net/DefaultServerSocketFactory.cpp \
+    decaf/internal/net/DefaultSocketFactory.cpp \
     decaf/internal/net/Network.cpp \
     decaf/internal/net/SocketFileDescriptor.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
@@ -498,7 +500,6 @@ cc_sources = \
     decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.cpp \
-    decaf/internal/net/tcp/DefaultSocketFactory.cpp \
     decaf/internal/net/tcp/TcpSocket.cpp \
     decaf/internal/net/tcp/TcpSocketInputStream.cpp \
     decaf/internal/net/tcp/TcpSocketOutputStream.cpp \
@@ -567,6 +568,7 @@ cc_sources = \
     decaf/net/InetAddress.cpp \
     decaf/net/InetSocketAddress.cpp \
     decaf/net/ServerSocket.cpp \
+    decaf/net/ServerSocketFactory.cpp \
     decaf/net/Socket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
@@ -579,6 +581,8 @@ cc_sources = \
     decaf/net/ssl/SSLContext.cpp \
     decaf/net/ssl/SSLContextSpi.cpp \
     decaf/net/ssl/SSLParameters.cpp \
+    decaf/net/ssl/SSLServerSocket.cpp \
+    decaf/net/ssl/SSLServerSocketFactory.cpp \
     decaf/net/ssl/SSLSocket.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
@@ -1166,6 +1170,8 @@ h_sources = \
     decaf/internal/io/StandardErrorOutputStream.h \
     decaf/internal/io/StandardInputStream.h \
     decaf/internal/io/StandardOutputStream.h \
+    decaf/internal/net/DefaultServerSocketFactory.h \
+    decaf/internal/net/DefaultSocketFactory.h \
     decaf/internal/net/Network.h \
     decaf/internal/net/SocketFileDescriptor.h \
     decaf/internal/net/URIEncoderDecoder.h \
@@ -1181,7 +1187,6 @@ h_sources = \
     decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.h \
     decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.h \
     decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.h \
-    decaf/internal/net/tcp/DefaultSocketFactory.h \
     decaf/internal/net/tcp/TcpSocket.h \
     decaf/internal/net/tcp/TcpSocketInputStream.h \
     decaf/internal/net/tcp/TcpSocketOutputStream.h \
@@ -1296,6 +1301,7 @@ h_sources = \
     decaf/net/PortUnreachableException.h \
     decaf/net/ProtocolException.h \
     decaf/net/ServerSocket.h \
+    decaf/net/ServerSocketFactory.h \
     decaf/net/Socket.h \
     decaf/net/SocketAddress.h \
     decaf/net/SocketError.h \
@@ -1315,6 +1321,8 @@ h_sources = \
     decaf/net/ssl/SSLContext.h \
     decaf/net/ssl/SSLContextSpi.h \
     decaf/net/ssl/SSLParameters.h \
+    decaf/net/ssl/SSLServerSocket.h \
+    decaf/net/ssl/SSLServerSocketFactory.h \
     decaf/net/ssl/SSLSocket.h \
     decaf/net/ssl/SSLSocketFactory.h \
     decaf/nio/Buffer.h \

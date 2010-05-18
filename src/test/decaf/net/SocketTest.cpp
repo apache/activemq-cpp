@@ -601,7 +601,7 @@ void SocketTest::testTx() {
 
         Thread::sleep( 100 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", serverThread.getLocalPort() );
@@ -657,7 +657,7 @@ void SocketTest::testTrx() {
 
         Thread::sleep( 100 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect( "127.0.0.1", serverThread.getLocalPort() );
@@ -711,7 +711,7 @@ void SocketTest::testRxFail() {
 
         Thread::sleep( 100 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", serverThread.getLocalPort() );
@@ -760,7 +760,7 @@ void SocketTest::testTrxNoDelay() {
 
         Thread::sleep( 10 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket() );
 
         client->connect("127.0.0.1", serverThread.getLocalPort() );

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef DEFAULTSOCKETFACTORY_H_
-#define DEFAULTSOCKETFACTORY_H_
+#ifndef _DECAF_INTERNAL_NET_DEFAULTSOCKETFACTORY_H_
+#define _DECAF_INTERNAL_NET_DEFAULTSOCKETFACTORY_H_
 
 #include <decaf/util/Config.h>
 
@@ -25,14 +25,18 @@
 namespace decaf {
 namespace internal {
 namespace net {
-namespace tcp {
 
     /**
-     * SocketFactory implementation that is used to create TCP style Sockets.
+     * SocketFactory implementation that is used to create Sockets.
      *
      * @since 1.0
      */
     class DECAF_API DefaultSocketFactory : public decaf::net::SocketFactory {
+    private:
+
+        DefaultSocketFactory( const DefaultSocketFactory& );
+        DefaultSocketFactory& operator= ( const DefaultSocketFactory& );
+
     public:
 
         DefaultSocketFactory();
@@ -51,8 +55,15 @@ namespace tcp {
         virtual decaf::net::Socket* createSocket( const std::string& name, int port )
             throw( decaf::io::IOException, decaf::net::UnknownHostException );
 
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::net::Socket* createSocket( const std::string& name, int port,
+                                                  const decaf::net::InetAddress* ifAddress, int localPort )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+
     };
 
-}}}}
+}}}
 
-#endif /* DEFAULTSOCKETFACTORY_H_ */
+#endif /* _DECAF_INTERNAL_NET_DEFAULTSOCKETFACTORY_H_ */
