@@ -79,9 +79,10 @@ namespace lang {
 
     public:
 
-        typedef T* PointerType;          // type returned by operator->
-        typedef T& ReferenceType;        // type returned by operator*
-        typedef REFCOUNTER CounterType;  // Type of the Reference Counter
+        typedef T* PointerType;              // type returned by operator->
+        typedef T& ReferenceType;            // type returned by operator*
+        typedef const T& ConstReferenceType; // type returned by const operator*
+        typedef REFCOUNTER CounterType;      // Type of the Reference Counter
 
     public:
 
@@ -281,7 +282,7 @@ namespace lang {
 
             return this->array->value[index];
         }
-        const ReferenceType operator[]( int index ) const {
+        ConstReferenceType operator[]( int index ) const {
             if( this->array->value == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
