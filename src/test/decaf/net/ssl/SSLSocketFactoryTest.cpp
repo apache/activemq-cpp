@@ -47,7 +47,7 @@ void SSLSocketFactoryTest::testGetDefault() {
 
 #else
 
-    CPUNIT_ASSERT_THROW_MESSAGE(
+    CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown an IOException",
         factory->createSocket(),
         IOException );
