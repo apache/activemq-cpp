@@ -56,22 +56,22 @@ OpenSSLServerSocketFactory::~OpenSSLServerSocketFactory() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket* OpenSSLServerSocketFactory::createServerSocket() {
-
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port ) {
-
+ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED ) {
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port, int backlog ) {
-
+ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED, int backlog DECAF_UNUSED ) {
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port, int backlog, const InetAddress* address ) {
-
+ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED, int backlog DECAF_UNUSED, const InetAddress* address DECAF_UNUSED ) {
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
