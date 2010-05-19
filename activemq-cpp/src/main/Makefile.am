@@ -491,6 +491,7 @@ cc_sources = \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
     decaf/internal/net/ssl/DefaultSSLContext.cpp \
+    decaf/internal/net/ssl/DefaultSSLServerSocketFactory.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLContextSpi.cpp \
     decaf/internal/net/ssl/openssl/OpenSSLServerSocket.cpp \
@@ -1178,6 +1179,7 @@ h_sources = \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
     decaf/internal/net/ssl/DefaultSSLContext.h \
+    decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
     decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h \
     decaf/internal/net/ssl/openssl/OpenSSLServerSocket.h \

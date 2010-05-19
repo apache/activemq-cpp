@@ -28,6 +28,7 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLServerSocketFactory.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -70,6 +71,7 @@ namespace openssl {
 
         Mutex monitor;
         Pointer<SocketFactory> clientSocketFactory;
+        Pointer<ServerSocketFactory> serverSocketFactory;
         Pointer<SecureRandom> random;
         std::string password;
 
@@ -253,6 +255,24 @@ SocketFactory* OpenSSLContextSpi::providerGetSocketFactory() {
         }
 
         return this->data->clientSocketFactory.get();
+    }
+    DECAF_CATCH_RETHROW( IllegalStateException )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocketFactory* OpenSSLContextSpi::providerGetServerSocketFactory() {
+
+    try{
+
+        synchronized( &( this->data->monitor ) ) {
+            if( this->data->serverSocketFactory == NULL ) {
+                this->data->serverSocketFactory.reset( new OpenSSLServerSocketFactory( this ) );
+            }
+        }
+
+        return this->data->serverSocketFactory.get();
     }
     DECAF_CATCH_RETHROW( IllegalStateException )
     DECAF_CATCH_RETHROW( Exception )

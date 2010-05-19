@@ -19,10 +19,20 @@
 
 #include <decaf/io/IOException.h>
 
+#include <decaf/internal/net/Network.h>
+
+#include <decaf/internal/net/ssl/DefaultSSLContext.h>
+#include <decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
 using namespace decaf::lang;
+using namespace decaf::internal::net;
+using namespace decaf::internal::net::ssl;
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocketFactory* SSLServerSocketFactory::defaultFactory = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLServerSocketFactory::SSLServerSocketFactory() {
@@ -32,3 +42,34 @@ SSLServerSocketFactory::SSLServerSocketFactory() {
 SSLServerSocketFactory::~SSLServerSocketFactory() {
 }
 
+////////////////////////////////////////////////////////////////////////////////
+ServerSocketFactory* SSLServerSocketFactory::getDefault() {
+
+    if( defaultFactory != NULL ) {
+        return defaultFactory;
+    }
+
+    Network* netRuntime = Network::getNetworkRuntime();
+
+    synchronized( netRuntime->getRuntimeLock() ) {
+
+        // Check the DefaultSSLContext to see if any SSL Providers are enabled
+        SSLContext* context = DefaultSSLContext::getContext();
+        if( context != NULL ) {
+
+            // The SSLContext owns the Factory returned here, no need to manage it.
+            defaultFactory = context->getServerSocketFactory();
+        }
+
+        // Non found, use the non-functional default one.
+        if( defaultFactory == NULL ) {
+            defaultFactory = new DefaultSSLServerSocketFactory( "SSL Support is not enabled in this build." );
+
+            // Since we created this one we need to make sure it is destroyed when the Network
+            // Runtime is shutdown.
+            netRuntime->addAsResource( defaultFactory );
+        }
+    }
+
+    return defaultFactory;
+}

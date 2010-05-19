@@ -85,6 +85,17 @@ namespace ssl {
         SocketFactory* getSocketFactory();
 
         /**
+         * Returns an ServerSocketFactory instance for use with this Context, the ServerSocketFactory
+         * is owned by the Context and should not be deleted by the caller.
+         *
+         * @returns a pointer to this SSLContext's ServerSocketFactory for creating SSLServerSocket objects.
+         *
+         * @throws IllegalStateException if the SSLContextSpi requires initialization but it
+         *         has not yet been initialized.
+         */
+        ServerSocketFactory* getServerSocketFactory();
+
+        /**
          * @return a new instance of an SSLParameters object containing the default set
          *         of settings for this SSLContext.
          *

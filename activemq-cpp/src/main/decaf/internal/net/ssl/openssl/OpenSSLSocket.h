@@ -133,26 +133,6 @@ namespace openssl {
          */
         virtual void setEnabledProtocols( const std::vector<std::string>& protocols );
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool getWantClientAuth() const;
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setWantClientAuth( bool value );
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool getNeedClientAuth() const;
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setNeedClientAuth( bool value );
-
     public:
 
         /**

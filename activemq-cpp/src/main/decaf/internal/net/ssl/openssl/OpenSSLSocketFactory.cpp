@@ -106,7 +106,7 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port,
-                                            const InetAddress* ifAddress, int localPort  )
+                                            const InetAddress* ifAddress, int localPort )
     throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
 
     try{

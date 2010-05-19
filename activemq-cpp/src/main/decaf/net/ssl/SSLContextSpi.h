@@ -26,6 +26,7 @@ namespace decaf {
 namespace net {
 
     class SocketFactory;
+    class ServerSocketFactory;
 
 namespace ssl {
 
@@ -89,6 +90,18 @@ namespace ssl {
          *         has not been initialized yet.
          */
         virtual SocketFactory* providerGetSocketFactory() = 0;
+
+        /**
+         * Returns a ServerSocketFactory instance that can be used to create new SSLServerSocket objects.
+         *
+         * The ServerSocketFactory is owned by the Service Provider and should not be destroyed by the caller.
+         *
+         * @returns SocketFactory instance that can be used to create new SSLServerSockets.
+         *
+         * @throws IllegalStateException if the SSLContextSpi object requires initialization but
+         *         has not been initialized yet.
+         */
+        virtual ServerSocketFactory* providerGetServerSocketFactory() = 0;
 
     };
 

@@ -56,6 +56,11 @@ namespace openssl {
          */
         virtual decaf::net::SocketFactory* providerGetSocketFactory();
 
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::net::ServerSocketFactory* providerGetServerSocketFactory();
+
     private:
 
         friend class OpenSSLSocket;
