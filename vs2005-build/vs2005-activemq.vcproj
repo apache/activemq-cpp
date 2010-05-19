@@ -1728,6 +1728,22 @@
 					Name="tcp"
 					>
 					<File
+						RelativePath="..\src\main\activemq\transport\tcp\SslTransport.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\tcp\SslTransport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\tcp\SslTransportFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\tcp\SslTransportFactory.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\transport\tcp\TcpTransport.cpp"
 						>
 					</File>
@@ -22572,6 +22588,38 @@
 					Name="net"
 					>
 					<File
+						RelativePath="..\src\main\decaf\internal\net\DefaultServerSocketFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\DefaultServerSocketFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\DefaultSocketFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\DefaultSocketFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\Network.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\Network.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\SocketFileDescriptor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\SocketFileDescriptor.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\internal\net\URIEncoderDecoder.cpp"
 						>
 					</File>
@@ -22591,6 +22639,130 @@
 						RelativePath="..\src\main\decaf\internal\net\URIType.h"
 						>
 					</File>
+					<Filter
+						Name="ssl"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLContext.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLContext.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLServerSocketFactory.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLServerSocketFactory.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLSocketFactory.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\ssl\DefaultSSLSocketFactory.h"
+							>
+						</File>
+						<Filter
+							Name="openssl"
+							>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLContextSpi.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLContextSpi.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocket.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocket.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocketFactory.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocketFactory.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocket.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocket.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketException.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketException.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketFactory.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketFactory.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketInputStream.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketInputStream.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketOutputStream.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketOutputStream.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
+					<Filter
+						Name="tcp"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocket.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocket.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocketInputStream.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocketInputStream.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocketOutputStream.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\net\tcp\TcpSocketOutputStream.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="nio"
@@ -22656,6 +22828,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\internal\util\GenericResource.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\internal\nio\IntArrayBuffer.cpp"
 						>
 					</File>
@@ -22669,6 +22845,58 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\internal\nio\LongArrayBuffer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\util\Resource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\util\Resource.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\util\ResourceLifecycleManager.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\util\ResourceLifecycleManager.h"
 						>
 					</File>
 					<File
@@ -23145,6 +23373,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\FileDescriptor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\FileDescriptor.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\FilterInputStream.cpp"
 					>
 				</File>
@@ -23245,19 +23481,43 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\net\BufferedSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\decaf\net\BufferedSocket.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\decaf\net\ConnectException.h"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\net\HttpRetryException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\Inet4Address.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\Inet4Address.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\Inet6Address.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\Inet6Address.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\InetAddress.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\InetAddress.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\InetSocketAddress.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\InetSocketAddress.h"
 					>
 				</File>
 				<File
@@ -23285,7 +23545,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\ServerSocketFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\ServerSocketFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\Socket.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\Socket.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\SocketAddress.h"
 					>
 				</File>
 				<File
@@ -23309,31 +23585,27 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\net\SocketInputStream.cpp"
+					RelativePath="..\src\main\decaf\net\SocketImpl.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\net\SocketInputStream.h"
+					RelativePath="..\src\main\decaf\net\SocketImpl.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\net\SocketOutputStream.cpp"
+					RelativePath="..\src\main\decaf\net\SocketImplFactory.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\net\SocketOutputStream.h"
+					RelativePath="..\src\main\decaf\net\SocketOptions.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\SocketOptions.h"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\net\SocketTimeoutException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\decaf\net\TcpSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\decaf\net\TcpSocket.h"
 					>
 				</File>
 				<File
@@ -23380,6 +23652,66 @@
 					RelativePath="..\src\main\decaf\net\URLEncoder.h"
 					>
 				</File>
+				<Filter
+					Name="ssl"
+					>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLContext.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLContext.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLContextSpi.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLContextSpi.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLParameters.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLParameters.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLServerSocket.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLServerSocket.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLServerSocketFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLServerSocketFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLSocket.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLSocket.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLSocketFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\net\ssl\SSLSocketFactory.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="nio"
@@ -23485,6 +23817,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\KeyManagementException.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\NoSuchAlgorithmException.h"
 					>
 				</File>
@@ -23498,6 +23834,22 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\security\PublicKey.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecureRandom.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecureRandom.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecureRandomSpi.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecureRandomSpi.h"
 					>
 				</File>
 				<File
@@ -23547,14 +23899,6 @@
 						RelativePath="..\src\main\decaf\security\cert\X509Certificate.h"
 						>
 					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="security_provider"
-				>
-				<Filter
-					Name="windows"
-					>
 				</Filter>
 			</Filter>
 			<Filter
