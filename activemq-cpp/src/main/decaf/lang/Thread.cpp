@@ -214,6 +214,8 @@ namespace{
             #else
                 ExitThread( 0 );
             #endif
+
+            return 0;
         }
 
     #endif
