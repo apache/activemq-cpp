@@ -39,9 +39,6 @@ SSLParameters SSLSocket::getSSLParameters() const {
     SSLParameters params( this->getEnabledCipherSuites(),
                           this->getEnabledProtocols() );
 
-    params.setWantClientAuth( this->getWantClientAuth() );
-    params.setNeedClientAuth( this->getNeedClientAuth() );
-
     return params;
 }
 
@@ -56,13 +53,6 @@ void SSLSocket::setSSLParameters( const SSLParameters& value ) {
 
         if( !value.getProtocols().empty() ) {
             this->setEnabledProtocols( value.getProtocols() );
-        }
-
-        if( value.getWantClientAuth() || value.getNeedClientAuth() ) {
-            this->setNeedClientAuth( value.getNeedClientAuth() );
-            this->setWantClientAuth( value.getWantClientAuth() );
-        } else {
-            this->setWantClientAuth( false );
         }
     }
     DECAF_CATCH_RETHROW( IllegalArgumentException )

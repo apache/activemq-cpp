@@ -91,6 +91,16 @@ SocketFactory* SSLContext::getSocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ServerSocketFactory* SSLContext::getServerSocketFactory() {
+    try{
+        return this->contextImpl->providerGetServerSocketFactory();
+    }
+    DECAF_CATCH_RETHROW( IllegalStateException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IllegalStateException)
+    DECAF_CATCHALL_THROW( IllegalStateException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
 SSLParameters* SSLContext::getDefaultSSLParameters() {
     try{
         return this->contextImpl->providerGetDefaultSSLParameters();

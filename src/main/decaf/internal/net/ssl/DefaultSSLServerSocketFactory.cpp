@@ -15,71 +15,60 @@
  * limitations under the License.
  */
 
-#include "OpenSSLServerSocketFactory.h"
+#include "DefaultSSLServerSocketFactory.h"
 
-#include <decaf/lang/exceptions/NullPointerException.h>
-#include <decaf/lang/exceptions/UnsupportedOperationException.h>
-
-#include <decaf/internal/net/ssl/openssl/OpenSSLSocket.h>
-#include <decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h>
-
-#include <memory>
-
-#ifdef HAVE_OPENSSL
-#include <openssl/ssl.h>
-#endif
+#include <decaf/io/IOException.h>
 
 using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
-using namespace decaf::internal::net::ssl::openssl;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLServerSocketFactory::OpenSSLServerSocketFactory( OpenSSLContextSpi* parent ) :
-    SSLServerSocketFactory(), parent( parent ) {
-
-    if( parent == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Parent Pointer was NULL." );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-OpenSSLServerSocketFactory::~OpenSSLServerSocketFactory() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket() {
+DefaultSSLServerSocketFactory::DefaultSSLServerSocketFactory( const std::string& errorMessage ) :
+    SSLServerSocketFactory(), errorMessage( errorMessage ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port ) {
-
+DefaultSSLServerSocketFactory::~DefaultSSLServerSocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port, int backlog ) {
+ServerSocket* DefaultSSLServerSocketFactory::createServerSocket() {
 
+    throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket* OpenSSLServerSocketFactory::createServerSocket( int port, int backlog, const InetAddress* address ) {
+ServerSocket* DefaultSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED ) {
 
+    throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> OpenSSLServerSocketFactory::getDefaultCipherSuites() {
+ServerSocket* DefaultSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED, int backlog DECAF_UNUSED ) {
+
+    throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ServerSocket* DefaultSSLServerSocketFactory::createServerSocket( int port DECAF_UNUSED,
+                                                                 int backlog DECAF_UNUSED,
+                                                                 const InetAddress* address DECAF_UNUSED ) {
+
+    throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> DefaultSSLServerSocketFactory::getDefaultCipherSuites() {
     return std::vector<std::string>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> OpenSSLServerSocketFactory::getSupportedCipherSuites() {
+std::vector<std::string> DefaultSSLServerSocketFactory::getSupportedCipherSuites() {
     return std::vector<std::string>();
 }

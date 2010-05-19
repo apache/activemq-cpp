@@ -42,27 +42,31 @@ SSLSocketFactory::~SSLSocketFactory() {
 ////////////////////////////////////////////////////////////////////////////////
 SocketFactory* SSLSocketFactory::getDefault() {
 
-    if( SSLSocketFactory::defaultSocketFactory != NULL ) {
-        return SSLSocketFactory::defaultSocketFactory;
+    if( defaultSocketFactory != NULL ) {
+        return defaultSocketFactory;
     }
 
-    // Check the DefaultSSLContext to see if any SSL Providers are enabled
-    SSLContext* context = DefaultSSLContext::getContext();
-    if( context != NULL ) {
+    Network* netRuntime = Network::getNetworkRuntime();
 
-        // The SSLContext owns the Factory returned here, no need to manage it.
-        SSLSocketFactory::defaultSocketFactory = context->getSocketFactory();
+    synchronized( netRuntime->getRuntimeLock() ) {
+
+        // Check the DefaultSSLContext to see if any SSL Providers are enabled
+        SSLContext* context = DefaultSSLContext::getContext();
+        if( context != NULL ) {
+
+            // The SSLContext owns the Factory returned here, no need to manage it.
+            defaultSocketFactory = context->getSocketFactory();
+        }
+
+        // Non found, use the non-functional default one.
+        if( defaultSocketFactory == NULL ) {
+            defaultSocketFactory = new DefaultSSLSocketFactory( "SSL Support is not enabled in this build." );
+
+            // Since we created this one we need to make sure it is destroyed when the Network
+            // Runtime is shutdown.
+            Network::getNetworkRuntime()->addAsResource( defaultSocketFactory );
+        }
     }
 
-    // Non found, use the non-functional default one.
-    if( SSLSocketFactory::defaultSocketFactory == NULL ) {
-        SSLSocketFactory::defaultSocketFactory =
-            new DefaultSSLSocketFactory( "SSL Support is not enabled in this build." );
-
-        // Since we created this one we need to make sure it is destroyed when the Network
-        // Runtime is shutdown.
-        Network::getNetworkRuntime()->addAsResource( SSLSocketFactory::defaultSocketFactory );
-    }
-
-    return SSLSocketFactory::defaultSocketFactory;
+    return defaultSocketFactory;
 }

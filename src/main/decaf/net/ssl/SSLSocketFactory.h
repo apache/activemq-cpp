@@ -39,9 +39,11 @@ namespace ssl {
 
         static SocketFactory* defaultSocketFactory;
 
-    public:
+    protected:
 
         SSLSocketFactory();
+
+    public:
 
         virtual ~SSLSocketFactory();
 
@@ -49,13 +51,8 @@ namespace ssl {
          * Returns the current default SSL SocketFactory, the factory is returned as a pointer
          * however the caller does not own this pointer and should not delete it.
          *
-         * The first time this method is called, the system property "ssl.SocketFactory.provider"
-         * is examined. If it is non-null, a class by that name is loaded and instantiated. If
-         * that is successful and the object is an instance of SSLSocketFactory, it is made the
-         * default SSL socket factory.
-         *
-         * Otherwise, this method returns SSLContext::getDefault()->getSocketFactory(). If that
-         * call fails, an non-functional factory is returned.
+         * This method returns SSLContext::getDefault()->getSocketFactory(). If that call fails,
+         * a non-functional factory is returned.
          *
          * @returns the default SSL SocketFactory pointer.
          *

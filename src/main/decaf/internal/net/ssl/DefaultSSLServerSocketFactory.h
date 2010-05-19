@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSERVERSOCKETFACTORY_H_
-#define _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSERVERSOCKETFACTORY_H_
+#ifndef _DECAF_INTERNAL_NET_DEFAULTSSLSERVERSOCKETFACTORY_H_
+#define _DECAF_INTERNAL_NET_DEFAULTSSLSERVERSOCKETFACTORY_H_
 
 #include <decaf/util/Config.h>
 
@@ -26,25 +26,24 @@ namespace decaf {
 namespace internal {
 namespace net {
 namespace ssl {
-namespace openssl {
-
-    class OpenSSLContextSpi;
 
     /**
-     * SSLServerSocketFactory that creates Server Sockets that use OpenSSL.
+     * Default implementation of the SSLServerSocketFactory, this factory throws an Exception
+     * from all its create methods to indicate that SSL is not supported, this factory is
+     * used when OpenSSL is not enabled in the builds.
      *
      * @since 1.0
      */
-    class DECAF_API OpenSSLServerSocketFactory : public decaf::net::ssl::SSLServerSocketFactory {
+    class DECAF_API DefaultSSLServerSocketFactory : public decaf::net::ssl::SSLServerSocketFactory {
     private:
 
-        OpenSSLContextSpi* parent;
+        std::string errorMessage;
 
     public:
 
-        OpenSSLServerSocketFactory( OpenSSLContextSpi* parent );
+        DefaultSSLServerSocketFactory( const std::string& errorMessage );
 
-        virtual ~OpenSSLServerSocketFactory();
+        virtual ~DefaultSSLServerSocketFactory();
 
         /**
          * {@inheritDoc}
@@ -79,6 +78,6 @@ namespace openssl {
 
     };
 
-}}}}}
+}}}}
 
-#endif /* _DECAF_INTERNAL_NET_SSL_OPENSSL_OPENSSLSERVERSOCKETFACTORY_H_ */
+#endif /* _DECAF_INTERNAL_NET_DEFAULTSSLSERVERSOCKETFACTORY_H_ */

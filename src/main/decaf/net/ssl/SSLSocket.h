@@ -124,36 +124,6 @@ namespace ssl {
          */
         virtual void setSSLParameters( const SSLParameters& value );
 
-        /**
-         * @returns true if the Socket request client Authentication.
-         */
-        virtual bool getWantClientAuth() const = 0;
-
-        /**
-         * Sets whether or not this Socket will request Client Authentication.  If set to true the
-         * Socket (when used in server mode) will request that the client authenticate itself, if the
-         * client doesn't send authentication the socket will still allow negotiation to continue.
-         *
-         * @param value
-         *      Whether the server socket should request client authentication.
-         */
-        virtual void setWantClientAuth( bool value ) = 0;
-
-        /**
-         * @returns true if the Socket requires client Authentication.
-         */
-        virtual bool getNeedClientAuth() const = 0;
-
-        /**
-         * Sets whether or not this Socket will require Client Authentication.  If set to true the
-         * Socket (when used in server mode) will require that the client authenticate itself, if the
-         * client doesn't send authentication the socket will not allow negotiation to continue.
-         *
-         * @param value
-         *      Whether the server socket should require client authentication.
-         */
-        virtual void setNeedClientAuth( bool value ) = 0;
-
     };
 
 }}}
