@@ -10773,6 +10773,18 @@
 						RelativePath="..\src\test\decaf\internal\net\URIHelperTest.h"
 						>
 					</File>
+					<Filter
+						Name="ssl"
+						>
+						<File
+							RelativePath="..\src\test\decaf\internal\net\ssl\DefaultSSLSocketFactoryTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\internal\net\ssl\DefaultSSLSocketFactoryTest.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -11031,6 +11043,38 @@
 				Name="net"
 				>
 				<File
+					RelativePath="..\src\test\decaf\net\Inet4AddressTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\Inet4AddressTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\Inet6AddressTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\Inet6AddressTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\InetAddressTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\InetAddressTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\ServerSocketTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\ServerSocketTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\net\SocketFactoryTest.cpp"
 					>
 				</File>
@@ -11078,6 +11122,18 @@
 					RelativePath="..\src\test\decaf\net\URLEncoderTest.h"
 					>
 				</File>
+				<Filter
+					Name="ssl"
+					>
+					<File
+						RelativePath="..\src\test\decaf\net\ssl\SSLSocketFactoryTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\net\ssl\SSLSocketFactoryTest.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="nio"
