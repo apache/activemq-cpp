@@ -173,7 +173,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while binding the socket.
          * @throws IllegalArgumentException if the parameters are not valid.
          */
-        void bind( const std::string& host, int port )
+        virtual void bind( const std::string& host, int port )
             throw ( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException );
 
         /**
@@ -194,7 +194,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while binding the socket.
          * @throws IllegalArgumentException if the parameters are not valid.
          */
-        void bind( const std::string& host, int port, int backlog )
+        virtual void bind( const std::string& host, int port, int backlog )
             throw ( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException );
 
         /**
@@ -209,7 +209,7 @@ namespace net{
          * @throws SocketException if an error occurs while blocking on the accept call.
          * @throws SocketTimeoutException if the SO_TIMEOUT option was used and the accept timed out.
          */
-        Socket* accept() throw( decaf::io::IOException );
+        virtual Socket* accept() throw( decaf::io::IOException );
 
         /**
          * Closes the server socket, causing any Threads blocked on an accept call to
@@ -217,17 +217,17 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        void close() throw( decaf::io::IOException );
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * @returns true if the close method has been called on the ServerSocket.
          */
-        bool isClosed() const;
+        virtual bool isClosed() const;
 
         /**
          * @return true of the server socket is bound.
          */
-        bool isBound() const;
+        virtual bool isBound() const;
 
         /**
          * Gets the receive buffer size for this socket, SO_RCVBUF.  This is the buffer used
@@ -237,7 +237,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        int getReceiveBufferSize() const throw( SocketException );
+        virtual int getReceiveBufferSize() const throw( SocketException );
 
         /**
          * Sets the receive buffer size for this socket, SO_RCVBUF.
@@ -248,7 +248,7 @@ namespace net{
          * @throws SocketException if the operation fails.
          * @throws IllegalArgumentException if the value is zero or negative.
          */
-        void setReceiveBufferSize( int size )
+        virtual void setReceiveBufferSize( int size )
             throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
 
         /**
@@ -258,7 +258,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        bool getReuseAddress() const throw( SocketException );
+        virtual bool getReuseAddress() const throw( SocketException );
 
         /**
          * Sets the reuse address flag, SO_REUSEADDR.
@@ -268,7 +268,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        void setReuseAddress( bool reuse ) throw( SocketException );
+        virtual void setReuseAddress( bool reuse ) throw( SocketException );
 
         /**
          * Gets the timeout for socket operations, SO_TIMEOUT.
@@ -277,7 +277,7 @@ namespace net{
          *
          * @throws SocketException Thrown if unable to retrieve the information.
          */
-        int getSoTimeout() const throw( SocketException );
+        virtual int getSoTimeout() const throw( SocketException );
 
         /**
          * Sets the timeout for socket operations, SO_TIMEOUT.  A value of zero indicates that timeout
@@ -289,7 +289,7 @@ namespace net{
          * @throws SocketException Thrown if unable to set the information.
          * @throws IllegalArgumentException if the timeout value is negative.
          */
-        void setSoTimeout( int timeout )
+        virtual void setSoTimeout( int timeout )
             throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
 
         /**
@@ -297,12 +297,12 @@ namespace net{
          *
          * @returns the port number of this machine that is bound, if not bound returns -1.
          */
-        int getLocalPort() const;
+        virtual int getLocalPort() const;
 
         /**
          * @returns a string representing this ServerSocket.
          */
-        std::string toString() const;
+        virtual std::string toString() const;
 
     public:
 
