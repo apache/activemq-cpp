@@ -37,17 +37,118 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::net;
-//using namespace decaf::net::ssl;
+using namespace decaf::net::ssl;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
 using namespace decaf::internal::net::ssl::openssl;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLServerSocket::OpenSSLServerSocket() {
+namespace decaf {
+namespace internal {
+namespace net {
+namespace ssl {
+namespace openssl {
+
+    class ServerSocketData {
+    public:
+
+#ifdef HAVE_OPENSSL
+        SSL* ssl;
+#endif
+        bool needsClientAuth;
+        bool wantsClientAuth;
+
+    public:
+
+        ServerSocketData() : ssl( NULL ), needsClientAuth( false ), wantsClientAuth( false ) {
+        }
+
+        ~ServerSocketData() {
+            try{
+#ifdef HAVE_OPENSSL
+                if( ssl ) {
+                    SSL_free( ssl );
+                }
+#endif
+            } catch(...) {}
+        }
+
+    };
+
+}}}}}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenSSLServerSocket::OpenSSLServerSocket( void* ssl ) : SSLServerSocket(), data( new ServerSocketData() ) {
+
+    if( ssl == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The OpenSSL SSL object instance passed was NULL." );
+    }
+
+#ifdef HAVE_OPENSSL
+    this->data->ssl = static_cast<SSL*>( ssl );
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLServerSocket::~OpenSSLServerSocket() {
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLServerSocket::getSupportedCipherSuites() const {
+
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLServerSocket::getSupportedProtocols() const {
+
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLServerSocket::getEnabledCipherSuites() const {
+
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLServerSocket::setEnabledCipherSuites( const std::vector<std::string>& suites DECAF_UNUSED ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLServerSocket::getEnabledProtocols() const {
+
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLServerSocket::setEnabledProtocols( const std::vector<std::string>& protocols DECAF_UNUSED ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool OpenSSLServerSocket::getNeedClientAuth() const {
+    return this->data->needsClientAuth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLServerSocket::setNeedClientAuth( bool value ) {
+
+    this->data->needsClientAuth = value;
+    this->data->wantsClientAuth = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool OpenSSLServerSocket::getWantClientAuth() const {
+    return this->data->wantsClientAuth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLServerSocket::setWantClientAuth( bool value ) {
+
+    this->data->needsClientAuth = value;
+    this->data->wantsClientAuth = value;
+}
