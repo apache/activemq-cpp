@@ -80,6 +80,8 @@ namespace openssl {
 
 #ifdef HAVE_OPENSSL
         SSL_CTX* openSSLContext;
+#else
+        void* openSSLContext;
 #endif
 
     public:

@@ -59,6 +59,8 @@ namespace openssl {
 
 #ifdef HAVE_OPENSSL
         SSL* ssl;
+#else
+        void* ssl;
 #endif
         bool needsClientAuth;
         bool wantsClientAuth;
