@@ -55,10 +55,10 @@ ByteArrayOutputStream::~ByteArrayOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::pair<const unsigned char*, int> ByteArrayOutputStream::toByteArray() const {
+std::pair<unsigned char*, int> ByteArrayOutputStream::toByteArray() const {
 
     if( this->count == 0 ) {
-        return std::pair<const unsigned char*, int>( NULL, 0 );
+        return std::pair<unsigned char*, int>( NULL, 0 );
     }
 
     unsigned char* temp = new unsigned char[this->count];

@@ -81,7 +81,7 @@ namespace io{
          *
          * @return an STL pair containing the copied array and its size.
          */
-        std::pair<const unsigned char*, int> toByteArray() const;
+        std::pair<unsigned char*, int> toByteArray() const;
 
         /**
          * Gets the current count of bytes written into this ByteArrayOutputStream.
