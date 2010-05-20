@@ -42,9 +42,8 @@ void SSLSocketFactoryTest::testGetDefault() {
 
 #ifdef HAVE_OPENSSL
 
-    Socket* sock = factory->createSocket();
-    CPPUNIT_ASSERT( sock != NULL );
-    delete sock;
+    std::auto_ptr<Socket> sock( factory->createSocket() );
+    CPPUNIT_ASSERT( sock.get() != NULL );
 
 #else
 
