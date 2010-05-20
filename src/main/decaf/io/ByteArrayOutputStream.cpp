@@ -57,11 +57,13 @@ ByteArrayOutputStream::~ByteArrayOutputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 std::pair<unsigned char*, int> ByteArrayOutputStream::toByteArray() const {
 
+    unsigned char* temp = NULL;
+
     if( this->count == 0 ) {
-        return std::pair<unsigned char*, int>( NULL, 0 );
+        return std::pair<unsigned char*, int>( temp, 0 );
     }
 
-    unsigned char* temp = new unsigned char[this->count];
+    temp = new unsigned char[this->count];
     System::arraycopy( this->buffer, 0, temp, 0, this->count );
 
     return std::make_pair( temp, this->count );
