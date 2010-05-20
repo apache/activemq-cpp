@@ -79,7 +79,7 @@ AC_DEFUN([DECAF_SEARCHFOR_OPENSSL], [
         AC_MSG_CHECKING([for openssl/ssl.h in $currentDir/include])
         if test -f "$currentDir/include/openssl/ssl.h"; then
             OPENSSL_INCLUDES="-I$currentDir/include"
-            OPENSSL_LDFLAGS="-L $currentDir/lib"
+            OPENSSL_LDFLAGS="-L$currentDir/lib"
             OPENSSL_LIBS="-lssl -lcrypto"
             decaf_have_ssl="1"
             AC_MSG_RESULT([yes])
