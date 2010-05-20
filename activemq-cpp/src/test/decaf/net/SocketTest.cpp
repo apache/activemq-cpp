@@ -388,7 +388,7 @@ void SocketTest::testGetOutputStream() {
 
     // Write some data to the server
     OutputStream* out = pingClient.getOutputStream();
-    unsigned char buffer[250];
+    unsigned char buffer[250] = {0};
     out->write( buffer, 1 );
 
     // Wait for the server to finish
