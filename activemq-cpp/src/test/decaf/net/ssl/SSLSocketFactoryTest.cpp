@@ -44,6 +44,7 @@ void SSLSocketFactoryTest::testGetDefault() {
 
     Socket* sock = factory->createSocket();
     CPPUNIT_ASSERT( sock != NULL );
+    delete sock;
 
 #else
 
