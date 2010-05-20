@@ -48,12 +48,12 @@ ServerSocket::ServerSocket( int port )
     throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
-    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
-
     if( port < 0 ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
 
     this->setupSocketImpl( port, getDefaultBacklog(), NULL );
 }
@@ -63,12 +63,12 @@ ServerSocket::ServerSocket( int port, int backlog )
     throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
-    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
-
     if( port < 0 ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
 
     this->setupSocketImpl( port, backlog, NULL );
 }
@@ -78,12 +78,12 @@ ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress 
     throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
-    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
-
     if( port < 0 ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__, "Port value was invalid: %d", port );
     }
+
+    this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
 
     this->setupSocketImpl( port, backlog, ifAddress );
 }
@@ -92,7 +92,6 @@ ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress 
 ServerSocket::~ServerSocket() {
     try{
         close();
-
         delete this->impl;
     }
     DECAF_CATCH_NOTHROW( Exception )
@@ -119,6 +118,8 @@ void ServerSocket::setupSocketImpl( int port, int backlog, const InetAddress* if
             this->impl->listen( backlog > 0 ? backlog : getDefaultBacklog() );
         } catch( IOException& ex ) {
             close();
+            delete this->impl;
+            this->impl = NULL;
             throw ex;
         }
     }

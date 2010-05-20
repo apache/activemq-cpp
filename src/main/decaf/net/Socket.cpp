@@ -139,6 +139,8 @@ void Socket::initSocketImpl( const std::string& host, int port, const InetAddres
             this->connected = true;
         } catch( IOException& ex ) {
             this->impl->close();
+            delete this->impl;
+            this->impl = NULL;
             throw ex;
         }
     }
