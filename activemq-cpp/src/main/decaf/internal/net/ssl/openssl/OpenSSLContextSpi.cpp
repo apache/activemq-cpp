@@ -40,7 +40,9 @@
 
 #ifdef HAVE_OPENSSL
 #include <openssl/ssl.h>
+#include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <openssl/conf.h>
 #define SSL_LOCK_MUTEX CRYPTO_LOCK
 #else
 #define SSL_LOCK_MUTEX 1
@@ -169,7 +171,9 @@ void OpenSSLContextSpi::providerInit( SecureRandom* random ) {
 #ifdef HAVE_OPENSSL
 
         // General library initialization.
+    #ifdef WIN32
         CRYPTO_malloc_init();
+    #endif
         SSL_load_error_strings();
         SSL_library_init();
         OpenSSL_add_all_algorithms();
