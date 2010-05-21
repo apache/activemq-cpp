@@ -140,7 +140,7 @@ void SocketFactoryTest::test()
 
         Thread::sleep( 500 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
 
         client->setSoLinger( false, 0 );
@@ -189,7 +189,7 @@ void SocketFactoryTest::testNoDelay()
 
         Thread::sleep( 40 );
 
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
 
         client->setSoLinger( false, 0 );
