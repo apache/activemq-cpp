@@ -348,9 +348,6 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////
 void SocketTest::testGetOutputStream() {
 
-    // Remove the SIGPIPE so that the CPPUNIT tests don't quit when sockets are broken.
-    apr_signal_block( SIGPIPE );
-
     {
         // Simple fetch test
         ServerSocket server(0);
