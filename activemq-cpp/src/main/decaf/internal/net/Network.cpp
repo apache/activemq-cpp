@@ -22,6 +22,8 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/internal/util/ResourceLifecycleManager.h>
 
+#include <apr_signal.h>
+
 using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
@@ -86,6 +88,12 @@ Mutex* Network::getRuntimeLock() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Network::initializeNetworking() {
+
+#ifndef WIN32
+    // Remove the SIGPIPE so that the application isn't aborted if a connected
+    // socket breaks during a read or write.
+    apr_signal_block( SIGPIPE );
+#endif
 
     // Create the Network Runtime
     Network::networkRuntime = new Network();
