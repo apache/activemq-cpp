@@ -39,13 +39,14 @@ SSLContextSpi::~SSLContextSpi() {
 ////////////////////////////////////////////////////////////////////////////////
 SSLParameters* SSLContextSpi::providerGetSupportedSSLParameters() {
 
+    SocketFactory* factory = NULL;
+
     std::auto_ptr<SSLParameters> params( new SSLParameters() );
-    std::auto_ptr<SocketFactory> factory;
     std::auto_ptr<SSLSocket> socket;
 
     try{
 
-        factory.reset( SSLSocketFactory::getDefault() );
+        factory = SSLSocketFactory::getDefault();
 
         socket.reset( dynamic_cast<SSLSocket*>( factory->createSocket() ) );
 

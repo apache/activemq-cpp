@@ -159,7 +159,7 @@ void TcpTransport::connect( const decaf::net::URI& uri,
 Socket* TcpTransport::createSocket() {
 
     try {
-        std::auto_ptr<SocketFactory> factory( SocketFactory::getDefault() );
+        SocketFactory* factory = SocketFactory::getDefault();
         return factory->createSocket();
     }
     DECAF_CATCH_RETHROW( IOException )
