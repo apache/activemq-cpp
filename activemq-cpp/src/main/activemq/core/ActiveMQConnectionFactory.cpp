@@ -81,6 +81,15 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
+    try{
+        delete this->settings;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection()
     throw ( cms::CMSException ) {
 
