@@ -47,7 +47,7 @@ namespace core{
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
-        virtual ~ActiveMQConnectionFactory() {}
+        virtual ~ActiveMQConnectionFactory();
 
         /**
          * Creates a connection with the default user identity. The
