@@ -17,7 +17,17 @@
 
 #include "OpenSSLParameters.h"
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+
+#ifdef HAVE_OPENSSL
+#include <openssl/ssl.h>
+#endif
+
+#include <memory>
+
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
@@ -28,6 +38,12 @@ using namespace decaf::internal::net::ssl::openssl;
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) : context( context ) {
 
+    if( context == NULL ) {
+        throw NullPointerException( __FILE__, __LINE__, "SSL Context was NULL" );
+    }
+
+    // Create a new SSL instance for this Parameters object, each one needs its own.
+    this->ssl = SSL_new( context );
 }
 
 #endif
@@ -35,7 +51,65 @@ OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) : context( context ) {
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLParameters::~OpenSSLParameters() {
 
+    try {
 #ifdef HAVE_OPENSSL
+
+    SSL_free( this->ssl );
+
+#endif
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLParameters::getSupportedCipherSuites() const {
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLParameters::getSupportedProtocols() const {
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLParameters::getEnabledCipherSuites() const {
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLParameters::setEnabledCipherSuites( const std::vector<std::string>& suites ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLParameters::getEnabledProtocols() const {
+    return std::vector<std::string>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLParameters::setEnabledProtocols( const std::vector<std::string>& protocols ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenSSLParameters* OpenSSLParameters::clonse() const {
+
+#ifdef HAVE_OPENSSL
+
+    std::auto_ptr<OpenSSLParameters> cloned( new OpenSSLParameters( this->context ) );
+
+    cloned->setEnabledCipherSuites( this->getEnabledCipherSuites() );
+    cloned->setEnabledProtocols( this->getEnabledProtocols() );
+    cloned->needClientAuth = this->needClientAuth;
+    cloned->wantClientAuth = this->wantClientAuth;
+    cloned->useClientMode = this->useClientMode;
+
+    return cloned.release();
+
+#else
+
+    return NULL;
 
 #endif
 }

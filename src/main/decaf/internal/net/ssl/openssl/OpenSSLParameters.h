@@ -84,9 +84,36 @@ namespace openssl {
             this->useClientMode = value;
         }
 
+        std::vector<std::string> getSupportedCipherSuites() const;
+
+        std::vector<std::string> getSupportedProtocols() const;
+
+        std::vector<std::string> getEnabledCipherSuites() const;
+
+        void setEnabledCipherSuites( const std::vector<std::string>& suites );
+
+        std::vector<std::string> getEnabledProtocols() const;
+
+        void setEnabledProtocols( const std::vector<std::string>& protocols );
+
 #ifdef HAVE_OPENSSL
 
+        SSL_CTX* getSSLContext() const {
+            return this->context;
+        }
+
+        SSL* getSSL() const {
+            return this->ssl;
+        }
+
 #endif
+
+        /**
+         * Creates a clone of this object such that all settings are transferred to a new
+         * instance of an SSL object whose parent is the same SSL_CTX as this object's.
+         */
+        OpenSSLParameters* clonse() const;
+
     };
 
 }}}}}
