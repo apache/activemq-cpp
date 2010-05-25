@@ -124,6 +124,86 @@ namespace ssl {
          */
         virtual void setSSLParameters( const SSLParameters& value );
 
+        /**
+         * Initiates a handshake for this SSL Connection, this can be necessary for several reasons such
+         * as using new encryption keys, or starting a new session.
+         *
+         * When called for the first time after the socket connects this method blocks until the handshake
+         * is completed.  The provider is not require to support multiple handshakes and can throw an
+         * IOException to indicate an error.
+         *
+         * @throw IOException if an I/O error occurs while performing the Handshake
+         */
+        virtual void startHandshake() = 0;
+
+        /**
+         * Determines the mode that the socket uses when a handshake is initiated, client or server.
+         *
+         * This method must be called prior to any handshake attempts on this Socket, once a handshake
+         * has be initiated this socket remains the the set mode; client or server, for the life of
+         * this object.
+         *
+         * @param value
+         *      The mode setting, true for client or false for server.
+         *
+         * @throw IllegalArguementException if the handshake process has begun and mode is lcoked.
+         */
+        virtual void setUseClientMode( bool value ) = 0;
+
+        /**
+         * Gets whether this Socket is in Client or Server mode, true indicates that the mode is
+         * set to Client.
+         *
+         * @return true if the Socket is in Client mode, false otherwise.
+         */
+        virtual bool getUseClientMode() const = 0;
+
+        /**
+         * Sets the Socket to require that a client authenticate itself by sending a valid Certificate that
+         * is trusted by this Server mode socket.  This option only applies to sockets in the Server mode.
+         *
+         * If the option is enabled an the client does not provide a certificate then the handshake is
+         * considered failed and the connection is refused.  Calling this method resets any previous
+         * value for this option as well as clears any value set in the setWantClientAuth method.
+         *
+         * @param value
+         *      The value indicating if a client is required to authenticate itself or not.
+         */
+        virtual void setNeedClientAuth( bool value ) = 0;
+
+        /**
+         * Returns if this socket is configured to require client authentication, true means that is has
+         * and that clients that failed to authenticate will be rejected.  This option is only useful when
+         * the socket is operating in server mode.
+         *
+         * @return true if client authentication is required.
+         */
+        virtual bool getNeedClientAuth() const = 0;
+
+        /**
+         * Sets the Socket to request that a client authenticate itself by sending a valid Certificate that
+         * is trusted by this Server mode socket.  This option only applies to sockets in the Server mode.
+         *
+         * If the option is enabled an the client does not provide a certificate then the handshake is
+         * considered to have succeeded, if it does send a certificate and that certificate is invalid the
+         * the handshake will fail.  Calling this method resets any previous value for this option as well
+         * as clears any value set in the setNeedClientAuth method.
+         *
+         * @param value
+         *      The value indicating if a client is requested to authenticate itself or not.
+         */
+        virtual void setWantClientAuth( bool value ) = 0;
+
+        /**
+         * Returns if this socket is configured to request client authentication, true means that is has
+         * and that clients that failed to authenticate will be rejected but that cleints that do not send
+         * a certificate are not considered to have failed authentication.  This option is only useful when
+         * the socket is operating in server mode.
+         *
+         * @return true if client authentication is required.
+         */
+        virtual bool getWantClientAuth() const = 0;
+
     };
 
 }}}
