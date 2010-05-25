@@ -133,6 +133,41 @@ namespace openssl {
          */
         virtual void setEnabledProtocols( const std::vector<std::string>& protocols );
 
+        /**
+         * {@inheritDoc}
+         */
+        virtual void startHandshake();
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setUseClientMode( bool value );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual bool getUseClientMode() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setNeedClientAuth( bool value );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual bool getNeedClientAuth() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setWantClientAuth( bool value );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual bool getWantClientAuth() const;
+
     public:
 
         /**
