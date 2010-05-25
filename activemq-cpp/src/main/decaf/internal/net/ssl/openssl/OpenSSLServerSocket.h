@@ -98,6 +98,13 @@ namespace openssl {
          */
         virtual void setNeedClientAuth( bool value );
 
+    public:  // ServerSocket overrides
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::net::Socket* accept() throw( decaf::io::IOException );
+
     };
 
 }}}}}

@@ -155,3 +155,9 @@ void OpenSSLServerSocket::setWantClientAuth( bool value ) {
     this->data->needsClientAuth = value;
     this->data->wantsClientAuth = value;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+Socket* OpenSSLServerSocket::accept() throw( decaf::io::IOException ) {
+
+    return NULL;
+}
