@@ -22678,6 +22678,14 @@
 								>
 							</File>
 							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLParameters.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLParameters.h"
+								>
+							</File>
+							<File
 								RelativePath="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocket.cpp"
 								>
 							</File>
