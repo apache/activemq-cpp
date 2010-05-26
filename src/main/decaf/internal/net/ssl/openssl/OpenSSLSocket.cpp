@@ -301,6 +301,7 @@ void OpenSSLSocket::startHandshake() {
 
     try {
 
+#ifdef HAVE_OPENSSL
         synchronized( &(this->data->handshakeLock ) ) {
 
             if( this->data->handshakeStarted ) {
@@ -360,6 +361,9 @@ void OpenSSLSocket::startHandshake() {
 
             this->data->handshakeCompleted = true;
         }
+#else
+        throw IOException( __FILE__, __LINE__, "SSL Not Supported." );
+#endif
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
