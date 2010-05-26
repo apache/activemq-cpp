@@ -30,6 +30,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/internal/net/SocketFileDescriptor.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
 
 using namespace decaf;
@@ -53,27 +54,11 @@ namespace openssl {
     class ServerSocketData {
     public:
 
-#ifdef HAVE_OPENSSL
-        SSL* ssl;
-#else
-        void* ssl;
-#endif
-
-        bool needsClientAuth;
-        bool wantsClientAuth;
-
-    public:
-
-        ServerSocketData() : ssl( NULL ), needsClientAuth( false ), wantsClientAuth( false ) {
+        ServerSocketData() {
         }
 
         ~ServerSocketData() {
             try{
-#ifdef HAVE_OPENSSL
-                if( ssl ) {
-                    SSL_free( ssl );
-                }
-#endif
             } catch(...) {}
         }
 
@@ -82,20 +67,24 @@ namespace openssl {
 }}}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLServerSocket::OpenSSLServerSocket( void* ssl ) : SSLServerSocket(), data( new ServerSocketData() ) {
+OpenSSLServerSocket::OpenSSLServerSocket( OpenSSLParameters* parameters ) :
+    SSLServerSocket(), data( new ServerSocketData() ), parameters( parameters ) {
 
-    if( ssl == NULL ) {
+    if( parameters == NULL ) {
         throw NullPointerException(
-            __FILE__, __LINE__, "The OpenSSL SSL object instance passed was NULL." );
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
     }
-
-#ifdef HAVE_OPENSSL
-    this->data->ssl = static_cast<SSL*>( ssl );
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLServerSocket::~OpenSSLServerSocket() {
+
+    try{
+        delete data;
+        delete parameters;
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,48 +101,42 @@ std::vector<std::string> OpenSSLServerSocket::getSupportedProtocols() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLServerSocket::getEnabledCipherSuites() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getEnabledCipherSuites();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLServerSocket::setEnabledCipherSuites( const std::vector<std::string>& suites DECAF_UNUSED ) {
-
+void OpenSSLServerSocket::setEnabledCipherSuites( const std::vector<std::string>& suites ) {
+    this->parameters->setEnabledCipherSuites( suites );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLServerSocket::getEnabledProtocols() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getEnabledProtocols();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLServerSocket::setEnabledProtocols( const std::vector<std::string>& protocols DECAF_UNUSED ) {
-
+void OpenSSLServerSocket::setEnabledProtocols( const std::vector<std::string>& protocols ) {
+    this->parameters->setEnabledProtocols( protocols );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool OpenSSLServerSocket::getNeedClientAuth() const {
-    return this->data->needsClientAuth;
+    return this->parameters->getNeedClientAuth();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLServerSocket::setNeedClientAuth( bool value ) {
-
-    this->data->needsClientAuth = value;
-    this->data->wantsClientAuth = value;
+    this->parameters->setNeedClientAuth( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool OpenSSLServerSocket::getWantClientAuth() const {
-    return this->data->wantsClientAuth;
+    return this->parameters->getWantClientAuth();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLServerSocket::setWantClientAuth( bool value ) {
-
-    this->data->needsClientAuth = value;
-    this->data->wantsClientAuth = value;
+    this->parameters->setWantClientAuth( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/internal/net/SocketFileDescriptor.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.h>
@@ -59,14 +60,6 @@ namespace openssl {
     class SocketData {
     public:
 
-#ifdef HAVE_OPENSSL
-        SSL* ssl;
-#else
-        void* ssl;
-#endif
-        bool needsClientAuth;
-        bool wantsClientAuth;
-        bool useClientMode;
         bool handshakeStarted;
         bool handshakeCompleted;
         std::string commonName;
@@ -75,18 +68,10 @@ namespace openssl {
 
     public:
 
-        SocketData() : ssl( NULL ), needsClientAuth( false ), wantsClientAuth( false ),
-                       useClientMode( true ), handshakeStarted( false ), handshakeCompleted( false ) {
+        SocketData() : handshakeStarted( false ), handshakeCompleted( false ) {
         }
 
         ~SocketData() {
-            try{
-#ifdef HAVE_OPENSSL
-                if( ssl ) {
-                    SSL_free( ssl );
-                }
-#endif
-            } catch(...) {}
         }
 
 #ifdef HAVE_OPENSSL
@@ -106,17 +91,13 @@ namespace openssl {
 }}}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocket::OpenSSLSocket( void* ssl ) :
-    SSLSocket(), data( new SocketData() ), input( NULL ), output( NULL ) {
+OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters ) :
+    SSLSocket(), data( new SocketData() ), parameters( parameters ), input( NULL ), output( NULL ) {
 
-    if( ssl == NULL ) {
+    if( parameters == NULL ) {
         throw NullPointerException(
-            __FILE__, __LINE__, "The OpenSSL SSL object instance passed was NULL." );
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
     }
-
-#ifdef HAVE_OPENSSL
-    this->data->ssl = static_cast<SSL*>( ssl );
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,13 +107,14 @@ OpenSSLSocket::~OpenSSLSocket() {
         SSLSocket::close();
 
 #ifdef HAVE_OPENSSL
-        if( this->data->ssl ) {
-            SSL_set_shutdown( this->data->ssl, SSL_SENT_SHUTDOWN | SSL_RECEIVED_SHUTDOWN );
-            SSL_shutdown( this->data->ssl );
+        if( this->parameters->getSSL() ) {
+            SSL_set_shutdown( this->parameters->getSSL(), SSL_SENT_SHUTDOWN | SSL_RECEIVED_SHUTDOWN );
+            SSL_shutdown( this->parameters->getSSL() );
         }
 #endif
 
         delete data;
+        delete parameters;
         delete input;
         delete output;
     }
@@ -171,7 +153,7 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
             }
 
             BIO_set_fd( bio, (int)fd->getValue(), BIO_NOCLOSE );
-            SSL_set_bio( this->data->ssl, bio, bio );
+            SSL_set_bio( this->parameters->getSSL(), bio, bio );
 
             // Later when startHandshake is called we will check for this common name
             // in the provided certificate
@@ -327,19 +309,19 @@ void OpenSSLSocket::startHandshake() {
 
             this->data->handshakeStarted = true;
 
-            if( this->data->useClientMode ) {
+            if( this->parameters->getUseClientMode() ) {
 
                 // Since we are a client we want to enforce peer verification, we set a
                 // callback so we can collect data on why a verify failed for debugging.
-                SSL_set_verify( this->data->ssl, SSL_VERIFY_PEER, SocketData::verifyCallback );
+                SSL_set_verify( this->parameters->getSSL(), SSL_VERIFY_PEER, SocketData::verifyCallback );
 
-                int result = SSL_connect( this->data->ssl );
+                int result = SSL_connect( this->parameters->getSSL() );
 
                 // Checks the error status, when things go right we still perform a deeper
                 // check on the provided certificate to ensure that it matches the host name
                 // that we connected to, this prevents someone from using any certificate
                 // signed by a signing authority that we trust.
-                switch( SSL_get_error( this->data->ssl, result ) ) {
+                switch( SSL_get_error( this->parameters->getSSL(), result ) ) {
                     case SSL_ERROR_NONE:
                         verifyServerCert( this->data->commonName );
                         std::cout << "OpenSSLSocket::startHandshake() - Verified name: "
@@ -356,19 +338,19 @@ void OpenSSLSocket::startHandshake() {
 
                 int mode = SSL_VERIFY_NONE;
 
-                if( this->data->wantsClientAuth ) {
+                if( this->parameters->getWantClientAuth() ) {
                     mode = SSL_VERIFY_PEER;
                 }
 
-                if( this->data->needsClientAuth ) {
+                if( this->parameters->getNeedClientAuth() ) {
                     mode = SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
                 }
 
                 // Since we are a client we want to enforce peer verification, we set a
                 // callback so we can collect data on why a verify failed for debugging.
-                SSL_set_verify( this->data->ssl, mode, SocketData::verifyCallback );
+                SSL_set_verify( this->parameters->getSSL(), mode, SocketData::verifyCallback );
 
-                int result = SSL_accept( this->data->ssl );
+                int result = SSL_accept( this->parameters->getSSL() );
 
                 if( result != SSL_ERROR_NONE ) {
                     SSLSocket::close();
@@ -392,35 +374,33 @@ void OpenSSLSocket::setUseClientMode( bool value ) {
                 __FILE__, __LINE__, "Handshake has already been started cannot change mode." );
         }
 
-        this->data->useClientMode = value;
+        this->parameters->setUseClientMode( value );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool OpenSSLSocket::getUseClientMode() const {
-    return this->data->useClientMode;
+    return this->parameters->getUseClientMode();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLSocket::setNeedClientAuth( bool value ) {
-    this->data->needsClientAuth = value;
-    this->data->wantsClientAuth = false;
+    this->parameters->setNeedClientAuth( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool OpenSSLSocket::getNeedClientAuth() const {
-    return this->data->needsClientAuth;
+    return this->parameters->getNeedClientAuth();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLSocket::setWantClientAuth( bool value ) {
-    this->data->wantsClientAuth = value;
-    this->data->needsClientAuth = false;
+    this->parameters->setWantClientAuth( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool OpenSSLSocket::getWantClientAuth() const {
-    return this->data->wantsClientAuth;
+    return this->parameters->getWantClientAuth();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -467,9 +447,9 @@ int OpenSSLSocket::read( unsigned char* buffer, int size, int offset, int length
         }
 
         // Read data from the socket.
-        int result = SSL_read( this->data->ssl, buffer + offset, length );
+        int result = SSL_read( this->parameters->getSSL(), buffer + offset, length );
 
-        switch( SSL_get_error( this->data->ssl, result ) ) {
+        switch( SSL_get_error( this->parameters->getSSL(), result ) ) {
             case SSL_ERROR_NONE:
                 return result;
             case SSL_ERROR_ZERO_RETURN:
@@ -536,9 +516,9 @@ void OpenSSLSocket::write( const unsigned char* buffer, int size, int offset, in
 
         while( remaining > 0 && !isClosed() ) {
 
-            int written = SSL_write( this->data->ssl, buffer + offset, remaining );
+            int written = SSL_write( this->parameters->getSSL(), buffer + offset, remaining );
 
-            switch( SSL_get_error( this->data->ssl, written ) ) {
+            switch( SSL_get_error( this->parameters->getSSL(), written ) ) {
                 case SSL_ERROR_NONE:
                     offset += written;
                     remaining -= written;
@@ -568,7 +548,7 @@ int OpenSSLSocket::available() {
 
 #ifdef HAVE_OPENSSL
         if( !isClosed() ) {
-            return SSL_pending( this->data->ssl );
+            return SSL_pending( this->parameters->getSSL() );
         }
 #else
         throw SocketException( __FILE__, __LINE__, "Not Supported" );
@@ -584,7 +564,7 @@ int OpenSSLSocket::available() {
 void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
 #ifdef HAVE_OPENSSL
-    X509* cert = SSL_get_peer_certificate( this->data->ssl );
+    X509* cert = SSL_get_peer_certificate( this->parameters->getSSL() );
 
     if( cert == NULL ) {
         this->close();

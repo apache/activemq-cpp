@@ -20,6 +20,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
+#include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocket.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h>
 

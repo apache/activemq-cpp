@@ -21,6 +21,7 @@
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocket.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h>
 
 #include <memory>
@@ -73,7 +74,8 @@ Socket* OpenSSLSocketFactory::createSocket() throw( decaf::io::IOException ) {
 #ifdef HAVE_OPENSSL
         // Create a new SSL object for the Socket then create a new unconnected Socket.
         SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
-        return new OpenSSLSocket( SSL_new( ctx ) );
+        std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
+        return new OpenSSLSocket( parameters.release() );
 #else
         return NULL;
 #endif
@@ -92,7 +94,8 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
 #ifdef HAVE_OPENSSL
         // Create a new SSL object for the Socket then create a new unconnected Socket.
         SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
-        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( SSL_new( ctx ) ) );
+        std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
+        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release() ) );
         socket->connect( hostname, port );
         return socket.release();
 #else
@@ -114,7 +117,8 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
 #ifdef HAVE_OPENSSL
         // Create a new SSL object for the Socket then create a new unconnected Socket.
         SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
-        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( SSL_new( ctx ) ) );
+        std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
+        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release() ) );
         std::string bindAddress = ifAddress == NULL ? "0.0.0.0" : ifAddress->getHostAddress();
         socket->bind( bindAddress, localPort );
         socket->connect( hostname, port );

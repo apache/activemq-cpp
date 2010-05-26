@@ -28,6 +28,7 @@ namespace net {
 namespace ssl {
 namespace openssl {
 
+    class OpenSSLParameters;
     class ServerSocketData;
 
     /**
@@ -40,9 +41,11 @@ namespace openssl {
 
         ServerSocketData* data;
 
+        OpenSSLParameters* parameters;
+
     public:
 
-        OpenSSLServerSocket( void* ssl );
+        OpenSSLServerSocket( OpenSSLParameters* parameters );
 
         virtual ~OpenSSLServerSocket();
 
