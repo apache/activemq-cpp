@@ -50,6 +50,9 @@ namespace openssl {
         SSL* ssl;
 #endif
 
+        std::vector<std::string> enabledCipherSuites;
+        std::vector<std::string> enabledProtocols;
+
     public:
 
 #ifdef HAVE_OPENSSL

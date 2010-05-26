@@ -31,6 +31,7 @@ namespace net {
 namespace ssl {
 namespace openssl {
 
+    class OpenSSLParameters;
     class SocketData;
 
     /**
@@ -45,6 +46,9 @@ namespace openssl {
         // Private data related to the OpenSSL Socket impl.
         SocketData* data;
 
+        // Parameters object containing the OpenSSL settings and objects for this Socket.
+        OpenSSLParameters* parameters;
+
         // The InputStream owned by this Socket
         decaf::io::InputStream* input;
 
@@ -53,7 +57,7 @@ namespace openssl {
 
     public:
 
-        OpenSSLSocket( void* ssl );
+        OpenSSLSocket( OpenSSLParameters* parameters );
 
         virtual ~OpenSSLSocket();
 

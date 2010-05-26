@@ -36,7 +36,8 @@ using namespace decaf::internal::net::ssl::openssl;
 #ifdef HAVE_OPENSSL
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) : context( context ) {
+OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) :
+    needClientAuth( false ), wantClientAuth( false ), useClientMode( true ), context( context ), ssl( NULL ) {
 
     if( context == NULL ) {
         throw NullPointerException( __FILE__, __LINE__, "SSL Context was NULL" );
@@ -80,6 +81,8 @@ std::vector<std::string> OpenSSLParameters::getEnabledCipherSuites() const {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLParameters::setEnabledCipherSuites( const std::vector<std::string>& suites ) {
 
+    // Cache the setting for quicker retrieval
+    this->enabledCipherSuites = suites;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +93,8 @@ std::vector<std::string> OpenSSLParameters::getEnabledProtocols() const {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenSSLParameters::setEnabledProtocols( const std::vector<std::string>& protocols ) {
 
+    // Cache the setting for quicker retrieval
+    this->enabledProtocols = protocols;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,8 +104,8 @@ OpenSSLParameters* OpenSSLParameters::clonse() const {
 
     std::auto_ptr<OpenSSLParameters> cloned( new OpenSSLParameters( this->context ) );
 
-    cloned->setEnabledCipherSuites( this->getEnabledCipherSuites() );
-    cloned->setEnabledProtocols( this->getEnabledProtocols() );
+    cloned->enabledProtocols = this->enabledProtocols;
+    cloned->enabledCipherSuites = this->enabledCipherSuites;
     cloned->needClientAuth = this->needClientAuth;
     cloned->wantClientAuth = this->wantClientAuth;
     cloned->useClientMode = this->useClientMode;
