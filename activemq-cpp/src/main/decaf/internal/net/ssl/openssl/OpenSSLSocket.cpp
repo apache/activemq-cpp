@@ -101,6 +101,51 @@ OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters, const InetAddress* address, int port )  :
+    SSLSocket( address, port ), data( new SocketData() ), parameters( parameters ), input( NULL ), output( NULL ) {
+
+    if( parameters == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters, const InetAddress* address, int port,
+                              const InetAddress* localAddress, int localPort ) :
+    SSLSocket( address, port, localAddress, localPort ),
+    data( new SocketData() ), parameters( parameters ), input( NULL ), output( NULL ) {
+
+    if( parameters == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port ) :
+    SSLSocket( host, port ),
+    data( new SocketData() ), parameters( parameters ), input( NULL ), output( NULL ) {
+
+    if( parameters == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenSSLSocket::OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port,
+                              const InetAddress* localAddress, int localPort ) :
+    SSLSocket( host, port, localAddress, localPort ),
+    data( new SocketData() ), parameters( parameters ), input( NULL ), output( NULL ) {
+
+    if( parameters == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The OpenSSL Parameters object instance passed was NULL." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 OpenSSLSocket::~OpenSSLSocket() {
     try{
 
@@ -256,36 +301,32 @@ void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) throw( decaf::io::IO
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLSocket::getSupportedCipherSuites() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getSupportedCipherSuites();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLSocket::getSupportedProtocols() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getSupportedProtocols();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLSocket::getEnabledCipherSuites() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getEnabledCipherSuites();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::setEnabledCipherSuites( const std::vector<std::string>& suites DECAF_UNUSED ) {
-
+void OpenSSLSocket::setEnabledCipherSuites( const std::vector<std::string>& suites ) {
+    this->parameters->setEnabledCipherSuites( suites );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLSocket::getEnabledProtocols() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getEnabledProtocols();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::setEnabledProtocols( const std::vector<std::string>& protocols DECAF_UNUSED ) {
-
+void OpenSSLSocket::setEnabledProtocols( const std::vector<std::string>& protocols ) {
+    this->parameters->setEnabledProtocols( protocols );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,8 +366,6 @@ void OpenSSLSocket::startHandshake() {
                 switch( SSL_get_error( this->parameters->getSSL(), result ) ) {
                     case SSL_ERROR_NONE:
                         verifyServerCert( this->data->commonName );
-                        std::cout << "OpenSSLSocket::startHandshake() - Verified name: "
-                                  << this->data->commonName << std::endl;
                         break;
                     case SSL_ERROR_SSL:
                     case SSL_ERROR_ZERO_RETURN:

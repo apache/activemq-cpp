@@ -98,7 +98,7 @@ void OpenSSLParameters::setEnabledProtocols( const std::vector<std::string>& pro
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLParameters* OpenSSLParameters::clonse() const {
+OpenSSLParameters* OpenSSLParameters::clone() const {
 
 #ifdef HAVE_OPENSSL
 

@@ -83,6 +83,47 @@ namespace net{
         Socket( SocketImpl* impl );
 
         /**
+         * Creates a new Socket instance and connects it to the given address and port.  If
+         * there is a SocketImplFactory set then the SokcetImpl is created using the factory
+         * otherwise the default Socket implementation is used.
+         *
+         * If the host parameter is empty then the loop back address is used.
+         *
+         * @param address
+         *      The address to connect to.
+         * @param port
+         *      The port number to connect to [0...65535]
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws NullPointerException if the InetAddress instance in NULL.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        Socket( const InetAddress* address, int port );
+
+        /**
+         * Creates a new Socket instance and connects it to the given address and port.  If
+         * there is a SocketImplFactory set then the SokcetImpl is created using the factory
+         * otherwise the default Socket implementation is used.  The Socket will also bind
+         * to the local address and port specified.
+         *
+         * @param address
+         *      The address to connect to.
+         * @param port
+         *      The port number to connect to [0...65535]
+         * @param localAddress
+         *      The IP address on the local machine to bind to.
+         * @param localPort
+         *      The port on the local machine to bind to.
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws NullPointerException if the InetAddress instance in NULL.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        Socket( const InetAddress* address, int port, const InetAddress* localAddress, int localPort );
+
+        /**
          * Creates a new Socket instance and connects it to the given host and port.  If
          * there is a SocketImplFactory set then the SokcetImpl is created using the factory
          * otherwise the default Socket implementation is used.

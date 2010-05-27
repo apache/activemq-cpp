@@ -57,6 +57,68 @@ Socket::Socket( SocketImpl* impl ) : impl(impl), created(false), connected(false
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Socket::Socket( const InetAddress* address, int port ) : impl(NULL), created(false), connected(false),
+                                                         closed(false), bound(false),
+                                                         inputShutdown(false), outputShutdown(false){
+
+    if( address == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The InetAddress to connect to cannot be NULL" );
+    }
+
+    if( port < 0 || port > 65535 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Port specified is out of range: %d", port );
+    }
+
+    try{
+
+        if( this->factory != NULL ) {
+            this->impl = factory->createSocketImpl();
+        } else {
+            this->impl = new TcpSocket();
+        }
+
+        this->initSocketImpl( address->getHostAddress(), port, NULL, 0 );
+    }
+    DECAF_CATCH_RETHROW( UnknownHostException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Socket::Socket( const InetAddress* address, int port, const InetAddress* localAddress, int localPort ) :
+    impl(NULL), created(false), connected(false), closed(false), bound(false),
+    inputShutdown(false), outputShutdown(false) {
+
+    if( address == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "The InetAddress to connect to cannot be NULL" );
+    }
+
+    if( port < 0 || port > 65535 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Port specified is out of range: %d", port );
+    }
+
+    try{
+
+        if( this->factory != NULL ) {
+            this->impl = factory->createSocketImpl();
+        } else {
+            this->impl = new TcpSocket();
+        }
+
+        this->initSocketImpl( address->getHostAddress(), port, localAddress, localPort );
+    }
+    DECAF_CATCH_RETHROW( UnknownHostException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Socket::Socket( const std::string& host, int port ) : impl(NULL), created(false), connected(false),
                                                       closed(false), bound(false),
                                                       inputShutdown(false), outputShutdown(false){

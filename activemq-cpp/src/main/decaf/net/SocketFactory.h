@@ -63,6 +63,46 @@ namespace net{
          * port using the configuration of this SocketFactory.
          *
          * @param host
+         *      The host to connect the socket to.
+         * @param port
+         *      The port on the remote host to connect to.
+         *
+         * @return a new Socket object, caller must free this object when done.
+         *
+         * @throws IOException if an I/O error occurs while creating the Socket object.
+         * @throws UnknownHostException if the host name is not known.
+         */
+        virtual Socket* createSocket( const InetAddress* host, int port )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
+
+        /**
+         * Creates a new Socket object and connects it to the specified remote host and
+         * port using the configuration of this SocketFactory.  The Socket will be bound
+         * to the specified local address and port.
+         *
+         * @param host
+         *      The host to connect the socket to.
+         * @param port
+         *      The port on the remote host to connect to.
+         * @param ifAddress
+         *      The address on the local machine to bind the Socket to.
+         * @param localPort
+         *      The local port to bind the Socket to.
+         *
+         * @return a new Socket object, caller must free this object when done.
+         *
+         * @throws IOException if an I/O error occurs while creating the Socket object.
+         * @throws UnknownHostException if the host name is not known.
+         */
+        virtual Socket* createSocket( const InetAddress* host, int port,
+                                      const InetAddress* ifAddress, int localPort )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
+
+        /**
+         * Creates a new Socket object and connects it to the specified remote host and
+         * port using the configuration of this SocketFactory.
+         *
+         * @param host
          *      The host name or IP address to connect the socket to.
          * @param port
          *      The port on the remote host to connect to.
@@ -93,7 +133,8 @@ namespace net{
          * @throws IOException if an I/O error occurs while creating the Socket object.
          * @throws UnknownHostException if the host name is not known.
          */
-        virtual Socket* createSocket( const std::string& name, int port, const InetAddress* ifAddress, int localPort )
+        virtual Socket* createSocket( const std::string& name, int port,
+                                      const InetAddress* ifAddress, int localPort )
             throw( decaf::io::IOException, decaf::net::UnknownHostException ) = 0;
 
         /**

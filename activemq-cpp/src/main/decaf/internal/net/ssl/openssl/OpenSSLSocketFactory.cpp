@@ -86,6 +86,50 @@ Socket* OpenSSLSocketFactory::createSocket() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host, int port )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    try{
+
+#ifdef HAVE_OPENSSL
+        // Create a new SSL object for the Socket then create a new unconnected Socket.
+        SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
+        std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
+        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release(), host, port ) );
+        return socket.release();
+#else
+        return NULL;
+#endif
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host, int port,
+                                            const decaf::net::InetAddress* ifAddress, int localPort )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    try{
+
+#ifdef HAVE_OPENSSL
+        // Create a new SSL object for the Socket then create a new unconnected Socket.
+        SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
+        std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
+        std::auto_ptr<SSLSocket> socket(
+            new OpenSSLSocket( parameters.release(), host, port, ifAddress, localPort ) );
+        return socket.release();
+#else
+        return NULL;
+#endif
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port )
     throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
 
@@ -95,8 +139,7 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
         // Create a new SSL object for the Socket then create a new unconnected Socket.
         SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
         std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
-        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release() ) );
-        socket->connect( hostname, port );
+        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release(), hostname, port ) );
         return socket.release();
 #else
         return NULL;
@@ -118,10 +161,8 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
         // Create a new SSL object for the Socket then create a new unconnected Socket.
         SSL_CTX* ctx = static_cast<SSL_CTX*>( this->parent->getOpenSSLCtx() );
         std::auto_ptr<OpenSSLParameters> parameters( new OpenSSLParameters( ctx ) );
-        std::auto_ptr<SSLSocket> socket( new OpenSSLSocket( parameters.release() ) );
-        std::string bindAddress = ifAddress == NULL ? "0.0.0.0" : ifAddress->getHostAddress();
-        socket->bind( bindAddress, localPort );
-        socket->connect( hostname, port );
+        std::auto_ptr<SSLSocket> socket(
+            new OpenSSLSocket( parameters.release(), hostname, port, ifAddress, localPort ) );
         return socket.release();
 #else
         return NULL;

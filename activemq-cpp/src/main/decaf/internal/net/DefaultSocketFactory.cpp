@@ -53,6 +53,55 @@ Socket* DefaultSocketFactory::createSocket()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Socket* DefaultSocketFactory::createSocket( const decaf::net::InetAddress* host, int port )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    try {
+
+        // Ensure something is actually passed in for the URI
+        if( host == NULL ) {
+            throw SocketException( __FILE__, __LINE__, "host address not provided" );
+        }
+
+        if( port <= 0 ) {
+            throw SocketException( __FILE__, __LINE__, "valid port not provided" );
+        }
+
+        std::auto_ptr<Socket> socket( new Socket( host, port ) );
+
+        return socket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Socket* DefaultSocketFactory::createSocket( const decaf::net::InetAddress* host, int port,
+                                            const decaf::net::InetAddress* ifAddress, int localPort )
+    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+
+    try {
+
+        // Ensure something is actually passed in for the URI
+        if( host == NULL ) {
+            throw SocketException( __FILE__, __LINE__, "host addres not provided" );
+        }
+
+        if( port <= 0 ) {
+            throw SocketException( __FILE__, __LINE__, "valid port not provided" );
+        }
+
+        std::auto_ptr<Socket> socket( new Socket( host, port, ifAddress, localPort ) );
+
+        return socket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Socket* DefaultSocketFactory::createSocket( const std::string& hostname, int port )
     throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
 

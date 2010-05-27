@@ -115,7 +115,7 @@ namespace openssl {
          * Creates a clone of this object such that all settings are transferred to a new
          * instance of an SSL object whose parent is the same SSL_CTX as this object's.
          */
-        OpenSSLParameters* clonse() const;
+        OpenSSLParameters* clone() const;
 
     };
 
