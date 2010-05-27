@@ -36,6 +36,79 @@ namespace ssl {
 
         SSLSocket();
 
+        /**
+         * Creates a new SSLSocket instance and connects it to the given address and port.
+         *
+         * If the host parameter is empty then the loop back address is used.
+         *
+         * @param address
+         *      The address to connect to.
+         * @param port
+         *      The port number to connect to [0...65535]
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws NullPointerException if the InetAddress instance in NULL.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        SSLSocket( const InetAddress* address, int port );
+
+        /**
+         * Creates a new SSLSocket instance and connects it to the given address and port.
+         * The Socket will also bind to the local address and port specified.
+         *
+         * @param address
+         *      The address to connect to.
+         * @param port
+         *      The port number to connect to [0...65535]
+         * @param localAddress
+         *      The IP address on the local machine to bind to.
+         * @param localPort
+         *      The port on the local machine to bind to.
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws NullPointerException if the InetAddress instance in NULL.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        SSLSocket( const InetAddress* address, int port, const InetAddress* localAddress, int localPort );
+
+        /**
+         * Creates a new SSLSocket instance and connects it to the given host and port.
+         *
+         * If the host parameter is empty then the loop back address is used.
+         *
+         * @param host
+         *      The host name or IP address to connect to, empty string means loopback.
+         * @param port
+         *      The port number to connect to [0...65535]
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        SSLSocket( const std::string& host, int port );
+
+        /**
+         * Creates a new SSLSocket instance and connects it to the given host and port.
+         *
+         * If the host parameter is empty then the loop back address is used.
+         *
+         * @param host
+         *      The host name or IP address to connect to, empty string means loopback.
+         * @param port
+         *      The port number to connect to [0...65535]
+         * @param localAddress
+         *      The IP address on the local machine to bind to.
+         * @param localPort
+         *      The port on the local machine to bind to.
+         *
+         * @throws UnknownHostException if the host cannot be resolved.
+         * @throws IOException if an I/O error occurs while connecting the Socket.
+         * @throws IllegalArgumentException if the port if not in range [0...65535]
+         */
+        SSLSocket( const std::string& host, int port, const InetAddress* localAddress, int localPort );
+
         virtual ~SSLSocket();
 
     public:

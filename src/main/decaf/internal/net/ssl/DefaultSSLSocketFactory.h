@@ -57,6 +57,19 @@ namespace ssl {
         /**
          * {@inheritDoc}
          */
+        virtual decaf::net::Socket* createSocket( const decaf::net::InetAddress* host, int port )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::net::Socket* createSocket( const decaf::net::InetAddress* host, int port,
+                                                  const decaf::net::InetAddress* ifAddress, int localPort )
+            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+
+        /**
+         * {@inheritDoc}
+         */
         virtual decaf::net::Socket* createSocket( const std::string& name, int port )
             throw( decaf::io::IOException, decaf::net::UnknownHostException );
 

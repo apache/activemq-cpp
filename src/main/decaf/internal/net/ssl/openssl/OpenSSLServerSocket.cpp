@@ -31,6 +31,7 @@
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/internal/net/SocketFileDescriptor.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
+#include <decaf/internal/net/ssl/openssl/OpenSSLSocket.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
 
 using namespace decaf;
@@ -89,14 +90,12 @@ OpenSSLServerSocket::~OpenSSLServerSocket() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLServerSocket::getSupportedCipherSuites() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getSupportedCipherSuites();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> OpenSSLServerSocket::getSupportedProtocols() const {
-
-    return std::vector<std::string>();
+    return this->parameters->getSupportedProtocols();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,5 +141,15 @@ void OpenSSLServerSocket::setWantClientAuth( bool value ) {
 ////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLServerSocket::accept() throw( decaf::io::IOException ) {
 
-    return NULL;
+    try{
+
+        std::auto_ptr<OpenSSLSocket> socket( new OpenSSLSocket( this->parameters->clone() ) );
+        this->implAccept( socket.get() );
+        socket->startHandshake();
+
+        return socket.release();
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

@@ -59,6 +59,16 @@ namespace openssl {
 
         OpenSSLSocket( OpenSSLParameters* parameters );
 
+        OpenSSLSocket( OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port );
+
+        OpenSSLSocket( OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port,
+                       const decaf::net::InetAddress* localAddress, int localPort );
+
+        OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port );
+
+        OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port,
+                       const decaf::net::InetAddress* localAddress, int localPort );
+
         virtual ~OpenSSLSocket();
 
     public:  // Socket Overrides.
