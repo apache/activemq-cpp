@@ -96,6 +96,10 @@ cc_sources = \
     activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/core/ActiveMQTransactionContext.cpp \
     activemq/core/MessageDispatchChannel.cpp \
+    activemq/core/PrefetchPolicy.cpp \
+    activemq/core/RedeliveryPolicy.cpp \
+    activemq/core/policies/DefaultPrefetchPolicy.cpp \
+    activemq/core/policies/DefaultRedeliveryPolicy.cpp \
     activemq/exceptions/ActiveMQException.cpp \
     activemq/io/LoggingInputStream.cpp \
     activemq/io/LoggingOutputStream.cpp \
@@ -735,7 +739,11 @@ h_sources = \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
     activemq/core/MessageDispatchChannel.h \
+    activemq/core/PrefetchPolicy.h \
+    activemq/core/RedeliveryPolicy.h \
     activemq/core/Synchronization.h \
+    activemq/core/policies/DefaultPrefetchPolicy.h \
+    activemq/core/policies/DefaultRedeliveryPolicy.h \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
     activemq/exceptions/ExceptionDefines.h \
