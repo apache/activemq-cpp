@@ -25,15 +25,26 @@ AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 AC_CONFIG_MACRO_DIR([m4])
 
-## -----------------------------------------------
-## Define the Version variables
-## -----------------------------------------------
+## ------------------------------------------------------------
+## Define the Version variables for the ActiveMQ-CPP Library
+## ------------------------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
 ACTIVEMQ_MAJOR_VERSION=3
 ACTIVEMQ_MINOR_VERSION=2
 ACTIVEMQ_PATCH_VERSION=0
 ACTIVEMQ_VERSION=${ACTIVEMQ_MAJOR_VERSION}.${ACTIVEMQ_MINOR_VERSION}.${ACTIVEMQ_PATCH_VERSION}
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
+
+## ------------------------------------------------------------
+## Define the Version variables for the CMS API Library
+## ------------------------------------------------------------
+CMSAPI_MAJOR_VERSION=2
+CMSAPI_MINOR_VERSION=2
+CMSAPI_VERSION=${CMSAPI_MAJOR_VERSION}.${CMSAPI_MINOR_VERSION}
+
+AC_SUBST(CMSAPI_MAJOR_VERSION)
+AC_SUBST(CMSAPI_MINOR_VERSION)
+AC_SUBST(CMSAPI_VERSION)
 
 ##
 ## When releasing a new version the ACTIVEMQ_LIBRARY_VERSION needs to be updated.
