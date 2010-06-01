@@ -1,4 +1,16 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.1.3                               ==
+=========================================================================
+
+This release is a minor patch release that resolves an issue on Windows
+that could result in a thread deadlocking while a join operation was in
+progress.
+
+Bug
+
+    * [AMQCPP-277] - Freeze when creating multiple Consumers
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.1.2                               ==
 =========================================================================
 
