@@ -31,37 +31,37 @@ ActiveMQConnectionMetaData::~ActiveMQConnectionMetaData() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnectionMetaData::getCMSVersion() const throw( cms::CMSException ) {
-    return "2.2";
+    return "@CMSAPI_VERSION@";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnectionMetaData::getCMSMajorVersion() const throw( cms::CMSException ) {
-    return 2;
+    return @CMSAPI_MAJOR_VERSION@;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnectionMetaData::getCMSMinorVersion() const throw( cms::CMSException ) {
-    return 2;
+    return @CMSAPI_MINOR_VERSION@;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnectionMetaData::getCMSProviderName() const throw( cms::CMSException ) {
-    return "activemq-cpp";
+    return "@ACTIVEMQ_LIBRARY_NAME@";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnectionMetaData::getProviderVersion() const throw( cms::CMSException ) {
-    return "3.2.0";
+    return "@ACTIVEMQ_VERSION@";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnectionMetaData::getProviderMajorVersion() const throw( cms::CMSException ) {
-    return 3;
+    return @ACTIVEMQ_MAJOR_VERSION@;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnectionMetaData::getProviderMinorVersion() const throw( cms::CMSException ) {
-    return 2;
+    return @ACTIVEMQ_MINOR_VERSION@;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
