@@ -27,7 +27,7 @@
 
   <groupId>org.apache.activemq-cpp</groupId>
   <artifactId>activemq-cpp-pom</artifactId>
-  <version>3.1.3-SNAPSHOT</version>
+  <version>3.1.3</version>
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP Project</name>
   <inceptionYear>2007</inceptionYear>
@@ -90,9 +90,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/branches/activemq-cpp-3.1.x</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/tags/activemq-cpp-3.1.3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/tags/activemq-cpp-3.1.3</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/tags/activemq-cpp-3.1.3</url>
   </scm>
 
   <dependencyManagement>
