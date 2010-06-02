@@ -127,7 +127,7 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
         CPPUNIT_ASSERT( amqConnection != NULL );
         CPPUNIT_ASSERT( username == amqConnection->getUsername() );
         CPPUNIT_ASSERT( password == amqConnection->getPassword() );
-        CPPUNIT_ASSERT( clientId == amqConnection->getClientId() );
+        CPPUNIT_ASSERT( clientId == amqConnection->getClientID() );
 
         return;
     }
