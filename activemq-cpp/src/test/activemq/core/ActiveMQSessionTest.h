@@ -23,6 +23,7 @@
 
 #include <cms/Connection.h>
 #include <cms/MessageListener.h>
+#include <cms/ExceptionListener.h>
 
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
