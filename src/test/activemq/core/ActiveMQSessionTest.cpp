@@ -17,11 +17,9 @@
 
 #include "ActiveMQSessionTest.h"
 
-#include <decaf/lang/Thread.h>
+#include <cms/ExceptionListener.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportRegistry.h>
-#include <decaf/net/Socket.h>
-#include <decaf/net/ServerSocket.h>
 #include <activemq/commands/ActiveMQTextMessage.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/MessageDispatch.h>
@@ -32,6 +30,9 @@
 #include <decaf/util/Properties.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/net/Socket.h>
+#include <decaf/net/ServerSocket.h>
 
 using namespace std;
 using namespace activemq;
