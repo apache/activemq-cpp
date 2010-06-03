@@ -143,6 +143,9 @@ namespace core{
             this->password = properties->getProperty(
                 core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_PASSWORD ), "" );
+
+            this->defaultPrefetchPolicy->configure( *properties );
+            this->defaultRedeliveryPolicy->configure( *properties );
         }
 
     };

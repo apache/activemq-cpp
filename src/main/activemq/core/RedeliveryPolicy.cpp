@@ -17,8 +17,16 @@
 
 #include "RedeliveryPolicy.h"
 
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Double.h>
+#include <decaf/lang/Short.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
+
 using namespace activemq;
 using namespace activemq::core;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 RedeliveryPolicy::RedeliveryPolicy() {
@@ -26,4 +34,38 @@ RedeliveryPolicy::RedeliveryPolicy() {
 
 ////////////////////////////////////////////////////////////////////////////////
 RedeliveryPolicy::~RedeliveryPolicy() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void RedeliveryPolicy::configure( const decaf::util::Properties& properties ) {
+
+    try{
+
+        if( properties.hasProperty( "cms.RedeliveryPolicy.backOffMultiplier" ) ) {
+            this->setBackOffMultiplier( Double::parseDouble(
+                properties.getProperty( "cms.RedeliveryPolicy.backOffMultiplier" ) ) );
+        }
+        if( properties.hasProperty( "cms.RedeliveryPolicy.collisionAvoidancePercent" ) ) {
+            this->setCollisionAvoidancePercent( Short::parseShort(
+                properties.getProperty( "cms.RedeliveryPolicy.collisionAvoidancePercent" ) ) );
+        }
+        if( properties.hasProperty( "cms.RedeliveryPolicy.initialRedeliveryDelay" ) ) {
+            this->setInitialRedeliveryDelay( Long::parseLong(
+                properties.getProperty( "cms.RedeliveryPolicy.initialRedeliveryDelay" ) ) );
+        }
+        if( properties.hasProperty( "cms.RedeliveryPolicy.maximumRedeliveries" ) ) {
+            this->setMaximumRedeliveries( Integer::parseInt(
+                properties.getProperty( "cms.RedeliveryPolicy.maximumRedeliveries" ) ) );
+        }
+        if( properties.hasProperty( "cms.RedeliveryPolicy.useCollisionAvoidance" ) ) {
+            this->setUseCollisionAvoidance( Boolean::parseBoolean(
+                properties.getProperty( "cms.RedeliveryPolicy.useCollisionAvoidance" ) ) );
+        }
+        if( properties.hasProperty( "cms.RedeliveryPolicy.useExponentialBackOff" ) ) {
+            this->setUseExponentialBackOff( Boolean::parseBoolean(
+                properties.getProperty( "cms.RedeliveryPolicy.useExponentialBackOff" ) ) );
+        }
+    }
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
