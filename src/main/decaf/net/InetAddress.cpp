@@ -165,10 +165,10 @@ InetAddress InetAddress::getLocalHost() {
             __FILE__, __LINE__, "Could not resolve the IP Address of this host." );
     }
 
-    if( address->family == APR_INET6 ) {
-        return Inet6Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
-    } else {
+    if( address->family == APR_INET ) {
         return Inet4Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
+    } else {
+        return Inet6Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
     }
 }
 
