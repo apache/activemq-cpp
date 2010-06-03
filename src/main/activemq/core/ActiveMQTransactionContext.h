@@ -47,16 +47,6 @@ namespace core{
      * creates a new transaction for the next set of messages.  The only
      * way to permanently end this transaction is to delete it.
      *
-     * Configuration options
-     *
-     * transaction.maxRedeliveryCount
-     *   Max number of times a message can be re-delivered, if the session is
-     *   rolled back more than this many time, the message is dropped.
-     *
-     * transaction.redeliveryDelay
-     *   Time in Milliseconds between message redelivery for rolled back
-     *   transactions.
-     *
      * @since 2.0
      */
     class AMQCPP_API ActiveMQTransactionContext {
@@ -73,13 +63,6 @@ namespace core{
 
         // List of Registered Synchronizations
         decaf::util::StlSet< Pointer<Synchronization> > synchronizations;
-
-        // Maximum number of time to redeliver a message when a Transaction is
-        // rolled back.
-        int maximumRedeliveries;
-
-        // Time to wait before starting delivery again.
-        long long redeliveryDelay;
 
     private:
 
@@ -146,19 +129,6 @@ namespace core{
          * @return true if a transaction is in progress.
          */
         virtual bool isInTransaction() const;
-
-        /**
-         * @returns The Maximum number of time the client will attempt to redeliver a
-         * message from a rolled back transaction before marking the message as not
-         * consumed by this client.
-         */
-        virtual int getMaximumRedeliveries() const;
-
-        /**
-         * @returns The time in Milliseconds that this client is configured to wait in
-         * between redelivery attempts for a Message in a rolled back transaction.
-         */
-        virtual long long getRedeliveryDelay() const;
 
     private:
 

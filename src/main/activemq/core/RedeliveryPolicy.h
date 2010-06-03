@@ -32,6 +32,10 @@ namespace core {
      * @since 3.2.0
      */
     class AMQCPP_API RedeliveryPolicy {
+    public:
+
+        static const long long NO_MAXIMUM_REDELIVERIES;
+
     private:
 
         RedeliveryPolicy( const RedeliveryPolicy& );

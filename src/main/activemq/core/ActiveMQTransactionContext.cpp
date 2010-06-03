@@ -52,11 +52,6 @@ ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session
         // Store State Data
         this->session = session;
         this->connection = session->getConnection();
-
-        maximumRedeliveries = Integer::parseInt(
-            properties.getProperty( "transaction.maxRedeliveryCount", "5" ) );
-        redeliveryDelay = Long::parseLong(
-            properties.getProperty( "transaction.redeliveryDelay", "0" ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -242,14 +237,4 @@ const Pointer<TransactionId>& ActiveMQTransactionContext::getTransactionId() con
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQTransactionContext::isInTransaction() const {
     return this->transactionId != NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ActiveMQTransactionContext::getMaximumRedeliveries() const {
-    return this->maximumRedeliveries;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQTransactionContext::getRedeliveryDelay() const {
-    return this->redeliveryDelay;
 }

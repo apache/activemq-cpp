@@ -240,10 +240,11 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     this->lastDeliveredSequenceId = -1;
     this->synchronizationRegistered = false;
     this->additionalWindowSize = 0;
-    this->redeliveryDelay = 0;
     this->deliveredCounter = 0;
     this->clearDispatchList = false;
     this->listener = NULL;
+    this->redeliveryDelay = 0;
+    this->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
 
     if( listener != NULL ) {
         this->setMessageListener( listener );
@@ -891,7 +892,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
             Pointer<MessageDispatch> lastMsg = dispatchedMessages.front();
             const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
-                redeliveryDelay = session->getTransactionContext()->getRedeliveryDelay();
+                redeliveryDelay = this->redeliveryPolicy->getRedeliveryDelay( redeliveryDelay );
             }
 
             Pointer<MessageId> firstMsgId =
@@ -904,7 +905,8 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                 message->setRedeliveryCounter( message->getRedeliveryCounter() + 1 );
             }
 
-            if( lastMsg->getRedeliveryCounter() > this->session->getTransactionContext()->getMaximumRedeliveries() ) {
+            if( this->redeliveryPolicy->getMaximumRedeliveries() != RedeliveryPolicy::NO_MAXIMUM_REDELIVERIES &&
+                lastMsg->getRedeliveryCounter() > this->redeliveryPolicy->getMaximumRedeliveries() ) {
 
                 // We need to NACK the messages so that they get sent to the DLQ.
                 // Acknowledge the last message.

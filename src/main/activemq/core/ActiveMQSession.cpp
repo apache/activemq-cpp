@@ -24,6 +24,7 @@
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQQueueBrowser.h>
 #include <activemq/core/ActiveMQSessionExecutor.h>
+#include <activemq/core/PrefetchPolicy.h>
 #include <activemq/util/ActiveMQProperties.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
@@ -317,10 +318,17 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         Pointer<ActiveMQDestination> dest( amqDestination->cloneDataStructure() );
 
+        int prefetch = 0;
+        if( dest->isTopic() ) {
+            prefetch = this->connection->getPrefetchPolicy()->getTopicPrefetch();
+        } else {
+            prefetch = this->connection->getPrefetchPolicy()->getQueuePrefetch();
+        }
+
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( this, this->getNextConsumerId(),
-                                  dest, "", selector, 1000, 0, noLocal,
+                                  dest, "", selector, prefetch, 0, noLocal,
                                   false, this->connection->isDispatchAsync(), NULL ) );
 
         try{
@@ -368,8 +376,9 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( this, this->getNextConsumerId(),
-                                  dest, name, selector, 1000, 0, noLocal,
-                                  false, this->connection->isDispatchAsync(), NULL ) );
+                                  dest, name, selector,
+                                  this->connection->getPrefetchPolicy()->getDurableTopicPrefetch(),
+                                  0, noLocal, false, this->connection->isDispatchAsync(), NULL ) );
 
         try{
             this->addConsumer( consumer.get() );
@@ -468,7 +477,8 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue,
 
         // Create the QueueBrowser instance
         std::auto_ptr<ActiveMQQueueBrowser> browser(
-            new ActiveMQQueueBrowser( this, this->getNextConsumerId(), dest, selector, false ) );
+            new ActiveMQQueueBrowser( this, this->getNextConsumerId(), dest,
+                                      selector, this->connection->isDispatchAsync() ) );
 
         return browser.release();
     }
