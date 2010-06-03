@@ -80,7 +80,7 @@ namespace net {
          *
          * @returns the name of the host associated with this set IP Address.
          */
-        virtual std::string getHostname() const;
+        virtual std::string getHostName() const;
 
         /**
          * Returns a string representation of the InetAddress in the form 'hostname / ipaddress'

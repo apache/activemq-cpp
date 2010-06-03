@@ -15,34 +15,34 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_INETADDRESSTEST_H_
-#define _DECAF_NET_INETADDRESSTEST_H_
+#ifndef _ACTIVEMQ_UTIL_IDGENERATORTEST_H_
+#define _ACTIVEMQ_UTIL_IDGENERATORTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-namespace decaf {
-namespace net {
+namespace activemq {
+namespace util {
 
-    class InetAddressTest : public CppUnit::TestFixture {
+    class IdGeneratorTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( InetAddressTest );
-        CPPUNIT_TEST( testGetByAddress );
-        CPPUNIT_TEST( testGetHostAddress );
-        CPPUNIT_TEST( testGetLocalHost );
+        CPPUNIT_TEST_SUITE( IdGeneratorTest );
+        CPPUNIT_TEST( testConstructor1 );
+        CPPUNIT_TEST( testConstructor2 );
+        CPPUNIT_TEST( testCompare );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        InetAddressTest();
-        virtual ~InetAddressTest();
+        IdGeneratorTest();
+        virtual ~IdGeneratorTest();
 
-        void testGetByAddress();
-        void testGetHostAddress();
-        void testGetLocalHost();
+        void testConstructor1();
+        void testConstructor2();
+        void testCompare();
 
     };
 
 }}
 
-#endif /* _DECAF_NET_INETADDRESSTEST_H_ */
+#endif /* _ACTIVEMQ_UTIL_IDGENERATORTEST_H_ */

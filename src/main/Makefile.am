@@ -87,7 +87,6 @@ cc_sources = \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQConnectionMetaData.cpp \
-    activemq/core/ActiveMQConnectionSupport.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQProducer.cpp \
@@ -139,6 +138,7 @@ cc_sources = \
     activemq/util/ActiveMQProperties.cpp \
     activemq/util/CMSExceptionSupport.cpp \
     activemq/util/CompositeData.cpp \
+    activemq/util/IdGenerator.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/MarshallingSupport.cpp \
     activemq/util/MemoryUsage.cpp \
@@ -728,7 +728,6 @@ h_sources = \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQConnectionFactory.h \
     activemq/core/ActiveMQConnectionMetaData.h \
-    activemq/core/ActiveMQConnectionSupport.h \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQProducer.h \
@@ -798,6 +797,7 @@ h_sources = \
     activemq/util/CMSExceptionSupport.h \
     activemq/util/CompositeData.h \
     activemq/util/Config.h \
+    activemq/util/IdGenerator.h \
     activemq/util/LongSequenceGenerator.h \
     activemq/util/MarshallingSupport.h \
     activemq/util/MemoryUsage.h \

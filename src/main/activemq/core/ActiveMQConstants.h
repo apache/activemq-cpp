@@ -89,6 +89,7 @@ namespace core{
             CONNECTION_ALWAYSSYNCSEND,
             CONNECTION_USEASYNCSEND,
             CONNECTION_USECOMPRESSION,
+            CONNECTION_DISPATCHASYNC,
             PARAM_USERNAME,
             PARAM_PASSWORD,
             PARAM_CLIENTID,
