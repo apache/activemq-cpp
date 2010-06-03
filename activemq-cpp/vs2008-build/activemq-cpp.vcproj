@@ -866,6 +866,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\IdGenerator.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\IdGenerator.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\LongSequenceGenerator.cpp"
 					>
 				</File>
@@ -1482,14 +1490,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\core\ActiveMQConnectionSupport.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\core\ActiveMQConnectionSupport.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQConstants.cpp"
 					>
 				</File>
@@ -1562,9 +1562,45 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\core\PrefetchPolicy.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\PrefetchPolicy.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\RedeliveryPolicy.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\RedeliveryPolicy.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\core\Synchronization.h"
 					>
 				</File>
+				<Filter
+					Name="policies"
+					>
+					<File
+						RelativePath="..\src\main\activemq\core\policies\DefaultPrefetchPolicy.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\policies\DefaultPrefetchPolicy.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\policies\DefaultRedeliveryPolicy.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\policies\DefaultRedeliveryPolicy.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="exceptions"
