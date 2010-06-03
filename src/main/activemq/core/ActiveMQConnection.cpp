@@ -96,7 +96,9 @@ namespace core{
         bool clientIDSet;
         bool isConnectionInfoSentToBroker;
         bool userSpecifiedClientID;
+
         decaf::util::concurrent::Mutex ensureConnectionInfoSentMutex;
+        decaf::util::concurrent::Mutex mutex;
 
         bool dispatchAsync;
         bool alwaysSyncSend;
@@ -891,7 +893,7 @@ void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 
-    synchronized( &mutex ) {
+    synchronized( &( this->config->mutex ) ) {
 
         if( this->config->transportInterruptionProcessingComplete != NULL ) {
             this->config->transportInterruptionProcessingComplete->countDown();
@@ -908,7 +910,7 @@ void ActiveMQConnection::signalInterruptionProcessingComplete()
     throw( decaf::lang::exceptions::InterruptedException ) {
 
     if( this->config->transportInterruptionProcessingComplete->await( 0, TimeUnit::SECONDS ) ) {
-        synchronized( &mutex ) {
+        synchronized( &( this->config->mutex ) ) {
 
             this->config->transportInterruptionProcessingComplete.reset( NULL );
             FailoverTransport* failoverTransport =

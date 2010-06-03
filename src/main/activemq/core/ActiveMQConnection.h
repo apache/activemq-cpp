@@ -73,11 +73,6 @@ namespace core{
         ConnectionConfig* config;
 
         /**
-         * Sync object.
-         */
-        decaf::util::concurrent::Mutex mutex;
-
-        /**
          * The instance of ConnectionMetaData to return to clients.
          */
         std::auto_ptr<cms::ConnectionMetaData> connectionMetaData;

@@ -321,7 +321,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( this, this->getNextConsumerId(),
                                   dest, "", selector, 1000, 0, noLocal,
-                                  false, false, NULL ) );
+                                  false, this->connection->isDispatchAsync(), NULL ) );
 
         try{
             this->addConsumer( consumer.get() );
@@ -369,7 +369,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( this, this->getNextConsumerId(),
                                   dest, name, selector, 1000, 0, noLocal,
-                                  false, false, NULL ) );
+                                  false, this->connection->isDispatchAsync(), NULL ) );
 
         try{
             this->addConsumer( consumer.get() );
