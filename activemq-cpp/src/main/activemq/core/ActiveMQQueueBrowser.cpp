@@ -23,7 +23,7 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQSession.h>
-#include <activemq/core/ActiveMQTransactionContext.h>
+#include <activemq/core/PrefetchPolicy.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
@@ -246,10 +246,12 @@ void ActiveMQQueueBrowser::waitForMessageAvailable() {
 ActiveMQConsumer* ActiveMQQueueBrowser::createConsumer() {
 
     this->browseDone.set( false );
-    // TODO - get config options from connection and prefetch policy.
+
+    int prefetch = this->session->getConnection()->getPrefetchPolicy()->getQueueBrowserPrefetch();
+
     std::auto_ptr<ActiveMQConsumer> consumer(
         new Browser( this, session, consumerId, destination, "", selector,
-                     500, 0, false, true, false, NULL ) );
+                     prefetch, 0, false, true, dispatchAsync, NULL ) );
 
     try{
         this->session->addConsumer( consumer.get() );

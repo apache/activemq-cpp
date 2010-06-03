@@ -29,6 +29,7 @@
 #include <activemq/commands/MessageDispatch.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/core/MessageDispatchChannel.h>
+#include <activemq/core/RedeliveryPolicy.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
@@ -111,11 +112,6 @@ namespace core{
         int additionalWindowSize;
 
         /**
-         * Time to wait before restarting delivery of rollback messages.
-         */
-        long long redeliveryDelay;
-
-        /**
          * Has the Synchronization been added for this transaction
          */
         volatile bool synchronizationRegistered;
@@ -124,6 +120,16 @@ namespace core{
          * Boolean indicating if in progress messages should be cleared.
          */
         bool clearDispatchList;
+
+        /**
+         * The redelivery delay used for the last set of redeliveries.
+         */
+        long long redeliveryDelay;
+
+        /**
+         * The policy to use when Message Redelivery is in progress.
+         */
+        std::auto_ptr<RedeliveryPolicy> redeliveryPolicy;
 
     private:
 
@@ -343,6 +349,31 @@ namespace core{
          * @returns the number of Message's this consumer is waiting to Dispatch.
          */
         int getMessageAvailableCount() const;
+
+        /**
+         * Sets the RedeliveryPolicy this Consumer should use when a rollback is
+         * performed on a transacted Consumer.  The Consumer takes ownership of the
+         * passed pointer.  The Consumer's redelivery policy can never be null, a
+         * call to this method with a NULL pointer is ignored.
+         *
+         * @param policy
+         *      Pointer to a Redelivery Policy object that his Consumer will use.
+         */
+        void setRedeliveryPolicy( RedeliveryPolicy* policy ) {
+            if( policy != NULL ) {
+                this->redeliveryPolicy.reset( policy );
+            }
+        }
+
+        /**
+         * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
+         * retains ownership of this pointer so the caller should not delete it.
+         *
+         * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
+         */
+        RedeliveryPolicy* getRedeliveryPolicy() const {
+            return this->redeliveryPolicy.get();
+        }
 
     protected:
 
