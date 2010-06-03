@@ -20,22 +20,16 @@
 
 #include <cms/Connection.h>
 #include <activemq/util/Config.h>
-#include <activemq/core/ActiveMQConnectionSupport.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
-#include <activemq/commands/BrokerInfo.h>
 #include <activemq/commands/ConnectionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
-#include <activemq/commands/ProducerInfo.h>
-#include <activemq/commands/LocalTransactionId.h>
-#include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportListener.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlSet.h>
-#include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -49,18 +43,21 @@ namespace core{
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicBoolean;
-    using decaf::util::concurrent::CountDownLatch;
 
     class ActiveMQSession;
     class ActiveMQProducer;
+    class ConnectionConfig;
+    class PrefetchPolicy;
+    class RedeliveryPolicy;
 
     /**
      * Concrete connection used for all connectors to the
      * ActiveMQ broker.
+     *
+     * @since 2.0
      */
     class AMQCPP_API ActiveMQConnection : public cms::Connection,
-                                          public ActiveMQConnectionSupport
-    {
+                                          public transport::TransportListener {
     private:
 
         typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
@@ -73,6 +70,8 @@ namespace core{
 
     private:
 
+        ConnectionConfig* config;
+
         /**
          * Sync object.
          */
@@ -82,11 +81,6 @@ namespace core{
          * The instance of ConnectionMetaData to return to clients.
          */
         std::auto_ptr<cms::ConnectionMetaData> connectionMetaData;
-
-        /**
-         * Connection Information for this connection to the Broker
-         */
-        Pointer<commands::ConnectionInfo> connectionInfo;
 
         /**
          * Indicates if this Connection is started
@@ -129,27 +123,6 @@ namespace core{
          * Maintain the set of all active sessions.
          */
         decaf::util::StlSet<transport::TransportListener*> transportListeners;
-
-        /**
-         * the registered exception listener
-         */
-        cms::ExceptionListener* exceptionListener;
-
-        /**
-         * Command sent from the Broker with its BrokerInfo
-         */
-        Pointer<commands::BrokerInfo> brokerInfo;
-
-        /**
-         * Command sent from the Broker with its WireFormatInfo
-         */
-        Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
-
-        /**
-         * Latch used to track completion of recovery of consumers
-         * after a Connection Interrupted event.
-         */
-        Pointer<CountDownLatch> transportInterruptionProcessingComplete;
 
     private:
 
@@ -314,6 +287,16 @@ namespace core{
         virtual cms::Session* createSession() throw ( cms::CMSException );
 
         /**
+         * {@inheritDoc}
+         */
+        virtual std::string getClientID() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setClientID( const std::string& clientID );
+
+        /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
          * @param ackMode the Acknowledgment Mode to use.
@@ -321,12 +304,6 @@ namespace core{
          */
         virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
             throw ( cms::CMSException );
-
-        /**
-         * Get the Client Id for this session
-         * @return string version of Client Id
-         */
-        virtual std::string getClientID() const;
 
         /**
          * Closes this connection as well as any Sessions
@@ -352,16 +329,210 @@ namespace core{
          * Gets the registered Exception Listener for this connection
          * @return pointer to an exception listener or NULL
          */
-        virtual cms::ExceptionListener* getExceptionListener() const{
-            return exceptionListener; };
+        virtual cms::ExceptionListener* getExceptionListener() const;
 
         /**
          * Sets the registered Exception Listener for this connection
          * @param listener pointer to and <code>ExceptionListener</code>
          */
-        virtual void setExceptionListener( cms::ExceptionListener* listener ){
-            exceptionListener = listener;
-        };
+        virtual void setExceptionListener( cms::ExceptionListener* listener );
+
+    public:   // Configuration Options
+
+        /**
+         * Sets the username that should be used when creating a new connection
+         * @param username string
+         */
+        void setUsername( const std::string& username );
+
+        /**
+         * Gets the username that this factory will use when creating a new
+         * connection instance.
+         * @return username string, "" for default credentials
+         */
+        const std::string& getUsername() const;
+
+        /**
+         * Sets the password that should be used when creating a new connection
+         * @param password string
+         */
+        void setPassword( const std::string& password );
+
+        /**
+         * Gets the password that this factory will use when creating a new
+         * connection instance.
+         * @return password string, "" for default credentials
+         */
+        const std::string& getPassword() const;
+
+        /**
+         * Sets the Client Id.
+         * @param clientId - The new clientId value.
+         */
+        void setDefaultClientId( const std::string& clientId );
+
+        /**
+         * Sets the Broker URL that should be used when creating a new
+         * connection instance
+         * @param brokerURL string
+         */
+        void setBrokerURL( const std::string& brokerURL );
+
+        /**
+         * Gets the Broker URL that this factory will use when creating a new
+         * connection instance.
+         * @return brokerURL string
+         */
+        const std::string& getBrokerURL() const;
+
+        /**
+         * Sets the PrefetchPolicy instance that this factory should use when it creates
+         * new Connection instances.  The PrefetchPolicy passed becomes the property of the
+         * factory and will be deleted when the factory is destroyed.
+         *
+         * @param policy
+         *      The new PrefetchPolicy that the ConnectionFactory should clone for Connections.
+         */
+        void setPrefetchPolicy( PrefetchPolicy* policy );
+
+        /**
+         * Gets the pointer to the current PrefetchPolicy that is in use by this ConnectionFactory.
+         *
+         * @returns a pointer to this objects PrefetchPolicy.
+         */
+        PrefetchPolicy* getPrefetchPolicy() const;
+
+        /**
+         * Sets the RedeliveryPolicy instance that this factory should use when it creates
+         * new Connection instances.  The RedeliveryPolicy passed becomes the property of the
+         * factory and will be deleted when the factory is destroyed.
+         *
+         * @param policy
+         *      The new RedeliveryPolicy that the ConnectionFactory should clone for Connections.
+         */
+        void setRedeliveryPolicy( RedeliveryPolicy* policy );
+
+        /**
+         * Gets the pointer to the current RedeliveryPolicy that is in use by this ConnectionFactory.
+         *
+         * @returns a pointer to this objects RedeliveryPolicy.
+         */
+        RedeliveryPolicy* getRedeliveryPolicy() const;
+
+        /**
+         * @return The value of the dispatch asynchronously option sent to the broker.
+         */
+        bool isDispatchAsync() const;
+
+        /**
+         * Should messages be dispatched synchronously or asynchronously from the producer
+         * thread for non-durable topics in the broker? For fast consumers set this to false.
+         * For slow consumers set it to true so that dispatching will not block fast consumers. .
+         *
+         * @param value
+         *        The value of the dispatch asynchronously option sent to the broker.
+         */
+        void setDispatchAsync( bool value );
+
+        /**
+         * Gets if the Connection should always send things Synchronously.
+         *
+         * @return true if sends should always be Synchronous.
+         */
+        bool isAlwaysSyncSend() const;
+
+        /**
+         * Sets if the Connection should always send things Synchronously.
+         * @param value
+         *        true if sends should always be Synchronous.
+         */
+        void setAlwaysSyncSend( bool value );
+
+        /**
+         * Gets if the useAsyncSend option is set
+         * @returns true if on false if not.
+         */
+        bool isUseAsyncSend() const;
+
+        /**
+         * Sets the useAsyncSend option
+         * @param value - true to activate, false to disable.
+         */
+        void setUseAsyncSend( bool value );
+
+        /**
+         * Gets if the Connection is configured for Message body compression.
+         * @returns if the Message body will be Compressed or not.
+         */
+        bool isUseCompression() const;
+
+        /**
+         * Sets whether Message body compression is enabled.
+         *
+         * @param value
+         *      Boolean indicating if Message body compression is enabled.
+         */
+        void setUseCompression( bool value );
+
+        /**
+         * Gets the assigned send timeout for this Connector
+         * @return the send timeout configured in the connection uri
+         */
+        unsigned int getSendTimeout() const;
+
+        /**
+         * Sets the send timeout to use when sending Message objects, this will
+         * cause all messages to be sent using a Synchronous request is non-zero.
+         * @param timeout - The time to wait for a response.
+         */
+        void setSendTimeout( unsigned int timeout );
+
+        /**
+         * Gets the assigned close timeout for this Connector
+         * @return the close timeout configured in the connection uri
+         */
+        unsigned int getCloseTimeout() const;
+
+        /**
+         * Sets the close timeout to use when sending the disconnect request.
+         * @param timeout - The time to wait for a close message.
+         */
+        void setCloseTimeout( unsigned int timeout );
+
+        /**
+         * Gets the configured producer window size for Producers that are created
+         * from this connector.  This only applies if there is no send timeout and the
+         * producer is able to send asynchronously.
+         * @return size in bytes of messages that this producer can produce before
+         *         it must block and wait for ProducerAck messages to free resources.
+         */
+        unsigned int getProducerWindowSize() const;
+
+        /**
+         * Sets the size in Bytes of messages that a producer can send before it is blocked
+         * to await a ProducerAck from the broker that frees enough memory to allow another
+         * message to be sent.
+         * @param windowSize - The size in bytes of the Producers memory window.
+         */
+        void setProducerWindowSize( unsigned int windowSize );
+
+        /**
+         * Get the Next available Session Id.
+         * @return the next id in the sequence.
+         */
+        long long getNextSessionId();
+
+        /**
+         * Get the Next Temporary Destination Id
+         * @return the next id in the sequence.
+         */
+        long long getNextTempDestinationId();
+
+        /**
+         * Get the Next Temporary Destination Id
+         * @return the next id in the sequence.
+         */
+        long long getNextLocalTransactionId();
 
     public: // TransportListener
 
@@ -428,6 +599,13 @@ namespace core{
             throw( exceptions::ActiveMQException );
 
         /**
+         * Gets a reference to this object's Transport instance.
+         *
+         * @return a reference to the Transport that is in use by this Connection.
+         */
+        transport::Transport& getTransport() const;
+
+        /**
          * Sends a oneway message.
          * @param command The message to send.
          * @throws ConnectorException if not currently connected, or
@@ -461,14 +639,14 @@ namespace core{
 
     private:
 
-        // Sends the connect message to the broker and waits for the response.
-        void connect() throw ( activemq::exceptions::ActiveMQException );
-
         // Sends a oneway disconnect message to the broker.
         void disconnect( long long lastDeliveredSequenceId ) throw ( activemq::exceptions::ActiveMQException );
 
-        // Check for Connected State and Throw an exception if not.
-        void enforceConnected() const throw ( activemq::exceptions::ActiveMQException );
+        // Check for Closed State and Throw an exception if true.
+        void checkClosed() const throw ( activemq::exceptions::ActiveMQException );
+
+        // If its not been sent, then send the ConnectionInfo to the Broker.
+        void ensureConnectionInfoSent();
 
         // Waits for all Consumers to handle the Transport Interrupted event.
         void waitForTransportInterruptionProcessingToComplete()

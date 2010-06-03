@@ -23,10 +23,14 @@
 #include <decaf/net/Inet6Address.h>
 #include <decaf/net/UnknownHostException.h>
 
+#include <apr_network_io.h>
+#include <decaf/internal/AprPool.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::internal;
 
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned char InetAddress::loopbackBytes[4] = { 127, 0, 0, 1 };
@@ -101,7 +105,7 @@ std::string InetAddress::getHostAddress() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string InetAddress::getHostname() const {
+std::string InetAddress::getHostName() const {
 
     if( !this->hostname.empty() ) {
         return this->hostname;
@@ -112,7 +116,7 @@ std::string InetAddress::getHostname() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string InetAddress::toString() const {
-    return getHostname() + " / " + getHostAddress();
+    return getHostName() + " / " + getHostAddress();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +147,29 @@ InetAddress InetAddress::getByAddress( const unsigned char* bytes, int numBytes 
 
 ////////////////////////////////////////////////////////////////////////////////
 InetAddress InetAddress::getLocalHost() {
-    return InetAddress::LOOPBACK;
+
+    char hostname[APRMAXHOSTLEN + 1] = {0};
+
+    AprPool pool;
+    apr_status_t result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
+
+    if( result != APR_SUCCESS ) {
+        return InetAddress::LOOPBACK;
+    }
+
+    apr_sockaddr_t* address = NULL;
+    result = apr_sockaddr_info_get( &address, hostname, APR_UNSPEC, 0, APR_IPV4_ADDR_OK, pool.getAprPool() );
+
+    if( result != APR_SUCCESS ) {
+        throw UnknownHostException(
+            __FILE__, __LINE__, "Could not resolve the IP Address of this host." );
+    }
+
+    if( address->family == APR_INET6 ) {
+        return Inet6Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
+    } else {
+        return Inet4Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

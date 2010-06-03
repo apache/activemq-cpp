@@ -61,3 +61,11 @@ void InetAddressTest::testGetHostAddress() {
     InetAddress address = InetAddress::getByAddress( bytes, 4 );
     CPPUNIT_ASSERT_EQUAL( std::string( "127.0.0.1" ), address.getHostAddress() );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void InetAddressTest::testGetLocalHost() {
+
+    InetAddress address = InetAddress::getLocalHost();
+    CPPUNIT_ASSERT( address.getHostName() != "" );
+    CPPUNIT_ASSERT( address.getHostAddress() != "" );
+}

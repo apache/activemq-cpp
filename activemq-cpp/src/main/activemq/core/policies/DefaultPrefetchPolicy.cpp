@@ -33,7 +33,12 @@ int DefaultPrefetchPolicy::DEFAULT_QUEUE_BROWSER_PREFETCH = 500;
 int DefaultPrefetchPolicy::DEFAULT_TOPIC_PREFETCH = MAX_PREFETCH_SIZE;
 
 ////////////////////////////////////////////////////////////////////////////////
-DefaultPrefetchPolicy::DefaultPrefetchPolicy() {
+DefaultPrefetchPolicy::DefaultPrefetchPolicy() :
+    durableTopicPrefetch( DEFAULT_DURABLE_TOPIC_PREFETCH ),
+    queuePrefetch( DEFAULT_QUEUE_PREFETCH ),
+    queueBrowserPrefetch( DEFAULT_QUEUE_BROWSER_PREFETCH ),
+    topicPrefetch( DEFAULT_TOPIC_PREFETCH ) {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
