@@ -55,7 +55,7 @@
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4290, 4101"
 			/>
@@ -228,7 +228,7 @@
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="2"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -401,7 +401,7 @@
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="2"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4251"
 			/>
@@ -578,7 +578,7 @@
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4290;4101;4251"
 			/>
