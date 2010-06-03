@@ -20,6 +20,8 @@
 
 #include <activemq/util/Config.h>
 
+#include <decaf/util/Properties.h>
+
 namespace activemq {
 namespace core {
 
@@ -137,6 +139,24 @@ namespace core {
          * @return pointer to a new RedeliveryPolicy that is a copy of this one.
          */
         virtual RedeliveryPolicy* clone() const = 0;
+
+        /**
+         * Checks the supplied properties object for properties matching the configurable
+         * settings of this class.  The default implementation looks for properties named
+         * with the prefix cms.RedeliveryPolicy.XXX where XXX is the name of a property with
+         * a public setter method.  For instance cms.RedeliveryPolicy.useExponentialBackOff
+         * will be used to set the value of the use exponential back off toggle.
+         *
+         * Subclasses can override this method to add more configuration options or to exclude
+         * certain parameters from being set via the properties object.
+         *
+         * @param properties
+         *      The Properties object used to configure this object.
+         *
+         * @throws NumberFormatException if a property that is numeric cannot be converted
+         * @throws IllegalArgumentException if a property can't be converted to the correct type.
+         */
+        virtual void configure( const decaf::util::Properties& properties );
 
     };
 
