@@ -34,10 +34,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-IdGenerator::StaticInit IdGenerator::statics;
-
-////////////////////////////////////////////////////////////////////////////////
-IdGenerator::StaticInit::StaticInit() : UNIQUE_STUB(), instanceCount(0), hostname() {
+IdGenerator::StaticData::StaticData() : UNIQUE_STUB(), instanceCount(0), hostname() {
 
     std::string stub = "";
 
@@ -57,18 +54,11 @@ IdGenerator::StaticInit::StaticInit() : UNIQUE_STUB(), instanceCount(0), hostnam
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IdGenerator::IdGenerator() : seed(), sequence(0) {
-    synchronized( &statics.mutex ) {
-        this->seed = std::string( "ID:" ) + statics.hostname +
-                     statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
-    }
+IdGenerator::IdGenerator() : prefix(), seed(), sequence(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IdGenerator::IdGenerator( const std::string& prefix ) : seed(), sequence(0) {
-    synchronized( &statics.mutex ) {
-        this->seed = prefix + statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
-    }
+IdGenerator::IdGenerator( const std::string& prefix ) : prefix(prefix), seed(), sequence(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +70,20 @@ std::string IdGenerator::generateId() const {
 
     std::string result;
 
+    StaticData& statics = IdGenerator::getClassStaticData();
+
     synchronized( &statics.mutex ) {
+
+        if( seed.empty() ) {
+
+            if( prefix.empty() ) {
+                this->seed = std::string( "ID:" ) + statics.hostname +
+                             statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
+            } else {
+                this->seed = prefix + statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
+            }
+        }
+
         result = this->seed + Long::toString( this->sequence++ );
     }
 
@@ -137,4 +140,10 @@ int IdGenerator::compare( const std::string& id1, const std::string& id2 ) {
     }
 
     return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IdGenerator::StaticData& IdGenerator::getClassStaticData() {
+    static IdGenerator::StaticData statics;
+    return statics;
 }

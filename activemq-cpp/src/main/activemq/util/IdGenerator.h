@@ -29,7 +29,7 @@ namespace util {
     class AMQCPP_API IdGenerator {
     private:
 
-        class StaticInit {
+        class StaticData {
         public:
 
             std::string UNIQUE_STUB;
@@ -37,12 +37,11 @@ namespace util {
             std::string hostname;
             mutable decaf::util::concurrent::Mutex mutex;
 
-            StaticInit();
+            StaticData();
         };
 
-        static StaticInit statics;
-
-        std::string seed;
+        std::string prefix;
+        mutable std::string seed;
         mutable long long sequence;
 
     public:
@@ -68,9 +67,7 @@ namespace util {
          *
          * @return the previously retrieved host name.
          */
-        static std::string getHostname() {
-            return statics.hostname;
-        }
+        static std::string getHostname();
 
         /**
          * Gets the seed value from a Generated Id, the count portion is removed.
@@ -97,6 +94,10 @@ namespace util {
          * @returns zero if ids are equal or positove if id1 > id2...
          */
         static int compare( const std::string& id1, const std::string& id2 );
+
+    private:
+
+        static StaticData& getClassStaticData();
 
     };
 
