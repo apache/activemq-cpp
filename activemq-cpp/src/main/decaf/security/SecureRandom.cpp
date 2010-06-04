@@ -120,6 +120,22 @@ void SecureRandom::setSeed( const std::vector<unsigned char>& seed ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SecureRandom::setSeed( const unsigned char* seed, int size ) {
+
+    if( seed == NULL ) {
+        throw NullPointerException( __FILE__, __LINE__, "Buffer pointer passed was NULL" );
+    }
+
+    if( size < 0 ) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative." );
+    }
+
+    if( size > 0 ) {
+        this->secureRandom->providerSetSeed( seed, size );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int SecureRandom::next( int numBits ) {
 
     if( numBits < 0 ) {
