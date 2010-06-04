@@ -120,6 +120,8 @@ AC_CHECK_HEADERS([repcdce.h])
 AC_CHECK_HEADERS([signal.h])
 AC_CHECK_HEADERS([string.h])
 AC_CHECK_HEADERS([sched.h])
+AC_CHECK_HEADERS([time.h])
+AC_CHECK_HEADERS([limits.h])
 AC_CHECK_HEADERS([sys/filio.h])
 AC_CHECK_HEADERS([sys/ioctl.h])
 AC_CHECK_HEADERS([sys/select.h])
@@ -133,7 +135,7 @@ AC_CHECK_HEADERS([pthread.h])
 AC_CHECK_HEADERS([errno.h])
 AC_CHECK_HEADERS([semaphore.h])
 
-AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
+AC_CHECK_FUNCS([ioctl select gettimeofday time ftime random srandom])
 
 AMQ_FIND_CPPUNIT( 1.10.2, cppunit=yes, cppunit=no;
     AC_MSG_RESULT([no. Unit and Integration tests disabled])
