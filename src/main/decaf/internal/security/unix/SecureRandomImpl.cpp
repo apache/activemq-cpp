@@ -121,18 +121,15 @@ void SecureRandomImpl::providerNextBytes( unsigned char* bytes, int numBytes ) {
         apr_status_t result = APR_EOF;
         apr_size_t bytesRead = 0;
 
-        for(;;) {
+        // Instruct APR to read it all.
+        result = apr_file_read_full( this->config->randFile, (void*)bytes, numBytes, &bytesRead );
 
-            // Instruct APR to read it all.
-            result = apr_file_read_full( this->config->randFile, (void*)bytes, numBytes, &bytesRead );
-
-            // Since the dev random files are special OS random sources we should never get
-            // an EOF or other error, if so its bad.
-            if( result != APR_SUCCESS ) {
-                throw RuntimeException(
-                    __FILE__, __LINE__,
-                    "Unexpected error while reading random bytes from system resources." );
-            }
+        // Since the dev random files are special OS random sources we should never get
+        // an EOF or other error, if so its bad.
+        if( result != APR_SUCCESS ) {
+            throw RuntimeException(
+                __FILE__, __LINE__,
+                "Unexpected error while reading random bytes from system resources." );
         }
 
     } else {

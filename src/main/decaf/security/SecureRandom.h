@@ -105,6 +105,20 @@ namespace security {
          */
         virtual void setSeed( const std::vector<unsigned char>& seed );
 
+        /**
+         * Supplements or sets the seed of this secure random number generator, calls to this
+         * method never reduces randomness.
+         *
+         * @param seed
+         *      The seed bytes to use to seed this secure random number generator.
+         * @param size
+         *      The number of bytes in the seed buffer.
+         *
+         * @throw NullPointerException if the seed buffer is NULL.
+         * @throw IllegalArgumentException if the size value is negative.
+         */
+        virtual void setSeed( const unsigned char* seed, int size );
+
     protected:  // Virtual method used by all non-virtual methods in Random.
 
         /**
