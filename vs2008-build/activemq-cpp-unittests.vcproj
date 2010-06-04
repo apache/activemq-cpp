@@ -11404,6 +11404,18 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="security"
+				>
+				<File
+					RelativePath="..\src\test\decaf\security\SecureRandomTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\security\SecureRandomTest.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="util"
