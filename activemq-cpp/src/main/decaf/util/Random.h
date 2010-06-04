@@ -135,12 +135,14 @@ namespace util{
          * is uniformly distributed between 0 (inclusively) and the value
          * of <code>n</code> (exclusively).
          *
-         * @return int
-         * @param n int
+         * @param n
+         *      The int value that defines the max value of the return.
          *
-         * @throws IllegalArgumentException
+         * @return the next pseudo random int value.
+         *
+         * @throws IllegalArgumentException if n is less than or equal to zero.
          */
-        int nextInt( int n ) throw( lang::exceptions::IllegalArgumentException );
+        int nextInt( int n );
 
         /**
          * Generates a uniformly distributed 64-bit <code>int</code> value
@@ -165,6 +167,19 @@ namespace util{
          * @see #next
          */
         virtual void nextBytes( std::vector<unsigned char>& buf );
+
+        /**
+         * Modifies the byte array by a random sequence of bytes generated
+         * by this random number generator.
+         *
+         * @param buf non-null array to contain the new random bytes
+         *
+         * @see #next
+         *
+         * @throw NullPointerException if buff is NULL
+         * @throw IllegalArgumentException if size is negative
+         */
+        virtual void nextBytes( unsigned char* buf, int size );
 
         /**
          * Modifies the seed using linear congruential formula presented

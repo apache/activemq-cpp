@@ -19,9 +19,13 @@
 
 #include <decaf/lang/System.h>
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 unsigned long long Random::multiplier = 0x5deece66dLL;
 
@@ -42,9 +46,29 @@ bool Random::nextBoolean() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Random::nextBytes( std::vector<unsigned char>& buf ) {
+
+    try{
+        this->nextBytes( &buf[0], (int)buf.size() );
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Random::nextBytes( unsigned char* buf, int size ) {
+
+    if( buf == NULL ) {
+        throw NullPointerException( __FILE__, __LINE__, "Buffer passed cannot be NULL." );
+    }
+
+    if( size < 0 ) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Specified buffer size was negative." );
+    }
+
     int rand = 0;
-    std::size_t count = 0, loop = 0;
-    while( count < buf.size() ) {
+    int count = 0, loop = 0;
+    while( count < size ) {
         if( loop == 0 ) {
             rand = nextInt();
             loop = 3;
@@ -99,7 +123,7 @@ int Random::nextInt() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Random::nextInt( int n ) throw( exceptions::IllegalArgumentException ) {
+int Random::nextInt( int n ) {
 
     if( n > 0 ) {
 
