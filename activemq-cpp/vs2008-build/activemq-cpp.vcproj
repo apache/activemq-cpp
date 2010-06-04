@@ -23133,6 +23133,22 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="security"
+					>
+					<Filter
+						Name="windows"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\windows\SecureRandomImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\windows\SecureRandomImpl.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="lang"
