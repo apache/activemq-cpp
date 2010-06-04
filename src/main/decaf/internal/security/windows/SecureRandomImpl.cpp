@@ -15,15 +15,32 @@
  * limitations under the License.
  */
 
-#include "SecureRandomSpi.h"
+#include "SecureRandomImpl.h"
 
 using namespace decaf;
 using namespace decaf::security;
+using namespace decaf::internal;
+using namespace decaf::internal::security;
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandomSpi::SecureRandomSpi() {
+SecureRandomImpl::SecureRandomImpl() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandomSpi::~SecureRandomSpi() {
+SecureRandomImpl::~SecureRandomImpl() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SecureRandomImpl::providerSetSeed( const unsigned char* seed, int size ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SecureRandomImpl::providerNextBytes( unsigned char* bytes, int numBytes ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char* SecureRandomImpl::providerGenerateSeed( int numBytes ) {
+
 }

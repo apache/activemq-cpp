@@ -32,6 +32,8 @@ namespace security {
     class DECAF_API SecureRandomSpi {
     public:
 
+        SecureRandomSpi();
+
         virtual ~SecureRandomSpi();
 
         /**
@@ -43,7 +45,7 @@ namespace security {
          * @param size
          *      The size of the passed byte array.
          */
-        virtual void providerSetSeed( unsigned char* seed, int size ) = 0;
+        virtual void providerSetSeed( const unsigned char* seed, int size ) = 0;
 
         /**
          * Generates the number of random bytes specified by the size parameter and write them to

@@ -21,6 +21,9 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/Random.h>
+#include <decaf/security/SecureRandomSpi.h>
+
+#include <memory>
 
 namespace decaf {
 namespace security {
@@ -30,6 +33,8 @@ namespace security {
      */
     class DECAF_API SecureRandom : public decaf::util::Random {
     private:
+
+        std::auto_ptr<SecureRandomSpi> secureRandom;
 
     public:
 
@@ -55,6 +60,23 @@ namespace security {
          */
         SecureRandom( const std::vector<unsigned char>& seed );
 
+        /**
+         * Creates a new instance of a secure random number generator that implements the
+         * default random number algorithm.
+         *
+         * The SecureRandom instance created by this constructor is seeded using the passed
+         * byte array.
+         *
+         * @param seed
+         *      The seed bytes to use to seed this secure random number generator.
+         * @param size
+         *      The number of bytes in the seed buffer.
+         *
+         * @throw NullPointerException if the seed buffer is NULL.
+         * @throw IllegalArgumentException if the size value is negative.
+         */
+        SecureRandom( const unsigned char* seed, int size );
+
         virtual ~SecureRandom();
 
     public:  // Virtual Methods
@@ -63,6 +85,11 @@ namespace security {
          * {@inheritDoc}
          */
         virtual void nextBytes( std::vector<unsigned char>& buf );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void nextBytes( unsigned char* buf, int size );
 
         /**
          * {@inheritDoc}

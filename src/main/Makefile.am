@@ -517,6 +517,7 @@ cc_sources = \
     decaf/internal/nio/IntArrayBuffer.cpp \
     decaf/internal/nio/LongArrayBuffer.cpp \
     decaf/internal/nio/ShortArrayBuffer.cpp \
+    decaf/internal/security/unix/SecureRandomImpl.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
     decaf/internal/util/Resource.cpp \
@@ -1210,6 +1211,8 @@ h_sources = \
     decaf/internal/nio/IntArrayBuffer.h \
     decaf/internal/nio/LongArrayBuffer.h \
     decaf/internal/nio/ShortArrayBuffer.h \
+    decaf/internal/security/unix/SecureRandomImpl.h \
+    decaf/internal/security/windows/SecureRandomImpl.h \
     decaf/internal/util/ByteArrayAdapter.h \
     decaf/internal/util/GenericResource.h \
     decaf/internal/util/HexStringParser.h \
