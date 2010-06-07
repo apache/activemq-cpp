@@ -126,6 +126,8 @@ public:
                 producer->send( message );
 
                 delete message;
+
+                Thread::sleep( 500 );
             }
 
         }catch ( CMSException& e ) {
@@ -350,6 +352,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
 
+
     // Set the URI to point to the IP Address of your broker.
     // add any optional params to the url to enable things like
     // tightMarshalling or tcp logging etc.  See the CMS web site for
@@ -358,7 +361,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //  http://activemq.apache.org/cms/
     //
     // Wire Format Options:
-    // =====================
+    // =========================
     // Use either stomp or openwire, the default ports are different for each
     //
     // Examples:
@@ -366,13 +369,29 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61616?wireFormat=openwire  same as above
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
+    // SSL:
+    // =========================
+    // To use SSL you need to specify the location of the trusted Root CA or the
+    // certificate for the broker you want to connect to.  Using the Root CA allows
+    // you to use failover with multiple servers all using certificates signed by
+    // the trusted root.  If using client authentication you also need to specify
+    // the location of the client Certificate.
+    //
+    //     System::setProperty( "decaf.net.ssl.keyStore", "<path>/client.pem" );
+    //     System::setProperty( "decaf.net.ssl.keyStorePassword", "password" );
+    //     System::setProperty( "decaf.net.ssl.trustStore", "<path>/rootCA.pem" );
+    //
+    // The you just specify the ssl transport in the URI, for example:
+    //
+    //     ssl://localhost:61617
+    //
     std::string brokerURI =
-        "failover:(tcp://127.0.0.1:61616"
+        "failover:(tcp://localhost:61616"
 //        "?wireFormat=openwire"
 //        "&transport.useInactivityMonitor=false"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
-//        "&transport.commandTracingEnabled=true"
+//        "?transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
         ")";
@@ -384,7 +403,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     bool useTopics = true;
     bool sessionTransacted = false;
-    int numMessages = 2000;
+    int numMessages = 20000;
 
     long long startTime = System::currentTimeMillis();
 
