@@ -883,8 +883,8 @@ void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
 
         while( !closed.get() && !transportFailed.get() && cdl->getCount() > 0 ) {
 
-            std::cout << "dispatch paused, waiting for outstanding dispatch interruption processing ("
-                      << Integer::toString( cdl->getCount() ) << ") to complete.." << std::endl;
+            //std::cout << "dispatch paused, waiting for outstanding dispatch interruption processing ("
+            //          << Integer::toString( cdl->getCount() ) << ") to complete.." << std::endl;
 
             cdl->await( 10, TimeUnit::SECONDS );
         }
@@ -899,7 +899,7 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
     if( cdl != NULL ) {
 
-        std::cout << "Set Transport interruption processing complete." << std::endl;
+        //std::cout << "Set Transport interruption processing complete." << std::endl;
         cdl->countDown();
 
         try {
@@ -916,7 +916,7 @@ void ActiveMQConnection::signalInterruptionProcessingComplete()
 
     if( cdl->getCount() == 0 ) {
 
-        std::cout << "Signaling Transport interruption processing complete." << std::endl;
+        //std::cout << "Signaling Transport interruption processing complete." << std::endl;
 
         this->config->transportInterruptionProcessingComplete.reset( NULL );
         FailoverTransport* failoverTransport =
