@@ -527,15 +527,16 @@ cc_sources = \
     decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
     decaf/internal/util/concurrent/unix/MutexImpl.cpp \
     decaf/internal/util/zip/adler32.c \
-    decaf/internal/util/zip/compress.c \
     decaf/internal/util/zip/crc32.c \
     decaf/internal/util/zip/deflate.c \
-    decaf/internal/util/zip/gzio.c \
+    decaf/internal/util/zip/gzclose.c \
+    decaf/internal/util/zip/gzlib.c \
+    decaf/internal/util/zip/gzread.c \
+    decaf/internal/util/zip/gzwrite.c \
     decaf/internal/util/zip/infback.c \
     decaf/internal/util/zip/inffast.c \
     decaf/internal/util/zip/inflate.c \
     decaf/internal/util/zip/inftrees.c \
-    decaf/internal/util/zip/minigzip.c \
     decaf/internal/util/zip/trees.c \
     decaf/internal/util/zip/uncompr.c \
     decaf/internal/util/zip/zutil.c \
@@ -1231,6 +1232,7 @@ h_sources = \
     decaf/internal/util/concurrent/windows/MutexHandle.h \
     decaf/internal/util/zip/crc32.h \
     decaf/internal/util/zip/deflate.h \
+    decaf/internal/util/zip/gzguts.h \
     decaf/internal/util/zip/inffast.h \
     decaf/internal/util/zip/inffixed.h \
     decaf/internal/util/zip/inflate.h \
