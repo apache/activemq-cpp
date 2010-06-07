@@ -234,6 +234,8 @@ void ActiveMQSession::clearMessagesInProgress() {
 
         std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
         for( ; iter != consumers.end(); ++iter ) {
+            (*iter)->inProgressClearRequired();
+            // Todo - This should occur asynchronously.
             (*iter)->clearMessagesInProgress();
         }
     }

@@ -32,6 +32,7 @@
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/util/UUID.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -877,13 +878,15 @@ void ActiveMQConnection::removeTransportListener( TransportListener* transportLi
 void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
     throw( decaf::lang::exceptions::InterruptedException ) {
 
-    if( this->config->transportInterruptionProcessingComplete != NULL ) {
+    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
+    if( cdl != NULL ) {
 
-        while( !closed.get() && !transportFailed.get() &&
-               !this->config->transportInterruptionProcessingComplete->await( 15, TimeUnit::SECONDS) ) {
+        while( !closed.get() && !transportFailed.get() && cdl->getCount() > 0 ) {
 
-            //LOG.warn( "dispatch paused, waiting for outstanding dispatch interruption processing (" +
-            //          transportInterruptionProcessingComplete.getCount() + ") to complete..");
+            std::cout << "dispatch paused, waiting for outstanding dispatch interruption processing ("
+                      << Integer::toString( cdl->getCount() ) << ") to complete.." << std::endl;
+
+            cdl->await( 10, TimeUnit::SECONDS );
         }
 
         signalInterruptionProcessingComplete();
@@ -893,15 +896,15 @@ void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 
-    synchronized( &( this->config->mutex ) ) {
+    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
+    if( cdl != NULL ) {
 
-        if( this->config->transportInterruptionProcessingComplete != NULL ) {
-            this->config->transportInterruptionProcessingComplete->countDown();
+        std::cout << "Set Transport interruption processing complete." << std::endl;
+        cdl->countDown();
 
-            try {
-                signalInterruptionProcessingComplete();
-            } catch( InterruptedException& ignored ) {}
-        }
+        try {
+            signalInterruptionProcessingComplete();
+        } catch( InterruptedException& ignored ) {}
     }
 }
 
@@ -909,21 +912,23 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 void ActiveMQConnection::signalInterruptionProcessingComplete()
     throw( decaf::lang::exceptions::InterruptedException ) {
 
-    if( this->config->transportInterruptionProcessingComplete->await( 0, TimeUnit::SECONDS ) ) {
-        synchronized( &( this->config->mutex ) ) {
+    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
 
-            this->config->transportInterruptionProcessingComplete.reset( NULL );
-            FailoverTransport* failoverTransport =
-                dynamic_cast<FailoverTransport*>( this->config->transport->narrow( typeid( FailoverTransport ) ) );
+    if( cdl->getCount() == 0 ) {
 
-            if( failoverTransport != NULL ) {
-                failoverTransport->setConnectionInterruptProcessingComplete(
-                    this->config->connectionInfo->getConnectionId() );
+        std::cout << "Signaling Transport interruption processing complete." << std::endl;
 
-                //if( LOG.isDebugEnabled() ) {
-                //    LOG.debug("transportInterruptionProcessingComplete for: " + this.getConnectionInfo().getConnectionId());
-                //}
-            }
+        this->config->transportInterruptionProcessingComplete.reset( NULL );
+        FailoverTransport* failoverTransport =
+            dynamic_cast<FailoverTransport*>( this->config->transport->narrow( typeid( FailoverTransport ) ) );
+
+        if( failoverTransport != NULL ) {
+            failoverTransport->setConnectionInterruptProcessingComplete(
+                this->config->connectionInfo->getConnectionId() );
+
+            //if( LOG.isDebugEnabled() ) {
+            //    LOG.debug("transportInterruptionProcessingComplete for: " + this.getConnectionInfo().getConnectionId());
+            //}
         }
     }
 }

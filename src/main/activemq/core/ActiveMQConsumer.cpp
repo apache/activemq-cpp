@@ -242,6 +242,7 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     this->additionalWindowSize = 0;
     this->deliveredCounter = 0;
     this->clearDispatchList = false;
+    this->inProgressClearRequiredFlag = false;
     this->listener = NULL;
     this->redeliveryDelay = 0;
     this->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
@@ -985,6 +986,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
         synchronized( &unconsumedMessages ) {
 
+            clearMessagesInProgress();
             if( this->clearDispatchList ) {
                 // we are reconnecting so lets flush the in progress
                 // messages
@@ -1095,15 +1097,27 @@ bool ActiveMQConsumer::iterate() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::clearMessagesInProgress() {
-    // we are called from inside the transport reconnection logic
-    // which involves us clearing all the connections' consumers
-    // dispatch lists and clearing them
-    // so rather than trying to grab a mutex (which could be already
-    // owned by the message listener calling the send) we will just set
-    // a flag so that the list can be cleared as soon as the
-    // dispatch thread is ready to flush the dispatch list
+void ActiveMQConsumer::inProgressClearRequired() {
+
+    inProgressClearRequiredFlag = true;
+    // Clears dispatched messages async to avoid lock contention with inprogress acks.
     clearDispatchList = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::clearMessagesInProgress() {
+    if( inProgressClearRequiredFlag ) {
+        synchronized( &unconsumedMessages ) {
+            if( inProgressClearRequiredFlag ) {
+
+                // TODO - Rollback duplicates.
+
+                // allow dispatch on this connection to resume
+                this->session->getConnection()->setTransportInterruptionProcessingComplete();
+                inProgressClearRequiredFlag = false;
+            }
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
