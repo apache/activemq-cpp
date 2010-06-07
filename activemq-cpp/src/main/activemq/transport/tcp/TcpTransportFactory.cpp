@@ -55,12 +55,6 @@ Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location 
         // Create the Transport for response correlator
         transport.reset( new ResponseCorrelator( transport ) );
 
-        // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
-            // Create the Transport for response correlator
-            transport.reset( new LoggingTransport( transport ) );
-        }
-
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -103,6 +97,12 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
 
         if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        }
+
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+            // Create the Transport for response correlator
+            transport.reset( new LoggingTransport( transport ) );
         }
 
         // If there is a negotiator need then we create and wrap here.
