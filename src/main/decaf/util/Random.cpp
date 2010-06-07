@@ -48,6 +48,11 @@ bool Random::nextBoolean() {
 void Random::nextBytes( std::vector<unsigned char>& buf ) {
 
     try{
+
+        if( buf.empty() ) {
+            return;
+        }
+
         this->nextBytes( &buf[0], (int)buf.size() );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
