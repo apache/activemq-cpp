@@ -126,8 +126,6 @@ public:
                 producer->send( message );
 
                 delete message;
-
-                Thread::sleep( 500 );
             }
 
         }catch ( CMSException& e ) {
@@ -403,7 +401,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     bool useTopics = true;
     bool sessionTransacted = false;
-    int numMessages = 20000;
+    int numMessages = 2000;
 
     long long startTime = System::currentTimeMillis();
 
