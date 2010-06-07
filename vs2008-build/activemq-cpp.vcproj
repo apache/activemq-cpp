@@ -23016,10 +23016,6 @@
 							>
 						</File>
 						<File
-							RelativePath="..\src\main\decaf\internal\util\zip\compress.c"
-							>
-						</File>
-						<File
 							RelativePath="..\src\main\decaf\internal\util\zip\crc32.c"
 							>
 						</File>
@@ -23036,7 +23032,23 @@
 							>
 						</File>
 						<File
-							RelativePath="..\src\main\decaf\internal\util\zip\gzio.c"
+							RelativePath="..\src\main\decaf\internal\util\zip\gzclose.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\gzguts.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\gzlib.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\gzread.c"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\zip\gzwrite.c"
 							>
 						</File>
 						<File
@@ -23069,10 +23081,6 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\internal\util\zip\inftrees.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\decaf\internal\util\zip\minigzip.c"
 							>
 						</File>
 						<File
