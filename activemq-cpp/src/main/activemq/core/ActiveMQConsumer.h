@@ -122,6 +122,11 @@ namespace core{
         bool clearDispatchList;
 
         /**
+         * Indicates if inprogress messages are to be cleared.
+         */
+        bool inProgressClearRequiredFlag;
+
+        /**
          * The redelivery delay used for the last set of redeliveries.
          */
         long long redeliveryDelay;
@@ -325,6 +330,12 @@ namespace core{
          * Called on a Failover to clear any pending messages.
          */
         void clearMessagesInProgress();
+
+        /**
+         * Signals that a Failure occurred and that anything in-progress in the
+         * consumer should be cleared.
+         */
+        void inProgressClearRequired();
 
         /**
          * Gets the currently set Last Delivered Sequence Id

@@ -467,14 +467,14 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
             connectedTransportURI.reset( NULL );
             connected = false;
 
+            // Place the State Tracker into a reconnection state.
+            this->stateTracker.transportInterrupted();
+
             // Notify before we attempt to reconnect so that the consumers have a chance
             // to cleanup their state.
             if( transportListener != NULL ) {
                 transportListener->transportInterrupted();
             }
-
-            // Place the State Tracker into a reconnection state.
-            this->stateTracker.transportInterrupted();
 
             if( started ) {
                 taskRunner->wakeup();
