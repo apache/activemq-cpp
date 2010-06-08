@@ -39,7 +39,7 @@ using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session,
-                                                        const Properties& properties ) {
+                                                        const Properties& properties AMQCPP_UNUSED) {
     try {
 
         if( session == NULL ) {

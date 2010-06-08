@@ -41,7 +41,7 @@ std::string SocketImpl::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketImpl::sendUrgentData( int data ) throw( decaf::io::IOException ) {
+void SocketImpl::sendUrgentData( int data DECAF_UNUSED ) throw( decaf::io::IOException ) {
 
     throw decaf::io::IOException(
         __FILE__, __LINE__, "Urgent Data not supported by this implementation." );
