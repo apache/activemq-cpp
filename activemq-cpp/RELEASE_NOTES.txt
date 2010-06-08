@@ -1,4 +1,49 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.2.0                               ==
+=========================================================================
+
+This is a major release featuring many new feature, performance improvements,
+bugfixes and tests.  The major new feature in this release is support for SSL
+using the popular OpenSSL library.  Also in this release Message body compression
+and a working QueueBrowser.  
+
+Bug
+
+    * [AMQCPP-275] - Thread::UncaughtExceptionHandler missing virtual destructor
+    * [AMQCPP-280] - Missing call to pthread_detach on linux causes temporary resource leak.
+    * [AMQCPP-281] - Memory Leak in Pointer class Constructor when dynamic cast fails.
+    * [AMQCPP-285] - If brokerURI is ipv4 format(127.0.0.1), createConnection will throw decaf::lang::exceptions::NumberFormatException.
+    * [AMQCPP-288] - ResourceLifecycleManager needs to be thread-safe
+    * [AMQCPP-290] - Authentication error leads to pure virtual call/kaboom in CMS 3.1.1
+    * [AMQCPP-292] - transacted sessions over shared failover connection throws exceptions
+
+Improvement
+
+    * [AMQCPP-261] - Handle Multibyte Strings or Strings encoded in Charsets other than US-ASCII
+    * [AMQCPP-274] - Refactor Commands toString methods and Logging Transport to make debugging easier
+    * [AMQCPP-283] - Update Visual Studio projects to VS2008 format.
+    * [AMQCPP-287] - Implement Message Body Compression that works with Java and .NET clients
+    * [AMQCPP-293] - Add configuration options to ActiveMQConnectionFactory class
+
+New Feature
+
+    * [AMQCPP-129] - Implement QueueBrowser
+    * [AMQCPP-140] - Add SSL transport
+    * [AMQCPP-147] - Add Optimized Acknowledge support to the CPP client
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.1.3                               ==
+=========================================================================
+
+This release is a minor patch release that resolves an issue on Windows
+that could result in a thread deadlocking while a join operation was in
+progress.
+
+Bug
+
+    * [AMQCPP-277] - Freeze when creating multiple Consumers
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.1.2                               ==
 =========================================================================
 
