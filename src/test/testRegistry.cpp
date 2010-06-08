@@ -884,3 +884,115 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::security::SecureRandomTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v5::WireFormatInfoMarshallerTest );
 //#include <activemq/wireformat/openwire/marshal/v5/XATransactionIdMarshallerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v5::XATransactionIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQBlobMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQBlobMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQBytesMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQBytesMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQMapMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQMapMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQObjectMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQObjectMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQQueueMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQQueueMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQStreamMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQStreamMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQTempQueueMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQTempQueueMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQTempTopicMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQTempTopicMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQTextMessageMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQTextMessageMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ActiveMQTopicMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ActiveMQTopicMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/BrokerIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::BrokerIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/BrokerInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::BrokerInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConnectionControlMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConnectionControlMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConnectionErrorMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConnectionErrorMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConnectionIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConnectionIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConnectionInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConnectionInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConsumerControlMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConsumerControlMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConsumerIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConsumerIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ConsumerInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ConsumerInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ControlCommandMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ControlCommandMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/DataArrayResponseMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::DataArrayResponseMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/DataResponseMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::DataResponseMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/DestinationInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::DestinationInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/DiscoveryEventMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::DiscoveryEventMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ExceptionResponseMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ExceptionResponseMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/FlushCommandMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::FlushCommandMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/IntegerResponseMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::IntegerResponseMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/JournalQueueAckMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::JournalQueueAckMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/JournalTopicAckMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::JournalTopicAckMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/JournalTraceMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::JournalTraceMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/JournalTransactionMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::JournalTransactionMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/KeepAliveInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::KeepAliveInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/LastPartialCommandMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::LastPartialCommandMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/LocalTransactionIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::LocalTransactionIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/MessageAckMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::MessageAckMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/MessageDispatchMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::MessageDispatchMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/MessageDispatchNotificationMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::MessageDispatchNotificationMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/MessageIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::MessageIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/MessagePullMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::MessagePullMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/NetworkBridgeFilterMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::NetworkBridgeFilterMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/PartialCommandMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::PartialCommandMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ProducerAckMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ProducerAckMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ProducerIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ProducerIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ProducerInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ProducerInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/RemoveInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::RemoveInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/RemoveSubscriptionInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::RemoveSubscriptionInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ReplayCommandMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ReplayCommandMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ResponseMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ResponseMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/SessionIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::SessionIdMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/SessionInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::SessionInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/ShutdownInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::ShutdownInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/SubscriptionInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::SubscriptionInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/TransactionInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::TransactionInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/WireFormatInfoMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::WireFormatInfoMarshallerTest );
+//#include <activemq/wireformat/openwire/marshal/v6/XATransactionIdMarshallerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::v6::XATransactionIdMarshallerTest );
