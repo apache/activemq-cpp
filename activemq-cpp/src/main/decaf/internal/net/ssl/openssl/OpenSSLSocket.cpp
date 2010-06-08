@@ -75,7 +75,7 @@ namespace openssl {
         }
 
 #ifdef HAVE_OPENSSL
-        static int verifyCallback( int verified, X509_STORE_CTX* store ) {
+        static int verifyCallback( int verified, X509_STORE_CTX* store DECAF_UNUSED ) {
 
             if( !verified ) {
 
@@ -649,7 +649,7 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
         if( apr_strnatcmp( "subjectAltName", extensionName ) == 0 ) {
 
-            const X509V3_EXT_METHOD* method = X509V3_EXT_get( extension );
+            X509V3_EXT_METHOD* method = (X509V3_EXT_METHOD*)X509V3_EXT_get( extension );
             if( method == NULL ) {
                 break;
             }
