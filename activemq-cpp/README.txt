@@ -22,26 +22,11 @@ libtool     >= 1.5.24
 APR         >= 1.3*
 APR-Util    >= 1.3* or higher
 CPPUnit     >= 1.10.2*
-libuuid     >= ?*
+OpenSSL     >= 0.9.8m* ( 1.0.0 or higher is recommended, this is an optional dependancy)
 
 * Requires that the Development package also be installed.
 
-1.1 libuuid
---------------------------------------------------------------------------
-
-The build requires the *libuuid* library that is part of the e2fsprogs
-package and is available from http://e2fsprogs.sourceforge.net/ which is
-not always installed by default.
-
-On Fedora, type the following:
-
-  sudo yum install e2fsprogs-devel
-
-On Debian/Ubuntu, type the following:
-
-  sudo apt-get install uuid-dev
-
-1.2 CppUnit
+1.1 CppUnit
 --------------------------------------------------------------------------
 
 The package contains a complete set of CppUnit tests.  In order for you to
@@ -70,7 +55,7 @@ The included Visual Studio projects are configured with the assumption
 that you will configure Visual Studio with the locations of the Platform
 SDK and the CPPUnit and APR libraries and headers.
 
-1.3 APR and APR Util
+1.2 APR and APR Util
 -------------------------------------------------------------------------
 
 The build requires the APR library and the APR-Util.  These libraries can
@@ -107,6 +92,25 @@ the source download at Apache.
     | a custom location, then you will need to point to that location     |
     | using the argument above.                                           |
     -----------------------------------------------------------------------
+
+1.3 OpenSSL
+--------------------------------------------------------------------------
+
+If you wish to use the SSL Transport then you will need to have OpenSSL and
+its includes installed on your system.  We recommend that you use version 1.0.0
+or higher for best performance and security, but version from 0.9.8 are also
+known to work.  The autoconf script will search for the library and enabled support
+automatically if it is found.
+
+You can disable the OpenSSL checks in the configure script with the --disable-ssl
+option or you can specify a custom location for the OpenSSL package with the
+--with-openssl option.  See the --help option on the configure script for more
+information.
+
+On Windows you need to obtain an OpenSSL binary package and place the libraries on
+the system path or in the System32 directory.  In the Visual Studio project you must
+add the HAVE_OPENSSL flag to the preprocessor directives and add the paths for the
+includes and libraries so that the compiler and linker can find them.
 
 1.4 GNU Build System (for building on Unix/Linux/OS X)
 --------------------------------------------------------------------------
