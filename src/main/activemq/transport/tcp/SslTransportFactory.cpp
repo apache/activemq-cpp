@@ -21,6 +21,7 @@
 
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/inactivity/InactivityMonitor.h>
+#include <activemq/transport/logging/LoggingTransport.h>
 
 #include <memory>
 
@@ -28,6 +29,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::io;
 using namespace activemq::transport;
+using namespace activemq::transport::logging;
 using namespace activemq::transport::inactivity;
 using namespace activemq::transport::tcp;
 using namespace activemq::exceptions;
@@ -56,6 +58,12 @@ Pointer<Transport> SslTransportFactory::doCreateComposite( const decaf::net::URI
 
         if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        }
+
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+            // Create the Transport for response correlator
+            transport.reset( new LoggingTransport( transport ) );
         }
 
         // If there is a negotiator need then we create and wrap here.
