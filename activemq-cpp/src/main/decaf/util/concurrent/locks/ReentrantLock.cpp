@@ -486,7 +486,11 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
     abstime.tv_sec = TimeUnit::NANOSECONDS.toSeconds( delay );
     abstime.tv_nsec = delay % 1000000000;
 
+#ifdef HAVE_PTHREAD_H
     unsigned int result = pthread_cond_timedwait( &condition, &lock->handle, &abstime );
+#else
+
+#endif
 
     // restore the owner
     lock->lock_owner = lock_owner;
