@@ -41,6 +41,7 @@ namespace test{
         };
 
         void testSendReceiveTransactedBatches();
+        void testSendRollbackCommitRollback();
         void testSendRollback();
         void testSendSessionClose();
         void testWithTTLSet();

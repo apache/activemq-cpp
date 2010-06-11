@@ -75,6 +75,47 @@ void TransactionTest::testSendReceiveTransactedBatches() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void TransactionTest::testSendRollbackCommitRollback() {
+
+    // Create CMS Object for Comms
+    cms::Session* session = cmsProvider->getSession();
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<TextMessage> outbound1( session->createTextMessage( "First Message" ) );
+    auto_ptr<TextMessage> outbound2( session->createTextMessage( "Second Message" ) );
+
+    // sends them and then rolls back.
+    producer->send( outbound1.get() );
+    producer->send( outbound2.get() );
+    session->rollback();
+
+    // Send one and commit.
+    producer->send( outbound1.get() );
+    session->commit();
+
+    // receives the first message
+    auto_ptr<TextMessage> inbound1(
+        dynamic_cast<TextMessage*>( consumer->receive( 1500 ) ) );
+
+    CPPUNIT_ASSERT( NULL == consumer->receive( 1500 ) );
+    CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
+
+    session->rollback();
+
+    inbound1.reset(
+        dynamic_cast<TextMessage*>( consumer->receive( 1500 ) ) );
+
+    CPPUNIT_ASSERT( NULL == consumer->receive( 1500 ) );
+    CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
+
+    // validates that the rollbacked was not consumed
+    session->commit();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testSendRollback() {
 
     try {
