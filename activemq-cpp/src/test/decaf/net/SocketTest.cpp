@@ -49,6 +49,22 @@ void SocketTest::testConnectUnknownHost() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testConnectPortOutOfRange() {
+
+    Socket s;
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an IllegalArguementException",
+        s.connect( "0.0.0.0", 70000 ),
+        IllegalArgumentException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an IllegalArguementException",
+        s.connect( "0.0.0.0", 70000, 1000 ),
+        IllegalArgumentException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SocketTest::testConstructor() {
 
     // create the socket and then validate some basic state

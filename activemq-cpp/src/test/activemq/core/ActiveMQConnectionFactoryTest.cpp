@@ -138,11 +138,28 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::testExceptionWithPortOutOfRange() {
+    try
+    {
+        std::string URI = "tcp://127.0.0.2:70000";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection() );
+
+        CPPUNIT_ASSERT( false );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactoryTest::testExceptionOnCreate() {
     try
     {
         std::string URI =
-            "tcp://127.0.0.2:23232?wireFormat=openwire";
+            "tcp://127.0.0.2:23232?soConnectTimeout=3000";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 

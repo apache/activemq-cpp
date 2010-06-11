@@ -258,6 +258,7 @@ void TcpSocket::bind( const std::string& ipaddress, int port )
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::connect( const std::string& hostname, int port, int timeout )
     throw( decaf::io::IOException,
+           decaf::net::SocketException,
            decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
@@ -307,10 +308,13 @@ void TcpSocket::connect( const std::string& hostname, int port, int timeout )
         ex.setMark( __FILE__, __LINE__);
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw ex;
-    } catch( Exception& ex ) {
+    } catch( IllegalArgumentException& ex ) {
         ex.setMark( __FILE__, __LINE__);
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw ex;
+    } catch( Exception& ex ) {
+        try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
+        throw SocketException( &ex );
     } catch( ... ) {
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw SocketException(
