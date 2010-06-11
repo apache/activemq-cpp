@@ -43,6 +43,7 @@ namespace net{
         CPPUNIT_TEST( testIsClosed );
         CPPUNIT_TEST( testIsInputShutdown );
         CPPUNIT_TEST( testIsOutputShutdown );
+        CPPUNIT_TEST( testConnectPortOutOfRange );
 
         CPPUNIT_TEST( testTx );
         CPPUNIT_TEST( testTrx );
@@ -70,6 +71,7 @@ namespace net{
         void testIsClosed();
         void testIsInputShutdown();
         void testIsOutputShutdown();
+        void testConnectPortOutOfRange();
 
         // Old Tests
         void testConnect();

@@ -318,7 +318,7 @@ void Socket::connect( const std::string& host, int port, int timeout )
         try {
 
             if( !isBound() ) {
-                //this->impl->bind( "", 0 );
+                this->impl->bind( "", 0 );
                 this->bound = true;
             }
 
