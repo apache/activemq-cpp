@@ -44,6 +44,7 @@ namespace test{
         void testSendRollback();
         void testSendSessionClose();
         void testWithTTLSet();
+        void testSendRollbackCommitRollback();
 
     };
 
