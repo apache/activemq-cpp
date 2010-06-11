@@ -182,6 +182,7 @@ namespace tcp {
          */
         virtual void connect( const std::string& hostname, int port, int timeout )
             throw( decaf::io::IOException,
+                   decaf::net::SocketException,
                    decaf::lang::exceptions::IllegalArgumentException );
 
         /**
