@@ -1,11 +1,15 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.3.0                               ==
+=========================================================================
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.0                               ==
 =========================================================================
 
 This is a major release featuring many new feature, performance improvements,
 bugfixes and tests.  The major new feature in this release is support for SSL
 using the popular OpenSSL library.  Also in this release Message body compression
-and a working QueueBrowser.  
+and a working QueueBrowser.
 
 Bug
 
@@ -16,6 +20,7 @@ Bug
     * [AMQCPP-288] - ResourceLifecycleManager needs to be thread-safe
     * [AMQCPP-290] - Authentication error leads to pure virtual call/kaboom in CMS 3.1.1
     * [AMQCPP-292] - transacted sessions over shared failover connection throws exceptions
+    * [AMQCPP-295] - Build Error on windows machines due to missing/wrong ifdef
 
 Improvement
 
