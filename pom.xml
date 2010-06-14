@@ -27,7 +27,7 @@
 
   <groupId>org.apache.activemq-cpp</groupId>
   <artifactId>activemq-cpp-pom</artifactId>
-  <version>3.2.x-SNAPSHOT</version>
+  <version>3.3.x-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ActiveMQ-CPP Project</name>
   <inceptionYear>2007</inceptionYear>
@@ -60,7 +60,7 @@
   </mailingLists>
 
   <properties>
-    <activemq-version>5.3.0</activemq-version>
+    <activemq-version>5.4-SNAPSHOT</activemq-version>
     <siteId>activemq-cpp-${activemq-version}</siteId>
     <projectName>Apache ActiveMQ-CPP</projectName>
     <annogen-version>0.1.0</annogen-version>
