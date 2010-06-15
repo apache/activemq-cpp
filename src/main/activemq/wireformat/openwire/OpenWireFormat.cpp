@@ -29,11 +29,7 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/wireformat/openwire/marshal/DataStreamMarshaller.h>
-#include <activemq/wireformat/openwire/marshal/v5/MarshallerFactory.h>
-#include <activemq/wireformat/openwire/marshal/v4/MarshallerFactory.h>
-#include <activemq/wireformat/openwire/marshal/v3/MarshallerFactory.h>
-#include <activemq/wireformat/openwire/marshal/v2/MarshallerFactory.h>
-#include <activemq/wireformat/openwire/marshal/v1/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/universal/MarshallerFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
@@ -53,6 +49,8 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned char OpenWireFormat::NULL_TYPE = 0;
+const int OpenWireFormat::DEFAULT_VERSION = 1;
+const int OpenWireFormat::MAX_SUPPORTED_VERSION = 6;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
@@ -75,6 +73,10 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
     this->sizePrefixDisabled = false;
     this->maxInactivityDuration = 30000;
     this->maxInactivityDurationInitialDelay = 10000;
+
+    // initialize the universal marshalers, don't need to reset them again
+    // after this so its safe to do this here.
+    universal::MarshallerFactory().configure( this );
 
     // Set to Default as lowest common denominator, then we will try
     // and move up to the preferred when the wireformat is negotiated.
@@ -117,36 +119,20 @@ void OpenWireFormat::destroyMarshalers() {
 void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
 
     try{
+
         if( version == this->getVersion() ){
             return;
         }
 
-        // Clear old marshalers in preparation for the new set.
-        this->destroyMarshalers();
-        this->version = version;
-
-        switch( this->version ){
-        case 1:
-            v1::MarshallerFactory().configure( this );
-            break;
-        case 2:
-            v2::MarshallerFactory().configure( this );
-            break;
-        case 3:
-            v3::MarshallerFactory().configure( this );
-            break;
-        case 4:
-            v4::MarshallerFactory().configure( this );
-            break;
-        case 5:
-            v5::MarshallerFactory().configure( this );
-            break;
-        default:
+        if( version > MAX_SUPPORTED_VERSION ) {
             throw IllegalArgumentException(
                 __FILE__, __LINE__,
                 "OpenWireFormat::setVersion - "
-                "Given Version: %d , is not supported", version );
+                "Given Version: %d , is not yet supported", version );
         }
+
+        // Clear old marshalers in preparation for the new set.
+        this->version = version;
     }
     AMQ_CATCH_RETHROW( IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )

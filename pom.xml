@@ -105,7 +105,6 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
-                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.cpp</exclude>
                 </excludes>
               </sources>
               <headers>
@@ -115,7 +114,6 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
-                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.h</exclude>
                 </excludes>
               </headers>
             </configuration>

@@ -65,6 +65,62 @@ cc_sources = \
     activemq/wireformat/openwire/OpenWireFormatTest.cpp \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
     activemq/wireformat/openwire/marshal/PrimitiveTypesMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQBlobMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQBytesMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQMapMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQObjectMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQQueueMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQStreamMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTempQueueMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTempTopicMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTextMessageMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTopicMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/BrokerIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/BrokerInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConnectionControlMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConnectionErrorMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConnectionIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConnectionInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConsumerControlMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConsumerIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ConsumerInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ControlCommandMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/DataArrayResponseMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/DataResponseMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/DestinationInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/DiscoveryEventMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ExceptionResponseMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/FlushCommandMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/IntegerResponseMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/JournalQueueAckMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/JournalTopicAckMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/JournalTraceMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/JournalTransactionMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/KeepAliveInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/LastPartialCommandMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/LocalTransactionIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/MessageAckMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/MessageDispatchMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/MessageDispatchNotificationMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/MessageIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/MessagePullMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/NetworkBridgeFilterMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/PartialCommandMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ProducerAckMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ProducerIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ProducerInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/RemoveInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/RemoveSubscriptionInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ReplayCommandMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ResponseMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/SessionIdMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/SessionInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/ShutdownInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/SubscriptionInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/TransactionInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/WireFormatInfoMarshallerTest.cpp \
+    activemq/wireformat/openwire/marshal/universal/XATransactionIdMarshallerTest.cpp \
     activemq/wireformat/openwire/utils/BooleanStreamTest.cpp \
     activemq/wireformat/openwire/utils/HexTableTest.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.cpp \
@@ -219,6 +275,62 @@ h_sources = \
     activemq/wireformat/openwire/OpenWireFormatTest.h \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h \
     activemq/wireformat/openwire/marshal/PrimitiveTypesMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQBlobMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQBytesMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQMapMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQObjectMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQQueueMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQStreamMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTempQueueMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTempTopicMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTextMessageMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ActiveMQTopicMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/BrokerIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/BrokerInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConnectionControlMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConnectionErrorMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConnectionIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConnectionInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConsumerControlMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConsumerIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ConsumerInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ControlCommandMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/DataArrayResponseMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/DataResponseMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/DestinationInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/DiscoveryEventMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ExceptionResponseMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/FlushCommandMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/IntegerResponseMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/JournalQueueAckMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/JournalTopicAckMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/JournalTraceMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/JournalTransactionMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/KeepAliveInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/LastPartialCommandMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/LocalTransactionIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/MessageAckMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/MessageDispatchMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/MessageDispatchNotificationMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/MessageIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/MessagePullMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/NetworkBridgeFilterMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/PartialCommandMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ProducerAckMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ProducerIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ProducerInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/RemoveInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/RemoveSubscriptionInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ReplayCommandMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ResponseMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/SessionIdMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/SessionInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/ShutdownInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/SubscriptionInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/TransactionInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/WireFormatInfoMarshallerTest.h \
+    activemq/wireformat/openwire/marshal/universal/XATransactionIdMarshallerTest.h \
     activemq/wireformat/openwire/utils/BooleanStreamTest.h \
     activemq/wireformat/openwire/utils/HexTableTest.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
@@ -312,12 +424,6 @@ h_sources = \
     decaf/util/zip/InflaterTest.h \
     util/teamcity/TeamCityProgressListener.h
 
-
-include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk
-include activemq/wireformat/openwire/marshal/v2/srcmakefile.mk
-include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
-include activemq/wireformat/openwire/marshal/v4/srcmakefile.mk
-include activemq/wireformat/openwire/marshal/v5/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test
