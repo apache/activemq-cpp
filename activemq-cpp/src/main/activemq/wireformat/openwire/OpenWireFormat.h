@@ -47,7 +47,10 @@ namespace marshal {
         static const unsigned char NULL_TYPE;
 
         // V1 if the default version we start at.
-        static const int DEFAULT_VERSION = 1;
+        static const int DEFAULT_VERSION;
+
+        // Defines the maximum supported openwire version
+        static const int MAX_SUPPORTED_VERSION;
 
     private:
 
