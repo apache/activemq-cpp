@@ -77,7 +77,7 @@ public class AmqCppMarshallingHeadersGenerator extends MultiSourceGenerator {
     public Object run() {
         filePostFix = getFilePostFix();
         if (destDir == null) {
-            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/v"+getOpenwireVersion());
+            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/universal");
         }
         Object answer = super.run();
         processFactory();
@@ -220,8 +220,8 @@ out.println(" */");
         generateLicence(out);
 
 out.println("");
-out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
-out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_UNIVERSAL_"+className.toUpperCase()+"_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_UNIVERSAL_"+className.toUpperCase()+"_H_");
 out.println("");
 out.println("// Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -232,7 +232,7 @@ out.println("");
     if( baseClass.equals("BaseDataStreamMarshaller") ) {
         out.println("#include <activemq/wireformat/openwire/marshal/"+baseClass+".h>");
     } else {
-        out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+baseClass+".h>");
+        out.println("#include <activemq/wireformat/openwire/marshal/universal/"+baseClass+".h>");
     }
 
 out.println("");
@@ -248,7 +248,7 @@ out.println("namespace activemq{");
 out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
-out.println("namespace v"+getOpenwireVersion()+"{");
+out.println("namespace universal{");
 out.println("");
 out.println("    /**");
 out.println("     * Marshaling code for Open Wire Format for "+className);
@@ -355,7 +355,7 @@ out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_UNIVERSAL_"+className.toUpperCase()+"_H_*/");
 out.println("");
         }
 
@@ -378,8 +378,8 @@ out.println("");
 
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
-out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
-out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_UNIVERSAL_MARSHALERFACTORY_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_UNIVERSAL_MARSHALERFACTORY_H_");
 out.println("");
 out.println("//       Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -392,7 +392,7 @@ out.println("namespace activemq{");
 out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
-out.println("namespace v"+getOpenwireVersion()+"{");
+out.println("namespace universal{");
 out.println("");
 out.println("    /**");
 out.println("     * Used to create marshallers for a specific version of the wire");
@@ -413,7 +413,7 @@ out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_UNIVERSAL_MARSHALLERFACTORY_H_*/");
     }
 
     public List<JClass> getConcreteClasses() {
