@@ -29,7 +29,7 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/wireformat/openwire/marshal/DataStreamMarshaller.h>
-#include <activemq/wireformat/openwire/marshal/universal/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/generated/MarshallerFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
@@ -76,7 +76,7 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 
     // initialize the universal marshalers, don't need to reset them again
     // after this so its safe to do this here.
-    universal::MarshallerFactory().configure( this );
+    generated::MarshallerFactory().configure( this );
 
     // Set to Default as lowest common denominator, then we will try
     // and move up to the preferred when the wireformat is negotiated.
