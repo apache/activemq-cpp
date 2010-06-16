@@ -568,7 +568,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         generateLicence(out);
 
 out.println("");
-out.println("#include <activemq/wireformat/openwire/marshal/universal/"+className+".h>");
+out.println("#include <activemq/wireformat/openwire/marshal/generated/"+className+".h>");
 out.println("");
 out.println("#include <activemq/commands/"+jclass.getSimpleName()+".h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
@@ -588,7 +588,7 @@ out.println("using namespace activemq::wireformat;");
 out.println("using namespace activemq::wireformat::openwire;");
 out.println("using namespace activemq::wireformat::openwire::marshal;");
 out.println("using namespace activemq::wireformat::openwire::utils;");
-out.println("using namespace activemq::wireformat::openwire::marshal::universal;");
+out.println("using namespace activemq::wireformat::openwire::marshal::generated;");
 out.println("using namespace decaf;");
 out.println("using namespace decaf::io;");
 out.println("using namespace decaf::lang;");
@@ -793,7 +793,7 @@ out.println("");
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
 
-out.println("#include <activemq/wireformat/openwire/marshal/universal/MarshallerFactory.h>");
+out.println("#include <activemq/wireformat/openwire/marshal/generated/MarshallerFactory.h>");
 
         List<JClass> list = new ArrayList<JClass>(getConcreteClasses());
         Collections.sort(list, new Comparator<JClass>(){
@@ -802,7 +802,7 @@ out.println("#include <activemq/wireformat/openwire/marshal/universal/Marshaller
         }});
 
         for ( JClass jclass : list ) {
-out.println("#include <activemq/wireformat/openwire/marshal/universal/"+jclass.getSimpleName()+"Marshaller.h>");
+out.println("#include <activemq/wireformat/openwire/marshal/generated/"+jclass.getSimpleName()+"Marshaller.h>");
         }
 
 out.println("");
@@ -821,7 +821,7 @@ out.println("using namespace activemq;");
 out.println("using namespace activemq::wireformat;");
 out.println("using namespace activemq::wireformat::openwire;");
 out.println("using namespace activemq::wireformat::openwire::marshal;");
-out.println("using namespace activemq::wireformat::openwire::marshal::universal;");
+out.println("using namespace activemq::wireformat::openwire::marshal::generated;");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
 out.println("void MarshallerFactory::configure( OpenWireFormat* format ) {");

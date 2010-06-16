@@ -33,9 +33,9 @@ public class AmqCppTestMarshallingClassesGenerator extends AmqCppTestMarshalling
         generateLicence(out);
 
 out.println("");
-out.println("#include <activemq/wireformat/openwire/marshal/universal/"+className+".h>");
+out.println("#include <activemq/wireformat/openwire/marshal/generated/"+className+".h>");
 out.println("");
-out.println("#include <activemq/wireformat/openwire/marshal/universal/"+super.getTargetClassName(jclass)+".h>");
+out.println("#include <activemq/wireformat/openwire/marshal/generated/"+super.getTargetClassName(jclass)+".h>");
 out.println("#include <activemq/commands/"+jclass.getSimpleName()+".h>");
 out.println("");
 out.println("#include <activemq/wireformat/openwire/OpenWireFormat.h>");
@@ -65,7 +65,7 @@ out.println("using namespace activemq::wireformat;");
 out.println("using namespace activemq::wireformat::openwire;");
 out.println("using namespace activemq::wireformat::openwire::marshal;");
 out.println("using namespace activemq::wireformat::openwire::utils;");
-out.println("using namespace activemq::wireformat::openwire::marshal::universal;");
+out.println("using namespace activemq::wireformat::openwire::marshal::generated;");
 out.println("using namespace decaf::io;");
 out.println("using namespace decaf::lang;");
 out.println("using namespace decaf::util;");
