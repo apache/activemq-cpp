@@ -38,12 +38,15 @@ namespace core{
         virtual ~ActiveMQAckHandler() {};
 
         /**
-         * Method called to acknowledge the message passed
-         * @param message Message to Acknowledge
-         * @throw CMSException
+         * Method called to acknowledge the message once it has been received by a
+         * MessageConsumer.
+         *
+         * @param message
+         *      The Message to Acknowledge.
+         *
+         * @throw CMSException if an error occurs while acknowledging the given Message.
          */
-        virtual void acknowledgeMessage( const commands::Message* message )
-            throw ( cms::CMSException ) = 0;
+        virtual void acknowledgeMessage( const commands::Message* message ) = 0;
 
     };
 

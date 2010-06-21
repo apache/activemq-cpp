@@ -126,17 +126,17 @@ ActiveMQQueueBrowser::~ActiveMQQueueBrowser() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const cms::Queue* ActiveMQQueueBrowser::getQueue() const throw ( cms::CMSException ) {
+const cms::Queue* ActiveMQQueueBrowser::getQueue() const {
     return this->queue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQQueueBrowser::getMessageSelector() const throw ( cms::CMSException ) {
+std::string ActiveMQQueueBrowser::getMessageSelector() const {
     return this->selector;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() throw ( cms::CMSException ) {
+cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
 
     try{
         checkClosed();
@@ -149,7 +149,7 @@ cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() throw ( cms::CMS
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQQueueBrowser::close() throw( cms::CMSException ) {
+void ActiveMQQueueBrowser::close() {
     try{
 
         if( this->closed ) {
@@ -193,7 +193,7 @@ bool ActiveMQQueueBrowser::hasMoreMessages() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQQueueBrowser::nextMessage() throw( cms::CMSException ) {
+cms::Message* ActiveMQQueueBrowser::nextMessage() {
 
     try{
 

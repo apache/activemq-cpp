@@ -81,17 +81,17 @@ namespace core {
 
         virtual ~TransactionSynhcronization() {}
 
-        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
+        virtual void beforeEnd() {
             consumer->acknowledge();
             consumer->setSynchronizationRegistered( false );
         }
 
-        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
+        virtual void afterCommit() {
             consumer->commit();
             consumer->setSynchronizationRegistered( false );
         }
 
-        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
+        virtual void afterRollback() {
             consumer->rollback();
             consumer->setSynchronizationRegistered( false );
         }
@@ -122,14 +122,14 @@ namespace core {
 
         virtual ~CloseSynhcronization() {}
 
-        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
+        virtual void beforeEnd() {
         }
 
-        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
+        virtual void afterCommit() {
             consumer->doClose();
         }
 
-        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
+        virtual void afterRollback() {
             consumer->doClose();
         }
 
@@ -149,8 +149,7 @@ namespace core {
             this->session = session;
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
-            throw ( cms::CMSException ) {
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
 
             try {
                 this->session->acknowledge();
@@ -175,8 +174,7 @@ namespace core {
             this->dispatch = dispatch;
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
-            throw ( cms::CMSException ) {
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
 
             try {
 
@@ -281,8 +279,7 @@ void ActiveMQConsumer::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::close()
-    throw ( cms::CMSException ) {
+void ActiveMQConsumer::close() {
 
     try{
         if( !this->isClosed() ) {
@@ -312,7 +309,7 @@ void ActiveMQConsumer::close()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
+void ActiveMQConsumer::doClose() {
 
     try {
 
@@ -379,8 +376,7 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConsumer::getMessageSelector() const
-    throw ( cms::CMSException ) {
+std::string ActiveMQConsumer::getMessageSelector() const {
 
     try {
         // Fetch the Selector
@@ -390,8 +386,7 @@ std::string ActiveMQConsumer::getMessageSelector() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeout )
-    throw ( cms::CMSException ) {
+decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeout ) {
 
     try {
 
@@ -440,7 +435,7 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
+cms::Message* ActiveMQConsumer::receive() {
 
     try{
 
@@ -473,8 +468,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive( int millisecs )
-    throw ( cms::CMSException ) {
+cms::Message* ActiveMQConsumer::receive( int millisecs ) {
 
     try {
 
@@ -507,8 +501,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receiveNoWait()
-    throw ( cms::CMSException ) {
+cms::Message* ActiveMQConsumer::receiveNoWait() {
 
     try {
 
@@ -541,7 +534,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
+void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
 
     try{
 
@@ -676,8 +669,7 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::deliverAcks()
-    throw ( ActiveMQException ) {
+void ActiveMQConsumer::deliverAcks() {
 
     try{
 
@@ -721,8 +713,7 @@ void ActiveMQConsumer::deliverAcks()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int ackType )
-    throw ( ActiveMQException ) {
+void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int ackType ) {
 
     // Don't acknowledge now, but we may need to let the broker know the
     // consumer got the message to expand the pre-fetch window
@@ -797,8 +788,7 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
-   throw ( cms::CMSException ) {
+void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& dispatch ) {
 
     try{
 
@@ -836,7 +826,7 @@ void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& di
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
+void ActiveMQConsumer::acknowledge() {
 
     try{
 
@@ -871,7 +861,7 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::commit() throw( ActiveMQException ) {
+void ActiveMQConsumer::commit() {
 
     synchronized( &dispatchedMessages ) {
         dispatchedMessages.clear();
@@ -880,7 +870,7 @@ void ActiveMQConsumer::commit() throw( ActiveMQException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
+void ActiveMQConsumer::rollback() {
 
     synchronized( &unconsumedMessages ) {
 
@@ -1033,8 +1023,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::sendPullRequest( long long timeout )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQConsumer::sendPullRequest( long long timeout ) {
 
     try {
 
@@ -1061,7 +1050,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::checkClosed() const throw( ActiveMQException ) {
+void ActiveMQConsumer::checkClosed() const {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
