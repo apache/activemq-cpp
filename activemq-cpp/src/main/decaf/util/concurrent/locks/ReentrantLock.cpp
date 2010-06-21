@@ -473,6 +473,8 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
     lock->lock_count = 0;
     lock->lock_owner_tid = 0;
 
+#ifdef HAVE_PTHREAD_H
+
     // Get time now as nanoseconds.
     struct timeval tv;
     gettimeofday( &tv, NULL );
@@ -486,8 +488,13 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
     abstime.tv_sec = TimeUnit::NANOSECONDS.toSeconds( delay );
     abstime.tv_nsec = delay % 1000000000;
 
-#ifdef HAVE_PTHREAD_H
     unsigned int result = pthread_cond_timedwait( &condition, &lock->handle, &abstime );
+
+    if( result != 0 && result != ETIMEDOUT ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to wait on OS Condition object." );
+    }
+
 #else
 
 #endif
@@ -496,11 +503,6 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
     lock->lock_owner = lock_owner;
     lock->lock_count = lock_count;
     lock->lock_owner_tid = lock_owner_tid;
-
-    if( result != 0 && result != ETIMEDOUT ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to wait on OS Condition object." );
-    }
 
     return 0;
 }
