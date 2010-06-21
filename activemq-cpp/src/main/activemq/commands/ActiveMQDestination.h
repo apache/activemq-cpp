@@ -102,7 +102,7 @@ namespace commands{
 
         ActiveMQDestination();
         ActiveMQDestination( const std::string& physicalName );
-        virtual ~ActiveMQDestination() {}
+        virtual ~ActiveMQDestination() throw() {}
 
         /**
          * Clone this object and return a new instance that the

@@ -59,7 +59,7 @@ namespace core{
             this->ack = ack;
         }
 
-        virtual ~MyCMSMessageListener(){
+        virtual ~MyCMSMessageListener() throw() {
             clear();
         }
 
@@ -71,7 +71,7 @@ namespace core{
             messages.clear();
         }
 
-        virtual void onMessage( const cms::Message* message ) {
+        virtual void onMessage( const cms::Message* message ) throw() {
 
             synchronized( &mutex ) {
                 if( ack ){

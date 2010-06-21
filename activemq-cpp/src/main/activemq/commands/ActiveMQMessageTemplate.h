@@ -51,7 +51,7 @@ namespace commands {
                     this, &this->getMessageProperties() ) );
         }
 
-        virtual ~ActiveMQMessageTemplate() {}
+        virtual ~ActiveMQMessageTemplate() throw() {}
 
     public:  // cms::Message related methods
 

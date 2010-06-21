@@ -56,7 +56,7 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::~AdvisoryConsumer() {
+AdvisoryConsumer::~AdvisoryConsumer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ void AdvisoryConsumer::close() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AdvisoryConsumer::onMessage( const cms::Message* message ) {
+void AdvisoryConsumer::onMessage( const cms::Message* message ) throw() {
 
     if( message->getCMSType() == "Advisory" ) {
 

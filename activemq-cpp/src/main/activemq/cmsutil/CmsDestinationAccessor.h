@@ -83,39 +83,14 @@ namespace cmsutil {
 
     protected:
 
-        /**
-         * Initializes the destination resolver.
-         */
-        virtual void init()
-            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+        virtual void init();
 
-        /**
-         * Calls destroy() on the destination resolver.
-         */
-        virtual void destroy()
-            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+        virtual void destroy();
 
-        /**
-         * Resolves the destination via the <code>DestinationResolver</code>.
-         * @param session
-         *      the session
-         * @param destName
-         *      the name of the destination.
-         * @return the destination
-         * @throws cms::CMSException if resolution failed.
-         * @throws decaf::lang::exceptions::IllegalStateException if the destination
-         *      resolver property is NULL.
-         */
-        virtual cms::Destination* resolveDestinationName(
-            cms::Session* session,
-            const std::string& destName )
-                throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+        virtual cms::Destination* resolveDestinationName( cms::Session* session,
+                                                          const std::string& destName );
 
-        /**
-         * Verifies that the destination resolver is valid.
-         */
-        virtual void checkDestinationResolver()
-            throw ( decaf::lang::exceptions::IllegalStateException );
+        virtual void checkDestinationResolver();
 
     };
 

@@ -31,7 +31,7 @@ PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession::~PooledSession(){
+PooledSession::~PooledSession() throw() {
 
     // Destroy cached producers.
     std::vector<CachedProducer*> cachedProducers = producerCache.values();
@@ -49,7 +49,7 @@ PooledSession::~PooledSession(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledSession::close() throw( cms::CMSException ) {
+void PooledSession::close() {
 
     if( pool != NULL ) {
         pool->returnSession( this );
@@ -57,23 +57,17 @@ void PooledSession::close() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue )
-    throw( cms::CMSException ) {
-
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue ) {
     return session->createBrowser( queue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector )
-    throw( cms::CMSException ) {
-
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector ) {
     return session->createBrowser( queue, selector );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* PooledSession::createCachedProducer(
-        const cms::Destination* destination )
-    throw ( cms::CMSException ) {
+cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destination* destination ) {
 
     try {
 
@@ -109,10 +103,9 @@ cms::MessageProducer* PooledSession::createCachedProducer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* PooledSession::createCachedConsumer(
-    const cms::Destination* destination,
-    const std::string& selector,
-    bool noLocal ) throw ( cms::CMSException ) {
+cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destination* destination,
+                                                           const std::string& selector,
+                                                           bool noLocal ) {
 
     try {
 

@@ -31,7 +31,7 @@ namespace cmsutil {
     class AMQCPP_API ProducerCallback {
     public:
 
-        virtual ~ProducerCallback(){}
+        virtual ~ProducerCallback() throw() {}
 
         /**
          * Execute an action given a session and producer.
@@ -40,10 +40,10 @@ namespace cmsutil {
          *          the CMS <code>Session</code>
          * @param producer
          *          the CMS <code>Producer</code>
+         *
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual void doInCms( cms::Session* session, cms::MessageProducer* producer )
-            throw ( cms::CMSException ) = 0;
+        virtual void doInCms( cms::Session* session, cms::MessageProducer* producer ) = 0;
 
     };
 

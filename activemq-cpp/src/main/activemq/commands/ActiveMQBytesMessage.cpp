@@ -93,7 +93,7 @@ ActiveMQBytesMessage::ActiveMQBytesMessage() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBytesMessage::~ActiveMQBytesMessage() {
+ActiveMQBytesMessage::~ActiveMQBytesMessage() throw() {
     this->reset();
 }
 

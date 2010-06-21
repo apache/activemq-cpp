@@ -83,9 +83,9 @@ namespace cmsutil {
          *
          * @return the pooled session object
          *
-         * @throws cms::CMSException if an error occurred
+         * @throws CMSException if an error occurred
          */
-        virtual PooledSession* takeSession() throw ( cms::CMSException );
+        virtual PooledSession* takeSession();
 
         /**
          * Returns a session to the pool.

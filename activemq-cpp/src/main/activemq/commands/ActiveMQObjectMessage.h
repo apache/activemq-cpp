@@ -46,7 +46,7 @@ namespace commands{
     public:
 
         ActiveMQObjectMessage();
-        virtual ~ActiveMQObjectMessage() {}
+        virtual ~ActiveMQObjectMessage() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 

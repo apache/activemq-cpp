@@ -51,12 +51,12 @@ namespace advisories {
     public:
 
         TempDestinationAdvisoryConsumer( cms::Session* session );
-        virtual ~TempDestinationAdvisoryConsumer();
+        virtual ~TempDestinationAdvisoryConsumer() throw();
 
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message );
+        virtual void onMessage( const cms::Message* message ) throw();
 
     };
 

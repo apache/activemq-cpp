@@ -137,7 +137,7 @@ namespace core{
         ActiveMQConnection( const Pointer<transport::Transport>& transport,
                             const Pointer<decaf::util::Properties>& properties );
 
-        virtual ~ActiveMQConnection();
+        virtual ~ActiveMQConnection() throw();
 
         /**
          * Removes the session resources for the given session

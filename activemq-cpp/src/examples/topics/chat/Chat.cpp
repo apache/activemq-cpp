@@ -47,7 +47,7 @@ Chat::Chat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Chat::~Chat() {
+Chat::~Chat() throw() {
 
     try {
 
@@ -164,7 +164,7 @@ void Chat::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Chat::onMessage( const cms::Message* message ) {
+void Chat::onMessage( const cms::Message* message ) throw() {
 
     // Cast the message as a TextMessage if possible.
     try {

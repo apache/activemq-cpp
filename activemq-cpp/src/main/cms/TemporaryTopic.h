@@ -39,7 +39,7 @@ namespace cms{
     class CMS_API TemporaryTopic : public Destination {
     public:
 
-        virtual ~TemporaryTopic() {}
+        virtual ~TemporaryTopic() throw() {}
 
         /**
          * Gets the name of this topic.
@@ -48,14 +48,14 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual std::string getTopicName() const throw( CMSException ) = 0;
+        virtual std::string getTopicName() const = 0;
 
         /**
          * Destroy's the Temporary Destination at the Provider
          *
          * @throws CMSException
          */
-        virtual void destroy() throw ( CMSException ) = 0;
+        virtual void destroy() = 0;
 
    };
 

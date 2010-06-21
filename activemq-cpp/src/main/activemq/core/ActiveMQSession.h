@@ -141,7 +141,7 @@ namespace core{
                          const decaf::util::Properties& properties,
                          ActiveMQConnection* connection );
 
-        virtual ~ActiveMQSession();
+        virtual ~ActiveMQSession() throw();
 
         /**
          * Redispatches the given set of unconsumed messages to the consumers.

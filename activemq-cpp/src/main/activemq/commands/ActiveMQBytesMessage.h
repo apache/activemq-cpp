@@ -74,7 +74,7 @@ namespace commands{
 
         ActiveMQBytesMessage();
 
-        virtual ~ActiveMQBytesMessage();
+        virtual ~ActiveMQBytesMessage() throw();
 
         virtual unsigned char getDataStructureType() const;
 

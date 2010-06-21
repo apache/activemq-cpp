@@ -38,7 +38,7 @@ namespace cmsutil {
         DummyConnection(MessageContext* messageContext ) {
             this->messageContext = messageContext;
         }
-        virtual ~DummyConnection() {}
+        virtual ~DummyConnection() throw() {}
 
         virtual const cms::ConnectionMetaData* getMetaData() const throw( cms::CMSException ) {
             return NULL;

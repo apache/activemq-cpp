@@ -49,7 +49,7 @@ namespace commands{
     public:
 
         ActiveMQTextMessage();
-        virtual ~ActiveMQTextMessage();
+        virtual ~ActiveMQTextMessage() throw();
 
         virtual unsigned char getDataStructureType() const;
 

@@ -94,7 +94,7 @@ ActiveMQSession::ActiveMQSession( const Pointer<SessionInfo>& sessionInfo,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSession::~ActiveMQSession() {
+ActiveMQSession::~ActiveMQSession() throw() {
     try{
         // Destroy this session's resources
         close();

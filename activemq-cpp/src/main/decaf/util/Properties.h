@@ -91,7 +91,7 @@ namespace util{
         /**
          * @return The number of Properties in this Properties Object.
          */
-        std::size_t size() const;
+        int size() const;
 
         /**
          * Looks up the value for the given property.

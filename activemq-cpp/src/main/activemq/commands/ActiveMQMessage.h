@@ -45,7 +45,7 @@ namespace commands{
     public:
 
         ActiveMQMessage();
-        virtual ~ActiveMQMessage() {}
+        virtual ~ActiveMQMessage() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 

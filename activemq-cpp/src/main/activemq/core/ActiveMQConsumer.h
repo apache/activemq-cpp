@@ -158,7 +158,7 @@ namespace core{
                           bool dispatchAsync,
                           cms::MessageListener* listener );
 
-        virtual ~ActiveMQConsumer();
+        virtual ~ActiveMQConsumer() throw();
 
     public:  // Interface Implementation
 

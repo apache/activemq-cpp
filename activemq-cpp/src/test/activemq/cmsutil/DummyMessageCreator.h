@@ -26,10 +26,10 @@ namespace cmsutil {
 
     class DummyMessageCreator : public MessageCreator {
     public:
-        
-        virtual ~DummyMessageCreator() {}
-        
-        virtual cms::Message* createMessage(cms::Session* session ) 
+
+        virtual ~DummyMessageCreator() throw() {}
+
+        virtual cms::Message* createMessage(cms::Session* session )
                     throw (cms::CMSException) {
             return new DummyMessage();
         }

@@ -55,7 +55,7 @@ namespace commands{
     public:
 
         ActiveMQMapMessage();
-        virtual ~ActiveMQMapMessage();
+        virtual ~ActiveMQMapMessage() throw();
 
         virtual unsigned char getDataStructureType() const;
 

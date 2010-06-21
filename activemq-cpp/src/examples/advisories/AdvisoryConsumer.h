@@ -50,7 +50,7 @@ namespace advisories {
     public:
 
         AdvisoryConsumer( cms::Session* session );
-        virtual ~AdvisoryConsumer();
+        virtual ~AdvisoryConsumer() throw();
 
         /**
          * Close down Consumer resources.
@@ -60,7 +60,7 @@ namespace advisories {
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message );
+        virtual void onMessage( const cms::Message* message ) throw();
 
     };
 

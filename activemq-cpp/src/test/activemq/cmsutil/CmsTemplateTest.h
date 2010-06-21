@@ -70,7 +70,7 @@ namespace cmsutil{
                 priority = 0;
                 ttl = 0LL;
             }
-            virtual ~MySendListener(){}
+            virtual ~MySendListener() throw() {}
 
             virtual void onSend(const cms::Destination* destination,
                 cms::Message* message, int deliveryMode, int priority,
@@ -99,7 +99,7 @@ namespace cmsutil{
 
             FailSendListener() {
             }
-            virtual ~FailSendListener(){}
+            virtual ~FailSendListener() throw() {}
 
             virtual void onSend(const cms::Destination* destination,
                     cms::Message* message, int deliveryMode, int priority,
@@ -124,7 +124,7 @@ namespace cmsutil{
             MySessionCallback() {
                 session = NULL;
             }
-            virtual ~MySessionCallback(){}
+            virtual ~MySessionCallback() throw() {}
 
             virtual void doInCms(cms::Session* session) throw (cms::CMSException) {
                 this->session = session;
@@ -142,7 +142,7 @@ namespace cmsutil{
                 session = NULL;
                 producer = NULL;
             }
-            virtual ~MyProducerCallback(){}
+            virtual ~MyProducerCallback() throw() {}
 
             virtual void doInCms(cms::Session* session,
                     cms::MessageProducer* producer) throw (cms::CMSException) {

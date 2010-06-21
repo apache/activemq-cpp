@@ -50,7 +50,7 @@ namespace commands{
 
         ActiveMQTopic();
         ActiveMQTopic( const std::string& name );
-        virtual ~ActiveMQTopic();
+        virtual ~ActiveMQTopic() throw();
 
         virtual unsigned char getDataStructureType() const;
 

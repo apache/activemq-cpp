@@ -43,7 +43,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs while stopping the Service.
          */
-        virtual void stop() throw( CMSException ) = 0;
+        virtual void stop() = 0;
 
     };
 }

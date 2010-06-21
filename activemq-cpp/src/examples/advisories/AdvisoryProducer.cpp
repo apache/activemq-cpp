@@ -54,7 +54,7 @@ AdvisoryProducer::AdvisoryProducer( cms::Session* session ) : shutdownLatch(1) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryProducer::~AdvisoryProducer() {
+AdvisoryProducer::~AdvisoryProducer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ void AdvisoryProducer::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AdvisoryProducer::onMessage( const cms::Message* message ) {
+void AdvisoryProducer::onMessage( const cms::Message* message ) throw() {
 
     if( message->getCMSType() == "Advisory" ) {
 

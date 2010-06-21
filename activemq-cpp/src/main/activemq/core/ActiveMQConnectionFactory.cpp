@@ -153,8 +153,7 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
-    throw ( cms::CMSException ) {
+cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI ) {
 
     return new ActiveMQConnectionFactory( brokerURI );
 }
@@ -174,7 +173,7 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
+ActiveMQConnectionFactory::~ActiveMQConnectionFactory() throw() {
     try{
         delete this->settings;
     }
@@ -183,27 +182,21 @@ ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection()
-    throw ( cms::CMSException ) {
-
+cms::Connection* ActiveMQConnectionFactory::createConnection() {
     return createConnection( settings->brokerURL, settings->username, settings->password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& username,
-    const std::string& password )
-        throw ( cms::CMSException ) {
+cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
+                                                              const std::string& password ) {
 
     return createConnection( settings->brokerURL, username, password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& username,
-    const std::string& password,
-    const std::string& clientId )
-        throw ( cms::CMSException ) {
+cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
+                                                              const std::string& password,
+                                                              const std::string& clientId ) {
 
     return createConnection( settings->brokerURL, username, password, clientId );
 }
@@ -212,8 +205,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::string& url,
                                                                 const std::string& username,
                                                                 const std::string& password,
-                                                                const std::string& clientId )
-    throw ( cms::CMSException ) {
+                                                                const std::string& clientId ) {
 
     Pointer<Transport> transport;
     auto_ptr<ActiveMQConnection> connection;
@@ -287,8 +279,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& url,
     const std::string& username,
     const std::string& password,
-    const std::string& clientId )
-       throw ( cms::CMSException ) {
+    const std::string& clientId ) {
 
     ActiveMQConnectionFactory factory;
 

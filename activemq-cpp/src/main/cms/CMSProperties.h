@@ -34,7 +34,15 @@ namespace cms{
     class CMS_API CMSProperties {
     public:
 
-        virtual ~CMSProperties(){}
+        virtual ~CMSProperties() throw() {}
+
+        /**
+         * Returns the current count of all the Properties that are currently stored in
+         * the Properties object.
+         *
+         * @return the number of properties currently stored.
+         */
+        virtual int size() const = 0;
 
         /**
          * Returns true if the properties object is empty
@@ -63,9 +71,8 @@ namespace cms{
          * @return The value of the property specified by <code>name</code>, if it
          *         exists, otherwise the <code>defaultValue</code>.
          */
-        virtual std::string getProperty(
-            const std::string& name,
-            const std::string& defaultValue ) const = 0;
+        virtual std::string getProperty( const std::string& name,
+                                         const std::string& defaultValue ) const = 0;
 
         /**
          * Sets the value for a given property.  If the property already
@@ -76,9 +83,8 @@ namespace cms{
          * @param value
          *      The value to be written.
          */
-        virtual void setProperty(
-            const std::string& name,
-            const std::string& value ) = 0;
+        virtual void setProperty( const std::string& name,
+                                  const std::string& value ) = 0;
 
         /**
          * Check to see if the Property exists in the set
@@ -90,12 +96,24 @@ namespace cms{
         virtual bool hasProperty( const std::string& name ) const = 0;
 
         /**
-         * Removes the property with the given name.
+         * Removes the property with the given name.  If the property existed in the
+         * collection then it is removed and returned, otherwise an empty string is
+         * returned.
          *
          * @param name
-         *      the name of the property to be removed.s
+         *      the name of the property to be removed.
+         *
+         * @returns the value that was removed from the Properties, or empty string.
          */
-        virtual void remove( const std::string& name ) = 0;
+        virtual std::string remove( const std::string& name ) = 0;
+
+        /**
+         * Returns a vector containing all the names of the properties currently stored
+         * in the Properties object.
+         *
+         * @returns an STL std::vector<std::string> with all the currently stored property names.
+         */
+        virtual std::vector<std::string> propertyNames() const = 0;
 
         /**
          * Method that serializes the contents of the property map to

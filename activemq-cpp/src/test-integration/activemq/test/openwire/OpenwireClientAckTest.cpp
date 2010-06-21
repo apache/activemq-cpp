@@ -48,7 +48,9 @@ namespace {
             this->dontAck = dontAck;
         }
 
-        virtual void onMessage( const Message* message ) {
+        virtual ~MyMesageListener() throw() {}
+
+        virtual void onMessage( const Message* message ) throw() {
 
             CPPUNIT_ASSERT( message != NULL );
 

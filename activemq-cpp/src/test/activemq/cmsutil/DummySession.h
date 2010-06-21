@@ -43,7 +43,7 @@ namespace cmsutil {
             this->messageContext = messageContext;
         }
 
-        virtual ~DummySession() {}
+        virtual ~DummySession() throw() {}
 
         virtual void close() throw( cms::CMSException ){}
 

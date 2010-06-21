@@ -32,7 +32,7 @@ ActiveMQTempTopic::ActiveMQTempTopic( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempTopic::~ActiveMQTempTopic() {
+ActiveMQTempTopic::~ActiveMQTempTopic() throw() {
     try {
         this->close();
     }

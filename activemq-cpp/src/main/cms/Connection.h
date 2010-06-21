@@ -72,16 +72,15 @@ namespace cms{
     {
     public:
 
-        virtual ~Connection() {}
+        virtual ~Connection() throw() {}
 
         /**
-         * Closes this connection as well as any Sessions
-         * created from it (and those Sessions' consumers and
-         * producers).
+         * Closes this connection as well as any Sessions created from it
+         * (and those Sessions' consumers and producers).
          *
          * @throws CMSException
          */
-        virtual void close() throw( CMSException ) = 0;
+        virtual void close() = 0;
 
         /**
          * Gets the metadata for this connection.
@@ -94,14 +93,14 @@ namespace cms{
          * @see ConnectionMetaData
          * @since 2.0
          */
-        virtual const ConnectionMetaData* getMetaData() const throw( CMSException ) = 0;
+        virtual const ConnectionMetaData* getMetaData() const = 0;
 
         /**
          * Creates an AUTO_ACKNOWLEDGE Session.
          *
          * @throws CMSException
          */
-        virtual Session* createSession() throw ( CMSException ) = 0;
+        virtual Session* createSession() = 0;
 
         /**
          * Creates a new Session to work for this Connection using the
@@ -109,10 +108,10 @@ namespace cms{
          *
          * @param ackMode
          *        the Acknowledgment Mode to use.
+         *
          * @throws CMSException
          */
-        virtual Session* createSession( Session::AcknowledgeMode ackMode )
-            throw ( CMSException ) = 0;
+        virtual Session* createSession( Session::AcknowledgeMode ackMode ) = 0;
 
         /**
          * Get the Client Id for this session, the client Id is provider specific and is either

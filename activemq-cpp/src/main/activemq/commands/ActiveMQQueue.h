@@ -50,7 +50,7 @@ namespace commands{
 
         ActiveMQQueue();
         ActiveMQQueue( const std::string& name );
-        virtual ~ActiveMQQueue() {}
+        virtual ~ActiveMQQueue() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 

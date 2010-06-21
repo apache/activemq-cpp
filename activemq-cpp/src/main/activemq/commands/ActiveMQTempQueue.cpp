@@ -33,7 +33,7 @@ ActiveMQTempQueue::ActiveMQTempQueue( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempQueue::~ActiveMQTempQueue() {
+ActiveMQTempQueue::~ActiveMQTempQueue() throw() {
     try {
         this->close();
     }

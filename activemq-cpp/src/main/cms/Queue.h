@@ -37,7 +37,7 @@ namespace cms{
     class CMS_API Queue : public Destination{
     public:
 
-        virtual ~Queue(){}
+        virtual ~Queue() throw() {}
 
         /**
          * Gets the name of this queue.
@@ -46,8 +46,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual std::string getQueueName() const
-            throw( CMSException ) = 0;
+        virtual std::string getQueueName() const = 0;
 
     };
 

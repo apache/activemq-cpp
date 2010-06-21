@@ -154,10 +154,10 @@ bool Properties::isEmpty() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Properties::size() const {
+int Properties::size() const {
 
     synchronized( &( internal->properties ) ) {
-        return internal->properties.size();
+        return (int)internal->properties.size();
     }
 
     return 0;

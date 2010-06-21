@@ -253,7 +253,7 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::~ActiveMQConsumer() {
+ActiveMQConsumer::~ActiveMQConsumer() throw() {
 
     try {
         close();
