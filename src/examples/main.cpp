@@ -200,7 +200,7 @@ public:
         this->sessionTransacted = sessionTransacted;
         this->brokerURI = brokerURI;
     }
-    virtual ~HelloWorldConsumer(){
+    virtual ~HelloWorldConsumer() throw() {
         cleanup();
     }
 
@@ -263,7 +263,7 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ){
+    virtual void onMessage( const Message* message ) throw() {
 
         static int count = 0;
 

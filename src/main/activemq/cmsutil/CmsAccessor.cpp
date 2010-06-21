@@ -35,8 +35,11 @@ CmsAccessor::~CmsAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsAccessor::createConnection()
-    throw ( cms::CMSException,IllegalStateException ) {
+void CmsAccessor::init() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* CmsAccessor::createConnection() {
 
     try {
 
@@ -55,8 +58,7 @@ cms::Connection* CmsAccessor::createConnection()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* CmsAccessor::createSession( cms::Connection* con )
-    throw ( cms::CMSException,IllegalStateException ) {
+cms::Session* CmsAccessor::createSession( cms::Connection* con ) {
 
     try {
 
@@ -79,7 +81,7 @@ cms::Session* CmsAccessor::createSession( cms::Connection* con )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsAccessor::checkConnectionFactory() throw ( IllegalStateException ) {
+void CmsAccessor::checkConnectionFactory() {
     if( getConnectionFactory() == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__,

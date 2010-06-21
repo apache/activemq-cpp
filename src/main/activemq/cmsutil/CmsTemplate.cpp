@@ -82,7 +82,7 @@ CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDesti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::~CmsTemplate() {
+CmsTemplate::~CmsTemplate() throw() {
 
     try {
         destroy();
@@ -143,7 +143,7 @@ void CmsTemplate::destroySessionPools() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::init() throw ( cms::CMSException, IllegalStateException ) {
+void CmsTemplate::init() {
 
     try {
 
@@ -161,7 +161,7 @@ void CmsTemplate::init() throw ( cms::CMSException, IllegalStateException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroy() throw ( cms::CMSException, IllegalStateException ) {
+void CmsTemplate::destroy() {
 
     try {
 
@@ -186,7 +186,7 @@ void CmsTemplate::destroy() throw ( cms::CMSException, IllegalStateException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::checkDefaultDestination() throw ( IllegalStateException ) {
+void CmsTemplate::checkDefaultDestination() {
     if( this->defaultDestination == NULL && this->defaultDestinationName.size()==0 ) {
         throw IllegalStateException(
             __FILE__, __LINE__,
@@ -196,8 +196,7 @@ void CmsTemplate::checkDefaultDestination() throw ( IllegalStateException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session )
-    throw ( cms::CMSException ) {
+cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session ) {
 
     try {
 
@@ -223,8 +222,7 @@ cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsTemplate::getConnection()
-    throw ( cms::CMSException ) {
+cms::Connection* CmsTemplate::getConnection() {
 
     try {
 
@@ -261,8 +259,7 @@ cms::Connection* CmsTemplate::getConnection()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession* CmsTemplate::takeSession()
-    throw ( cms::CMSException ) {
+PooledSession* CmsTemplate::takeSession() {
 
     try {
 
@@ -278,8 +275,7 @@ PooledSession* CmsTemplate::takeSession()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::returnSession( PooledSession*& session )
-    throw ( cms::CMSException ) {
+void CmsTemplate::returnSession( PooledSession*& session ) {
 
     try {
 
@@ -297,7 +293,7 @@ void CmsTemplate::returnSession( PooledSession*& session )
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageProducer* CmsTemplate::createProducer(
-    cms::Session* session, cms::Destination* dest) throw ( cms::CMSException ) {
+    cms::Session* session, cms::Destination* dest ) {
 
     try {
 
@@ -330,8 +326,7 @@ cms::MessageProducer* CmsTemplate::createProducer(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageConsumer* CmsTemplate::createConsumer(
-    cms::Session* session, cms::Destination* dest, const std::string& selector, bool noLocal )
-        throw ( cms::CMSException ) {
+    cms::Session* session, cms::Destination* dest, const std::string& selector, bool noLocal ) {
 
     try {
 
@@ -359,8 +354,7 @@ cms::MessageConsumer* CmsTemplate::createConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyProducer( cms::MessageProducer*& producer )
-    throw ( cms::CMSException ) {
+void CmsTemplate::destroyProducer( cms::MessageProducer*& producer ) {
 
     if( producer == NULL ) {
         return;
@@ -383,8 +377,7 @@ void CmsTemplate::destroyProducer( cms::MessageProducer*& producer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer )
-    throw ( cms::CMSException ) {
+void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer ) {
 
     if( consumer == NULL ) {
         return;
@@ -407,7 +400,7 @@ void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyMessage( cms::Message*& message) {
+void CmsTemplate::destroyMessage( cms::Message*& message ) {
 
     if( message == NULL ) {
         return;
@@ -419,7 +412,7 @@ void CmsTemplate::destroyMessage( cms::Message*& message) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( SessionCallback* action ) throw ( cms::CMSException ) {
+void CmsTemplate::execute( SessionCallback* action ) {
 
     PooledSession* pooledSession = NULL;
 
@@ -447,7 +440,7 @@ void CmsTemplate::execute( SessionCallback* action ) throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( ProducerCallback* action ) throw ( cms::CMSException ) {
+void CmsTemplate::execute( ProducerCallback* action ) {
 
     try {
 
@@ -466,8 +459,7 @@ void CmsTemplate::execute( ProducerCallback* action ) throw ( cms::CMSException 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action )
-    throw ( cms::CMSException ) {
+void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action ) {
 
     try {
 
@@ -486,8 +478,7 @@ void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( const std::string& destinationName, ProducerCallback* action )
-    throw ( cms::CMSException ) {
+void CmsTemplate::execute( const std::string& destinationName, ProducerCallback* action ) {
 
     try {
 
@@ -506,8 +497,7 @@ void CmsTemplate::execute( const std::string& destinationName, ProducerCallback*
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session )
-    throw ( cms::CMSException ) {
+void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session ) {
 
     cms::MessageProducer* producer = NULL;
 
@@ -532,8 +522,7 @@ void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination(
-    cms::Session* session ) throw ( cms::CMSException ) {
+cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination( cms::Session* session ) {
 
     try {
         return parent->resolveDestinationName( session, destinationName );
@@ -544,8 +533,7 @@ cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::send( MessageCreator* messageCreator )
-    throw ( cms::CMSException ) {
+void CmsTemplate::send( MessageCreator* messageCreator ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
@@ -556,8 +544,7 @@ void CmsTemplate::send( MessageCreator* messageCreator )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::send( cms::Destination* dest, MessageCreator* messageCreator )
-    throw ( cms::CMSException ) {
+void CmsTemplate::send( cms::Destination* dest, MessageCreator* messageCreator ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
@@ -569,8 +556,7 @@ void CmsTemplate::send( cms::Destination* dest, MessageCreator* messageCreator )
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::send( const std::string& destinationName,
-                        MessageCreator* messageCreator )
-    throw ( cms::CMSException ) {
+                        MessageCreator* messageCreator ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
@@ -583,7 +569,7 @@ void CmsTemplate::send( const std::string& destinationName,
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::doSend( cms::Session* session,
                           cms::MessageProducer* producer,
-                          MessageCreator* messageCreator) throw ( cms::CMSException ) {
+                          MessageCreator* messageCreator) {
 
     cms::Message* message = NULL;
 
@@ -618,8 +604,7 @@ void CmsTemplate::doSend( cms::Session* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer )
-    throw ( cms::CMSException ) {
+cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer ) {
 
     try {
 
@@ -647,8 +632,7 @@ cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session )
-    throw ( cms::CMSException ) {
+void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session ) {
 
     cms::MessageConsumer* consumer = NULL;
     message = NULL;
@@ -677,7 +661,7 @@ void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session )
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* CmsTemplate::ResolveReceiveExecutor::getDestination(
-    cms::Session* session ) throw ( cms::CMSException ) {
+    cms::Session* session ) {
 
     try {
         return parent->resolveDestinationName( session, destinationName );
@@ -688,7 +672,7 @@ cms::Destination* CmsTemplate::ResolveReceiveExecutor::getDestination(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive() throw ( cms::CMSException ) {
+cms::Message* CmsTemplate::receive() {
 
     try {
 
@@ -702,8 +686,7 @@ cms::Message* CmsTemplate::receive() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive( cms::Destination* destination )
-    throw ( cms::CMSException ) {
+cms::Message* CmsTemplate::receive( cms::Destination* destination ) {
 
     try {
 
@@ -717,8 +700,7 @@ cms::Message* CmsTemplate::receive( cms::Destination* destination )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive( const std::string& destinationName )
-    throw ( cms::CMSException ) {
+cms::Message* CmsTemplate::receive( const std::string& destinationName ) {
 
     try {
 
@@ -733,8 +715,7 @@ cms::Message* CmsTemplate::receive( const std::string& destinationName )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receiveSelected( const std::string& selector )
-    throw ( cms::CMSException ) {
+cms::Message* CmsTemplate::receiveSelected( const std::string& selector ) {
 
     try {
 
@@ -750,8 +731,7 @@ cms::Message* CmsTemplate::receiveSelected( const std::string& selector )
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* CmsTemplate::receiveSelected( cms::Destination* destination,
-                                            const std::string& selector )
-    throw ( cms::CMSException ) {
+                                            const std::string& selector ) {
 
     try {
 
@@ -767,8 +747,7 @@ cms::Message* CmsTemplate::receiveSelected( cms::Destination* destination,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* CmsTemplate::receiveSelected( const std::string& destinationName,
-                                            const std::string& selector )
-    throw ( cms::CMSException ) {
+                                            const std::string& selector ) {
 
     try {
 

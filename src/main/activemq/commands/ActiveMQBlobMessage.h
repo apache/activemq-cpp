@@ -55,7 +55,7 @@ namespace commands {
     public:
 
         ActiveMQBlobMessage();
-        virtual ~ActiveMQBlobMessage() {}
+        virtual ~ActiveMQBlobMessage() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 

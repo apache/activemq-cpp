@@ -36,14 +36,14 @@ namespace cms{
     class CMS_API Startable {
     public:
 
-        virtual ~Startable() {}
+        virtual ~Startable() throw() {}
 
         /**
          * Starts the service.
          *
          * @throws CMSException if an internal error occurs while starting.
          */
-        virtual void start() throw( CMSException ) = 0;
+        virtual void start() = 0;
 
     };
 }

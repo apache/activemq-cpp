@@ -98,7 +98,7 @@ namespace core{
                           const Pointer<commands::ActiveMQDestination>& destination,
                           long long sendTimeout );
 
-        virtual ~ActiveMQProducer();
+        virtual ~ActiveMQProducer() throw();
 
         /**
          * Closes the Consumer.  This will return all allocated resources

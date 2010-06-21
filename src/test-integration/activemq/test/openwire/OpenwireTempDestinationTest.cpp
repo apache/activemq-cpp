@@ -72,7 +72,7 @@ namespace openwire{
             this->numReceived = 0;
         }
 
-        virtual ~Requester() {}
+        virtual ~Requester() throw() {}
 
         virtual unsigned int getNumReceived() const {
             return this->numReceived;
@@ -105,7 +105,7 @@ namespace openwire{
             }
         }
 
-        virtual void onMessage( const cms::Message* message ) {
+        virtual void onMessage( const cms::Message* message ) throw() {
 
             try {
 
@@ -145,7 +145,7 @@ namespace openwire{
             this->numReceived = 0;
         }
 
-        virtual ~Responder() {}
+        virtual ~Responder() throw() {}
 
         virtual unsigned int getNumReceived() const {
             return this->numReceived;
@@ -155,7 +155,7 @@ namespace openwire{
             this->requests.await( 2000 * this->messageCount );
         }
 
-        virtual void onMessage( const cms::Message* message ) {
+        virtual void onMessage( const cms::Message* message ) throw() {
 
             try {
 

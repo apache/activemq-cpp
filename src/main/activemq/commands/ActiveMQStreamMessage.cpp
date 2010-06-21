@@ -64,7 +64,7 @@ ActiveMQStreamMessage::ActiveMQStreamMessage() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQStreamMessage::~ActiveMQStreamMessage() {
+ActiveMQStreamMessage::~ActiveMQStreamMessage() throw() {
     this->reset();
 }
 

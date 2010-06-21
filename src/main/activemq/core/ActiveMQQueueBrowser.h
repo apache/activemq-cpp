@@ -73,7 +73,7 @@ namespace core {
                               const std::string& selector,
                               bool dispatchAsync );
 
-        virtual ~ActiveMQQueueBrowser();
+        virtual ~ActiveMQQueueBrowser() throw();
 
     public:
 

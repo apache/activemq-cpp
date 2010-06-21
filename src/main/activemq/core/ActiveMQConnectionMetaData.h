@@ -40,7 +40,7 @@ namespace core {
     public:
 
         ActiveMQConnectionMetaData();
-        virtual ~ActiveMQConnectionMetaData();
+        virtual ~ActiveMQConnectionMetaData() throw();
 
     public:  // cms::ConnectionMetaData
 

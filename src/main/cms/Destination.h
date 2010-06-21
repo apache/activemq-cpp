@@ -48,7 +48,7 @@ namespace cms{
 
     public:
 
-        virtual ~Destination(){}
+        virtual ~Destination() throw() {}
 
         /**
          * Retrieve the Destination Type for this Destination

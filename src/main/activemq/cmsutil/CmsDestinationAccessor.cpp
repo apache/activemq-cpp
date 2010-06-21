@@ -34,8 +34,7 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::init()
-    throw ( cms::CMSException, IllegalStateException ) {
+void CmsDestinationAccessor::init() {
 
     CmsAccessor::init();
 
@@ -47,8 +46,7 @@ void CmsDestinationAccessor::init()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::destroy()
-    throw ( cms::CMSException, IllegalStateException ) {
+void CmsDestinationAccessor::destroy() {
 
     if( destinationResolver != NULL ) {
         destinationResolver->destroy();
@@ -58,10 +56,8 @@ void CmsDestinationAccessor::destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsDestinationAccessor::resolveDestinationName(
-    cms::Session* session,
-    const std::string& destName )
-        throw ( cms::CMSException, IllegalStateException ) {
+cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* session,
+                                                                  const std::string& destName ) {
 
     checkDestinationResolver();
 
@@ -70,8 +66,7 @@ cms::Destination* CmsDestinationAccessor::resolveDestinationName(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::checkDestinationResolver()
-    throw ( IllegalStateException ) {
+void CmsDestinationAccessor::checkDestinationResolver() {
 
     if( getDestinationResolver() == NULL ) {
         throw IllegalStateException(

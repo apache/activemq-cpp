@@ -57,13 +57,11 @@ namespace cmsutil {
                   queueMap() {
             }
 
-            virtual ~SessionResolver() {}
+            virtual ~SessionResolver() throw() {}
 
-            cms::Topic* getTopic(const std::string& topicName )
-                throw ( cms::CMSException );
+            cms::Topic* getTopic(const std::string& topicName );
 
-            cms::Queue* getQueue(const std::string& queueName )
-                throw ( cms::CMSException );
+            cms::Queue* getQueue(const std::string& queueName );
 
         };
 
@@ -86,7 +84,7 @@ namespace cmsutil {
 
         DynamicDestinationResolver();
 
-        virtual ~DynamicDestinationResolver();
+        virtual ~DynamicDestinationResolver() throw();
 
         virtual void init( ResourceLifecycleManager* mgr ) {
 
@@ -115,11 +113,9 @@ namespace cmsutil {
          * @return the resolved destination
          * @throws cms::CMSException if resolution failed.
          */
-        virtual cms::Destination* resolveDestinationName(
-            cms::Session* session,
-            const std::string& destName,
-            bool pubSubDomain )
-                throw ( cms::CMSException );
+        virtual cms::Destination* resolveDestinationName( cms::Session* session,
+                                                          const std::string& destName,
+                                                          bool pubSubDomain );
 
     };
 

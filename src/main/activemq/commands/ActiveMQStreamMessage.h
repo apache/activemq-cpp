@@ -63,7 +63,7 @@ namespace commands{
     public:
 
         ActiveMQStreamMessage();
-        virtual ~ActiveMQStreamMessage();
+        virtual ~ActiveMQStreamMessage() throw();
 
         virtual unsigned char getDataStructureType() const;
 

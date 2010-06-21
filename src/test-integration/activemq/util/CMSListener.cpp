@@ -34,7 +34,7 @@ CMSListener::CMSListener( cms::Session* session ) : session( session ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSListener::~CMSListener() {
+CMSListener::~CMSListener() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ void CMSListener::asyncWaitForMessages( unsigned int count ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSListener::onMessage( const cms::Message* message ) {
+void CMSListener::onMessage( const cms::Message* message ) throw() {
 
     if( session->getAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE ) {
         try {

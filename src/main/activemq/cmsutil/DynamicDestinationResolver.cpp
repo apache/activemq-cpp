@@ -25,8 +25,7 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
-        const std::string& topicName ) throw ( cms::CMSException ) {
+cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic( const std::string& topicName ) {
 
     cms::Topic* topic = NULL;
     try {
@@ -49,8 +48,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
-        const std::string& queueName ) throw ( cms::CMSException ) {
+cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue( const std::string& queueName ) {
 
     cms::Queue* queue = NULL;
     try {
@@ -78,8 +76,7 @@ DynamicDestinationResolver::DynamicDestinationResolver()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DynamicDestinationResolver::~DynamicDestinationResolver() {
-
+DynamicDestinationResolver::~DynamicDestinationResolver() throw() {
     destroy();
 }
 
@@ -96,8 +93,7 @@ void DynamicDestinationResolver::destroy() {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* DynamicDestinationResolver::resolveDestinationName(
-        cms::Session* session, const std::string& destName, bool pubSubDomain)
-        throw (cms::CMSException) {
+        cms::Session* session, const std::string& destName, bool pubSubDomain ) {
 
     if( destName == "" ) {
         throw ActiveMQException(

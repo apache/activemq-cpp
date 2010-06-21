@@ -27,51 +27,47 @@ namespace activemq{
 namespace cmsutil{
 
     class DummyConnectionFactory;
-    
+
     class CmsDestinationAccessorTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( CmsDestinationAccessorTest );
         CPPUNIT_TEST( test );
-        CPPUNIT_TEST_SUITE_END();               
-             
+        CPPUNIT_TEST_SUITE_END();
+
 
         class MyAccessor : public CmsDestinationAccessor {
-        
+
         public:
-            
-            virtual ~MyAccessor(){
+
+            virtual ~MyAccessor() throw(){
                 try {
                     destroy();
-                } catch( ... ) {                    
+                } catch( ... ) {
                 }
             }
-            
-            virtual cms::Connection* createConnection() throw (cms::CMSException) {
+
+            virtual cms::Connection* createConnection() {
                 return CmsDestinationAccessor::createConnection();
             }
-                
-            virtual cms::Session* createSession(cms::Connection* con) 
-                throw (cms::CMSException) {
+
+            virtual cms::Session* createSession(cms::Connection* con) {
                 return CmsDestinationAccessor::createSession(con);
             }
-            virtual cms::Destination* resolveDestinationName( 
-                cms::Session* session, 
-                const std::string& destName ) throw (cms::CMSException) {
+            virtual cms::Destination* resolveDestinationName( cms::Session* session,
+                                                              const std::string& destName ) {
                 return CmsDestinationAccessor::resolveDestinationName(session,destName);
             }
-            virtual void init() 
-            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+            virtual void init() {
                 CmsDestinationAccessor::init();
             }
-            virtual void destroy() 
-            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+            virtual void destroy() {
                 CmsDestinationAccessor::destroy();
             }
         };
-        
+
         MyAccessor* accessor;
         DummyConnectionFactory* cf;
-        
+
     public:
 
         CmsDestinationAccessorTest() {}
@@ -79,7 +75,7 @@ namespace cmsutil{
 
         virtual void setUp();
         virtual void tearDown();
-        
+
         void test();
     };
 

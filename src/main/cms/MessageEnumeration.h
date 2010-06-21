@@ -35,7 +35,7 @@ namespace cms{
     class CMS_API MessageEnumeration {
     public:
 
-        virtual ~MessageEnumeration() {}
+        virtual ~MessageEnumeration() throw() {}
 
         /**
          * Returns true if there are more Message in the Browser that can be retrieved
@@ -56,7 +56,7 @@ namespace cms{
          *
          * @throws CMSException if no more Message's currently in the Queue.
          */
-        virtual cms::Message* nextMessage() throw( cms::CMSException ) = 0;
+        virtual cms::Message* nextMessage() = 0;
 
     };
 }

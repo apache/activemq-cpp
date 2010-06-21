@@ -55,7 +55,7 @@ namespace core{
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
-        virtual ~ActiveMQConnectionFactory();
+        virtual ~ActiveMQConnectionFactory() throw();
 
         /**
          * Creates a connection with the default user identity. The
@@ -65,8 +65,7 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection()
-            throw ( cms::CMSException );
+        virtual cms::Connection* createConnection();
 
         /**
          * Creates a connection with the specified user identity. The
@@ -82,8 +81,7 @@ namespace core{
          * @throws CMSException
          */
         virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password )
-            throw ( cms::CMSException );
+                                                   const std::string& password );
 
         /**
          * Creates a connection with the specified user identity. The
@@ -102,8 +100,7 @@ namespace core{
          */
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password,
-                                                   const std::string& clientId )
-            throw ( cms::CMSException );
+                                                   const std::string& clientId );
 
     public:   // Configuration Options
 
@@ -323,16 +320,14 @@ namespace core{
         static cms::Connection* createConnection( const std::string& url,
                                                   const std::string& username,
                                                   const std::string& password,
-                                                  const std::string& clientId = "" )
-            throw ( cms::CMSException );
+                                                  const std::string& clientId = "" );
 
     private:
 
         cms::Connection* doCreateConnection( const std::string& url,
                                              const std::string& username,
                                              const std::string& password,
-                                             const std::string& clientId )
-            throw ( cms::CMSException );
+                                             const std::string& clientId );
 
         void configureConnection( ActiveMQConnection* connection );
 

@@ -54,7 +54,7 @@ namespace cms{
     class CMS_API MessageConsumer : public Closeable {
     public:
 
-        virtual ~MessageConsumer() {}
+        virtual ~MessageConsumer() throw() {}
 
         /**
          * Synchronously Receive a Message
@@ -63,7 +63,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Message* receive() throw ( CMSException ) = 0;
+        virtual Message* receive() = 0;
 
         /**
          * Synchronously Receive a Message, time out after defined interval.
@@ -73,7 +73,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Message* receive( int millisecs ) throw ( CMSException ) = 0;
+        virtual Message* receive( int millisecs ) = 0;
 
         /**
          * Receive a Message, does not wait if there isn't a new message
@@ -83,7 +83,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Message* receiveNoWait() throw ( CMSException ) = 0;
+        virtual Message* receiveNoWait() = 0;
 
         /**
          * Sets the MessageListener that this class will send notifs on
@@ -93,8 +93,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual void setMessageListener( MessageListener* listener )
-            throw ( CMSException ) = 0;
+        virtual void setMessageListener( MessageListener* listener ) = 0;
 
         /**
          * Gets the MessageListener that this class will send mew Message
@@ -104,7 +103,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual MessageListener* getMessageListener() const throw ( CMSException ) = 0;
+        virtual MessageListener* getMessageListener() const = 0;
 
         /**
          * Gets this message consumer's message selector expression.
@@ -113,8 +112,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual std::string getMessageSelector() const
-            throw ( cms::CMSException ) = 0;
+        virtual std::string getMessageSelector() const = 0;
 
     };
 

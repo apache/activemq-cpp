@@ -48,7 +48,7 @@ void ResourceLifecycleManager::releaseAll() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
+void ResourceLifecycleManager::destroy() {
 
     try{
         // Close all the connections.
@@ -123,8 +123,7 @@ void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addConnection( cms::Connection* connection )
-    throw ( cms::CMSException ) {
+void ResourceLifecycleManager::addConnection( cms::Connection* connection ) {
 
     try{
         // Add the connection to the list.
@@ -136,8 +135,7 @@ void ResourceLifecycleManager::addConnection( cms::Connection* connection )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addSession( cms::Session* session )
-    throw ( cms::CMSException ) {
+void ResourceLifecycleManager::addSession( cms::Session* session ) {
 
     try{
         // Add the session to the list.
@@ -150,8 +148,7 @@ void ResourceLifecycleManager::addSession( cms::Session* session )
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addDestination( cms::Destination* dest )
-    throw ( cms::CMSException ) {
+void ResourceLifecycleManager::addDestination( cms::Destination* dest ) {
 
     try{
         // Add the destination to the list.
@@ -163,8 +160,7 @@ void ResourceLifecycleManager::addDestination( cms::Destination* dest )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer )
-    throw ( cms::CMSException ) {
+void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer ) {
 
     try{
         // Add the producer to the list.
@@ -176,8 +172,7 @@ void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* produce
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer )
-    throw ( cms::CMSException ) {
+void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer ) {
 
     try{
         // Add the consumer to the list.

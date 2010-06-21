@@ -82,7 +82,7 @@ ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::~ActiveMQProducer() {
+ActiveMQProducer::~ActiveMQProducer() throw() {
     try {
         close();
     }

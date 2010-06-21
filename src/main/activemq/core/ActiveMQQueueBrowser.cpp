@@ -118,7 +118,7 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser( ActiveMQSession* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueueBrowser::~ActiveMQQueueBrowser() {
+ActiveMQQueueBrowser::~ActiveMQQueueBrowser() throw() {
     try{
         this->close();
     }

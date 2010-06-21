@@ -175,7 +175,7 @@ ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& tra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::~ActiveMQConnection() {
+ActiveMQConnection::~ActiveMQConnection() throw() {
     try {
         this->close();
         delete this->config;

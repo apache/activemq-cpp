@@ -53,7 +53,7 @@ namespace test {
             this->text = text;
         }
 
-        virtual ~TextMessageCreator() {}
+        virtual ~TextMessageCreator() throw() {}
 
         std::string getText() const {
             return text;
@@ -124,7 +124,7 @@ namespace test {
             this->count = count;
         }
 
-        virtual ~Receiver(){
+        virtual ~Receiver() throw() {
         }
 
         int getNumReceived() const {

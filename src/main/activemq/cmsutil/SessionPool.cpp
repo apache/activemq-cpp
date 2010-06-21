@@ -58,7 +58,7 @@ SessionPool::~SessionPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession* SessionPool::takeSession() throw ( cms::CMSException ){
+PooledSession* SessionPool::takeSession() {
 
     synchronized(&mutex) {
 

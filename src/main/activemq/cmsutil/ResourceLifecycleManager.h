@@ -69,9 +69,10 @@ namespace cmsutil {
          *
          * @param connection
          *         the object to be managed
+         *
+         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addConnection( cms::Connection* connection )
-            throw ( cms::CMSException );
+        void addConnection( cms::Connection* connection );
 
         /**
          * Adds a session so that its life will be managed by
@@ -79,9 +80,10 @@ namespace cmsutil {
          *
          * @param session
          *         the object to be managed
+         *
+         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addSession( cms::Session* session )
-            throw ( cms::CMSException );
+        void addSession( cms::Session* session );
 
         /**
          * Adds a destination so that its life will be managed by
@@ -89,9 +91,10 @@ namespace cmsutil {
          *
          * @param dest
          *         the object to be managed
+         *
+         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addDestination( cms::Destination* dest )
-            throw ( cms::CMSException );
+        void addDestination( cms::Destination* dest );
 
         /**
          * Adds a message producer so that its life will be managed by
@@ -99,9 +102,10 @@ namespace cmsutil {
          *
          * @param producer
          *         the object to be managed
+         *
+         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageProducer( cms::MessageProducer* producer )
-            throw ( cms::CMSException );
+        void addMessageProducer( cms::MessageProducer* producer );
 
         /**
          * Adds a message consumer so that its life will be managed by
@@ -109,15 +113,17 @@ namespace cmsutil {
          *
          * @param consumer
          *         the object to be managed
+         *
+         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageConsumer( cms::MessageConsumer* consumer )
-            throw ( cms::CMSException );
+        void addMessageConsumer( cms::MessageConsumer* consumer );
 
         /**
          * Closes and destroys the contained CMS resources.
+         *
          * @throws cms::CMSException thrown if an error occurs.
          */
-        void destroy() throw ( cms::CMSException );
+        void destroy();
 
         /**
          * Releases all of the contained resources so that this
