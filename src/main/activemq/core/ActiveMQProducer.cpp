@@ -91,7 +91,7 @@ ActiveMQProducer::~ActiveMQProducer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::close() throw ( cms::CMSException ) {
+void ActiveMQProducer::close() {
 
     try{
 
@@ -112,10 +112,7 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message ) throw ( cms::CMSException,
-                                                             cms::MessageFormatException,
-                                                             cms::InvalidDestinationException,
-                                                             cms::UnsupportedOperationException ) {
+void ActiveMQProducer::send( cms::Message* message ) {
 
     try {
 
@@ -127,11 +124,7 @@ void ActiveMQProducer::send( cms::Message* message ) throw ( cms::CMSException,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priority, long long timeToLive )
-    throw ( cms::CMSException,
-            cms::MessageFormatException,
-            cms::InvalidDestinationException,
-            cms::UnsupportedOperationException ) {
+void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priority, long long timeToLive ) {
 
     try {
 
@@ -143,11 +136,7 @@ void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priori
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message )
-    throw ( cms::CMSException,
-            cms::MessageFormatException,
-            cms::InvalidDestinationException,
-            cms::UnsupportedOperationException ) {
+void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message ) {
 
     try {
 
@@ -160,11 +149,7 @@ void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* 
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message,
-                             int deliveryMode, int priority, long long timeToLive )
-    throw ( cms::CMSException,
-            cms::MessageFormatException,
-            cms::InvalidDestinationException,
-            cms::UnsupportedOperationException ) {
+                             int deliveryMode, int priority, long long timeToLive ) {
 
     try {
 
@@ -236,7 +221,7 @@ void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
+void ActiveMQProducer::checkClosed() const {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

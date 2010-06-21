@@ -77,17 +77,17 @@ namespace core {
 
     public:
 
-        virtual const cms::Queue* getQueue() const throw ( cms::CMSException );
+        virtual const cms::Queue* getQueue() const;
 
-        virtual std::string getMessageSelector() const throw ( cms::CMSException );
+        virtual std::string getMessageSelector() const;
 
-        virtual cms::MessageEnumeration* getEnumeration() throw ( cms::CMSException );
+        virtual cms::MessageEnumeration* getEnumeration();
 
-        virtual void close() throw( cms::CMSException );
+        virtual void close();
 
         virtual bool hasMoreMessages();
 
-        virtual cms::Message* nextMessage() throw( cms::CMSException );
+        virtual cms::Message* nextMessage();
 
     private:
 

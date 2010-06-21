@@ -61,8 +61,7 @@ bool MessageDispatchChannel::isEmpty() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout )
-    throw( ActiveMQException ) {
+Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout ) {
 
     synchronized( &channel ) {
         // Wait until the channel is ready to deliver messages.

@@ -186,8 +186,7 @@ ActiveMQConnection::~ActiveMQConnection() throw() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addDispatcher(
-    const decaf::lang::Pointer<ConsumerId>& consumer, Dispatcher* dispatcher )
-        throw ( cms::CMSException ) {
+    const decaf::lang::Pointer<ConsumerId>& consumer, Dispatcher* dispatcher ) {
 
     try{
         // Add the consumer to the map.
@@ -199,9 +198,7 @@ void ActiveMQConnection::addDispatcher(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeDispatcher(
-    const decaf::lang::Pointer<ConsumerId>& consumer )
-        throw ( cms::CMSException ) {
+void ActiveMQConnection::removeDispatcher( const decaf::lang::Pointer<ConsumerId>& consumer ) {
 
     try{
         // Remove the consumer from the map.
@@ -213,7 +210,7 @@ void ActiveMQConnection::removeDispatcher(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException ) {
+cms::Session* ActiveMQConnection::createSession() {
     try {
         return createSession( Session::AUTO_ACKNOWLEDGE );
     }
@@ -221,8 +218,7 @@ cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession(
-    cms::Session::AcknowledgeMode ackMode ) throw ( cms::CMSException ) {
+cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode ackMode ) {
 
     try {
 
@@ -260,8 +256,7 @@ cms::Session* ActiveMQConnection::createSession(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeSession( ActiveMQSession* session )
-    throw ( cms::CMSException ) {
+void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
 
     try {
 
@@ -274,8 +269,7 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
-    throw ( cms::CMSException ) {
+void ActiveMQConnection::addProducer( ActiveMQProducer* producer ) {
 
     try {
 
@@ -288,8 +282,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>& producerId )
-    throw ( cms::CMSException ) {
+void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>& producerId ) {
 
     try {
 
@@ -342,8 +335,8 @@ void ActiveMQConnection::setDefaultClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::close() throw ( cms::CMSException )
-{
+void ActiveMQConnection::close() {
+
     try {
 
         if( this->isClosed() ) {
@@ -392,7 +385,8 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::start() throw ( cms::CMSException ) {
+void ActiveMQConnection::start() {
+
     try{
 
         checkClosed();
@@ -414,7 +408,7 @@ void ActiveMQConnection::start() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::stop() throw ( cms::CMSException ) {
+void ActiveMQConnection::stop() {
 
     try {
 
@@ -434,8 +428,7 @@ void ActiveMQConnection::stop() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
 
     try{
 
@@ -490,8 +483,7 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::sendPullRequest(
-    const ConsumerInfo* consumer, long long timeout ) throw ( ActiveMQException ) {
+void ActiveMQConnection::sendPullRequest( const ConsumerInfo* consumer, long long timeout ) {
 
     try {
 
@@ -511,11 +503,7 @@ void ActiveMQConnection::sendPullRequest(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destination )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IllegalStateException,
-           decaf::lang::exceptions::UnsupportedOperationException,
-           activemq::exceptions::ActiveMQException ) {
+void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destination ) {
 
     try{
 
@@ -544,11 +532,7 @@ void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::destroyDestination( const cms::Destination* destination )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IllegalStateException,
-           decaf::lang::exceptions::UnsupportedOperationException,
-           activemq::exceptions::ActiveMQException ) {
+void ActiveMQConnection::destroyDestination( const cms::Destination* destination ) {
 
     try{
 
@@ -730,8 +714,7 @@ void ActiveMQConnection::transportResumed() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::oneway( Pointer<Command> command )
-    throw ( ActiveMQException ) {
+void ActiveMQConnection::oneway( Pointer<Command> command ) {
 
     try {
         checkClosed();
@@ -744,8 +727,7 @@ void ActiveMQConnection::oneway( Pointer<Command> command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout )
-    throw ( ActiveMQException ) {
+void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout ) {
 
     try {
 
@@ -779,7 +761,7 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::checkClosed() const throw ( ActiveMQException ) {
+void ActiveMQConnection::checkClosed() const {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
@@ -831,20 +813,14 @@ void ActiveMQConnection::fire( const ActiveMQException& ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const
-    throw( ActiveMQException ) {
-
+const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const {
     checkClosed();
-
     return *this->config->connectionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId& ActiveMQConnection::getConnectionId() const
-    throw( ActiveMQException ) {
-
+const ConnectionId& ActiveMQConnection::getConnectionId() const {
     checkClosed();
-
     return *( this->config->connectionInfo->getConnectionId() );
 }
 
@@ -875,8 +851,7 @@ void ActiveMQConnection::removeTransportListener( TransportListener* transportLi
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
-    throw( decaf::lang::exceptions::InterruptedException ) {
+void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete() {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
     if( cdl != NULL ) {
@@ -909,8 +884,7 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::signalInterruptionProcessingComplete()
-    throw( decaf::lang::exceptions::InterruptedException ) {
+void ActiveMQConnection::signalInterruptionProcessingComplete() {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
 

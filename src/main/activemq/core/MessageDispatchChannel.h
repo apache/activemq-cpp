@@ -95,8 +95,7 @@ namespace core {
          * @return null if we timeout or if the consumer is closed.
          * @throws ActiveMQException
          */
-        Pointer<MessageDispatch> dequeue( long long timeout )
-            throw( exceptions::ActiveMQException );
+        Pointer<MessageDispatch> dequeue( long long timeout );
 
         /**
          * Used to get an enqueued message if there is one queued right now.  If there is

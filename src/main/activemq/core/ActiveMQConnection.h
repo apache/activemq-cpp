@@ -140,40 +140,46 @@ namespace core{
         virtual ~ActiveMQConnection() throw();
 
         /**
-         * Removes the session resources for the given session
-         * instance.
-         * @param session The session to be unregistered from this connection.
+         * Removes the session resources for the given session instance.
+         *
+         * @param session
+         *      The session to be unregistered from this connection.
+         *
+         * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
+        virtual void removeSession( ActiveMQSession* session );
 
         /**
          * Adds an active Producer to the Set of known producers.
-         * @param producer - The Producer to add from the the known set.
+         *
+         * @param producer
+         *      The Producer to add from the the known set.
+         *
+         * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addProducer( ActiveMQProducer* producer ) throw ( cms::CMSException );
+        virtual void addProducer( ActiveMQProducer* producer );
 
         /**
          * Removes an active Producer to the Set of known producers.
          * @param producerId - The ProducerId to remove from the the known set.
+         * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeProducer( const Pointer<commands::ProducerId>& producerId )
-            throw ( cms::CMSException );
+        virtual void removeProducer( const Pointer<commands::ProducerId>& producerId );
 
         /**
          * Adds a dispatcher for a consumer.
          * @param consumer - The consumer for which to register a dispatcher.
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
+         * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addDispatcher(
-            const Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher )
-                throw ( cms::CMSException );
+        virtual void addDispatcher( const Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher );
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
+         * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeDispatcher( const Pointer<commands::ConsumerId>& consumer )
-            throw ( cms::CMSException );
+        virtual void removeDispatcher( const Pointer<commands::ConsumerId>& consumer );
 
         /**
          * If supported sends a message pull request to the service provider asking
@@ -182,9 +188,10 @@ namespace core{
          * capable of delivering messages on a pull basis.
          * @param consumer - the ConsumerInfo for the requesting Consumer.
          * @param timeout - the time that the client is willing to wait.
+         *
+         * @throws ActiveMQException if an error occurs while removing performing the operation.
          */
-        virtual void sendPullRequest( const commands::ConsumerInfo* consumer, long long timeout )
-            throw ( exceptions::ActiveMQException );
+        virtual void sendPullRequest( const commands::ConsumerInfo* consumer, long long timeout );
 
         /**
          * Checks if this connection has been closed
@@ -228,11 +235,7 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
-        virtual void destroyDestination( const commands::ActiveMQDestination* destination )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalStateException,
-                   decaf::lang::exceptions::UnsupportedOperationException,
-                   activemq::exceptions::ActiveMQException );
+        virtual void destroyDestination( const commands::ActiveMQDestination* destination );
 
         /**
          * Requests that the Broker removes the given Destination.  Calling this
@@ -252,34 +255,21 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
-        virtual void destroyDestination( const cms::Destination* destination )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalStateException,
-                   decaf::lang::exceptions::UnsupportedOperationException,
-                   activemq::exceptions::ActiveMQException );
+        virtual void destroyDestination( const cms::Destination* destination );
 
     public:   // Connection Interface Methods
 
         /**
-         * Gets the metadata for this connection.
-         *
-         * @returns the connection MetaData pointer ( caller does not own it ).
-         *
-         * @throws CMSException
-         *         if the provider fails to get the connection metadata for this connection.
-         *
-         * @see ConnectionMetaData
-         * @since 2.0
+         * {@inheritDoc}
          */
-        virtual const cms::ConnectionMetaData* getMetaData() const throw( cms::CMSException ) {
+        virtual const cms::ConnectionMetaData* getMetaData() const {
             return connectionMetaData.get();
         }
 
         /**
-         * Creates a new Session to work for this Connection
-         * @throws CMSException
+         * {@inheritDoc}
          */
-        virtual cms::Session* createSession() throw ( cms::CMSException );
+        virtual cms::Session* createSession();
 
         /**
          * {@inheritDoc}
@@ -292,43 +282,32 @@ namespace core{
         virtual void setClientID( const std::string& clientID );
 
         /**
-         * Creates a new Session to work for this Connection using the
-         * specified acknowledgment mode
-         * @param ackMode the Acknowledgment Mode to use.
-         * @throws CMSException
+         * {@inheritDoc}
          */
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
-            throw ( cms::CMSException );
+        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode );
 
         /**
-         * Closes this connection as well as any Sessions
-         * created from it (and those Sessions' consumers and
-         * producers).
-         * @throws CMSException
+         * {@inheritDoc}
          */
-        virtual void close() throw ( cms::CMSException );
+        virtual void close();
 
         /**
-         * Starts or (restarts) a connections delivery of incoming messages
-         * @throws CMSException
+         * {@inheritDoc}
          */
-        virtual void start() throw ( cms::CMSException );
+        virtual void start();
 
         /**
-         * Stop the flow of incoming messages
-         * @throws CMSException
+         * {@inheritDoc}
          */
-        virtual void stop() throw ( cms::CMSException );
+        virtual void stop();
 
         /**
-         * Gets the registered Exception Listener for this connection
-         * @return pointer to an exception listener or NULL
+         * {@inheritDoc}
          */
         virtual cms::ExceptionListener* getExceptionListener() const;
 
         /**
-         * Sets the registered Exception Listener for this connection
-         * @param listener pointer to and <code>ExceptionListener</code>
+         * {@inheritDoc}
          */
         virtual void setExceptionListener( cms::ExceptionListener* listener );
 
@@ -581,17 +560,19 @@ namespace core{
 
         /**
          * Gets the ConnectionInfo for this Object, if the Connection is not open
-         * than this method throws an exception
+         * than this method throws an exception.
+         *
+         * @throws ActiveMQException if an error occurs while performing this operation.
          */
-        const commands::ConnectionInfo& getConnectionInfo() const
-            throw( exceptions::ActiveMQException );
+        const commands::ConnectionInfo& getConnectionInfo() const;
 
         /**
          * Gets the ConnectionId for this Object, if the Connection is not open
-         * than this method throws an exception
+         * than this method throws an exception.
+         *
+         * @throws ActiveMQException if an error occurs while performing this operation.
          */
-        const commands::ConnectionId& getConnectionId() const
-            throw( exceptions::ActiveMQException );
+        const commands::ConnectionId& getConnectionId() const;
 
         /**
          * Gets a reference to this object's Transport instance.
@@ -606,8 +587,7 @@ namespace core{
          * @throws ConnectorException if not currently connected, or
          * if the operation fails for any reason.
          */
-        void oneway( Pointer<commands::Command> command )
-            throw ( activemq::exceptions::ActiveMQException );
+        void oneway( Pointer<commands::Command> command );
 
         /**
          * Sends a synchronous request and returns the response from the broker.
@@ -617,8 +597,7 @@ namespace core{
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 )
-            throw ( activemq::exceptions::ActiveMQException );
+        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
 
         /**
          * Notify the exception listener
@@ -635,21 +614,19 @@ namespace core{
     private:
 
         // Sends a oneway disconnect message to the broker.
-        void disconnect( long long lastDeliveredSequenceId ) throw ( activemq::exceptions::ActiveMQException );
+        void disconnect( long long lastDeliveredSequenceId );
 
         // Check for Closed State and Throw an exception if true.
-        void checkClosed() const throw ( activemq::exceptions::ActiveMQException );
+        void checkClosed() const;
 
         // If its not been sent, then send the ConnectionInfo to the Broker.
         void ensureConnectionInfoSent();
 
         // Waits for all Consumers to handle the Transport Interrupted event.
-        void waitForTransportInterruptionProcessingToComplete()
-            throw ( decaf::lang::exceptions::InterruptedException );
+        void waitForTransportInterruptionProcessingToComplete();
 
         // Marks processing complete for a single caller when interruption processing completes.
-        void signalInterruptionProcessingComplete()
-            throw ( decaf::lang::exceptions::InterruptedException );
+        void signalInterruptionProcessingComplete();
 
     };
 

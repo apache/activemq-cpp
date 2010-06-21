@@ -162,116 +162,61 @@ namespace core{
 
     public:  // Interface Implementation
 
-        /**
-         * Starts the Consumer if not already started and not closed. A consumer
-         * will no deliver messages until started.
-         */
         virtual void start();
 
-        /**
-         * Stops a Consumer, the Consumer will not deliver any messages that are
-         * dispatched to it until it is started again.  A Closed Consumer is also a
-         * stopped consumer.
-         */
         virtual void stop();
 
-        /**
-         * Closes the Consumer.  This will return all allocated resources
-         * and purge any outstanding messages.  This method will block if
-         * there is a call to receive in progress, or a dispatch to a
-         * MessageListener in place
-         * @throws CMSException
-         */
-        virtual void close() throw ( cms::CMSException );
+        virtual void close();
 
-        /**
-         * Synchronously Receive a Message
-         * @return new message
-         * @throws CMSException
-         */
-        virtual cms::Message* receive() throw ( cms::CMSException );
+        virtual cms::Message* receive();
 
-        /**
-         * Synchronously Receive a Message, time out after defined interval.
-         * Returns null if nothing read.
-         * @param millisecs the time in milliseconds to wait before returning
-         * @return new message or null on timeout
-         * @throws CMSException
-         */
-        virtual cms::Message* receive( int millisecs ) throw ( cms::CMSException );
+        virtual cms::Message* receive( int millisecs );
 
-        /**
-         * Receive a Message, does not wait if there isn't a new message
-         * to read, returns NULL if nothing read.
-         * @return new message
-         * @throws CMSException
-         */
-        virtual cms::Message* receiveNoWait() throw ( cms::CMSException );
+        virtual cms::Message* receiveNoWait();
 
-        /**
-         * Sets the MessageListener that this class will send notifs on
-         * @param listener MessageListener interface pointer
-         */
-        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException );
+        virtual void setMessageListener( cms::MessageListener* listener );
 
-        /**
-         * Gets the MessageListener that this class will send events to.
-         * @return the currently registered MessageListener interface pointer.
-         */
-        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
+        virtual cms::MessageListener* getMessageListener() const {
             return this->listener;
         }
 
-        /**
-         * Gets this message consumer's message selector expression.
-         * @return This Consumer's selector expression or "".
-         * @throws cms::CMSException
-         */
-        virtual std::string getMessageSelector() const
-            throw ( cms::CMSException );
+        virtual std::string getMessageSelector() const;
 
-        /**
-         * Method called to acknowledge the message passed, called from a message
-         * when the mode is client ack.
-         * @param message the Message to Acknowledge
-         * @throw CMSException
-         */
-        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
-            throw ( cms::CMSException );
+        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch );
 
     public:  // Dispatcher Methods
 
-        /**
-         * Called asynchronously by the session to dispatch a message.
-         * @param message dispatch object pointer
-         */
         virtual void dispatch( const Pointer<MessageDispatch>& message );
 
     public:  // ActiveMQConsumer Methods
 
         /**
          * Method called to acknowledge all messages that have been received so far.
-         * @throw CMSException
+         *
+         * @throw CMSException if an error occurs while ack'ing the message.
          */
-        void acknowledge() throw ( cms::CMSException );
+        void acknowledge();
 
         /**
          * Called to Commit the current set of messages in this Transaction
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void commit() throw ( exceptions::ActiveMQException );
+        void commit();
 
         /**
          * Called to Roll back the current set of messages in this Transaction
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void rollback() throw ( exceptions::ActiveMQException );
+        void rollback();
 
         /**
          * Performs the actual close operation on this consumer
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void doClose() throw ( exceptions::ActiveMQException );
+        void doClose();
 
         /**
          * Get the Consumer information for this consumer
@@ -323,8 +268,10 @@ namespace core{
 
         /**
          * Forces this consumer to send all pending acks to the broker.
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void deliverAcks() throw ( exceptions::ActiveMQException );
+        void deliverAcks();
 
         /**
          * Called on a Failover to clear any pending messages.
@@ -392,17 +339,18 @@ namespace core{
          * Used by synchronous receive methods to wait for messages to come in.
          * @param timeout - The maximum number of milliseconds to wait before
          * returning.
+         *
          * If -1, it will block until a messages is received or this consumer
          * is closed.
          * If 0, will not block at all.  If > 0, will wait at a maximum the
          * specified number of milliseconds before returning.
          * @return the message, if received within the allotted time.
          * Otherwise NULL.
+         *
          * @throws InvalidStateException if this consumer is closed upon
-         * entering this method.
+         *         entering this method.
          */
-        Pointer<MessageDispatch> dequeue( long long timeout )
-            throw ( cms::CMSException );
+        Pointer<MessageDispatch> dequeue( long long timeout );
 
         /**
          * Pre-consume processing
@@ -431,17 +379,15 @@ namespace core{
         // capable of delivering messages on a pull basis.  No request is made if
         // there are already messages in the unconsumed queue since there's no need
         // for a server round-trip in that instance.
-        void sendPullRequest( long long timeout )
-            throw ( exceptions::ActiveMQException );
+        void sendPullRequest( long long timeout );
 
         // Checks for the closed state and throws if so.
-        void checkClosed() const throw( exceptions::ActiveMQException );
+        void checkClosed() const;
 
         // Sends an ack as needed in order to keep them coming in if the current
         // ack mode allows the consumer to receive up to the prefetch limit before
         // an real ack is sent.
-        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType )
-            throw ( exceptions::ActiveMQException );
+        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType );
 
         // Create an Ack Message that acks all messages that have been delivered so far.
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );

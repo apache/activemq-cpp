@@ -111,8 +111,8 @@ void ActiveMQSession::fire( const activemq::exceptions::ActiveMQException& ex ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::close() throw ( cms::CMSException )
-{
+void ActiveMQSession::close() {
+
     // If we're already closed, just return.
     if( closed ) {
         return;
@@ -173,7 +173,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::commit() throw ( cms::CMSException ) {
+void ActiveMQSession::commit() {
 
     try {
 
@@ -192,7 +192,7 @@ void ActiveMQSession::commit() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::rollback() throw ( cms::CMSException ) {
+void ActiveMQSession::rollback() {
 
     try{
 
@@ -211,7 +211,7 @@ void ActiveMQSession::rollback() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::recover() throw( cms::CMSException ) {
+void ActiveMQSession::recover() {
 
     try{
 
@@ -268,9 +268,7 @@ void ActiveMQSession::deliverAcks() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer(
-    const cms::Destination* destination )
-        throw ( cms::CMSException ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination ) {
 
     try{
 
@@ -282,10 +280,8 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer(
-    const cms::Destination* destination,
-    const std::string& selector )
-        throw ( cms::CMSException ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination,
+                                                       const std::string& selector ) {
 
     try{
 
@@ -297,11 +293,9 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer(
-    const cms::Destination* destination,
-    const std::string& selector,
-    bool noLocal )
-        throw ( cms::CMSException ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination,
+                                                       const std::string& selector,
+                                                       bool noLocal ) {
 
     try{
 
@@ -351,12 +345,10 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
-    const cms::Topic* destination,
-    const std::string& name,
-    const std::string& selector,
-    bool noLocal )
-        throw ( cms::CMSException ) {
+cms::MessageConsumer* ActiveMQSession::createDurableConsumer( const cms::Topic* destination,
+                                                              const std::string& name,
+                                                              const std::string& selector,
+                                                              bool noLocal ) {
 
     try{
 
@@ -400,9 +392,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* ActiveMQSession::createProducer(
-    const cms::Destination* destination )
-        throw ( cms::CMSException ) {
+cms::MessageProducer* ActiveMQSession::createProducer( const cms::Destination* destination ) {
 
     try{
 
@@ -446,8 +436,7 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue )
-    throw( cms::CMSException ) {
+cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue ) {
 
     try{
         return ActiveMQSession::createBrowser( queue, "" );
@@ -457,8 +446,7 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue )
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue,
-                                                   const std::string& selector )
-    throw( cms::CMSException ) {
+                                                   const std::string& selector ) {
 
     try{
 
@@ -488,8 +476,7 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
-    throw ( cms::CMSException ) {
+cms::Queue* ActiveMQSession::createQueue( const std::string& queueName ) {
 
     try{
 
@@ -506,8 +493,7 @@ cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
-    throw ( cms::CMSException ) {
+cms::Topic* ActiveMQSession::createTopic( const std::string& topicName ) {
 
     try{
 
@@ -524,8 +510,7 @@ cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
-    throw ( cms::CMSException ) {
+cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue() {
 
     try{
 
@@ -543,8 +528,7 @@ cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
-    throw ( cms::CMSException ) {
+cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic() {
 
     try{
 
@@ -562,8 +546,7 @@ cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQSession::createMessage()
-    throw ( cms::CMSException ) {
+cms::Message* ActiveMQSession::createMessage() {
 
     try{
 
@@ -576,8 +559,7 @@ cms::Message* ActiveMQSession::createMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage()
-    throw ( cms::CMSException ) {
+cms::BytesMessage* ActiveMQSession::createBytesMessage() {
 
     try{
 
@@ -590,8 +572,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* bytes, int bytesSize )
-        throw ( cms::CMSException ) {
+cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* bytes, int bytesSize ) {
 
     try{
 
@@ -604,8 +585,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* byt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::StreamMessage* ActiveMQSession::createStreamMessage()
-    throw ( cms::CMSException ) {
+cms::StreamMessage* ActiveMQSession::createStreamMessage() {
 
     try{
 
@@ -618,8 +598,7 @@ cms::StreamMessage* ActiveMQSession::createStreamMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage()
-    throw ( cms::CMSException ) {
+cms::TextMessage* ActiveMQSession::createTextMessage() {
 
     try{
 
@@ -632,8 +611,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
-    throw ( cms::CMSException ) {
+cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text ) {
 
     try {
 
@@ -646,8 +624,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MapMessage* ActiveMQSession::createMapMessage()
-    throw ( cms::CMSException ) {
+cms::MapMessage* ActiveMQSession::createMapMessage() {
 
     try{
 
@@ -660,19 +637,17 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const throw ( cms::CMSException ) {
+cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const {
     return this->ackMode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQSession::isTransacted() const throw ( cms::CMSException ) {
+bool ActiveMQSession::isTransacted() const {
     return this->ackMode == Session::SESSION_TRANSACTED;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::send(
-    cms::Message* message, ActiveMQProducer* producer, util::Usage* usage )
-        throw ( cms::CMSException ) {
+void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage ) {
 
     try {
 
@@ -752,8 +727,8 @@ void ActiveMQSession::send(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::ExceptionListener* ActiveMQSession::getExceptionListener()
-{
+cms::ExceptionListener* ActiveMQSession::getExceptionListener() {
+
     if( connection != NULL ) {
         return connection->getExceptionListener();
     }
@@ -762,8 +737,7 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::unsubscribe( const std::string& name )
-    throw ( cms::CMSException ) {
+void ActiveMQSession::unsubscribe( const std::string& name ) {
 
     try{
 
@@ -837,8 +811,7 @@ bool ActiveMQSession::isStarted() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::createTemporaryDestination(
-    commands::ActiveMQTempDestination* tempDestination )
-        throw ( activemq::exceptions::ActiveMQException ) {
+    commands::ActiveMQTempDestination* tempDestination ) {
 
     try {
 
@@ -861,8 +834,7 @@ void ActiveMQSession::createTemporaryDestination(
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::destroyTemporaryDestination(
-    commands::ActiveMQTempDestination* tempDestination )
-        throw ( activemq::exceptions::ActiveMQException ) {
+    commands::ActiveMQTempDestination* tempDestination ) {
 
     try {
 
@@ -882,9 +854,8 @@ void ActiveMQSession::destroyTemporaryDestination(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQSession::createTemporaryDestinationName()
-    throw ( activemq::exceptions::ActiveMQException )
-{
+std::string ActiveMQSession::createTemporaryDestinationName() {
+
     try {
         return this->connection->getConnectionId().getValue() + ":" +
                Long::toString( this->connection->getNextTempDestinationId() );
@@ -895,8 +866,7 @@ std::string ActiveMQSession::createTemporaryDestinationName()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::oneway( Pointer<Command> command )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::oneway( Pointer<Command> command ) {
 
     try{
         this->checkClosed();
@@ -908,8 +878,7 @@ void ActiveMQSession::oneway( Pointer<Command> command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout ) {
 
     try{
         this->checkClosed();
@@ -921,7 +890,7 @@ void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeou
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::checkClosed() const {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
@@ -930,8 +899,7 @@ void ActiveMQSession::checkClosed() const throw( activemq::exceptions::ActiveMQE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer ) {
 
     try{
 
@@ -951,8 +919,7 @@ void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, long long lastDeliveredSequenceId )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, long long lastDeliveredSequenceId ) {
 
     try{
 
@@ -977,8 +944,7 @@ void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, lon
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::addProducer( ActiveMQProducer* producer )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::addProducer( ActiveMQProducer* producer ) {
 
     try{
 
@@ -998,8 +964,7 @@ void ActiveMQSession::addProducer( ActiveMQProducer* producer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId )
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId ) {
 
     try{
 
@@ -1020,7 +985,7 @@ void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::doStartTransaction() throw ( ActiveMQException ) {
+void ActiveMQSession::doStartTransaction() {
 
     if( !this->isTransacted() ) {
         throw ActiveMQException( __FILE__, __LINE__, "Not a Transacted Session" );

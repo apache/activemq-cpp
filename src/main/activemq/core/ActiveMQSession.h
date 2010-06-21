@@ -196,262 +196,61 @@ namespace core{
 
     public:   // Implements Methods
 
-        /**
-         * Closes this session as well as any active child consumers or
-         * producers.
-         * @throws CMSException
-         */
-        virtual void close() throw ( cms::CMSException );
+        virtual void close();
 
-        /**
-         * Commits all messages done in this transaction and releases any
-         * locks currently held.
-         * @throws CMSException
-         */
-        virtual void commit() throw ( cms::CMSException );
+        virtual void commit();
 
-        /**
-         * Rollsback all messages done in this transaction and releases any
-         * locks currently held.
-         * @throws CMSException
-         */
-        virtual void rollback() throw ( cms::CMSException );
+        virtual void rollback();
 
-        /**
-         * Stops message delivery in this session, and restarts message delivery with the
-         * oldest unacknowledged message.
-         *
-         * All consumers deliver messages in a serial order. Acknowledging a received message
-         * automatically acknowledges all messages that have been delivered to the client.
-         *
-         * Restarting a session causes it to take the following actions:
-         *
-         *  - Stop message delivery
-         *  - Mark all messages that might have been delivered but not acknowledged
-         *    as "redelivered"
-         *  - Restart the delivery sequence including all unacknowledged messages that had
-         *    been previously delivered.  Redelivered messages do not have to be delivered in
-         *    exactly their original delivery order.
-         *
-         * @throws CMSException - if the CMS provider fails to stop and restart message
-         *                        delivery due to some internal error.
-         * @throws IllegalStateException - if the method is called by a transacted session.
-         */
-        virtual void recover() throw( cms::CMSException );
+        virtual void recover();
 
-        /**
-         * Creates a MessageConsumer for the specified destination.
-         * @param destination - The Destination that this consumer receiving messages for.
-         * @throws CMSException
-         */
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination )
-                throw ( cms::CMSException );
+        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination );
 
-        /**
-         * Creates a MessageConsumer for the specified destination, using a
-         * message selector.
-         * @param destination - The Destination that this consumer receiving messages for.
-         * @param selector - The Message Selector string to use for this destination
-         * @throws CMSException
-         */
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination,
-            const std::string& selector )
-                throw ( cms::CMSException );
-        /**
-         * Creates a MessageConsumer for the specified destination, using a
-         * message selector.
-         * @param destination - The Destination that this consumer receiving messages for.
-         * @param selector - The Message Selector string to use for this destination
-         * @param noLocal - if true, and the destination is a topic, inhibits the
-         *        delivery of messages published by its own connection. The
-         *        behavior for NoLocal is not specified if the destination is
-         *        a queue.
-         * @throws CMSException
-         */
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination,
-            const std::string& selector,
-            bool noLocal )
-                throw ( cms::CMSException );
+        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
+                                                      const std::string& selector );
 
-        /**
-         * Creates a durable subscriber to the specified topic, using a
-         * message selector
-         * @param destination - the topic to subscribe to
-         * @param name - The name used to identify the subscription
-         * @param selector - only messages matching the selector are received
-         * @param noLocal - if true, and the destination is a topic, inhibits the
-         *        delivery of messages published by its own connection. The
-         *        behavior for NoLocal is not specified if the destination is
-         *        a queue.
-         * @throws CMSException
-         */
-        virtual cms::MessageConsumer* createDurableConsumer(
-            const cms::Topic* destination,
-            const std::string& name,
-            const std::string& selector,
-            bool noLocal = false )
-                throw ( cms::CMSException );
+        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
+                                                      const std::string& selector,
+                                                      bool noLocal );
 
-        /**
-         * Creates a MessageProducer to send messages to the specified
-         * destination.
-         * @param destination - the Destination to publish on
-         * @throws CMSException
-         */
-        virtual cms::MessageProducer* createProducer(
-            const cms::Destination* destination )
-                throw ( cms::CMSException );
+        virtual cms::MessageConsumer* createDurableConsumer( const cms::Topic* destination,
+                                                             const std::string& name,
+                                                             const std::string& selector,
+                                                             bool noLocal = false );
 
-        /**
-         * Creates a new QueueBrowser to peek at Messages on the given Queue.
-         *
-         * @param queue
-         *      the Queue to browse
-         * @return New QueueBrowser that is owned by the caller.
-         *
-         * @throws CMSException - If an internal error occurs.
-         * @throws InvalidDestinationException - if the destination given is invalid.
-         */
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue )
-            throw( cms::CMSException );
+        virtual cms::MessageProducer* createProducer( const cms::Destination* destination );
 
-        /**
-         * Creates a new QueueBrowser to peek at Messages on the given Queue.
-         *
-         * @param queue
-         *      the Queue to browse
-         * @param selector
-         *      the Message selector to filter which messages are browsed.
-         * @return New QueueBrowser that is owned by the caller.
-         *
-         * @throws CMSException - If an internal error occurs.
-         * @throws InvalidDestinationException - if the destination given is invalid.
-         */
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
-            throw( cms::CMSException );
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue );
 
-        /**
-         * Creates a queue identity given a Queue name.
-         * @param queueName - the name of the new Queue
-         * @throws CMSException
-         */
-        virtual cms::Queue* createQueue( const std::string& queueName )
-            throw ( cms::CMSException );
+        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector );
 
-        /**
-         * Creates a topic identity given a Queue name.
-         * @param topicName - the name of the new Topic
-         * @throws CMSException
-         */
-        virtual cms::Topic* createTopic( const std::string& topicName )
-            throw ( cms::CMSException );
+        virtual cms::Queue* createQueue( const std::string& queueName );
 
-        /**
-         * Creates a TemporaryQueue object.
-         * @throws CMSException
-         */
-        virtual cms::TemporaryQueue* createTemporaryQueue()
-            throw ( cms::CMSException );
+        virtual cms::Topic* createTopic( const std::string& topicName );
 
-        /**
-         * Creates a TemporaryTopic object.
-         * @throws CMSException
-         */
-        virtual cms::TemporaryTopic* createTemporaryTopic()
-            throw ( cms::CMSException );
+        virtual cms::TemporaryQueue* createTemporaryQueue();
 
-        /**
-         * Creates a new Message
-         * @throws CMSException
-         */
-        virtual cms::Message* createMessage()
-            throw ( cms::CMSException );
+        virtual cms::TemporaryTopic* createTemporaryTopic();
 
-        /**
-         * Creates a BytesMessage
-         *
-         * @return a newly created BytesMessage.
-         * @throws CMSException
-         */
-        virtual cms::BytesMessage* createBytesMessage()
-            throw ( cms::CMSException );
+        virtual cms::Message* createMessage();
 
-        /**
-         * Creates a BytesMessage and sets the pay-load to the passed value
-         *
-         * @param bytes - an array of bytes to set in the message
-         * @param bytesSize - the size of the bytes array, or number of bytes to use
-         * @return a newly created BytesMessage.
-         *
-         * @throws CMSException
-         */
-        virtual cms::BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize )
-            throw ( cms::CMSException );
+        virtual cms::BytesMessage* createBytesMessage();
 
-        /**
-         * Creates a new StreamMessage
-         *
-         * @returns a newly created StreamMessage.
-         * @throws CMSException
-         */
-        virtual cms::StreamMessage* createStreamMessage() throw ( cms::CMSException );
+        virtual cms::BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize );
 
-        /**
-         * Creates a new TextMessage
-         * @returns a newly created TextMessage.
-         * @throws CMSException
-         */
-        virtual cms::TextMessage* createTextMessage() throw ( cms::CMSException );
+        virtual cms::StreamMessage* createStreamMessage();
 
-        /**
-         * Creates a new TextMessage and set the text to the value given
-         *
-         * @param text - The initial text for the message
-         * @returns a newly created TextMessage with the given Text set in the Message body.
-         * @throws CMSException
-         */
-        virtual cms::TextMessage* createTextMessage( const std::string& text )
-            throw ( cms::CMSException );
+        virtual cms::TextMessage* createTextMessage();
 
-        /**
-         * Creates a new MapMessage
-         *
-         * @returns a newly created MapMessage.
-         * @throws CMSException
-         */
-        virtual cms::MapMessage* createMapMessage()
-            throw ( cms::CMSException );
+        virtual cms::TextMessage* createTextMessage( const std::string& text );
 
-        /**
-         * Returns the acknowledgment mode of the session.
-         * @return the Sessions Acknowledge Mode
-         */
-        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const throw ( cms::CMSException );
+        virtual cms::MapMessage* createMapMessage();
 
-        /**
-         * Gets if the Sessions is a Transacted Session
-         * @return transacted true - false.
-         */
-        virtual bool isTransacted() const throw ( cms::CMSException );
+        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const;
 
-        /**
-         * Unsubscribes a durable subscription that has been created by a
-         * client.
-         *
-         * This method deletes the state being maintained on behalf of the
-         * subscriber by its provider.  It is erroneous for a client to delete a
-         * durable subscription while there is an active MessageConsumer or
-         * Subscriber for the subscription, or while a consumed message is
-         * part of a pending transaction or has not been acknowledged in the
-         * session.
-         * @param name the name used to identify this subscription
-         * @throws CMSException
-         */
-        virtual void unsubscribe( const std::string& name )
-            throw ( cms::CMSException );
+        virtual bool isTransacted() const;
+
+        virtual void unsubscribe( const std::string& name );
 
    public:   // ActiveMQSession specific Methods
 
@@ -472,8 +271,7 @@ namespace core{
          *
          * @throws CMSException
          */
-        void send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage )
-            throw ( cms::CMSException );
+        void send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage );
 
         /**
          * This method gets any registered exception listener of this sessions
@@ -536,8 +334,7 @@ namespace core{
          * @throws ActiveMQException if not currently connected, or
          * if the operation fails for any reason.
          */
-        void oneway( Pointer<commands::Command> command )
-            throw ( activemq::exceptions::ActiveMQException );
+        void oneway( Pointer<commands::Command> command );
 
         /**
          * Sends a synchronous request and returns the response from the broker.
@@ -547,8 +344,7 @@ namespace core{
          * @throws ActiveMQException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 )
-            throw ( activemq::exceptions::ActiveMQException );
+        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
 
         /**
          * Adds a MessageConsumer to this session registering it with the Connection and store
@@ -560,8 +356,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addConsumer( ActiveMQConsumer* consumer )
-            throw ( activemq::exceptions::ActiveMQException );
+        void addConsumer( ActiveMQConsumer* consumer );
 
         /**
          * Dispose of a MessageConsumer from this session.  Removes it from the Connection
@@ -574,8 +369,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId, long long lastDeliveredSequenceId = 0 )
-            throw ( activemq::exceptions::ActiveMQException );
+        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId, long long lastDeliveredSequenceId = 0 );
 
         /**
          * Adds a MessageProducer to this session registering it with the Connection and store
@@ -587,8 +381,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addProducer( ActiveMQProducer* consumer )
-            throw ( activemq::exceptions::ActiveMQException );
+        void addProducer( ActiveMQProducer* consumer );
 
         /**
          * Dispose of a MessageProducer from this session.  Removes it from the Connection
@@ -599,8 +392,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeProducer( const Pointer<commands::ProducerId>& producerId )
-            throw ( activemq::exceptions::ActiveMQException );
+        void removeProducer( const Pointer<commands::ProducerId>& producerId );
 
         /**
          * Starts if not already start a Transaction for this Session.  If the session
@@ -609,7 +401,7 @@ namespace core{
          *
          * @throw ActiveMQException if this is not a Transacted Session.
          */
-        void doStartTransaction() throw ( exceptions::ActiveMQException );
+        void doStartTransaction();
 
         /**
          * Gets the Pointer to this Session's TransactionContext
@@ -666,27 +458,24 @@ namespace core{
        }
 
        // Checks for the closed state and throws if so.
-       void checkClosed() const throw( exceptions::ActiveMQException );
+       void checkClosed() const;
 
        // Send the Destination Creation Request to the Broker, alerting it
        // that we've created a new Temporary Destination.
        // @param tempDestination - The new Temporary Destination
        void createTemporaryDestination(
-           commands::ActiveMQTempDestination* tempDestination )
-               throw ( activemq::exceptions::ActiveMQException );
+           commands::ActiveMQTempDestination* tempDestination );
 
        // Send the Destination Destruction Request to the Broker, alerting
        // it that we've removed an existing Temporary Destination.
        // @param tempDestination - The Temporary Destination to remove
        void destroyTemporaryDestination(
-           commands::ActiveMQTempDestination* tempDestination )
-               throw ( activemq::exceptions::ActiveMQException );
+           commands::ActiveMQTempDestination* tempDestination );
 
        // Creates a new Temporary Destination name using the connection id
        // and a rolling count.
        // @returns a unique Temporary Destination name
-       std::string createTemporaryDestinationName()
-           throw ( activemq::exceptions::ActiveMQException );
+       std::string createTemporaryDestinationName();
 
     };
 
