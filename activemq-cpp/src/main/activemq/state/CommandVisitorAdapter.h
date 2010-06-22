@@ -69,229 +69,229 @@ namespace state {
         virtual ~CommandVisitorAdapter() {}
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveConnection(
-            commands::ConnectionId* id AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConnectionId* id AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveSession(
-            commands::SessionId* id AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::SessionId* id AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveProducer(
-            commands::ProducerId* id AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ProducerId* id AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveConsumer(
-            commands::ConsumerId* id AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConsumerId* id AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processDestinationInfo(
-            commands::DestinationInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::DestinationInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveDestination(
-            commands::DestinationInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::DestinationInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveSubscriptionInfo(
-            commands::RemoveSubscriptionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::RemoveSubscriptionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processMessage(
-            commands::Message* send AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::Message* send AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processMessageAck(
-            commands::MessageAck* ack AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::MessageAck* ack AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processMessagePull(
-            commands::MessagePull* pull AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::MessagePull* pull AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processBeginTransaction(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processPrepareTransaction(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processCommitTransactionOnePhase(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processCommitTransactionTwoPhase(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRollbackTransaction(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processWireFormat(
-            commands::WireFormatInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::WireFormatInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processKeepAliveInfo(
-            commands::KeepAliveInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::KeepAliveInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processShutdownInfo(
-            commands::ShutdownInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ShutdownInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processFlushCommand(
-            commands::FlushCommand* command AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::FlushCommand* command AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processBrokerInfo(
-            commands::BrokerInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::BrokerInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRecoverTransactions(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processForgetTransaction(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processEndTransaction(
-            commands::TransactionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processMessageDispatchNotification(
-            commands::MessageDispatchNotification* notification AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::MessageDispatchNotification* notification AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processProducerAck(
-            commands::ProducerAck* ack AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ProducerAck* ack AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processMessageDispatch(
-            commands::MessageDispatch* dispatch AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::MessageDispatch* dispatch AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processControlCommand(
-            commands::ControlCommand* command AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ControlCommand* command AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionError(
-            commands::ConnectionError* error AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConnectionError* error AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionControl(
-            commands::ConnectionControl* control AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConnectionControl* control AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processConsumerControl(
-            commands::ConsumerControl* control AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConsumerControl* control AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processBrokerError(
-            commands::BrokerError* error AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::BrokerError* error AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processReplayCommand(
-            commands::ReplayCommand* replay AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ReplayCommand* replay AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processResponse(
-            commands::Response* response AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::Response* response AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionInfo(
-            commands::ConnectionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConnectionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processSessionInfo(
-            commands::SessionInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::SessionInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processProducerInfo(
-            commands::ProducerInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ProducerInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processConsumerInfo(
-            commands::ConsumerInfo* info AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+            commands::ConsumerInfo* info AMQCPP_UNUSED ) {
 
             return decaf::lang::Pointer<commands::Command>();
         }
 
         virtual decaf::lang::Pointer<commands::Command> processTransactionInfo(
-            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) {
+            commands::TransactionInfo* info ) {
 
             if( info != decaf::lang::Pointer<commands::Command>() ) {
                 switch( info->getType() ) {
@@ -320,7 +320,7 @@ namespace state {
         }
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveInfo(
-            commands::RemoveInfo* info ) throw ( exceptions::ActiveMQException ) {
+            commands::RemoveInfo* info ) {
 
             if( info != decaf::lang::Pointer<commands::Command>() ) {
                 switch( info->getObjectId()->getDataStructureType() ) {

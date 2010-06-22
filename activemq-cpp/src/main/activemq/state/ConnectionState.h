@@ -145,7 +145,7 @@ namespace state {
             return recoveringPullConsumers;
         }
 
-        void setConnectionInterruptProcessingComplete(bool connectionInterruptProcessingComplete) {
+        void setConnectionInterruptProcessingComplete( bool connectionInterruptProcessingComplete ) {
             this->connectionInterruptProcessingComplete = connectionInterruptProcessingComplete;
         }
 
