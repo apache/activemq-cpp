@@ -75,71 +75,52 @@ namespace state {
 
         virtual ~ConnectionStateTracker();
 
-        Pointer<Tracked> track( const Pointer<Command>& command ) throw( decaf::io::IOException );
+        Pointer<Tracked> track( const Pointer<Command>& command );
 
         void trackBack( const Pointer<Command>& command );
 
-        void restore( const Pointer<transport::Transport>& transport )
-            throw( decaf::io::IOException );
+        void restore( const Pointer<transport::Transport>& transport );
 
         void connectionInterruptProcessingComplete(
             transport::Transport* transport, const Pointer<ConnectionId>& connectionId );
 
         void transportInterrupted();
 
-        virtual Pointer<Command> processDestinationInfo( DestinationInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processDestinationInfo( DestinationInfo* info );
 
-        virtual Pointer<Command> processRemoveDestination( DestinationInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRemoveDestination( DestinationInfo* info );
 
-        virtual Pointer<Command> processProducerInfo( ProducerInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processProducerInfo( ProducerInfo* info );
 
-        virtual Pointer<Command> processRemoveProducer( ProducerId* id )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRemoveProducer( ProducerId* id );
 
-        virtual Pointer<Command> processConsumerInfo( ConsumerInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processConsumerInfo( ConsumerInfo* info );
 
-        virtual Pointer<Command> processRemoveConsumer( ConsumerId* id )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRemoveConsumer( ConsumerId* id );
 
-        virtual Pointer<Command> processSessionInfo( SessionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processSessionInfo( SessionInfo* info );
 
-        virtual Pointer<Command> processRemoveSession( SessionId* id )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRemoveSession( SessionId* id );
 
-        virtual Pointer<Command> processConnectionInfo( ConnectionInfo* info)
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processConnectionInfo( ConnectionInfo* info );
 
-        virtual Pointer<Command> processRemoveConnection( ConnectionId* id )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRemoveConnection( ConnectionId* id );
 
-        virtual Pointer<Command> processMessage( Message* message )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processMessage( Message* message );
 
-        virtual Pointer<Command> processMessageAck( MessageAck* ack )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processMessageAck( MessageAck* ack );
 
-        virtual Pointer<Command> processBeginTransaction( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processBeginTransaction( TransactionInfo* info );
 
-        virtual Pointer<Command> processPrepareTransaction( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processPrepareTransaction( TransactionInfo* info );
 
-        virtual Pointer<Command> processCommitTransactionOnePhase( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processCommitTransactionOnePhase( TransactionInfo* info );
 
-        virtual Pointer<Command> processCommitTransactionTwoPhase( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processCommitTransactionTwoPhase( TransactionInfo* info );
 
-        virtual Pointer<Command> processRollbackTransaction( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processRollbackTransaction( TransactionInfo* info );
 
-        virtual Pointer<Command> processEndTransaction( TransactionInfo* info )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Command> processEndTransaction( TransactionInfo* info );
 
         bool isRestoreConsumers() const {
             return this->restoreConsumers;
@@ -208,24 +189,19 @@ namespace state {
     private:
 
         void doRestoreTransactions( const Pointer<transport::Transport>& transport,
-                                    const Pointer<ConnectionState>& connectionState )
-            throw( decaf::io::IOException );
+                                    const Pointer<ConnectionState>& connectionState );
 
         void doRestoreSessions( const Pointer<transport::Transport>& transport,
-                                const Pointer<ConnectionState>& connectionState )
-            throw( decaf::io::IOException );
+                                const Pointer<ConnectionState>& connectionState );
 
         void doRestoreConsumers( const Pointer<transport::Transport>& transport,
-                                 const Pointer<SessionState>& sessionState )
-            throw( decaf::io::IOException );
+                                 const Pointer<SessionState>& sessionState );
 
         void doRestoreProducers( const Pointer<transport::Transport>& transport,
-                                 const Pointer<SessionState>& sessionState )
-            throw( decaf::io::IOException );
+                                 const Pointer<SessionState>& sessionState );
 
         void doRestoreTempDestinations( const Pointer<transport::Transport>& transport,
-                                        const Pointer<ConnectionState>& connectionState )
-            throw( decaf::io::IOException );
+                                        const Pointer<ConnectionState>& connectionState );
 
     };
 
