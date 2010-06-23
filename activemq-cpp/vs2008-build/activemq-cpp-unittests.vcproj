@@ -10495,6 +10495,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQBlobMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQBlobMessageMarshallerTest.h"
@@ -10503,6 +10512,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQBytesMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQBytesMessageMarshallerTest.h"
@@ -10511,6 +10529,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQMapMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQMapMessageMarshallerTest.h"
@@ -10519,6 +10546,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQMessageMarshallerTest.h"
@@ -10527,6 +10563,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQObjectMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQObjectMessageMarshallerTest.h"
@@ -10535,6 +10580,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQQueueMarshallerTest.h"
@@ -10543,6 +10597,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQStreamMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQStreamMessageMarshallerTest.h"
@@ -10551,6 +10614,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTempQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTempQueueMarshallerTest.h"
@@ -10559,6 +10631,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTempTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTempTopicMarshallerTest.h"
@@ -10567,6 +10648,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTextMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTextMessageMarshallerTest.h"
@@ -10575,6 +10665,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ActiveMQTopicMarshallerTest.h"
@@ -10583,6 +10682,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\BrokerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\BrokerIdMarshallerTest.h"
@@ -10591,6 +10699,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\BrokerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\BrokerInfoMarshallerTest.h"
@@ -10599,6 +10716,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionControlMarshallerTest.h"
@@ -10607,6 +10733,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionErrorMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionErrorMarshallerTest.h"
@@ -10615,6 +10750,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionIdMarshallerTest.h"
@@ -10623,6 +10767,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConnectionInfoMarshallerTest.h"
@@ -10631,6 +10784,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerControlMarshallerTest.h"
@@ -10639,6 +10801,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerIdMarshallerTest.h"
@@ -10647,6 +10818,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ConsumerInfoMarshallerTest.h"
@@ -10655,6 +10835,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ControlCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ControlCommandMarshallerTest.h"
@@ -10663,6 +10852,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DataArrayResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DataArrayResponseMarshallerTest.h"
@@ -10671,6 +10869,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DataResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DataResponseMarshallerTest.h"
@@ -10679,6 +10886,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DestinationInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DestinationInfoMarshallerTest.h"
@@ -10687,6 +10903,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DiscoveryEventMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\DiscoveryEventMarshallerTest.h"
@@ -10695,6 +10920,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ExceptionResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ExceptionResponseMarshallerTest.h"
@@ -10703,6 +10937,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\FlushCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\FlushCommandMarshallerTest.h"
@@ -10711,6 +10954,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\IntegerResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\IntegerResponseMarshallerTest.h"
@@ -10719,6 +10971,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalQueueAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalQueueAckMarshallerTest.h"
@@ -10727,6 +10988,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTopicAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTopicAckMarshallerTest.h"
@@ -10735,6 +11005,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTraceMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTraceMarshallerTest.h"
@@ -10743,6 +11022,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTransactionMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\JournalTransactionMarshallerTest.h"
@@ -10751,6 +11039,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\KeepAliveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\KeepAliveInfoMarshallerTest.h"
@@ -10759,6 +11056,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\LastPartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\LastPartialCommandMarshallerTest.h"
@@ -10767,6 +11073,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\LocalTransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\LocalTransactionIdMarshallerTest.h"
@@ -10775,6 +11090,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageAckMarshallerTest.h"
@@ -10783,6 +11107,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageDispatchMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageDispatchMarshallerTest.h"
@@ -10791,6 +11124,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageDispatchNotificationMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageDispatchNotificationMarshallerTest.h"
@@ -10799,6 +11141,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessageIdMarshallerTest.h"
@@ -10807,6 +11158,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessagePullMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\MessagePullMarshallerTest.h"
@@ -10815,6 +11175,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\NetworkBridgeFilterMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\NetworkBridgeFilterMarshallerTest.h"
@@ -10823,6 +11192,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\PartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\PartialCommandMarshallerTest.h"
@@ -10831,6 +11209,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerAckMarshallerTest.h"
@@ -10839,6 +11226,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerIdMarshallerTest.h"
@@ -10847,6 +11243,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ProducerInfoMarshallerTest.h"
@@ -10855,6 +11260,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\RemoveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\RemoveInfoMarshallerTest.h"
@@ -10863,6 +11277,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\RemoveSubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\RemoveSubscriptionInfoMarshallerTest.h"
@@ -10871,6 +11294,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ReplayCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ReplayCommandMarshallerTest.h"
@@ -10879,6 +11311,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ResponseMarshallerTest.h"
@@ -10887,6 +11328,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SessionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SessionIdMarshallerTest.h"
@@ -10895,6 +11345,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SessionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SessionInfoMarshallerTest.h"
@@ -10903,6 +11362,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ShutdownInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\ShutdownInfoMarshallerTest.h"
@@ -10915,6 +11383,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\SubscriptionInfoMarshallerTest.h"
@@ -10923,6 +11400,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\TransactionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\TransactionInfoMarshallerTest.h"
@@ -10931,6 +11417,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\WireFormatInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\WireFormatInfoMarshallerTest.h"
@@ -10939,6 +11434,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\XATransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)3\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)3\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v4\XATransactionIdMarshallerTest.h"
@@ -10951,6 +11455,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQBlobMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQBlobMessageMarshallerTest.h"
@@ -10959,6 +11472,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQBytesMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQBytesMessageMarshallerTest.h"
@@ -10967,6 +11489,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQMapMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQMapMessageMarshallerTest.h"
@@ -10975,6 +11506,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQMessageMarshallerTest.h"
@@ -10983,6 +11523,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQObjectMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQObjectMessageMarshallerTest.h"
@@ -10991,6 +11540,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQQueueMarshallerTest.h"
@@ -10999,6 +11557,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQStreamMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQStreamMessageMarshallerTest.h"
@@ -11007,6 +11574,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTempQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTempQueueMarshallerTest.h"
@@ -11015,6 +11591,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTempTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTempTopicMarshallerTest.h"
@@ -11023,6 +11608,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTextMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTextMessageMarshallerTest.h"
@@ -11031,6 +11625,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ActiveMQTopicMarshallerTest.h"
@@ -11039,6 +11642,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\BrokerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\BrokerIdMarshallerTest.h"
@@ -11047,6 +11659,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\BrokerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\BrokerInfoMarshallerTest.h"
@@ -11055,6 +11676,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionControlMarshallerTest.h"
@@ -11063,6 +11693,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionErrorMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionErrorMarshallerTest.h"
@@ -11071,6 +11710,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionIdMarshallerTest.h"
@@ -11079,6 +11727,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConnectionInfoMarshallerTest.h"
@@ -11087,6 +11744,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerControlMarshallerTest.h"
@@ -11095,6 +11761,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerIdMarshallerTest.h"
@@ -11103,6 +11778,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ConsumerInfoMarshallerTest.h"
@@ -11111,6 +11795,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ControlCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ControlCommandMarshallerTest.h"
@@ -11119,6 +11812,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DataArrayResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DataArrayResponseMarshallerTest.h"
@@ -11127,6 +11829,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DataResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DataResponseMarshallerTest.h"
@@ -11135,6 +11846,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DestinationInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DestinationInfoMarshallerTest.h"
@@ -11143,6 +11863,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DiscoveryEventMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\DiscoveryEventMarshallerTest.h"
@@ -11151,6 +11880,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ExceptionResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ExceptionResponseMarshallerTest.h"
@@ -11159,6 +11897,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\FlushCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\FlushCommandMarshallerTest.h"
@@ -11167,6 +11914,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\IntegerResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\IntegerResponseMarshallerTest.h"
@@ -11175,6 +11931,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalQueueAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalQueueAckMarshallerTest.h"
@@ -11183,6 +11948,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTopicAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTopicAckMarshallerTest.h"
@@ -11191,6 +11965,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTraceMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTraceMarshallerTest.h"
@@ -11199,6 +11982,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTransactionMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\JournalTransactionMarshallerTest.h"
@@ -11207,6 +11999,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\KeepAliveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\KeepAliveInfoMarshallerTest.h"
@@ -11215,6 +12016,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\LastPartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\LastPartialCommandMarshallerTest.h"
@@ -11223,6 +12033,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\LocalTransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\LocalTransactionIdMarshallerTest.h"
@@ -11231,6 +12050,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageAckMarshallerTest.h"
@@ -11239,6 +12067,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageDispatchMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageDispatchMarshallerTest.h"
@@ -11247,6 +12084,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageDispatchNotificationMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageDispatchNotificationMarshallerTest.h"
@@ -11255,6 +12101,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessageIdMarshallerTest.h"
@@ -11263,6 +12118,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessagePullMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\MessagePullMarshallerTest.h"
@@ -11271,6 +12135,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\NetworkBridgeFilterMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\NetworkBridgeFilterMarshallerTest.h"
@@ -11279,6 +12152,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\PartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\PartialCommandMarshallerTest.h"
@@ -11287,6 +12169,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerAckMarshallerTest.h"
@@ -11295,6 +12186,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerIdMarshallerTest.h"
@@ -11303,6 +12203,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ProducerInfoMarshallerTest.h"
@@ -11311,6 +12220,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\RemoveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\RemoveInfoMarshallerTest.h"
@@ -11319,6 +12237,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\RemoveSubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\RemoveSubscriptionInfoMarshallerTest.h"
@@ -11327,6 +12254,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ReplayCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ReplayCommandMarshallerTest.h"
@@ -11335,6 +12271,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ResponseMarshallerTest.h"
@@ -11343,6 +12288,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SessionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SessionIdMarshallerTest.h"
@@ -11351,6 +12305,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SessionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SessionInfoMarshallerTest.h"
@@ -11359,6 +12322,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ShutdownInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\ShutdownInfoMarshallerTest.h"
@@ -11371,6 +12343,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\SubscriptionInfoMarshallerTest.h"
@@ -11379,6 +12360,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\TransactionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\TransactionInfoMarshallerTest.h"
@@ -11387,6 +12377,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\WireFormatInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\WireFormatInfoMarshallerTest.h"
@@ -11395,6 +12394,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\XATransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)4\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)4\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v5\XATransactionIdMarshallerTest.h"
@@ -11407,6 +12415,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQBlobMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQBlobMessageMarshallerTest.h"
@@ -11415,6 +12432,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQBytesMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQBytesMessageMarshallerTest.h"
@@ -11423,6 +12449,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQMapMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQMapMessageMarshallerTest.h"
@@ -11431,6 +12466,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQMessageMarshallerTest.h"
@@ -11439,6 +12483,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQObjectMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQObjectMessageMarshallerTest.h"
@@ -11447,6 +12500,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQQueueMarshallerTest.h"
@@ -11455,6 +12517,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQStreamMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQStreamMessageMarshallerTest.h"
@@ -11463,6 +12534,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTempQueueMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTempQueueMarshallerTest.h"
@@ -11471,6 +12551,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTempTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTempTopicMarshallerTest.h"
@@ -11479,6 +12568,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTextMessageMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTextMessageMarshallerTest.h"
@@ -11487,6 +12585,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTopicMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ActiveMQTopicMarshallerTest.h"
@@ -11495,6 +12602,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\BrokerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\BrokerIdMarshallerTest.h"
@@ -11503,6 +12619,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\BrokerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\BrokerInfoMarshallerTest.h"
@@ -11511,6 +12636,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionControlMarshallerTest.h"
@@ -11519,6 +12653,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionErrorMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionErrorMarshallerTest.h"
@@ -11527,6 +12670,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionIdMarshallerTest.h"
@@ -11535,6 +12687,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConnectionInfoMarshallerTest.h"
@@ -11543,6 +12704,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerControlMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerControlMarshallerTest.h"
@@ -11551,6 +12721,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerIdMarshallerTest.h"
@@ -11559,6 +12738,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ConsumerInfoMarshallerTest.h"
@@ -11567,6 +12755,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ControlCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ControlCommandMarshallerTest.h"
@@ -11575,6 +12772,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DataArrayResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DataArrayResponseMarshallerTest.h"
@@ -11583,6 +12789,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DataResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DataResponseMarshallerTest.h"
@@ -11591,6 +12806,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DestinationInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DestinationInfoMarshallerTest.h"
@@ -11599,6 +12823,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DiscoveryEventMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\DiscoveryEventMarshallerTest.h"
@@ -11607,6 +12840,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ExceptionResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ExceptionResponseMarshallerTest.h"
@@ -11615,6 +12857,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\FlushCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\FlushCommandMarshallerTest.h"
@@ -11623,6 +12874,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\IntegerResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\IntegerResponseMarshallerTest.h"
@@ -11631,6 +12891,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalQueueAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalQueueAckMarshallerTest.h"
@@ -11639,6 +12908,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTopicAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTopicAckMarshallerTest.h"
@@ -11647,6 +12925,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTraceMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTraceMarshallerTest.h"
@@ -11655,6 +12942,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTransactionMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\JournalTransactionMarshallerTest.h"
@@ -11663,6 +12959,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\KeepAliveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\KeepAliveInfoMarshallerTest.h"
@@ -11671,6 +12976,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\LastPartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\LastPartialCommandMarshallerTest.h"
@@ -11679,6 +12993,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\LocalTransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\LocalTransactionIdMarshallerTest.h"
@@ -11687,6 +13010,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageAckMarshallerTest.h"
@@ -11695,6 +13027,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageDispatchMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageDispatchMarshallerTest.h"
@@ -11703,6 +13044,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageDispatchNotificationMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageDispatchNotificationMarshallerTest.h"
@@ -11711,6 +13061,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessageIdMarshallerTest.h"
@@ -11719,6 +13078,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessagePullMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\MessagePullMarshallerTest.h"
@@ -11727,6 +13095,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\NetworkBridgeFilterMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\NetworkBridgeFilterMarshallerTest.h"
@@ -11735,6 +13112,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\PartialCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\PartialCommandMarshallerTest.h"
@@ -11743,6 +13129,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerAckMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerAckMarshallerTest.h"
@@ -11751,6 +13146,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerIdMarshallerTest.h"
@@ -11759,6 +13163,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ProducerInfoMarshallerTest.h"
@@ -11767,6 +13180,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\RemoveInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\RemoveInfoMarshallerTest.h"
@@ -11775,6 +13197,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\RemoveSubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\RemoveSubscriptionInfoMarshallerTest.h"
@@ -11783,6 +13214,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ReplayCommandMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ReplayCommandMarshallerTest.h"
@@ -11791,6 +13231,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ResponseMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ResponseMarshallerTest.h"
@@ -11799,6 +13248,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SessionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SessionIdMarshallerTest.h"
@@ -11807,6 +13265,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SessionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SessionInfoMarshallerTest.h"
@@ -11815,6 +13282,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ShutdownInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\ShutdownInfoMarshallerTest.h"
@@ -11827,6 +13303,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SubscriptionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\SubscriptionInfoMarshallerTest.h"
@@ -11835,6 +13320,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\TransactionInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\TransactionInfoMarshallerTest.h"
@@ -11843,6 +13337,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\WireFormatInfoMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\WireFormatInfoMarshallerTest.h"
@@ -11851,6 +13354,15 @@
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\XATransactionIdMarshallerTest.cpp"
 								>
+								<FileConfiguration
+									Name="Release|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										ObjectFile="$(IntDir)\$(ProjectName)5\"
+										XMLDocumentationFileName="$(IntDir)\$(ProjectName)5\"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\src\test\activemq\wireformat\openwire\marshal\v6\XATransactionIdMarshallerTest.h"
