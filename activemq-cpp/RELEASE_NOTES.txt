@@ -1,4 +1,16 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.2.1                               ==
+=========================================================================
+
+This release is a bugfix release that addresses a couple issues for Windows
+users.
+
+Bug
+
+    * [AMQCPP-295] - Build Error on windows machines due to missing/wrong ifdef
+    * [AMQCPP-296] - vs2008 project files are missing in the download-package
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.0                               ==
 =========================================================================
 
