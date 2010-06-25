@@ -777,6 +777,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test-integration\activemq\test\MapMessageTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\MapMessageTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test-integration\activemq\test\MessageCompressionTest.cpp"
 						>
 					</File>
@@ -889,6 +897,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.h"
 							>
 						</File>
 						<File
