@@ -102,7 +102,10 @@ namespace util {
             this->host = host;
         }
 
-        URI toURI() const throw( decaf::net::URISyntaxException );
+        /**
+         * @throws decaf::net::URISyntaxException
+         */
+        URI toURI() const;
 
     };
 

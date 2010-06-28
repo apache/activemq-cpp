@@ -93,8 +93,7 @@ OpenWireFormat::~OpenWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport )
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport ) {
 
     try{
         return Pointer<Transport>( new OpenWireFormatNegotiator( this, transport ) );
@@ -105,6 +104,7 @@ Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& t
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::destroyMarshalers() {
+
     try {
         for( size_t i = 0; i < dataMarshallers.size(); ++i ) {
             delete dataMarshallers[i];
@@ -116,7 +116,7 @@ void OpenWireFormat::destroyMarshalers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
+void OpenWireFormat::setVersion( int version ) {
 
     try{
 
@@ -145,17 +145,14 @@ void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setPreferedWireFormatInfo(
-    const Pointer<commands::WireFormatInfo>& info ) throw ( IllegalStateException ) {
-
+void OpenWireFormat::setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info ) {
     this->preferedWireFormatInfo = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* dataOut )
-    throw ( decaf::io::IOException ) {
+                              decaf::io::DataOutputStream* dataOut ) {
 
     try {
 
@@ -240,8 +237,7 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
-                                                      decaf::io::DataInputStream* dis )
-    throw ( decaf::io::IOException ) {
+                                                      decaf::io::DataInputStream* dis ) {
 
     try {
 
@@ -278,8 +274,7 @@ Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
-    throw ( IOException ) {
+commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
 
     try {
 
@@ -339,8 +334,7 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
 
 ////////////////////////////////////////////////////////////////////////////////
 int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
-                                               utils::BooleanStream* bs )
-    throw ( decaf::io::IOException ) {
+                                               utils::BooleanStream* bs ) {
 
     try {
 
@@ -386,8 +380,7 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
                                                 DataOutputStream* ds,
-                                                BooleanStream* bs )
-                                                    throw ( IOException ) {
+                                                BooleanStream* bs ) {
 
     try {
 
@@ -427,8 +420,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
-                                                           BooleanStream* bs )
-    throw ( decaf::io::IOException ) {
+                                                           BooleanStream* bs ) {
 
     try {
 
@@ -472,8 +464,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis )
-    throw ( IOException ) {
+DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis ) {
 
     try{
 
@@ -507,8 +498,7 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputS
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
-                                               decaf::io::DataOutputStream* dataOut )
-    throw ( decaf::io::IOException ) {
+                                               decaf::io::DataOutputStream* dataOut ) {
 
     try{
 
@@ -538,8 +528,7 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info )
-    throw ( IllegalStateException ) {
+void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info ) {
 
     if( preferedWireFormatInfo == NULL ) {
         throw IllegalStateException(

@@ -38,8 +38,7 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<unsigned char>& buffer )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<unsigned char>& buffer ) {
 
     try {
 
@@ -63,8 +62,7 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<uns
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<unsigned char>& buffer )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<unsigned char>& buffer ) {
 
     try {
 
@@ -84,8 +82,7 @@ void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<u
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<unsigned char>& buffer )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<unsigned char>& buffer ) {
 
     try {
 
@@ -109,8 +106,7 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<u
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( PrimitiveList* list, const std::vector<unsigned char>& buffer )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveList* list, const std::vector<unsigned char>& buffer ) {
 
     try {
 
@@ -130,8 +126,7 @@ void PrimitiveTypesMarshaller::unmarshal( PrimitiveList* list, const std::vector
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshalMap( const PrimitiveMap* map, DataOutputStream& dataOut )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshalMap( const PrimitiveMap* map, DataOutputStream& dataOut ) {
 
     try {
 
@@ -146,8 +141,7 @@ void PrimitiveTypesMarshaller::marshalMap( const PrimitiveMap* map, DataOutputSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveMap* PrimitiveTypesMarshaller::unmarshalMap( DataInputStream& dataIn )
-    throw ( decaf::lang::Exception ) {
+PrimitiveMap* PrimitiveTypesMarshaller::unmarshalMap( DataInputStream& dataIn ) {
 
     try {
 
@@ -160,8 +154,7 @@ PrimitiveMap* PrimitiveTypesMarshaller::unmarshalMap( DataInputStream& dataIn )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshalList( const PrimitiveList* list, DataOutputStream& dataOut )
-    throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshalList( const PrimitiveList* list, DataOutputStream& dataOut ) {
 
     try {
 
@@ -176,8 +169,7 @@ void PrimitiveTypesMarshaller::marshalList( const PrimitiveList* list, DataOutpu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveList* PrimitiveTypesMarshaller::unmarshalList( DataInputStream& dataIn )
-    throw ( decaf::lang::Exception ) {
+PrimitiveList* PrimitiveTypesMarshaller::unmarshalList( DataInputStream& dataIn ) {
 
     try {
 
@@ -192,8 +184,7 @@ PrimitiveList* PrimitiveTypesMarshaller::unmarshalList( DataInputStream& dataIn 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitiveMap(
     decaf::io::DataOutputStream& dataOut,
-    const decaf::util::Map<std::string, PrimitiveValueNode>& map )
-        throw ( decaf::io::IOException ) {
+    const decaf::util::Map<std::string, PrimitiveValueNode>& map ) {
 
     try{
 
@@ -217,8 +208,7 @@ void PrimitiveTypesMarshaller::marshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitiveList(
     decaf::io::DataOutputStream& dataOut,
-    const decaf::util::List<PrimitiveValueNode>& list )
-        throw ( decaf::io::IOException ) {
+    const decaf::util::List<PrimitiveValueNode>& list ) {
 
     try{
         dataOut.writeInt( (int)list.size() );
@@ -234,8 +224,7 @@ void PrimitiveTypesMarshaller::marshalPrimitiveList(
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
-                                               const activemq::util::PrimitiveValueNode& value )
-                                                    throw ( decaf::io::IOException ) {
+                                               const activemq::util::PrimitiveValueNode& value ) {
 
     try {
 
@@ -331,8 +320,7 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
-    decaf::io::DataInputStream& dataIn, PrimitiveMap& map )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream& dataIn, PrimitiveMap& map ) {
 
     try{
 
@@ -353,8 +341,7 @@ void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
-    decaf::util::StlList<PrimitiveValueNode>& list )
-        throw ( decaf::io::IOException ) {
+    decaf::util::StlList<PrimitiveValueNode>& list ) {
 
     try{
 
@@ -369,8 +356,7 @@ void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
-    io::DataInputStream& dataIn ) throw ( decaf::io::IOException ) {
+PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn ) {
 
     try {
 

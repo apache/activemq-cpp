@@ -71,8 +71,7 @@ namespace wireformat {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        WireFormatFactory* findFactory( const std::string& name ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+        WireFormatFactory* findFactory( const std::string& name ) const;
 
         /**
          * Registers a new WireFormatFactory with this Registry.  If a Factory with the
@@ -88,9 +87,7 @@ namespace wireformat {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, WireFormatFactory* factory )
-            throw( decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void registerFactory( const std::string& name, WireFormatFactory* factory );
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the

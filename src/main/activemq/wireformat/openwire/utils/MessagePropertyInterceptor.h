@@ -66,10 +66,9 @@ namespace utils {
          *
          * @throws NullPointerException if either param is NULL
          */
-        MessagePropertyInterceptor( commands::Message* message, util::PrimitiveMap* properties )
-            throw( decaf::lang::exceptions::NullPointerException );
+        MessagePropertyInterceptor( commands::Message* message, util::PrimitiveMap* properties );
 
-        virtual ~MessagePropertyInterceptor();
+        virtual ~MessagePropertyInterceptor() throw();
 
         /**
          * Gets a boolean property.

@@ -37,7 +37,7 @@ CompositeData::~CompositeData() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI CompositeData::toURI() const throw( decaf::net::URISyntaxException ) {
+URI CompositeData::toURI() const {
 
     ostringstream sb;
 

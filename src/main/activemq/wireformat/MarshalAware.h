@@ -38,6 +38,7 @@ namespace wireformat{
          * want to be marshal aware you just wouldn't implement this interface
          * but since this is C++ and we don't have true interfaces we need
          * a flat inheritance hierarchy, so we always implement this.
+         *
          * @returns true if this class cares about marshaling.
          */
         virtual bool isMarshalAware() const = 0;
@@ -45,48 +46,69 @@ namespace wireformat{
         /**
          * Called before marshaling is started to prepare the object to be
          * marshaled.
-         * @param wireFormat - the wireformat object to control marshaling
+         *
+         * @param wireFormat
+         *      The wireformat object to control marshaling
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual void beforeMarshal( WireFormat* wireFormat )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void beforeMarshal( WireFormat* wireFormat ) = 0;
 
         /**
          * Called after marshaling is started to cleanup the object being
          * marshaled.
-         * @param wireFormat - the wireformat object to control marshaling
+         *
+         * @param wireFormat
+         *      The wireformat object to control marshaling
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual void afterMarshal( WireFormat* wireFormat )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void afterMarshal( WireFormat* wireFormat ) = 0;
 
         /**
          * Called before unmarshaling is started to prepare the object to be
          * unmarshaled.
-         * @param wireFormat - the wireformat object to control unmarshaling
+         *
+         * @param wireFormat
+         *      The wireformat object to control marshaling
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual void beforeUnmarshal( WireFormat* wireFormat )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void beforeUnmarshal( WireFormat* wireFormat ) = 0;
 
         /**
          * Called after unmarshaling is started to cleanup the object being
          * unmarshaled.
-         * @param wireFormat - the wireformat object to control unmarshaling
+         *
+         * @param wireFormat
+         *      The wireformat object to control marshaling
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual void afterUnmarshal( WireFormat* wireFormat )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void afterUnmarshal( WireFormat* wireFormat ) = 0;
 
         /**
          * Called to set the data to this object that will contain the objects
          * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @param data - vector of object binary data
+         *
+         * @param wireFormat
+         *      The wireformat object to control marshaling
+         * @param data
+         *      A vector of bytes that contains the object in marshaled form.
+         *
+         * @throws IOException if an I/O error occurs.
          */
-        virtual void setMarshaledForm( WireFormat* wireFormat,
-                                       const std::vector<char>& data ) = 0;
+        virtual void setMarshaledForm( WireFormat* wireFormat, const std::vector<char>& data ) = 0;
 
         /**
          * Called to get the data to this object that will contain the objects
          * marshaled form.
-         * @param wireFormat - the wireformat object to control unmarshaling
+         *
+         * @param wireFormat
+         *      The wireformat object to control unmarshaling
+         *
          * @return buffer that holds the objects data.
          */
         virtual std::vector<unsigned char> getMarshaledForm( WireFormat* wireFormat ) = 0;

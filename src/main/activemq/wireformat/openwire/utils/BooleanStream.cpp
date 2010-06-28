@@ -41,7 +41,11 @@ BooleanStream::BooleanStream() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-bool BooleanStream::readBoolean() throw ( IOException ) {
+BooleanStream::~BooleanStream() throw() {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+bool BooleanStream::readBoolean() {
 
     try {
 
@@ -60,7 +64,7 @@ bool BooleanStream::readBoolean() throw ( IOException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
+void BooleanStream::writeBoolean( bool value ) {
 
     try{
 
@@ -91,7 +95,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
+void BooleanStream::marshal( DataOutputStream* dataOut ) {
 
     try {
 
@@ -139,7 +143,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
+void BooleanStream::unmarshal( DataInputStream* dataIn ) {
 
     try{
 

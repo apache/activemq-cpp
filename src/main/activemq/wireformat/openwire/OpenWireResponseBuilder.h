@@ -29,8 +29,10 @@ namespace openwire{
 
     using decaf::lang::Pointer;
 
-    class AMQCPP_API OpenWireResponseBuilder :
-        public transport::mock::ResponseBuilder{
+    /**
+     * Used to allow a MockTransport to generate response commands to OpenWire Commands.
+     */
+    class AMQCPP_API OpenWireResponseBuilder : public transport::mock::ResponseBuilder {
     public:
 
         OpenWireResponseBuilder() {}

@@ -31,8 +31,7 @@ namespace util{
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BOOLEAN_TYPE:
@@ -52,8 +51,7 @@ bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BYTE_TYPE:
@@ -73,8 +71,7 @@ unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value 
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::CHAR_TYPE:
@@ -94,8 +91,7 @@ char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BYTE_TYPE:
@@ -117,8 +113,7 @@ short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BYTE_TYPE:
@@ -142,8 +137,7 @@ int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BYTE_TYPE:
@@ -169,8 +163,7 @@ long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) co
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::FLOAT_TYPE:
@@ -190,8 +183,7 @@ float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::FLOAT_TYPE:
@@ -213,8 +205,7 @@ double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BOOLEAN_TYPE:
@@ -244,8 +235,7 @@ std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) 
 
 ////////////////////////////////////////////////////////////////////////////////
 template<>
-std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
         case PrimitiveValueNode::BYTE_ARRAY_TYPE:

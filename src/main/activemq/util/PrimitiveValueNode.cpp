@@ -243,8 +243,7 @@ void PrimitiveValueNode::setBool( bool lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool PrimitiveValueNode::getBool() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+bool PrimitiveValueNode::getBool() const {
 
     if( valueType != BOOLEAN_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -262,8 +261,7 @@ void PrimitiveValueNode::setByte( unsigned char lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PrimitiveValueNode::getByte() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+unsigned char PrimitiveValueNode::getByte() const {
 
     if( valueType != BYTE_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -281,8 +279,7 @@ void PrimitiveValueNode::setChar( char lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char PrimitiveValueNode::getChar() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+char PrimitiveValueNode::getChar() const {
 
     if( valueType != CHAR_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -300,8 +297,7 @@ void PrimitiveValueNode::setShort( short lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short PrimitiveValueNode::getShort()
-    const throw( decaf::lang::exceptions::NoSuchElementException ) {
+short PrimitiveValueNode::getShort() const {
 
     if( valueType != SHORT_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -319,8 +315,7 @@ void PrimitiveValueNode::setInt( int lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveValueNode::getInt() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+int PrimitiveValueNode::getInt() const {
 
     if( valueType != INTEGER_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -338,8 +333,7 @@ void PrimitiveValueNode::setLong( long long lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PrimitiveValueNode::getLong() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+long long PrimitiveValueNode::getLong() const {
 
     if( valueType != LONG_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -357,8 +351,7 @@ void PrimitiveValueNode::setDouble( double lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double PrimitiveValueNode::getDouble() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+double PrimitiveValueNode::getDouble() const {
 
     if( valueType != DOUBLE_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -376,8 +369,7 @@ void PrimitiveValueNode::setFloat( float lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float PrimitiveValueNode::getFloat() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+float PrimitiveValueNode::getFloat() const {
 
     if( valueType != FLOAT_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -395,8 +387,7 @@ void PrimitiveValueNode::setString( const std::string& lvalue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string PrimitiveValueNode::getString() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+std::string PrimitiveValueNode::getString() const {
 
     if( valueType != STRING_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -418,8 +409,7 @@ void PrimitiveValueNode::setByteArray( const std::vector<unsigned char>& lvalue 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PrimitiveValueNode::getByteArray() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+std::vector<unsigned char> PrimitiveValueNode::getByteArray() const {
 
     if( valueType != BYTE_ARRAY_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -442,8 +432,7 @@ void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& l
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const decaf::util::List<PrimitiveValueNode>& PrimitiveValueNode::getList() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+const decaf::util::List<PrimitiveValueNode>& PrimitiveValueNode::getList() const {
 
     if( valueType != LIST_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(
@@ -470,8 +459,7 @@ void PrimitiveValueNode::setMap(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const decaf::util::Map<std::string, PrimitiveValueNode>& PrimitiveValueNode::getMap() const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+const decaf::util::Map<std::string, PrimitiveValueNode>& PrimitiveValueNode::getMap() const {
 
     if( valueType != MAP_TYPE ){
         throw decaf::lang::exceptions::NoSuchElementException(

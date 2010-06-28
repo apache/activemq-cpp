@@ -47,52 +47,6 @@ namespace utils{
      * If the first byte = 0x80, the following short (two bytes) are the size field.
      */
     class AMQCPP_API BooleanStream {
-    public:
-
-        BooleanStream();
-        virtual ~BooleanStream() {}
-
-        /**
-         * Read a boolean data element from the internal data buffer
-         * @returns boolean from the stream
-         */
-        bool readBoolean() throw ( decaf::io::IOException );
-
-        /**
-         * Writes a Boolean value to the internal data buffer
-         * @param value - boolean data to write.
-         */
-        void writeBoolean( bool value ) throw ( decaf::io::IOException );
-
-        /**
-         * Marshal the data to a DataOutputStream
-         * @param dataOut - Stream to write the data to.
-         */
-        void marshal( decaf::io::DataOutputStream* dataOut ) throw ( decaf::io::IOException );
-
-        /**
-         * Marshal the data to a STL vector of unsigned chars
-         * @param dataOut - reference to a vector to write the data to.
-         */
-        void marshal( std::vector< unsigned char >& dataOut );
-
-        /**
-         * Unmarshal a Boolean data stream from the Input Stream
-         * @param dataIn - Input Stream to read data from.
-         */
-        void unmarshal( decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
-
-        /**
-         * Clears to old position markers, data starts at the beginning
-         */
-        void clear();
-
-        /**
-         * Calc the size that data is marshalled to
-         * @returns int size of marshalled data.
-         */
-        int marshalledSize();
-
     private:
 
         // Internal Buffer of data
@@ -106,6 +60,64 @@ namespace utils{
 
         // Bit we are on in the byte we are on from the buffer
         unsigned char bytePos;
+
+    public:
+
+        BooleanStream();
+
+        virtual ~BooleanStream() throw();
+
+        /**
+         * Read a boolean data element from the internal data buffer
+         *
+         * @returns boolean from the stream
+         *
+         * @throws IOException if an I/O error occurs during this operation.
+         */
+        bool readBoolean();
+
+        /**
+         * Writes a Boolean value to the internal data buffer
+         * @param value - boolean data to write.
+         *
+         * @throws IOException if an I/O error occurs during this operation.
+         */
+        void writeBoolean( bool value );
+
+        /**
+         * Marshal the data to a DataOutputStream
+         * @param dataOut - Stream to write the data to.
+         *
+         * @throws IOException if an I/O error occurs during this operation.
+         */
+        void marshal( decaf::io::DataOutputStream* dataOut );
+
+        /**
+         * Marshal the data to a STL vector of unsigned chars
+         * @param dataOut - reference to a vector to write the data to.
+         *
+         * @throws IOException if an I/O error occurs during this operation.
+         */
+        void marshal( std::vector< unsigned char >& dataOut );
+
+        /**
+         * Unmarshal a Boolean data stream from the Input Stream
+         * @param dataIn - Input Stream to read data from.
+         *
+         * @throws IOException if an I/O error occurs during this operation.
+         */
+        void unmarshal( decaf::io::DataInputStream* dataIn );
+
+        /**
+         * Clears to old position markers, data starts at the beginning
+         */
+        void clear();
+
+        /**
+         * Calc the size that data is marshalled to
+         * @returns int size of marshalled data.
+         */
+        int marshalledSize();
 
     };
 

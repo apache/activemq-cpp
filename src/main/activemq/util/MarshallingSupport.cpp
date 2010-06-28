@@ -38,8 +38,7 @@ MarshallingSupport::~MarshallingSupport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MarshallingSupport::writeString( decaf::io::DataOutputStream& dataOut, const std::string& value )
-    throw( decaf::io::IOException ) {
+void MarshallingSupport::writeString( decaf::io::DataOutputStream& dataOut, const std::string& value ) {
 
     try{
 
@@ -57,8 +56,7 @@ void MarshallingSupport::writeString( decaf::io::DataOutputStream& dataOut, cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MarshallingSupport::writeString16( decaf::io::DataOutputStream& dataOut, const std::string& value )
-    throw( decaf::io::IOException ) {
+void MarshallingSupport::writeString16( decaf::io::DataOutputStream& dataOut, const std::string& value ) {
 
     try{
 
@@ -81,8 +79,7 @@ void MarshallingSupport::writeString16( decaf::io::DataOutputStream& dataOut, co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MarshallingSupport::writeString32( decaf::io::DataOutputStream& dataOut, const std::string& value )
-    throw( decaf::io::IOException ) {
+void MarshallingSupport::writeString32( decaf::io::DataOutputStream& dataOut, const std::string& value ) {
 
     try{
 
@@ -105,8 +102,7 @@ void MarshallingSupport::writeString32( decaf::io::DataOutputStream& dataOut, co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshallingSupport::readString16( decaf::io::DataInputStream& dataIn )
-    throw( decaf::io::IOException ) {
+std::string MarshallingSupport::readString16( decaf::io::DataInputStream& dataIn ) {
 
     try{
         int utfLength = dataIn.readShort();
@@ -124,8 +120,7 @@ std::string MarshallingSupport::readString16( decaf::io::DataInputStream& dataIn
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshallingSupport::readString32( decaf::io::DataInputStream& dataIn )
-    throw( decaf::io::IOException ) {
+std::string MarshallingSupport::readString32( decaf::io::DataInputStream& dataIn ) {
 
     try{
         int utfLength = dataIn.readInt();
@@ -143,8 +138,7 @@ std::string MarshallingSupport::readString32( decaf::io::DataInputStream& dataIn
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshallingSupport::asciiToModifiedUtf8( const std::string& asciiString )
-    throw( decaf::io::UTFDataFormatException ) {
+std::string MarshallingSupport::asciiToModifiedUtf8( const std::string& asciiString ) {
 
     try {
 
@@ -210,8 +204,7 @@ std::string MarshallingSupport::asciiToModifiedUtf8( const std::string& asciiStr
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string MarshallingSupport::modifiedUtf8ToAscii( const std::string modifiedUtf8String )
-    throw( decaf::io::UTFDataFormatException ) {
+std::string MarshallingSupport::modifiedUtf8ToAscii( const std::string modifiedUtf8String ) {
 
     try {
 
