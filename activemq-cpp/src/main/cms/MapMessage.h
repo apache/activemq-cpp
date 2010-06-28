@@ -74,6 +74,15 @@ namespace cms{
         virtual ~MapMessage() throw() {}
 
         /**
+         * Returns true if there are no values stored in the MapMessage body.
+         *
+         * @returns true if the body of the MapMessage contains no elements.
+         *
+         * @throws CMSException if the operation fails due to an internal error.
+         */
+        virtual bool isEmpty() const = 0;
+
+        /**
          * Returns an Enumeration of all the names in the MapMessage
          * object.
          *
