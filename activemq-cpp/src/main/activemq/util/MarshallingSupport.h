@@ -51,8 +51,7 @@ namespace util {
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
-        static void writeString( decaf::io::DataOutputStream& dataOut, const std::string& value )
-            throw( decaf::io::IOException );
+        static void writeString( decaf::io::DataOutputStream& dataOut, const std::string& value );
 
         /**
          * Write the string object to the given DataOutputStream as Raw bytes, no string
@@ -67,8 +66,7 @@ namespace util {
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
-        static void writeString16( decaf::io::DataOutputStream& dataOut, const std::string& value )
-            throw( decaf::io::IOException );
+        static void writeString16( decaf::io::DataOutputStream& dataOut, const std::string& value );
 
         /**
          * Write the string object to the given DataOutputStream as Raw bytes, no string
@@ -83,8 +81,7 @@ namespace util {
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
-        static void writeString32( decaf::io::DataOutputStream& dataOut, const std::string& value )
-            throw( decaf::io::IOException );
+        static void writeString32( decaf::io::DataOutputStream& dataOut, const std::string& value );
 
         /**
          * Reads an Openwire encoded string from the provided DataInputStream.  No string
@@ -101,8 +98,7 @@ namespace util {
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
-        static std::string readString16( decaf::io::DataInputStream& dataIn )
-            throw( decaf::io::IOException );
+        static std::string readString16( decaf::io::DataInputStream& dataIn );
 
         /**
          * Reads an Openwire encoded string from the provided DataInputStream.  No string
@@ -119,8 +115,7 @@ namespace util {
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
-        static std::string readString32( decaf::io::DataInputStream& dataIn )
-            throw( decaf::io::IOException );
+        static std::string readString32( decaf::io::DataInputStream& dataIn );
 
     public:  // Static Utility Methods.
 
@@ -138,8 +133,7 @@ namespace util {
          * @throws UTFDataFormatException if the length of the encoded string would exceed the
          *         size of an signed integer.
          */
-        static std::string asciiToModifiedUtf8( const std::string& asciiString )
-            throw( decaf::io::UTFDataFormatException );
+        static std::string asciiToModifiedUtf8( const std::string& asciiString );
 
         /**
          * Given a string that contains bytes in the Java Modified UTF-8 format convert
@@ -156,8 +150,7 @@ namespace util {
          * @throws UTFDataFormatException if the provided string contains invalid data or the
          *         character values encoded in the string exceed ASCII value 255.
          */
-        static std::string modifiedUtf8ToAscii( const std::string modifiedUtf8String )
-            throw( decaf::io::UTFDataFormatException );
+        static std::string modifiedUtf8ToAscii( const std::string modifiedUtf8String );
 
     };
 

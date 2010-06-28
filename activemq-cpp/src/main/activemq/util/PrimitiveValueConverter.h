@@ -58,8 +58,7 @@ namespace util {
         virtual ~PrimitiveValueConverter() {}
 
         template< typename TO>
-        TO convert( const PrimitiveValueNode& value ) const
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+        TO convert( const PrimitiveValueNode& value ) const {
 
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "Invalid Conversion" );
@@ -68,35 +67,25 @@ namespace util {
     };
 
     template<>
-    bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
     template<>
-    std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const
-        throw( decaf::lang::exceptions::UnsupportedOperationException );
+    std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
 
 }}
 

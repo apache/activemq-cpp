@@ -43,8 +43,7 @@ WireFormatRegistry::~WireFormatRegistry() {
  }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,9 +54,7 @@ WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,

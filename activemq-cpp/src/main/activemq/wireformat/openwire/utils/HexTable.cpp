@@ -47,8 +47,7 @@ HexTable::HexTable(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index )
-    throw ( IndexOutOfBoundsException ) {
+const std::string& HexTable::operator[]( std::size_t index ) {
 
     try{
 
@@ -67,8 +66,7 @@ const std::string& HexTable::operator[]( std::size_t index )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index ) const
-    throw ( IndexOutOfBoundsException ) {
+const std::string& HexTable::operator[]( std::size_t index ) const {
 
     try{
 

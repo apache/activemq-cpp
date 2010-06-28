@@ -54,15 +54,19 @@ namespace marshal{
 
         /**
          * Tight Marhsal to the given stream
-         * @param format - The OpenwireFormat properties
-         * @param command -  the object to Marshal
-         * @param bs - boolean stream to marshal to.
+         *
+         * @param format
+         *      The OpenwireFormat properties
+         * @param command
+         *      The object to Marshal
+         * @param bs
+         *      The boolean stream to marshal to.
+         *
          * @throws IOException if an error occurs.
          */
         virtual int tightMarshal1( OpenWireFormat* format,
                                    commands::DataStructure* command,
-                                   utils::BooleanStream* bs )
-                                       throw ( decaf::io::IOException ) = 0;
+                                   utils::BooleanStream* bs ) = 0;
 
         /**
          * Tight Marhsal to the given stream
@@ -75,8 +79,7 @@ namespace marshal{
         virtual void tightMarshal2( OpenWireFormat* format,
                                     commands::DataStructure* command,
                                     decaf::io::DataOutputStream* ds,
-                                    utils::BooleanStream* bs )
-                                        throw ( decaf::io::IOException ) = 0;
+                                    utils::BooleanStream* bs ) = 0;
 
         /**
          * Tight Un-marhsal to the given stream
@@ -89,8 +92,7 @@ namespace marshal{
         virtual void tightUnmarshal( OpenWireFormat* format,
                                      commands::DataStructure* command,
                                      decaf::io::DataInputStream* dis,
-                                     utils::BooleanStream* bs )
-                                        throw ( decaf::io::IOException ) = 0;
+                                     utils::BooleanStream* bs ) = 0;
 
         /**
          * Tight Marhsal to the given stream
@@ -101,8 +103,7 @@ namespace marshal{
          */
         virtual void looseMarshal( OpenWireFormat* format,
                                    commands::DataStructure* command,
-                                   decaf::io::DataOutputStream* ds )
-                                       throw ( decaf::io::IOException ) = 0;
+                                   decaf::io::DataOutputStream* ds ) = 0;
 
         /**
          * Loose Un-marhsal to the given stream
@@ -113,8 +114,7 @@ namespace marshal{
          */
         virtual void looseUnmarshal( OpenWireFormat* format,
                                      commands::DataStructure* command,
-                                     decaf::io::DataInputStream* dis )
-                                        throw ( decaf::io::IOException ) = 0;
+                                     decaf::io::DataInputStream* dis ) = 0;
 
     };
 
