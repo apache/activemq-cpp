@@ -78,16 +78,14 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * wire");
         out.println("         * @param wireFormat - the wireformat controller");
         out.println("         */");
-        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("            throw ( decaf::io::IOException );");
+        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
         out.println("");
         out.println("        /**");
         out.println("         * Called after unmarshaling is started to cleanup the object being");
         out.println("         * unmarshaled.");
         out.println("         * @param wireFormat - the wireformat object to control unmarshaling");
         out.println("         */");
-        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("            throw ( decaf::io::IOException );");
+        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
         out.println("");
         out.println("        /**");
         out.println("         * Indicates that this command is aware of Marshaling, and needs");

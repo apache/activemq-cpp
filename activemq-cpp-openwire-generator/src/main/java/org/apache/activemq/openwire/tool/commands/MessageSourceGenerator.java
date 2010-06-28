@@ -111,8 +111,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("    throw ( decaf::io::IOException ) {");
+        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
         out.println("");
         out.println("    try{");
         out.println("");
@@ -128,8 +127,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("    throw ( decaf::io::IOException ) {");
+        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
         out.println("");
         out.println("    try{");
         out.println("");

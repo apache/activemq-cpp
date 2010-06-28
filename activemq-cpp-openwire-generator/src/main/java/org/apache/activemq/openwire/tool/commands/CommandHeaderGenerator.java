@@ -159,8 +159,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
             out.println("         * " );
             out.println("         * @return a Response to the visitor being called or NULL if no response." );
             out.println("         */" );
-            out.println("        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )" );
-            out.println("            throw( exceptions::ActiveMQException );" );
+            out.println("        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );" );
             out.println("");
         }
 
