@@ -85,40 +85,14 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
 
         out.println("        virtual ~"+getClassName()+"();");
         out.println("");
-        out.println("        /**");
-        out.println("         * Get the unique identifier that this object and its own");
-        out.println("         * Marshaler share.");
-        out.println("         * @returns new DataStructure type copy.");
-        out.println("         */");
         out.println("        virtual unsigned char getDataStructureType() const;");
         out.println("");
-        out.println("        /**");
-        out.println("         * Clone this object and return a new instance that the");
-        out.println("         * caller now owns, this will be an exact copy of this one");
-        out.println("         * @returns new copy of this object.");
-        out.println("         */");
         out.println("        virtual "+getClassName()+"* cloneDataStructure() const;");
         out.println("");
-        out.println("        /**");
-        out.println("         * Copy the contents of the passed object into this object's");
-        out.println("         * members, overwriting any existing data.");
-        out.println("         * @param src - Source Object");
-        out.println("         */");
         out.println("        virtual void copyDataStructure( const DataStructure* src );");
         out.println("");
-        out.println("        /**");
-        out.println("         * Returns a string containing the information for this DataStructure");
-        out.println("         * such as its type and value of its elements.");
-        out.println("         * @return formatted string useful for debugging.");
-        out.println("         */");
         out.println("        virtual std::string toString() const;");
         out.println("");
-        out.println("        /**" );
-        out.println("         * Compares the DataStructure passed in to this one, and returns if" );
-        out.println("         * they are equivalent.  Equivalent here means that they are of the" );
-        out.println("         * same type, and that each element of the objects are the same." );
-        out.println("         * @returns true if DataStructure's are Equal." );
-        out.println("         */" );
         out.println("        virtual bool equals( const DataStructure* value ) const;" );
         out.println("");
 
@@ -152,13 +126,6 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         }
 
         if( getBaseClassName().equals( "BaseCommand" ) ) {
-            out.println("        /**" );
-            out.println("         * Allows a Visitor to visit this command and return a response to the" );
-            out.println("         * command based on the command type being visited.  The command will call" );
-            out.println("         * the proper processXXX method in the visitor." );
-            out.println("         * " );
-            out.println("         * @return a Response to the visitor being called or NULL if no response." );
-            out.println("         */" );
             out.println("        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );" );
             out.println("");
         }
