@@ -125,36 +125,12 @@ namespace util{
 
     public:  // Comparable
 
-        /**
-         * Compares this Data object to the one given.
-         *
-         * @param value
-         *      The Date value to compare to this one.
-         *
-         * @returns zero if the Date values are equal, a value less than zero if this
-         *          Data value is earlier than argument value, and a value greater than
-         *          zero if this Date object is later than the argument Date value.
-         */
         virtual int compareTo( const Date& value ) const;
 
-        /**
-         * @return true if this value is considered equal to the passed value.
-         */
         virtual bool equals( const Date& value ) const;
 
-        /**
-         * Compares equality between this object and the one passed.
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
-         */
         virtual bool operator==( const Date& value ) const;
 
-        /**
-         * Compares this object to another and returns true if this object
-         * is considered to be less than the one passed.  This
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
-         */
         virtual bool operator<( const Date& value ) const;
 
     };

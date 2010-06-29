@@ -43,8 +43,7 @@ TransportRegistry::~TransportRegistry() {
  }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory* TransportRegistry::findFactory( const std::string& name ) const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+TransportFactory* TransportRegistry::findFactory( const std::string& name ) const {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,9 +54,7 @@ TransportFactory* TransportRegistry::findFactory( const std::string& name ) cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,

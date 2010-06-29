@@ -39,8 +39,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location )
-    throw ( ActiveMQException ) {
+Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location ) {
 
     try{
 
@@ -63,8 +62,7 @@ Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& location )
-    throw ( ActiveMQException ) {
+Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& location ) {
 
     try{
 
@@ -84,8 +82,7 @@ Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
                                                            const Pointer<wireformat::WireFormat>& wireFormat,
-                                                           const decaf::util::Properties& properties )
-    throw ( ActiveMQException ) {
+                                                           const decaf::util::Properties& properties ) {
 
     try {
 

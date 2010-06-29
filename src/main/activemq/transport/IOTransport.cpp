@@ -94,8 +94,7 @@ void IOTransport::fire( const Pointer<Command>& command ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::oneway( const Pointer<Command>& command )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+void IOTransport::oneway( const Pointer<Command>& command ) {
 
     try{
 
@@ -137,7 +136,7 @@ void IOTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::start() throw( decaf::io::IOException ){
+void IOTransport::start() {
 
     try{
 
@@ -171,7 +170,7 @@ void IOTransport::start() throw( decaf::io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::stop() throw( decaf::io::IOException ){
+void IOTransport::stop() {
 
     try{
     }
@@ -181,7 +180,7 @@ void IOTransport::stop() throw( decaf::io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::close() throw( decaf::io::IOException ){
+void IOTransport::close() {
 
     try{
 
@@ -223,7 +222,7 @@ void IOTransport::close() throw( decaf::io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::run(){
+void IOTransport::run() {
 
     try{
 
@@ -258,8 +257,7 @@ void IOTransport::run(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,
@@ -267,8 +265,7 @@ Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_U
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,

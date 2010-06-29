@@ -41,7 +41,7 @@ namespace io {
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void flush() throw( decaf::io::IOException ) = 0;
+        virtual void flush() = 0;
 
     };
 

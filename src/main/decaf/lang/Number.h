@@ -29,6 +29,8 @@ namespace lang{
      *
      * Subclasses of Number must provide methods to convert the represented
      * numeric value to byte, double, float, int, long, and short.
+     *
+     * @since 1.0
      */
     class DECAF_API Number {
     public:
@@ -71,7 +73,7 @@ namespace lang{
          * Answers the short value which the receiver represents
          * @return short the value of the receiver.
          */
-        virtual short shortValue()  const {
+        virtual short shortValue() const {
             return (short) intValue();
         }
 

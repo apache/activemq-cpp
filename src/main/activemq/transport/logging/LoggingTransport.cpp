@@ -41,8 +41,7 @@ void LoggingTransport::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::oneway( const Pointer<Command>& command )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+void LoggingTransport::oneway( const Pointer<Command>& command ) {
 
     try {
 
@@ -58,8 +57,7 @@ void LoggingTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+Pointer<Response> LoggingTransport::request( const Pointer<Command>& command ) {
 
     try {
 
@@ -77,8 +75,7 @@ Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout ) {
 
     try {
 

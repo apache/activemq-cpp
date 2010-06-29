@@ -38,8 +38,7 @@ using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<WireFormat> AbstractTransportFactory::createWireFormat(
-    const decaf::util::Properties& properties )
-        throw( decaf::lang::exceptions::NoSuchElementException ) {
+    const decaf::util::Properties& properties ) {
 
     try{
 

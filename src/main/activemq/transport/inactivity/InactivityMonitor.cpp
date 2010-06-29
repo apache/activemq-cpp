@@ -256,7 +256,7 @@ void InactivityMonitor::setKeepAliveResponseRequired( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::close() throw( decaf::io::IOException ) {
+void InactivityMonitor::close() {
     try{
         stopMonitorThreads();
         TransportFilter::close();
@@ -307,8 +307,7 @@ void InactivityMonitor::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::oneway( const Pointer<Command>& command )
-    throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+void InactivityMonitor::oneway( const Pointer<Command>& command ) {
 
     try{
         // Disable inactivity monitoring while processing a command.  Synchronize this

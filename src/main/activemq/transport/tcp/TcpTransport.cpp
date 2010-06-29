@@ -59,7 +59,7 @@ TcpTransport::~TcpTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() throw( decaf::io::IOException ) {
+void TcpTransport::close() {
 
     try {
 

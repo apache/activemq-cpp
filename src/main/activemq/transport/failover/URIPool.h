@@ -60,9 +60,10 @@ namespace failover {
          * in the future, the caller should react accordingly.
          *
          * @return the next free URI in the Pool.
+         *
          * @throw NoSuchElementException if there are none free currently.
          */
-        URI getURI() throw ( decaf::lang::exceptions::NoSuchElementException );
+        URI getURI();
 
         /**
          * Adds a URI to the free list, callers that have previously taken one using

@@ -59,7 +59,7 @@ namespace mock{
      * up to the builder to create appropriate responses and schedule any asynchronous
      * messages that might result from a message sent to the Broker.
      */
-    class AMQCPP_API MockTransport : public Transport{
+    class AMQCPP_API MockTransport : public Transport {
     private:
 
         Pointer<ResponseBuilder> responseBuilder;
@@ -96,71 +96,6 @@ namespace mock{
         }
 
         /**
-         * Sets the ResponseBuilder that this class uses to create Responses to
-         * Commands sent.  These are either real Response Objects, or Commands that
-         * would have been sent Asynchronously be the Broker.
-         * @param responseBuilder - The ResponseBuilder to use from now on.
-         */
-        void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ){
-            this->responseBuilder = responseBuilder;
-        }
-
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException);
-
-        virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException);
-
-
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException);
-
-        /**
-         * Sets a Listener that gets notified for every command that would
-         * have been sent by this transport to the Broker, this allows a client
-         * to verify that its messages are making it to the wire.
-         * @param listener - The CommandListener to notify for each message
-         */
-        virtual void setOutgoingListener( TransportListener* listener ){
-            outgoingListener = listener;
-        }
-
-        /**
-         * Sets the WireFormat instance to use.
-         *
-         * @param wireFormat
-         *      WireFormat the object used to encode / decode commands.
-         */
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
-
-        /**
-         * Gets the currently set WireFormat
-         *
-         * @return the current WireFormat object.
-         */
-        Pointer<wireformat::WireFormat> getWireFormat() const {
-            return this->wireFormat;
-        }
-
-        /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport events.
-         */
-        virtual void setTransportListener( TransportListener* listener ){
-            this->listener = listener;
-        }
-
-        /**
-         * Gets the observer of asynchronous exceptions from this transport.
-         * @return The listener of transport events.
-         */
-        virtual TransportListener* getTransportListener() const {
-            return this->listener;
-        }
-
-        /**
          * Fires a Command back through this transport to its registered
          * CommandListener if there is one.
          * @param command - Command to send to the Listener.
@@ -184,21 +119,60 @@ namespace mock{
             }
         }
 
-        virtual void start() throw( decaf::io::IOException );
+        /**
+         * Sets the ResponseBuilder that this class uses to create Responses to
+         * Commands sent.  These are either real Response Objects, or Commands that
+         * would have been sent Asynchronously be the Broker.
+         * @param responseBuilder - The ResponseBuilder to use from now on.
+         */
+        void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ){
+            this->responseBuilder = responseBuilder;
+        }
 
-        virtual void stop() throw( decaf::io::IOException );
-
-        virtual void close() throw( decaf::io::IOException );
 
         /**
-         * Narrows down a Chain of Transports to a specific Transport to allow a
-         * higher level transport to skip intermediate Transports in certain
-         * circumstances.
-         *
-         * @param typeId - The type_info of the Object we are searching for.
-         *
-         * @return the requested Object. or NULL if its not in this chain.
+         * Sets a Listener that gets notified for every command that would
+         * have been sent by this transport to the Broker, this allows a client
+         * to verify that its messages are making it to the wire.
+         * @param listener - The CommandListener to notify for each message
          */
+        virtual void setOutgoingListener( TransportListener* listener ){
+            outgoingListener = listener;
+        }
+
+        /**
+         * Gets the currently set WireFormat
+         *
+         * @return the current WireFormat object.
+         */
+        Pointer<wireformat::WireFormat> getWireFormat() const {
+            return this->wireFormat;
+        }
+
+    public:  // Transport Methods
+
+        virtual void oneway( const Pointer<Command>& command );
+
+        virtual Pointer<Response> request( const Pointer<Command>& command );
+
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
+
+        virtual void setTransportListener( TransportListener* listener ){
+            this->listener = listener;
+        }
+
+        virtual TransportListener* getTransportListener() const {
+            return this->listener;
+        }
+
+        virtual void start();
+
+        virtual void stop();
+
+        virtual void close();
+
         virtual Transport* narrow( const std::type_info& typeId ) {
             if( typeid( *this ) == typeId ) {
                 return this;
@@ -207,48 +181,23 @@ namespace mock{
             return NULL;
         }
 
-        /**
-         * Is this Transport fault tolerant, meaning that it will reconnect to
-         * a broker on disconnect.
-         *
-         * @returns true if the Transport is fault tolerant.
-         */
         virtual bool isFaultTolerant() const {
             return false;
         }
 
-        /**
-         * Is the Transport Connected to its Broker.
-         *
-         * @returns true if a connection has been made.
-         */
         virtual bool isConnected() const {
             return true;
         }
 
-        /**
-         * Has the Transport been shutdown and no longer usable.
-         *
-         * @returns true if the Transport
-         */
         virtual bool isClosed() const {
             return false;
         }
 
-        /**
-         * @return the remote address for this connection
-         */
         virtual std::string getRemoteAddress() const {
             return "";
         }
 
-        /**
-         * reconnect to another location
-         * @param uri
-         * @throws IOException on failure of if not supported
-         */
-        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED )
-            throw( decaf::io::IOException ) {}
+        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED ) {}
 
     public:  // Property Getters and Setters
 

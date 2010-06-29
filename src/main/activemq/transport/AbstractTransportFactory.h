@@ -57,8 +57,7 @@ namespace transport {
          * @throws NoSuchElementException if the configured WireFormat is not found.
          */
         virtual Pointer<wireformat::WireFormat> createWireFormat(
-            const decaf::util::Properties& properties )
-                throw( decaf::lang::exceptions::NoSuchElementException );
+            const decaf::util::Properties& properties );
 
     };
 

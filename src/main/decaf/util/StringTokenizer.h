@@ -24,8 +24,12 @@
 namespace decaf{
 namespace util{
 
-    class DECAF_API StringTokenizer
-    {
+    /**
+     * Class that allows for parsing of string based on Tokens.
+     *
+     * @since 1.0
+     */
+    class DECAF_API StringTokenizer {
     private:
 
         // String to tokenize
@@ -82,11 +86,12 @@ namespace util{
 
         /**
          * Returns the next token from this string tokenizer.
+         *
          * @return string value of next token
-         * @throws NoSuchElementException
+         *
+         * @throws NoSuchElementException if there are no more tokens in this string.
          */
-        virtual std::string nextToken()
-            throw ( lang::exceptions::NoSuchElementException );
+        virtual std::string nextToken();
 
         /**
          * Returns the next token in this string tokenizer's string. First,
@@ -96,12 +101,15 @@ namespace util{
          * position is returned. The current position is advanced beyond the
          * recognized token. The new delimiter set remains the default after
          * this call.
-         * @param delim - string containing the new set of delimiters
+         *
+         * @param delim
+         *      The string containing the new set of delimiters.
+         *
          * @return next string in the token list
-         * @throw NoSuchElementException
+         *
+         * @throws NoSuchElementException if there are no more tokens in this string.
          */
-        virtual std::string nextToken( const std::string& delim )
-            throw ( lang::exceptions::NoSuchElementException );
+        virtual std::string nextToken( const std::string& delim );
 
         /**
          * Grab all remaining tokens in the String and return them
@@ -116,15 +124,20 @@ namespace util{
          * calls to countToken and nextToken now start back at the beginning.
          * This allows this object to be reused, the caller need not create
          * a new instance every time a String needs tokenizing.
-         * If set the string param will reset the string that this Tokenizer
-         * is working on.  If set to "" no change is made.
-         * If set the delim param will reset the string that this Tokenizer
-         * is using to tokenizer the string.  If set to "", no change is made
-         * If set the return Delims will set if this Tokenizer will return
-         * delimiters as tokens. Defaults to false.
-         * @param str - New String to tokenize or "", defaults to ""
-         * @param delim - New Delimiter String to use or "", defaults to ""
-         * @param returnDelims - Should the Tokenizer return delimiters as Tokens, default false
+         *
+         *   * If set the string param will reset the string that this Tokenizer
+         *     is working on.  If set to "" no change is made.
+         *   * If set the delim param will reset the string that this Tokenizer
+         *     is using to tokenizer the string.  If set to "", no change is made
+         *   * If set the return Delims will set if this Tokenizer will return
+         *     delimiters as tokens. Defaults to false.
+         *
+         * @param str
+         *      New String to tokenize or "", defaults to ""
+         * @param delim
+         *      New Delimiter String to use or "", defaults to ""
+         * @param returnDelims
+         *      Should the Tokenizer return delimiters as Tokens, default false
          */
         virtual void reset( const std::string& str = "",
                             const std::string& delim = "",

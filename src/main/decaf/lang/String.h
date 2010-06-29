@@ -74,14 +74,12 @@ namespace lang {
         /**
          * {@inheritDoc}
          */
-        virtual char charAt( int index ) const
-            throw( lang::exceptions::IndexOutOfBoundsException );
+        virtual char charAt( int index ) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual CharSequence* subSequence( int start, int end ) const
-            throw( lang::exceptions::IndexOutOfBoundsException );
+        virtual CharSequence* subSequence( int start, int end ) const;
 
         /**
          * {@inheritDoc}

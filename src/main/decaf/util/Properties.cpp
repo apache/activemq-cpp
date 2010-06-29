@@ -341,10 +341,7 @@ void Properties::selectProperties( StlMap<std::string, std::string>& selectPrope
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::InputStream* stream )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void Properties::load( decaf::io::InputStream* stream ) {
 
     try{
 
@@ -506,10 +503,7 @@ void Properties::load( decaf::io::InputStream* stream )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::Reader* reader )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void Properties::load( decaf::io::Reader* reader ) {
 
     try{
 
@@ -531,9 +525,7 @@ void Properties::load( decaf::io::Reader* reader )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::NullPointerException ) {
+void Properties::store( decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED ) {
 
     try{
 
@@ -582,9 +574,7 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::NullPointerException ) {
+void Properties::store( decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED ) {
 
     try{
 

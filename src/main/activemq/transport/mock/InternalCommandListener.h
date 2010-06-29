@@ -58,7 +58,7 @@ namespace mock {
 
         virtual ~InternalCommandListener();
 
-        void setTransport( MockTransport* transport ){
+        void setTransport( MockTransport* transport ) {
             this->transport = transport;
         }
 
