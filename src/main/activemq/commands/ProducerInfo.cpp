@@ -248,8 +248,7 @@ void ProducerInfo::setWindowSize( int windowSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processProducerInfo( this );
 }

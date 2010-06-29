@@ -52,95 +52,45 @@ namespace commands{
 
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual ActiveMQTempTopic* cloneDataStructure() const;
 
-        /**
-         * Copy the contents of the passed object into this objects
-         * members, overwriting any existing data.
-         * @return src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src );
-        /**
-         * Converts the Destination Name into a String
-         * @return string name
-         */
+
         virtual std::string toString() const;
 
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * @returns the cms::Destination interface pointer that the
-         *          objects that derive from this class implement.
-         */
         virtual const cms::Destination* getCMSDestination() const {
             return this;
         }
 
     public:   // CMS Destination
 
-        /**
-         * Retrieve the Destination Type for this Destination
-         * @return The Destination Type
-         */
         virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::TEMPORARY_TOPIC;
         }
 
-        /**
-         * Creates a new instance of this destination type that is a
-         * copy of this one, and returns it.
-         * @returns cloned copy of this object
-         */
         virtual cms::Destination* clone() const {
             return dynamic_cast<cms::Destination*>(
                 this->cloneDataStructure() );
         }
 
-        /**
-         * Copies the contents of the given Destinastion object to this one.
-         * @param source The source Destination object.
-         */
         virtual void copy( const cms::Destination& source ) {
             this->copyDataStructure(
                 dynamic_cast<const DataStructure*>( &source ) );
         }
 
-        /**
-         * Retrieve any properties that might be part of the destination
-         * that was specified.  This is a deviation from the JMS spec
-         * but necessary due to C++ restrictions.
-         * @return const reference to a properties object.
-         */
         virtual const cms::CMSProperties& getCMSProperties() const {
             return this->getOptions();
         }
 
     public:  // CMS Temporary Topic
 
-        /**
-         * Gets the name of this topic.
-         * @return The topic name.
-         */
-        virtual std::string getTopicName() const throw( cms::CMSException ) {
+        virtual std::string getTopicName() const {
             return this->getPhysicalName();
         }
 
-        /**
-         * Destroy's the Temp Destination at the Broker
-         * @throws CMSException
-         */
-        virtual void destroy() throw ( cms::CMSException );
+        virtual void destroy();
 
     };
 

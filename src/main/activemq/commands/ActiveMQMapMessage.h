@@ -60,63 +60,25 @@ namespace commands{
 
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Determine if this object is aware of marshaling and should have
-         * its before and after marshaling methods called.  Defaults to false.
-         * @returns true if aware of marshaling
-         */
         virtual bool isMarshalAware() const {
             return true;
         }
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual ActiveMQMapMessage* cloneDataStructure() const;
 
-        /**
-         * Copy the contents of the passed object into this objects
-         * members, overwriting any existing data.
-         * @return src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src );
 
-        /**
-         * Perform any processing needed before an marshal
-         * @param wireFormat - the OpenWireFormat object in use.
-         */
         virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
             throw ( decaf::io::IOException );
 
-        /**
-         * Returns a string containing the information for this DataStructure
-         * such as its type and value of its elements.
-         * @return formatted string useful for debugging.
-         */
         virtual std::string toString() const;
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
+
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * Clears out the body of the message.  This does not clear the
-         * headers or properties.
-         */
         virtual void clearBody() throw( cms::CMSException );
 
     public:   // CMS Message
 
-        /**
-         * Clone this message exactly, returns a new instance that the
-         * caller is required to delete.
-         * @return new copy of this message
-         */
         virtual cms::MapMessage* clone() const {
             return dynamic_cast<cms::MapMessage*>( this->cloneDataStructure() );
         }
@@ -255,7 +217,7 @@ namespace commands{
          * Performs the unmarshal on the Map if needed, otherwise just returns
          *
          * @throws NullPointerException if the internal Map is Null.
-s         */
+         */
         virtual void checkMapIsUnmarshalled() const;
 
     };

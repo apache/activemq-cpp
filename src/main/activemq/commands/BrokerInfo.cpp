@@ -368,8 +368,7 @@ void BrokerInfo::setNetworkProperties( const std::string& networkProperties ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processBrokerInfo( this );
 }

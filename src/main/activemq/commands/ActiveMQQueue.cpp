@@ -25,9 +25,12 @@ ActiveMQQueue::ActiveMQQueue() : ActiveMQDestination()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
-    ActiveMQDestination( name )
+ActiveMQQueue::ActiveMQQueue( const std::string& name ) : ActiveMQDestination( name )
 {}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQQueue::~ActiveMQQueue() throw() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQQueue::getDataStructureType() const {

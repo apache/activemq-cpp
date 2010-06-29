@@ -162,8 +162,7 @@ void RemoveInfo::setLastDeliveredSequenceId( long long lastDeliveredSequenceId )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> RemoveInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> RemoveInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processRemoveInfo( this );
 }

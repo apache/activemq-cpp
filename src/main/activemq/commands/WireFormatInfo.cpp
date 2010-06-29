@@ -311,8 +311,7 @@ void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 
@@ -328,8 +327,7 @@ void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 

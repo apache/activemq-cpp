@@ -142,8 +142,7 @@ bool ActiveMQBytesMessage::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, int numBytes )
-    throw( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, int numBytes ) {
 
     try{
 
@@ -154,8 +153,7 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, int numByt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* ActiveMQBytesMessage::getBodyBytes() const
-    throw( cms::MessageNotReadableException, cms::CMSException ) {
+unsigned char* ActiveMQBytesMessage::getBodyBytes() const {
 
     try{
 
@@ -175,8 +173,7 @@ unsigned char* ActiveMQBytesMessage::getBodyBytes() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::getBodyLength() const
-    throw( cms::MessageNotReadableException, cms::CMSException ) {
+int ActiveMQBytesMessage::getBodyLength() const {
 
     try{
         initializeReading();
@@ -186,7 +183,7 @@ int ActiveMQBytesMessage::getBodyLength() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::clearBody() throw( cms::CMSException ) {
+void ActiveMQBytesMessage::clearBody() {
 
     // Invoke base class's version.
     ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
@@ -205,8 +202,7 @@ void ActiveMQBytesMessage::onSend() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::reset()
-    throw ( cms::MessageFormatException, cms::CMSException ) {
+void ActiveMQBytesMessage::reset() {
 
     try{
         storeContent();
@@ -220,8 +216,7 @@ void ActiveMQBytesMessage::reset()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQBytesMessage::readBoolean() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+bool ActiveMQBytesMessage::readBoolean() const {
 
     initializeReading();
     try{
@@ -236,8 +231,7 @@ bool ActiveMQBytesMessage::readBoolean() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBoolean( bool value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeBoolean( bool value ) {
 
     initializeWriting();
     try{
@@ -250,8 +244,7 @@ void ActiveMQBytesMessage::writeBoolean( bool value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQBytesMessage::readByte() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+unsigned char ActiveMQBytesMessage::readByte() const {
 
     initializeReading();
     try{
@@ -266,8 +259,7 @@ unsigned char ActiveMQBytesMessage::readByte() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeByte( unsigned char value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeByte( unsigned char value ) {
 
     initializeWriting();
     try{
@@ -280,15 +272,13 @@ void ActiveMQBytesMessage::writeByte( unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value ) const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+int ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value ) const {
 
     return this->readBytes( &value[0], (int)value.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value ) {
 
     initializeWriting();
     try{
@@ -301,8 +291,7 @@ void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::readBytes( unsigned char* buffer, int length ) const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+int ActiveMQBytesMessage::readBytes( unsigned char* buffer, int length ) const {
 
     initializeReading();
     try{
@@ -333,8 +322,7 @@ int ActiveMQBytesMessage::readBytes( unsigned char* buffer, int length ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeBytes( const unsigned char* value, int offset, int length )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeBytes( const unsigned char* value, int offset, int length ) {
 
     initializeWriting();
     try{
@@ -347,8 +335,7 @@ void ActiveMQBytesMessage::writeBytes( const unsigned char* value, int offset, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char ActiveMQBytesMessage::readChar() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+char ActiveMQBytesMessage::readChar() const {
 
     initializeReading();
     try{
@@ -363,8 +350,7 @@ char ActiveMQBytesMessage::readChar() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeChar( char value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeChar( char value ) {
 
     initializeWriting();
     try{
@@ -377,8 +363,7 @@ void ActiveMQBytesMessage::writeChar( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ActiveMQBytesMessage::readFloat() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+float ActiveMQBytesMessage::readFloat() const {
 
     initializeReading();
     try{
@@ -393,8 +378,7 @@ float ActiveMQBytesMessage::readFloat() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeFloat( float value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeFloat( float value ) {
 
     initializeWriting();
     try{
@@ -407,8 +391,7 @@ void ActiveMQBytesMessage::writeFloat( float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ActiveMQBytesMessage::readDouble() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+double ActiveMQBytesMessage::readDouble() const {
 
     initializeReading();
     try{
@@ -423,8 +406,7 @@ double ActiveMQBytesMessage::readDouble() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeDouble( double value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeDouble( double value ) {
 
     initializeWriting();
     try{
@@ -437,8 +419,7 @@ void ActiveMQBytesMessage::writeDouble( double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ActiveMQBytesMessage::readShort() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+short ActiveMQBytesMessage::readShort() const {
 
     initializeReading();
     try{
@@ -453,8 +434,7 @@ short ActiveMQBytesMessage::readShort() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeShort( short value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeShort( short value ) {
 
     initializeWriting();
     try{
@@ -467,8 +447,7 @@ void ActiveMQBytesMessage::writeShort( short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short ActiveMQBytesMessage::readUnsignedShort() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+unsigned short ActiveMQBytesMessage::readUnsignedShort() const {
 
     initializeReading();
     try{
@@ -483,8 +462,7 @@ unsigned short ActiveMQBytesMessage::readUnsignedShort() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value ) {
 
     initializeWriting();
     try{
@@ -497,8 +475,7 @@ void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::readInt() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+int ActiveMQBytesMessage::readInt() const {
 
     initializeReading();
     try{
@@ -513,8 +490,7 @@ int ActiveMQBytesMessage::readInt() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeInt( int value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeInt( int value ) {
 
     initializeWriting();
     try{
@@ -527,8 +503,7 @@ void ActiveMQBytesMessage::writeInt( int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQBytesMessage::readLong() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+long long ActiveMQBytesMessage::readLong() const {
 
     initializeReading();
     try{
@@ -543,8 +518,7 @@ long long ActiveMQBytesMessage::readLong() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeLong( long long value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeLong( long long value ) {
 
     initializeWriting();
     try{
@@ -557,8 +531,7 @@ void ActiveMQBytesMessage::writeLong( long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readString() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+std::string ActiveMQBytesMessage::readString() const {
 
     initializeReading();
     try{
@@ -573,8 +546,7 @@ std::string ActiveMQBytesMessage::readString() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeString( const std::string& value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeString( const std::string& value ) {
 
     initializeWriting();
     try{
@@ -587,8 +559,7 @@ void ActiveMQBytesMessage::writeString( const std::string& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readUTF() const
-    throw ( cms::MessageEOFException, cms::MessageNotReadableException, cms::CMSException ) {
+std::string ActiveMQBytesMessage::readUTF() const {
 
     initializeReading();
     try{
@@ -603,8 +574,7 @@ std::string ActiveMQBytesMessage::readUTF() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::writeUTF( const std::string& value )
-    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
+void ActiveMQBytesMessage::writeUTF( const std::string& value ) {
 
     initializeWriting();
     try{

@@ -73,7 +73,7 @@ namespace commands{
          * @return a Response to the visitor being called or NULL if no response.
          */
         virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException ) = 0;
+            activemq::state::CommandVisitor* visitor ) = 0;
 
         /*
          * This section contains a set of short-cut methods for determining if a

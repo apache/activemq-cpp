@@ -192,8 +192,7 @@ void TransactionInfo::setType( unsigned char type ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> TransactionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> TransactionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processTransactionInfo( this );
 }

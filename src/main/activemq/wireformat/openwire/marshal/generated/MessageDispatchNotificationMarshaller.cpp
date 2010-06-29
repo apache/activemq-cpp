@@ -51,7 +51,7 @@ unsigned char MessageDispatchNotificationMarshaller::getDataStructureType() cons
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
 
     try {
 
@@ -73,7 +73,7 @@ void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wire
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {
+int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
 
     try {
 
@@ -94,7 +94,7 @@ int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFo
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
 
     try {
 
@@ -113,7 +113,7 @@ void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireF
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {
+void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
 
     try {
 
@@ -134,7 +134,7 @@ void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wire
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {
+void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
 
     try {
 

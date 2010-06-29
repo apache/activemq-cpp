@@ -132,8 +132,7 @@ void Response::setCorrelationId( int correlationId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processResponse( this );
 }

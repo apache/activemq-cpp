@@ -52,8 +52,7 @@ void BrokerError::copyDataStructure( const DataStructure* src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> BrokerError::visit( activemq::state::CommandVisitor* visitor )
-    throw( exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> BrokerError::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processBrokerError( this );
 }

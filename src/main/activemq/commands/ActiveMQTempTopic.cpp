@@ -67,7 +67,7 @@ bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempTopic::destroy() throw ( cms::CMSException ) {
+void ActiveMQTempTopic::destroy() {
     try{
         close();
     }

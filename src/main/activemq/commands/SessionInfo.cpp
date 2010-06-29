@@ -147,8 +147,7 @@ void SessionInfo::setSessionId( const decaf::lang::Pointer<SessionId>& sessionId
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processSessionInfo( this );
 }

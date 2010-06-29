@@ -63,54 +63,28 @@ namespace commands{
 
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual ActiveMQTempDestination* cloneDataStructure() const {
             return NULL;
         }
 
-        /**
-         * Copy the contents of the passed object into this objects
-         * members, overwriting any existing data.
-         * @return src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQDestination::copyDataStructure( src );
         }
 
-        /**
-         * Returns a string containing the information for this DataStructure
-         * such as its type and value of its elements.
-         * @return formatted string useful for debugging.
-         */
         virtual std::string toString() const;
 
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
         virtual bool equals( const DataStructure* value ) const {
             return ActiveMQDestination::equals( value );
         }
 
-        /**
-         * Closes down this Destination resulting in a call to dispose of the
-         * TempDestination resource at the Broker.  This should only be called
-         * when the user is certain that they are finished with this destination.
-         * The TempDestination is not closed automatically on shutdown.
-         * throws cms::CMSException
-         */
-        virtual void close() throw( cms::CMSException );
+        virtual void close();
 
         /**
          * Sets the Parent Connection that is notified when this destination is
          * destroyed.
-         * @param connection - The parent connection.
+         *
+         * @param connection
+         *      The parent connection to be used to destroy this destination if closed..
          */
         void setConnection( core::ActiveMQConnection* connection ) {
             this->connection = connection;
