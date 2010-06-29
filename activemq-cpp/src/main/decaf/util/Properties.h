@@ -224,10 +224,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::InputStream* stream )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void load( decaf::io::InputStream* stream );
 
         /**
          * Reads a property list (key and element pairs) from the input character stream in a
@@ -328,10 +325,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::Reader* reader )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void load( decaf::io::Reader* reader );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the
@@ -361,9 +355,7 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::OutputStream* out, const std::string& comment )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException );
+        void store( decaf::io::OutputStream* out, const std::string& comment );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the output
@@ -401,9 +393,7 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::Writer* writer, const std::string& comments )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException );
+        void store( decaf::io::Writer* writer, const std::string& comments );
 
     private:
 

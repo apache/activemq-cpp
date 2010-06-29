@@ -71,8 +71,7 @@ namespace transport {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        TransportFactory* findFactory( const std::string& name ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
+        TransportFactory* findFactory( const std::string& name ) const;
 
         /**
          * Registers a new TransportFactory with this Registry.  If a Factory with the
@@ -88,9 +87,7 @@ namespace transport {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, TransportFactory* factory )
-            throw( decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void registerFactory( const std::string& name, TransportFactory* factory );
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the

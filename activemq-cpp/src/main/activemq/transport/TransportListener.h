@@ -46,7 +46,8 @@ namespace transport{
          * the Object.  If there is no registered listener the Transport deletes
          * the command upon receipt.
          *
-         * @param command the received command object.
+         * @param command
+         *      The received command object.
          */
         virtual void onCommand( const Pointer<Command>& command ) = 0;
 

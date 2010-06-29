@@ -134,8 +134,7 @@ void FailoverTransport::removeURI( const List<URI>& uris ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::reconnect( const decaf::net::URI& uri )
-    throw( decaf::io::IOException ) {
+void FailoverTransport::reconnect( const decaf::net::URI& uri ) {
 
     try {
 
@@ -176,8 +175,7 @@ std::string FailoverTransport::getRemoteAddress() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::oneway( const Pointer<Command>& command )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+void FailoverTransport::oneway( const Pointer<Command>& command ) {
 
     Pointer<Exception> error;
 
@@ -303,9 +301,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
-    throw( IOException,
-           decaf::lang::exceptions::UnsupportedOperationException ) {
+Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
@@ -313,16 +309,14 @@ Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AM
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED,
-                                                unsigned int timeout AMQCPP_UNUSED )
-    throw( IOException,
-           decaf::lang::exceptions::UnsupportedOperationException ) {
+                                                unsigned int timeout AMQCPP_UNUSED ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::start() throw( IOException ) {
+void FailoverTransport::start() {
 
     try{
 
@@ -351,7 +345,7 @@ void FailoverTransport::start() throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::stop() throw( IOException ) {
+void FailoverTransport::stop() {
 
     try{
     }
@@ -361,7 +355,7 @@ void FailoverTransport::stop() throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::close() throw( IOException ) {
+void FailoverTransport::close() {
 
     try{
 
@@ -412,8 +406,7 @@ void FailoverTransport::reconnect() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::restoreTransport( const Pointer<Transport>& transport )
-    throw( IOException ) {
+void FailoverTransport::restoreTransport( const Pointer<Transport>& transport ) {
 
     try{
 
@@ -441,8 +434,7 @@ void FailoverTransport::restoreTransport( const Pointer<Transport>& transport )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error AMQCPP_UNUSED )
-    throw( decaf::lang::Exception ) {
+void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error AMQCPP_UNUSED ) {
 
     Pointer<Transport> transport;
     synchronized( &reconnectMutex ) {
@@ -702,8 +694,7 @@ bool FailoverTransport::iterate() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransport::createTransport( const URI& location ) const
-    throw ( decaf::io::IOException ) {
+Pointer<Transport> FailoverTransport::createTransport( const URI& location ) const {
 
     try{
 

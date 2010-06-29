@@ -100,31 +100,16 @@ namespace tcp{
          * @param properties
          *      The Properties that have been parsed from the URI or from configuration files.
          */
-        void connect( const decaf::net::URI& uri,
-                      const decaf::util::Properties& properties );
+        void connect( const decaf::net::URI& uri, const decaf::util::Properties& properties );
 
-        /**
-         * Delegates to the superclass and then closes the socket.
-         *
-         * @throws IOException if errors occur.
-         */
-        virtual void close() throw( decaf::io::IOException );
+    public:  // Transport Methods
 
-        /**
-         * Is this Transport fault tolerant, meaning that it will reconnect to
-         * a broker on disconnect.
-         *
-         * @returns true if the Transport is fault tolerant.
-         */
+        virtual void close();
+
         virtual bool isFaultTolerant() const {
             return false;
         }
 
-        /**
-         * Is the Transport Connected to its Broker.
-         *
-         * @returns true if a connection has been made.
-         */
         virtual bool isConnected() const {
             if( this->socket.get() != NULL ) {
                 return this->socket->isConnected();
@@ -133,11 +118,6 @@ namespace tcp{
             return false;
         }
 
-        /**
-         * Has the Transport been shutdown and no longer usable.
-         *
-         * @returns true if the Transport
-         */
         virtual bool isClosed() const {
             return this->closed;
         }

@@ -84,8 +84,7 @@ bool String::isEmpty() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char String::charAt( int index ) const
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+char String::charAt( int index ) const {
 
     try{
 
@@ -101,8 +100,7 @@ char String::charAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharSequence* String::subSequence( int start DECAF_UNUSED, int end DECAF_UNUSED ) const
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+CharSequence* String::subSequence( int start DECAF_UNUSED, int end DECAF_UNUSED ) const {
 
     try{
 

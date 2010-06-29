@@ -38,8 +38,7 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& location )
-throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& location ) {
 
     try{
 
@@ -60,8 +59,7 @@ throw ( activemq::exceptions::ActiveMQException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::URI& location )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::URI& location ) {
 
     try{
 
@@ -79,8 +77,7 @@ Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> FailoverTransportFactory::doCreateComposite(
     const decaf::net::URI& location,
-    const decaf::util::Properties& properties )
-        throw ( activemq::exceptions::ActiveMQException ) {
+    const decaf::util::Properties& properties ) {
 
     try {
 

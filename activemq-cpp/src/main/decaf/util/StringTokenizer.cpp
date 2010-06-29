@@ -40,8 +40,8 @@ StringTokenizer::~StringTokenizer(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StringTokenizer::countTokens() const
-{
+int StringTokenizer::countTokens() const {
+
     int count = 0;
     string::size_type localPos = pos;
     string::size_type lastPos = pos;
@@ -69,8 +69,7 @@ int StringTokenizer::countTokens() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool StringTokenizer::hasMoreTokens() const
-{
+bool StringTokenizer::hasMoreTokens() const {
     string::size_type nextpos =
         returnDelims ? str.find_first_of( delim, pos ) :
                        str.find_first_not_of( delim, pos );
@@ -79,9 +78,8 @@ bool StringTokenizer::hasMoreTokens() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string StringTokenizer::nextToken()
-   throw ( lang::exceptions::NoSuchElementException )
-{
+std::string StringTokenizer::nextToken() {
+
     if( pos == string::npos ) {
         throw NoSuchElementException(
             __FILE__, __LINE__,
@@ -117,16 +115,15 @@ std::string StringTokenizer::nextToken()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string StringTokenizer::nextToken( const std::string& delim )
-    throw ( lang::exceptions::NoSuchElementException ) {
+std::string StringTokenizer::nextToken( const std::string& delim ) {
 
     this->delim = delim;
     return nextToken();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StringTokenizer::toArray( std::vector<std::string>& array )
-{
+unsigned int StringTokenizer::toArray( std::vector<std::string>& array ) {
+
     int count = 0;
 
     while( hasMoreTokens() ) {
@@ -138,10 +135,8 @@ unsigned int StringTokenizer::toArray( std::vector<std::string>& array )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StringTokenizer::reset( const std::string& str,
-                             const std::string& delim,
-                             bool returnDelims )
-{
+void StringTokenizer::reset( const std::string& str, const std::string& delim, bool returnDelims ) {
+
     if( str != "" ) {
         this->str = str;
     }

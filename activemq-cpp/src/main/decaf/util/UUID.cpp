@@ -83,7 +83,7 @@ long long UUID::getMostSignificantBits() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException ) {
+long long UUID::node() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -95,7 +95,7 @@ long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationException ) {
+long long UUID::timestamp() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -112,7 +112,7 @@ long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::clockSequence() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -124,7 +124,7 @@ int UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::variant() {
 
     // determine variant field
     if( ( this->leastSigBits & 0x8000000000000000ULL ) == 0 ) {
@@ -140,7 +140,7 @@ int UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::version() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::version() {
     return this->uuidVersion;
 }
 
@@ -220,8 +220,7 @@ UUID UUID::nameUUIDFromBytes( const char* name, std::size_t size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID UUID::fromString( const std::string& name )
-    throw ( lang::exceptions::IllegalArgumentException ){
+UUID UUID::fromString( const std::string& name ) {
 
     apr_uuid_t temp;
 

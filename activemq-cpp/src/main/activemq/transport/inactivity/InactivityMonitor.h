@@ -65,14 +65,17 @@ namespace inactivity {
 
         virtual ~InactivityMonitor();
 
-        virtual void close() throw( decaf::io::IOException );
+    public:  // TransportFilter Methods
+
+        virtual void close();
 
         virtual void onException( const decaf::lang::Exception& ex );
 
         virtual void onCommand( const Pointer<Command>& command );
 
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
+        virtual void oneway( const Pointer<Command>& command );
+
+    public:
 
         bool isKeepAliveResponseRequired() const;
 

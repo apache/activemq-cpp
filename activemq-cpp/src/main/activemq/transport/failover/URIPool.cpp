@@ -44,7 +44,7 @@ URIPool::~URIPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI URIPool::getURI() throw ( decaf::lang::exceptions::NoSuchElementException ) {
+URI URIPool::getURI() {
 
     synchronized( &uriPool ) {
         if( !uriPool.isEmpty() ) {
