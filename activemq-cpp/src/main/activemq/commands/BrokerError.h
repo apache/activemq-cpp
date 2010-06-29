@@ -92,7 +92,7 @@ namespace commands{
          * @return a Response to the visitor being called or NULL if no response.
          */
         virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException );
+            activemq::state::CommandVisitor* visitor );
 
         /**
          * Gets the string holding the error message

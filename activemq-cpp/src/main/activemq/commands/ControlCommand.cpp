@@ -137,8 +137,7 @@ void ControlCommand::setCommand( const std::string& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processControlCommand( this );
 }

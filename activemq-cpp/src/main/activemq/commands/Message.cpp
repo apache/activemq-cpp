@@ -828,8 +828,7 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processMessage( this );
 }
@@ -856,8 +855,7 @@ unsigned int Message::getSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 
@@ -873,8 +871,7 @@ void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 

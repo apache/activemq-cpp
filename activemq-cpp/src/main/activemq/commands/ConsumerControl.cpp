@@ -256,8 +256,7 @@ void ConsumerControl::setStop( bool stop ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processConsumerControl( this );
 }

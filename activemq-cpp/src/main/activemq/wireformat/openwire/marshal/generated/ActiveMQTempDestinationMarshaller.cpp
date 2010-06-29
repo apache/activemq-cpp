@@ -41,7 +41,7 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
 
     try {
 
@@ -54,7 +54,7 @@ void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireForm
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {
+int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
 
     try {
 
@@ -68,7 +68,7 @@ int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
 
     try {
 
@@ -81,7 +81,7 @@ void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireForma
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {
+void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
 
     try {
 
@@ -93,7 +93,7 @@ void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireForm
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {
+void ActiveMQTempDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
 
     try {
 

@@ -72,6 +72,10 @@ ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination::~ActiveMQDestination() throw() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
 
     this->physicalName = physicalName;

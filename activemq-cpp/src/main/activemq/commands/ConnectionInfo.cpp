@@ -314,8 +314,7 @@ void ConnectionInfo::setFaultTolerant( bool faultTolerant ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processConnectionInfo( this );
 }

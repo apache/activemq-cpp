@@ -51,7 +51,7 @@ unsigned char RemoveSubscriptionInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void RemoveSubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
 
     try {
 
@@ -70,7 +70,7 @@ void RemoveSubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireForma
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int RemoveSubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {
+int RemoveSubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
 
     try {
 
@@ -90,7 +90,7 @@ int RemoveSubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {
+void RemoveSubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
 
     try {
 
@@ -108,7 +108,7 @@ void RemoveSubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {
+void RemoveSubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
 
     try {
 
@@ -126,7 +126,7 @@ void RemoveSubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireForma
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {
+void RemoveSubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
 
     try {
 
