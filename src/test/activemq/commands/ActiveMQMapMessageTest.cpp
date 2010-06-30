@@ -277,6 +277,10 @@ void ActiveMQMapMessageTest::testGetBytes() {
         ex.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
+
+    ActiveMQMapMessage msg3;
+    msg3.setBytes( "empty", std::vector<unsigned char>() );
+    CPPUNIT_ASSERT_NO_THROW( msg3.getBytes( "empty" ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
