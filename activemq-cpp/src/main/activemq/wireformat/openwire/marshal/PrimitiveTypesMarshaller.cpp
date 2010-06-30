@@ -411,8 +411,10 @@ PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
             {
                 int size = dataIn.readInt();
                 std::vector<unsigned char> data;
-                data.resize( size );
-                dataIn.readFully( &data[0], size );
+                if( size > 0 ) {
+                    data.resize( size );
+                    dataIn.readFully( &data[0], size );
+                }
                 value.setByteArray( data );
                 break;
             }
