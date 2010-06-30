@@ -248,7 +248,7 @@ void WireFormatInfo::setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
 bool WireFormatInfo::isCacheEnabled() const {
 
     try {
-        return properties.getBool( "CacheEnabled" );
+        return false;
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -257,10 +257,11 @@ bool WireFormatInfo::isCacheEnabled() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setCacheEnabled( bool cacheEnabled ) {
+void WireFormatInfo::setCacheEnabled( bool cacheEnabled AMQCPP_UNUSED ) {
 
     try {
-        properties.setBool( "CacheEnabled", cacheEnabled );
+        // Turning this on is not supported as it causes the client to not work.
+        properties.setBool( "CacheEnabled", false );
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
