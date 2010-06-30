@@ -39,7 +39,7 @@ Double::Double( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Double::Double( const std::string& value ) {
     this->value = Double::parseDouble( value );
 }
 
@@ -257,8 +257,7 @@ Double Double::valueOf( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Double Double::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Double Double::valueOf( const std::string& value ) {
 
     return valueOf( parseDouble( value ) );
 }

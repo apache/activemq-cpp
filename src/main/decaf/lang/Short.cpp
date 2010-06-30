@@ -30,7 +30,7 @@ Short::Short( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Short::Short( const std::string& value ) {
     Short::parseShort( value );
 }
 
@@ -55,8 +55,7 @@ std::string Short::toString( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short Short::parseShort( const std::string& s, int radix )
-    throw ( exceptions::NumberFormatException ) {
+short Short::parseShort( const std::string& s, int radix ) {
 
     int intValue = Integer::parseInt( s, radix );
     short result = (short)intValue;
@@ -70,14 +69,12 @@ short Short::parseShort( const std::string& s, int radix )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short Short::parseShort( const std::string& s )
-    throw ( exceptions::NumberFormatException ) {
+short Short::parseShort( const std::string& s ) {
     return parseShort( s, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::decode( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Short Short::decode( const std::string& value ) {
 
     int intValue = Integer::decode( value ).intValue();
     short result = (short)intValue;
@@ -103,15 +100,13 @@ Short Short::valueOf( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Short Short::valueOf( const std::string& value ) {
 
     return Short( parseShort( value, 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::valueOf( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
+Short Short::valueOf( const std::string& value, int radix ) {
 
     return Short( parseShort( value, radix ) );
 }

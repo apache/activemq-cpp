@@ -57,14 +57,24 @@ namespace lang{
     public:
 
         /**
-         * @param value - the primitve type to wrap
+         * Constructs a new instance of a Double object and assigns it the given value.
+         *
+         * @param value
+         *      The primitive type to wrap.
          */
         Double( double value );
 
         /**
-         * @param value - the string to convert to a primitve type to wrap
+         * Constructs a new Double and attempts to convert the given string to a double
+         * value, assigning it to the new object is successful or throwing a
+         * NumberFormatException if the string is not a properly formatted double.
+         *
+         * @param value
+         *      The string to convert to a primitive type to wrap.
+         *
+         * @throws NumberFormatException if the string is not a a valid double.
          */
-        Double( const std::string& value ) throw( exceptions::NumberFormatException );
+        Double( const std::string& value );
 
         virtual ~Double() {}
 
@@ -110,7 +120,7 @@ namespace lang{
          * @param d - the Double instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const double& d ) const;
@@ -394,8 +404,7 @@ namespace lang{
          * @returns a new Double instance wrapping the double parsed from value
          * @throws NumberFormatException on error.
          */
-        static Double valueOf( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Double valueOf( const std::string& value );
 
     private:
 
