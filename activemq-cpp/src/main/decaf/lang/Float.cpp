@@ -43,7 +43,7 @@ Float::Float( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Float::Float( const std::string& value ) {
     this->value = Float::parseFloat( value );
 }
 
@@ -145,8 +145,7 @@ bool Float::isNaN( float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float Float::parseFloat( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+float Float::parseFloat( const std::string& value ) {
 
     // TODO - This is not going to parse the formats we say we do.
     float result = 0.0;
@@ -262,8 +261,7 @@ Float Float::valueOf( float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float Float::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Float Float::valueOf( const std::string& value ) {
 
     return valueOf( parseFloat( value ) );
 }

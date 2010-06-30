@@ -53,10 +53,16 @@ namespace lang{
         Long( long long value );
 
         /**
-         * @param value - the long long formated string to wrap
-         * @throw NumberFormatException
+         * Constructs a new Long and attempts to convert the given string to an long long
+         * value, assigning it to the new object is successful or throwing a
+         * NumberFormatException if the string is not a properly formatted long long.
+         *
+         * @param value
+         *      The string to convert to a primitive type to wrap.
+         *
+         * @throws NumberFormatException if the string is not a a valid 64bit long.
          */
-        Long( const std::string& value ) throw( exceptions::NumberFormatException );
+        Long( const std::string& value );
 
         virtual ~Long() {}
 
@@ -65,7 +71,7 @@ namespace lang{
          * @param l - the Long instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const Long& l ) const;
@@ -102,7 +108,7 @@ namespace lang{
          * @param l - the Integer instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object repesents a value
+         * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
         virtual int compareTo( const long long& l ) const;
@@ -214,8 +220,7 @@ namespace lang{
          * @returns a Long object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Long decode( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Long decode( const std::string& value );
 
         /**
          * Returns an long long value with at most a single one-bit, in the position
@@ -285,8 +290,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static long long parseLong( const std::string& value );
 
         /**
          * Returns a Long object holding the value extracted from the specified
@@ -300,8 +304,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong( const std::string& value, int radix )
-            throw ( exceptions::NumberFormatException );
+        static long long parseLong( const std::string& value, int radix );
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -475,8 +478,7 @@ namespace lang{
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal long long.
          */
-        static Long valueOf( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Long valueOf( const std::string& value );
 
         /**
          * Returns a Long object holding the value extracted from the specified
@@ -490,14 +492,12 @@ namespace lang{
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid long long.
          */
-        static Long valueOf( const std::string& value, int radix )
-            throw ( exceptions::NumberFormatException );
+        static Long valueOf( const std::string& value, int radix );
 
     private:
 
         static long long parse( const std::string& value, int offset,
-                                int radix, bool negative )
-            throw ( exceptions::NumberFormatException );
+                                int radix, bool negative );
 
     };
 

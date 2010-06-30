@@ -44,8 +44,7 @@ std::string Byte::toString( unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s, int radix )
-    throw ( exceptions::NumberFormatException ) {
+unsigned char Byte::parseByte( const std::string& s, int radix ) {
 
     int intValue = Integer::parseInt( s, radix );
     unsigned char result = (unsigned char)intValue;
@@ -59,15 +58,12 @@ unsigned char Byte::parseByte( const std::string& s, int radix )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s )
-    throw ( exceptions::NumberFormatException ) {
-
+unsigned char Byte::parseByte( const std::string& s ) {
     return parseByte( s, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::decode( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Byte Byte::decode( const std::string& value ) {
 
     int intValue = Integer::decode( value ).intValue();
     unsigned char result = (unsigned char)intValue;
@@ -81,15 +77,11 @@ Byte Byte::decode( const std::string& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
-
+Byte Byte::valueOf( const std::string& value ) {
     return Byte( parseByte( value, 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
-
+Byte Byte::valueOf( const std::string& value, int radix ) {
     return Byte( parseByte( value, radix ) );
 }

@@ -343,8 +343,7 @@ void Thread::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
-                             decaf::lang::exceptions::RuntimeException ) {
+void Thread::start() {
 
     try {
 
@@ -408,7 +407,7 @@ void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join() throw( decaf::lang::exceptions::InterruptedException ) {
+void Thread::join() {
 
     if( this->properties->state < Thread::RUNNABLE ) {
         return;
@@ -426,9 +425,7 @@ void Thread::join() throw( decaf::lang::exceptions::InterruptedException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join( long long millisecs )
-    throw ( decaf::lang::exceptions::IllegalArgumentException,
-            decaf::lang::exceptions::InterruptedException ) {
+void Thread::join( long long millisecs ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -444,9 +441,7 @@ void Thread::join( long long millisecs )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join( long long millisecs, unsigned int nanos )
-    throw ( decaf::lang::exceptions::IllegalArgumentException,
-            decaf::lang::exceptions::InterruptedException ) {
+void Thread::join( long long millisecs, unsigned int nanos ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -471,17 +466,13 @@ void Thread::join( long long millisecs, unsigned int nanos )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( long long millisecs )
-    throw( decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void Thread::sleep( long long millisecs ) {
 
     Thread::sleep( millisecs, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( long long millisecs, unsigned int nanos )
-    throw( decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void Thread::sleep( long long millisecs, unsigned int nanos ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -547,7 +538,7 @@ std::string Thread::getName() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException ) {
+void Thread::setPriority( int value ) {
 
     if( value < Thread::MIN_PRIORITY || value > Thread::MAX_PRIORITY ) {
         throw IllegalArgumentException(

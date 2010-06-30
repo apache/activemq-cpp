@@ -120,11 +120,11 @@ namespace lang {
          * then this method throws a ClassCastException.
          *
          * @param value - Pointer instance to cast to this type.
+         *
          * @throw ClassCastException if the dynamic cast returns NULL
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& )
-            throw( decaf::lang::exceptions::ClassCastException ) :
+        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& ) :
                 REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
 
             if( this->value == NULL ) {
