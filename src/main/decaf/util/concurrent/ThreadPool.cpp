@@ -90,8 +90,7 @@ ThreadPool* ThreadPool::getInstance() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::queueTask( ThreadPool::Task task )
-   throw ( lang::Exception ) {
+void ThreadPool::queueTask( ThreadPool::Task task ) {
 
     try{
 
@@ -128,8 +127,7 @@ void ThreadPool::queueTask( ThreadPool::Task task )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::Task ThreadPool::deQueueTask()
-    throw ( lang::Exception ) {
+ThreadPool::Task ThreadPool::deQueueTask() {
 
     try{
         //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - syncing on queue");

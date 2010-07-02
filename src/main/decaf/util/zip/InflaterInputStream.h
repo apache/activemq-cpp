@@ -118,23 +118,21 @@ namespace zip {
          *
          * Until EOF this method always returns 1, thereafter it always returns 0.
          */
-        virtual int available() const throw ( decaf::io::IOException );
+        virtual int available() const;
 
         /**
          * {@inheritDoc}
          *
          * Closes any resources associated with this InflaterInputStream.
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
         /**
          * {@inheritDoc}
          *
          * Skips the specified amount of uncompressed input data.
          */
-        virtual long long skip( long long num )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long skip( long long num );
 
         /**
          * {@inheritDoc}
@@ -148,7 +146,7 @@ namespace zip {
          *
          * Always throws an IOException when called.
          */
-        virtual void reset() throw ( decaf::io::IOException );
+        virtual void reset();
 
         /**
          * {@inheritDoc}
@@ -164,16 +162,13 @@ namespace zip {
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void fill() throw( decaf::io::IOException );
+        virtual void fill();
 
     protected:
 
-        virtual int doReadByte() throw ( decaf::io::IOException );
+        virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     };
 

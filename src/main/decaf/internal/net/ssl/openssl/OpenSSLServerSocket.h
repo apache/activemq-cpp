@@ -106,7 +106,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* accept() throw( decaf::io::IOException );
+        virtual decaf::net::Socket* accept();
 
     };
 

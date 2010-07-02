@@ -83,7 +83,7 @@ namespace util{
 
             virtual ~QueueIterator() {}
 
-            virtual T next() throw( lang::exceptions::NoSuchElementException ){
+            virtual T next() {
                 if( this->current == queue->end() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -98,8 +98,7 @@ namespace util{
                 return ( this->current != queue->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 if( this->previous == queue->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -249,51 +248,35 @@ namespace util{
 
     public:  // Synchronizable
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs ) {
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs, int nanos ) {
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 

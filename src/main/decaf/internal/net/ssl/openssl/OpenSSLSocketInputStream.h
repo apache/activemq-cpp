@@ -50,7 +50,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual int available() const throw ( decaf::io::IOException );
+        virtual int available() const;
 
         /**
          * Close - does nothing.  It is the responsibility of the owner
@@ -58,25 +58,20 @@ namespace openssl {
          *
          * {@inheritDoc}
          */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         /**
          * Not supported.
          *
          * {@inheritDoc}
          */
-        virtual long long skip( long long num )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long skip( long long num );
 
     protected:
 
-        virtual int doReadByte() throw ( io::IOException );
+        virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     };
 

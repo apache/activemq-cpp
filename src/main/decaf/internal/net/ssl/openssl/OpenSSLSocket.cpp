@@ -168,9 +168,7 @@ OpenSSLSocket::~OpenSSLSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void OpenSSLSocket::connect( const std::string& host, int port, int timeout ) {
 
     try{
 
@@ -215,7 +213,7 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::close() throw( decaf::io::IOException ) {
+void OpenSSLSocket::close() {
 
     try{
 
@@ -238,7 +236,7 @@ void OpenSSLSocket::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::io::InputStream* OpenSSLSocket::getInputStream() throw( decaf::io::IOException ) {
+decaf::io::InputStream* OpenSSLSocket::getInputStream() {
 
     checkClosed();
 
@@ -255,7 +253,7 @@ decaf::io::InputStream* OpenSSLSocket::getInputStream() throw( decaf::io::IOExce
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::io::OutputStream* OpenSSLSocket::getOutputStream() throw( decaf::io::IOException ) {
+decaf::io::OutputStream* OpenSSLSocket::getOutputStream() {
 
     checkClosed();
 
@@ -272,28 +270,28 @@ decaf::io::OutputStream* OpenSSLSocket::getOutputStream() throw( decaf::io::IOEx
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::shutdownInput() throw( decaf::io::IOException ) {
+void OpenSSLSocket::shutdownInput() {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::shutdownOutput() throw( decaf::io::IOException ) {
+void OpenSSLSocket::shutdownOutput() {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::setOOBInline( bool value DECAF_UNUSED ) throw( SocketException ) {
+void OpenSSLSocket::setOOBInline( bool value DECAF_UNUSED ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) throw( decaf::io::IOException ) {
+void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );

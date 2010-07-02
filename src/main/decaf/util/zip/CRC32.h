@@ -71,8 +71,7 @@ namespace zip {
          *
          * @throw IndexOutOfBoundsException if offset + length > size of the buffer.
          */
-        virtual void update( const std::vector<unsigned char>& buffer, int offset, int length )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void update( const std::vector<unsigned char>& buffer, int offset, int length );
 
         /**
          * Updates the current checksum with the specified array of bytes.
@@ -89,10 +88,7 @@ namespace zip {
          * @throw NullPointerException if the passed buffer is NULL.
          * @throw IndexOutOfBoundsException if offset + length > size of the buffer.
          */
-        virtual void update( const unsigned char* buffer, int size,
-                             int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void update( const unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Updates the current checksum with the specified byte value.

@@ -55,7 +55,7 @@ InputStreamReader::~InputStreamReader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStreamReader::close() throw( decaf::io::IOException ) {
+void InputStreamReader::close() {
 
     try{
 
@@ -69,7 +69,7 @@ void InputStreamReader::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool InputStreamReader::ready() const throw( decaf::io::IOException ) {
+bool InputStreamReader::ready() const {
 
     try{
         checkClosed();
@@ -84,10 +84,7 @@ bool InputStreamReader::ready() const throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, int length )
-        throw( decaf::io::IOException,
-               decaf::lang::exceptions::NullPointerException,
-               decaf::lang::exceptions::IndexOutOfBoundsException ) {
+int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, int length ) {
 
     try{
         checkClosed();
@@ -105,7 +102,7 @@ int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStreamReader::checkClosed() const throw( decaf::io::IOException ) {
+void InputStreamReader::checkClosed() const {
     if( closed ) {
         throw IOException( __FILE__, __LINE__, "This Reader is Closed" );
     }

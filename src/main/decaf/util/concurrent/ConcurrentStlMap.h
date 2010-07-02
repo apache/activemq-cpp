@@ -232,8 +232,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void put( const K& key, const V& value )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void put( const K& key, const V& value ) {
 
             synchronized( &mutex ) {
                 valueMap[key] = value;
@@ -243,8 +242,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other ) {
 
             synchronized( &mutex ) {
                 this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
@@ -254,8 +252,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
 
             synchronized( &mutex ) {
                 std::vector<K> keys = other.keySet();
@@ -270,9 +267,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V remove( const K& key )
-            throw ( decaf::lang::exceptions::NoSuchElementException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual V remove( const K& key ) {
 
             V result;
 
@@ -349,8 +344,7 @@ namespace concurrent{
          * @throw UnsupportedOperationException
          *        if the put operation is not supported by this map
          */
-        bool putIfAbsent( const K& key, const V& value )
-            throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+        bool putIfAbsent( const K& key, const V& value ) {
 
             synchronized( &mutex ) {
                 if( !this->containsKey( key ) ) {
@@ -441,8 +435,7 @@ namespace concurrent{
          *
          * @throws NoSuchElementException if there was no previous mapping.
          */
-        V replace( const K& key, const V& value )
-            throw( decaf::lang::exceptions::NoSuchElementException ) {
+        V replace( const K& key, const V& value ) {
 
             synchronized( &mutex ) {
                 if( this->containsKey( key ) ) {
@@ -458,51 +451,35 @@ namespace concurrent{
 
     public:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs ) {
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs, int nanos ) {
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 

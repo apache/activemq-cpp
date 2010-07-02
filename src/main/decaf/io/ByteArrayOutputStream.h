@@ -68,8 +68,7 @@ namespace io{
          *
          * @throw IllegalArgumentException if the size is less than or equal to zero.
          */
-        ByteArrayOutputStream( int bufferSize )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        ByteArrayOutputStream( int bufferSize );
 
         virtual ~ByteArrayOutputStream();
 
@@ -94,7 +93,7 @@ namespace io{
          * Clear current Stream contents
          * @throws IOException
          */
-        virtual void reset() throw ( IOException );
+        virtual void reset();
 
         /**
          * Converts the bytes in the buffer into a standard C++ string
@@ -107,18 +106,13 @@ namespace io{
          * specified output stream argument, as if by calling the output
          * stream's write method using out.write( buf, 0, count ).
          */
-        void writeTo( OutputStream* out ) const
-            throw ( decaf::io::IOException, decaf::lang::exceptions::NullPointerException );
+        void writeTo( OutputStream* out ) const;
 
     protected:
 
-        virtual void doWriteByte( unsigned char value )
-           throw ( decaf::io::IOException );
+        virtual void doWriteByte( unsigned char value );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     private:
 

@@ -38,8 +38,7 @@ Reader::~Reader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Reader::mark( int readAheadLimit DECAF_UNUSED )
-    throw( decaf::io::IOException ) {
+void Reader::mark( int readAheadLimit DECAF_UNUSED ) {
 
     throw IOException(
         __FILE__, __LINE__,
@@ -47,12 +46,12 @@ void Reader::mark( int readAheadLimit DECAF_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Reader::ready() const throw( decaf::io::IOException ) {
+bool Reader::ready() const {
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Reader::reset() throw( decaf::io::IOException ) {
+void Reader::reset() {
 
     throw IOException(
         __FILE__, __LINE__,
@@ -60,8 +59,7 @@ void Reader::reset() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Reader::skip( long long count )
-    throw( decaf::io::IOException ) {
+long long Reader::skip( long long count ) {
 
     try{
 
@@ -96,7 +94,7 @@ long long Reader::skip( long long count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( std::vector<char>& buffer ) throw( decaf::io::IOException ) {
+int Reader::read( std::vector<char>& buffer ) {
 
     try{
         return this->doReadVector( buffer );
@@ -106,9 +104,7 @@ int Reader::read( std::vector<char>& buffer ) throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, int length )
-   throw( decaf::io::IOException,
-          decaf::lang::exceptions::NullPointerException ) {
+int Reader::read( char* buffer, int length ) {
 
     try{
         return this->doReadArray( buffer, length );
@@ -118,10 +114,7 @@ int Reader::read( char* buffer, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, int size, int offset, int length )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+int Reader::read( char* buffer, int size, int offset, int length ) {
 
     try{
         return this->doReadArrayBounded( buffer, size, offset, length );
@@ -131,7 +124,7 @@ int Reader::read( char* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read() throw( IOException ) {
+int Reader::read() {
 
     try{
         return this->doReadChar();
@@ -141,10 +134,7 @@ int Reader::read() throw( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( decaf::nio::CharBuffer* charBuffer )
-         throw( decaf::io::IOException,
-                decaf::lang::exceptions::NullPointerException,
-                decaf::nio::ReadOnlyBufferException ) {
+int Reader::read( decaf::nio::CharBuffer* charBuffer ) {
 
     try{
         // Error checking is done in the Impl.
@@ -157,8 +147,7 @@ int Reader::read( decaf::nio::CharBuffer* charBuffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadVector( std::vector<char>& buffer )
-    throw( decaf::io::IOException ) {
+int Reader::doReadVector( std::vector<char>& buffer ) {
 
     try{
 
@@ -173,9 +162,7 @@ int Reader::doReadVector( std::vector<char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadArray( char* buffer, int length )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::NullPointerException ) {
+int Reader::doReadArray( char* buffer, int length ) {
 
     try{
 
@@ -190,7 +177,7 @@ int Reader::doReadArray( char* buffer, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadChar() throw( decaf::io::IOException ) {
+int Reader::doReadChar() {
 
     try{
 
@@ -207,10 +194,7 @@ int Reader::doReadChar() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::NullPointerException,
-           decaf::nio::ReadOnlyBufferException ) {
+int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer ) {
 
     try{
 

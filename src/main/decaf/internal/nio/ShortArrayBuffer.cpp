@@ -26,8 +26,7 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : ShortBuffer( size ){
+ShortArrayBuffer::ShortArrayBuffer( int size, bool readOnly ) : ShortBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
@@ -38,9 +37,8 @@ ShortArrayBuffer::ShortArrayBuffer( int size, bool readOnly )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( short* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : ShortBuffer( length ) {
+ShortArrayBuffer::ShortArrayBuffer( short* array, int size, int offset, int length, bool readOnly ) :
+    ShortBuffer( length ) {
 
     try{
 
@@ -68,9 +66,7 @@ ShortArrayBuffer::ShortArrayBuffer( short* array, int size, int offset, int leng
 
 ///////////////////////////////////////////////////////////////////////////////
 ShortArrayBuffer::ShortArrayBuffer( const Pointer<ByteArrayAdapter>& array,
-                                    int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : ShortBuffer( length ) {
+                                    int offset, int length, bool readOnly ) : ShortBuffer( length ) {
 
     try{
 
@@ -117,9 +113,7 @@ ShortArrayBuffer::~ShortArrayBuffer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short* ShortArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+short* ShortArrayBuffer::array() {
 
     try{
 
@@ -144,9 +138,7 @@ short* ShortArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ShortArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int ShortArrayBuffer::arrayOffset() {
 
     try{
 
@@ -185,7 +177,7 @@ ShortBuffer* ShortArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::compact() {
 
     try{
 
@@ -223,7 +215,7 @@ ShortBuffer* ShortArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short ShortArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+short ShortArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -234,8 +226,7 @@ short ShortArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short ShortArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+short ShortArrayBuffer::get( int index ) const {
 
     try{
 
@@ -253,8 +244,7 @@ short ShortArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::put( short value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::put( short value ) {
 
     try{
 
@@ -268,9 +258,7 @@ ShortBuffer& ShortArrayBuffer::put( short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::put( int index, short value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::put( int index, short value ) {
 
     try{
 

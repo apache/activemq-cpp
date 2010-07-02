@@ -74,8 +74,7 @@ namespace concurrent{
          * @throws InterruptedException - if the current thread is interrupted while waiting.
          * @throws Exception - if any other error occurs.
          */
-        virtual void await() throw ( decaf::lang::exceptions::InterruptedException,
-                                     decaf::lang::Exception );
+        virtual void await();
 
         /**
          * Causes the current thread to wait until the latch has counted down to zero, unless the
@@ -107,9 +106,7 @@ namespace concurrent{
          * @throws InterruptedException - if the current thread is interrupted while waiting.
          * @throws Exception - if any other error occurs.
          */
-        virtual bool await( long long timeOut )
-            throw ( decaf::lang::exceptions::InterruptedException,
-                    decaf::lang::Exception );
+        virtual bool await( long long timeOut );
 
         /**
          * Causes the current thread to wait until the latch has counted down to zero, unless the
@@ -142,9 +139,7 @@ namespace concurrent{
          * @throws InterruptedException - if the current thread is interrupted while waiting.
          * @throws Exception - if any other error occurs.
          */
-        virtual bool await( long long timeout, const TimeUnit& unit )
-            throw ( decaf::lang::exceptions::InterruptedException,
-                    decaf::lang::Exception );
+        virtual bool await( long long timeout, const TimeUnit& unit );
 
         /**
          * Counts down the latch, releasing all waiting threads when

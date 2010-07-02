@@ -318,8 +318,7 @@ namespace lang{
          * @returns a double parsed from the passed string
          * @throws NumberFormatException
          */
-        static double parseDouble( const std::string value )
-            throw ( exceptions::NumberFormatException );
+        static double parseDouble( const std::string value );
 
         /**
          * Returns a hexadecimal string representation of the double argument. All

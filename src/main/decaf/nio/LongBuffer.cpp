@@ -29,14 +29,12 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer::LongBuffer( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
+LongBuffer::LongBuffer( int capacity ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer* LongBuffer::allocate( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) {
+LongBuffer* LongBuffer::allocate( int capacity ) {
 
     try{
         return BufferFactory::createLongBuffer( capacity );
@@ -46,9 +44,7 @@ LongBuffer* LongBuffer::allocate( int capacity )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer* LongBuffer::wrap( long long* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+LongBuffer* LongBuffer::wrap( long long* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -97,8 +93,7 @@ std::string LongBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongBuffer::get( std::vector<long long> buffer )
-    throw ( BufferUnderflowException ) {
+LongBuffer& LongBuffer::get( std::vector<long long> buffer ) {
 
     try{
 
@@ -113,10 +108,7 @@ LongBuffer& LongBuffer::get( std::vector<long long> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongBuffer::get( long long* buffer, int size, int offset, int length )
-    throw( BufferUnderflowException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+LongBuffer& LongBuffer::get( long long* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -155,9 +147,7 @@ LongBuffer& LongBuffer::get( long long* buffer, int size, int offset, int length
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongBuffer::put( LongBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::IllegalArgumentException ) {
+LongBuffer& LongBuffer::put( LongBuffer& src ) {
 
     try{
 
@@ -193,10 +183,7 @@ LongBuffer& LongBuffer::put( LongBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongBuffer::put( const long long* buffer, int size, int offset, int length )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+LongBuffer& LongBuffer::put( const long long* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -243,8 +230,7 @@ LongBuffer& LongBuffer::put( const long long* buffer, int size, int offset, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongBuffer::put( std::vector<long long>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+LongBuffer& LongBuffer::put( std::vector<long long>& buffer ) {
 
     try{
 

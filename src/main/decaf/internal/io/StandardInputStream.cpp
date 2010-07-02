@@ -35,12 +35,12 @@ StandardInputStream::~StandardInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::available() const throw ( decaf::io::IOException ) {
+int StandardInputStream::available() const {
     return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::doReadByte() throw ( decaf::io::IOException ) {
+int StandardInputStream::doReadByte() {
 
     if( !std::cin.good() ) {
         throw decaf::io::IOException(

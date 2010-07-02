@@ -71,7 +71,7 @@ namespace concurrent{
          * running one, and then die.  Does not block.
          * @throws Exception
          */
-        virtual void stop() throw ( lang::Exception );
+        virtual void stop();
 
         /**
          * Checks to see if the thread is busy, if busy it means
@@ -86,8 +86,7 @@ namespace concurrent{
          * notified when this thread starts and completes a task.
          * @param listener the listener to send notifications to.
          */
-        virtual void setPooledThreadListener( PooledThreadListener* listener )
-        {
+        virtual void setPooledThreadListener( PooledThreadListener* listener ) {
             this->listener = listener;
         }
 
@@ -96,8 +95,7 @@ namespace concurrent{
          * notified when this thread starts and completes a task.
          * @return a pointer to this thread's listener or NULL
          */
-        virtual PooledThreadListener* getPooledThreadListener()
-        {
+        virtual PooledThreadListener* getPooledThreadListener() {
             return this->listener;
         }
     };

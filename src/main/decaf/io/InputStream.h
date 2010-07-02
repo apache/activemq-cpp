@@ -55,12 +55,14 @@ namespace io{
         virtual ~InputStream();
 
         /**
-         * Closes the InputStream freeing any resources that might have been aquired
+         * Closes the InputStream freeing any resources that might have been acquired
          * during the lifetime of this stream.
          *
          * The default implementation of this method does nothing.
+         *
+         * @throws IOException if an I/O error occurs while closing the InputStream.
          */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         /**
          * Marks the current position in the stream A subsequent call to the
@@ -107,7 +109,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void reset() throw ( decaf::io::IOException );
+        virtual void reset();
 
         /**
          * Determines if this input stream supports the mark and reset methods.
@@ -135,7 +137,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual int available() const throw ( decaf::io::IOException ) {
+        virtual int available() const {
             return 0;
         }
 
@@ -152,7 +154,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual int read() throw ( decaf::io::IOException );
+        virtual int read();
 
         /**
          * Reads up to size bytes of data from the input stream into an array of bytes. An
@@ -182,9 +184,7 @@ namespace io{
          * @throws IOException if an I/O error occurs.
          * @throws NullPointerException if buffer passed is NULL.
          */
-        virtual int read( unsigned char* buffer, int size )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int read( unsigned char* buffer, int size );
 
         /**
          * Reads up to length bytes of data from the input stream into an array of bytes. An
@@ -231,10 +231,7 @@ namespace io{
          * @throws NullPointerException if buffer passed is NULL.
          * @throws IndexOutOfBoundsException if length > size - offset.
          */
-        virtual int read( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int read( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The skip
@@ -257,9 +254,7 @@ namespace io{
          * @throws UnsupportedOperationException if the concrete stream class does
          *         not support skipping bytes.
          */
-        virtual long long skip( long long num )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long skip( long long num );
 
         /**
          * Output a String representation of this object.
@@ -272,65 +267,43 @@ namespace io{
 
     protected:  // Virtual doRead methods that can be overridden to customize subclasses.
 
-        virtual int doReadByte() throw( decaf::io::IOException ) = 0;
+        virtual int doReadByte() = 0;
 
-        virtual int doReadArray( unsigned char* buffer, int size )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArray( unsigned char* buffer, int size );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     public:  // Synchronizable
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs ) {
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs, int nanos ) {
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 

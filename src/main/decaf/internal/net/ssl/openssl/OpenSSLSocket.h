@@ -76,44 +76,42 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void connect( const std::string& host, int port, int timeout )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        virtual void connect( const std::string& host, int port, int timeout );
 
         /**
          * {@inheritDoc}
          */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::InputStream* getInputStream() throw( decaf::io::IOException );
+        virtual decaf::io::InputStream* getInputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::OutputStream* getOutputStream() throw( decaf::io::IOException );
+        virtual decaf::io::OutputStream* getOutputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownInput() throw( decaf::io::IOException );
+        virtual void shutdownInput();
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownOutput() throw( decaf::io::IOException );
+        virtual void shutdownOutput();
 
         /**
          * {@inheritDoc}
          */
-        virtual void setOOBInline( bool value ) throw( decaf::net::SocketException );
+        virtual void setOOBInline( bool value );
 
         /**
          * {@inheritDoc}
          */
-        virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
+        virtual void sendUrgentData( int data );
 
     public:  // SSLSocket Overrides
 

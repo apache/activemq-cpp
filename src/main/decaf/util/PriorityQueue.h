@@ -90,7 +90,7 @@ namespace util {
 
             PriorityQueueIterator( PriorityQueue* queue ) : position( 0 ), allowRemove( false ), queue( queue ) {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ) {
+            virtual E next() {
 
                 if( !hasNext() ) {
                     throw lang::exceptions::NoSuchElementException(
@@ -106,8 +106,7 @@ namespace util {
                 return position < queue->_size;
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ) {
+            virtual void remove() {
 
                 if( !allowRemove ) {
                     throw lang::exceptions::IllegalStateException(
@@ -126,8 +125,7 @@ namespace util {
             ConstPriorityQueueIterator( const PriorityQueue* queue ) :
                 PriorityQueueIterator( const_cast<PriorityQueue*>( queue ) ) {}
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ) {
+            virtual void remove() {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
@@ -242,8 +240,7 @@ namespace util {
             return this->_size;
         }
 
-        virtual void clear()
-            throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
 
             // TODO - Provide a more efficient way to clear the array without reallocating it
             //        we should keep the size it grew to since if reused it could get that big
@@ -256,9 +253,7 @@ namespace util {
             this->_size = 0;
         }
 
-        virtual bool offer( const E& value )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalArgumentException ) {
+        virtual bool offer( const E& value ) {
 
             // TODO - Check for Null and throw exception
 
@@ -289,7 +284,7 @@ namespace util {
             return true;
         }
 
-        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual E remove() {
 
             if( !Queue<E>::isEmpty() ) {
                 E result = elements[0];
@@ -301,9 +296,7 @@ namespace util {
                 __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool remove( const E& value ) {
 
             std::size_t targetIndex = 0;
             for( targetIndex = 0; targetIndex < _size; targetIndex++ ) {
@@ -320,10 +313,7 @@ namespace util {
             return true;
         }
 
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
+        virtual bool add( const E& value ) {
 
             try {
                 return offer( value );

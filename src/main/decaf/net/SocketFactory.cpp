@@ -38,7 +38,7 @@ SocketFactory::~SocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* SocketFactory::createSocket() throw( decaf::io::IOException ) {
+Socket* SocketFactory::createSocket() {
 
     throw IOException(
         __FILE__, __LINE__, "Unconnected Sockets not implemented for this Socket Type." );

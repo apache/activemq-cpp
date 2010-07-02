@@ -90,9 +90,7 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool LogManager::addLogger( Logger* logger DECAF_UNUSED )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+bool LogManager::addLogger( Logger* logger DECAF_UNUSED ) {
 
     return false;
 }
@@ -138,14 +136,11 @@ void LogManager::shutdown() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::readConfiguration()
-    throw( decaf::io::IOException ) {
+void LogManager::readConfiguration() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::NullPointerException ) {
+void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

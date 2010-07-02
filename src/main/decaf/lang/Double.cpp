@@ -138,8 +138,7 @@ double Double::longBitsToDouble( long long bits ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Double::parseDouble( const std::string value )
-    throw ( exceptions::NumberFormatException ) {
+double Double::parseDouble( const std::string value ) {
 
     // TODO - This is not going to parse the formats we say we do.
     float result = 0.0;

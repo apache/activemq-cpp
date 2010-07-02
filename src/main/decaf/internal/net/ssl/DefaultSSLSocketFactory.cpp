@@ -37,38 +37,33 @@ DefaultSSLSocketFactory::~DefaultSSLSocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::net::Socket* DefaultSSLSocketFactory::createSocket()
-    throw( decaf::io::IOException ) {
+decaf::net::Socket* DefaultSSLSocketFactory::createSocket() {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* DefaultSSLSocketFactory::createSocket( const decaf::net::InetAddress* host DECAF_UNUSED, int port DECAF_UNUSED )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+Socket* DefaultSSLSocketFactory::createSocket( const decaf::net::InetAddress* host DECAF_UNUSED, int port DECAF_UNUSED ) {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* DefaultSSLSocketFactory::createSocket( const decaf::net::InetAddress* host DECAF_UNUSED, int port DECAF_UNUSED,
-                                               const decaf::net::InetAddress* ifAddress DECAF_UNUSED, int localPort DECAF_UNUSED )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+                                               const decaf::net::InetAddress* ifAddress DECAF_UNUSED, int localPort DECAF_UNUSED ) {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::net::Socket* DefaultSSLSocketFactory::createSocket( const std::string& name DECAF_UNUSED, int port DECAF_UNUSED )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+decaf::net::Socket* DefaultSSLSocketFactory::createSocket( const std::string& name DECAF_UNUSED, int port DECAF_UNUSED ) {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::net::Socket* DefaultSSLSocketFactory::createSocket( const std::string& name DECAF_UNUSED, int port DECAF_UNUSED,
-                                                           const InetAddress* ifAddress DECAF_UNUSED, int localPort DECAF_UNUSED )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+                                                           const InetAddress* ifAddress DECAF_UNUSED, int localPort DECAF_UNUSED ) {
 
     throw IOException( __FILE__, __LINE__, errorMessage.c_str() );
 }

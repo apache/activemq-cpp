@@ -61,8 +61,7 @@ namespace concurrent{
          * @param thread - Pointer to the Pooled Thread that is making this call
          * @param ex - The Exception that occurred.
          */
-        virtual void onTaskException( PooledThread* thread,
-                                      lang::Exception& ex) = 0;
+        virtual void onTaskException( PooledThread* thread, lang::Exception& ex) = 0;
 
     };
 

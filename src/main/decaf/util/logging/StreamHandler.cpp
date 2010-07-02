@@ -68,7 +68,7 @@ StreamHandler::~StreamHandler() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StreamHandler::close() throw ( decaf::io::IOException ) {
+void StreamHandler::close() {
     this->close( true );
 }
 
@@ -127,8 +127,7 @@ bool StreamHandler::isLoggable( const LogRecord& record ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StreamHandler::setOuputStream( decaf::io::OutputStream* stream )
-    throw( decaf::lang::exceptions::NullPointerException ) {
+void StreamHandler::setOuputStream( decaf::io::OutputStream* stream ) {
 
     if( stream == NULL ) {
         throw NullPointerException(

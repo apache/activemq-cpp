@@ -26,8 +26,7 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : LongBuffer( size ){
+LongArrayBuffer::LongArrayBuffer( int size, bool readOnly ) : LongBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
@@ -38,9 +37,8 @@ LongArrayBuffer::LongArrayBuffer( int size, bool readOnly )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
+LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int length, bool readOnly ) :
+    LongBuffer( length ) {
 
     try{
 
@@ -68,9 +66,7 @@ LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int le
 
 ///////////////////////////////////////////////////////////////////////////////
 LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array,
-                                  int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
+                                  int offset, int length, bool readOnly ) : LongBuffer( length ) {
 
     try{
 
@@ -117,9 +113,7 @@ LongArrayBuffer::~LongArrayBuffer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long* LongArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+long long* LongArrayBuffer::array() {
 
     try{
 
@@ -144,9 +138,7 @@ long long* LongArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int LongArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int LongArrayBuffer::arrayOffset() {
 
     try{
 
@@ -185,7 +177,7 @@ LongBuffer* LongArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+LongBuffer& LongArrayBuffer::compact() {
 
     try{
 
@@ -223,7 +215,7 @@ LongBuffer* LongArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long LongArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+long long LongArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -234,8 +226,7 @@ long long LongArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long LongArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+long long LongArrayBuffer::get( int index ) const {
 
     try{
 
@@ -253,8 +244,7 @@ long long LongArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::put( long long value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+LongBuffer& LongArrayBuffer::put( long long value ) {
 
     try{
 
@@ -268,9 +258,7 @@ LongBuffer& LongArrayBuffer::put( long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::put( int index, long long value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+LongBuffer& LongArrayBuffer::put( int index, long long value ) {
 
     try{
 

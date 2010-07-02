@@ -67,7 +67,7 @@ std::vector<std::string> OpenSSLSocketFactory::getSupportedCipherSuites() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* OpenSSLSocketFactory::createSocket() throw( decaf::io::IOException ) {
+Socket* OpenSSLSocketFactory::createSocket() {
 
     try{
 
@@ -86,8 +86,7 @@ Socket* OpenSSLSocketFactory::createSocket() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host, int port )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host, int port ) {
 
     try{
 
@@ -108,8 +107,7 @@ Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host,
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host, int port,
-                                            const decaf::net::InetAddress* ifAddress, int localPort )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+                                            const decaf::net::InetAddress* ifAddress, int localPort ) {
 
     try{
 
@@ -130,8 +128,7 @@ Socket* OpenSSLSocketFactory::createSocket( const decaf::net::InetAddress* host,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port ) {
 
     try{
 
@@ -152,8 +149,7 @@ Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int por
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* OpenSSLSocketFactory::createSocket( const std::string& hostname, int port,
-                                            const InetAddress* ifAddress, int localPort )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+                                            const InetAddress* ifAddress, int localPort ) {
 
     try{
 

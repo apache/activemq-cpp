@@ -39,7 +39,7 @@ CheckedOutputStream::~CheckedOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CheckedOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
+void CheckedOutputStream::doWriteByte( unsigned char value ) {
 
     try{
 
@@ -57,10 +57,7 @@ void CheckedOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::
 
 ////////////////////////////////////////////////////////////////////////////////
 void CheckedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                               int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                               int offset, int length ) {
 
     try{
 

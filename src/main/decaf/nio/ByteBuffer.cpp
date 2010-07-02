@@ -31,13 +31,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer::ByteBuffer( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
+ByteBuffer::ByteBuffer( int capacity ) : Buffer( capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* ByteBuffer::allocate( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) {
+ByteBuffer* ByteBuffer::allocate( int capacity ) {
 
     try{
         return BufferFactory::createByteBuffer( capacity );
@@ -47,9 +45,7 @@ ByteBuffer* ByteBuffer::allocate( int capacity )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* ByteBuffer::wrap( unsigned char* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteBuffer* ByteBuffer::wrap( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -91,8 +87,7 @@ ByteBuffer* ByteBuffer::wrap( std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::get( std::vector<unsigned char> buffer )
-    throw ( BufferUnderflowException ) {
+ByteBuffer& ByteBuffer::get( std::vector<unsigned char> buffer ) {
 
     try{
 
@@ -108,8 +103,7 @@ ByteBuffer& ByteBuffer::get( std::vector<unsigned char> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::get( unsigned char* buffer, int size, int offset, int length )
-    throw( BufferUnderflowException, NullPointerException, IndexOutOfBoundsException ) {
+ByteBuffer& ByteBuffer::get( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -149,8 +143,7 @@ ByteBuffer& ByteBuffer::get( unsigned char* buffer, int size, int offset, int le
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::put( ByteBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException, IllegalArgumentException ) {
+ByteBuffer& ByteBuffer::put( ByteBuffer& src ) {
 
     try{
 
@@ -186,8 +179,7 @@ ByteBuffer& ByteBuffer::put( ByteBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::put( const unsigned char* buffer, int size, int offset, int length )
-    throw( BufferOverflowException, ReadOnlyBufferException, NullPointerException, IndexOutOfBoundsException ) {
+ByteBuffer& ByteBuffer::put( const unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -233,8 +225,7 @@ ByteBuffer& ByteBuffer::put( const unsigned char* buffer, int size, int offset, 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer& ByteBuffer::put( std::vector<unsigned char>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+ByteBuffer& ByteBuffer::put( std::vector<unsigned char>& buffer ) {
 
     try{
 

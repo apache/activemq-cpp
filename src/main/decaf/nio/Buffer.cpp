@@ -44,8 +44,7 @@ Buffer::Buffer( const Buffer& other ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::position( int newPosition )
-    throw( lang::exceptions::IllegalArgumentException ) {
+Buffer& Buffer::position( int newPosition ) {
 
     if( newPosition < 0 || newPosition > this->_limit ) {
         throw IllegalArgumentException(
@@ -63,7 +62,7 @@ Buffer& Buffer::position( int newPosition )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::limit( int newLimit ) throw( IllegalArgumentException ) {
+Buffer& Buffer::limit( int newLimit ) {
 
     if( newLimit < 0 || newLimit > this->capacity() ) {
         throw IllegalArgumentException(
@@ -94,7 +93,7 @@ Buffer& Buffer::mark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::reset() throw ( InvalidMarkException ) {
+Buffer& Buffer::reset() {
 
     if( !this->_markSet ) {
         throw InvalidMarkException(

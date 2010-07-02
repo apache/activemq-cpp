@@ -170,8 +170,7 @@ namespace logging{
          *
          * @throws NullPointerException if the Handler given is NULL.
          */
-        void addHandler( Handler* handler )
-            throw ( lang::exceptions::NullPointerException );
+        void addHandler( Handler* handler );
 
         /**
          * Removes the specified Handler from this logger, ownership of the

@@ -58,8 +58,7 @@ namespace cert {
          *      Receives the encoded form of this certificate.
          * @throws CertificateEncodingException if an encoding error occurs
          */
-        virtual void getEncoded( std::vector<unsigned char>& output ) const
-            throw ( CertificateEncodingException ) = 0;
+        virtual void getEncoded( std::vector<unsigned char>& output ) const = 0;
 
         /**
          * Returns the type of this certificate
@@ -94,12 +93,7 @@ namespace cert {
          * @throws SignatureException - on signature errors.
          * @throws CertificateException - on encoding errors.
          */
-        virtual void verify( const PublicKey& publicKey ) const
-            throw( NoSuchAlgorithmException,
-                   InvalidKeyException,
-                   NoSuchProviderException,
-                   SignatureException,
-                   CertificateException) = 0;
+        virtual void verify( const PublicKey& publicKey ) const = 0;
 
         /**
          * Verifies that this certificate was signed with the private key
@@ -117,12 +111,7 @@ namespace cert {
          * @throws CertificateException - on encoding errors.
          */
         virtual void verify( const PublicKey& publicKey,
-                             const std::string& sigProvider ) const
-                    throw( NoSuchAlgorithmException,
-                           InvalidKeyException,
-                           NoSuchProviderException,
-                           SignatureException,
-                           CertificateException) = 0;
+                             const std::string& sigProvider ) const = 0;
 
         /**
          * Returns a string representation of this certificate.

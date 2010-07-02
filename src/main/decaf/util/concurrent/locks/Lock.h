@@ -115,7 +115,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
+        virtual void lock() = 0;
 
         /**
          * Acquires the lock unless the current thread is interrupted.
@@ -157,8 +157,7 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported).
          */
-        virtual void lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
-                                                 decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual void lockInterruptibly() = 0;
 
         /**
          * Acquires the lock only if it is free at the time of invocation.
@@ -187,7 +186,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) = 0;
+        virtual bool tryLock() = 0;
 
         /**
          * Acquires the lock if it is free within the given waiting time and the current
@@ -244,9 +243,7 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported)
          */
-        virtual bool tryLock( long long time, const TimeUnit& unit )
-            throw ( decaf::lang::exceptions::RuntimeException,
-                    decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual bool tryLock( long long time, const TimeUnit& unit ) = 0;
 
         /**
          * Releases the lock.
@@ -261,8 +258,7 @@ namespace locks {
          * @throws RuntimeException if an error occurs while acquiring the lock.
          * @throws IllegalMonitorStateException if the current thread is not the owner of the lock.
          */
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
+        virtual void unlock() = 0;
 
         /**
          * Returns a new Condition instance that is bound to this Lock instance.
@@ -283,9 +279,7 @@ namespace locks {
          * @throws UnsupportedOperationException
          *         if this Lock implementation does not support conditions
          */
-        virtual Condition* newCondition()
-            throw ( decaf::lang::exceptions::RuntimeException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual Condition* newCondition() = 0;
 
     };
 

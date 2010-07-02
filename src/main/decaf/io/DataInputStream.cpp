@@ -39,7 +39,7 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
+bool DataInputStream::readBoolean() {
 
     try {
         readAllData( buffer, sizeof(char) );
@@ -51,7 +51,7 @@ bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readByte() throw ( IOException, EOFException ) {
+char DataInputStream::readByte() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -63,7 +63,7 @@ char DataInputStream::readByte() throw ( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFException ) {
+unsigned char DataInputStream::readUnsignedByte() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -75,7 +75,7 @@ unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readChar() throw ( IOException, EOFException ) {
+char DataInputStream::readChar() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -87,7 +87,7 @@ char DataInputStream::readChar() throw ( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
+short DataInputStream::readShort() {
 
     try {
         short value = 0;
@@ -101,7 +101,7 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io::EOFException ) {
+unsigned short DataInputStream::readUnsignedShort() {
 
     try {
         unsigned short value = 0;
@@ -115,7 +115,7 @@ unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
+int DataInputStream::readInt() {
 
     try {
         unsigned int value = 0;
@@ -130,7 +130,7 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
+double DataInputStream::readDouble() {
 
     try {
         unsigned long long lvalue = this->readLong();
@@ -144,7 +144,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
+float DataInputStream::readFloat() {
 
     try {
         unsigned int lvalue = this->readInt();
@@ -158,8 +158,7 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DataInputStream::readLong()
-    throw ( io::IOException, io::EOFException ) {
+long long DataInputStream::readLong() {
 
     try {
         unsigned long long value = 0;
@@ -187,7 +186,7 @@ long long DataInputStream::readLong()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readString() throw ( io::IOException, io::EOFException ) {
+std::string DataInputStream::readString() {
 
     try {
 
@@ -229,8 +228,7 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readUTF()
-    throw ( io::IOException, io::EOFException, io::UTFDataFormatException ) {
+std::string DataInputStream::readUTF() {
 
     try {
 
@@ -325,10 +323,7 @@ std::string DataInputStream::readUTF()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, int size )
-    throw ( decaf::io::IOException,
-            decaf::io::EOFException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+void DataInputStream::readFully( unsigned char* buffer, int size ) {
 
     try {
 
@@ -345,7 +340,7 @@ void DataInputStream::readFully( unsigned char* buffer, int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readLine() throw( decaf::io::IOException ) {
+std::string DataInputStream::readLine() {
     try{
 
         throw IOException( __FILE__, __LINE__, "Not Yet Implemented." );
@@ -389,11 +384,7 @@ std::string DataInputStream::readLine() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::io::EOFException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length ) {
 
     try {
 
@@ -444,8 +435,7 @@ void DataInputStream::readFully( unsigned char* buffer, int size, int offset, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DataInputStream::skipBytes( long long num )
-    throw( decaf::io::IOException ) {
+long long DataInputStream::skipBytes( long long num ) {
 
     try {
 
@@ -470,8 +460,7 @@ long long DataInputStream::skipBytes( long long num )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readAllData( unsigned char* buffer, int length )
-    throw ( decaf::io::IOException, decaf::io::EOFException ) {
+void DataInputStream::readAllData( unsigned char* buffer, int length ) {
 
     try{
 

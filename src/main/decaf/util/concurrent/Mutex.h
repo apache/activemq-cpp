@@ -52,32 +52,21 @@ namespace concurrent{
 
         virtual ~Mutex();
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException );
+        virtual void lock();
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException );
+        virtual bool tryLock();
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException );
+        virtual void unlock();
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException );
+        virtual void wait();
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException );
+        virtual void wait( long long millisecs );
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException );
+        virtual void wait( long long millisecs, int nanos );
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void notify();
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void notifyAll();
 
     };
 

@@ -29,14 +29,12 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer::IntBuffer( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
+IntBuffer::IntBuffer( int capacity ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* IntBuffer::allocate( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) {
+IntBuffer* IntBuffer::allocate( int capacity ) {
 
     try{
         return BufferFactory::createIntBuffer( capacity );
@@ -46,9 +44,7 @@ IntBuffer* IntBuffer::allocate( int capacity )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* IntBuffer::wrap( int* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+IntBuffer* IntBuffer::wrap( int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -97,8 +93,7 @@ std::string IntBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::get( std::vector<int> buffer )
-    throw ( BufferUnderflowException ) {
+IntBuffer& IntBuffer::get( std::vector<int> buffer ) {
 
     try{
 
@@ -113,10 +108,7 @@ IntBuffer& IntBuffer::get( std::vector<int> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::get( int* buffer, int size, int offset, int length )
-    throw( BufferUnderflowException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+IntBuffer& IntBuffer::get( int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -155,9 +147,7 @@ IntBuffer& IntBuffer::get( int* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( IntBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::IllegalArgumentException ) {
+IntBuffer& IntBuffer::put( IntBuffer& src ) {
 
     try{
 
@@ -193,10 +183,7 @@ IntBuffer& IntBuffer::put( IntBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( const int* buffer, int size, int offset, int length )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+IntBuffer& IntBuffer::put( const int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -243,8 +230,7 @@ IntBuffer& IntBuffer::put( const int* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( std::vector<int>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+IntBuffer& IntBuffer::put( std::vector<int>& buffer ) {
 
     try{
 

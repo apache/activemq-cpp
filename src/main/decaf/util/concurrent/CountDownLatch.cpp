@@ -42,9 +42,7 @@ CountDownLatch::~CountDownLatch() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CountDownLatch::await()
-    throw ( decaf::lang::exceptions::InterruptedException,
-            decaf::lang::Exception ) {
+void CountDownLatch::await() {
 
     try {
 
@@ -62,9 +60,7 @@ void CountDownLatch::await()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( long long timeOut )
-    throw ( decaf::lang::exceptions::InterruptedException,
-            decaf::lang::Exception ) {
+bool CountDownLatch::await( long long timeOut ) {
 
     try {
 
@@ -91,9 +87,7 @@ bool CountDownLatch::await( long long timeOut )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( long long timeout, const TimeUnit& unit )
-    throw ( decaf::lang::exceptions::InterruptedException,
-            decaf::lang::Exception ) {
+bool CountDownLatch::await( long long timeout, const TimeUnit& unit ) {
 
     try{
         return this->await( unit.toMillis( timeout ) );

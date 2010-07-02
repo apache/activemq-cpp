@@ -63,8 +63,7 @@ namespace nio{
          *
          * @throws IllegalArguementException if capacity is negative.
          */
-        DoubleBuffer( int capacity )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        DoubleBuffer( int capacity );
 
     public:
 
@@ -89,9 +88,7 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual double* array()
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   ReadOnlyBufferException ) = 0;
+        virtual double* array() = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element of
@@ -105,9 +102,7 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int arrayOffset()
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   ReadOnlyBufferException ) = 0;
+        virtual int arrayOffset() = 0;
 
         /**
          * Creates a new, read-only double buffer that shares this buffer's content.
@@ -146,7 +141,7 @@ namespace nio{
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual DoubleBuffer& compact() throw( ReadOnlyBufferException ) = 0;
+        virtual DoubleBuffer& compact() = 0;
 
         /**
          * Creates a new double buffer that shares this buffer's content.
@@ -171,7 +166,7 @@ namespace nio{
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
-        virtual double get() throw ( BufferUnderflowException ) = 0;
+        virtual double get() = 0;
 
         /**
          * Absolute get method. Reads the value at the given index.
@@ -184,8 +179,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit
          */
-        virtual double get( int index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual double get( int index ) const = 0;
 
         /**
          * Relative bulk get method.
@@ -201,8 +195,7 @@ namespace nio{
          * @throws BufferUnderflowException iIf there are fewer than length doubles
          *         remaining in this buffer
          */
-        DoubleBuffer& get( std::vector<double> buffer )
-            throw ( BufferUnderflowException );
+        DoubleBuffer& get( std::vector<double> buffer );
 
         /**
          * Relative bulk get method.
@@ -233,10 +226,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        DoubleBuffer& get( double* buffer, int size, int offset, int length )
-            throw( BufferUnderflowException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        DoubleBuffer& get( double* buffer, int size, int offset, int length );
 
         /**
          * Tells whether or not this buffer is backed by an accessible double array.
@@ -269,9 +259,7 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        DoubleBuffer& put( DoubleBuffer& src )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        DoubleBuffer& put( DoubleBuffer& src );
 
         /**
          * This method transfers doubles into this buffer from the given source array.
@@ -300,10 +288,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        DoubleBuffer& put( const double* buffer, int size, int offset, int length )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        DoubleBuffer& put( const double* buffer, int size, int offset, int length );
 
         /**
          * This method transfers the entire content of the given source doubles array into
@@ -317,8 +302,7 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        DoubleBuffer& put( std::vector<double>& buffer )
-            throw( BufferOverflowException, ReadOnlyBufferException );
+        DoubleBuffer& put( std::vector<double>& buffer );
 
         /**
          * Writes the given doubles into this buffer at the current position, and then
@@ -333,8 +317,7 @@ namespace nio{
          *         smaller than its limit.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual DoubleBuffer& put( double value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual DoubleBuffer& put( double value ) = 0;
 
         /**
          * Writes the given doubles into this buffer at the given index.
@@ -350,9 +333,7 @@ namespace nio{
          *         minus the size of the type being written, or the index is negative.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual DoubleBuffer& put( int index, double value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual DoubleBuffer& put( int index, double value ) = 0;
 
         /**
          * Creates a new DoubleBuffer whose content is a shared subsequence of this
@@ -407,8 +388,7 @@ namespace nio{
          *
          * @throws IllegalArgumentException is the capacity value is negative.
          */
-        static DoubleBuffer* allocate( int capacity )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        static DoubleBuffer* allocate( int capacity );
 
         /**
          * Wraps the passed buffer with a new DoubleBuffer.
@@ -434,9 +414,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        static DoubleBuffer* wrap( double* array, int size, int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        static DoubleBuffer* wrap( double* array, int size, int offset, int length );
 
         /**
          * Wraps the passed STL double Vector in a DoubleBuffer.

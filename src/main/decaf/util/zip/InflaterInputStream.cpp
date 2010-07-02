@@ -95,7 +95,7 @@ bool InflaterInputStream::markSupported() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::reset() throw ( decaf::io::IOException ) {
+void InflaterInputStream::reset() {
     throw IOException(
          __FILE__, __LINE__, "Not Supported for this class." );
 }
@@ -106,9 +106,7 @@ void InflaterInputStream::mark( int readLimit DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long InflaterInputStream::skip( long long num )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::UnsupportedOperationException ) {
+long long InflaterInputStream::skip( long long num ) {
 
     try{
 
@@ -137,7 +135,7 @@ long long InflaterInputStream::skip( long long num )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::close() throw ( decaf::io::IOException ) {
+void InflaterInputStream::close() {
 
     try{
 
@@ -152,7 +150,7 @@ void InflaterInputStream::close() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::available() const throw ( decaf::io::IOException ) {
+int InflaterInputStream::available() const {
 
     try{
 
@@ -172,7 +170,7 @@ int InflaterInputStream::available() const throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::doReadByte() throw ( decaf::io::IOException ) {
+int InflaterInputStream::doReadByte() {
 
     try{
 
@@ -188,10 +186,7 @@ int InflaterInputStream::doReadByte() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -277,7 +272,7 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::fill() throw ( decaf::io::IOException ) {
+void InflaterInputStream::fill() {
 
     try{
 

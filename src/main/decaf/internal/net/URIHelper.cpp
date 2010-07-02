@@ -54,8 +54,7 @@ URIHelper::URIHelper() : unreserved( "_-!.~\'()*" ),
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
-    throw( URISyntaxException ) {
+URIType URIHelper::parseURI( const std::string& uri, bool forceServer ) {
 
     URIType result( uri );
 
@@ -183,8 +182,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIHelper::validateScheme( const std::string& uri, const std::string& scheme, int index )
-    throw( URISyntaxException ) {
+void URIHelper::validateScheme( const std::string& uri, const std::string& scheme, int index ) {
 
     // first char needs to be an alpha char
     if( !Character::isLetter( scheme.at(0) ) ) {
@@ -204,8 +202,7 @@ void URIHelper::validateScheme( const std::string& uri, const std::string& schem
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
-                             std::size_t index )
-    throw( URISyntaxException ) {
+                             std::size_t index ) {
 
     try {
         URIEncoderDecoder::validate( ssp, allLegal );
@@ -218,8 +215,7 @@ void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateAuthority( const std::string& uri, const std::string& authority,
-                                   std::size_t index )
-    throw( URISyntaxException ) {
+                                   std::size_t index ) {
 
     try {
         // "@[]" + someLegal
@@ -233,8 +229,7 @@ void URIHelper::validateAuthority( const std::string& uri, const std::string& au
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validatePath( const std::string& uri, const std::string& path,
-                              std::size_t index )
-    throw( URISyntaxException ) {
+                              std::size_t index ) {
 
     try {
         // "/@" + someLegal
@@ -248,8 +243,7 @@ void URIHelper::validatePath( const std::string& uri, const std::string& path,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateQuery( const std::string& uri, const std::string& query,
-                               std::size_t index )
-    throw( URISyntaxException ) {
+                               std::size_t index ) {
 
     try {
         URIEncoderDecoder::validate( query, allLegal );
@@ -262,8 +256,7 @@ void URIHelper::validateQuery( const std::string& uri, const std::string& query,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateFragment( const std::string& uri, const std::string& fragment,
-                                  std::size_t index )
-    throw( URISyntaxException ) {
+                                  std::size_t index ) {
 
     try {
         URIEncoderDecoder::validate( fragment, allLegal );
@@ -275,8 +268,7 @@ void URIHelper::validateFragment( const std::string& uri, const std::string& fra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIType URIHelper::parseAuthority( bool forceServer, const std::string& authority )
-    throw( URISyntaxException ) {
+URIType URIHelper::parseAuthority( bool forceServer, const std::string& authority ) {
 
     try{
 
@@ -372,8 +364,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateUserinfo( const std::string& uri, const std::string& userinfo,
-                                  std::size_t index )
-    throw( URISyntaxException ) {
+                                  std::size_t index ) {
 
     for( std::size_t i = 0; i < userinfo.length(); i++ ) {
 
@@ -387,8 +378,7 @@ void URIHelper::validateUserinfo( const std::string& uri, const std::string& use
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool URIHelper::isValidHost( bool forceServer, const std::string& host )
-    throw( URISyntaxException ) {
+bool URIHelper::isValidHost( bool forceServer, const std::string& host ) {
 
     try{
 

@@ -69,19 +69,17 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual int available() const throw ( decaf::io::IOException );
+        virtual int available() const;
 
         /**
          * {@inheritDoc}
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long skip( long long num );
 
         /**
          * {@inheritDoc}
@@ -91,7 +89,7 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual void reset() throw ( decaf::io::IOException );
+        virtual void reset();
 
         /**
          * {@inheritDoc}
@@ -100,17 +98,11 @@ namespace io{
 
     protected:
 
-        virtual int doReadByte() throw ( decaf::io::IOException );
+        virtual int doReadByte();
 
-        virtual int doReadArray( unsigned char* buffer, int size )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArray( unsigned char* buffer, int size );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * @returns true if this stream has been closed.

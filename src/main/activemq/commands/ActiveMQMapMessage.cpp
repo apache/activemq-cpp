@@ -94,8 +94,7 @@ void ActiveMQMapMessage::clearBody() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
-    throw ( decaf::io::IOException ) {
+void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat ) {
 
     try{
 

@@ -58,7 +58,7 @@ namespace util{
 
             virtual ~SetIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == set->end() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -73,8 +73,7 @@ namespace util{
                 return ( this->current != set->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 if( this->previous == set->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -101,7 +100,7 @@ namespace util{
 
             virtual ~ConstSetIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == set->end() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -116,8 +115,7 @@ namespace util{
                 return ( this->current != set->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "Set::Iterator::remove - Not Valid on a Const Iterator" );
@@ -179,14 +177,14 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             values.clear();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) {
+        virtual bool contains( const E& value ) const {
             typename std::set<E>::const_iterator iter;
             iter = values.find( value );
             return iter != values.end();
@@ -209,21 +207,14 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
-
+        virtual bool add( const E& value ) {
             return values.insert( value ).second;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
+        virtual bool remove( const E& value ) {
             return values.erase( value ) != 0;
         }
 

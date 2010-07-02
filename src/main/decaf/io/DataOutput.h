@@ -60,8 +60,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeBoolean( bool value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeBoolean( bool value ) = 0;
 
         /**
          * Writes out a byte to the underlying output stream as a 1-byte
@@ -73,8 +72,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeByte( unsigned char value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeByte( unsigned char value ) = 0;
 
         /**
          * Writes a short to the underlying output stream as two bytes, high
@@ -86,8 +84,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeShort( short value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeShort( short value ) = 0;
 
         /**
          * Writes a unsigned short to the bytes message stream as a 2 byte value
@@ -97,8 +94,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeUnsignedShort( unsigned short value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeUnsignedShort( unsigned short value ) = 0;
 
         /**
          * Writes out a char to the underlying output stream as a one byte
@@ -110,8 +106,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeChar( char value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeChar( char value ) = 0;
 
         /**
          * Writes an int to the underlying output stream as four bytes, high
@@ -123,8 +118,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeInt( int value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeInt( int value ) = 0;
 
         /**
          * Writes an 64 bit long to the underlying output stream as eight
@@ -136,8 +130,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeLong( long long value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeLong( long long value ) = 0;
 
         /**
          * Converts the float argument to an int using the floatToIntBits
@@ -151,8 +144,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeFloat( float value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeFloat( float value ) = 0;
 
         /**
          * Converts the double argument to a long using the doubleToLongBits
@@ -166,8 +158,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeDouble( double value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeDouble( double value ) = 0;
 
         /**
          * Writes out the string to the underlying output stream as a
@@ -183,8 +174,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeBytes( const std::string& value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeBytes( const std::string& value ) = 0;
 
         /**
          * Writes a string to the underlying output stream as a sequence of
@@ -198,8 +188,7 @@ namespace io {
          *
          * @throws IOException if an I/O error is encountered.
          */
-        virtual void writeChars( const std::string& value )
-            throw ( decaf::io::IOException ) = 0;
+        virtual void writeChars( const std::string& value ) = 0;
 
         /**
          * Writes out the string to the underlying output stream as a modeified UTF-8
@@ -214,9 +203,7 @@ namespace io {
          * @throws IOException if an I/O error is encountered.
          * @throws UTFDataFormatException if the encoded size if greater than 65535
          */
-        virtual void writeUTF( const std::string& value )
-            throw ( decaf::io::IOException,
-                    decaf::io::UTFDataFormatException ) = 0;
+        virtual void writeUTF( const std::string& value ) = 0;
 
     };
 

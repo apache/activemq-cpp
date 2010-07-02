@@ -88,7 +88,7 @@ DeflaterOutputStream::~DeflaterOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
+void DeflaterOutputStream::finish() {
 
     try{
 
@@ -115,7 +115,7 @@ void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::close() throw ( decaf::io::IOException ) {
+void DeflaterOutputStream::close() {
 
     try{
 
@@ -130,7 +130,7 @@ void DeflaterOutputStream::close() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
+void DeflaterOutputStream::doWriteByte( unsigned char value ) {
 
     try{
         this->doWriteArrayBounded( &value, 1, 0, 1 );
@@ -141,10 +141,7 @@ void DeflaterOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io:
 
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                                int offset, int length ) {
 
     try{
 
@@ -198,7 +195,7 @@ void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::deflate() throw ( decaf::io::IOException ) {
+void DeflaterOutputStream::deflate() {
 
     try{
 

@@ -26,8 +26,7 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-IntArrayBuffer::IntArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : IntBuffer( size ){
+IntArrayBuffer::IntArrayBuffer( int size, bool readOnly ) : IntBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The size is the given size times the size of the stored datatype
@@ -38,9 +37,8 @@ IntArrayBuffer::IntArrayBuffer( int size, bool readOnly )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-IntArrayBuffer::IntArrayBuffer( int* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : IntBuffer( length ) {
+IntArrayBuffer::IntArrayBuffer( int* array, int size, int offset, int length, bool readOnly ) :
+    IntBuffer( length ) {
 
     try{
 
@@ -68,9 +66,7 @@ IntArrayBuffer::IntArrayBuffer( int* array, int size, int offset, int length, bo
 
 ///////////////////////////////////////////////////////////////////////////////
 IntArrayBuffer::IntArrayBuffer( const Pointer<ByteArrayAdapter>& array,
-                                int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : IntBuffer( length ) {
+                                int offset, int length, bool readOnly ) : IntBuffer( length ) {
 
     try{
 
@@ -117,9 +113,7 @@ IntArrayBuffer::~IntArrayBuffer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int* IntArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int* IntArrayBuffer::array() {
 
     try{
 
@@ -144,9 +138,7 @@ int* IntArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int IntArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int IntArrayBuffer::arrayOffset() {
 
     try{
 
@@ -185,7 +177,7 @@ IntBuffer* IntArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+IntBuffer& IntArrayBuffer::compact() {
 
     try{
 
@@ -223,7 +215,7 @@ IntBuffer* IntArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int IntArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+int IntArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -234,8 +226,7 @@ int IntArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int IntArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+int IntArrayBuffer::get( int index ) const {
 
     try{
 
@@ -253,8 +244,7 @@ int IntArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntArrayBuffer::put( int value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+IntBuffer& IntArrayBuffer::put( int value ) {
 
     try{
 
@@ -268,9 +258,7 @@ IntBuffer& IntArrayBuffer::put( int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntArrayBuffer::put( int index, int value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+IntBuffer& IntArrayBuffer::put( int index, int value ) {
 
     try{
 

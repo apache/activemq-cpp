@@ -47,7 +47,7 @@ TcpSocketInputStream::~TcpSocketInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketInputStream::close() throw( decaf::io::IOException ) {
+void TcpSocketInputStream::close() {
 
     if( this->closed ) {
         return;
@@ -62,7 +62,7 @@ void TcpSocketInputStream::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocketInputStream::available() const throw ( io::IOException ){
+int TcpSocketInputStream::available() const {
 
     if( this->closed ){
         throw IOException(
@@ -73,7 +73,7 @@ int TcpSocketInputStream::available() const throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocketInputStream::doReadByte() throw ( IOException ){
+int TcpSocketInputStream::doReadByte() {
 
     if( this->closed ){
         throw IOException(
@@ -92,10 +92,7 @@ int TcpSocketInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     if( closed ){
         throw IOException(
@@ -118,8 +115,7 @@ int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long TcpSocketInputStream::skip( long long num )
-    throw ( IOException, UnsupportedOperationException ) {
+long long TcpSocketInputStream::skip( long long num ) {
 
     try{
 

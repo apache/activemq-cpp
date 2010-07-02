@@ -44,8 +44,7 @@ ServerSocket::ServerSocket() : impl(NULL), created(false), closed(false), bound(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket( int port )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+ServerSocket::ServerSocket( int port ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
     if( port < 0 ) {
@@ -59,8 +58,7 @@ ServerSocket::ServerSocket( int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket( int port, int backlog )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+ServerSocket::ServerSocket( int port, int backlog ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
     if( port < 0 ) {
@@ -74,8 +72,7 @@ ServerSocket::ServerSocket( int port, int backlog )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) :
+ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress ) :
         impl(NULL), created(false), closed(false), bound(false) {
 
     if( port < 0 ) {
@@ -130,8 +127,7 @@ void ServerSocket::setupSocketImpl( int port, int backlog, const InetAddress* if
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const std::string& host, int port )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) {
+void ServerSocket::bind( const std::string& host, int port ) {
 
     try{
         this->bind( host, port, getDefaultBacklog() );
@@ -142,8 +138,7 @@ void ServerSocket::bind( const std::string& host, int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const std::string& address, int port, int backlog )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) {
+void ServerSocket::bind( const std::string& address, int port, int backlog ) {
 
     checkClosed();
 
@@ -177,7 +172,7 @@ void ServerSocket::bind( const std::string& address, int port, int backlog )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::close() throw ( decaf::io::IOException ){
+void ServerSocket::close() {
 
     try{
         if( !this->closed ) {
@@ -201,7 +196,7 @@ bool ServerSocket::isClosed() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* ServerSocket::accept() throw( decaf::io::IOException ) {
+Socket* ServerSocket::accept() {
 
     checkClosed();
 
@@ -222,7 +217,7 @@ Socket* ServerSocket::accept() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::implAccept( Socket* socket ) throw( decaf::io::IOException ) {
+void ServerSocket::implAccept( Socket* socket ) {
 
     try{
         this->impl->accept( socket->impl );
@@ -234,7 +229,7 @@ void ServerSocket::implAccept( Socket* socket ) throw( decaf::io::IOException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ServerSocket::getReceiveBufferSize() const throw( SocketException ) {
+int ServerSocket::getReceiveBufferSize() const {
 
     checkClosed();
 
@@ -248,8 +243,7 @@ int ServerSocket::getReceiveBufferSize() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::setReceiveBufferSize( int size )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void ServerSocket::setReceiveBufferSize( int size ) {
 
     checkClosed();
 
@@ -269,7 +263,7 @@ void ServerSocket::setReceiveBufferSize( int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ServerSocket::getReuseAddress() const throw( SocketException ) {
+bool ServerSocket::getReuseAddress() const {
 
     checkClosed();
 
@@ -283,7 +277,7 @@ bool ServerSocket::getReuseAddress() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::setReuseAddress( bool reuse ) throw( SocketException ) {
+void ServerSocket::setReuseAddress( bool reuse ) {
 
     checkClosed();
 
@@ -297,7 +291,7 @@ void ServerSocket::setReuseAddress( bool reuse ) throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ServerSocket::getSoTimeout() const throw( SocketException ) {
+int ServerSocket::getSoTimeout() const {
 
     checkClosed();
 
@@ -311,8 +305,7 @@ int ServerSocket::getSoTimeout() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::setSoTimeout( int timeout )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void ServerSocket::setSoTimeout( int timeout ) {
 
     checkClosed();
 
@@ -342,9 +335,7 @@ int ServerSocket::getLocalPort() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::setSocketImplFactory( SocketImplFactory* factory )
-    throw( decaf::io::IOException,
-           decaf::net::SocketException ) {
+void ServerSocket::setSocketImplFactory( SocketImplFactory* factory ) {
 
     if( Socket::factory != NULL ) {
         throw SocketException(
@@ -371,14 +362,14 @@ std::string ServerSocket::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::checkClosed() const throw( decaf::io::IOException ) {
+void ServerSocket::checkClosed() const {
     if( this->closed ) {
         throw IOException( __FILE__, __LINE__, "ServerSocket already closed." );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::ensureCreated() const throw( decaf::io::IOException ) {
+void ServerSocket::ensureCreated() const {
 
     try{
         if( !this->created ) {

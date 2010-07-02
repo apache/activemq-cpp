@@ -43,7 +43,7 @@ namespace util{
          * @returns next element in the iteration of elements
          * @throws NoSuchElementException - iteration has no more elements.
          */
-        virtual T next() throw( lang::exceptions::NoSuchElementException ) = 0;
+        virtual T next() = 0;
 
         /**
          * Returns true if the iteration has more elements.  Returns false if
@@ -65,8 +65,7 @@ namespace util{
          *         called, or the remove method has already been called after
          *         the last call to the next  method.
          */
-        virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                      lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void remove() = 0;
 
     };
 

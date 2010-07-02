@@ -47,16 +47,13 @@ namespace openssl {
 
         virtual ~OpenSSLSocketOutputStream();
 
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
     protected:
 
-        virtual void doWriteByte( unsigned char c ) throw ( decaf::io::IOException );
+        virtual void doWriteByte( unsigned char c );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     };
 

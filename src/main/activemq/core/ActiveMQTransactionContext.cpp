@@ -79,8 +79,7 @@ void ActiveMQTransactionContext::removeSynchronization( const Pointer<Synchroniz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::begin()
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::begin() {
 
     try{
 
@@ -112,8 +111,7 @@ void ActiveMQTransactionContext::begin()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::commit()
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::commit() {
 
     try{
 
@@ -146,8 +144,7 @@ void ActiveMQTransactionContext::commit()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::rollback()
-    throw ( activemq::exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::rollback() {
 
     try{
 

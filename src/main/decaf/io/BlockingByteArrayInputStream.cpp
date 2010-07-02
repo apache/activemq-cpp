@@ -63,12 +63,12 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::available() const throw ( decaf::io::IOException ){
+int BlockingByteArrayInputStream::available() const {
     return (int)std::distance( pos, buffer.end() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BlockingByteArrayInputStream::close() throw ( io::IOException ){
+void BlockingByteArrayInputStream::close() {
 
     synchronized( this ){
 
@@ -84,7 +84,7 @@ void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::doReadByte() throw ( IOException ){
+int BlockingByteArrayInputStream::doReadByte() {
 
     try{
 
@@ -110,10 +110,7 @@ int BlockingByteArrayInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     if( length == 0 ) {
         return 0;
@@ -177,8 +174,7 @@ int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long BlockingByteArrayInputStream::skip( long long num )
-    throw ( io::IOException, lang::exceptions::UnsupportedOperationException ){
+long long BlockingByteArrayInputStream::skip( long long num ) {
 
     long long ix = 0;
 

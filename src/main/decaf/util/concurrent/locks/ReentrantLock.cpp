@@ -179,33 +179,19 @@ namespace locks{
 #endif
         }
 
-        virtual void await()
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void await();
 
-        virtual void awaitUninterruptibly()
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void awaitUninterruptibly();
 
-        virtual long long awaitNanos( long long nanosTimeout )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual long long awaitNanos( long long nanosTimeout );
 
-        virtual bool await( long long time, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual bool await( long long time, const TimeUnit& unit );
 
-        virtual bool awaitUntil( const Date& deadline )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual bool awaitUntil( const Date& deadline );
 
-        virtual void signal() throw ( decaf::lang::exceptions::RuntimeException );
+        virtual void signal();
 
-        virtual void signalAll() throw ( decaf::lang::exceptions::RuntimeException );
+        virtual void signalAll();
 
     };
 
@@ -225,7 +211,7 @@ ReentrantLock::~ReentrantLock() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::lock() throw( decaf::lang::exceptions::RuntimeException ) {
+void ReentrantLock::lock() {
 
     long long threadId = Thread::getId();
 
@@ -258,14 +244,13 @@ void ReentrantLock::lock() throw( decaf::lang::exceptions::RuntimeException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
-                                                decaf::lang::exceptions::InterruptedException ) {
+void ReentrantLock::lockInterruptibly() {
 
     this->lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+bool ReentrantLock::tryLock() {
 
     long long threadId = Thread::getId();
 
@@ -299,9 +284,7 @@ bool ReentrantLock::tryLock() throw( decaf::lang::exceptions::RuntimeException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
-    throw ( decaf::lang::exceptions::RuntimeException,
-            decaf::lang::exceptions::InterruptedException ) {
+bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
 
 //    long long threadId = Thread::getId();
 //
@@ -324,8 +307,7 @@ bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit D
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::unlock() throw( decaf::lang::exceptions::RuntimeException,
-                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+void ReentrantLock::unlock() {
 
     if( handle->lock_owner_tid == 0 ) {
         return;
@@ -357,9 +339,7 @@ void ReentrantLock::unlock() throw( decaf::lang::exceptions::RuntimeException,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Condition* ReentrantLock::newCondition()
-    throw ( decaf::lang::exceptions::RuntimeException,
-            decaf::lang::exceptions::UnsupportedOperationException ) {
+Condition* ReentrantLock::newCondition() {
 
     return new ConditionObject( this->handle.get() );
 }
@@ -415,10 +395,7 @@ std::string ReentrantLock::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::await()
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+void ConditionObject::await() {
 
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
@@ -448,18 +425,12 @@ void ConditionObject::await()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::awaitUninterruptibly()
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+void ConditionObject::awaitUninterruptibly() {
     this->await();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ConditionObject::awaitNanos( long long nanosTimeout )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+long long ConditionObject::awaitNanos( long long nanosTimeout ) {
 
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
@@ -508,25 +479,19 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::await( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+bool ConditionObject::await( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::awaitUntil( const Date& deadline DECAF_UNUSED )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+bool ConditionObject::awaitUntil( const Date& deadline DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signal() throw ( decaf::lang::exceptions::RuntimeException ) {
+void ConditionObject::signal() {
 
 #ifdef HAVE_PTHREAD_H
     if( pthread_cond_signal( &condition ) ) {
@@ -562,7 +527,7 @@ void ConditionObject::signal() throw ( decaf::lang::exceptions::RuntimeException
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signalAll() throw ( decaf::lang::exceptions::RuntimeException ) {
+void ConditionObject::signalAll() {
 
 #ifdef HAVE_PTHREAD_H
     if( pthread_cond_broadcast( &condition ) ) {

@@ -36,7 +36,7 @@ LoggingOutputStream::LoggingOutputStream( OutputStream* outputStream, bool own )
 LoggingOutputStream::~LoggingOutputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::doWriteByte( const unsigned char c ) throw ( IOException ) {
+void LoggingOutputStream::doWriteByte( const unsigned char c ) {
     try {
 
         log( &c, 1 );
@@ -48,10 +48,7 @@ void LoggingOutputStream::doWriteByte( const unsigned char c ) throw ( IOExcepti
 
 ////////////////////////////////////////////////////////////////////////////////
 void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                               int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                               int offset, int length ) {
 
     try {
 

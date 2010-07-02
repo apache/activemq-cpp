@@ -76,7 +76,7 @@ namespace util{
          *
          * @throws IllegalArgumentException if size is negative.
          */
-        ByteArrayAdapter( int size ) throw( decaf::lang::exceptions::IllegalArgumentException );
+        ByteArrayAdapter( int size );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -92,9 +92,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( unsigned char* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( unsigned char* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -110,9 +108,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( char* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( char* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -128,9 +124,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( double* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( double* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -146,9 +140,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( float* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( float* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -164,9 +156,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( long long* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( long long* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -182,9 +172,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( int* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( int* array, int size, bool own = false );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag
@@ -200,9 +188,7 @@ namespace util{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if the size is negative.
          */
-        ByteArrayAdapter( short* array, int size, bool own = false )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        ByteArrayAdapter( short* array, int size, bool own = false );
 
         virtual ~ByteArrayAdapter();
 
@@ -344,10 +330,7 @@ namespace util{
          * @throws BufferUnderflowException if there is not enough data to read
          *         because the offset or the length is greater than the size of this array.
          */
-        virtual void read( unsigned char* buffer, int size, int offset, int length ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException,
-                   decaf::nio::BufferUnderflowException );
+        virtual void read( unsigned char* buffer, int size, int offset, int length ) const;
 
         /**
          * Writes from the Byte array given, starting at the specified offset and writing
@@ -369,10 +352,7 @@ namespace util{
          * @throws BufferOverflowException if the amount of data to be written to this
          * array or the offset given are larger than this array's size.
          */
-        virtual void write( unsigned char* buffer, int size, int offset, int length )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException,
-                   decaf::nio::BufferOverflowException );
+        virtual void write( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Resizes the underlying array to the new given size, preserving all the
@@ -389,9 +369,7 @@ namespace util{
          * @throws IllegalArgumentException if the size parameter is negative.
          * @throws InvalidStateException if this object does not own the buffer.
          */
-        virtual void resize( int size )
-            throw( decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::InvalidStateException );
+        virtual void resize( int size );
 
         /**
          * Clear all data from that Array, setting the underlying bytes to zero.
@@ -409,10 +387,8 @@ namespace util{
          *
          * @throws IndexOutOfBoundsException if the preconditions of index are not met.
          */
-        unsigned char& operator[]( int index )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        const unsigned char& operator[]( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        unsigned char& operator[]( int index );
+        const unsigned char& operator[]( int index ) const;
 
         /**
          * Absolute get method. Reads the byte at the given index.
@@ -425,8 +401,7 @@ namespace util{
          * @throws IndexOutOfBoundsException If index is not smaller than the
          *         buffer's limit or is negative.
          */
-        virtual unsigned char get( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual unsigned char get( int index ) const;
 
         /**
          * Reads one byte at the given index and returns it.
@@ -439,8 +414,7 @@ namespace util{
          * @throws IndexOutOfBoundsException If index is not smaller than the
          *         buffer's limit or is negative.
          */
-        virtual char getChar( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual char getChar( int index ) const;
 
         /**
          * Reads eight bytes at the given index and returns it.  The index is a
@@ -456,8 +430,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual double getDouble( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual double getDouble( int index ) const;
 
         /**
          * Reads eight bytes at the given byte index and returns it.
@@ -470,8 +443,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual double getDoubleAt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual double getDoubleAt( int index ) const;
 
         /**
          * Reads four bytes at the given index and returns it. The index is a
@@ -487,8 +459,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual float getFloat( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual float getFloat( int index ) const;
 
         /**
          * Reads four bytes at the given byte index and returns it
@@ -501,8 +472,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual float getFloatAt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual float getFloatAt( int index ) const;
 
         /**
          * Reads eight bytes at the given index and returns it.  The index is a
@@ -518,8 +488,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual long long getLong( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual long long getLong( int index ) const;
 
         /**
          * Reads eight bytes at the given byte index and returns it.
@@ -532,8 +501,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual long long getLongAt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual long long getLongAt( int index ) const;
 
         /**
          * Reads four bytes at the given index and returns it.  The index is a
@@ -549,8 +517,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual int getInt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual int getInt( int index ) const;
 
         /**
          * Reads four bytes at the given byte index and returns it.
@@ -563,8 +530,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual int getIntAt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual int getIntAt( int index ) const;
 
         /**
          * Reads two bytes at the given index and returns it. The index is a
@@ -580,8 +546,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual short getShort( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual short getShort( int index ) const;
 
         /**
          * Reads two bytes at the given byte index and returns it.
@@ -594,8 +559,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
          */
-        virtual short getShortAt( int index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual short getShortAt( int index ) const;
 
         /**
          * Writes the given byte into this buffer at the given index. The index is a
@@ -613,8 +577,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& put( int index, unsigned char value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& put( int index, unsigned char value );
 
         /**
          * Writes one byte containing the given value, into this buffer at the
@@ -632,8 +595,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putChar( int index, char value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putChar( int index, char value );
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -651,8 +613,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putDouble( int index, double value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putDouble( int index, double value );
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -668,8 +629,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putDoubleAt( int index, double value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putDoubleAt( int index, double value );
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -687,8 +647,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putFloat( int index, float value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putFloat( int index, float value );
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -704,8 +663,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putFloatAt( int index, float value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putFloatAt( int index, float value );
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -723,8 +681,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putLong( int index, long long value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putLong( int index, long long value );
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -740,8 +697,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putLongAt( int index, long long value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putLongAt( int index, long long value );
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -759,8 +715,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putInt( int index, int value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putInt( int index, int value );
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -776,8 +731,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putIntAt( int index, int value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putIntAt( int index, int value );
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
@@ -795,8 +749,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putShort( int index, short value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putShort( int index, short value );
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
@@ -812,8 +765,7 @@ namespace util{
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
          */
-        virtual ByteArrayAdapter& putShortAt( int index, short value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual ByteArrayAdapter& putShortAt( int index, short value );
 
     private:
 

@@ -100,19 +100,19 @@ namespace core{
          * Begins a new transaction if one is not currently in progress.
          * @throw ActiveMQException
          */
-        virtual void begin() throw ( exceptions::ActiveMQException );
+        virtual void begin();
 
         /**
          * Commit the current Transaction
          * @throw ActiveMQException
          */
-        virtual void commit() throw ( exceptions::ActiveMQException );
+        virtual void commit();
 
         /**
          * Rollback the current Transaction
          * @throw ActiveMQException
          */
-        virtual void rollback() throw ( exceptions::ActiveMQException );
+        virtual void rollback();
 
         /**
          * Get the Transaction Id object for the current

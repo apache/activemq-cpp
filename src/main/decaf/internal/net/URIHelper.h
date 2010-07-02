@@ -72,8 +72,7 @@ namespace net {
          * @returns a URIType instance containing the parsed data.
          * @throws URISyntaxException if forceServer is true and the URI is invalid.
          */
-        URIType parseURI( const std::string& uri, bool forceServer )
-            throw( decaf::net::URISyntaxException );
+        URIType parseURI( const std::string& uri, bool forceServer );
 
         /**
          * Validate the schema portin of the URI.
@@ -82,8 +81,7 @@ namespace net {
          * @param index - index in uri where schema starts.
          * @throw URISyntaxException if the fragment has errors.
          */
-        void validateScheme( const std::string& uri, const std::string& scheme, int index )
-            throw( decaf::net::URISyntaxException );
+        void validateScheme( const std::string& uri, const std::string& scheme, int index );
 
         /**
          * Validate that the URI Ssp Segment contains no invalid encodings.
@@ -93,8 +91,7 @@ namespace net {
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateSsp( const std::string& uri, const std::string& ssp,
-                          std::size_t index )
-            throw( decaf::net::URISyntaxException );
+                          std::size_t index );
 
         /**
          * Validate that the URI Authority Segment contains no invalid encodings.
@@ -104,8 +101,7 @@ namespace net {
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateAuthority( const std::string& uri, const std::string& authority,
-                                std::size_t index )
-            throw( decaf::net::URISyntaxException );
+                                std::size_t index );
 
         /**
          * Validate that the URI Path Segment contains no invalid encodings.
@@ -115,8 +111,7 @@ namespace net {
          * @throw URISyntaxException if the fragment has errors.
          */
         void validatePath( const std::string& uri, const std::string& path,
-                           std::size_t index )
-            throw( decaf::net::URISyntaxException );
+                           std::size_t index );
 
         /**
          * Validate that the URI Query Segment contains no invalid encodings.
@@ -126,8 +121,7 @@ namespace net {
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateQuery( const std::string& uri, const std::string& query,
-                            std::size_t index )
-            throw( decaf::net::URISyntaxException );
+                            std::size_t index );
 
         /**
          * Validate that the URI fragment contains no invalid encodings.
@@ -137,8 +131,7 @@ namespace net {
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateFragment( const std::string& uri, const std::string& fragment,
-                               std::size_t index )
-            throw( decaf::net::URISyntaxException );
+                               std::size_t index );
 
         /**
          * determine the host, port and user-info if the authority parses
@@ -157,8 +150,7 @@ namespace net {
          * @returns a URIType instance containing the parsed data.
          * @throw URISyntaxException
          */
-        URIType parseAuthority( bool forceServer, const std::string& authority )
-            throw( decaf::net::URISyntaxException );
+        URIType parseAuthority( bool forceServer, const std::string& authority );
 
         /**
          * Check the supplied user info for validity.
@@ -168,8 +160,7 @@ namespace net {
          * @return true if valid
          * @throw URISyntaxException if an error occurs
          */
-        void validateUserinfo( const std::string& uri, const std::string& userinfo, std::size_t index )
-            throw( decaf::net::URISyntaxException );
+        void validateUserinfo( const std::string& uri, const std::string& userinfo, std::size_t index );
 
         /**
          * distinguish between IPv4, IPv6, domain name and validate it based on
@@ -179,8 +170,7 @@ namespace net {
          * @return true if the host value if a valid domain name.
          * @throws URISyntaxException if the host is invalid and forceServer is true.
          */
-        bool isValidHost( bool forceServer, const std::string& host )
-            throw( decaf::net::URISyntaxException );
+        bool isValidHost( bool forceServer, const std::string& host );
 
         /**
          * Validates the string past to determine if it is a well formed

@@ -43,7 +43,7 @@ OpenSSLSocketInputStream::~OpenSSLSocketInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocketInputStream::close() throw( decaf::io::IOException ) {
+void OpenSSLSocketInputStream::close() {
 
     if( this->closed ) {
         return;
@@ -58,7 +58,7 @@ void OpenSSLSocketInputStream::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int OpenSSLSocketInputStream::available() const throw ( io::IOException ){
+int OpenSSLSocketInputStream::available() const {
 
     if( this->closed ){
         throw IOException(
@@ -69,7 +69,7 @@ int OpenSSLSocketInputStream::available() const throw ( io::IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int OpenSSLSocketInputStream::doReadByte() throw ( IOException ){
+int OpenSSLSocketInputStream::doReadByte() {
 
     if( this->closed ){
         throw IOException(
@@ -88,10 +88,7 @@ int OpenSSLSocketInputStream::doReadByte() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int OpenSSLSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int OpenSSLSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     if( closed ){
         throw IOException(
@@ -114,8 +111,7 @@ int OpenSSLSocketInputStream::doReadArrayBounded( unsigned char* buffer, int siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long OpenSSLSocketInputStream::skip( long long num )
-    throw ( IOException, UnsupportedOperationException ) {
+long long OpenSSLSocketInputStream::skip( long long num ) {
 
     try{
 

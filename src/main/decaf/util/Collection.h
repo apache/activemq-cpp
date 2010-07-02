@@ -66,7 +66,7 @@ namespace util{
      */
     template< typename E >
     class Collection : public lang::Iterable<E>,
-					   public util::concurrent::Synchronizable {
+                       public util::concurrent::Synchronizable {
     public:
 
         virtual ~Collection() {}
@@ -101,10 +101,7 @@ namespace util{
          * @throw IllegalStateException
          *        if the element cannot be added at this time due to insertion restrictions
          */
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) = 0;
+        virtual bool add( const E& value ) = 0;
 
         /**
          * Adds all of the elements in the specified collection to this
@@ -120,10 +117,7 @@ namespace util{
          * @throw IllegalStateException
          *        if the element cannot be added at this time due to insertion restrictions
          */
-        virtual bool addAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) = 0;
+        virtual bool addAll( const Collection<E>& collection ) = 0;
 
         /**
          * Removes all of the elements from this collection (optional operation).
@@ -131,8 +125,7 @@ namespace util{
          * an exception.
          * @throw UnsupportedOperationException
          */
-        virtual void clear()
-            throw ( lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void clear() = 0;
 
         /**
          * Returns true if this collection contains the specified element. More
@@ -142,7 +135,7 @@ namespace util{
          * @returns true if there is at least one of the elements in the collection
          * @throw Exception
          */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) = 0;
+        virtual bool contains( const E& value ) const = 0;
 
         /**
          * Returns true if this collection contains all of the elements in
@@ -150,8 +143,7 @@ namespace util{
          * @param collection - Collection to compare to this one.
          * @throw Exception
          */
-        virtual bool containsAll( const Collection<E>& collection ) const
-            throw ( lang::Exception ) = 0;
+        virtual bool containsAll( const Collection<E>& collection ) const = 0;
 
         /**
          * Compares the passed collection to this one, if they contain the
@@ -178,9 +170,7 @@ namespace util{
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) = 0;
+        virtual bool remove( const E& value ) = 0;
 
         /**
          * Removes all this collection's elements that are also contained in
@@ -192,9 +182,7 @@ namespace util{
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool removeAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) = 0;
+        virtual bool removeAll( const Collection<E>& collection ) = 0;
 
         /**
          * Retains only the elements in this collection that are contained in the
@@ -206,9 +194,7 @@ namespace util{
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool retainAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) = 0;
+        virtual bool retainAll( const Collection<E>& collection ) = 0;
 
         /**
          * Returns the number of elements in this collection. If this collection

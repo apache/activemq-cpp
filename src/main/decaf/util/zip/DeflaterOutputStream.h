@@ -115,31 +115,28 @@ namespace zip {
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void finish() throw ( decaf::io::IOException );
+        virtual void finish();
 
         /**
          * {@inheritDoc}
          *
          * Finishes writing any remaining data to the OutputStream then closes the stream.
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
     protected:
 
-        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
+        virtual void doWriteByte( unsigned char value );
 
         virtual void doWriteArrayBounded( const unsigned char* buffer, int size,
-                                          int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+                                          int offset, int length );
 
     protected:
 
         /**
          * Writes a buffers worth of compressed data to the wrapped OutputStream.
          */
-        virtual void deflate() throw( decaf::io::IOException );
+        virtual void deflate();
 
     };
 
