@@ -71,8 +71,7 @@ StompWireFormat::~StompWireFormat() {
 ////////////////////////////////////////////////////////////////////////////////
 void StompWireFormat::marshal( const Pointer<Command>& command,
                                const activemq::transport::Transport* transport,
-                               decaf::io::DataOutputStream* out )
-    throw ( decaf::io::IOException ) {
+                               decaf::io::DataOutputStream* out ) {
 
     try{
 
@@ -130,8 +129,7 @@ void StompWireFormat::marshal( const Pointer<Command>& command,
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transport* transport,
-                                             decaf::io::DataInputStream* in )
-    throw ( decaf::io::IOException ) {
+                                             decaf::io::DataInputStream* in ) {
 
     if( transport == NULL ) {
         throw decaf::io::IOException(
@@ -194,8 +192,7 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<transport::Transport> StompWireFormat::createNegotiator(
-    const Pointer<transport::Transport>& transport AMQCPP_UNUSED )
-        throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+    const Pointer<transport::Transport>& transport AMQCPP_UNUSED ) {
 
     throw UnsupportedOperationException( __FILE__, __LINE__,
         "No Negotiator is required to use this WireFormat." );

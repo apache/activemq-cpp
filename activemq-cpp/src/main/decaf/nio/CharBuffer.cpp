@@ -29,14 +29,12 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer::CharBuffer( int capacity )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
+CharBuffer::CharBuffer( int capacity ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer* CharBuffer::allocate( int capacity )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+CharBuffer* CharBuffer::allocate( int capacity ) {
 
     try{
 
@@ -52,9 +50,7 @@ CharBuffer* CharBuffer::allocate( int capacity )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer* CharBuffer::wrap( char* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+CharBuffer* CharBuffer::wrap( char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -102,8 +98,7 @@ std::string CharBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::append( char value )
-    throw ( BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharBuffer::append( char value ) {
 
     try{
 
@@ -118,8 +113,7 @@ CharBuffer& CharBuffer::append( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::append( const CharSequence* value )
-    throw ( BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharBuffer::append( const CharSequence* value ) {
 
     try{
 
@@ -136,9 +130,7 @@ CharBuffer& CharBuffer::append( const CharSequence* value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::append( const CharSequence* value, int start, int end )
-    throw ( decaf::lang::exceptions::IndexOutOfBoundsException,
-            BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharBuffer::append( const CharSequence* value, int start, int end ) {
 
     try{
 
@@ -159,8 +151,7 @@ CharBuffer& CharBuffer::append( const CharSequence* value, int start, int end )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char CharBuffer::charAt( int index ) const
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+char CharBuffer::charAt( int index ) const {
 
     try{
 
@@ -177,8 +168,7 @@ char CharBuffer::charAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::get( std::vector<char> buffer )
-    throw ( BufferUnderflowException ) {
+CharBuffer& CharBuffer::get( std::vector<char> buffer ) {
 
     try{
 
@@ -193,10 +183,7 @@ CharBuffer& CharBuffer::get( std::vector<char> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::get( char* buffer, int size, int offset, int length )
-    throw( BufferUnderflowException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+CharBuffer& CharBuffer::get( char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -235,9 +222,7 @@ CharBuffer& CharBuffer::get( char* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::put( CharBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+CharBuffer& CharBuffer::put( CharBuffer& src ) {
 
     try{
 
@@ -273,10 +258,7 @@ CharBuffer& CharBuffer::put( CharBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::put( const char* buffer, int size, int offset, int length )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) {
+CharBuffer& CharBuffer::put( const char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -323,8 +305,7 @@ CharBuffer& CharBuffer::put( const char* buffer, int size, int offset, int lengt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::put( std::vector<char>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharBuffer::put( std::vector<char>& buffer ) {
 
     try{
 
@@ -341,9 +322,7 @@ CharBuffer& CharBuffer::put( std::vector<char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::put( std::string& src, int start, int end )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+CharBuffer& CharBuffer::put( std::string& src, int start, int end ) {
 
     try{
 
@@ -373,8 +352,7 @@ CharBuffer& CharBuffer::put( std::string& src, int start, int end )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharBuffer::put( const std::string& src )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharBuffer::put( const std::string& src ) {
 
     try{
 
@@ -391,10 +369,7 @@ CharBuffer& CharBuffer::put( const std::string& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int CharBuffer::read( CharBuffer* target )
-    throw ( decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IllegalArgumentException,
-            ReadOnlyBufferException ) {
+int CharBuffer::read( CharBuffer* target ) {
 
     try{
 

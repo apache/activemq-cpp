@@ -31,10 +31,9 @@ using namespace decaf::util::concurrent;
 LOGDECAF_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread")
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledThread::PooledThread(ThreadPool* pool)
-{
-    if(pool == NULL)
-    {
+PooledThread::PooledThread(ThreadPool* pool) {
+
+    if( pool == NULL ) {
         throw IllegalArgumentException( __FILE__, __LINE__,
             "PooledThread::PooledThread");
     }
@@ -49,13 +48,12 @@ PooledThread::PooledThread(ThreadPool* pool)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledThread::~PooledThread()
-{
+PooledThread::~PooledThread(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledThread::run()
-{
+void PooledThread::run() {
+
     ThreadPool::Task task;
 
     try
@@ -158,7 +156,6 @@ void PooledThread::run()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledThread::stop() throw ( Exception )
-{
+void PooledThread::stop() {
     done = true;
 }

@@ -79,8 +79,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual bool readBoolean()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual bool readBoolean();
 
         /**
          * Reads and returns one input byte. The byte is treated as a
@@ -91,8 +90,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual char readByte()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual char readByte();
 
         /**
          * Reads one input byte, zero-extends it to type int, and returns
@@ -103,8 +101,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual unsigned char readUnsignedByte()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual unsigned char readUnsignedByte();
 
         /**
          * Reads an input char and returns the char value. A ascii char
@@ -116,8 +113,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual char readChar()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual char readChar();
 
         /**
          * Reads eight input bytes and returns a double value. It does this
@@ -130,8 +126,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual double readDouble()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual double readDouble();
 
         /**
          * Reads four input bytes and returns a float value. It does this
@@ -144,8 +139,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual float readFloat()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual float readFloat();
 
         /**
          * Reads four input bytes and returns an int value. Let a  be the
@@ -160,8 +154,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual int readInt()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual int readInt();
 
         /**
          * Reads eight input bytes and returns a long value. Let a  be the
@@ -184,8 +177,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual long long readLong()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual long long readLong();
 
         /**
          * Reads two input bytes and returns a short value. Let a  be the
@@ -198,8 +190,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual short readShort()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual short readShort();
 
         /**
          * Reads two input bytes and returns an int value in the range 0
@@ -213,8 +204,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual unsigned short readUnsignedShort()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual unsigned short readUnsignedShort();
 
         /**
          * Reads an NULL terminated ASCII string to the stream and returns the
@@ -225,8 +215,7 @@ namespace io{
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
          */
-        virtual std::string readString()
-            throw( decaf::io::IOException, decaf::io::EOFException );
+        virtual std::string readString();
 
         /**
          * Reads the next line of text from the input stream. It reads successive bytes, converting
@@ -247,8 +236,7 @@ namespace io{
          *
          * @throws IOException if an I/O Error occurs.
          */
-        virtual std::string readLine()
-            throw( decaf::io::IOException );
+        virtual std::string readLine();
 
         /**
          * Reads a modified UTF-8 encoded string in ASCII format and returns it,
@@ -265,10 +253,7 @@ namespace io{
          * @throws EOFException if the end of input is reached.
          * @throws UTFDataFormatException if the bytes are not valid modified UTF-8 values.
          */
-        virtual std::string readUTF()
-            throw( decaf::io::IOException,
-                   decaf::io::EOFException,
-                   decaf::io::UTFDataFormatException );
+        virtual std::string readUTF();
 
         /**
          * Reads some bytes from an input stream and stores them into the
@@ -298,10 +283,7 @@ namespace io{
          * @throws EOFException if the end of input is reached.
          * @throws IndexOutOfBoundsException if the size value is negative.
          */
-        virtual void readFully( unsigned char* buffer, int size )
-            throw( decaf::io::IOException,
-                   decaf::io::EOFException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void readFully( unsigned char* buffer, int size );
 
         /**
          * Reads length bytes from an input stream.
@@ -334,11 +316,7 @@ namespace io{
          * @throws NullPointerException if the buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void readFully( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::io::EOFException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void readFully( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Makes an attempt to skip over n bytes of data from the input stream,
@@ -355,13 +333,12 @@ namespace io{
          *
          * @throws IOException if an I/O Error occurs.
          */
-        virtual long long skipBytes( long long num ) throw( io::IOException );
+        virtual long long skipBytes( long long num );
 
     private:
 
         // Used internally to reliably get data from the underlying stream
-        void readAllData( unsigned char* buffer, int length )
-            throw ( decaf::io::IOException, decaf::io::EOFException );
+        void readAllData( unsigned char* buffer, int length );
 
     };
 

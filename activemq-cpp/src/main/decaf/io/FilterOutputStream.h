@@ -81,7 +81,7 @@ namespace io{
          * The flush method of FilterOutputStream calls the flush method of its
          * underlying output stream.
          */
-        virtual void flush() throw ( decaf::io::IOException );
+        virtual void flush();
 
         /**
          * {@inheritDoc}
@@ -89,7 +89,7 @@ namespace io{
          * The close method of FilterOutputStream calls its flush method, and then
          * calls the close method of its underlying output stream.
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
         /**
          * {@inheritDoc}
@@ -101,17 +101,11 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
+        virtual void doWriteByte( unsigned char value );
 
-        virtual void doWriteArray( const unsigned char* buffer, int size )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void doWriteArray( const unsigned char* buffer, int size );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     protected:
 

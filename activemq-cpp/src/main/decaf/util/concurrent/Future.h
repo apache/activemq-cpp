@@ -82,7 +82,7 @@ namespace concurrent {
          * @throws ExecutionException - if the computation threw an exception
          * @throws InterruptedException - if the current thread was interrupted while waiting
          */
-        V get() throw( CancellationException, InterruptedException, ExecutionException ) = 0;
+        V get() = 0;
 
         /**
          * Waits if necessary for at most the given time for the computation to complete, and
@@ -95,8 +95,7 @@ namespace concurrent {
          * @throws InterruptedException - if the current thread was interrupted while waiting
          * @throws TimeoutException - if the wait timed out
          */
-        V get( long long timeout, TimeUnit unit)
-            throw( InterruptedException, ExecutionException, TimeoutException ) = 0;
+        V get( long long timeout, TimeUnit unit ) = 0;
 
     };
 

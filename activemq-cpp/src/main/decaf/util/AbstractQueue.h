@@ -65,10 +65,7 @@ namespace util {
          *
          * @throw IllegalArgumentException if the element cannot be added.
          */
-        virtual bool add( const E& value )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException,
-                    decaf::lang::exceptions::IllegalStateException ) {
+        virtual bool add( const E& value ) {
 
             if( offer( value ) ) {
                 return true;
@@ -94,10 +91,7 @@ namespace util {
          * @throws IllegalArgumentException If the collection to be added to the
          *         queue is the queue itself.
          */
-        virtual bool addAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
+        virtual bool addAll( const Collection<E>& collection ) {
 
             if( this == &collection ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -117,7 +111,7 @@ namespace util {
          *
          * @throws NoSuchElementException if the queue is empty.
          */
-        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual E remove() {
 
             E result;
             if( this->poll( result ) == true ) {
@@ -137,8 +131,7 @@ namespace util {
          * @return the element in the head of the queue.
          * @throws NoSuchElementException if the queue is empty.
          */
-        virtual E element() const
-            throw( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual E element() const {
 
             E result;
             if( this->peek( result ) == true ) {
@@ -154,7 +147,7 @@ namespace util {
          *
          * This implementation repeatedly invokes poll until it returns the empty marker.
          */
-        virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
 
             if( this->isEmpty() ) {
                 return;

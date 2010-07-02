@@ -126,7 +126,7 @@ namespace tcp {
          *
          * @throws SocketException thrown if an error occurs while creating the Socket.
          */
-        TcpSocket() throw ( decaf::net::SocketException );
+        TcpSocket();
 
         /**
          * Releases the socket handle but not gracefully shut down the connection.
@@ -163,74 +163,67 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual void create() throw( decaf::io::IOException );
+        virtual void create();
 
         /**
          * {@inheritDoc}
          */
-        virtual void accept( SocketImpl* socket )
-            throw( decaf::io::IOException );
+        virtual void accept( SocketImpl* socket );
 
         /**
          * {@inheritDoc}
          */
-        virtual void bind( const std::string& ipaddress, int port )
-            throw( decaf::io::IOException );
+        virtual void bind( const std::string& ipaddress, int port );
 
         /**
          * {@inheritDoc}
          */
-        virtual void connect( const std::string& hostname, int port, int timeout )
-            throw( decaf::io::IOException,
-                   decaf::net::SocketException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        virtual void connect( const std::string& hostname, int port, int timeout );
 
         /**
          * {@inheritDoc}
          */
-        virtual void listen( int backlog ) throw( decaf::io::IOException );
+        virtual void listen( int backlog );
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::InputStream* getInputStream()
-            throw( decaf::io::IOException );
+        virtual decaf::io::InputStream* getInputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::OutputStream* getOutputStream()
-            throw( decaf::io::IOException );
+        virtual decaf::io::OutputStream* getOutputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual int available() throw( decaf::io::IOException );
+        virtual int available();
 
         /**
          * {@inheritDoc}
          */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownInput() throw( decaf::io::IOException );
+        virtual void shutdownInput();
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownOutput() throw( decaf::io::IOException );
+        virtual void shutdownOutput();
 
         /**
          * {@inheritDoc}
          */
-        virtual int getOption( int option ) const throw( decaf::io::IOException );
+        virtual int getOption( int option ) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual void setOption( int option, int value ) throw( decaf::io::IOException );
+        virtual void setOption( int option, int value );
 
     public:
 
@@ -252,10 +245,7 @@ namespace tcp {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        int read( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        int read( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Writes the specified data in the passed in buffer to the Socket.
@@ -273,14 +263,11 @@ namespace tcp {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        void write( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        void write( const unsigned char* buffer, int size, int offset, int length );
 
     protected:
 
-        void checkResult( apr_status_t value ) const throw( decaf::net::SocketException );
+        void checkResult( apr_status_t value ) const;
 
     };
 

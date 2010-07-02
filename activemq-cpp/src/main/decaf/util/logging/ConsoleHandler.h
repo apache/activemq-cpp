@@ -67,7 +67,7 @@ namespace logging{
          * but doesn't close.
          * @throw IOException
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
         /**
          * Publish the Log Record to this Handler

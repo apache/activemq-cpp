@@ -99,10 +99,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const unsigned char* buffer, int size, int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::IllegalStateException );
+        void setInput( const unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Sets input data for decompression. This should be called whenever needsInput() returns
@@ -118,9 +115,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer, int offset, int length )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::IllegalStateException );
+        void setInput( const std::vector<unsigned char>& buffer, int offset, int length );
 
         /**
          * Sets input data for decompression. This should be called whenever needsInput() returns
@@ -131,8 +126,7 @@ namespace zip {
          *
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer )
-            throw( decaf::lang::exceptions::IllegalStateException );
+        void setInput( const std::vector<unsigned char>& buffer );
 
         /**
          * Returns the total number of bytes remaining in the input buffer. This can be used to
@@ -163,11 +157,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const unsigned char* buffer, int size, int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalStateException );
+        void setDictionary( const unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Sets the preset dictionary to the given array of bytes. Should be called when inflate()
@@ -187,10 +177,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalStateException );
+        void setDictionary( const std::vector<unsigned char>& buffer, int offset, int length );
 
         /**
          * Sets the preset dictionary to the given array of bytes. Should be called when inflate()
@@ -202,12 +189,10 @@ namespace zip {
          *      The Buffer to read in for decompression.
          *
          * @throws IllegalStateException if in the end state.
-         * @throws IllegalArgumentException if the given dictionary doesn't match thre required
+         * @throws IllegalArgumentException if the given dictionary doesn't match the required
          *         dictionaries checksum value.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer )
-            throw( decaf::lang::exceptions::IllegalStateException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        void setDictionary( const std::vector<unsigned char>& buffer );
 
         /**
          * @return true if the input data buffer is empty and setInput() should be called in
@@ -251,11 +236,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( unsigned char* buffer, int size, int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalStateException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::util::zip::DataFormatException );
+        int inflate( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * Uncompresses bytes into specified buffer. Returns actual number of bytes uncompressed.
@@ -274,10 +255,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( std::vector<unsigned char>& buffer, int offset, int length )
-            throw( decaf::lang::exceptions::IllegalStateException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::util::zip::DataFormatException );
+        int inflate( std::vector<unsigned char>& buffer, int offset, int length );
 
         /**
          * Uncompresses bytes into specified buffer. Returns actual number of bytes uncompressed.
@@ -291,30 +269,28 @@ namespace zip {
          * @throws IllegalStateException if in the end state.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( std::vector<unsigned char>& buffer )
-            throw( decaf::lang::exceptions::IllegalStateException,
-                   decaf::util::zip::DataFormatException );
+        int inflate( std::vector<unsigned char>& buffer );
 
         /**
          * @returns the ADLER-32 value of the uncompressed data.
          *
          * @throws IllegalStateException if in the end state.
          */
-        long long getAdler() const throw( decaf::lang::exceptions::IllegalStateException );
+        long long getAdler() const;
 
         /**
          * @returns the total number of compressed bytes input so far.
          *
          * @throws IllegalStateException if in the end state.
          */
-        long long getBytesRead() const throw( decaf::lang::exceptions::IllegalStateException );
+        long long getBytesRead() const;
 
         /**
          * @return the total number of decompressed bytes output so far.
          *
          * @throws IllegalStateException if in the end state.
          */
-        long long getBytesWritten() const throw( decaf::lang::exceptions::IllegalStateException );
+        long long getBytesWritten() const;
 
         /**
          * Resets deflater so that a new set of input data can be processed. Keeps current decompression
@@ -322,7 +298,7 @@ namespace zip {
          *
          * @throws IllegalStateException if in the end state.
          */
-        void reset() throw( decaf::lang::exceptions::IllegalStateException );
+        void reset();
 
         /**
          * Closes the decompressor and discards any unprocessed input. This method should be called

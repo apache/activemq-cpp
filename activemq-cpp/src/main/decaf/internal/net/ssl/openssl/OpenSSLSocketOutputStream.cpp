@@ -43,7 +43,7 @@ OpenSSLSocketOutputStream::~OpenSSLSocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocketOutputStream::close() throw( decaf::io::IOException ) {
+void OpenSSLSocketOutputStream::close() {
 
     if( this->closed ) {
         return;
@@ -58,7 +58,7 @@ void OpenSSLSocketOutputStream::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
+void OpenSSLSocketOutputStream::doWriteByte( unsigned char c ) {
 
     try{
 
@@ -70,10 +70,7 @@ void OpenSSLSocketOutputStream::doWriteByte( unsigned char c ) throw ( IOExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+void OpenSSLSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 

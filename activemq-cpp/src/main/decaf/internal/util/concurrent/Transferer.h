@@ -44,9 +44,7 @@ namespace concurrent {
          * @throws InterruptedException if the thread was interrupted while
          *         waiting for the consumer to accept the item offered.
          */
-        virtual void transfer( E* e, bool timed, long long nanos )
-            throw( decaf::util::concurrent::TimeoutException,
-                   decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual void transfer( E* e, bool timed, long long nanos ) = 0;
 
         /**
          * Performs a take.
@@ -61,9 +59,7 @@ namespace concurrent {
          * @throws InterruptedException if the thread was interrupted while
          *         waiting for the producer to offer an item.
          */
-        virtual E* transfer( bool timed, long long nanos )
-            throw( decaf::util::concurrent::TimeoutException,
-                   decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual E* transfer( bool timed, long long nanos ) = 0;
 
     };
 

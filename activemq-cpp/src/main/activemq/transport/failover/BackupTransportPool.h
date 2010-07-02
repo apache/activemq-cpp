@@ -123,8 +123,7 @@ namespace failover {
         // the internal transport to the close transport's task for cleanup.
         void onBackupTransportFailure( BackupTransport* failedTransport );
 
-        Pointer<Transport> createTransport( const URI& location ) const
-            throw ( decaf::io::IOException );
+        Pointer<Transport> createTransport( const URI& location ) const;
 
     };
 

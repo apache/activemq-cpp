@@ -111,10 +111,7 @@ namespace util {
          * @throw IllegalStateException
          *        if the element cannot be added at this time due to insertion restrictions
          */
-        virtual bool add( const E& value DECAF_UNUSED )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
+        virtual bool add( const E& value DECAF_UNUSED ) {
 
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "AbstractCollection add is not implemented.");
@@ -144,10 +141,7 @@ namespace util {
          * @throw IllegalStateException
          *        if the element cannot be added at this time due to insertion restrictions
          */
-        virtual bool addAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
+        virtual bool addAll( const Collection<E>& collection ) {
 
             bool result = false;
             std::auto_ptr< Iterator<E> > iter( collection.iterator() );
@@ -173,8 +167,7 @@ namespace util {
          * @throw UnsupportedOperationException
          *        if the clear operation is not supported by this collection
          */
-        virtual void clear()
-            throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
 
             std::auto_ptr< Iterator<E> > iter( this->iterator() );
             while( iter->hasNext() ) {
@@ -212,7 +205,7 @@ namespace util {
          *
          * @throw Exception if an error occurs,
          */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) {
+        virtual bool contains( const E& value ) const {
 
             bool result = false;
             std::auto_ptr< Iterator<E> > iter( this->iterator() );
@@ -241,8 +234,7 @@ namespace util {
          *
          * @throw Exception if an error occurs,
          */
-        virtual bool containsAll( const Collection<E>& collection ) const
-            throw ( lang::Exception ) {
+        virtual bool containsAll( const Collection<E>& collection ) const {
 
             bool result = false;
             std::auto_ptr< Iterator<E> > iter( collection.iterator() );
@@ -310,9 +302,7 @@ namespace util {
          * @throw IllegalArgumentException
          *        If the value is not a valid entry for this Collection.
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool remove( const E& value ) {
 
             std::auto_ptr< Iterator<E> > iter( this->iterator() );
             while( iter->hasNext() ) {
@@ -346,9 +336,7 @@ namespace util {
          *        if the remove operation is not supported by this collection
          * @throw IllegalArgumentException.
          */
-        virtual bool removeAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool removeAll( const Collection<E>& collection ) {
 
             bool result = false;
             std::auto_ptr< Iterator<E> > iter( this->iterator() );
@@ -383,9 +371,7 @@ namespace util {
          *        if the remove operation is not supported by this collection
          * @throw IllegalArgumentException.
          */
-        virtual bool retainAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool retainAll( const Collection<E>& collection ) {
 
             bool result = false;
             std::auto_ptr< Iterator<E> > iter( this->iterator() );
@@ -421,51 +407,35 @@ namespace util {
 
     public:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait()  {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs ) {
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs, int nanos ) {
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 

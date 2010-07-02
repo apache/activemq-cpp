@@ -26,8 +26,7 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatArrayBuffer::FloatArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : FloatBuffer( size ){
+FloatArrayBuffer::FloatArrayBuffer( int size, bool readOnly ) : FloatBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
@@ -38,9 +37,8 @@ FloatArrayBuffer::FloatArrayBuffer( int size, bool readOnly )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : FloatBuffer( length ) {
+FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int length, bool readOnly ) :
+    FloatBuffer( length ) {
 
     try{
 
@@ -68,9 +66,7 @@ FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int leng
 
 ///////////////////////////////////////////////////////////////////////////////
 FloatArrayBuffer::FloatArrayBuffer( const Pointer<ByteArrayAdapter>& array,
-                                    int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : FloatBuffer( length ) {
+                                    int offset, int length, bool readOnly ) : FloatBuffer( length ) {
 
     try{
 
@@ -117,9 +113,7 @@ FloatArrayBuffer::~FloatArrayBuffer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-float* FloatArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+float* FloatArrayBuffer::array() {
 
     try{
 
@@ -144,9 +138,7 @@ float* FloatArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int FloatArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int FloatArrayBuffer::arrayOffset() {
 
     try{
 
@@ -185,7 +177,7 @@ FloatBuffer* FloatArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+FloatBuffer& FloatArrayBuffer::compact() {
 
     try{
 
@@ -223,7 +215,7 @@ FloatBuffer* FloatArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-float FloatArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+float FloatArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -234,8 +226,7 @@ float FloatArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-float FloatArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+float FloatArrayBuffer::get( int index ) const {
 
     try{
 
@@ -253,8 +244,7 @@ float FloatArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatArrayBuffer::put( float value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+FloatBuffer& FloatArrayBuffer::put( float value ) {
 
     try{
 
@@ -268,9 +258,7 @@ FloatBuffer& FloatArrayBuffer::put( float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatArrayBuffer::put( int index, float value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+FloatBuffer& FloatArrayBuffer::put( int index, float value ) {
 
     try{
 

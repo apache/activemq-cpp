@@ -72,9 +72,7 @@ namespace util {
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool removeAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool removeAll( const Collection<E>& collection ) {
 
             bool result = false;
             if( this->size() <= collection.size() ) {

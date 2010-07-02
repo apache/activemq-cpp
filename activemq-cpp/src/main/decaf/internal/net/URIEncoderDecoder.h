@@ -46,9 +46,10 @@ namespace net{
          *
          * @param s - the string to be validated
          * @param legal - the characters allowed in the string s
+         *
+         * @throws URISyntaxException if the uri string is not well formed.
          */
-        static void validate( const std::string& s, const std::string& legal )
-            throw ( decaf::net::URISyntaxException );
+        static void validate( const std::string& s, const std::string& legal );
 
         /**
          * Validate a string by checking if it contains any characters other than:
@@ -59,9 +60,10 @@ namespace net{
          *
          * @param s - the string to be validated
          * @param legal - the characters allowed in the string s
+         *
+         * @throws URISyntaxException if the uri string is not well formed.
          */
-        static void validateSimple( const std::string& s, const std::string& legal )
-            throw ( decaf::net::URISyntaxException );
+        static void validateSimple( const std::string& s, const std::string& legal );
 
         /**
          * All characters except letters ('a'..'z', 'A'..'Z') and numbers ('0'..'9')
@@ -76,8 +78,7 @@ namespace net{
          * @param legal - the characters allowed to be preserved in the string s
          * @return converted string
          */
-        static std::string quoteIllegal( const std::string& s,
-                                         const std::string& legal );
+        static std::string quoteIllegal( const std::string& s, const std::string& legal );
 
         /**
          * Other characters, which are chars that are not US-ASCII, and are

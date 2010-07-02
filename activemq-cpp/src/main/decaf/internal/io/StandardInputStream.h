@@ -32,11 +32,11 @@ namespace io {
 
         virtual ~StandardInputStream();
 
-        virtual int available() const throw ( decaf::io::IOException );
+        virtual int available() const;
 
     protected:
 
-        virtual int doReadByte() throw ( decaf::io::IOException );
+        virtual int doReadByte();
 
     };
 

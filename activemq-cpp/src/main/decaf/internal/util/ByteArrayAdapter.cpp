@@ -31,8 +31,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( int size )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) {
+ByteArrayAdapter::ByteArrayAdapter( int size ) {
 
     try{
 
@@ -50,9 +49,7 @@ ByteArrayAdapter::ByteArrayAdapter( int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own ) {
 
     try{
         this->initialize( array, size, own );
@@ -63,9 +60,7 @@ ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ), size, own );
@@ -76,9 +71,7 @@ ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -90,9 +83,7 @@ ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -104,9 +95,7 @@ ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -118,9 +107,7 @@ ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -132,9 +119,7 @@ ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own ) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -183,8 +168,7 @@ ByteArrayAdapter::~ByteArrayAdapter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::read( unsigned char* buffer, int size, int offset, int length ) const
-    throw( IndexOutOfBoundsException, NullPointerException, BufferUnderflowException ) {
+void ByteArrayAdapter::read( unsigned char* buffer, int size, int offset, int length ) const {
 
     try{
 
@@ -229,8 +213,7 @@ void ByteArrayAdapter::read( unsigned char* buffer, int size, int offset, int le
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::write( unsigned char* buffer, int size, int offset, int length )
-    throw( IndexOutOfBoundsException, NullPointerException, BufferOverflowException ) {
+void ByteArrayAdapter::write( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -276,8 +259,7 @@ void ByteArrayAdapter::write( unsigned char* buffer, int size, int offset, int l
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::resize( int size )
-    throw ( IllegalArgumentException, InvalidStateException ) {
+void ByteArrayAdapter::resize( int size ) {
 
     try{
 
@@ -312,8 +294,7 @@ void ByteArrayAdapter::clear() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char& ByteArrayAdapter::operator[]( int index )
-    throw ( IndexOutOfBoundsException ) {
+unsigned char& ByteArrayAdapter::operator[]( int index ) {
 
     try{
 
@@ -329,8 +310,7 @@ unsigned char& ByteArrayAdapter::operator[]( int index )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char& ByteArrayAdapter::operator[]( int index ) const
-    throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+const unsigned char& ByteArrayAdapter::operator[]( int index ) const {
 
     try{
 
@@ -346,8 +326,7 @@ const unsigned char& ByteArrayAdapter::operator[]( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayAdapter::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+unsigned char ByteArrayAdapter::get( int index ) const {
 
     try{
 
@@ -365,8 +344,7 @@ unsigned char ByteArrayAdapter::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char ByteArrayAdapter::getChar( int index ) const
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+char ByteArrayAdapter::getChar( int index ) const {
 
     try{
         return (char)this->get( index );
@@ -377,8 +355,7 @@ char ByteArrayAdapter::getChar( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayAdapter::getDouble( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+double ByteArrayAdapter::getDouble( int index ) const {
 
     try{
 
@@ -396,8 +373,7 @@ double ByteArrayAdapter::getDouble( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayAdapter::getDoubleAt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+double ByteArrayAdapter::getDoubleAt( int index ) const {
 
     try{
 
@@ -410,8 +386,7 @@ double ByteArrayAdapter::getDoubleAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayAdapter::getFloat( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+float ByteArrayAdapter::getFloat( int index ) const {
 
     try{
 
@@ -429,8 +404,7 @@ float ByteArrayAdapter::getFloat( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayAdapter::getFloatAt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+float ByteArrayAdapter::getFloatAt( int index ) const {
 
     try{
 
@@ -443,8 +417,7 @@ float ByteArrayAdapter::getFloatAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayAdapter::getLong( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+long long ByteArrayAdapter::getLong( int index ) const {
 
     try{
 
@@ -462,8 +435,7 @@ long long ByteArrayAdapter::getLong( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayAdapter::getLongAt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+long long ByteArrayAdapter::getLongAt( int index ) const {
 
     try{
 
@@ -499,8 +471,7 @@ long long ByteArrayAdapter::getLongAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayAdapter::getInt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+int ByteArrayAdapter::getInt( int index ) const {
 
     try{
 
@@ -518,8 +489,7 @@ int ByteArrayAdapter::getInt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayAdapter::getIntAt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+int ByteArrayAdapter::getIntAt( int index ) const {
 
     try{
 
@@ -543,8 +513,7 @@ int ByteArrayAdapter::getIntAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayAdapter::getShort( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException )  {
+short ByteArrayAdapter::getShort( int index ) const {
 
     try{
 
@@ -562,8 +531,7 @@ short ByteArrayAdapter::getShort( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayAdapter::getShortAt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException )  {
+short ByteArrayAdapter::getShortAt( int index ) const {
 
     try{
 
@@ -586,8 +554,7 @@ short ByteArrayAdapter::getShortAt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::put( int index, unsigned char value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::put( int index, unsigned char value ) {
 
     try{
 
@@ -607,8 +574,7 @@ ByteArrayAdapter& ByteArrayAdapter::put( int index, unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putChar( int index, char value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putChar( int index, char value ) {
 
     try{
 
@@ -621,8 +587,7 @@ ByteArrayAdapter& ByteArrayAdapter::putChar( int index, char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putDouble( int index, double value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putDouble( int index, double value ) {
 
     try{
 
@@ -641,8 +606,7 @@ ByteArrayAdapter& ByteArrayAdapter::putDouble( int index, double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( int index, double value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( int index, double value ) {
 
     try{
 
@@ -655,8 +619,7 @@ ByteArrayAdapter& ByteArrayAdapter::putDoubleAt( int index, double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putFloat( int index, float value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putFloat( int index, float value ) {
 
     try{
 
@@ -675,8 +638,7 @@ ByteArrayAdapter& ByteArrayAdapter::putFloat( int index, float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putFloatAt( int index, float value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putFloatAt( int index, float value ) {
 
     try{
 
@@ -689,8 +651,7 @@ ByteArrayAdapter& ByteArrayAdapter::putFloatAt( int index, float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putLong( int index, long long value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putLong( int index, long long value ) {
 
     try{
 
@@ -709,8 +670,7 @@ ByteArrayAdapter& ByteArrayAdapter::putLong( int index, long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putLongAt( int index, long long value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putLongAt( int index, long long value ) {
 
     try{
 
@@ -735,8 +695,7 @@ ByteArrayAdapter& ByteArrayAdapter::putLongAt( int index, long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putInt( int index, int value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putInt( int index, int value ) {
 
     try{
 
@@ -755,8 +714,7 @@ ByteArrayAdapter& ByteArrayAdapter::putInt( int index, int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putIntAt( int index, int value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putIntAt( int index, int value ) {
 
     try{
 
@@ -777,8 +735,7 @@ ByteArrayAdapter& ByteArrayAdapter::putIntAt( int index, int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putShort( int index, short value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putShort( int index, short value ) {
 
     try{
 
@@ -797,8 +754,7 @@ ByteArrayAdapter& ByteArrayAdapter::putShort( int index, short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter& ByteArrayAdapter::putShortAt( int index, short value )
-    throw( lang::exceptions::IndexOutOfBoundsException ) {
+ByteArrayAdapter& ByteArrayAdapter::putShortAt( int index, short value ) {
 
     try{
 

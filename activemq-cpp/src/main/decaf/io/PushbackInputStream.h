@@ -77,8 +77,7 @@ namespace io {
          *
          * @throws IllegalArgumentException if the bufSize argument is < zero.
          */
-        PushbackInputStream( InputStream* stream, int bufSize, bool own = false )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        PushbackInputStream( InputStream* stream, int bufSize, bool own = false );
 
         virtual ~PushbackInputStream();
 
@@ -92,8 +91,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( unsigned char value )
-            throw( decaf::io::IOException );
+        void unread( unsigned char value );
 
         /**
          * Pushes back the given array of bytes, the bytes are copied to the front of the pushback
@@ -109,10 +107,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, int size )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        void unread( const unsigned char* buffer, int size );
 
         /**
          * Pushes back the given array of bytes, the bytes are copied to the front of the pushback
@@ -132,10 +127,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, int size, int offset, int length )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        void unread( const unsigned char* buffer, int size, int offset, int length );
 
         /**
          * {@inheritDoc}
@@ -143,7 +135,7 @@ namespace io {
          * Returns the sum of the number of pushed back bytes if any and the amount of bytes
          * available in the underlying stream via a call to available.
          */
-        virtual int available() const throw ( decaf::io::IOException );
+        virtual int available() const;
 
         /**
          * {@inheritDoc}
@@ -152,9 +144,7 @@ namespace io {
          * complete the request by calling the underlying stream skip method with the remainder
          * of bytes that needs to be skipped.
          */
-        virtual long long skip( long long num )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long skip( long long num );
 
         /**
          * Does nothing except throw an IOException.
@@ -168,7 +158,7 @@ namespace io {
          *
          * {@inheritDoc}
          */
-        virtual void reset() throw ( decaf::io::IOException );
+        virtual void reset();
 
         /**
          * Does nothing except throw an IOException.
@@ -181,12 +171,9 @@ namespace io {
 
     protected:
 
-        virtual int doReadByte() throw ( decaf::io::IOException );
+        virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     };
 

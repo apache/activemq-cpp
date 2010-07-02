@@ -69,7 +69,7 @@ namespace util{
 
             virtual ~StlListIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == list->end() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -84,8 +84,7 @@ namespace util{
                 return ( this->current != list->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 if( this->prev == list->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -96,20 +95,15 @@ namespace util{
                 this->prev = this->list->end();
             }
 
-            virtual void add( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException ) {
+            virtual void add( const E& e DECAF_UNUSED ) {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::add - Not Implemented Yet." );
             }
 
-            virtual void set( const E& e )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException,
-                        decaf::lang::exceptions::IllegalStateException )
-            {
+            virtual void set( const E& e ) {
+
                 if( this->current == list->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -175,7 +169,7 @@ namespace util{
 
             virtual ~ConstStlListIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == list->end() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -190,28 +184,22 @@ namespace util{
                 return ( this->current != list->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::remove - Const Iterator." );
             }
 
-            virtual void add( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException ) {
+            virtual void add( const E& e DECAF_UNUSED ) {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::add - Const Iterator." );
             }
 
-            virtual void set( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException,
-                        decaf::lang::exceptions::IllegalStateException )
-            {
+            virtual void set( const E& e DECAF_UNUSED ) {
+
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::set - Const Iterator." );
@@ -306,8 +294,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual ListIterator<E>* listIterator( std::size_t index )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual ListIterator<E>* listIterator( std::size_t index ) {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -317,8 +304,7 @@ namespace util{
 
             return new StlListIterator( &values, index );
         }
-        virtual ListIterator<E>* listIterator( std::size_t index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual ListIterator<E>* listIterator( std::size_t index ) const {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -340,14 +326,14 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             values.clear();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) {
+        virtual bool contains( const E& value ) const {
             typename std::list<E>::const_iterator iter;
             iter = std::find( values.begin(), values.end(), value );
             return iter != values.end();
@@ -356,8 +342,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t indexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual std::size_t indexOf( const E& value ) {
 
             typename std::list<E>::iterator iter;
             iter = std::find( values.begin(), values.end(), value );
@@ -374,8 +359,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t lastIndexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) {
+        virtual std::size_t lastIndexOf( const E& value ) {
 
             typename std::list<E>::reverse_iterator iter;
             iter = std::find( values.rbegin(), values.rend(), value );
@@ -407,8 +391,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E get( std::size_t index ) const
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual E get( std::size_t index ) const {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -425,8 +408,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E set( std::size_t index, const E& element )
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ){
+        virtual E set( std::size_t index, const E& element ) {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -447,22 +429,15 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
-
+        virtual bool add( const E& value ) {
             values.insert( values.end(), value );
-
             return true;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void add( std::size_t index, const E& element )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IndexOutOfBoundsException ) {
+        virtual void add( std::size_t index, const E& element ) {
 
             if( index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -479,9 +454,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool addAll( std::size_t index, const Collection<E>& source )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual bool addAll( std::size_t index, const Collection<E>& source ) {
 
             if( index != 0 && index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -500,9 +473,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool remove( const E& value ) {
 
             std::size_t origSize = this->size();
             this->values.remove( value );
@@ -512,9 +483,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E remove( std::size_t index )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual E remove( std::size_t index ) {
 
             if( index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(

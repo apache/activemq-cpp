@@ -32,18 +32,13 @@ StandardErrorOutputStream::~StandardErrorOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::doWriteByte( unsigned char c )
-    throw ( decaf::io::IOException ) {
-
+void StandardErrorOutputStream::doWriteByte( unsigned char c ) {
     std::cerr << c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                     int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                                     int offset, int length ) {
 
     if( length == 0 ) {
         return;
@@ -76,11 +71,11 @@ void StandardErrorOutputStream::doWriteArrayBounded( const unsigned char* buffer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::flush() throw ( decaf::io::IOException ){
+void StandardErrorOutputStream::flush() {
     std::cerr.flush();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardErrorOutputStream::close() throw ( decaf::io::IOException ){
+void StandardErrorOutputStream::close() {
     std::cerr.flush();
 }

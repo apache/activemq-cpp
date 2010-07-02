@@ -46,34 +46,29 @@ namespace net {
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket()
-            throw( decaf::io::IOException );
+        virtual decaf::net::Socket* createSocket();
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket( const decaf::net::InetAddress* host, int port )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+        virtual decaf::net::Socket* createSocket( const decaf::net::InetAddress* host, int port );
 
         /**
          * {@inheritDoc}
          */
         virtual decaf::net::Socket* createSocket( const decaf::net::InetAddress* host, int port,
-                                                  const decaf::net::InetAddress* ifAddress, int localPort )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+                                                  const decaf::net::InetAddress* ifAddress, int localPort );
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* createSocket( const std::string& name, int port )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+        virtual decaf::net::Socket* createSocket( const std::string& name, int port );
 
         /**
          * {@inheritDoc}
          */
         virtual decaf::net::Socket* createSocket( const std::string& name, int port,
-                                                  const decaf::net::InetAddress* ifAddress, int localPort )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+                                                  const decaf::net::InetAddress* ifAddress, int localPort );
 
     };
 

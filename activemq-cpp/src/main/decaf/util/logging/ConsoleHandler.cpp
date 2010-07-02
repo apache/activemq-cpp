@@ -32,7 +32,7 @@ ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsoleHandler::close() throw ( decaf::io::IOException ) {
+void ConsoleHandler::close() {
     StreamHandler::close( true );
 }
 

@@ -68,8 +68,7 @@ namespace commands{
 
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
-            throw ( decaf::io::IOException );
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat );
 
         virtual std::string toString() const;
 

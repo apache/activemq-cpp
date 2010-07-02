@@ -69,10 +69,8 @@ namespace util{
          * @throws IndexOutOfBoundsException if the index is out of range
          *         (index < 0 || index > size())
          */
-        virtual ListIterator<E>* listIterator( std::size_t index )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
-        virtual ListIterator<E>* listIterator( std::size_t index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual ListIterator<E>* listIterator( std::size_t index ) = 0;
+        virtual ListIterator<E>* listIterator( std::size_t index ) const = 0;
 
         /**
          * Returns the index of the first occurrence of the specified element in
@@ -85,8 +83,7 @@ namespace util{
          * this list,
          * @throw NoSuchElementException if value is not in the list
          */
-        virtual std::size_t indexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
+        virtual std::size_t indexOf( const E& value ) = 0;
 
         /**
          * Returns the index of the last occurrence of the specified element in
@@ -99,16 +96,14 @@ namespace util{
          * this list.
          * @throw NoSuchElementException if value is not in the list
          */
-        virtual size_t lastIndexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
+        virtual size_t lastIndexOf( const E& value ) = 0;
 
         /**
          * Gets the element contained at position passed
          * @param index - position to get
          * @return value at index
          */
-        virtual E get( std::size_t index ) const
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual E get( std::size_t index ) const = 0;
 
         /**
          * Replaces the element at the specified position in this list with the
@@ -119,8 +114,7 @@ namespace util{
          * @return the element previously at the specified position
          * @throw IndexOutOfBoundsException - if the index is greater than size
          */
-        virtual E set( std::size_t index, const E& element )
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual E set( std::size_t index, const E& element ) = 0;
 
         /**
          * Inserts the specified element at the specified position in this list.
@@ -133,9 +127,7 @@ namespace util{
          * @throw IndexOutOfBoundsException - if the index is greater than size
          * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual void add( std::size_t index, const E& element )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual void add( std::size_t index, const E& element ) = 0;
 
         /**
          * Inserts all of the elements in the specified collection into this list at
@@ -157,9 +149,7 @@ namespace util{
          * @throw IndexOutOfBoundsException - if the index is greater than size
          * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual bool addAll( std::size_t index, const Collection<E>& source )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual bool addAll( std::size_t index, const Collection<E>& source ) = 0;
 
         /**
          * Removes the element at the specified position in this list.
@@ -171,9 +161,7 @@ namespace util{
          * @throw IndexOutOfBoundsException - if the index is greater than size
          * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual E remove( std::size_t index )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual E remove( std::size_t index ) = 0;
 
     };
 

@@ -44,22 +44,20 @@ URI::URI() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const URI& uri ) throw ( URISyntaxException ) {
+URI::URI( const URI& uri ) {
     this->uri = uri.uri;
     this->uriString = uri.uriString;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const std::string& uri ) throw ( URISyntaxException) {
+URI::URI( const std::string& uri ) {
 
     this->uriString = uri;
     this->parseURI( uri, false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const std::string& scheme,
-          const std::string& ssp,
-          const std::string& fragment ) throw ( URISyntaxException ) {
+URI::URI( const std::string& scheme, const std::string& ssp, const std::string& fragment ) {
 
     std::string uri = "";
 
@@ -87,7 +85,7 @@ URI::URI( const std::string& scheme,
 URI::URI( const std::string& scheme, const std::string& userInfo,
           const std::string& host, int port,
           const std::string& path, const std::string& query,
-          const std::string& fragment ) throw ( URISyntaxException ) {
+          const std::string& fragment ) {
 
     if( scheme == "" && userInfo == "" && host == "" &&
         path == "" && query == "" && fragment == "" ) {
@@ -158,8 +156,7 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
 
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& scheme, const std::string& host,
-          const std::string& path, const std::string& fragment )
-            throw ( URISyntaxException ) {
+          const std::string& path, const std::string& fragment ) {
 
     if( scheme == "" && host == "" && path == "" && fragment == "" ) {
         return;
@@ -215,7 +212,7 @@ URI::URI( const std::string& scheme, const std::string& host,
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& scheme, const std::string& authority,
           const std::string& path, const std::string& query,
-          const std::string& fragment ) throw ( URISyntaxException ) {
+          const std::string& fragment ) {
 
     if( scheme != "" && !path.empty() && path.at(0) != '/' ) {
          throw URISyntaxException(
@@ -258,7 +255,7 @@ URI::URI( const std::string& scheme, const std::string& authority,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URI::parseURI( const std::string& uri, bool forceServer ) throw ( URISyntaxException ) {
+void URI::parseURI( const std::string& uri, bool forceServer ) {
 
     try{
         this->uri = URIHelper().parseURI( uri, forceServer );
@@ -490,8 +487,7 @@ bool URI::operator<( const URI& value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI URI::create( const std::string uri )
-    throw ( lang::exceptions::IllegalArgumentException ) {
+URI URI::create( const std::string uri ) {
 
     try {
         return URI( uri );
@@ -762,7 +758,7 @@ void URI::setSchemeSpecificPart() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI URI::parseServerAuthority() const throw( URISyntaxException ) {
+URI URI::parseServerAuthority() const {
 
     URI newURI = *this;
 
@@ -890,8 +886,7 @@ URI URI::resolve( const URI& relative ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI URI::resolve( const std::string& relative ) const
-    throw ( lang::exceptions::IllegalArgumentException ) {
+URI URI::resolve( const std::string& relative ) const {
 
     return resolve( create( relative ) );
 }
@@ -939,8 +934,7 @@ string URI::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL URI::toURL() const
-    throw ( MalformedURLException, lang::exceptions::IllegalArgumentException ) {
+URL URI::toURL() const {
 
     if( !this->isAbsolute() ) {
         throw IllegalArgumentException(

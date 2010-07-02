@@ -219,8 +219,7 @@ void BackupTransportPool::onBackupTransportFailure( BackupTransport* failedTrans
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> BackupTransportPool::createTransport( const URI& location ) const
-    throw ( decaf::io::IOException ) {
+Pointer<Transport> BackupTransportPool::createTransport( const URI& location ) const {
 
     try{
 

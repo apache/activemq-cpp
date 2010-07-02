@@ -43,7 +43,7 @@ Logger::~Logger() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::addHandler( Handler* handler ) throw ( NullPointerException ) {
+void Logger::addHandler( Handler* handler ) {
 
     if( handler == NULL ) {
         NullPointerException(

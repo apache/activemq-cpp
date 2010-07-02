@@ -139,7 +139,7 @@ void OpenSSLServerSocket::setWantClientAuth( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* OpenSSLServerSocket::accept() throw( decaf::io::IOException ) {
+Socket* OpenSSLServerSocket::accept() {
 
     try{
 

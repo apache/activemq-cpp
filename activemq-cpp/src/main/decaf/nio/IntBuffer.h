@@ -61,8 +61,7 @@ namespace nio{
          *
          * @throws IllegalArguementException if capacity is negative.
          */
-        IntBuffer( int capacity )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        IntBuffer( int capacity );
 
     public:
 
@@ -87,9 +86,7 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int* array()
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   ReadOnlyBufferException ) = 0;
+        virtual int* array() = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element of
@@ -103,9 +100,7 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int arrayOffset()
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   ReadOnlyBufferException ) = 0;
+        virtual int arrayOffset() = 0;
 
         /**
          * Creates a new, read-only int buffer that shares this buffer's content.
@@ -144,7 +139,7 @@ namespace nio{
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual IntBuffer& compact() throw( ReadOnlyBufferException ) = 0;
+        virtual IntBuffer& compact() = 0;
 
         /**
          * Creates a new int buffer that shares this buffer's content.
@@ -169,7 +164,7 @@ namespace nio{
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
-        virtual int get() throw ( BufferUnderflowException ) = 0;
+        virtual int get() = 0;
 
         /**
          * Absolute get method. Reads the value at the given index.
@@ -182,8 +177,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
          */
-        virtual int get( int index ) const
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual int get( int index ) const = 0;
 
         /**
          * Relative bulk get method.
@@ -199,8 +193,7 @@ namespace nio{
          * @throws BufferUnderflowException if there are fewer than length ints
          *         remaining in this buffer.
          */
-        IntBuffer& get( std::vector<int> buffer )
-            throw ( BufferUnderflowException );
+        IntBuffer& get( std::vector<int> buffer );
 
         /**
          * Relative bulk get method.
@@ -231,10 +224,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        IntBuffer& get( int* buffer, int size, int offset, int length )
-            throw( BufferUnderflowException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        IntBuffer& get( int* buffer, int size, int offset, int length );
 
         /**
          * Tells whether or not this buffer is backed by an accessible int array.
@@ -267,9 +257,7 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        IntBuffer& put( IntBuffer& src )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        IntBuffer& put( IntBuffer& src );
 
         /**
          * This method transfers ints into this buffer from the given source array.
@@ -298,10 +286,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        IntBuffer& put( const int* buffer, int size, int offset, int length )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException,
-                   decaf::lang::exceptions::NullPointerException );
+        IntBuffer& put( const int* buffer, int size, int offset, int length );
 
         /**
          * This method transfers the entire content of the given source ints array into
@@ -315,8 +300,7 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        IntBuffer& put( std::vector<int>& buffer )
-            throw( BufferOverflowException, ReadOnlyBufferException );
+        IntBuffer& put( std::vector<int>& buffer );
 
         /**
          * Writes the given integer into this buffer at the current position, and then
@@ -331,8 +315,7 @@ namespace nio{
          *         smaller than its limit.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual IntBuffer& put( int value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual IntBuffer& put( int value ) = 0;
 
         /**
          * Writes the given ints into this buffer at the given index.
@@ -348,9 +331,7 @@ namespace nio{
          *         minus the size of the type being written, or the index is negative.
          * @throws ReadOnlyBufferException - If this buffer is read-only.
          */
-        virtual IntBuffer& put( int index, int value )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual IntBuffer& put( int index, int value ) = 0;
 
         /**
          * Creates a new IntBuffer whose content is a shared subsequence of this
@@ -403,8 +384,7 @@ namespace nio{
          *
          * @returns the IntBuffer that was allocated, caller owns.
          */
-        static IntBuffer* allocate( int capacity )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        static IntBuffer* allocate( int capacity );
 
         /**
          * Wraps the passed buffer with a new IntBuffer.
@@ -430,9 +410,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        static IntBuffer* wrap( int* array, int size, int offset, int length )
-            throw( decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException );
+        static IntBuffer* wrap( int* array, int size, int offset, int length );
 
         /**
          * Wraps the passed STL int Vector in a IntBuffer.

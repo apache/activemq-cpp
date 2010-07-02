@@ -28,8 +28,7 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : CharBuffer( size ){
+CharArrayBuffer::CharArrayBuffer( int size, bool readOnly ) : CharBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     this->_array.reset( new ByteArrayAdapter( size ) );
@@ -39,9 +38,8 @@ CharArrayBuffer::CharArrayBuffer( int size, bool readOnly )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( char* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) : CharBuffer( length ) {
+CharArrayBuffer::CharArrayBuffer( char* array, int size, int offset, int length, bool readOnly ) :
+    CharBuffer( length ) {
 
     try{
 
@@ -68,9 +66,8 @@ CharArrayBuffer::CharArrayBuffer( char* array, int size, int offset, int length,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-CharArrayBuffer::CharArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::NullPointerException ) : CharBuffer( length ) {
+CharArrayBuffer::CharArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
+    CharBuffer( length ) {
 
     try{
 
@@ -117,9 +114,7 @@ CharArrayBuffer::~CharArrayBuffer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-char* CharArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+char* CharArrayBuffer::array() {
 
     try{
 
@@ -144,9 +139,7 @@ char* CharArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int CharArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int CharArrayBuffer::arrayOffset() {
 
     try{
 
@@ -185,7 +178,7 @@ CharBuffer* CharArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharArrayBuffer::compact()  throw( decaf::nio::ReadOnlyBufferException ) {
+CharBuffer& CharArrayBuffer::compact() {
 
     try{
 
@@ -223,7 +216,7 @@ CharBuffer* CharArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-char CharArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+char CharArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -234,8 +227,7 @@ char CharArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-char CharArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+char CharArrayBuffer::get( int index ) const {
 
     try{
 
@@ -258,8 +250,7 @@ char CharArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharArrayBuffer::put( char value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+CharBuffer& CharArrayBuffer::put( char value ) {
 
     try{
 
@@ -273,9 +264,7 @@ CharBuffer& CharArrayBuffer::put( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer& CharArrayBuffer::put( int index, char value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+CharBuffer& CharArrayBuffer::put( int index, char value ) {
 
     try{
 
@@ -321,8 +310,7 @@ CharBuffer* CharArrayBuffer::slice() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharSequence* CharArrayBuffer::subSequence( int start, int end ) const
-    throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+CharSequence* CharArrayBuffer::subSequence( int start, int end ) const {
 
     try{
 

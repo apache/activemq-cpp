@@ -51,13 +51,11 @@ namespace concurrent {
 
 ////////////////////////////////////////////////////////////////////////////////
 Semaphore::Semaphore( int permits ) {
-
     this->handle.reset( new SemaphoreHandle( permits ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Semaphore::Semaphore( int permits, bool fair ) {
-
     this->handle.reset( new SemaphoreHandle( permits, fair ) );
 }
 
@@ -66,68 +64,52 @@ Semaphore::~Semaphore() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::acquire() throw( decaf::lang::exceptions::InterruptedException,
-                                 decaf::lang::exceptions::RuntimeException ) {
-
+void Semaphore::acquire() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::acquireUninterruptibly() throw ( decaf::lang::exceptions::RuntimeException ) {
-
+void Semaphore::acquireUninterruptibly() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Semaphore::tryAcquire() throw ( decaf::lang::exceptions::RuntimeException ) {
+bool Semaphore::tryAcquire() {
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Semaphore::tryAcquire( long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
-    throw( decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::RuntimeException ) {
-
+bool Semaphore::tryAcquire( long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::release() throw ( decaf::lang::exceptions::RuntimeException ) {
+void Semaphore::release() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::acquire( int permits DECAF_UNUSED ) throw( decaf::lang::exceptions::InterruptedException,
-                                                           decaf::lang::exceptions::IllegalArgumentException,
-                                                           decaf::lang::exceptions::RuntimeException ) {
+void Semaphore::acquire( int permits DECAF_UNUSED ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::acquireUninterruptibly( int permits DECAF_UNUSED )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::RuntimeException ) {
+void Semaphore::acquireUninterruptibly( int permits DECAF_UNUSED ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Semaphore::tryAcquire( int permits DECAF_UNUSED )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::RuntimeException ) {
+bool Semaphore::tryAcquire( int permits DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Semaphore::tryAcquire( int permits DECAF_UNUSED, long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::RuntimeException ) {
+bool Semaphore::tryAcquire( int permits DECAF_UNUSED, long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Semaphore::release( int permits DECAF_UNUSED )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::RuntimeException ) {
+void Semaphore::release( int permits DECAF_UNUSED ) {
 
 }
 
@@ -137,7 +119,7 @@ int Semaphore::availablePermits() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Semaphore::drainPermits() throw( decaf::lang::exceptions::RuntimeException ) {
+int Semaphore::drainPermits() {
     return 0;
 }
 

@@ -49,7 +49,7 @@ TcpSocketOutputStream::~TcpSocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketOutputStream::close() throw( decaf::io::IOException ) {
+void TcpSocketOutputStream::close() {
 
     if( this->closed ) {
         return;
@@ -64,7 +64,7 @@ void TcpSocketOutputStream::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException ) {
+void TcpSocketOutputStream::doWriteByte( unsigned char c ) {
 
     try{
 
@@ -76,10 +76,7 @@ void TcpSocketOutputStream::doWriteByte( unsigned char c ) throw ( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+void TcpSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 

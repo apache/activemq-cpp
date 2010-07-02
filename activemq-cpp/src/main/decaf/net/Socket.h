@@ -179,8 +179,7 @@ namespace net{
          * @throws IllegalArgumentException if the Socket can't process the subclass of SocketAddress
          *         that has been provided.
          */
-        virtual void bind( const std::string& ipaddress, int port )
-            throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void bind( const std::string& ipaddress, int port );
 
         /**
          * Closes the Socket.  Once closed a Socket cannot be connected or otherwise
@@ -188,7 +187,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while closing the Socket.
          */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         /**
          * Connects to the specified destination.
@@ -201,9 +200,7 @@ namespace net{
          * @throws IOException Thrown if a failure occurred in the connect.
          * @throws IllegalArguementException if the timeout value is negative or the endpoint is invalid.
          */
-        virtual void connect( const std::string& host, int port )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        virtual void connect( const std::string& host, int port );
 
         /**
          * Connects to the specified destination, with a specified timeout value.  If a connection
@@ -222,9 +219,7 @@ namespace net{
          * @throws SocketTimeoutException if the timeout for connection is exceeded.
          * @throws IllegalArguementException if the timeout value is negative or the endpoint is invalid.
          */
-        virtual void connect( const std::string& host, int port, int timeout )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException );
+        virtual void connect( const std::string& host, int port, int timeout );
 
         /**
          * Indicates whether or not this socket is connected to am end point.
@@ -278,7 +273,7 @@ namespace net{
          * @throws IOException if an error occurs during creation of the InputStream, also if the
          *         Socket is not connected or the input has been shutdown previously.
          */
-        virtual decaf::io::InputStream* getInputStream() throw( decaf::io::IOException );
+        virtual decaf::io::InputStream* getInputStream();
 
         /**
          * Gets the OutputStream for this socket if it is connected.  The pointer returned is the
@@ -291,7 +286,7 @@ namespace net{
          * @throws IOException if an error occurs during the creation of this OutputStream, or
          *         if the Socket is closed or the output has been shutdown previously.
          */
-        virtual decaf::io::OutputStream* getOutputStream() throw( decaf::io::IOException );
+        virtual decaf::io::OutputStream* getOutputStream();
 
         /**
          * Gets the on the remote host this Socket is connected to.
@@ -327,7 +322,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual void shutdownInput() throw( decaf::io::IOException );
+        virtual void shutdownInput();
 
         /**
          * Shuts down the OutputStream for this socket, any data already written to the socket will
@@ -335,7 +330,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual void shutdownOutput() throw( decaf::io::IOException );
+        virtual void shutdownOutput();
 
         /**
          * Gets the linger time for the socket, SO_LINGER.  A return value of -1 indicates that
@@ -345,7 +340,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual int getSoLinger() const throw( SocketException );
+        virtual int getSoLinger() const;
 
         /**
          * Sets the linger time (SO_LINGER) using a specified time value, this limits of this
@@ -359,8 +354,7 @@ namespace net{
          * @throws SocketException if the operation fails.
          * @throws IllegalArgumentException if state is true and timeout is negative.
          */
-        virtual void setSoLinger( bool state, int timeout )
-            throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void setSoLinger( bool state, int timeout );
 
         /**
          * Gets the keep alive flag for this socket, SO_KEEPALIVE.
@@ -369,7 +363,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual bool getKeepAlive() const throw( SocketException );
+        virtual bool getKeepAlive() const;
 
         /**
          * Enables/disables the keep alive flag for this socket, SO_KEEPALIVE.
@@ -379,7 +373,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual void setKeepAlive( bool keepAlive ) throw( SocketException );
+        virtual void setKeepAlive( bool keepAlive );
 
         /**
          * Gets the receive buffer size for this socket, SO_RCVBUF.  This is the buffer used
@@ -389,7 +383,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual int getReceiveBufferSize() const throw( SocketException );
+        virtual int getReceiveBufferSize() const;
 
         /**
          * Sets the receive buffer size for this socket, SO_RCVBUF.
@@ -400,8 +394,7 @@ namespace net{
          * @throws SocketException if the operation fails.
          * @throws IllegalArgumentException if the value is zero or negative.
          */
-        virtual void setReceiveBufferSize( int size )
-            throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void setReceiveBufferSize( int size );
 
         /**
          * Gets the reuse address flag, SO_REUSEADDR.
@@ -410,7 +403,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual bool getReuseAddress() const throw( SocketException );
+        virtual bool getReuseAddress() const;
 
         /**
          * Sets the reuse address flag, SO_REUSEADDR.
@@ -420,7 +413,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual void setReuseAddress( bool reuse ) throw( SocketException );
+        virtual void setReuseAddress( bool reuse );
 
         /**
          * Gets the send buffer size for this socket, SO_SNDBUF, this value is used by the platform
@@ -430,7 +423,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual int getSendBufferSize() const throw( SocketException );
+        virtual int getSendBufferSize() const;
 
         /**
          * Gets the send buffer size for this socket, SO_SNDBUF, this value is used by the platform
@@ -442,8 +435,7 @@ namespace net{
          * @throws SocketException if the operation fails.
          * @throws IllegalArgumentException if the value is zero or negative.
          */
-        virtual void setSendBufferSize( int size )
-            throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void setSendBufferSize( int size );
 
         /**
          * Gets the timeout for socket operations, SO_TIMEOUT.
@@ -452,7 +444,7 @@ namespace net{
          *
          * @throws SocketException Thrown if unable to retrieve the information.
          */
-        virtual int getSoTimeout() const throw( SocketException );
+        virtual int getSoTimeout() const;
 
         /**
          * Sets the timeout for socket operations, SO_TIMEOUT.  A value of zero indicates that timeout
@@ -464,8 +456,7 @@ namespace net{
          * @throws SocketException Thrown if unable to set the information.
          * @throws IllegalArgumentException if the timeout value is negative.
          */
-        virtual void setSoTimeout( int timeout )
-            throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void setSoTimeout( int timeout );
 
         /**
          * Gets the Status of the TCP_NODELAY setting for this socket.
@@ -474,7 +465,7 @@ namespace net{
          *
          * @throws SocketException Thrown if unable to set the information.
          */
-        virtual bool getTcpNoDelay() const throw ( SocketException );
+        virtual bool getTcpNoDelay() const;
 
         /**
          * Sets the Status of the TCP_NODELAY param for this socket., this setting is used
@@ -485,7 +476,7 @@ namespace net{
          *
          * @throws SocketException Thrown if unable to set the information.
          */
-        virtual void setTcpNoDelay( bool value ) throw ( SocketException );
+        virtual void setTcpNoDelay( bool value );
 
         /**
          * Gets the Traffic Class setting for this Socket, sometimes referred to as Type of
@@ -498,7 +489,7 @@ namespace net{
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
-        virtual int getTrafficClass() const throw( SocketException );
+        virtual int getTrafficClass() const;
 
         /**
          * Gets the Traffic Class setting for this Socket, sometimes referred to as Type of
@@ -513,8 +504,7 @@ namespace net{
          * @throws SocketException if an error is encountered while performing this operation.
          * @throws IllegalArgumentException if the value is not in the range [0..255].
          */
-        virtual void setTrafficClass( int value )
-            throw( SocketException, decaf::lang::exceptions::IllegalArgumentException );
+        virtual void setTrafficClass( int value );
 
         /**
          * Gets the value of the OOBINLINE for this socket.
@@ -523,7 +513,7 @@ namespace net{
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
-        virtual bool getOOBInline() const throw( SocketException );
+        virtual bool getOOBInline() const;
 
         /**
          * Sets the value of the OOBINLINE for this socket, by default this option is disabled.  If
@@ -533,7 +523,7 @@ namespace net{
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
-        virtual void setOOBInline( bool value ) throw( SocketException );
+        virtual void setOOBInline( bool value );
 
         /**
          * Sends on byte of urgent data to the Socket.
@@ -543,7 +533,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
+        virtual void sendUrgentData( int data );
 
         /**
          * @returns a string representing this Socket.
@@ -563,9 +553,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while performing this operation.
          * @throws SocketException if this method has already been called with a valid factory.
          */
-        static void setSocketImplFactory( SocketImplFactory* factory )
-            throw( decaf::io::IOException,
-                   decaf::net::SocketException );
+        static void setSocketImplFactory( SocketImplFactory* factory );
 
     protected:
 
@@ -574,14 +562,13 @@ namespace net{
         void accepted();
 
         // Sets up a connected socket for the constructors that take connection arguments.
-        void initSocketImpl( const std::string& address, int port, const InetAddress* localAddress, int localPort )
-            throw( decaf::io::IOException, decaf::net::UnknownHostException );
+        void initSocketImpl( const std::string& address, int port, const InetAddress* localAddress, int localPort );
 
         // Check for already closed and throw an error if so.
-        void checkClosed() const throw( decaf::io::IOException );
+        void checkClosed() const;
 
         // Create but don't connect the underlying OS Socket instance, if not already created.
-        void ensureCreated() const throw( decaf::io::IOException );
+        void ensureCreated() const;
 
     };
 

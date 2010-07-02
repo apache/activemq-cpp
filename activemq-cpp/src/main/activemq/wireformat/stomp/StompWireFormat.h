@@ -68,8 +68,7 @@ namespace stomp {
          */
         virtual void marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out )
-            throw ( decaf::io::IOException );
+                              decaf::io::DataOutputStream* out );
 
         /**
          * Stream based un-marshaling, blocks on reads on the input stream until a complete
@@ -82,8 +81,7 @@ namespace stomp {
          * @throws IOException
          */
         virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+                                                      decaf::io::DataInputStream* in );
 
         /**
          * Set the Version
@@ -124,8 +122,7 @@ namespace stomp {
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport )
-                throw( decaf::lang::exceptions::UnsupportedOperationException );
+            const Pointer<transport::Transport>& transport );
 
     private:
 

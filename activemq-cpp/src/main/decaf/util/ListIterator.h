@@ -57,9 +57,7 @@ namespace util{
          * @throw IllegalArgumentException - if some aspect of this element
          * prevents it from being added to this list.
          */
-        virtual void add( const E& e )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual void add( const E& e ) = 0;
 
         /**
          * Replaces the last element returned by next or previous with the
@@ -77,10 +75,7 @@ namespace util{
          * called, or remove or add have been called after the last call to next
          * or previous.
          */
-        virtual void set( const E& e )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException,
-                    decaf::lang::exceptions::IllegalStateException ) = 0;
+        virtual void set( const E& e ) = 0;
 
         /**
          * Returns true if this list iterator has more elements when traversing the

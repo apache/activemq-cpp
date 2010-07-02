@@ -97,8 +97,7 @@ namespace concurrent{
          * @param task object that derives from Runnable
          * @throws ActiveMQException
          */
-        virtual void queueTask( Task task )
-            throw ( lang::Exception );
+        virtual void queueTask( Task task );
 
         /**
          * DeQueue a task to be completed by one of the Pooled Threads.
@@ -110,8 +109,7 @@ namespace concurrent{
          * @return object that derives from Runnable
          * @throws ActiveMQException
          */
-        virtual Task deQueueTask()
-            throw ( lang::Exception );
+        virtual Task deQueueTask();
 
         /**
          * Returns the current number of Threads in the Pool, this is

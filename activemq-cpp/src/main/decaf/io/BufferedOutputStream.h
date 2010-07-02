@@ -80,27 +80,22 @@ namespace io{
          *
          * @throws IllegalArgumentException if the bufferSize given is negative.
          */
-        BufferedOutputStream( OutputStream* stream, int bufferSize, bool own = false )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        BufferedOutputStream( OutputStream* stream, int bufferSize, bool own = false );
 
         virtual ~BufferedOutputStream();
 
         /**
          * @{inheritDoc}
          */
-        virtual void flush() throw ( decaf::io::IOException );
+        virtual void flush();
 
     protected:
 
-        virtual void doWriteByte( unsigned char c ) throw ( decaf::io::IOException );
+        virtual void doWriteByte( unsigned char c );
 
-        virtual void doWriteArray( const unsigned char* buffer, int size )
-            throw ( decaf::io::IOException );
+        virtual void doWriteArray( const unsigned char* buffer, int size );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     private:
 
@@ -115,7 +110,7 @@ namespace io{
         /**
          * Writes the contents of the buffer to the output stream.
          */
-        void emptyBuffer() throw ( decaf::io::IOException );
+        void emptyBuffer();
 
    };
 

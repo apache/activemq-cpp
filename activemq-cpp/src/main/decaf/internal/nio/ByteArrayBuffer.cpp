@@ -30,8 +30,7 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly )
-    throw( decaf::lang::exceptions::IllegalArgumentException ) : decaf::nio::ByteBuffer( size ) {
+ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly ) : decaf::nio::ByteBuffer( size ) {
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     this->_array.reset( new ByteArrayAdapter( size ) );
@@ -41,9 +40,7 @@ ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) :
+ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, int length, bool readOnly ) :
     decaf::nio::ByteBuffer( length ) {
 
     try{
@@ -71,9 +68,8 @@ ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException ) : decaf::nio::ByteBuffer( length ) {
+ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
+    decaf::nio::ByteBuffer( length ) {
 
     try{
 
@@ -119,8 +115,7 @@ ByteArrayBuffer::~ByteArrayBuffer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* ByteArrayBuffer::array()
-    throw( decaf::nio::ReadOnlyBufferException, UnsupportedOperationException ) {
+unsigned char* ByteArrayBuffer::array() {
 
     try{
 
@@ -145,9 +140,7 @@ unsigned char* ByteArrayBuffer::array()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayBuffer::arrayOffset() const
-    throw( decaf::nio::ReadOnlyBufferException,
-           lang::exceptions::UnsupportedOperationException ) {
+int ByteArrayBuffer::arrayOffset() const {
 
     try{
 
@@ -186,7 +179,7 @@ ByteArrayBuffer* ByteArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::compact() {
 
     try{
 
@@ -224,7 +217,7 @@ ByteArrayBuffer* ByteArrayBuffer::duplicate() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayBuffer::get() const throw( decaf::nio::BufferUnderflowException ) {
+unsigned char ByteArrayBuffer::get() const {
 
     try{
         return this->get( this->_position++ );
@@ -235,8 +228,7 @@ unsigned char ByteArrayBuffer::get() const throw( decaf::nio::BufferUnderflowExc
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ByteArrayBuffer::get( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+unsigned char ByteArrayBuffer::get( int index ) const {
 
     try{
 
@@ -254,7 +246,7 @@ unsigned char ByteArrayBuffer::get( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayBuffer::getDouble() throw( decaf::nio::BufferUnderflowException ) {
+double ByteArrayBuffer::getDouble() {
 
     try{
 
@@ -267,8 +259,7 @@ double ByteArrayBuffer::getDouble() throw( decaf::nio::BufferUnderflowException 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ByteArrayBuffer::getDouble( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+double ByteArrayBuffer::getDouble( int index ) const {
 
     try{
 
@@ -281,7 +272,7 @@ double ByteArrayBuffer::getDouble( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayBuffer::getFloat() throw( decaf::nio::BufferUnderflowException ) {
+float ByteArrayBuffer::getFloat() {
 
     try{
 
@@ -294,8 +285,7 @@ float ByteArrayBuffer::getFloat() throw( decaf::nio::BufferUnderflowException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ByteArrayBuffer::getFloat( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+float ByteArrayBuffer::getFloat( int index ) const {
 
     try{
 
@@ -308,7 +298,7 @@ float ByteArrayBuffer::getFloat( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayBuffer::getLong() throw( decaf::nio::BufferUnderflowException ) {
+long long ByteArrayBuffer::getLong() {
 
     try{
 
@@ -322,8 +312,7 @@ long long ByteArrayBuffer::getLong() throw( decaf::nio::BufferUnderflowException
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayBuffer::getLong( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+long long ByteArrayBuffer::getLong( int index ) const {
 
     try{
 
@@ -341,7 +330,7 @@ long long ByteArrayBuffer::getLong( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayBuffer::getInt() throw( decaf::nio::BufferUnderflowException )  {
+int ByteArrayBuffer::getInt() {
 
     try{
 
@@ -355,8 +344,7 @@ int ByteArrayBuffer::getInt() throw( decaf::nio::BufferUnderflowException )  {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayBuffer::getInt( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+int ByteArrayBuffer::getInt( int index ) const {
 
     try{
 
@@ -374,7 +362,7 @@ int ByteArrayBuffer::getInt( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayBuffer::getShort() throw( decaf::nio::BufferUnderflowException ) {
+short ByteArrayBuffer::getShort() {
 
     try{
 
@@ -388,8 +376,7 @@ short ByteArrayBuffer::getShort() throw( decaf::nio::BufferUnderflowException ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ByteArrayBuffer::getShort( int index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException )  {
+short ByteArrayBuffer::getShort( int index ) const {
 
     try{
 
@@ -407,8 +394,7 @@ short ByteArrayBuffer::getShort( int index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::put( unsigned char value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::put( unsigned char value ) {
 
     try{
 
@@ -422,9 +408,7 @@ ByteArrayBuffer& ByteArrayBuffer::put( unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::put( int index, unsigned char value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::put( int index, unsigned char value ) {
 
     try{
 
@@ -451,8 +435,7 @@ ByteArrayBuffer& ByteArrayBuffer::put( int index, unsigned char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putChar( char value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putChar( char value ) {
 
     try{
 
@@ -466,9 +449,7 @@ ByteArrayBuffer& ByteArrayBuffer::putChar( char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putChar( int index, char value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putChar( int index, char value ) {
 
     try{
 
@@ -482,8 +463,7 @@ ByteArrayBuffer& ByteArrayBuffer::putChar( int index, char value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putDouble( double value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putDouble( double value ) {
 
     try{
 
@@ -498,9 +478,7 @@ ByteArrayBuffer& ByteArrayBuffer::putDouble( double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putDouble( int index, double value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putDouble( int index, double value ) {
 
     try{
 
@@ -514,8 +492,7 @@ ByteArrayBuffer& ByteArrayBuffer::putDouble( int index, double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putFloat( float value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putFloat( float value ) {
 
     try{
 
@@ -530,9 +507,7 @@ ByteArrayBuffer& ByteArrayBuffer::putFloat( float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putFloat( int index, float value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putFloat( int index, float value ) {
 
     try{
 
@@ -546,8 +521,7 @@ ByteArrayBuffer& ByteArrayBuffer::putFloat( int index, float value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putLong( long long value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putLong( long long value ) {
 
     try{
 
@@ -562,9 +536,7 @@ ByteArrayBuffer& ByteArrayBuffer::putLong( long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putLong( int index, long long value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putLong( int index, long long value ) {
 
     try{
 
@@ -585,8 +557,7 @@ ByteArrayBuffer& ByteArrayBuffer::putLong( int index, long long value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putInt( int value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putInt( int value ) {
 
     try{
 
@@ -601,9 +572,7 @@ ByteArrayBuffer& ByteArrayBuffer::putInt( int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putInt( int index, int value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putInt( int index, int value ) {
 
     try{
 
@@ -624,8 +593,7 @@ ByteArrayBuffer& ByteArrayBuffer::putInt( int index, int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putShort( short value )
-    throw( decaf::nio::BufferOverflowException, decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putShort( short value ) {
 
     try{
 
@@ -640,9 +608,7 @@ ByteArrayBuffer& ByteArrayBuffer::putShort( short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer& ByteArrayBuffer::putShort( int index, short value )
-    throw( lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ByteArrayBuffer& ByteArrayBuffer::putShort( int index, short value ) {
 
     try{
 

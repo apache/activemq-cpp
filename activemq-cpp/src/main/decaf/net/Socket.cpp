@@ -181,8 +181,7 @@ Socket::~Socket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::initSocketImpl( const std::string& host, int port, const InetAddress* localAddress, int localPort )
-    throw( decaf::io::IOException, decaf::net::UnknownHostException ) {
+void Socket::initSocketImpl( const std::string& host, int port, const InetAddress* localAddress, int localPort ) {
 
     try{
 
@@ -233,8 +232,7 @@ std::string Socket::getLocalAddress() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::bind( const std::string& ipaddress, int port )
-    throw( decaf::io::IOException, decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::bind( const std::string& ipaddress, int port ) {
 
     checkClosed();
 
@@ -262,7 +260,7 @@ void Socket::bind( const std::string& ipaddress, int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::close() throw( decaf::io::IOException ) {
+void Socket::close() {
     try{
         this->closed = true;
         this->impl->close();
@@ -272,9 +270,7 @@ void Socket::close() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::connect( const std::string& host, int port )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::connect( const std::string& host, int port ) {
 
     if( port < 0 || port > 65535 ) {
         throw IllegalArgumentException(
@@ -290,9 +286,7 @@ void Socket::connect( const std::string& host, int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::connect( const std::string& host, int port, int timeout )
-    throw( decaf::io::IOException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::connect( const std::string& host, int port, int timeout ) {
 
     checkClosed();
 
@@ -337,7 +331,7 @@ void Socket::connect( const std::string& host, int port, int timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStream* Socket::getInputStream() throw( decaf::io::IOException ) {
+InputStream* Socket::getInputStream() {
 
     checkClosed();
 
@@ -355,7 +349,7 @@ InputStream* Socket::getInputStream() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStream* Socket::getOutputStream() throw( decaf::io::IOException ) {
+OutputStream* Socket::getOutputStream() {
 
     checkClosed();
 
@@ -373,7 +367,7 @@ OutputStream* Socket::getOutputStream() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::shutdownInput() throw( decaf::io::IOException ) {
+void Socket::shutdownInput() {
 
     if( isInputShutdown() ) {
         throw IOException( __FILE__, __LINE__, "Socket input has already been shutdown." );
@@ -391,7 +385,7 @@ void Socket::shutdownInput() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::shutdownOutput() throw( decaf::io::IOException ) {
+void Socket::shutdownOutput() {
 
     if( isOutputShutdown() ) {
         throw IOException( __FILE__, __LINE__, "Socket output has already been shutdown." );
@@ -409,7 +403,7 @@ void Socket::shutdownOutput() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Socket::getSoLinger() const throw( SocketException ) {
+int Socket::getSoLinger() const {
 
     checkClosed();
 
@@ -423,8 +417,7 @@ int Socket::getSoLinger() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setSoLinger( bool state, int timeout )
-    throw( SocketException, IllegalArgumentException ) {
+void Socket::setSoLinger( bool state, int timeout ) {
 
     checkClosed();
 
@@ -446,7 +439,7 @@ void Socket::setSoLinger( bool state, int timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Socket::getKeepAlive() const throw( SocketException ) {
+bool Socket::getKeepAlive() const {
 
     checkClosed();
 
@@ -460,7 +453,7 @@ bool Socket::getKeepAlive() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setKeepAlive( bool keepAlive ) throw( SocketException ) {
+void Socket::setKeepAlive( bool keepAlive ) {
 
     checkClosed();
 
@@ -474,7 +467,7 @@ void Socket::setKeepAlive( bool keepAlive ) throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Socket::getReceiveBufferSize() const throw( SocketException ) {
+int Socket::getReceiveBufferSize() const {
 
     checkClosed();
 
@@ -488,8 +481,7 @@ int Socket::getReceiveBufferSize() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setReceiveBufferSize( int size )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::setReceiveBufferSize( int size ) {
 
     checkClosed();
 
@@ -509,7 +501,7 @@ void Socket::setReceiveBufferSize( int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Socket::getReuseAddress() const throw( SocketException ) {
+bool Socket::getReuseAddress() const {
 
     checkClosed();
 
@@ -523,7 +515,7 @@ bool Socket::getReuseAddress() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setReuseAddress( bool reuse ) throw( SocketException ) {
+void Socket::setReuseAddress( bool reuse ) {
 
     checkClosed();
 
@@ -537,7 +529,7 @@ void Socket::setReuseAddress( bool reuse ) throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Socket::getSendBufferSize() const throw( SocketException ) {
+int Socket::getSendBufferSize() const {
 
     checkClosed();
 
@@ -551,8 +543,7 @@ int Socket::getSendBufferSize() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setSendBufferSize( int size )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::setSendBufferSize( int size ) {
 
     checkClosed();
 
@@ -572,7 +563,7 @@ void Socket::setSendBufferSize( int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Socket::getSoTimeout() const throw( SocketException ) {
+int Socket::getSoTimeout() const {
 
     checkClosed();
 
@@ -586,8 +577,7 @@ int Socket::getSoTimeout() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setSoTimeout( int timeout )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::setSoTimeout( int timeout ) {
 
     checkClosed();
 
@@ -607,7 +597,7 @@ void Socket::setSoTimeout( int timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Socket::getTcpNoDelay() const throw ( SocketException ) {
+bool Socket::getTcpNoDelay() const {
 
     checkClosed();
 
@@ -621,7 +611,7 @@ bool Socket::getTcpNoDelay() const throw ( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setTcpNoDelay( bool value ) throw ( SocketException ) {
+void Socket::setTcpNoDelay( bool value ) {
 
     checkClosed();
 
@@ -635,7 +625,7 @@ void Socket::setTcpNoDelay( bool value ) throw ( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Socket::getTrafficClass() const throw( SocketException ) {
+int Socket::getTrafficClass() const {
 
     checkClosed();
 
@@ -649,8 +639,7 @@ int Socket::getTrafficClass() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setTrafficClass( int value )
-    throw( SocketException, decaf::lang::exceptions::IllegalArgumentException ) {
+void Socket::setTrafficClass( int value ) {
 
     checkClosed();
 
@@ -670,7 +659,7 @@ void Socket::setTrafficClass( int value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Socket::getOOBInline() const throw( SocketException ) {
+bool Socket::getOOBInline() const {
 
     checkClosed();
 
@@ -684,7 +673,7 @@ bool Socket::getOOBInline() const throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setOOBInline( bool value ) throw( SocketException ) {
+void Socket::setOOBInline( bool value ) {
 
     checkClosed();
 
@@ -698,7 +687,7 @@ void Socket::setOOBInline( bool value ) throw( SocketException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::sendUrgentData( int data ) throw( decaf::io::IOException ) {
+void Socket::sendUrgentData( int data ) {
 
     checkClosed();
 
@@ -712,14 +701,14 @@ void Socket::sendUrgentData( int data ) throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::checkClosed() const throw( decaf::io::IOException ) {
+void Socket::checkClosed() const {
     if( this->closed ) {
         throw IOException( __FILE__, __LINE__, "Socket already closed." );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::ensureCreated() const throw( decaf::io::IOException ) {
+void Socket::ensureCreated() const {
 
     try{
         if( !this->created ) {
@@ -733,9 +722,7 @@ void Socket::ensureCreated() const throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Socket::setSocketImplFactory( SocketImplFactory* factory )
-    throw( decaf::io::IOException,
-           decaf::net::SocketException ) {
+void Socket::setSocketImplFactory( SocketImplFactory* factory ) {
 
     if( Socket::factory != NULL ) {
         throw SocketException(

@@ -89,7 +89,7 @@ namespace logging{
          *
          * @throw IOException if an I/O error occurs.
          */
-        virtual void close() throw ( decaf::io::IOException );
+        virtual void close();
 
         /**
          * Flush the Handler's output, clears any buffers.
@@ -128,8 +128,7 @@ namespace logging{
          *
          * @throws NullPointerException if the passed stream is NULL.
          */
-        virtual void setOuputStream( decaf::io::OutputStream* stream )
-            throw( decaf::lang::exceptions::NullPointerException );
+        virtual void setOuputStream( decaf::io::OutputStream* stream );
 
         /**
          * Closes this handler, but the underlying output stream is only closed if

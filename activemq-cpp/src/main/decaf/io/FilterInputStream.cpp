@@ -46,7 +46,7 @@ FilterInputStream::~FilterInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::available() const throw ( IOException ) {
+int FilterInputStream::available() const {
 
     try {
 
@@ -63,7 +63,7 @@ int FilterInputStream::available() const throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterInputStream::close() throw ( io::IOException ) {
+void FilterInputStream::close() {
 
     try {
         if( !closed && inputStream != NULL ) {
@@ -87,7 +87,7 @@ void FilterInputStream::mark( int readLimit ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterInputStream::reset() throw ( IOException ) {
+void FilterInputStream::reset() {
 
     try {
 
@@ -116,9 +116,7 @@ bool FilterInputStream::markSupported() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long FilterInputStream::skip( long long num )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::UnsupportedOperationException ) {
+long long FilterInputStream::skip( long long num ) {
 
     try {
 
@@ -136,7 +134,7 @@ long long FilterInputStream::skip( long long num )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::doReadByte() throw ( IOException ) {
+int FilterInputStream::doReadByte() {
 
     try {
 
@@ -153,10 +151,7 @@ int FilterInputStream::doReadByte() throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::doReadArray( unsigned char* buffer, int size )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int FilterInputStream::doReadArray( unsigned char* buffer, int size ) {
 
     try {
 
@@ -174,10 +169,7 @@ int FilterInputStream::doReadArray( unsigned char* buffer, int size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::IndexOutOfBoundsException,
-            decaf::lang::exceptions::NullPointerException ) {
+int FilterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     try {
 

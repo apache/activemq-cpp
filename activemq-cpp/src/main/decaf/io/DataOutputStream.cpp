@@ -38,7 +38,7 @@ DataOutputStream::~DataOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::doWriteByte( const unsigned char c ) throw ( IOException ) {
+void DataOutputStream::doWriteByte( const unsigned char c ) {
     try {
 
         if( outputStream == NULL ) {
@@ -55,10 +55,7 @@ void DataOutputStream::doWriteByte( const unsigned char c ) throw ( IOException 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+void DataOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
 
     try {
 
@@ -103,7 +100,7 @@ void DataOutputStream::doWriteArrayBounded( const unsigned char* buffer, int siz
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
+void DataOutputStream::writeBoolean( bool value ) {
     try {
 
         value == true ? buffer[0] = 1 : buffer[0] = 0;
@@ -122,7 +119,7 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
+void DataOutputStream::writeByte( unsigned char value ) {
     try {
 
         if( outputStream == NULL ) {
@@ -139,7 +136,7 @@ void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChar( char value ) throw ( IOException ) {
+void DataOutputStream::writeChar( char value ) {
     try {
 
         if( outputStream == NULL ) {
@@ -156,7 +153,7 @@ void DataOutputStream::writeChar( char value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeShort( short value ) throw ( IOException ) {
+void DataOutputStream::writeShort( short value ) {
     try {
 
         if( outputStream == NULL ) {
@@ -176,9 +173,7 @@ void DataOutputStream::writeShort( short value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUnsignedShort( unsigned short value )
-    throw ( IOException )
-{
+void DataOutputStream::writeUnsignedShort( unsigned short value ) {
     try {
 
         if( outputStream == NULL ) {
@@ -198,7 +193,8 @@ void DataOutputStream::writeUnsignedShort( unsigned short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeInt( int value ) throw ( IOException ) {
+void DataOutputStream::writeInt( int value ) {
+
     try {
 
         if( outputStream == NULL ) {
@@ -220,7 +216,8 @@ void DataOutputStream::writeInt( int value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
+void DataOutputStream::writeLong( long long value ) {
+
     try {
 
         if( outputStream == NULL ) {
@@ -246,7 +243,7 @@ void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
+void DataOutputStream::writeFloat( float value ) {
     try {
         unsigned int lvalue = 0;
         memcpy( &lvalue, &value, sizeof( float ) );
@@ -257,7 +254,7 @@ void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
+void DataOutputStream::writeDouble( double value ) {
     try {
         unsigned long long lvalue = 0;
         memcpy( &lvalue, &value, sizeof( double ) );
@@ -268,7 +265,7 @@ void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeBytes( const std::string& value ) throw ( IOException ) {
+void DataOutputStream::writeBytes( const std::string& value ) {
     try {
 
         if( value.length() == 0 ) {
@@ -283,7 +280,7 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChars( const std::string& value ) throw ( IOException ) {
+void DataOutputStream::writeChars( const std::string& value ) {
     try {
 
         if( value.length() == 0 ) {
@@ -298,8 +295,7 @@ void DataOutputStream::writeChars( const std::string& value ) throw ( IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUTF( const std::string& value )
-    throw ( IOException, UTFDataFormatException ) {
+void DataOutputStream::writeUTF( const std::string& value ) {
 
     try {
 

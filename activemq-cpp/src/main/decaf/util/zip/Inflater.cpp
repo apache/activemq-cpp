@@ -150,10 +150,7 @@ Inflater::~Inflater() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setInput( const unsigned char* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::setInput( const unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -182,9 +179,7 @@ void Inflater::setInput( const unsigned char* buffer, int size, int offset, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length ) {
 
     if( buffer.empty() ) {
         return;
@@ -194,8 +189,7 @@ void Inflater::setInput( const std::vector<unsigned char>& buffer, int offset, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setInput( const std::vector<unsigned char>& buffer )
-    throw( decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::setInput( const std::vector<unsigned char>& buffer ) {
 
     if( buffer.empty() ) {
         return;
@@ -215,11 +209,7 @@ int Inflater::getRemaining() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setDictionary( const unsigned char* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::setDictionary( const unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -257,10 +247,7 @@ void Inflater::setDictionary( const unsigned char* buffer, int size, int offset,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalStateException,
-           decaf::lang::exceptions::IllegalArgumentException ) {
+void Inflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length ) {
 
     if( buffer.empty() ) {
         return;
@@ -270,9 +257,7 @@ void Inflater::setDictionary( const std::vector<unsigned char>& buffer, int offs
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::setDictionary( const std::vector<unsigned char>& buffer )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::setDictionary( const std::vector<unsigned char>& buffer ) {
 
     if( buffer.empty() ) {
         return;
@@ -307,11 +292,7 @@ bool Inflater::finished() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Inflater::inflate( unsigned char* buffer, int size, int offset, int length )
-    throw( decaf::lang::exceptions::NullPointerException,
-           decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalStateException,
-           decaf::util::zip::DataFormatException ) {
+int Inflater::inflate( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -373,10 +354,7 @@ int Inflater::inflate( unsigned char* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Inflater::inflate( std::vector<unsigned char>& buffer, int offset, int length )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::lang::exceptions::IllegalStateException,
-           decaf::util::zip::DataFormatException ) {
+int Inflater::inflate( std::vector<unsigned char>& buffer, int offset, int length ) {
 
     if( buffer.empty() ) {
         return 0;
@@ -386,9 +364,7 @@ int Inflater::inflate( std::vector<unsigned char>& buffer, int offset, int lengt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Inflater::inflate( std::vector<unsigned char>& buffer )
-    throw( decaf::lang::exceptions::IllegalStateException,
-           decaf::util::zip::DataFormatException ){
+int Inflater::inflate( std::vector<unsigned char>& buffer ) {
 
     if( buffer.empty() ) {
         return 0;
@@ -398,7 +374,7 @@ int Inflater::inflate( std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Inflater::getAdler() const throw( decaf::lang::exceptions::IllegalStateException ) {
+long long Inflater::getAdler() const {
 
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
@@ -409,7 +385,7 @@ long long Inflater::getAdler() const throw( decaf::lang::exceptions::IllegalStat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Inflater::getBytesRead() const throw( decaf::lang::exceptions::IllegalStateException ) {
+long long Inflater::getBytesRead() const {
 
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
@@ -420,7 +396,7 @@ long long Inflater::getBytesRead() const throw( decaf::lang::exceptions::Illegal
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Inflater::getBytesWritten() const throw( decaf::lang::exceptions::IllegalStateException ) {
+long long Inflater::getBytesWritten() const {
 
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
@@ -431,7 +407,7 @@ long long Inflater::getBytesWritten() const throw( decaf::lang::exceptions::Ille
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Inflater::reset() throw( decaf::lang::exceptions::IllegalStateException ) {
+void Inflater::reset() {
 
     if( this->data->stream == NULL ) {
         throw IllegalStateException(

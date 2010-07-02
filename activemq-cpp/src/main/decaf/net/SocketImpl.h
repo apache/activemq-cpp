@@ -76,7 +76,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void create() throw( decaf::io::IOException ) = 0;
+        virtual void create() = 0;
 
         /**
          * Accepts a new connection on the given Socket.
@@ -88,10 +88,7 @@ namespace net {
          * @throws SocketException if an error occurs while performing an Accept on the socket.
          * @throws SocketTimeoutException if the accept call times out due to SO_TIMEOUT being set.
          */
-        virtual void accept( SocketImpl* socket )
-            throw( decaf::io::IOException,
-                   decaf::net::SocketException,
-                   decaf::net::SocketTimeoutException ) = 0;
+        virtual void accept( SocketImpl* socket ) = 0;
 
         /**
          * Connects this socket to the given host and port.
@@ -107,10 +104,7 @@ namespace net {
          * @throws SocketTimeoutException if the connect call times out due to timeout being set.
          * @throws IllegalArguementException if a parameter has an illegal value.
          */
-        virtual void connect( const std::string& hostname, int port, int timeout )
-            throw( decaf::io::IOException,
-                   decaf::net::SocketTimeoutException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual void connect( const std::string& hostname, int port, int timeout ) = 0;
 
         /**
          * Binds this Socket instance to the local ip address and port number given.
@@ -122,8 +116,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void bind( const std::string& ipaddress, int port )
-            throw( decaf::io::IOException ) = 0;
+        virtual void bind( const std::string& ipaddress, int port ) = 0;
 
         /**
          * Sets the maximum queue length for incoming connection indications (a request to
@@ -135,8 +128,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void listen( int backlog )
-            throw( decaf::io::IOException ) = 0;
+        virtual void listen( int backlog ) = 0;
 
         /**
          * Gets the InputStream linked to this Socket.
@@ -145,8 +137,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual decaf::io::InputStream* getInputStream()
-            throw( decaf::io::IOException ) = 0;
+        virtual decaf::io::InputStream* getInputStream() = 0;
 
         /**
          * Gets the OutputStream linked to this Socket.
@@ -155,8 +146,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual decaf::io::OutputStream* getOutputStream()
-            throw( decaf::io::IOException ) = 0;
+        virtual decaf::io::OutputStream* getOutputStream() = 0;
 
         /**
          * Gets the number of bytes that can be read from the Socket without blocking.
@@ -165,15 +155,14 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual int available()
-            throw( decaf::io::IOException ) = 0;
+        virtual int available() = 0;
 
         /**
          * Closes the socket, terminating any blocked reads or writes.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void close() throw( decaf::io::IOException ) = 0;
+        virtual void close() = 0;
 
         /**
          * Places the input stream for this socket at "end of stream". Any data sent to this
@@ -182,7 +171,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void shutdownInput() throw( decaf::io::IOException ) = 0;
+        virtual void shutdownInput() = 0;
 
         /**
          * Disables the output stream for this socket. For a TCP socket, any previously written
@@ -192,7 +181,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
-        virtual void shutdownOutput() throw( decaf::io::IOException ) = 0;
+        virtual void shutdownOutput() = 0;
 
         /**
          * Gets the specified Socket option.
@@ -204,7 +193,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual int getOption( int option ) const throw( decaf::io::IOException ) = 0;
+        virtual int getOption( int option ) const = 0;
 
         /**
          * Sets the specified option on the Socket if supported.
@@ -216,7 +205,7 @@ namespace net {
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual void setOption( int option, int value ) throw( decaf::io::IOException ) = 0;
+        virtual void setOption( int option, int value ) = 0;
 
         /**
          * Gets the port that this socket has been assigned.
@@ -286,7 +275,7 @@ namespace net {
           *
           * @throws IOException if an I/O error occurs while performing this operation.
           */
-         virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
+         virtual void sendUrgentData( int data );
 
     };
 

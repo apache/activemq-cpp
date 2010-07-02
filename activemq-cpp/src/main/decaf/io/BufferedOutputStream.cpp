@@ -35,8 +35,8 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own )
-    throw( IllegalArgumentException ) : FilterOutputStream( stream, own ) {
+BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own ) :
+    FilterOutputStream( stream, own ) {
 
     try {
         this->init( bufSize );
@@ -47,6 +47,7 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, b
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::~BufferedOutputStream() {
+
     try{
         this->close();
 
@@ -75,7 +76,7 @@ void BufferedOutputStream::init( int bufSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::emptyBuffer() throw ( IOException ){
+void BufferedOutputStream::emptyBuffer() {
 
     if( this->outputStream == NULL ) {
         throw IOException(
@@ -90,7 +91,7 @@ void BufferedOutputStream::emptyBuffer() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::flush() throw ( decaf::io::IOException ) {
+void BufferedOutputStream::flush() {
 
     try {
 
@@ -111,8 +112,7 @@ void BufferedOutputStream::flush() throw ( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteByte( const unsigned char c )
-    throw ( decaf::io::IOException ) {
+void BufferedOutputStream::doWriteByte( const unsigned char c ) {
 
     try{
 
@@ -133,8 +133,7 @@ void BufferedOutputStream::doWriteByte( const unsigned char c )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size )
-    throw ( decaf::io::IOException ) {
+void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
 
     try{
 
@@ -156,10 +155,7 @@ void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size )
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                int offset, int length )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::NullPointerException,
-            decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                                int offset, int length ) {
 
     try{
 

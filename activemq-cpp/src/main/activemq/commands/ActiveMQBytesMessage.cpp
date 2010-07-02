@@ -59,24 +59,18 @@ namespace{
 
     protected:
 
-        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
+        virtual void doWriteByte( unsigned char value ) {
             (*length)++;
             FilterOutputStream::doWriteByte( value );
         }
 
-        virtual void doWriteArray( const unsigned char* buffer, int size )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual void doWriteArray( const unsigned char* buffer, int size ) {
 
             (*length) += size;
             FilterOutputStream::doWriteArray( buffer, size );
         }
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
 
             (*this->length) += length;
             FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );

@@ -223,8 +223,7 @@ namespace logging {
          *         string is either a valid int (between Integer::MIN_VALUE and Integer::MAX_VALUE
          *         or is one of the known level names.
          */
-        static Level parse( const std::string& name )
-            throw( decaf::lang::exceptions::IllegalArgumentException );
+        static Level parse( const std::string& name );
 
     };
 
