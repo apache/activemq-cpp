@@ -323,6 +323,7 @@ cc_sources = \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
+    decaf/net/DatagramPacket.cpp \
     decaf/net/Inet4Address.cpp \
     decaf/net/Inet6Address.cpp \
     decaf/net/InetAddress.cpp \
@@ -812,6 +813,7 @@ h_sources = \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
     decaf/net/ConnectException.h \
+    decaf/net/DatagramPacket.h \
     decaf/net/HttpRetryException.h \
     decaf/net/Inet4Address.h \
     decaf/net/Inet6Address.h \
