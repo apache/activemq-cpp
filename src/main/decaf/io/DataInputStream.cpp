@@ -364,7 +364,12 @@ std::string DataInputStream::readLine() {
                 PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
 
                 if( foundTerminator ) {
-                    ( (PushbackInputStream*)inputStream )->unread( (unsigned char)nextByte );
+
+                    if( pbStream == NULL ) {
+                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
+                    }
+
+                    pbStream->unread( (unsigned char)nextByte );
                     return line;
                 }
 
@@ -383,7 +388,13 @@ std::string DataInputStream::readLine() {
             } else {
 
                 if( foundTerminator ) {
-                    ( (PushbackInputStream*)inputStream )->unread( (unsigned char)nextByte );
+                    PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
+
+                    if( pbStream == NULL ) {
+                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
+                    }
+
+                    pbStream->unread( (unsigned char)nextByte );
                     return line;
                 }
 
