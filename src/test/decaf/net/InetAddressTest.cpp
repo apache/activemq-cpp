@@ -20,6 +20,8 @@
 #include <decaf/net/InetAddress.h>
 #include <decaf/net/UnknownHostException.h>
 
+#include <memory>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::lang;
@@ -30,6 +32,19 @@ InetAddressTest::InetAddressTest() {
 
 ////////////////////////////////////////////////////////////////////////////////
 InetAddressTest::~InetAddressTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InetAddressTest::testClone() {
+
+    InetAddress address = InetAddress::getLocalHost();
+    CPPUNIT_ASSERT( address.getHostName() != "" );
+    CPPUNIT_ASSERT( address.getHostAddress() != "" );
+
+    std::auto_ptr<InetAddress> copy( address.clone() );
+
+    CPPUNIT_ASSERT( address.getHostName() == copy->getHostName() );
+    CPPUNIT_ASSERT( address.getHostAddress() == copy->getHostAddress() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

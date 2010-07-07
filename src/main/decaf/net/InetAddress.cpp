@@ -22,6 +22,7 @@
 #include <decaf/net/Inet4Address.h>
 #include <decaf/net/Inet6Address.h>
 #include <decaf/net/UnknownHostException.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 
 #include <apr_network_io.h>
 #include <decaf/internal/AprPool.h>
@@ -82,6 +83,12 @@ InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAd
 
 ////////////////////////////////////////////////////////////////////////////////
 InetAddress::~InetAddress() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InetAddress* InetAddress::clone() const {
+
+    return new InetAddress( *this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
