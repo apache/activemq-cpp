@@ -17,6 +17,8 @@
 
 #include <decaf/io/DataInputStream.h>
 
+#include <decaf/io/PushbackInputStream.h>
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -343,41 +345,51 @@ void DataInputStream::readFully( unsigned char* buffer, int size ) {
 std::string DataInputStream::readLine() {
     try{
 
-        throw IOException( __FILE__, __LINE__, "Not Yet Implemented." );
-        // TODO - Once PushBackInputStream is done.
-//        std::string line;
-//        bool foundTerminator = false;
-//
-//        while( true ) {
-//
-//            int nextByte = inputStream->read();
-//            switch( nextByte ) {
-//                case -1:
-//                    if( line.length() == 0 && !foundTerminator ) {
-//                        return "";
-//                    }
-//                    return line;
-//                case (unsigned char)'\r':
-//                    if( foundTerminator ) {
-//                        ( (PushbackInputStream)in ).unread( nextByte );
-//                        return line.toString();
-//                    }
-//                    foundTerminator = true;
-//                    /* Have to be able to peek ahead one byte */
-//                    if(!(in.getClass() == PushbackInputStream.class))  {
-//                        in = new PushbackInputStream( in );
-//                    }
-//                    break;
-//                case (byte)'\n':
-//                    return line.toString();
-//                default:
-//                    if( foundTerminator ) {
-//                        ( (PushbackInputStream)in ).unread( nextByte );
-//                        return line.toString();
-//                    }
-//                    line.append( (char)nextByte );
-//            }
-//        }
+        std::string line;
+        bool foundTerminator = false;
+
+        while( true ) {
+
+            int nextByte = inputStream->read();
+
+            if( nextByte == -1 ) {
+
+                if( line.length() == 0 && !foundTerminator ) {
+                    return "";
+                }
+                return line;
+
+            } else if( nextByte == (unsigned char)'\r' ) {
+
+                PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
+
+                if( foundTerminator ) {
+                    ( (PushbackInputStream*)inputStream )->unread( (unsigned char)nextByte );
+                    return line;
+                }
+
+                foundTerminator = true;
+
+                // Have to be able to peek ahead one byte to see if its an newline.
+                if( pbStream == NULL ) {
+                    inputStream = new PushbackInputStream( inputStream, own );
+                    own = true;
+                }
+
+            } else if( nextByte == (unsigned char)'\n' ) {
+
+                return line;
+
+            } else {
+
+                if( foundTerminator ) {
+                    ( (PushbackInputStream*)inputStream )->unread( (unsigned char)nextByte );
+                    return line;
+                }
+
+                line += (char)nextByte;
+            }
+        }
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
