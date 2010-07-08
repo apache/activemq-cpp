@@ -86,6 +86,9 @@ void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
         if( wireVersion >= 6 ) {
             info->setFaultTolerant( bs->readBoolean() );
         }
+        if( wireVersion >= 6 ) {
+            info->setFailoverReconnect( bs->readBoolean() );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -117,6 +120,9 @@ int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
         if( wireVersion >= 6 ) {
             bs->writeBoolean( info->isFaultTolerant() );
         }
+        if( wireVersion >= 6 ) {
+            bs->writeBoolean( info->isFailoverReconnect() );
+        }
 
         return rc + 0;
     }
@@ -145,6 +151,9 @@ void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
         bs->readBoolean();
         bs->readBoolean();
         if( wireVersion >= 2 ) {
+            bs->readBoolean();
+        }
+        if( wireVersion >= 6 ) {
             bs->readBoolean();
         }
         if( wireVersion >= 6 ) {
@@ -191,6 +200,9 @@ void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataS
         if( wireVersion >= 6 ) {
             info->setFaultTolerant( dataIn->readBoolean() );
         }
+        if( wireVersion >= 6 ) {
+            info->setFailoverReconnect( dataIn->readBoolean() );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -220,6 +232,9 @@ void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
         }
         if( wireVersion >= 6 ) {
             dataOut->writeBoolean( info->isFaultTolerant() );
+        }
+        if( wireVersion >= 6 ) {
+            dataOut->writeBoolean( info->isFailoverReconnect() );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
