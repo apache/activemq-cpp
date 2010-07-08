@@ -58,6 +58,7 @@ namespace commands{
         bool manageable;
         bool clientMaster;
         bool faultTolerant;
+        bool failoverReconnect;
 
     public:
 
@@ -117,6 +118,9 @@ namespace commands{
 
         virtual bool isFaultTolerant() const;
         virtual void setFaultTolerant( bool faultTolerant );
+
+        virtual bool isFailoverReconnect() const;
+        virtual void setFailoverReconnect( bool failoverReconnect );
 
         /**
          * @return an answer of true to the isConnectionInfo() query.

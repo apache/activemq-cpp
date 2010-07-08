@@ -124,7 +124,11 @@ void ConnectionStateTracker::restore( const Pointer<transport::Transport>& trans
 
         for( ; iter != connectionStates.end(); ++iter ) {
             Pointer<ConnectionState> state = *iter;
-            transport->oneway( state->getInfo() );
+
+            Pointer<ConnectionInfo> info = state->getInfo();
+            info->setFailoverReconnect( true );
+            transport->oneway( info );
+
             doRestoreTempDestinations( transport, state );
 
             if( restoreSessions ) {
