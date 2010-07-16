@@ -36,9 +36,6 @@ namespace net {
         static const unsigned char loopbackBytes[4];
         static const unsigned char anyBytes[4];
 
-        static const InetAddress ANY;
-        static const InetAddress LOOPBACK;
-
     protected:
 
         mutable std::string hostname;
@@ -241,6 +238,10 @@ namespace net {
          * @return an unsigned int that represents the address value.
          */
         static unsigned int bytesToInt( const unsigned char* bytes, int start );
+
+        static InetAddress getAnyAddress();
+
+        static InetAddress getLoopbackAddress();
 
     };
 
