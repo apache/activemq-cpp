@@ -60,13 +60,13 @@ namespace{
     char c = 'c';
     short d = 0x1234;
     int e = 0x12345678;
-    long long f = 0x1234567812345678;
+    long long f = 0x1234567812345678LL;
     string g = "Hello World!";
     bool h = false;
     unsigned char i = 0xFF;
     short j = -0x1234;
     int k = -0x12345678;
-    long long l = -0x1234567812345678;
+    long long l = -0x1234567812345678LL;
     float m = 2.1F;
     double n = 2.3;
 }
