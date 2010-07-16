@@ -36,9 +36,6 @@ using namespace decaf::internal;
 const unsigned char InetAddress::loopbackBytes[4] = { 127, 0, 0, 1 };
 const unsigned char InetAddress::anyBytes[4] = { 0, 0, 0, 0 };
 
-const InetAddress InetAddress::LOOPBACK( Inet4Address( "localhost", InetAddress::loopbackBytes, 4 ) );
-const InetAddress InetAddress::ANY( Inet4Address( InetAddress::anyBytes, 4 ) );
-
 ////////////////////////////////////////////////////////////////////////////////
 InetAddress::InetAddress() {
 }
@@ -154,7 +151,7 @@ InetAddress InetAddress::getLocalHost() {
     apr_status_t result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
 
     if( result != APR_SUCCESS ) {
-        return InetAddress::LOOPBACK;
+        return getLoopbackAddress();
     }
 
     apr_sockaddr_t* address = NULL;
@@ -187,4 +184,14 @@ unsigned int InetAddress::bytesToInt( const unsigned char* bytes, int start ) {
                 ( ( bytes[start] & 255 ) << 24 );
 
     return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InetAddress InetAddress::getAnyAddress() {
+    return Inet4Address( "localhost", InetAddress::loopbackBytes, 4 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InetAddress InetAddress::getLoopbackAddress() {
+    return Inet4Address( InetAddress::anyBytes, 4 );
 }
