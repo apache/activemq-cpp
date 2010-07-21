@@ -21,6 +21,7 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Math.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/transport/TransportRegistry.h>
@@ -59,12 +60,13 @@ namespace core{
         std::string password;
         std::string clientId;
 
-        std::string brokerURL;
+        URI brokerURI;
 
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
         bool useCompression;
+        int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
@@ -73,11 +75,12 @@ namespace core{
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
-        FactorySettings() : brokerURL( ActiveMQConnectionFactory::DEFAULT_URI ),
+        FactorySettings() : brokerURI( ActiveMQConnectionFactory::DEFAULT_URI ),
                             dispatchAsync( true ),
                             alwaysSyncSend( false ),
                             useAsyncSend( false ),
                             useCompression( false ),
+                            compressionLevel( -1 ),
                             sendTimeout( 0 ),
                             closeTimeout( 15000 ),
                             producerWindowSize( 0 ),
@@ -92,7 +95,7 @@ namespace core{
 
         void updateConfiguration( const URI& uri ) {
 
-            this->brokerURL = uri.toString();
+            this->brokerURI = uri;
             this->properties->clear();
             activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
 
@@ -111,6 +114,9 @@ namespace core{
                 properties->getProperty(
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_USECOMPRESSION ), "false" ) );
+
+            this->compressionLevel = decaf::lang::Integer::parseInt(
+                properties->getProperty( "connection.compressionLevel", "-1" ) );
 
             this->dispatchAsync = Boolean::parseBoolean(
                 properties->getProperty(
@@ -167,9 +173,31 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
                                                       const std::string& username,
                                                       const std::string& password ) : settings( new FactorySettings() ) {
 
-    settings->brokerURL = url;
-    settings->username = username;
-    settings->password = password;
+    this->setBrokerURI( URI( url ) );
+
+    // Store login data in the properties
+    if( !username.empty() ) {
+        this->settings->username = username;
+    }
+    if( !password.empty() ) {
+        this->settings->password = password;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQConnectionFactory::ActiveMQConnectionFactory( const decaf::net::URI& uri,
+                                                      const std::string& username,
+                                                      const std::string& password ) : settings( new FactorySettings() ) {
+
+    this->setBrokerURI( uri );
+
+    // Store login data in the properties
+    if( !username.empty() ) {
+        this->settings->username = username;
+    }
+    if( !password.empty() ) {
+        this->settings->password = password;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,14 +211,14 @@ ActiveMQConnectionFactory::~ActiveMQConnectionFactory() throw() {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection() {
-    return createConnection( settings->brokerURL, settings->username, settings->password, settings->clientId );
+    return doCreateConnection( settings->brokerURI, settings->username, settings->password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
                                                               const std::string& password ) {
 
-    return createConnection( settings->brokerURL, username, password, settings->clientId );
+    return doCreateConnection( settings->brokerURI, username, password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,11 +226,11 @@ cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string&
                                                               const std::string& password,
                                                               const std::string& clientId ) {
 
-    return createConnection( settings->brokerURL, username, password, clientId );
+    return doCreateConnection( settings->brokerURI, username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::string& url,
+cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net::URI& uri,
                                                                 const std::string& username,
                                                                 const std::string& password,
                                                                 const std::string& clientId ) {
@@ -212,11 +240,7 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::strin
 
     try{
 
-        // Try to convert the String URL into a valid URI
-        URI uri( url );
-
-        // Update configuration with new authentication info if any was provided.
-        this->settings->updateConfiguration( uri );
+        this->setBrokerURI( uri );
 
         // Store login data in the properties
         if( !username.empty() ) {
@@ -276,14 +300,14 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::strin
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& url,
+    const std::string& uri,
     const std::string& username,
     const std::string& password,
     const std::string& clientId ) {
 
     ActiveMQConnectionFactory factory;
 
-    return factory.doCreateConnection( url, username, password, clientId );
+    return factory.doCreateConnection( URI( uri ), username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,6 +319,7 @@ void ActiveMQConnectionFactory::configureConnection( ActiveMQConnection* connect
     connection->setAlwaysSyncSend( this->settings->alwaysSyncSend );
     connection->setUseAsyncSend( this->settings->useAsyncSend );
     connection->setUseCompression( this->settings->useCompression );
+    connection->setCompressionLevel( this->settings->compressionLevel );
     connection->setSendTimeout( this->settings->sendTimeout );
     connection->setCloseTimeout( this->settings->closeTimeout );
     connection->setProducerWindowSize( this->settings->producerWindowSize );
@@ -337,13 +362,20 @@ void ActiveMQConnectionFactory::setClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setBrokerURL( const std::string& brokerURL ){
-    settings->brokerURL = brokerURL;
+void ActiveMQConnectionFactory::setBrokerURI( const std::string& uri ) {
+    this->setBrokerURI( URI( uri ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& ActiveMQConnectionFactory::getBrokerURL() const {
-    return settings->brokerURL;
+void ActiveMQConnectionFactory::setBrokerURI( const decaf::net::URI& uri ) {
+
+    // Update configuration with new authentication info if any was provided.
+    this->settings->updateConfiguration( uri );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const decaf::net::URI& ActiveMQConnectionFactory::getBrokerURI() const {
+    return settings->brokerURI;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -414,6 +446,21 @@ bool ActiveMQConnectionFactory::isUseCompression() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setUseCompression( bool value ) {
     this->settings->useCompression = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionFactory::getCompressionLevel() const {
+    return this->settings->compressionLevel;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setCompressionLevel( int value ) {
+
+    if( value < 0 ) {
+        this->settings->compressionLevel = -1;
+    }
+
+    this->settings->compressionLevel = Math::min( value, 9 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

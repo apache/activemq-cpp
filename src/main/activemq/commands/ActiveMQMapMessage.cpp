@@ -109,7 +109,10 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat ) {
 
             if( this->connection != NULL && this->connection->isUseCompression() ) {
                 this->compressed = true;
-                os = new DeflaterOutputStream( os, true );
+
+                Deflater* deflator = new Deflater( this->connection->getCompressionLevel() );
+
+                os = new DeflaterOutputStream( os, deflator, true, true );
             }
 
             DataOutputStream dataOut( os, true );

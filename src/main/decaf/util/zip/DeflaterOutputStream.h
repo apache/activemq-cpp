@@ -74,7 +74,8 @@ namespace zip {
         /**
          * Creates a new DeflateOutputStream with a user supplied Deflater and a default buffer size.
          * When the user supplied a Deflater instance the DeflaterOutpotStream does not take ownership
-         * of the Deflater pointer, the caller is still responsible for deleting the Deflater.
+         * of the Deflater pointer unless the ownDeflater parameter is set to true, the caller is still
+         * responsible for deleting the Deflater when ownDeflater is false.
          *
          * @param outputStream
          *      The OutputStream instance to wrap.
@@ -82,15 +83,19 @@ namespace zip {
          *      The user supplied Deflater to use for compression. (
          * @param own
          *      Should this filter take ownership of the OutputStream pointer (default is false).
+         * @param ownDeflater
+         *      Should the filter take ownership of the passed Deflater object (default is false).
          *
          * @throws NullPointerException if the Deflater given is NULL.
          */
-        DeflaterOutputStream( decaf::io::OutputStream* outputStream, Deflater* deflater, bool own = false );
+        DeflaterOutputStream( decaf::io::OutputStream* outputStream, Deflater* deflater,
+                              bool own = false, bool ownDeflater = false );
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Deflater and specified buffer size.
          * When the user supplied a Deflater instance the DeflaterOutpotStream does not take ownership
-         * of the Deflater pointer, the caller is still responsible for deleting the Deflater.
+         * of the Deflater pointer unless the ownDeflater parameter is set to true, otherwise the caller
+         * is still responsible for deleting the Deflater.
          *
          * @param outputStream
          *      The OutputStream instance to wrap.
@@ -100,12 +105,14 @@ namespace zip {
          *      The size of the input buffer.
          * @param own
          *      Should this filter take ownership of the OutputStream pointer (default is false).
+         * @param ownDeflater
+         *      Should the filter take ownership of the passed Deflater object (default is false).
          *
          * @throws NullPointerException if the Deflater given is NULL.
          * @throws IllegalArgumentException if bufferSize is 0.
          */
         DeflaterOutputStream( decaf::io::OutputStream* outputStream, Deflater* deflater,
-                              int bufferSize, bool own = false );
+                              int bufferSize, bool own = false, bool ownDeflater = false );
 
         virtual ~DeflaterOutputStream();
 

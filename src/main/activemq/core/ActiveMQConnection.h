@@ -449,6 +449,24 @@ namespace core{
         void setUseCompression( bool value );
 
         /**
+         * Sets the Compression level used when Message body compression is enabled, a
+         * value of -1 causes the Compression Library to use the default setting which
+         * is a balance of speed and compression.  The range of compression levels is
+         * [0..9] where 0 indicates best speed and 9 indicates best compression.
+         *
+         * @param value
+         *      A signed int value that controls the compression level.
+         */
+        void setCompressionLevel( int value );
+
+        /**
+         * Gets the currently configured Compression level for Message bodies.
+         *
+         * @return the int value of the current compression level.
+         */
+        int getCompressionLevel() const;
+
+        /**
          * Gets the assigned send timeout for this Connector
          * @return the send timeout configured in the connection uri
          */

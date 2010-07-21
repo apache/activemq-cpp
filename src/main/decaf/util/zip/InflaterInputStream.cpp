@@ -41,7 +41,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own )
+InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own, bool ownInflater )
  :  FilterInputStream( inputStream, own ) {
 
     if( inflater == NULL ) {
@@ -50,14 +50,14 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
     }
 
     this->inflater = inflater;
-    this->ownInflater = false;
+    this->ownInflater = ownInflater;
     this->buff.resize( DEFAULT_BUFFER_SIZE );
     this->atEOF = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater,
-                                          int bufferSize, bool own )
+                                          int bufferSize, bool own, bool ownInflater )
  :  FilterInputStream( inputStream, own ) {
 
     if( inflater == NULL ) {
@@ -71,7 +71,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
     }
 
     this->inflater = inflater;
-    this->ownInflater = false;
+    this->ownInflater = ownInflater;
     this->buff.resize( bufferSize );
     this->atEOF = false;
 }

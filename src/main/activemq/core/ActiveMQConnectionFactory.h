@@ -22,6 +22,8 @@
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 
+#include <decaf/net/URI.h>
+
 namespace activemq{
 namespace core{
 
@@ -52,6 +54,16 @@ namespace core{
          * @param password to authenticate with, defaults to ""
          */
         ActiveMQConnectionFactory( const std::string& url,
+                                   const std::string& username = "",
+                                   const std::string& password = "" );
+
+        /**
+         * Constructor
+         * @param uri the URI of the Broker we are connecting to.
+         * @param username to authenticate with, defaults to ""
+         * @param password to authenticate with, defaults to ""
+         */
+        ActiveMQConnectionFactory( const decaf::net::URI& uri,
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
@@ -143,18 +155,27 @@ namespace core{
         void setClientId( const std::string& clientId );
 
         /**
-         * Sets the Broker URL that should be used when creating a new
-         * connection instance
-         * @param brokerURL string
+         * Sets the Broker URI that should be used when creating a new connection instance.
+         *
+         * @param brokerURI
+         *      The string form of the Broker URI, this will be converted to a URI object.
          */
-        void setBrokerURL( const std::string& brokerURL );
+        void setBrokerURI( const std::string& uri );
 
         /**
-         * Gets the Broker URL that this factory will use when creating a new
-         * connection instance.
-         * @return brokerURL string
+         * Sets the Broker URI that should be used when creating a new connection instance.
+         *
+         * @param brokerURI
+         *      The URI of the broker that this client will connect to.
          */
-        const std::string& getBrokerURL() const;
+        void setBrokerURI( const decaf::net::URI& uri );
+
+        /**
+         * Gets the Broker URI that this factory will use when creating a new
+         * connection instance.
+         * @return brokerURI string
+         */
+        const decaf::net::URI& getBrokerURI() const;
 
         /**
          * Set an CMS ExceptionListener that will be set on eat connection once it has been
@@ -264,6 +285,24 @@ namespace core{
         void setUseCompression( bool value );
 
         /**
+         * Sets the Compression level used when Message body compression is enabled, a
+         * value of -1 causes the Compression Library to use the default setting which
+         * is a balance of speed and compression.  The range of compression levels is
+         * [0..9] where 0 indicates best speed and 9 indicates best compression.
+         *
+         * @param value
+         *      A signed int value that controls the compression level.
+         */
+        void setCompressionLevel( int value );
+
+        /**
+         * Gets the currently configured Compression level for Message bodies.
+         *
+         * @return the int value of the current compression level.
+         */
+        int getCompressionLevel() const;
+
+        /**
          * Gets the assigned send timeout for this Connector
          * @return the send timeout configured in the connection uri
          */
@@ -311,20 +350,26 @@ namespace core{
          * Creates a connection with the specified user identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly called.
-         * @param url the URL of the Broker we are connecting to.
-         * @param username to authenticate with
-         * @param password to authenticate with
-         * @param clientId to assign to connection, defaults to ""
+         *
+         * @param uri
+         *      The URI of the Broker we are connecting to.
+         * @param username
+         *      The name of the user to authenticate with.
+         * @param password
+         *      The password for the user to authenticate with.
+         * @param clientId
+         *      The unique client id to assign to connection, defaults to "".
+         *
          * @throw CMSException.
          */
-        static cms::Connection* createConnection( const std::string& url,
+        static cms::Connection* createConnection( const std::string& uri,
                                                   const std::string& username,
                                                   const std::string& password,
                                                   const std::string& clientId = "" );
 
     private:
 
-        cms::Connection* doCreateConnection( const std::string& url,
+        cms::Connection* doCreateConnection( const decaf::net::URI& uri,
                                              const std::string& username,
                                              const std::string& password,
                                              const std::string& clientId );
