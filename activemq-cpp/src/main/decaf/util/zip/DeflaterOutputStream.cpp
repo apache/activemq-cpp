@@ -38,7 +38,7 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, bool own
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own )
+DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own, bool ownDeflater )
  :  FilterOutputStream( outputStream, own ) {
 
     if( deflater == NULL ) {
@@ -47,14 +47,14 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater
     }
 
     this->deflater = deflater;
-    this->ownDeflater = false;
+    this->ownDeflater = ownDeflater;
     this->buf.resize( DEFAULT_BUFFER_SIZE );
     this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
-                                            int bufferSize, bool own )
+                                            int bufferSize, bool own, bool ownDeflater )
  :  FilterOutputStream( outputStream, own ) {
 
     if( deflater == NULL ) {
@@ -68,7 +68,7 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater
     }
 
     this->deflater = deflater;
-    this->ownDeflater = false;
+    this->ownDeflater = ownDeflater;
     this->buf.resize( bufferSize );
     this->isDone = false;
 }

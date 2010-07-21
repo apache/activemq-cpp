@@ -78,7 +78,8 @@ namespace zip {
         /**
          * Creates a new InflaterInputStream with a user supplied Inflater and a default buffer size.
          * When the user supplied a Inflater instance the InflaterInputStream does not take ownership
-         * of the Inflater pointer, the caller is still responsible for deleting the Inflater.
+         * of the Inflater pointer unless the ownInflater parameter is set to true, otherwise the
+         * caller is still responsible for deleting the Inflater.
          *
          * @param inputStream
          *      The InputStream instance to wrap.
@@ -86,15 +87,19 @@ namespace zip {
          *      The user supplied Inflater to use for decompression. (
          * @param own
          *      Should this filter take ownership of the InputStream pointer (default is false).
+         * @param ownInflater
+         *      Should the filter take ownership of the passed Inflater object (default is false).
          *
          * @throws NullPointerException if the Inflater given is NULL.
          */
-        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater, bool own = false );
+        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
+                             bool own = false, bool ownInflater = false );
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Inflater and specified buffer size.
          * When the user supplied a Inflater instance the InflaterInputStream does not take ownership
-         * of the Inflater pointer, the caller is still responsible for deleting the Inflater.
+         * of the Inflater pointer unless the ownInflater parameter is set to true, otherwise the caller
+         * is still responsible for deleting the Inflater.
          *
          * @param inputStream
          *      The InputStream instance to wrap.
@@ -104,12 +109,14 @@ namespace zip {
          *      The size of the input buffer.
          * @param own
          *      Should this filter take ownership of the InputStream pointer (default is false).
+         * @param ownInflater
+         *      Should the filter take ownership of the passed Inflater object (default is false).
          *
          * @throws NullPointerException if the Inflater given is NULL.
          * @throws IllegalArgumentException if the bufferSize value is zero.
          */
         InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                             int bufferSize, bool own = false );
+                             int bufferSize, bool own = false, bool ownInflater = false );
 
         virtual ~InflaterInputStream();
 

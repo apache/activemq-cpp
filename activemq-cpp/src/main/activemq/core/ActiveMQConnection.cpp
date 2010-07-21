@@ -105,6 +105,7 @@ namespace core{
         bool alwaysSyncSend;
         bool useAsyncSend;
         bool useCompression;
+        int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
@@ -127,6 +128,7 @@ namespace core{
                              alwaysSyncSend( false ),
                              useAsyncSend( false ),
                              useCompression( false ),
+                             compressionLevel( -1 ),
                              sendTimeout( 0 ),
                              closeTimeout( 15000 ),
                              producerWindowSize( 0 ),
@@ -1005,6 +1007,21 @@ bool ActiveMQConnection::isUseCompression() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setUseCompression( bool value ) {
     this->config->useCompression = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnection::getCompressionLevel() const {
+    return this->config->compressionLevel;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setCompressionLevel( int value ) {
+
+    if( value < 0 ) {
+        this->config->compressionLevel = -1;
+    }
+
+    this->config->compressionLevel = Math::min( value, 9 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

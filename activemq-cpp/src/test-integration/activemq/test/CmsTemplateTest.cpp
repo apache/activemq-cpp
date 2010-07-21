@@ -76,7 +76,7 @@ namespace test {
     public:
 
         Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
-            cf.setBrokerURL(url);
+            cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);
@@ -116,7 +116,7 @@ namespace test {
         Receiver( const std::string& url, bool pubSub, const std::string& destName, int count )
             : ready(1) {
 
-            cf.setBrokerURL(url);
+            cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);

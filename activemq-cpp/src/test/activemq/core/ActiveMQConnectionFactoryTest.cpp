@@ -239,5 +239,48 @@ void ActiveMQConnectionFactoryTest::testTransportListener() {
 
     CPPUNIT_ASSERT( listener.isInterrupted() );
     CPPUNIT_ASSERT( listener.isResumed() );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::testURIOptionsProcessing() {
+
+    try
+    {
+        std::string URI =
+            "mock://127.0.0.1:23232?connection.dispatchAsync=true&"
+            "connection.alwaysSyncSend=true&connection.useAsyncSend=true&"
+            "connection.useCompression=true&connection.compressionLevel=7&"
+            "connection.closeTimeout=10000";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        CPPUNIT_ASSERT( connectionFactory.isDispatchAsync() == true );
+        CPPUNIT_ASSERT( connectionFactory.isAlwaysSyncSend() == true );
+        CPPUNIT_ASSERT( connectionFactory.isUseAsyncSend() == true );
+        CPPUNIT_ASSERT( connectionFactory.isUseCompression() == true );
+        CPPUNIT_ASSERT( connectionFactory.getCloseTimeout() == 10000 );
+        CPPUNIT_ASSERT( connectionFactory.getCompressionLevel() == 7 );
+
+        cms::Connection* connection =
+            connectionFactory.createConnection();
+
+        CPPUNIT_ASSERT( connection != NULL );
+
+        ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>( connection );
+
+        CPPUNIT_ASSERT( amqConnection->isDispatchAsync() == true );
+        CPPUNIT_ASSERT( amqConnection->isAlwaysSyncSend() == true );
+        CPPUNIT_ASSERT( amqConnection->isUseAsyncSend() == true );
+        CPPUNIT_ASSERT( amqConnection->isUseCompression() == true );
+        CPPUNIT_ASSERT( amqConnection->getCloseTimeout() == 10000 );
+        CPPUNIT_ASSERT( amqConnection->getCompressionLevel() == 7 );
+
+        delete connection;
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
 }
