@@ -3,6 +3,19 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.2.2                               ==
+=========================================================================
+
+This release is a bugfix release that addresses a couple issues found since
+the release of v3.2.1
+
+Bug
+
+    * [AMQCPP-301] - Unmarshal of an empty byte array in a MapMessage segfaults on Windows
+    * [AMQCPP-302] - Compilation issue with older GCC versions in MessageCompressionTest.cpp
+    * [AMQCPP-303] - SEGFAULT on startup (before main)
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.1                               ==
 =========================================================================
 
