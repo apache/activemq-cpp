@@ -31,6 +31,7 @@ namespace test {
         virtual ~MapMessageTest();
 
         void testEmptyMapSendReceive();
+        void testMapWithEmptyStringValue();
 
     };
 

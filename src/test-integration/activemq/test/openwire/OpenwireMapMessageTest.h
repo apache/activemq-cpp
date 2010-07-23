@@ -29,6 +29,7 @@ namespace openwire {
 
         CPPUNIT_TEST_SUITE( OpenwireMapMessageTest );
         CPPUNIT_TEST( testEmptyMapSendReceive );
+        CPPUNIT_TEST( testMapWithEmptyStringValue );
         CPPUNIT_TEST_SUITE_END();
 
     public:
