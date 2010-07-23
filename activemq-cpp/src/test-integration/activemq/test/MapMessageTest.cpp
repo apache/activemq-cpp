@@ -63,3 +63,31 @@ void MapMessageTest::testEmptyMapSendReceive() {
     CPPUNIT_ASSERT( recvMapMessage != NULL );
     CPPUNIT_ASSERT( recvMapMessage->itemExists( "SomeKey" ) == false );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void MapMessageTest::testMapWithEmptyStringValue() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
+
+    mapMessage->setString("String1", "");
+    mapMessage->setString("String2", "value");
+
+    // Send some text messages
+    producer->send( mapMessage.get() );
+
+    auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
+
+    cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
+    CPPUNIT_ASSERT( recvMapMessage != NULL );
+    CPPUNIT_ASSERT( recvMapMessage->itemExists( "String1" ) == true );
+    CPPUNIT_ASSERT( recvMapMessage->itemExists( "String2" ) == true );
+    CPPUNIT_ASSERT( recvMapMessage->itemExists( "String3" ) == false );
+    CPPUNIT_ASSERT( recvMapMessage->getString( "String2" ) == string( "value" ) );
+}
