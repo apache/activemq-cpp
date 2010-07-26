@@ -50,6 +50,7 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "MessageDispatchNotification" );
         commandsWithShortcuts.add( "ShutdownInfo" );
         commandsWithShortcuts.add( "TransactionInfo" );
+        commandsWithShortcuts.add( "ConnectionControl" );
         commandsWithShortcuts.add( "ConnectionInfo" );
         commandsWithShortcuts.add( "ConsumerInfo" );
         commandsWithShortcuts.add( "RemoveSubscriptionInfo" );
