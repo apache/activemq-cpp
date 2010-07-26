@@ -76,6 +76,8 @@ namespace failover {
         int maxCacheSize;
         bool connectionInterruptProcessingComplete;
         bool firstConnection;
+        bool updateURIsSupported;
+        bool reconnectSupported;
 
         mutable decaf::util::concurrent::Mutex reconnectMutex;
         mutable decaf::util::concurrent::Mutex sleepMutex;
@@ -85,6 +87,7 @@ namespace failover {
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
         Pointer<URIPool> uris;
+        decaf::util::StlList<URI> updated;
         Pointer<URI> connectedTransportURI;
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
@@ -109,8 +112,11 @@ namespace failover {
         /**
          * Indicates that the Transport needs to reconnect to another URI in its
          * list.
+         *
+         * @param rebalance
+         *      Indicates if the current connection should be broken and reconnected.
          */
-        void reconnect();
+        void reconnect( bool rebalance );
 
         /**
          * Adds a New URI to the List of URIs this transport can Connect to.
@@ -121,25 +127,9 @@ namespace failover {
 
     public: // CompositeTransport methods
 
-        /**
-         * Add a URI to the list of URI's that will represent the set of Transports
-         * that this Transport is a composite of.
-         *
-         * @param uris
-         *        The new URIs to add to the set this composite maintains.
-         */
-        virtual void addURI( const List<URI>& uris );
+        virtual void addURI( bool rebalance, const List<URI>& uris );
 
-        /**
-         * Remove a URI from the set of URI's that represents the set of Transports
-         * that this Transport is composed of, removing a URI for which the composite
-         * has created a connected Transport should result in that Transport being
-         * disposed of.
-         *
-         * @param uris
-         *        The new URIs to remove to the set this composite maintains.
-         */
-        virtual void removeURI( const List<URI>& uris );
+        virtual void removeURI( bool rebalance, const List<URI>& uris );
 
     public: // Transport Members
 
@@ -196,6 +186,8 @@ namespace failover {
         virtual std::string getRemoteAddress() const;
 
         virtual void reconnect( const decaf::net::URI& uri );
+
+        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris );
 
     public:  // CompositeTask Methods.
 
@@ -328,6 +320,22 @@ namespace failover {
             this->maxCacheSize = value;
         }
 
+        bool isReconnectSupported() const {
+            return this->reconnectSupported;
+        }
+
+        void setReconnectSupported( bool value ) {
+            this->reconnectSupported = value;
+        }
+
+        bool isUpdateURIsSupported() const {
+            return this->updateURIsSupported;
+        }
+
+        void setUpdateURIsSupported( bool value ) {
+            this->updateURIsSupported = value;
+        }
+
         void setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId );
 
     protected:
@@ -350,6 +358,16 @@ namespace failover {
          */
         void handleTransportFailure( const decaf::lang::Exception& error );
 
+        /**
+         * Called when the Broker sends a ConnectionControl command which could
+         * signal that this Client needs to reconnect in order to rebalance the
+         * connections on a Broker or the set of Known brokers has changed.
+         *
+         * @param control
+         *      The ConnectionControl command sent from the Broker.
+         */
+        void handleConnectionControl( const Pointer<Command>& control );
+
     private:
 
         /**
@@ -370,6 +388,8 @@ namespace failover {
          * @throw IOException if an I/O error occurs while creating the new Transport.
          */
         Pointer<Transport> createTransport( const URI& location ) const;
+
+        void processNewTransports( bool rebalance, std::string newTransports );
 
     };
 

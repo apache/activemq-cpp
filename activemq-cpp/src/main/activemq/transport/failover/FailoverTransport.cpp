@@ -24,6 +24,7 @@
 #include <activemq/threads/DedicatedTaskRunner.h>
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <decaf/util/Random.h>
+#include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Integer.h>
 
@@ -63,6 +64,9 @@ FailoverTransport::FailoverTransport() {
     this->connected = false;
     this->connectionInterruptProcessingComplete = false;
     this->firstConnection = true;
+
+    this->updateURIsSupported = true;
+    this->reconnectSupported = true;
 
     this->transportListener = NULL;
     this->uris.reset( new URIPool() );
@@ -104,13 +108,13 @@ void FailoverTransport::add( const std::string& uri ) {
     try {
         uris->addURI( URI( uri ) );
 
-        reconnect();
+        reconnect( false );
     }
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::addURI( const List<URI>& uris ) {
+void FailoverTransport::addURI( bool rebalance, const List<URI>& uris ) {
 
     std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
@@ -118,11 +122,11 @@ void FailoverTransport::addURI( const List<URI>& uris ) {
         this->uris->addURI( iter->next() );
     }
 
-    reconnect();
+    reconnect( rebalance );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::removeURI( const List<URI>& uris ) {
+void FailoverTransport::removeURI( bool rebalance, const List<URI>& uris ) {
 
     std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
@@ -130,7 +134,7 @@ void FailoverTransport::removeURI( const List<URI>& uris ) {
         this->uris->removeURI( iter->next() );
     }
 
-    reconnect();
+    reconnect( rebalance );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +144,7 @@ void FailoverTransport::reconnect( const decaf::net::URI& uri ) {
 
         this->uris->addURI( uri );
 
-        reconnect();
+        reconnect( true );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
@@ -335,7 +339,7 @@ void FailoverTransport::start() {
             if( connectedTransport != NULL ) {
                 stateTracker.restore( connectedTransport );
             } else {
-                reconnect();
+                reconnect( false );
             }
         }
     }
@@ -396,10 +400,28 @@ void FailoverTransport::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::reconnect() {
+void FailoverTransport::reconnect( bool rebalance ) {
+
+    Pointer<Transport> transport;
 
     synchronized( &reconnectMutex  ) {
         if( started ) {
+
+            if( rebalance ) {
+
+                transport.swap( this->connectedTransport );
+
+                if( transport != NULL ) {
+
+                    if( this->disposedListener != NULL ) {
+                        transport->setTransportListener( disposedListener.get() );
+                    }
+
+                    // Hand off to the close task so it gets done in a different thread.
+                    closeTask->add( transport );
+                }
+            }
+
             taskRunner->wakeup();
         }
     }
@@ -443,8 +465,6 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
     if( transport != NULL ) {
 
-        //std::cout << "Failover: Connection to has been unexpectedly terminated." << std::endl;
-
         if( this->disposedListener != NULL ) {
             transport->setTransportListener( disposedListener.get() );
         }
@@ -470,6 +490,110 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
             if( started ) {
                 taskRunner->wakeup();
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::handleConnectionControl( const Pointer<Command>& control ) {
+
+    try {
+
+        Pointer<ConnectionControl> ctrlCommand = control.dynamicCast<ConnectionControl>();
+
+        std::string reconnectStr = ctrlCommand->getReconnectTo();
+        if( !reconnectStr.empty() ) {
+
+            std::remove(reconnectStr.begin(), reconnectStr.end(), ' ');
+
+            if( reconnectStr.length() > 0 ) {
+                try {
+                    if( isReconnectSupported() ) {
+                        reconnect( URI( reconnectStr ) );
+                    }
+                } catch( Exception e ) {
+                }
+            }
+        }
+
+        processNewTransports( ctrlCommand->isRebalanceConnection(), ctrlCommand->getConnectedBrokers() );
+    }
+    AMQ_CATCH_RETHROW( Exception )
+    AMQ_CATCHALL_THROW( Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::processNewTransports( bool rebalance, std::string newTransports ) {
+
+    if( !newTransports.empty() ) {
+
+        std::remove( newTransports.begin(), newTransports.end(), ' ' );
+
+        if( newTransports.length() > 0 && isUpdateURIsSupported() ) {
+
+            StlList<URI> list;
+            StringTokenizer tokenizer( newTransports, "," );
+
+            while( tokenizer.hasMoreTokens() ) {
+                std::string str = tokenizer.nextToken();
+                try {
+                    URI uri( str );
+                    list.add( uri );
+                } catch( Exception e ) {
+                    //LOG.error( "Failed to parse broker address: " + str, e );
+                }
+            }
+
+            if( !list.isEmpty() ) {
+                try {
+                    updateURIs( rebalance, list );
+                } catch( IOException e ) {
+                    //LOG.error( "Failed to update transport URI's from: " + newTransports, e );
+                }
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& updatedURIs ) {
+
+    if( isUpdateURIsSupported() ) {
+
+        StlList<URI> copy( this->updated );
+        StlList<URI> add;
+
+        if( !updatedURIs.isEmpty() ) {
+
+            StlSet<URI> set;
+
+            for( std::size_t i = 0; i < updatedURIs.size(); i++ ) {
+                set.add( updatedURIs.get(i) );
+            }
+
+            Pointer< Iterator<URI> > setIter( set.iterator() );
+            while( setIter->hasNext() ) {
+                URI value = setIter->next();
+                if( copy.remove( value ) ) {
+                    add.add( value );
+                }
+            }
+
+            synchronized( &reconnectMutex ) {
+
+                this->updated.clear();
+                Pointer< Iterator<URI> > listIter1( add.iterator() );
+                while( listIter1->hasNext() ) {
+                    this->updated.add( listIter1->next() );
+                }
+
+                Pointer< Iterator<URI> > listIter2( copy.iterator() );
+                while( listIter2->hasNext() ) {
+                    this->uris->removeURI( listIter2->next() );
+                }
+
+                this->addURI( rebalance, add );
             }
         }
     }

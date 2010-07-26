@@ -149,6 +149,14 @@ namespace transport{
             return next->isConnected();
         }
 
+        virtual bool isReconnectSupported() const {
+            return next->isReconnectSupported();
+        }
+
+        virtual bool isUpdateURIsSupported() const {
+            return next->isUpdateURIsSupported();
+        }
+
         virtual bool isClosed() const {
             return next->isClosed();
         }
@@ -158,6 +166,10 @@ namespace transport{
         }
 
         virtual void reconnect( const decaf::net::URI& uri );
+
+        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris ) {
+            next->updateURIs( rebalance, uris );
+        }
 
     };
 
