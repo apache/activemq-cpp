@@ -297,6 +297,19 @@ namespace mock{
             this->failOnClose = value;
         }
 
+        virtual bool isReconnectSupported() const {
+            return false;
+        }
+
+        virtual bool isUpdateURIsSupported() const {
+            return false;
+        }
+
+        virtual void updateURIs( bool rebalance AMQCPP_UNUSED,
+                                 const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED ) {
+            throw decaf::io::IOException();
+        }
+
     };
 
 }}}

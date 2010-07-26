@@ -107,7 +107,7 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(
         transport->setMaxCacheSize(
             Integer::parseInt( properties.getProperty( "maxCacheSize", "131072" ) ) );
 
-        transport->addURI( data.getComponents() );
+        transport->addURI( false, data.getComponents() );
 
         return transport;
     }

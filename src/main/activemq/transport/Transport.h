@@ -22,6 +22,7 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/IOException.h>
 #include <decaf/io/Closeable.h>
+#include <decaf/util/List.h>
 #include <decaf/net/URI.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -168,6 +169,16 @@ namespace transport{
         virtual bool isClosed() const = 0;
 
         /**
+         * @return true if reconnect is supported.
+         */
+        virtual bool isReconnectSupported() const = 0;
+
+        /**
+         * @return true if updating uris is supported.
+         */
+        virtual bool isUpdateURIsSupported() const = 0;
+
+        /**
          * @return the remote address for this connection
          */
         virtual std::string getRemoteAddress() const = 0;
@@ -181,6 +192,19 @@ namespace transport{
          * @throws IOException on failure or if reconnect is not supported.
          */
         virtual void reconnect( const decaf::net::URI& uri ) = 0;
+
+        /**
+         * Updates the set of URIs the Transport can connect to.  If the Transport
+         * doesn't support updating its URIs then an IOException is thrown.
+         *
+         * @param rebalance
+         *      Indicates if a forced reconnection should be performed as a result of the update.
+         * @param uris
+         *      The new list of URIs that can be used for connection.
+         *
+         * @throws IOException if an error occurs or updates aren't supported.
+         */
+        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris ) = 0;
 
     };
 
