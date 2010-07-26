@@ -89,6 +89,9 @@ namespace commands{
             return BaseDataStructure::equals( value );
         }
 
+        virtual bool isConnectionControl() const {
+            return false;
+        }
         virtual bool isConnectionInfo() const {
             return false;
         }

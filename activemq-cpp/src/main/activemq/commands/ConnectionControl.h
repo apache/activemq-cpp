@@ -106,6 +106,13 @@ namespace commands{
         virtual bool isRebalanceConnection() const;
         virtual void setRebalanceConnection( bool rebalanceConnection );
 
+        /**
+         * @return an answer of true to the isConnectionControl() query.
+         */
+        virtual bool isConnectionControl() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };

@@ -80,6 +80,7 @@ namespace commands{
          * Command is of a certain type.  These are the most commonly used Commands
          * and we save several casts and some ugly code by just adding these here.
          */
+        virtual bool isConnectionControl() const = 0;
         virtual bool isConnectionInfo() const = 0;
         virtual bool isConsumerInfo() const = 0;
         virtual bool isBrokerInfo() const = 0;
