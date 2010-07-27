@@ -70,6 +70,8 @@ namespace mock{
         InternalCommandListener internalListener;
         static MockTransport* instance;
 
+        std::string name;
+
         bool failOnSendMessage;
         int numSentMessageBeforeFail;
         int numSentMessages;
@@ -200,6 +202,14 @@ namespace mock{
         virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED ) {}
 
     public:  // Property Getters and Setters
+
+        std::string getName() const {
+            return this->name;
+        }
+
+        void setName( const std::string& name ) {
+            this->name = name;
+        }
 
         bool isFailOnSendMessage() const {
             return this->failOnSendMessage;

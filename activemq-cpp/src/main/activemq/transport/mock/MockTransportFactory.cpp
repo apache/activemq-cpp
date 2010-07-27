@@ -128,6 +128,7 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
             Boolean::parseBoolean( properties.getProperty( "failOnKeepAliveSends", "false" ) ) );
         transport->setNumSentKeepAlivesBeforeFail(
             Integer::parseInt( properties.getProperty( "numSentKeepAlivesBeforeFail", "0" ) ) );
+        transport->setName( properties.getProperty( "name", "" ) );
 
         return transport;
     }
