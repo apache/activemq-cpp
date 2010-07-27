@@ -40,16 +40,16 @@ namespace failover {
     class FailoverTransportTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( FailoverTransportTest );
-//        CPPUNIT_TEST( testTransportCreate );
-//        CPPUNIT_TEST( testTransportCreateWithBackups );
-//        CPPUNIT_TEST( testTransportCreateFailOnCreate );
-//        CPPUNIT_TEST( testTransportCreateFailOnCreateSendMessage );
-//        CPPUNIT_TEST( testFailingBackupCreation );
-//        CPPUNIT_TEST( testSendOnewayMessage );
-//        CPPUNIT_TEST( testSendRequestMessage );
-//        CPPUNIT_TEST( testSendOnewayMessageFail );
-//        CPPUNIT_TEST( testSendRequestMessageFail );
-//        CPPUNIT_TEST( testWithOpewireCommands );
+        CPPUNIT_TEST( testTransportCreate );
+        CPPUNIT_TEST( testTransportCreateWithBackups );
+        CPPUNIT_TEST( testTransportCreateFailOnCreate );
+        CPPUNIT_TEST( testTransportCreateFailOnCreateSendMessage );
+        CPPUNIT_TEST( testFailingBackupCreation );
+        CPPUNIT_TEST( testSendOnewayMessage );
+        CPPUNIT_TEST( testSendRequestMessage );
+        CPPUNIT_TEST( testSendOnewayMessageFail );
+        CPPUNIT_TEST( testSendRequestMessageFail );
+        CPPUNIT_TEST( testWithOpewireCommands );
         CPPUNIT_TEST( testTransportHandlesConnectionControl );
         CPPUNIT_TEST_SUITE_END();
 
