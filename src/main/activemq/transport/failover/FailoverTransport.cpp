@@ -575,7 +575,7 @@ void FailoverTransport::updateURIs( bool rebalance, const decaf::util::List<deca
             Pointer< Iterator<URI> > setIter( set.iterator() );
             while( setIter->hasNext() ) {
                 URI value = setIter->next();
-                if( copy.remove( value ) ) {
+                if( copy.remove( value ) == false ) {
                     add.add( value );
                 }
             }
@@ -682,9 +682,6 @@ bool FailoverTransport::iterate() {
 
                 try {
 
-                    //std::cout << "Failover: Attempting to connect to: "
-                    //          << uri.toString() << std::endl;
-
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
@@ -695,8 +692,6 @@ bool FailoverTransport::iterate() {
 
                 } catch( Exception& e ) {
                     e.setMark( __FILE__, __LINE__ );
-                    //std::cout << "Failover: Failed while attempting to connect to: "
-                    //          << uri.toString() << std::endl;
 
                     if( transport != NULL ) {
                         if( this->disposedListener != NULL ) {
@@ -748,9 +743,6 @@ bool FailoverTransport::iterate() {
                 if( firstConnection ) {
                     firstConnection = false;
                 }
-
-                //std::cout << "Failover: Successfully connected to Broker at: "
-                //          << connectedTransportURI->toString() << std::endl;
 
                 return false;
             }
