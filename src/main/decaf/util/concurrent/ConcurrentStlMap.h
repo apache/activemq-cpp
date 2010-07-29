@@ -183,9 +183,9 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t size() const {
+        virtual int size() const {
             synchronized( &mutex ) {
-                return valueMap.size();
+                return (int)valueMap.size();
             }
 
             return 0;

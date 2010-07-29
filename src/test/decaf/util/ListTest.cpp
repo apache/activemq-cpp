@@ -285,7 +285,7 @@ void ListTest::testIterator(){
     CPPUNIT_ASSERT( iterator1 != NULL );
     CPPUNIT_ASSERT( iterator1->hasNext() == true );
 
-    size_t count = 0;
+    int count = 0;
     while( iterator1->hasNext() ) {
         iterator1->next();
         ++count;

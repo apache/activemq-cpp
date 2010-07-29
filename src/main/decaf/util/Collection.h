@@ -201,7 +201,7 @@ namespace util{
          * contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
          * @returns the number of elements in this collection
          */
-        virtual std::size_t size() const = 0;
+        virtual int size() const = 0;
 
         /**
          * Returns an array containing all of the elements in this collection. If

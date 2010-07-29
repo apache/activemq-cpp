@@ -444,7 +444,7 @@ void PriorityQueueTest::testIteratorRemove() {
 
     int result;
     std::sort( newArray.begin(), newArray.end() );
-    for( std::size_t i = 0; i < intQueue.size(); i++ ) {
+    for( int i = 0; i < intQueue.size(); i++ ) {
         CPPUNIT_ASSERT( intQueue.poll( result ) );
         CPPUNIT_ASSERT( newArray[i] == result );
     }

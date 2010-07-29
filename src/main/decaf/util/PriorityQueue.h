@@ -72,8 +72,8 @@ namespace util {
         static const int DEFAULT_CAPACITY = 11;
         static const int DEFAULT_CAPACITY_RATIO = 2;
 
-        std::size_t _size;
-        std::size_t capacity;
+        int _size;
+        int capacity;
         E* elements;
         decaf::lang::Pointer< Comparator<E> > _comparator;
 
@@ -82,7 +82,7 @@ namespace util {
         class PriorityQueueIterator : public Iterator<E> {
         private:
 
-            std::size_t position;
+            int position;
             bool allowRemove;
             PriorityQueue* queue;
 
@@ -150,7 +150,7 @@ namespace util {
          * @param initialCapacity
          *      The initial number of elements allocated to this PriorityQueue.
          */
-        PriorityQueue( std::size_t initialCapacity ) :
+        PriorityQueue( int initialCapacity ) :
             AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             this->initQueue( initialCapacity, new comparators::Less<E>() );
@@ -168,7 +168,7 @@ namespace util {
          *
          * @throws NullPointerException if the passed Comparator is NULL.
          */
-        PriorityQueue( std::size_t initialCapacity, Comparator<E>* comparator ) :
+        PriorityQueue( int initialCapacity, Comparator<E>* comparator ) :
             AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             if( comparator == NULL ) {
@@ -236,7 +236,7 @@ namespace util {
             return new ConstPriorityQueueIterator( this );
         }
 
-        virtual std::size_t size() const {
+        virtual int size() const {
             return this->_size;
         }
 
@@ -298,7 +298,7 @@ namespace util {
 
         virtual bool remove( const E& value ) {
 
-            std::size_t targetIndex = 0;
+            int targetIndex = 0;
             for( targetIndex = 0; targetIndex < _size; targetIndex++ ) {
                 if( 0 == _comparator->compare( value, elements[targetIndex] ) ) {
                     break;
@@ -338,7 +338,7 @@ namespace util {
 
     private:
 
-        void initQueue( std::size_t initialSize, Comparator<E>* comparator ) {
+        void initQueue( int initialSize, Comparator<E>* comparator ) {
             this->elements = new E[initialSize];
             this->capacity = initialSize;
             this->_size = 0;
@@ -347,8 +347,8 @@ namespace util {
 
         void upHeap() {
 
-            std::size_t current = _size - 1;
-            std::size_t parent = ( current - 1 ) / 2;
+            int current = _size - 1;
+            int parent = ( current - 1 ) / 2;
 
             while( current != 0 && _comparator->compare( elements[current], elements[parent] ) < 0 ) {
 
@@ -363,10 +363,10 @@ namespace util {
             }
         }
 
-        void downHeap( std::size_t pos ) {
+        void downHeap( int pos ) {
 
-            std::size_t current = pos;
-            std::size_t child = 2 * current + 1;
+            int current = pos;
+            int child = 2 * current + 1;
 
             while( child < _size && !Queue<E>::isEmpty() ) {
 
@@ -394,7 +394,7 @@ namespace util {
         void getFromPriorityQueue( const PriorityQueue<E>& c ) {
             initCapacity( c );
             _comparator = c.comparator();
-            for( std::size_t ix = 0; ix < c.size(); ++ix ) {
+            for( int ix = 0; ix < c.size(); ++ix ) {
                 this->elements[ix] = c.elements[ix];
             }
             _size = c.size();
@@ -409,7 +409,7 @@ namespace util {
             }
         }
 
-        void removeAt( std::size_t index ) {
+        void removeAt( int index ) {
             _size--;
             elements[index] = elements[_size];
             downHeap(index);
@@ -425,17 +425,17 @@ namespace util {
                 capacity = 1;
                 elements = new E[capacity];
             } else {
-                capacity = (std::size_t) lang::Math::ceil( (double)c.size() * 1.1 );
+                capacity = (int) lang::Math::ceil( (double)c.size() * 1.1 );
                 elements = new E[capacity];
             }
         }
 
-        void increaseCapacity( std::size_t size ) {
+        void increaseCapacity( int size ) {
 
             if( size > capacity ) {
                 E* newElements = new E[ size * DEFAULT_CAPACITY_RATIO ];
 
-                for( std::size_t ix = 0; ix < capacity; ix++ ) {
+                for( int ix = 0; ix < capacity; ix++ ) {
                     newElements[ix] = elements[ix];
                 }
 

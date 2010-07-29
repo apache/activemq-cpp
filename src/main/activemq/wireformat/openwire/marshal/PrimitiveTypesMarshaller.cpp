@@ -213,7 +213,7 @@ void PrimitiveTypesMarshaller::marshalPrimitiveList(
     try{
         dataOut.writeInt( (int)list.size() );
 
-        for( std::size_t ix = 0; ix < list.size(); ++ix ) {
+        for( int ix = 0; ix < list.size(); ++ix ) {
             marshalPrimitive( dataOut, list.get( ix ) );
         }
     }

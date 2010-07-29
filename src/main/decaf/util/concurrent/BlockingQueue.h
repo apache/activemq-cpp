@@ -188,14 +188,16 @@ namespace concurrent {
          *        <tt>unit</tt>
          * @param unit a <tt>TimeUnit</tt> determining how to interpret the
          *        <tt>timeout</tt> parameter
+         *
          * @return <tt>true</tt> if successful, or <tt>false</tt> if
          *         the specified waiting time elapses before space is available
+         *
          * @throws InterruptedException if interrupted while waiting
          * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& e, long timeout, const TimeUnit& unit ) = 0;
+        virtual bool offer( const E& e, long long timeout, const TimeUnit& unit ) = 0;
 
         /**
          * Retrieves and removes the head of this queue, waiting if necessary until an
@@ -254,7 +256,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual std::size_t drainTo( Collection<E>& c ) = 0;
+        virtual int drainTo( Collection<E>& c ) = 0;
 
         /**
          * Removes at most the given number of available elements from
@@ -276,7 +278,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual std::size_t drainTo( Collection<E>& c, std::size_t maxElements ) = 0;
+        virtual int drainTo( Collection<E>& c, int maxElements ) = 0;
 
     };
 

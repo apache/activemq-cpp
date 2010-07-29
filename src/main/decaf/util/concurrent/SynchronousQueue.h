@@ -127,7 +127,7 @@ namespace concurrent {
          * @throws NullPointerException {@inheritDoc}
          * @throws IllegalArgumentException {@inheritDoc}
          */
-        virtual bool offer( const E& e, long timeout, const TimeUnit& unit ) {
+        virtual bool offer( const E& e, long long timeout, const TimeUnit& unit ) {
 
             //if (o == null) throw new NullPointerException();
             //if (transferer.transfer(o, true, unit.toNanos(timeout)) != null)
@@ -236,7 +236,7 @@ namespace concurrent {
             return true;
         }
 
-        virtual std::size_t size() const {
+        virtual int size() const {
             return 0;
         }
 
@@ -272,7 +272,7 @@ namespace concurrent {
 
         virtual std::vector<E> toArray() const { return std::vector<E>(); }
 
-        virtual std::size_t drainTo( Collection<E>& c ) {
+        virtual int drainTo( Collection<E>& c ) {
 
             if( (void*)&c == this ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -280,7 +280,7 @@ namespace concurrent {
                     "Cannot drain a Collection to Itself." );
             }
 
-            std::size_t count = 0;
+            int count = 0;
             E element;
 
             while( ( poll( element ) ) != false ) {
@@ -291,7 +291,7 @@ namespace concurrent {
             return count;
         }
 
-        virtual std::size_t drainTo( Collection<E>& c, std::size_t maxElements ) {
+        virtual int drainTo( Collection<E>& c, int maxElements ) {
 
             if( (void*)&c == this ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -299,7 +299,7 @@ namespace concurrent {
                     "Cannot drain a Collection to Itself." );
             }
 
-            std::size_t count = 0;
+            int count = 0;
             E element;
 
             while( count < maxElements && ( poll( element ) != false ) ) {
