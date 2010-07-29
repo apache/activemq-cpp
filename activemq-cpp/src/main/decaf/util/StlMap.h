@@ -157,8 +157,8 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t size() const {
-            return valueMap.size();
+        virtual int size() const {
+            return (int)valueMap.size();
         }
 
         /**

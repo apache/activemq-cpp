@@ -61,7 +61,7 @@ namespace util{
 
         public:
 
-            StlListIterator( typename std::list<E>* list, std::size_t index ) :
+            StlListIterator( typename std::list<E>* list, int index ) :
                 current( list->begin() ), prev( list->end() ), list( list ) {
 
                 std::advance( this->current, index );
@@ -161,7 +161,7 @@ namespace util{
 
         public:
 
-            ConstStlListIterator( const typename std::list<E>* list, std::size_t index ) :
+            ConstStlListIterator( const typename std::list<E>* list, int index ) :
                 ListIterator<E>(), current( list->begin() ), prev( list->end() ), list( list ) {
 
                 std::advance( this->current, index );
@@ -294,7 +294,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual ListIterator<E>* listIterator( std::size_t index ) {
+        virtual ListIterator<E>* listIterator( int index ) {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -304,7 +304,7 @@ namespace util{
 
             return new StlListIterator( &values, index );
         }
-        virtual ListIterator<E>* listIterator( std::size_t index ) const {
+        virtual ListIterator<E>* listIterator( int index ) const {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -342,7 +342,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t indexOf( const E& value ) {
+        virtual int indexOf( const E& value ) {
 
             typename std::list<E>::iterator iter;
             iter = std::find( values.begin(), values.end(), value );
@@ -353,13 +353,13 @@ namespace util{
                     "List::indexOf - No matching element in list" );
             }
 
-            return std::distance( values.begin(), iter );
+            return (int)std::distance( values.begin(), iter );
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t lastIndexOf( const E& value ) {
+        virtual int lastIndexOf( const E& value ) {
 
             typename std::list<E>::reverse_iterator iter;
             iter = std::find( values.rbegin(), values.rend(), value );
@@ -371,7 +371,7 @@ namespace util{
             }
 
             // Now reverse the result to get the last index
-            return this->size() - std::distance( values.rbegin(), iter ) - 1;
+            return (int)( this->size() - std::distance( values.rbegin(), iter ) - 1 );
         }
 
         /**
@@ -384,14 +384,14 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t size() const {
-            return values.size();
+        virtual int size() const {
+            return (int)values.size();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual E get( std::size_t index ) const {
+        virtual E get( int index ) const {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -408,7 +408,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E set( std::size_t index, const E& element ) {
+        virtual E set( int index, const E& element ) {
 
             if( index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -437,7 +437,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void add( std::size_t index, const E& element ) {
+        virtual void add( int index, const E& element ) {
 
             if( index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -454,7 +454,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool addAll( std::size_t index, const Collection<E>& source ) {
+        virtual bool addAll( int index, const Collection<E>& source ) {
 
             if( index != 0 && index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -475,7 +475,7 @@ namespace util{
          */
         virtual bool remove( const E& value ) {
 
-            std::size_t origSize = this->size();
+            int origSize = this->size();
             this->values.remove( value );
             return origSize != this->size();
         }
@@ -483,7 +483,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E remove( std::size_t index ) {
+        virtual E remove( int index ) {
 
             if( index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(

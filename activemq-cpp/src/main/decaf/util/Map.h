@@ -111,7 +111,7 @@ namespace util{
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual std::size_t size() const = 0;
+        virtual int size() const = 0;
 
         /**
          * Gets the value mapped to the specified key in the Map.  If there is no

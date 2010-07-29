@@ -568,7 +568,7 @@ void FailoverTransport::updateURIs( bool rebalance, const decaf::util::List<deca
 
             StlSet<URI> set;
 
-            for( std::size_t i = 0; i < updatedURIs.size(); i++ ) {
+            for( int i = 0; i < updatedURIs.size(); i++ ) {
                 set.add( updatedURIs.get(i) );
             }
 

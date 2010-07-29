@@ -52,7 +52,7 @@ std::string PrimitiveList::toString() const {
 
     stream << "Begin Class PrimitiveList:" << std::endl;
 
-    for( std::size_t i = 0; i < this->size(); ++i ) {
+    for( int i = 0; i < this->size(); ++i ) {
         stream << "list[" << i << "] = "
                << this->get( i ).toString() << std::endl;
     }
@@ -63,14 +63,14 @@ std::string PrimitiveList::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool PrimitiveList::getBool( std::size_t index ) const {
+bool PrimitiveList::getBool( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<bool>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setBool( std::size_t index, bool value ) {
+void PrimitiveList::setBool( int index, bool value ) {
 
     PrimitiveValueNode node;
     node.setBool( value );
@@ -79,14 +79,14 @@ void PrimitiveList::setBool( std::size_t index, bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PrimitiveList::getByte( std::size_t index ) const {
+unsigned char PrimitiveList::getByte( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<unsigned char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByte( std::size_t index, unsigned char value ) {
+void PrimitiveList::setByte( int index, unsigned char value ) {
 
     PrimitiveValueNode node;
     node.setByte( value );
@@ -95,14 +95,14 @@ void PrimitiveList::setByte( std::size_t index, unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char PrimitiveList::getChar( std::size_t index ) const {
+char PrimitiveList::getChar( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setChar( std::size_t index, char value ) {
+void PrimitiveList::setChar( int index, char value ) {
 
     PrimitiveValueNode node;
     node.setChar( value );
@@ -111,14 +111,14 @@ void PrimitiveList::setChar( std::size_t index, char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short PrimitiveList::getShort( std::size_t index ) const {
+short PrimitiveList::getShort( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<short>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setShort( std::size_t index, short value ) {
+void PrimitiveList::setShort( int index, short value ) {
 
     PrimitiveValueNode node;
     node.setShort( value );
@@ -127,14 +127,14 @@ void PrimitiveList::setShort( std::size_t index, short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveList::getInt( std::size_t index ) const {
+int PrimitiveList::getInt( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<int>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setInt( std::size_t index, int value ) {
+void PrimitiveList::setInt( int index, int value ) {
 
     PrimitiveValueNode node;
     node.setInt( value );
@@ -143,14 +143,14 @@ void PrimitiveList::setInt( std::size_t index, int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PrimitiveList::getLong( std::size_t index ) const {
+long long PrimitiveList::getLong( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<long long>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setLong( std::size_t index, long long value ) {
+void PrimitiveList::setLong( int index, long long value ) {
 
     PrimitiveValueNode node;
     node.setLong( value );
@@ -159,14 +159,14 @@ void PrimitiveList::setLong( std::size_t index, long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double PrimitiveList::getDouble( std::size_t index ) const {
+double PrimitiveList::getDouble( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<double>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setDouble( std::size_t index, double value ) {
+void PrimitiveList::setDouble( int index, double value ) {
 
     PrimitiveValueNode node;
     node.setDouble( value );
@@ -175,14 +175,14 @@ void PrimitiveList::setDouble( std::size_t index, double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float PrimitiveList::getFloat( std::size_t index ) const {
+float PrimitiveList::getFloat( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<float>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setFloat( std::size_t index, float value ) {
+void PrimitiveList::setFloat( int index, float value ) {
 
     PrimitiveValueNode node;
     node.setFloat( value );
@@ -191,14 +191,14 @@ void PrimitiveList::setFloat( std::size_t index, float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-string PrimitiveList::getString( std::size_t index ) const {
+string PrimitiveList::getString( int index ) const {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<std::string>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setString( std::size_t index, const string& value ) {
+void PrimitiveList::setString( int index, const string& value ) {
 
     PrimitiveValueNode node;
     node.setString( value );
@@ -207,14 +207,14 @@ void PrimitiveList::setString( std::size_t index, const string& value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PrimitiveList::getByteArray( std::size_t index ) const  {
+std::vector<unsigned char> PrimitiveList::getByteArray( int index ) const  {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert< std::vector<unsigned char> >( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByteArray( std::size_t index, const std::vector<unsigned char>& value ) {
+void PrimitiveList::setByteArray( int index, const std::vector<unsigned char>& value ) {
 
     PrimitiveValueNode node;
     node.setByteArray( value );

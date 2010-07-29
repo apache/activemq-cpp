@@ -200,8 +200,8 @@ namespace util{
         /**
          * @return The number of elements in this set.
          */
-        virtual std::size_t size() const {
-            return values.size();
+        virtual int size() const {
+            return (int)values.size();
         }
 
         /**
