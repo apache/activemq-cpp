@@ -42,10 +42,10 @@ namespace cmsutil {
             decaf::util::StlMap<std::string, cms::Topic*> topicMap;
             decaf::util::StlMap<std::string, cms::Queue*> queueMap;
 
-        protected:
+        private:
 
-            SessionResolver( const SessionResolver& ) {}
-            SessionResolver& operator= ( const SessionResolver& ) { return *this; }
+            SessionResolver( const SessionResolver& );
+            SessionResolver& operator= ( const SessionResolver& );
 
         public:
 

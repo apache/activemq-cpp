@@ -96,10 +96,10 @@ namespace cmsutil {
             CmsTemplate* parent;
             cms::Destination* destination;
 
-        protected:
+        private:
 
-            ProducerExecutor( const ProducerExecutor& ) : SessionCallback() {}
-            ProducerExecutor& operator= ( const ProducerExecutor& ) { return *this; }
+            ProducerExecutor( const ProducerExecutor& );
+            ProducerExecutor& operator= ( const ProducerExecutor& );
 
         public:
 
