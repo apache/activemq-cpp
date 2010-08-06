@@ -89,6 +89,21 @@ namespace core {
         virtual void setInitialRedeliveryDelay( long long value ) = 0;
 
         /**
+         * Gets the time that redelivery of messages is delayed.
+         *
+         * @returns the time in milliseconds that redelivery is delayed.
+         */
+        virtual long long getRedeliveryDelay() const = 0;
+
+        /**
+         * Sets the time that redelivery will be delayed.
+         *
+         * @param value
+         *      Time in Milliseconds to wait before the next redelivery.
+         */
+        virtual void setRedeliveryDelay( long long value ) = 0;
+
+        /**
          * Gets the Maximum number of allowed redeliveries for a message before it will
          * be discarded by the consumer.
          *
@@ -113,7 +128,7 @@ namespace core {
          *
          * @return the new delay to use before attempting another redelivery.
          */
-        virtual long long getRedeliveryDelay( long long previousDelay ) = 0;
+        virtual long long getNextRedeliveryDelay( long long previousDelay ) = 0;
 
         /**
          * @returns whether or not collision avoidance is enabled for this Policy.

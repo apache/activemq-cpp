@@ -36,6 +36,7 @@ DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() {
     this->useCollisionAvoidance = false;
     this->useExponentialBackOff = false;
     this->backOffMultiplier = 5.0;
+    this->redeliveryDelay = initialRedeliveryDelay;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,18 +54,18 @@ void DefaultRedeliveryPolicy::setCollisionAvoidancePercent( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DefaultRedeliveryPolicy::getRedeliveryDelay( long long previousDelay ) {
+long long DefaultRedeliveryPolicy::getNextRedeliveryDelay( long long previousDelay ) {
 
     static Random randomNumberGenerator;
 
-    long long redeliveryDelay;
+    long long nextDelay;
 
     if( previousDelay == 0 ) {
-        redeliveryDelay = initialRedeliveryDelay;
+        nextDelay = redeliveryDelay;
     } else if( useExponentialBackOff && (int)backOffMultiplier > 1 ) {
-        redeliveryDelay = (long long)( (double)previousDelay * backOffMultiplier );
+        nextDelay = (long long)( (double)previousDelay * backOffMultiplier );
     } else {
-        redeliveryDelay = previousDelay;
+        nextDelay = previousDelay;
     }
 
     if( useCollisionAvoidance ) {
@@ -74,10 +75,10 @@ long long DefaultRedeliveryPolicy::getRedeliveryDelay( long long previousDelay )
          */
         double variance = ( randomNumberGenerator.nextBoolean() ?
             collisionAvoidanceFactor : -collisionAvoidanceFactor ) * randomNumberGenerator.nextDouble( );
-        redeliveryDelay += (long long)( (double)redeliveryDelay * variance );
+        nextDelay += (long long)( (double)nextDelay * variance );
     }
 
-    return redeliveryDelay;
+    return nextDelay;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +92,7 @@ RedeliveryPolicy* DefaultRedeliveryPolicy::clone() const {
     copy->useCollisionAvoidance = this->useCollisionAvoidance;
     copy->useExponentialBackOff = this->useExponentialBackOff;
     copy->backOffMultiplier = this->backOffMultiplier;
+    copy->redeliveryDelay = this->redeliveryDelay;
 
     return copy;
 }

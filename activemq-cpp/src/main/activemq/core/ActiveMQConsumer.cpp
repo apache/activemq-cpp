@@ -883,7 +883,9 @@ void ActiveMQConsumer::rollback() {
             Pointer<MessageDispatch> lastMsg = dispatchedMessages.front();
             const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
-                redeliveryDelay = this->redeliveryPolicy->getRedeliveryDelay( redeliveryDelay );
+                redeliveryDelay = this->redeliveryPolicy->getNextRedeliveryDelay( redeliveryDelay );
+            } else {
+                redeliveryDelay = this->redeliveryPolicy->getInitialRedeliveryDelay();
             }
 
             Pointer<MessageId> firstMsgId =
