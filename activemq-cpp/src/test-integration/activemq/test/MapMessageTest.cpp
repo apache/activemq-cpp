@@ -87,6 +87,7 @@ void MapMessageTest::testMapWithEmptyStringValue() {
     cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
     CPPUNIT_ASSERT( recvMapMessage != NULL );
     CPPUNIT_ASSERT( recvMapMessage->itemExists( "String1" ) == true );
+    CPPUNIT_ASSERT( recvMapMessage->getString( "String1" ) == "" );
     CPPUNIT_ASSERT( recvMapMessage->itemExists( "String2" ) == true );
     CPPUNIT_ASSERT( recvMapMessage->itemExists( "String3" ) == false );
     CPPUNIT_ASSERT( recvMapMessage->getString( "String2" ) == string( "value" ) );
