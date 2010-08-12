@@ -208,6 +208,8 @@ template<>
 std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const {
 
     switch( value.getType() ) {
+        case PrimitiveValueNode::NULL_TYPE:
+            return "";
         case PrimitiveValueNode::BOOLEAN_TYPE:
             return decaf::lang::Boolean::toString( value.getBool() );
         case PrimitiveValueNode::BYTE_TYPE:
