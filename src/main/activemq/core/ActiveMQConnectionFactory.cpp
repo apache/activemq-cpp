@@ -65,6 +65,7 @@ namespace core{
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
+        bool messagePrioritySupported;
         bool useCompression;
         int compressionLevel;
         unsigned int sendTimeout;
@@ -79,6 +80,7 @@ namespace core{
                             dispatchAsync( true ),
                             alwaysSyncSend( false ),
                             useAsyncSend( false ),
+                            messagePrioritySupported( true ),
                             useCompression( false ),
                             compressionLevel( -1 ),
                             sendTimeout( 0 ),
@@ -115,15 +117,18 @@ namespace core{
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_USECOMPRESSION ), "false" ) );
 
-            this->compressionLevel = decaf::lang::Integer::parseInt(
+            this->compressionLevel = Integer::parseInt(
                 properties->getProperty( "connection.compressionLevel", "-1" ) );
+
+            this->messagePrioritySupported = Boolean::parseBoolean(
+                properties->getProperty( "connection.messagePrioritySupported", "true" ) );
 
             this->dispatchAsync = Boolean::parseBoolean(
                 properties->getProperty(
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_DISPATCHASYNC ), "true" ) );
 
-            this->producerWindowSize = decaf::lang::Integer::parseInt(
+            this->producerWindowSize = Integer::parseInt(
                 properties->getProperty(
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) );
@@ -325,6 +330,7 @@ void ActiveMQConnectionFactory::configureConnection( ActiveMQConnection* connect
     connection->setProducerWindowSize( this->settings->producerWindowSize );
     connection->setPrefetchPolicy( this->settings->defaultPrefetchPolicy->clone() );
     connection->setRedeliveryPolicy( this->settings->defaultRedeliveryPolicy->clone() );
+    connection->setMessagePrioritySupported( this->settings->messagePrioritySupported );
 
     if( this->settings->defaultListener ) {
         connection->setExceptionListener( this->settings->defaultListener );
@@ -491,4 +497,14 @@ unsigned int ActiveMQConnectionFactory::getProducerWindowSize() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setProducerWindowSize( unsigned int windowSize ) {
     this->settings->producerWindowSize = windowSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isMessagePrioritySupported() const {
+    return this->settings->messagePrioritySupported;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setMessagePrioritySupported( bool value ) {
+    this->settings->messagePrioritySupported = value;
 }

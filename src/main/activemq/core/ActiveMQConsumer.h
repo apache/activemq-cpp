@@ -28,21 +28,19 @@
 #include <activemq/commands/MessageAck.h>
 #include <activemq/commands/MessageDispatch.h>
 #include <activemq/core/Dispatcher.h>
-#include <activemq/core/MessageDispatchChannel.h>
 #include <activemq/core/RedeliveryPolicy.h>
+#include <activemq/core/MessageDispatchChannel.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <memory>
 
 namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicBoolean;
-    using activemq::core::MessageDispatchChannel;
 
     class ActiveMQSession;
 
@@ -84,7 +82,7 @@ namespace core{
         /**
          * Queue of unconsumed messages.
          */
-        MessageDispatchChannel unconsumedMessages;
+        Pointer<MessageDispatchChannel> unconsumedMessages;
 
         /**
          * Queue of consumed messages.
@@ -134,7 +132,7 @@ namespace core{
         /**
          * The policy to use when Message Redelivery is in progress.
          */
-        std::auto_ptr<RedeliveryPolicy> redeliveryPolicy;
+        Pointer<RedeliveryPolicy> redeliveryPolicy;
 
     private:
 
@@ -239,9 +237,7 @@ namespace core{
         /**
          * @returns if this Consumer has been closed.
          */
-        bool isClosed() const {
-            return this->unconsumedMessages.isClosed();
-        }
+        bool isClosed() const;
 
         /**
          * Has this Consumer Transaction Synchronization been added to the transaction
@@ -317,11 +313,7 @@ namespace core{
          * @param policy
          *      Pointer to a Redelivery Policy object that his Consumer will use.
          */
-        void setRedeliveryPolicy( RedeliveryPolicy* policy ) {
-            if( policy != NULL ) {
-                this->redeliveryPolicy.reset( policy );
-            }
-        }
+        void setRedeliveryPolicy( RedeliveryPolicy* policy );
 
         /**
          * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
@@ -329,9 +321,7 @@ namespace core{
          *
          * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
          */
-        RedeliveryPolicy* getRedeliveryPolicy() const {
-            return this->redeliveryPolicy.get();
-        }
+        RedeliveryPolicy* getRedeliveryPolicy() const;
 
     protected:
 

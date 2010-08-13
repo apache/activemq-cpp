@@ -36,7 +36,8 @@ cc_sources = \
     activemq/core/ActiveMQConnectionFactoryTest.cpp \
     activemq/core/ActiveMQConnectionTest.cpp \
     activemq/core/ActiveMQSessionTest.cpp \
-    activemq/core/MessageDispatchChannelTest.cpp \
+    activemq/core/FifoMessageDispatchChannelTest.cpp \
+    activemq/core/SimplePriorityMessageDispatchChannelTest.cpp \
     activemq/exceptions/ActiveMQExceptionTest.cpp \
     activemq/state/ConnectionStateTest.cpp \
     activemq/state/ConnectionStateTrackerTest.cpp \
@@ -246,7 +247,8 @@ h_sources = \
     activemq/core/ActiveMQConnectionFactoryTest.h \
     activemq/core/ActiveMQConnectionTest.h \
     activemq/core/ActiveMQSessionTest.h \
-    activemq/core/MessageDispatchChannelTest.h \
+    activemq/core/FifoMessageDispatchChannelTest.h \
+    activemq/core/SimplePriorityMessageDispatchChannelTest.h \
     activemq/exceptions/ActiveMQExceptionTest.h \
     activemq/state/ConnectionStateTest.h \
     activemq/state/ConnectionStateTrackerTest.h \

@@ -15,14 +15,16 @@
  * limitations under the License.
  */
 
-#include <cms/Message.h>
+#include "OpenwireMessagePriorityTest.h"
 
-#include <cms/DeliveryMode.h>
-
-using namespace cms;
+using namespace activemq;
+using namespace activemq::test;
+using namespace activemq::test::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Message::DEFAULT_DELIVERY_MODE = cms::DeliveryMode::PERSISTENT;
-const int Message::DEFAULT_MSG_PRIORITY = 4;
-const long long Message::DEFAULT_TIME_TO_LIVE = 0;
+OpenwireMessagePriorityTest::OpenwireMessagePriorityTest() {
+}
 
+////////////////////////////////////////////////////////////////////////////////
+OpenwireMessagePriorityTest::~OpenwireMessagePriorityTest() {
+}

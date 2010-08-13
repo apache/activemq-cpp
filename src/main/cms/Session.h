@@ -284,7 +284,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageProducer* createProducer( const Destination* destination ) = 0;
+        virtual MessageProducer* createProducer( const Destination* destination = NULL ) = 0;
 
         /**
          * Creates a new QueueBrowser to peek at Messages on the given Queue.

@@ -15,28 +15,25 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREQUEUEBROWSERTEST_H_
-#define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREQUEUEBROWSERTEST_H_
+#ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREMESSAGEPRIORITYTEST_H_
+#define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREMESSAGEPRIORITYTEST_H_
 
-#include <activemq/test/QueueBrowserTest.h>
+#include <activemq/test/MessagePriorityTest.h>
 
 namespace activemq {
 namespace test {
 namespace openwire {
 
-    class OpenwireQueueBrowserTest : public QueueBrowserTest {
-    private:
+    class OpenwireMessagePriorityTest : public MessagePriorityTest {
 
-        CPPUNIT_TEST_SUITE( OpenwireQueueBrowserTest );
-        CPPUNIT_TEST( testReceiveBrowseReceive );
-        CPPUNIT_TEST( testBrowseReceive );
-        CPPUNIT_TEST( testQueueBrowserWith2Consumers );
+        CPPUNIT_TEST_SUITE( OpenwireMessagePriorityTest );
+        CPPUNIT_TEST( testMessagePrioritySendReceive );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        OpenwireQueueBrowserTest();
-        virtual ~OpenwireQueueBrowserTest();
+        OpenwireMessagePriorityTest();
+        virtual ~OpenwireMessagePriorityTest();
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
@@ -46,4 +43,4 @@ namespace openwire {
 
 }}}
 
-#endif /* _ACTIVEMQ_TEST_OPENWIRE_OPENWIREQUEUEBROWSERTEST_H_ */
+#endif /* _ACTIVEMQ_TEST_OPENWIRE_OPENWIREMESSAGEPRIORITYTEST_H_ */

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CORE_MESSAGEDISPATCHCHANNELTEST_H_
-#define _ACTIVEMQ_CORE_MESSAGEDISPATCHCHANNELTEST_H_
+#ifndef _ACTIVEMQ_CORE_FIFOMESSAGEDISPATCHCHANNELTEST_H_
+#define _ACTIVEMQ_CORE_FIFOMESSAGEDISPATCHCHANNELTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -24,9 +24,9 @@
 namespace activemq {
 namespace core {
 
-    class MessageDispatchChannelTest : public CppUnit::TestFixture {
+    class FifoMessageDispatchChannelTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( MessageDispatchChannelTest );
+        CPPUNIT_TEST_SUITE( FifoMessageDispatchChannelTest );
         CPPUNIT_TEST( testCtor );
         CPPUNIT_TEST( testStart );
         CPPUNIT_TEST( testStop );
@@ -41,8 +41,8 @@ namespace core {
 
     public:
 
-        MessageDispatchChannelTest() {}
-        virtual ~MessageDispatchChannelTest() {}
+        FifoMessageDispatchChannelTest() {}
+        virtual ~FifoMessageDispatchChannelTest() {}
 
         void testCtor();
         void testStart();
@@ -59,4 +59,4 @@ namespace core {
 
 }}
 
-#endif /* _ACTIVEMQ_CORE_MESSAGEDISPATCHCHANNELTEST_H_ */
+#endif /* _ACTIVEMQ_CORE_FIFOMESSAGEDISPATCHCHANNELTEST_H_ */
