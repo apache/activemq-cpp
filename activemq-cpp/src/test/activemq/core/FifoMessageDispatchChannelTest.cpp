@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-#include "MessageDispatchChannelTest.h"
+#include "FifoMessageDispatchChannelTest.h"
 
-#include <activemq/core/MessageDispatchChannel.h>
+#include <activemq/core/FifoMessageDispatchChannel.h>
 #include <activemq/commands/MessageDispatch.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/System.h>
@@ -29,9 +29,9 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testCtor() {
+void FifoMessageDispatchChannelTest::testCtor() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     CPPUNIT_ASSERT( channel.isRunning() == false );
     CPPUNIT_ASSERT( channel.isEmpty() == true );
     CPPUNIT_ASSERT( channel.size() == 0 );
@@ -39,17 +39,17 @@ void MessageDispatchChannelTest::testCtor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testStart() {
+void FifoMessageDispatchChannelTest::testStart() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     channel.start();
     CPPUNIT_ASSERT( channel.isRunning() == true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testStop() {
+void FifoMessageDispatchChannelTest::testStop() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     channel.start();
     CPPUNIT_ASSERT( channel.isRunning() == true );
     channel.stop();
@@ -57,9 +57,9 @@ void MessageDispatchChannelTest::testStop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testClose() {
+void FifoMessageDispatchChannelTest::testClose() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     channel.start();
     CPPUNIT_ASSERT( channel.isRunning() == true );
     CPPUNIT_ASSERT( channel.isClosed() == false );
@@ -72,9 +72,9 @@ void MessageDispatchChannelTest::testClose() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testEnqueue() {
+void FifoMessageDispatchChannelTest::testEnqueue() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );
 
@@ -93,9 +93,9 @@ void MessageDispatchChannelTest::testEnqueue() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testEnqueueFront() {
+void FifoMessageDispatchChannelTest::testEnqueueFront() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );
 
@@ -119,9 +119,9 @@ void MessageDispatchChannelTest::testEnqueueFront() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testPeek() {
+void FifoMessageDispatchChannelTest::testPeek() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );
 
@@ -149,9 +149,9 @@ void MessageDispatchChannelTest::testPeek() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testDequeueNoWait() {
+void FifoMessageDispatchChannelTest::testDequeueNoWait() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
 
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );
@@ -179,9 +179,9 @@ void MessageDispatchChannelTest::testDequeueNoWait() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testDequeue() {
+void FifoMessageDispatchChannelTest::testDequeue() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
 
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );
@@ -210,9 +210,9 @@ void MessageDispatchChannelTest::testDequeue() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchChannelTest::testRemoveAll() {
+void FifoMessageDispatchChannelTest::testRemoveAll() {
 
-    MessageDispatchChannel channel;
+    FifoMessageDispatchChannel channel;
 
     Pointer<MessageDispatch> dispatch1( new MessageDispatch() );
     Pointer<MessageDispatch> dispatch2( new MessageDispatch() );

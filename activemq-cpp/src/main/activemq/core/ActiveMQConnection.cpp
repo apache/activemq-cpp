@@ -104,6 +104,7 @@ namespace core{
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
+        bool messagePrioritySupported;
         bool useCompression;
         int compressionLevel;
         unsigned int sendTimeout;
@@ -127,6 +128,7 @@ namespace core{
                              dispatchAsync( true ),
                              alwaysSyncSend( false ),
                              useAsyncSend( false ),
+                             messagePrioritySupported( true ),
                              useCompression( false ),
                              compressionLevel( -1 ),
                              sendTimeout( 0 ),
@@ -1072,4 +1074,14 @@ long long ActiveMQConnection::getNextLocalTransactionId() {
 ////////////////////////////////////////////////////////////////////////////////
 transport::Transport& ActiveMQConnection::getTransport() const {
     return *( this->config->transport );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isMessagePrioritySupported() const {
+    return this->config->messagePrioritySupported;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setMessagePrioritySupported( bool value ) {
+    this->config->messagePrioritySupported = value;
 }

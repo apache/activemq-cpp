@@ -509,6 +509,21 @@ namespace core{
         void setProducerWindowSize( unsigned int windowSize );
 
         /**
+         * @returns true if the Connections that this factory creates should support the
+         * message based priority settings.
+         */
+        bool isMessagePrioritySupported() const;
+
+        /**
+         * Set whether or not this factory should create Connection objects with the Message
+         * priority support function enabled.
+         *
+         * @param value
+         *      Boolean indicating if Message priority should be enabled.
+         */
+        void setMessagePrioritySupported( bool value );
+
+        /**
          * Get the Next available Session Id.
          * @return the next id in the sequence.
          */

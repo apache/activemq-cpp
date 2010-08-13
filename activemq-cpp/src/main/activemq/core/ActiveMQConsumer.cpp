@@ -39,6 +39,9 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/core/FifoMessageDispatchChannel.h>
+#include <activemq/core/SimplePriorityMessageDispatchChannel.h>
+#include <activemq/core/RedeliveryPolicy.h>
 #include <cms/ExceptionListener.h>
 #include <memory>
 
@@ -245,6 +248,12 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     this->redeliveryDelay = 0;
     this->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
 
+    if( this->session->getConnection()->isMessagePrioritySupported() ) {
+        this->unconsumedMessages.reset( new SimplePriorityMessageDispatchChannel() );
+    } else {
+        this->unconsumedMessages.reset( new FifoMessageDispatchChannel() );
+    }
+
     if( listener != NULL ) {
         this->setMessageListener( listener );
     }
@@ -263,19 +272,24 @@ ActiveMQConsumer::~ActiveMQConsumer() throw() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::start() {
 
-    if( this->unconsumedMessages.isClosed() ) {
+    if( this->unconsumedMessages->isClosed() ) {
         return;
     }
 
     this->started.set( true );
-    this->unconsumedMessages.start();
+    this->unconsumedMessages->start();
     this->session->wakeup();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::stop() {
     this->started.set( false );
-    this->unconsumedMessages.stop();
+    this->unconsumedMessages->stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumer::isClosed() const {
+    return this->unconsumedMessages->isClosed();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,7 +341,7 @@ void ActiveMQConsumer::doClose() {
 
             // Purge all the pending messages
             try{
-                unconsumedMessages.clear();
+                unconsumedMessages->clear();
             } catch ( ActiveMQException& ex ){
                 if( !haveException ){
                     ex.setMark( __FILE__, __LINE__ );
@@ -337,7 +351,7 @@ void ActiveMQConsumer::doClose() {
             }
 
             // Stop and Wakeup all sync consumers.
-            unconsumedMessages.close();
+            unconsumedMessages->close();
 
             if( this->session->isIndividualAcknowledge() ) {
                 // For IndividualAck Mode we need to unlink the ack handler to remove a
@@ -401,10 +415,10 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
         // Loop until the time is up or we get a non-expired message
         while( true ) {
 
-            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeue( timeout );
+            Pointer<MessageDispatch> dispatch = unconsumedMessages->dequeue( timeout );
             if( dispatch == NULL ) {
 
-                if( timeout > 0 && !unconsumedMessages.isClosed() ) {
+                if( timeout > 0 && !unconsumedMessages->isClosed() ) {
                     timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
                 } else {
                     return Pointer<MessageDispatch>();
@@ -560,7 +574,7 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
                 this->listener = listener;
             }
 
-            session->redispatch( unconsumedMessages );
+            session->redispatch( *unconsumedMessages );
 
             if( wasStarted ) {
                 session->start();
@@ -609,7 +623,7 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
 
     try{
 
-        if( unconsumedMessages.isClosed() ) {
+        if( unconsumedMessages->isClosed() ) {
             return;
         }
 
@@ -872,7 +886,7 @@ void ActiveMQConsumer::commit() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::rollback() {
 
-    synchronized( &unconsumedMessages ) {
+    synchronized( unconsumedMessages.get() ) {
 
         synchronized( &dispatchedMessages ) {
             if( dispatchedMessages.empty() ) {
@@ -933,15 +947,15 @@ void ActiveMQConsumer::rollback() {
                 }
 
                 // stop the delivery of messages.
-                unconsumedMessages.stop();
+                unconsumedMessages->stop();
 
                 std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( dispatchedMessages.iterator() );
 
                 while( iter->hasNext() ) {
-                    unconsumedMessages.enqueueFirst( iter->next() );
+                    unconsumedMessages->enqueueFirst( iter->next() );
                 }
 
-                if (redeliveryDelay > 0 && !unconsumedMessages.isClosed()) {
+                if (redeliveryDelay > 0 && !unconsumedMessages->isClosed()) {
                     // TODO
                     // Start up the delivery again a little later.
                     //scheduler.executeAfterDelay(new Runnable() {
@@ -967,7 +981,7 @@ void ActiveMQConsumer::rollback() {
     }
 
     if( this->listener != NULL ) {
-        session->redispatch( unconsumedMessages );
+        session->redispatch( *unconsumedMessages );
     }
 }
 
@@ -976,17 +990,17 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
     try {
 
-        synchronized( &unconsumedMessages ) {
+        synchronized( unconsumedMessages.get() ) {
 
             clearMessagesInProgress();
             if( this->clearDispatchList ) {
                 // we are reconnecting so lets flush the in progress
                 // messages
                 clearDispatchList = false;
-                unconsumedMessages.clear();
+                unconsumedMessages->clear();
             }
 
-            if( !unconsumedMessages.isClosed() ) {
+            if( !unconsumedMessages->isClosed() ) {
 
                 // Don't dispatch expired messages, ack it and then destroy it
                 if( dispatch->getMessage()->isExpired() ) {
@@ -998,7 +1012,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
                 synchronized( &listenerMutex ) {
                     // If we have a listener, send the message.
-                    if( this->listener != NULL && unconsumedMessages.isRunning() ) {
+                    if( this->listener != NULL && unconsumedMessages->isRunning() ) {
 
                         // Preprocessing.
                         beforeMessageIsConsumed( dispatch );
@@ -1013,7 +1027,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
                     } else {
 
                         // No listener, add it to the unconsumed messages list
-                        this->unconsumedMessages.enqueue( dispatch );
+                        this->unconsumedMessages->enqueue( dispatch );
                     }
                 }
             }
@@ -1032,7 +1046,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout ) {
         this->checkClosed();
 
         // There are still local message, consume them first.
-        if( !this->unconsumedMessages.isEmpty() ) {
+        if( !this->unconsumedMessages->isEmpty() ) {
             return;
         }
 
@@ -1067,7 +1081,7 @@ bool ActiveMQConsumer::iterate() {
 
         if( this->listener != NULL ) {
 
-            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeueNoWait();
+            Pointer<MessageDispatch> dispatch = unconsumedMessages->dequeueNoWait();
             if( dispatch != NULL ) {
 
                 try {
@@ -1098,7 +1112,7 @@ void ActiveMQConsumer::inProgressClearRequired() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::clearMessagesInProgress() {
     if( inProgressClearRequiredFlag ) {
-        synchronized( &unconsumedMessages ) {
+        synchronized( unconsumedMessages.get() ) {
             if( inProgressClearRequiredFlag ) {
 
                 // TODO - Rollback duplicates.
@@ -1124,7 +1138,7 @@ bool ActiveMQConsumer::isAutoAcknowledgeBatch() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConsumer::getMessageAvailableCount() const {
-    return this->unconsumedMessages.size();
+    return this->unconsumedMessages->size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1200,4 +1214,16 @@ void ActiveMQConsumer::applyDestinationOptions( const Pointer<ConsumerInfo>& inf
             Boolean::parseBoolean(
                 options.getProperty( networkSubscriptionStr ) ) );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::setRedeliveryPolicy( RedeliveryPolicy* policy ) {
+    if( policy != NULL ) {
+        this->redeliveryPolicy.reset( policy );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+RedeliveryPolicy* ActiveMQConsumer::getRedeliveryPolicy() const {
+    return this->redeliveryPolicy.get();
 }

@@ -16,6 +16,7 @@
  */
 #include "ActiveMQProducer.h"
 
+#include <cms/Message.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/commands/RemoveInfo.h>
@@ -73,11 +74,11 @@ ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
     this->closed = false;
 
     // Default the Delivery options
-    this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
+    this->defaultDeliveryMode = cms::Message::DEFAULT_DELIVERY_MODE;
     this->disableTimestamps = false;
     this->disableMessageId = false;
-    this->defaultPriority = 4;
-    this->defaultTimeToLive = 0;
+    this->defaultPriority = cms::Message::DEFAULT_MSG_PRIORITY;
+    this->defaultTimeToLive = cms::Message::DEFAULT_TIME_TO_LIVE;
     this->sendTimeout = sendTimeout;
 }
 
