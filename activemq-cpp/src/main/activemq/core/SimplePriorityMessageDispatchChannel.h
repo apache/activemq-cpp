@@ -30,7 +30,7 @@ namespace core {
 
     using decaf::lang::ArrayPointer;
 
-    class SimplePriorityMessageDispatchChannel : public MessageDispatchChannel {
+    class AMQCPP_API SimplePriorityMessageDispatchChannel : public MessageDispatchChannel {
     private:
 
         static const int MAX_PRIORITIES;
