@@ -88,6 +88,23 @@ namespace cms{
     class CMS_API Message {
     public:
 
+        /**
+         * The Default delivery mode for Message Producers is PERSISTENT.
+         */
+        static const int DEFAULT_DELIVERY_MODE;
+
+        /**
+         * The Default priority assigned to a Message is 4.
+         */
+        static const int DEFAULT_MSG_PRIORITY;
+
+        /**
+         * The Default Time to Live for a Message Producer is unlimited, the message will never expire.
+         */
+        static const long long DEFAULT_TIME_TO_LIVE;
+
+    public:
+
         virtual ~Message() throw() {}
 
         /**
