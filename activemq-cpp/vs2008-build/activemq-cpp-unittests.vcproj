@@ -752,11 +752,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\test\activemq\core\MessageDispatchChannelTest.cpp"
+					RelativePath="..\src\test\activemq\core\FifoMessageDispatchChannelTest.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\src\test\activemq\core\MessageDispatchChannelTest.h"
+					RelativePath="..\src\test\activemq\core\FifoMessageDispatchChannelTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\core\SimplePriorityMessageDispatchChannelTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\core\SimplePriorityMessageDispatchChannelTest.h"
 					>
 				</File>
 			</Filter>
