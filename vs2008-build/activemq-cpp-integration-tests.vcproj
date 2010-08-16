@@ -793,6 +793,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test-integration\activemq\test\MessagePriorityTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\MessagePriorityTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test-integration\activemq\test\QueueBrowserTest.cpp"
 						>
 					</File>
@@ -913,6 +921,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.h"
 							>
 						</File>
 						<File

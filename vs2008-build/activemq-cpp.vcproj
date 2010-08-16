@@ -1335,6 +1335,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Message.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Message.h"
 				>
 			</File>
@@ -2162,7 +2175,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\core\MessageDispatchChannel.cpp"
+					RelativePath="..\src\main\activemq\core\FifoMessageDispatchChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\FifoMessageDispatchChannel.h"
 					>
 				</File>
 				<File
@@ -2183,6 +2200,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\RedeliveryPolicy.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\SimplePriorityMessageDispatchChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\SimplePriorityMessageDispatchChannel.h"
 					>
 				</File>
 				<File
