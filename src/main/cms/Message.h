@@ -105,7 +105,7 @@ namespace cms{
 
     public:
 
-        virtual ~Message() throw() {}
+        virtual ~Message();
 
         /**
          * Clone this message exactly, returns a new instance that the
