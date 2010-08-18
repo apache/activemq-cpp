@@ -275,7 +275,9 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             std::vector<unsigned char> data = value.getByteArray();
 
             dataOut.writeInt( (int)data.size() );
-            dataOut.write( &data[0], (int)data.size() );
+			if( !data.empty() ) {
+				dataOut.write( &data[0], (int)data.size() );
+			}
 
         } else if( value.getType() == PrimitiveValueNode::STRING_TYPE ) {
 
