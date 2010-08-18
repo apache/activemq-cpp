@@ -92,3 +92,30 @@ void MapMessageTest::testMapWithEmptyStringValue() {
     CPPUNIT_ASSERT( recvMapMessage->itemExists( "String3" ) == false );
     CPPUNIT_ASSERT( recvMapMessage->getString( "String2" ) == string( "value" ) );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void MapMessageTest::testMapSetEmptyBytesVector() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
+
+    std::vector<unsigned char> bytes;
+
+    mapMessage->setBytes( "BYTES", bytes );
+
+    // Send some text messages
+    producer->send( mapMessage.get() );
+
+    auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
+
+    cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
+    CPPUNIT_ASSERT( recvMapMessage != NULL );
+    CPPUNIT_ASSERT( recvMapMessage->itemExists( "BYTES" ) == true );
+    CPPUNIT_ASSERT( recvMapMessage->getBytes( "BYTES" ).empty() == true );
+}
