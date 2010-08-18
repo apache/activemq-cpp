@@ -32,6 +32,7 @@ namespace test {
 
         void testEmptyMapSendReceive();
         void testMapWithEmptyStringValue();
+        void testMapSetEmptyBytesVector();
 
     };
 
