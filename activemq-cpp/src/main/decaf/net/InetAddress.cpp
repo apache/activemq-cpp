@@ -157,11 +157,17 @@ InetAddress InetAddress::getLocalHost() {
     try{
 
         AprPool pool;
-        apr_status_t result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
+        apr_status_t result = APR_SUCCESS;
 
-        if( result != APR_SUCCESS ) {
-            return getLoopbackAddress();
-        }
+        try {
+
+            result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
+
+            if( result != APR_SUCCESS ) {
+                return getLoopbackAddress();
+            }
+
+        } catch(...) {}
 
         apr_sockaddr_t* address = NULL;
         result = apr_sockaddr_info_get( &address, hostname, APR_UNSPEC, 0, APR_IPV4_ADDR_OK, pool.getAprPool() );
