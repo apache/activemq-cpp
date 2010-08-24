@@ -154,26 +154,32 @@ InetAddress InetAddress::getLocalHost() {
 
     char hostname[APRMAXHOSTLEN + 1] = {0};
 
-    AprPool pool;
-    apr_status_t result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
+    try{
 
-    if( result != APR_SUCCESS ) {
-        return getLoopbackAddress();
+        AprPool pool;
+        apr_status_t result = apr_gethostname( hostname, APRMAXHOSTLEN+1, pool.getAprPool() );
+
+        if( result != APR_SUCCESS ) {
+            return getLoopbackAddress();
+        }
+
+        apr_sockaddr_t* address = NULL;
+        result = apr_sockaddr_info_get( &address, hostname, APR_UNSPEC, 0, APR_IPV4_ADDR_OK, pool.getAprPool() );
+
+        if( result != APR_SUCCESS ) {
+            throw UnknownHostException(
+                __FILE__, __LINE__, "Could not resolve the IP Address of this host." );
+        }
+
+        if( address->family == APR_INET ) {
+            return Inet4Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
+        } else {
+            return Inet6Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
+        }
     }
-
-    apr_sockaddr_t* address = NULL;
-    result = apr_sockaddr_info_get( &address, hostname, APR_UNSPEC, 0, APR_IPV4_ADDR_OK, pool.getAprPool() );
-
-    if( result != APR_SUCCESS ) {
-        throw UnknownHostException(
-            __FILE__, __LINE__, "Could not resolve the IP Address of this host." );
-    }
-
-    if( address->family == APR_INET ) {
-        return Inet4Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
-    } else {
-        return Inet6Address( hostname, (const unsigned char*)address->ipaddr_ptr, address->ipaddr_len );
-    }
+    DECAF_CATCH_RETHROW( UnknownHostException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, UnknownHostException )
+    DECAF_CATCHALL_THROW( UnknownHostException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
