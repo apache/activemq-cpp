@@ -37,6 +37,21 @@ void IdGeneratorTest::testConstructor1() {
 
     CPPUNIT_ASSERT( idGen.generateId() != "" );
     CPPUNIT_ASSERT( idGen.generateId() != "" );
+
+    std::string id1 = idGen.generateId();
+    std::string id2 = idGen.generateId();
+
+    CPPUNIT_ASSERT( id1 != id2 );
+
+    std::size_t idPos = id1.find("ID:");
+
+    CPPUNIT_ASSERT( idPos == 0 );
+
+    std::size_t firstColon = id1.find(':');
+    std::size_t lastColon = id1.rfind(':');
+
+    CPPUNIT_ASSERT( firstColon != lastColon );
+    CPPUNIT_ASSERT( ( lastColon - firstColon ) > 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
