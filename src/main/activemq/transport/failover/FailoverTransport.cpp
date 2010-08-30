@@ -689,7 +689,7 @@ bool FailoverTransport::iterate() {
                 try{
                     uri = uris->getURI();
                 } catch( NoSuchElementException& ex ) {
-                    throw IOException( __FILE__, __LINE__, "No URIs to reconnect to." );
+                    break;
                 }
 
                 try {
