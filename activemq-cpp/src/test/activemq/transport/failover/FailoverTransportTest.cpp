@@ -577,6 +577,7 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     removals.add( URI("mock://localhost:61616") );
 
     mock->fireCommand( control );
+    Thread::sleep( 1000 );
     failover->removeURI( true, removals );
 
     Thread::sleep( 2000 );
