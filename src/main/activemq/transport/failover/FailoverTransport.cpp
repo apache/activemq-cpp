@@ -130,11 +130,18 @@ void FailoverTransport::removeURI( bool rebalance, const List<URI>& uris ) {
 
     std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
-    while( iter->hasNext() ) {
-        this->uris->removeURI( iter->next() );
-    }
+    synchronized( &reconnectMutex ) {
 
-    reconnect( rebalance );
+        // We need to lock so that the reconnect doesn't get kicked off until
+        // we have a chance to remove the URIs in case one of them was the one
+        // we had a connection to and it gets reinserted into the URI pool.
+
+        reconnect( rebalance );
+
+        while( iter->hasNext() ) {
+            this->uris->removeURI( iter->next() );
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -419,6 +426,11 @@ void FailoverTransport::reconnect( bool rebalance ) {
 
                     // Hand off to the close task so it gets done in a different thread.
                     closeTask->add( transport );
+
+                    if( this->connectedTransportURI != NULL ) {
+                        this->uris->addURI( *this->connectedTransportURI );
+                        this->connectedTransportURI.reset( NULL );
+                    }
                 }
             }
 
@@ -505,7 +517,7 @@ void FailoverTransport::handleConnectionControl( const Pointer<Command>& control
         std::string reconnectStr = ctrlCommand->getReconnectTo();
         if( !reconnectStr.empty() ) {
 
-            std::remove(reconnectStr.begin(), reconnectStr.end(), ' ');
+            std::remove( reconnectStr.begin(), reconnectStr.end(), ' ' );
 
             if( reconnectStr.length() > 0 ) {
                 try {
@@ -677,7 +689,7 @@ bool FailoverTransport::iterate() {
                 try{
                     uri = uris->getURI();
                 } catch( NoSuchElementException& ex ) {
-                    break;
+                    throw IOException( __FILE__, __LINE__, "No URIs to reconnect to." );
                 }
 
                 try {
