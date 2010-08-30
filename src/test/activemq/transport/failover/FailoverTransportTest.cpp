@@ -569,6 +569,7 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
 
     MockTransport* mock = NULL;
     while( mock == NULL ) {
+        Thread::sleep( 100 );
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
     }
 
@@ -578,10 +579,11 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     mock->fireCommand( control );
     failover->removeURI( true, removals );
 
-    Thread::sleep( 1000 );
+    Thread::sleep( 2000 );
 
     mock = NULL;
     while( mock == NULL ) {
+        Thread::sleep( 100 );
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
     }
 
