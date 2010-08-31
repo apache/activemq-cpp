@@ -29,6 +29,7 @@ using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::lang;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace decaf{
@@ -38,10 +39,11 @@ namespace internal{
     public:
 
         mutable apr_pool_t* aprPool;
+        Mutex* lock;
 
     public:
 
-        RuntimeData() : aprPool(NULL) {
+        RuntimeData() : aprPool(NULL), lock(NULL) {
         }
 
     };
@@ -59,12 +61,17 @@ DecafRuntime::DecafRuntime() {
     // Create a Global Pool for Threads to use
     apr_pool_create_ex( &runtimeData->aprPool, NULL, NULL, NULL );
 
+    // Create the global Lock object now that the memory pool exists.
+    this->runtimeData->lock = new Mutex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DecafRuntime::~DecafRuntime() {
 
     try{
+
+        // Destory the Global Lock before we deallocate the memory pool.
+        delete this->runtimeData->lock;
 
         // Destroy the Global Thread Memory Pool
         apr_pool_destroy( this->runtimeData->aprPool );
@@ -82,6 +89,11 @@ DecafRuntime::~DecafRuntime() {
 ////////////////////////////////////////////////////////////////////////////////
 apr_pool_t* DecafRuntime::getGlobalPool() const {
     return this->runtimeData->aprPool;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Mutex* DecafRuntime::getGlobalLock() {
+    return this->runtimeData->lock;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

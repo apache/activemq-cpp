@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Runtime.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #include <apr_pools.h>
 
@@ -53,6 +54,18 @@ namespace internal {
          * used when creating new threads.
          */
         apr_pool_t* getGlobalPool() const;
+
+        /**
+         * Gets a pointer to the Decaf Runtime's Global Lock object, this can be used by
+         * Decaf APIs to synchronize around certain actions such as adding or acquiring
+         * a resource that must be Thread safe.
+         *
+         * The pointer returned is owned by the Decaf runtime and should not be
+         * deleted or copied by the caller.
+         *
+         * @returns a pointer to the Decaf Runtime's global Lock instance.
+         */
+        decaf::util::concurrent::Mutex* getGlobalLock();
 
     };
 
