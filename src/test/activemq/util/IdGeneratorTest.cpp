@@ -33,27 +33,38 @@ namespace {
     class CreateIdThread : public Thread {
     public:
 
+        bool failed;
+
+        CreateIdThread() : failed( false ) {}
+
+    public:
+
         virtual void run() {
 
-            IdGenerator idGen;
+            try{
+                IdGenerator idGen;
 
-            CPPUNIT_ASSERT( idGen.generateId() != "" );
-            CPPUNIT_ASSERT( idGen.generateId() != "" );
+                CPPUNIT_ASSERT( idGen.generateId() != "" );
+                CPPUNIT_ASSERT( idGen.generateId() != "" );
 
-            std::string id1 = idGen.generateId();
-            std::string id2 = idGen.generateId();
+                std::string id1 = idGen.generateId();
+                std::string id2 = idGen.generateId();
 
-            CPPUNIT_ASSERT( id1 != id2 );
+                CPPUNIT_ASSERT( id1 != id2 );
 
-            std::size_t idPos = id1.find("ID:");
+                std::size_t idPos = id1.find("ID:");
 
-            CPPUNIT_ASSERT( idPos == 0 );
+                CPPUNIT_ASSERT( idPos == 0 );
 
-            std::size_t firstColon = id1.find(':');
-            std::size_t lastColon = id1.rfind(':');
+                std::size_t firstColon = id1.find(':');
+                std::size_t lastColon = id1.rfind(':');
 
-            CPPUNIT_ASSERT( firstColon != lastColon );
-            CPPUNIT_ASSERT( ( lastColon - firstColon ) > 1 );
+                CPPUNIT_ASSERT( firstColon != lastColon );
+                CPPUNIT_ASSERT( ( lastColon - firstColon ) > 1 );
+            }
+            catch(...) {
+                failed = true;
+            }
         }
 
     };
@@ -75,21 +86,6 @@ void IdGeneratorTest::testConstructor1() {
 
     CPPUNIT_ASSERT( idGen.generateId() != "" );
     CPPUNIT_ASSERT( idGen.generateId() != "" );
-
-    std::string id1 = idGen.generateId();
-    std::string id2 = idGen.generateId();
-
-    CPPUNIT_ASSERT( id1 != id2 );
-
-    std::size_t idPos = id1.find("ID:");
-
-    CPPUNIT_ASSERT( idPos == 0 );
-
-    std::size_t firstColon = id1.find(':');
-    std::size_t lastColon = id1.rfind(':');
-
-    CPPUNIT_ASSERT( firstColon != lastColon );
-    CPPUNIT_ASSERT( ( lastColon - firstColon ) > 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +115,8 @@ void IdGeneratorTest::testCompare() {
 ////////////////////////////////////////////////////////////////////////////////
 void IdGeneratorTest::testThreadSafety() {
 
+    bool failed = false;
+
     static const int COUNT = 50;
 
     std::vector<CreateIdThread*> threads;
@@ -136,6 +134,11 @@ void IdGeneratorTest::testThreadSafety() {
     }
 
     for( int i = 0; i < COUNT; i++ ) {
+        if( !failed ) {
+            threads[i]->failed ? failed = true : failed = false;
+        }
         delete threads[i];
     }
+
+    CPPUNIT_ASSERT_MESSAGE( "One of the Thread Tester failed", !failed );
 }
