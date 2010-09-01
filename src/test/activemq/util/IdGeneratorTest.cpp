@@ -19,8 +19,46 @@
 
 #include <activemq/util/IdGenerator.h>
 
+#include <decaf/lang/Thread.h>
+
 using namespace activemq;
 using namespace activemq::util;
+
+using namespace decaf;
+using namespace decaf::lang;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class CreateIdThread : public Thread {
+    public:
+
+        virtual void run() {
+
+            IdGenerator idGen;
+
+            CPPUNIT_ASSERT( idGen.generateId() != "" );
+            CPPUNIT_ASSERT( idGen.generateId() != "" );
+
+            std::string id1 = idGen.generateId();
+            std::string id2 = idGen.generateId();
+
+            CPPUNIT_ASSERT( id1 != id2 );
+
+            std::size_t idPos = id1.find("ID:");
+
+            CPPUNIT_ASSERT( idPos == 0 );
+
+            std::size_t firstColon = id1.find(':');
+            std::size_t lastColon = id1.rfind(':');
+
+            CPPUNIT_ASSERT( firstColon != lastColon );
+            CPPUNIT_ASSERT( ( lastColon - firstColon ) > 1 );
+        }
+
+    };
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 IdGeneratorTest::IdGeneratorTest() {
@@ -76,4 +114,28 @@ void IdGeneratorTest::testCompare() {
     CPPUNIT_ASSERT( IdGenerator::compare( id1, id1 ) == 0 );
     CPPUNIT_ASSERT( IdGenerator::compare( id1, id2 ) < 0 );
     CPPUNIT_ASSERT( IdGenerator::compare( id2, id1 ) > 0 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IdGeneratorTest::testThreadSafety() {
+
+    static const int COUNT = 50;
+
+    std::vector<CreateIdThread*> threads;
+
+    for( int i = 0; i < COUNT; i++ ) {
+        threads.push_back( new CreateIdThread );
+    }
+
+    for( int i = 0; i < COUNT; i++ ) {
+        threads[i]->start();
+    }
+
+    for( int i = 0; i < COUNT; i++ ) {
+        threads[i]->join();
+    }
+
+    for( int i = 0; i < COUNT; i++ ) {
+        delete threads[i];
+    }
 }

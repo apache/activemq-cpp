@@ -21,6 +21,8 @@
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
 
+#include <activemq/util/IdGenerator.h>
+
 #include <activemq/wireformat/stomp/StompWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
@@ -31,6 +33,7 @@
 
 using namespace activemq;
 using namespace activemq::library;
+using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::mock;
@@ -48,6 +51,9 @@ void ActiveMQCPP::initializeLibrary( int argc, char** argv ) {
 
     // Register all Transports
     ActiveMQCPP::registerTransports();
+
+    // Start the IdGenerator Kernel
+    IdGenerator::initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +63,11 @@ void ActiveMQCPP::initializeLibrary() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQCPP::shutdownLibrary() {
+
+    // Shutdown the IdGenerator Kernel
+    IdGenerator::initialize();
+
+    // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
 }
 
