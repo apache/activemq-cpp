@@ -30,6 +30,7 @@ namespace util {
         CPPUNIT_TEST( testConstructor1 );
         CPPUNIT_TEST( testConstructor2 );
         CPPUNIT_TEST( testCompare );
+        CPPUNIT_TEST( testThreadSafety );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -40,6 +41,7 @@ namespace util {
         void testConstructor1();
         void testConstructor2();
         void testCompare();
+        void testThreadSafety();
 
     };
 
