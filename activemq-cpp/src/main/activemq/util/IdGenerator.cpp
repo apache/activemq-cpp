@@ -22,6 +22,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/net/InetAddress.h>
 #include <decaf/net/ServerSocket.h>
+#include <decaf/internal/net/Network.h>
 
 #include <apr_strings.h>
 
@@ -32,6 +33,7 @@ using namespace decaf::lang;
 using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
 IdGenerator::StaticData::StaticData() : UNIQUE_STUB(), instanceCount(0), hostname() {
@@ -144,6 +146,11 @@ int IdGenerator::compare( const std::string& id1, const std::string& id2 ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 IdGenerator::StaticData& IdGenerator::getClassStaticData() {
-    static IdGenerator::StaticData statics;
-    return statics;
+
+    Network* netRuntime = Network::getNetworkRuntime();
+
+    synchronized( netRuntime->getRuntimeLock() ) {
+        static IdGenerator::StaticData statics;
+        return statics;
+    }
 }
