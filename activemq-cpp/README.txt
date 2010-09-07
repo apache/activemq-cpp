@@ -21,7 +21,7 @@ automake    >= 1.10
 libtool     >= 1.5.24
 APR         >= 1.3*
 APR-Util    >= 1.3* or higher
-CPPUnit     >= 1.10.2* ( 1.12.0 is recommended )
+CPPUnit     >= 1.10.2* ( 1.12.1 is recommended )
 OpenSSL     >= 0.9.8m* ( 1.0.0 or higher is recommended, this is an optional dependency)
 
 * Requires that the Development package also be installed.
