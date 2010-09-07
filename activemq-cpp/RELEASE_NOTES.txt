@@ -3,6 +3,24 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.2.3                               ==
+=========================================================================
+
+This release is a bugfix release that addresses a couple issues found since
+the release of v3.2.2
+
+Bug
+
+    * [AMQCPP-312] - exception when bytearray is 0 length
+    * [AMQCPP-314] - Starting app with Com using cms destroys connection of
+                     other app. New problem with recent lib version
+    * [AMQCPP-315] - Advisory messages do not work with multiple listeners
+
+Wish
+
+    * [AMQCPP-309] - pkg-config library version mismatch
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.2                               ==
 =========================================================================
 
