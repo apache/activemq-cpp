@@ -65,7 +65,7 @@ void ActiveMQCPP::initializeLibrary() {
 void ActiveMQCPP::shutdownLibrary() {
 
     // Shutdown the IdGenerator Kernel
-    IdGenerator::initialize();
+    IdGenerator::shutdown();
 
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
