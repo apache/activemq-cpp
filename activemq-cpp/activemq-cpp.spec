@@ -1,5 +1,5 @@
 Name:           activemq-cpp
-Version:        3.2.2
+Version:        3.3.0
 Release:        1%{?dist}
 Summary:        C++ Implementation of a JMS style Messaging Client
 
@@ -116,5 +116,5 @@ make %{?_smp_mflags} check
 
 %changelog
 
-* Wed Sep 08 2010 Tim Bish <ricardo.rocha@cern.ch> - 3.2.3
+* Wed Sep 08 2010 Tim Bish <tabish121@gmail.com> - 3.2.3
 - Create a new Spec by porting the Fedora Version.
