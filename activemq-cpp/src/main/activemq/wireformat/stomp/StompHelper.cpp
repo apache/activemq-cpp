@@ -265,9 +265,18 @@ Pointer<ConsumerId> StompHelper::convertConsumerId( const std::string& consumerI
     }
 
     Pointer<ConsumerId> id( new ConsumerId() );
+
     StringTokenizer tokenizer( consumerId, ":" );
 
-    id->setConnectionId( tokenizer.nextToken() );
+    string connectionId;
+
+    connectionId += tokenizer.nextToken();
+    connectionId += ":";
+    connectionId += tokenizer.nextToken();
+    connectionId += ":";
+    connectionId += tokenizer.nextToken();
+
+    id->setConnectionId( connectionId );
 
     while( tokenizer.hasMoreTokens() ){
         string text = tokenizer.nextToken();
@@ -322,8 +331,13 @@ Pointer<TransactionId> StompHelper::convertTransactionId( const std::string& tra
     Pointer<LocalTransactionId> id( new LocalTransactionId() );
     StringTokenizer tokenizer( transactionId, ":" );
 
+    string connectionIdStr;
+    connectionIdStr += tokenizer.nextToken();
+    connectionIdStr += ":";
+    connectionIdStr += tokenizer.nextToken();
+
     Pointer<ConnectionId> connectionId( new ConnectionId() );
-    connectionId->setValue( tokenizer.nextToken() );
+    connectionId->setValue( connectionIdStr );
     id->setConnectionId( connectionId );
 
     while( tokenizer.hasMoreTokens() ){
