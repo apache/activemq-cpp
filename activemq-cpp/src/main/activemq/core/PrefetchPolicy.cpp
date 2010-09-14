@@ -53,6 +53,15 @@ void PrefetchPolicy::configure( const decaf::util::Properties& properties ) {
             this->setTopicPrefetch( Integer::parseInt(
                 properties.getProperty( "cms.PrefetchPolicy.topicPrefetch" ) ) );
         }
+
+        if( properties.hasProperty( "cms.PrefetchPolicy.all" ) ) {
+            int value = Integer::parseInt( properties.getProperty( "cms.PrefetchPolicy.all" ) );
+
+            this->setDurableTopicPrefetch( value );
+            this->setQueueBrowserPrefetch( value );
+            this->setQueuePrefetch( value );
+            this->setTopicPrefetch( value );
+        }
     }
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )
