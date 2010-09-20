@@ -181,7 +181,12 @@ ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& tra
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnection::~ActiveMQConnection() throw() {
     try {
-        this->close();
+
+        try{
+            this->close();
+        } catch(...) {}
+
+        // This must happen even if exceptions occur in the Close attempt.
         delete this->config;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
@@ -436,6 +441,9 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
 
     try{
 
+        // Clear the listener, we don't care about async errors at this point.
+        this->config->transport->setTransportListener( NULL );
+
         // Remove our ConnectionId from the Broker
         Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
         command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
@@ -450,9 +458,6 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
         exceptions::ActiveMQException e;
 
         if( this->config->transport != NULL ){
-
-            // Clear the listener, we don't care about errors at this point.
-            this->config->transport->setTransportListener( NULL );
 
             try{
                 this->config->transport->close();
