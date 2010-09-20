@@ -48,6 +48,20 @@ chat_SOURCES = $(chat_sources)
 chat_LDADD= $(AMQ_TEST_LIBS)
 chat_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
+## CMSTemplate Message send Sample
+cmstemplate_sender_sources = ./cmstemplate/CMSTemplateSender.cpp
+noinst_PROGRAMS += cmstemplate_sender
+cmstemplate_sender_SOURCES = $(cmstemplate_sender_sources)
+cmstemplate_sender_LDADD= $(AMQ_TEST_LIBS)
+cmstemplate_sender_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## CMSTemplate Message receive Sample
+cmstemplate_receiver_sources = ./cmstemplate/CMSTemplateReceiver.cpp
+noinst_PROGRAMS += cmstemplate_receiver
+cmstemplate_receiver_SOURCES = $(cmstemplate_receiver_sources)
+cmstemplate_receiver_LDADD= $(AMQ_TEST_LIBS)
+cmstemplate_receiver_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
 ## Advisory Producer Example
 advisory_producer_sources = advisories/AdvisoryProducer.cpp \
                             advisories/AdvisoryProducerMain.cpp
