@@ -97,7 +97,9 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
         }
 
         // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ||
+            properties.getProperty( "transport.trace", "false" ) == "true" ) {
+
             // Create the Transport for response correlator
             transport.reset( new LoggingTransport( transport ) );
         }
