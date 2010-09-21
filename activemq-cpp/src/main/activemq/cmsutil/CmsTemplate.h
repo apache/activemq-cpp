@@ -23,7 +23,6 @@
 #include <activemq/cmsutil/SessionCallback.h>
 #include <activemq/cmsutil/ProducerCallback.h>
 #include <activemq/cmsutil/SessionPool.h>
-#include <decaf/lang/exceptions/IllegalStateException.h>
 #include <cms/ConnectionFactory.h>
 #include <cms/DeliveryMode.h>
 #include <string>

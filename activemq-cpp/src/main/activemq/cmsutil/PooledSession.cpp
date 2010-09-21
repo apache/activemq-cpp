@@ -18,12 +18,20 @@
 #include "PooledSession.h"
 #include "SessionPool.h"
 #include "ResourceLifecycleManager.h"
-#include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/exceptions/ExceptionDefines.h>
-#include <activemq/util/CMSExceptionSupport.h>
+#include <cms/CMSException.h>
 
+using namespace cms;
 using namespace activemq::cmsutil;
-using namespace activemq::exceptions;
+
+/**
+ * A catch-all that throws an CMSException.
+ */
+#define CMSTEMPLATE_CATCHALL() \
+    catch( cms::CMSException& ex ){ \
+        throw ex; \
+    } catch( ... ){ \
+        throw CMSException( "caught unknown exception", NULL ); \
+    }
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
@@ -72,7 +80,7 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
     try {
 
         if( destination == NULL ) {
-            throw ActiveMQException(__FILE__, __LINE__, "destination is NULL");
+            throw CMSException( "destination is NULL", NULL );
         }
 
         std::string key = getUniqueDestName(destination);
@@ -99,7 +107,7 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
 
         return cachedProducer;
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +118,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
     try {
 
         if( destination == NULL ) {
-            throw ActiveMQException( __FILE__, __LINE__, "destination is NULL" );
+            throw CMSException( "destination is NULL", NULL );
         }
 
         // Append the selector and noLocal flag onto the key.
@@ -142,7 +150,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
 
         return cachedConsumer;
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

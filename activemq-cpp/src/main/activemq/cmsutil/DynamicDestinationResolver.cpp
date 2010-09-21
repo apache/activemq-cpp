@@ -17,11 +17,11 @@
 
 #include "DynamicDestinationResolver.h"
 #include "ResourceLifecycleManager.h"
-#include <activemq/exceptions/ActiveMQException.h>
+#include <cms/CMSException.h>
 
 using namespace activemq::cmsutil;
-using namespace activemq::exceptions;
 using namespace decaf::util;
+using namespace cms;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,9 +96,7 @@ cms::Destination* DynamicDestinationResolver::resolveDestinationName(
         cms::Session* session, const std::string& destName, bool pubSubDomain ) {
 
     if( destName == "" ) {
-        throw ActiveMQException(
-            __FILE__, __LINE__,
-            "destination name is invalid" ).convertToCMSException();
+        throw CMSException( "destination name is invalid", NULL );
     }
 
     // Get the resolver for this session.
