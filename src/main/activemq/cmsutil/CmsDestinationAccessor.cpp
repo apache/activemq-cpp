@@ -17,8 +17,10 @@
 
 #include "CmsDestinationAccessor.h"
 
+#include <cms/IllegalStateException.h>
+
+using namespace cms;
 using namespace activemq::cmsutil;
-using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsDestinationAccessor::CmsDestinationAccessor() : CmsAccessor(),
@@ -69,8 +71,6 @@ cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* 
 void CmsDestinationAccessor::checkDestinationResolver() {
 
     if( getDestinationResolver() == NULL ) {
-        throw IllegalStateException(
-                __FILE__, __LINE__,
-                "Property 'destinationResolver' is required" );
+        throw IllegalStateException( "Property 'destinationResolver' is required", NULL );
     }
 }

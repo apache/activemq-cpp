@@ -20,7 +20,6 @@
 #include <cms/ConnectionFactory.h>
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
 #include <activemq/util/Config.h>
-#include <decaf/lang/exceptions/IllegalStateException.h>
 
 namespace activemq {
 namespace cmsutil {
