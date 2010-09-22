@@ -672,6 +672,14 @@ void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session )
         parent->destroyMessage( message );
 
         throw e;
+    } catch( cms::CMSException& e ) {
+
+        e.setMark( __FILE__, __LINE__ );
+
+        // Destroy the message resource.
+        parent->destroyMessage( message );
+
+        throw e;
     }
 }
 
