@@ -800,7 +800,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				AdditionalIncludeDirectories="..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;;&quot;$(OPENSSL_DIST)\include&quot;"
-				PreprocessorDefinitions="HAVE_OPENSSL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;$(NOINHERIT);HAVE_OPENSSL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\$(ProjectName)\"
