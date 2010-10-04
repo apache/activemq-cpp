@@ -84,6 +84,8 @@ namespace commands{
             return this->getOptions();
         }
 
+        virtual bool equals( const cms::Destination& other ) const;
+
     public:  // CMS Temporary Topic
 
         virtual std::string getTopicName() const {

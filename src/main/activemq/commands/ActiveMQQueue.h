@@ -88,6 +88,8 @@ namespace commands{
             return this->getOptions();
         }
 
+        virtual bool equals( const cms::Destination& other ) const;
+
     public:  // CMS Queue
 
         virtual std::string getQueueName() const {

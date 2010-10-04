@@ -67,6 +67,12 @@ bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTempTopic::equals( const cms::Destination& value ) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
+    return ActiveMQDestination::equals( dest );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempTopic::destroy() {
     try{
         close();

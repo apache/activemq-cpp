@@ -56,3 +56,14 @@ void ActiveMQTopic::copyDataStructure( const DataStructure* src ) {
 std::string ActiveMQTopic::toString() const {
     return ActiveMQDestination::toString();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTopic::equals( const DataStructure* value ) const {
+    return ActiveMQDestination::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQTopic::equals( const cms::Destination& value ) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
+    return ActiveMQDestination::equals( dest );
+}
