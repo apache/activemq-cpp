@@ -60,9 +60,7 @@ namespace commands{
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQDestination::equals( value );
-        }
+        virtual bool equals( const DataStructure* value ) const;
 
         virtual const cms::Destination* getCMSDestination() const {
             return this;
@@ -87,6 +85,8 @@ namespace commands{
         virtual const cms::CMSProperties& getCMSProperties() const {
             return this->getOptions();
         }
+
+        virtual bool equals( const cms::Destination& other ) const;
 
     public:  // CMS Topic
 
