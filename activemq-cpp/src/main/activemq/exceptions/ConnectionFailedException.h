@@ -27,7 +27,7 @@ namespace exceptions {
     class AMQCPP_API ConnectionFailedException : public exceptions::ActiveMQException {
     public:
 
-        ConnectionFailedException();
+        ConnectionFailedException() {}
 
         ConnectionFailedException( const exceptions::ActiveMQException& ex )
             : exceptions::ActiveMQException() {
@@ -55,7 +55,7 @@ namespace exceptions {
             return new ConnectionFailedException( *this );
         }
 
-        virtual ~ConnectionFailedException() throw();
+        virtual ~ConnectionFailedException() throw() {}
 
     };
 
