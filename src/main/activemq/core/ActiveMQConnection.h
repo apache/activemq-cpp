@@ -652,6 +652,9 @@ namespace core{
         // Check for Closed State and Throw an exception if true.
         void checkClosed() const;
 
+        // Check for Closed State and Throw an exception if true.
+        void checkClosedOrFailed() const;
+
         // If its not been sent, then send the ConnectionInfo to the Broker.
         void ensureConnectionInfoSent();
 

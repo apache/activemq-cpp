@@ -26,6 +26,7 @@
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/exceptions/BrokerException.h>
+#include <activemq/exceptions/ConnectionFailedException.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/IdGenerator.h>
 #include <activemq/transport/failover/FailoverTransport.h>
@@ -121,6 +122,8 @@ namespace core{
         Pointer<commands::BrokerInfo> brokerInfo;
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
         Pointer<CountDownLatch> transportInterruptionProcessingComplete;
+
+        Pointer<Exception> firstFailureError;
 
         ConnectionConfig() : clientIDSet( false ),
                              isConnectionInfoSentToBroker( false ),
@@ -231,7 +234,7 @@ cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode a
 
     try {
 
-        checkClosed();
+        checkClosedOrFailed();
         ensureConnectionInfoSent();
 
         // Create and initialize a new SessionInfo object
@@ -398,7 +401,7 @@ void ActiveMQConnection::start() {
 
     try{
 
-        checkClosed();
+        checkClosedOrFailed();
         ensureConnectionInfoSent();
 
         // This starts or restarts the delivery of all incoming messages
@@ -421,7 +424,7 @@ void ActiveMQConnection::stop() {
 
     try {
 
-        checkClosed();
+        checkClosedOrFailed();
 
         // Once current deliveries are done this stops the delivery of any
         // new messages.
@@ -521,7 +524,7 @@ void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destinat
                 __FILE__, __LINE__, "Destination passed was NULL" );
         }
 
-        checkClosed();
+        checkClosedOrFailed();
         ensureConnectionInfoSent();
 
         Pointer<DestinationInfo> command( new DestinationInfo() );
@@ -550,7 +553,7 @@ void ActiveMQConnection::destroyDestination( const cms::Destination* destination
                 __FILE__, __LINE__, "Destination passed was NULL" );
         }
 
-        checkClosed();
+        checkClosedOrFailed();
         ensureConnectionInfoSent();
 
         const ActiveMQDestination* amqDestination =
@@ -663,6 +666,7 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 
         // Mark this Connection as having a Failed transport.
         this->transportFailed.set( true );
+        this->config->firstFailureError.reset( ex.clone() );
 
         // Inform the user of the error.
         fire( exceptions::ActiveMQException( ex ) );
@@ -726,7 +730,7 @@ void ActiveMQConnection::transportResumed() {
 void ActiveMQConnection::oneway( Pointer<Command> command ) {
 
     try {
-        checkClosed();
+        checkClosedOrFailed();
         this->config->transport->oneway( command );
     }
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
@@ -740,7 +744,7 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
 
     try {
 
-        checkClosed();
+        checkClosedOrFailed();
 
         Pointer<Response> response;
 
@@ -775,6 +779,15 @@ void ActiveMQConnection::checkClosed() const {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQConnection::enforceConnected - Connection has already been closed!" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::checkClosedOrFailed() const {
+
+    checkClosed();
+    if( this->transportFailed.get() == true ) {
+        throw ConnectionFailedException( *this->config->firstFailureError );
     }
 }
 
@@ -866,10 +879,6 @@ void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete() {
     if( cdl != NULL ) {
 
         while( !closed.get() && !transportFailed.get() && cdl->getCount() > 0 ) {
-
-            //std::cout << "dispatch paused, waiting for outstanding dispatch interruption processing ("
-            //          << Integer::toString( cdl->getCount() ) << ") to complete.." << std::endl;
-
             cdl->await( 10, TimeUnit::SECONDS );
         }
 
@@ -882,8 +891,6 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
     if( cdl != NULL ) {
-
-        //std::cout << "Set Transport interruption processing complete." << std::endl;
         cdl->countDown();
 
         try {
@@ -898,8 +905,6 @@ void ActiveMQConnection::signalInterruptionProcessingComplete() {
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
 
     if( cdl->getCount() == 0 ) {
-
-        //std::cout << "Signaling Transport interruption processing complete." << std::endl;
 
         this->config->transportInterruptionProcessingComplete.reset( NULL );
         FailoverTransport* failoverTransport =
