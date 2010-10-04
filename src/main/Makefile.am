@@ -504,6 +504,7 @@ h_sources = \
     activemq/core/policies/DefaultRedeliveryPolicy.h \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
+    activemq/exceptions/ConnectionFailedException.h \
     activemq/exceptions/ExceptionDefines.h \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
