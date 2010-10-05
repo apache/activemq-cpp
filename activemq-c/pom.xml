@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.3.x-SNAPSHOT</version>
   </parent>
 
   <artifactId>activemq-c-library</artifactId>
@@ -41,29 +41,6 @@
         <inherited>false</inherited>
         <executions>
           <execution>
-            <id>Integration-Test-Makefile</id>
-            <configuration>
-              <outputDirectory>${basedir}/src/test-integration/c/</outputDirectory>
-              <template>${basedir}/src/test-integration/c/Makefile.maven</template>
-              <sources>
-                <directory>${basedir}/src/test-integration/c</directory>
-                <includes>
-                  <includes>**\*.cpp</includes>
-                </includes>
-              </sources>
-              <headers>
-                <directory>${basedir}/src/test-integration/c</directory>
-                <includes>
-                  <includes>**\*.h</includes>
-                </includes>
-              </headers>
-            </configuration>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>makefile</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>Test-Makefile</id>
             <configuration>
               <outputDirectory>${basedir}/src/test/c</outputDirectory>
@@ -71,6 +48,7 @@
               <sources>
                 <directory>${basedir}/src/test/c</directory>
                 <includes>
+                  <includes>**\*.c</includes>
                   <includes>**\*.cpp</includes>
                 </includes>
               </sources>
