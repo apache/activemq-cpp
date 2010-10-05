@@ -15,9 +15,15 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQC_H_
 #define _ACTIVEMQC_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* _ACTIVEMQC_H_ */

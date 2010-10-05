@@ -16,20 +16,25 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-    ${source}
+    activemqc.c
 
-##h_sources = \
-##    ${headers}
 
-## Compile this as part of make check
-check_PROGRAMS = activemqc-test
+h_sources = \
+    activemqc.h
 
-## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
 
-## 
-## Compiler/Linker Options
 ##
-activemqc_test_SOURCES = $(cc_sources)
-activemqc_test_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemqc_test_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@ 
+## Compiler / Linker Info
+##
+
+lib_LTLIBRARIES= libactivemq-c.la
+libactivemq_c_la_SOURCES= $(h_sources) $(cc_sources)
+libactivemq_c_la_CXXFLAGS= $(AMQ_CXXFLAGS)
+libactivemq_c_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION)
+libactivemq_c_la_LIBADD= $(AMQ_LIBS)
+
+##
+## Packaging Info
+##
+library_includedir=$(includedir)/$(ACTIVEMQ_LIBRARY_NAME)-$(ACTIVEMQ_VERSION)
+nobase_library_include_HEADERS = $(h_sources)

@@ -16,10 +16,11 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-    ${source}
+    main.cpp
+
 
 ##h_sources = \
-##    ${headers}
+##    
 
 ## Compile this as part of make check
 check_PROGRAMS = activemqc-test
