@@ -225,15 +225,12 @@ AC_OUTPUT_COMMANDS([chmod +x activemqc-1-config],[])
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(activemq-c.pc)
-AC_CONFIG_FILES(src/main/Makefile)
-AC_CONFIG_FILES(src/examples/Makefile)
+AC_CONFIG_FILES(src/main/c/Makefile)
 AC_CONFIG_FILES(activemqc-1-config)
 
 if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/c/Makefile)
-  AC_CONFIG_FILES(src/test-integration/c/Makefile)
-  AC_CONFIG_FILES(src/test-benchmarks/c/Makefile)
 fi
 
 AC_OUTPUT
