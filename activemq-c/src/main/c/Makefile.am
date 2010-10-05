@@ -16,10 +16,13 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    ActiveMQConnection.c \
     activemqc.c
 
 
 h_sources = \
+    ActiveMQConnection.h \
+    ActiveMQConnectionFactory.h \
     activemqc.h
 
 

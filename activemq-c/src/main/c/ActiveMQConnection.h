@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-#include <activemqc.h>
+#ifndef _ACTIVEMQCONNECTION_H_
+#define _ACTIVEMQCONNECTION_H_
 
-////////////////////////////////////////////////////////////////////////////////
-void cms_initialize() {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#ifdef __cplusplus
 }
+#endif
 
-////////////////////////////////////////////////////////////////////////////////
-void cms_terminate() {
-
-}
+#endif /* _ACTIVEMQCONNECTION_H_ */
