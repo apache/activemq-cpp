@@ -17,12 +17,14 @@
 
 #include <cms.h>
 
+#include <activemq/library/ActiveMQCPP.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 void cms_initialize() {
-
+    activemq::library::ActiveMQCPP::initializeLibrary();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void cms_terminate() {
-
+    activemq::library::ActiveMQCPP::shutdownLibrary();
 }
