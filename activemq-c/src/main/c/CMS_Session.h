@@ -73,6 +73,22 @@ cms_status destroySession(CMS_Session* session);
  */
 cms_status closeSession(CMS_Session* session);
 
+/**
+ * Commit the current transaction in progress for the Session.
+ *
+ * @param session
+ *      The Session that will have its current transaction committed.
+ */
+cms_status commitSession(CMS_Session* session);
+
+/**
+ * Roll back the current transaction in progress for the Session.
+ *
+ * @param session
+ *      The Session that will have its current transaction rolled back.
+ */
+cms_status rollbackSession(CMS_Session* session);
+
 #ifdef __cplusplus
 }
 #endif

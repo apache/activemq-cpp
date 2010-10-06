@@ -125,3 +125,37 @@ cms_status closeSession(CMS_Session* session) {
 
     return result;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status commitSession(CMS_Session* session) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL) {
+
+        try{
+            session->session->commit();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status rollbackSession(CMS_Session* session) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL) {
+
+        try{
+            session->session->rollback();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
