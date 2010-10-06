@@ -54,7 +54,7 @@ typedef struct CMS_Destination CMS_Destination;
  */
 
 /** Enum that defines the various message types supported by CMS. */
-typedef enum MESSAGE_TYPE {
+enum MESSAGE_TYPE {
     CMS_MESSAGE,
     CMS_BYTES_MESSAGE,
     CMS_MAP_MESSAGE,
@@ -63,11 +63,20 @@ typedef enum MESSAGE_TYPE {
 };
 
 /** Enum that defines the various destination types that are supported by CMS. */
-typedef enum DESTINATION_TYPE {
+enum DESTINATION_TYPE {
     CMS_TOPIC,
     CMS_QUEUE,
     CMS_TEMPORARY_TOPIC,
     CMS_TEMPORARY_QUEUE
+};
+
+/** Enum that defines the various Message Acknowledgment modes that are supported by CMS. */
+enum ACKNOWLEDGMENT_MODE {
+    AUTO_ACKNOWLEDGE,
+    DUPS_OK_ACKNOWLEDGE,
+    CLIENT_ACKNOWLEDGE,
+    SESSION_TRANSACTED,
+    INDIVIDUAL_ACKNOWLEDGE
 };
 
 /** Result code returned from wrapper functions to indicate success or failure. */
@@ -78,8 +87,18 @@ typedef int cms_status;
  * Exception Types or the type of errors that some CMS API calls can encounter.
  */
 
-#define CMS_SUCCESS       0
-#define CMS_ERROR         1
+#define CMS_SUCCESS                 0
+#define CMS_ERROR                   1
+#define CMS_UNSUPPORTEDOP           2
+#define CMS_ILLEGAL_STATE           3
+#define CMS_SECURITY_ERROR          4
+#define CMS_INVALID_CLIENTID        5
+#define CMS_INVALID_DESTINATION     6
+#define CMS_INVALID_SELECTOR        7
+#define CMS_MESSAGE_EOF             8
+#define CMS_MESSAGE_NOT_READABLE    9
+#define CMS_MESSAGE_NOT_WRITABLE    10
+#define CMS_UNKNOWN_ACKTYPE         11
 
 /**
  * C Functions used to initialize and shutdown the ActiveMQ-C library.

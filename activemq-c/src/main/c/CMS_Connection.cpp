@@ -16,3 +16,97 @@
  */
 
 #include <CMS_Connection.h>
+
+#include <Config.h>
+#include <types/CMS_Types.h>
+
+#include <activemq/core/ActiveMQConnection.h>
+
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+
+#include <memory>
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createDefaultConnection(CMS_ConnectionFactory* factory, CMS_Connection** connection) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Connection> wrapper( new CMS_Connection );
+
+    try{
+
+        if (factory == NULL) {
+            result = CMS_ERROR;
+        } else {
+            wrapper->connection = factory->factory->createConnection();
+        }
+
+        *connection = wrapper.release();
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createConnection(CMS_ConnectionFactory* factory,
+                            CMS_Connection** connection,
+                            const char* username,
+                            const char* password,
+                            const char* clientId) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Connection> wrapper( new CMS_Connection );
+
+    try{
+
+        if (factory == NULL) {
+            result = CMS_ERROR;
+        } else {
+            wrapper->connection = factory->factory->createConnection(username, password, clientId);
+        }
+
+        *connection = wrapper.release();
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status destroyConnection(CMS_Connection* connection) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL) {
+
+        try{
+            delete connection->connection;
+            delete connection;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status startConnection(CMS_Connection* connection) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL) {
+
+        try{
+            connection->connection->start();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
