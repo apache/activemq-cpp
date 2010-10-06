@@ -15,15 +15,4 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQCONNECTIONFACTORY_H_
-#define _ACTIVEMQCONNECTIONFACTORY_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ACTIVEMQCONNECTIONFACTORY_H_ */
+#include <CMS_Session.h>

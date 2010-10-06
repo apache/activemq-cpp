@@ -22,7 +22,7 @@ AC_PREREQ(2.61)
 ## -----------------------------------------------------------------------------
 AC_INIT(activemq-c, 1, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_SRCDIR(src/main/c/ActiveMQConnection.c)
+AC_CONFIG_SRCDIR(src/main/c/cms.cpp)
 AC_CONFIG_MACRO_DIR([m4])
 
 ## -----------------------------------------------------------------------------
@@ -172,6 +172,10 @@ if test "$GCC" = "yes"; then
    PLAT_CXXFLAGS="-ansi -pedantic"
 fi
 
+## Find and configure the cflags and libs needed to build against the
+## ActiveMQ-CPP library.
+AMQ_CONFIGURE_ACTIVEMQCPP
+
 ## find and configure the Apache Decaf Library
 ## DECAF_CONFIGURE_DECAF - Future use for decaf as a standalone lib
 ## Flags for building the decaf cpp library
@@ -192,20 +196,20 @@ AC_SUBST([AMQ_CXXFLAGS])
 AC_SUBST([AMQ_LIBS])
 
 if test "$GCC" = "yes"; then
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -W -Wall -Wextra -Wconversion -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -W -Wall -Wextra -Wconversion -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 else
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -PIC"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -PIC"
 fi
 
-AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
+AMQ_LIBS="$PLAT_LIBS $AMQCPP_LIBS $DECAF_LIBS"
 
 if test "$GCC" = "yes"; then
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 else
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
 fi
 
-AMQ_TEST_LIBS="../main/libactivemq-c.la $DECAF_LIBS"
+AMQ_TEST_LIBS="../main/libactivemq-c.la $AMQCPP_LIBS $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
@@ -235,12 +239,12 @@ DX_INIT_DOXYGEN(activemq-c, doxygen.cfg, doc)
 ## Generates Makefile's, configuration files and scripts
 ## -----------------------------------------------------------------------------
 
-AC_OUTPUT_COMMANDS([chmod +x activemqc-1-config],[])
+AC_OUTPUT_COMMANDS([chmod +x activemqc-config],[])
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(activemq-c.pc)
 AC_CONFIG_FILES(src/main/c/Makefile)
-AC_CONFIG_FILES(activemqc-1-config)
+AC_CONFIG_FILES(activemqc-config)
 
 if test x$cppunit = xyes
 then

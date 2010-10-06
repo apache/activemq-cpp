@@ -15,8 +15,10 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQCONNECTION_H_
-#define _ACTIVEMQCONNECTION_H_
+#include <cms.h>
+
+#ifndef _CMS_MESSAGEPRODUCER_WRAPPER_H_
+#define _CMS_MESSAGEPRODUCER_WRAPPER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,4 +28,4 @@ extern "C" {
 }
 #endif
 
-#endif /* _ACTIVEMQCONNECTION_H_ */
+#endif /* _CMS_MESSAGEPRODUCER_WRAPPER_H_ */

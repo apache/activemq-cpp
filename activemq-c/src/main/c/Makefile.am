@@ -16,14 +16,27 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-    ActiveMQConnection.c \
-    activemqc.c
+    CMS_Connection.cpp \
+    CMS_ConnectionFactory.cpp \
+    CMS_Destination.cpp \
+    CMS_Message.cpp \
+    CMS_MessageConsumer.cpp \
+    CMS_MessageProducer.cpp \
+    CMS_Session.cpp \
+    cms.cpp
 
 
 h_sources = \
-    ActiveMQConnection.h \
-    ActiveMQConnectionFactory.h \
-    activemqc.h
+    CMS_Connection.h \
+    CMS_ConnectionFactory.h \
+    CMS_Destination.h \
+    CMS_Message.h \
+    CMS_MessageConsumer.h \
+    CMS_MessageProducer.h \
+    CMS_Session.h \
+    Config.h \
+    cms.h \
+    types/CMS_Types.h
 
 
 ##

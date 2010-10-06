@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQC_H_
-#define _ACTIVEMQC_H_
+#ifndef _CMS_H_
+#define _CMS_H_
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif
 
 /**
  * Types used throughout the C Wrapper lib are declared here, the actual definition
@@ -54,7 +54,7 @@ typedef struct CMS_Destination CMS_Destination;
  */
 
 /** Enum that defines the various message types supported by CMS. */
-typedef enum {
+typedef enum MESSAGE_TYPE {
     CMS_MESSAGE,
     CMS_BYTES_MESSAGE,
     CMS_MAP_MESSAGE,
@@ -62,8 +62,24 @@ typedef enum {
     CMS_TEXT_MESSAGE
 };
 
+/** Enum that defines the various destination types that are supported by CMS. */
+typedef enum DESTINATION_TYPE {
+    CMS_TOPIC,
+    CMS_QUEUE,
+    CMS_TEMPORARY_TOPIC,
+    CMS_TEMPORARY_QUEUE
+};
+
 /** Result code returned from wrapper functions to indicate success or failure. */
 typedef int cms_status;
+
+/**
+ * CMS Wrapper Library Status Codes.  These should map in some way to the CMS
+ * Exception Types or the type of errors that some CMS API calls can encounter.
+ */
+
+#define CMS_SUCCESS       0
+#define CMS_ERROR         1
 
 /**
  * C Functions used to initialize and shutdown the ActiveMQ-C library.
@@ -86,6 +102,6 @@ void cms_terminate();
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif
 
 #endif /* _ACTIVEMQC_H_ */

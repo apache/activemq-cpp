@@ -72,6 +72,7 @@
               <sources>
                 <directory>${basedir}/src/main/c</directory>
                 <includes>
+                  <includes>**\*.cpp</includes>
                   <includes>**\*.c</includes>
                 </includes>
               </sources>

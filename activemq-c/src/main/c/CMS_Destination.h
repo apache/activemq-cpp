@@ -15,14 +15,17 @@
  * limitations under the License.
  */
 
-#include <activemqc.h>
+#include <cms.h>
 
-////////////////////////////////////////////////////////////////////////////////
-void cms_initialize() {
+#ifndef _CMS_DESTINATION_WRAPPER_H_
+#define _CMS_DESTINATION_WRAPPER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef __cplusplus
 }
+#endif
 
-////////////////////////////////////////////////////////////////////////////////
-void cms_terminate() {
-
-}
+#endif /* _CMS_DESTINATION_WRAPPER_H_ */

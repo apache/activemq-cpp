@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQCONNECTION_H_
-#define _ACTIVEMQCONNECTION_H_
+#include <cms.h>
+
+#ifndef _CMS_SESSION_WRAPPER_H_
+#define _CMS_SESSION_WRAPPER_H_
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif
 
-#endif /* _ACTIVEMQCONNECTION_H_ */
+#endif /* _CMS_SESSION_WRAPPER_H_ */
