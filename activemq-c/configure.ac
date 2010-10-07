@@ -163,7 +163,6 @@ case "${host_os}" in
 
   *linux*) ## Unix configuration
 
-    PLAT_LIBS="-lm -luuid"
     ;;
 
 esac
