@@ -54,7 +54,7 @@ cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CM
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms_status producerDefaultSend(CMS_MessageProducer* producer, CMS_Message* message) {
+cms_status producerSendWithDefaults(CMS_MessageProducer* producer, CMS_Message* message) {
 
     cms_status result = CMS_SUCCESS;
 

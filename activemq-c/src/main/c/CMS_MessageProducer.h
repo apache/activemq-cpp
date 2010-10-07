@@ -48,7 +48,7 @@ cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CM
  *
  * @return result code indicating the success or failure of the operation.
  */
-cms_status producerDefaultSend(CMS_MessageProducer* producer, CMS_Message* message);
+cms_status producerSendWithDefaults(CMS_MessageProducer* producer, CMS_Message* message);
 
 /**
  * Closes the MessageProducer.
