@@ -65,7 +65,12 @@ cms_status createConnection(CMS_ConnectionFactory* factory,
         if (factory == NULL) {
             result = CMS_ERROR;
         } else {
-            wrapper->connection = factory->factory->createConnection(username, password, clientId);
+
+            std::string user = username == NULL ? "" : std::string(username);
+            std::string pass = password == NULL ? "" : std::string(password);
+            std::string id = clientId == NULL ? "" : std::string(clientId);
+
+            wrapper->connection = factory->factory->createConnection(user, pass, id);
             *connection = wrapper.release();
         }
 

@@ -37,6 +37,9 @@ cms_status createDefaultConnectionFactory(CMS_ConnectionFactory** factory) {
     try{
         wrapper->factory = new activemq::core::ActiveMQConnectionFactory();
         *factory = wrapper.release();
+    } catch(cms::CMSException& ex) {
+        ex.printStackTrace();
+        result = CMS_ERROR;
     } catch(...) {
         result = CMS_ERROR;
     }
@@ -58,11 +61,21 @@ cms_status createConnectionFactory(CMS_ConnectionFactory** factory,
         if (brokerUri == NULL) {
             wrapper->factory = new activemq::core::ActiveMQConnectionFactory();
         } else {
-            wrapper->factory = new activemq::core::ActiveMQConnectionFactory( brokerUri, username, password );
+
+            std::string user = username == NULL ? "" : std::string(username);
+            std::string pass = password == NULL ? "" : std::string(password);
+
+            wrapper->factory = new activemq::core::ActiveMQConnectionFactory( brokerUri, user, pass );
         }
 
         *factory = wrapper.release();
+    } catch(cms::CMSException& ex) {
+        ex.printStackTrace();
+        result = CMS_ERROR;
+    } catch(std::exception& ex) {
+        std::cout << ex.what() << std::endl;
     } catch(...) {
+        std::cout << "Caught an unknown exception." << std::endl;
         result = CMS_ERROR;
     }
 

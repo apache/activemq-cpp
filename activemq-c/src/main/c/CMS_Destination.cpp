@@ -41,23 +41,28 @@ cms_status createDestination(CMS_Session* session, DESTINATION_TYPE type,
             result = CMS_ERROR;
         } else {
 
-            switch(type) {
-                case CMS_TOPIC:
-                    wrapper->destination = session->session->createTopic(name);
-                    break;
-                case CMS_TEMPORARY_TOPIC:
-                    wrapper->destination = session->session->createTemporaryTopic();
-                    break;
-                case CMS_TEMPORARY_QUEUE:
-                    wrapper->destination = session->session->createTemporaryQueue();
-                    break;
-                default:
-                    wrapper->destination = session->session->createQueue(name);
-                    break;
-            }
+            if (name == NULL && type != CMS_TEMPORARY_QUEUE && type != CMS_TEMPORARY_TOPIC) {
+                result = CMS_ERROR;
+            } else {
 
-            wrapper->type = type;
-            *destination = wrapper.release();
+                switch(type) {
+                    case CMS_TOPIC:
+                        wrapper->destination = session->session->createTopic(name);
+                        break;
+                    case CMS_TEMPORARY_TOPIC:
+                        wrapper->destination = session->session->createTemporaryTopic();
+                        break;
+                    case CMS_TEMPORARY_QUEUE:
+                        wrapper->destination = session->session->createTemporaryQueue();
+                        break;
+                    default:
+                        wrapper->destination = session->session->createQueue(name);
+                        break;
+                }
+
+                wrapper->type = type;
+                *destination = wrapper.release();
+            }
         }
 
     } catch(...) {

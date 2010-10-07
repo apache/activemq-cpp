@@ -59,8 +59,11 @@ cms_status createConsumer(CMS_Session* session, CMS_Destination* destination, CM
         if (session == NULL || destination == NULL) {
             result = CMS_ERROR;
         } else {
+
+            std::string sel = selector == NULL ? "" : std::string(selector);
+
             wrapper->consumer = session->session->createConsumer(
-                destination->destination, selector, noLocal > 0 ? true : false);
+                destination->destination, sel, noLocal > 0 ? true : false);
             *consumer = wrapper.release();
         }
 
@@ -94,8 +97,11 @@ cms_status createDurableConsumer(CMS_Session* session,
 
                 cms::Topic* topic = dynamic_cast<cms::Topic*>(destination->destination);
 
+                std::string name = subscriptionName == NULL ? "" : std::string(subscriptionName);
+                std::string sel = selector == NULL ? "" : std::string(selector);
+
                 wrapper->consumer = session->session->createDurableConsumer(
-                    topic, subscriptionName, selector, noLocal > 0 ? true : false);
+                    topic, name, sel, noLocal > 0 ? true : false);
 
                 *consumer = wrapper.release();
             }
