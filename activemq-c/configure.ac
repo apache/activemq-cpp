@@ -193,6 +193,7 @@ AC_SUBST([DECAF_TEST_CXXFLAGS])
 
 ## Flags for building the activemq-c library
 AC_SUBST([AMQ_CXXFLAGS])
+AC_SUBST([AMQ_CFLAGS])
 AC_SUBST([AMQ_LIBS])
 
 if test "$GCC" = "yes"; then
@@ -209,7 +210,8 @@ else
    AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
 fi
 
-AMQ_TEST_LIBS="../main/libactivemq-c.la $AMQCPP_LIBS $DECAF_LIBS"
+AMQ_TEST_CFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
+AMQ_TEST_LIBS="../main/c/libactivemq-c.la $AMQCPP_LIBS $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
@@ -244,6 +246,7 @@ AC_OUTPUT_COMMANDS([chmod +x activemqc-config],[])
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(activemq-c.pc)
 AC_CONFIG_FILES(src/main/c/Makefile)
+AC_CONFIG_FILES(src/examples/Makefile)
 AC_CONFIG_FILES(activemqc-config)
 
 if test x$cppunit = xyes

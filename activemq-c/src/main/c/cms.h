@@ -54,30 +54,30 @@ typedef struct CMS_Destination CMS_Destination;
  */
 
 /** Enum that defines the various message types supported by CMS. */
-enum MESSAGE_TYPE {
+typedef enum {
     CMS_MESSAGE,
     CMS_BYTES_MESSAGE,
     CMS_MAP_MESSAGE,
     CMS_STREAM_MESSAAGE,
     CMS_TEXT_MESSAGE
-};
+} MESSAGE_TYPE;
 
 /** Enum that defines the various destination types that are supported by CMS. */
-enum DESTINATION_TYPE {
+typedef enum {
     CMS_TOPIC,
     CMS_QUEUE,
     CMS_TEMPORARY_TOPIC,
     CMS_TEMPORARY_QUEUE
-};
+} DESTINATION_TYPE;
 
 /** Enum that defines the various Message Acknowledgment modes that are supported by CMS. */
-enum ACKNOWLEDGMENT_MODE {
+typedef enum {
     AUTO_ACKNOWLEDGE,
     DUPS_OK_ACKNOWLEDGE,
     CLIENT_ACKNOWLEDGE,
     SESSION_TRANSACTED,
     INDIVIDUAL_ACKNOWLEDGE
-};
+} ACKNOWLEDGMENT_MODE;
 
 /** Result code returned from wrapper functions to indicate success or failure. */
 typedef int cms_status;

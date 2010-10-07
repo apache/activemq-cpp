@@ -15,24 +15,14 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-# Since we don't strictly follow the GNU standard of having 'NEWS README AUTHORS ChangeLog' files
-AUTOMAKE_OPTIONS = foreign
+main_example_sources = main.c
 
-SUBDIRS = src/main/c src/examples
-if BUILD_CPPUNIT_TESTS
-  SUBDIRS += src/test/c
-endif
+##
+## Compiler / Linker Info
+##
 
-#Distribute these directories:
-DIST_SUBDIRS = src/main/c 
-
-bin_SCRIPTS = activemqc-config 
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = activemq-c.pc
-
-ACLOCAL_AMFLAGS = -I m4
-
-include doxygen-include.am
-
-EXTRA_DIST=autogen.sh $(DX_CONFIG) doc/html
+## Main Example
+bin_PROGRAMS = example 
+example_SOURCES = $(main_example_sources)
+example_LDADD= $(AMQ_TEST_LIBS)
+example_CFLAGS = $(AMQ_TEST_CFLAGS) -I$(srcdir)/../main/c
