@@ -17,3 +17,92 @@
 
 #include <CMS_MessageProducer.h>
 
+#include <Config.h>
+#include <types/CMS_Types.h>
+
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+
+#include <memory>
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CMS_MessageProducer** producer) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_MessageProducer> wrapper( new CMS_MessageProducer );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+            if( destination != NULL && destination->destination != NULL ) {
+                wrapper->producer = session->session->createProducer(destination->destination);
+            } else {
+                wrapper->producer = session->session->createProducer(NULL);
+            }
+        }
+
+        *producer = wrapper.release();
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status producerDefaultSend(CMS_MessageProducer* producer, CMS_Message* message) {
+
+    cms_status result = CMS_SUCCESS;
+
+    try{
+
+        if (producer == NULL || message == NULL) {
+            result = CMS_ERROR;
+        } else {
+            producer->producer->send(message->message);
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status closeProducer(CMS_MessageProducer* producer) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->close();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status destroyProducer(CMS_MessageProducer* producer) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            delete producer->producer;
+            delete producer;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}

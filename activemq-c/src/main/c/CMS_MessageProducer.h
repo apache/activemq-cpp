@@ -24,6 +24,52 @@
 extern "C" {
 #endif
 
+/**
+ * Given a Session instance, create a new Producer with the default settings.
+ *
+ * @param session
+ *      The Session that is to be used to create the new Producer.
+ * @param destination
+ *      The Destination that this Producer will publish to.
+ * @param producer
+ *      The memory location where the newly allocated Producer instance is to be stored.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CMS_MessageProducer** producer);
+
+/**
+ * Given a Message Producer, send the given Message using that Producer.
+ *
+ * @param producer
+ *      The Message Producer to use for this send operation.
+ * @param message
+ *      The Message to send via the given Message Producer.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status producerDefaultSend(CMS_MessageProducer* producer, CMS_Message* message);
+
+/**
+ * Closes the MessageProducer.
+ *
+ * @param producer
+ *      The Producer that is to be closed.
+ *
+  * @return result code indicating the success or failure of the operation.
+ */
+cms_status closeProducer(CMS_MessageProducer* producer);
+
+/**
+ * Destroys the given Producer instance.
+ *
+ * @param producer
+ *      The Producer that is to be destroyed.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status destroyProducer(CMS_MessageProducer* producer);
+
 #ifdef __cplusplus
 }
 #endif
