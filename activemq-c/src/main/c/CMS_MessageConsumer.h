@@ -135,7 +135,9 @@ cms_status consumerReceiveNoWait(CMS_MessageConsumer* consumer, CMS_Message** me
  * Closes the MessageConsumer, interrupting any currently blocked receive calls.
  *
  * @param consumer
- *      The Consumer that is to be destroyed.
+ *      The Consumer that is to be closed.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status closeConsumer(CMS_MessageConsumer* consumer);
 
