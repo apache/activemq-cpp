@@ -16,3 +16,71 @@
  */
 
 #include <CMS_Destination.h>
+
+#include <Config.h>
+#include <types/CMS_Types.h>
+
+#include <activemq/core/ActiveMQConnection.h>
+
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+
+#include <memory>
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createDestination(CMS_Session* session, DESTINATION_TYPE type,
+                             const char* name, CMS_Destination** destination) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Destination> wrapper( new CMS_Destination );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            switch(type) {
+                case CMS_TOPIC:
+                    wrapper->destination = session->session->createTopic(name);
+                    break;
+                case CMS_TEMPORARY_TOPIC:
+                    wrapper->destination = session->session->createTemporaryTopic();
+                    break;
+                case CMS_TEMPORARY_QUEUE:
+                    wrapper->destination = session->session->createTemporaryQueue();
+                    break;
+                default:
+                    wrapper->destination = session->session->createQueue(name);
+                    break;
+            }
+
+            wrapper->type = type;
+            *destination = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status destroyDestination(CMS_Destination* destination) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(destination != NULL) {
+
+        try{
+            delete destination->destination;
+            delete destination;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}

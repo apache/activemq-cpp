@@ -38,9 +38,9 @@ cms_status createDefaultConsumer(CMS_Session* session, CMS_Destination* destinat
             result = CMS_ERROR;
         } else {
             wrapper->consumer = session->session->createConsumer(destination->destination);
+            *consumer = wrapper.release();
         }
 
-        *consumer = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }
@@ -61,9 +61,9 @@ cms_status createConsumer(CMS_Session* session, CMS_Destination* destination, CM
         } else {
             wrapper->consumer = session->session->createConsumer(
                 destination->destination, selector, noLocal > 0 ? true : false);
+            *consumer = wrapper.release();
         }
 
-        *consumer = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }

@@ -24,6 +24,34 @@
 extern "C" {
 #endif
 
+/**
+ * Creates a Destination from the Given Session instance.  The type of Destination is
+ * given by the DESTINATION_TYPE parameter.
+ *
+ * @param session
+ *      The Session to use to create the new Destination.
+ * @param type
+ *      The Type of Destination that is to be created.
+ * @param name
+ *      The name to assign the Destination, in the case of Temporary Destinations
+ *      this parameter is ignored.
+ * @param destination
+ *      The address of the location to store the new Destination instance.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createDestination(CMS_Session* session, DESTINATION_TYPE type, const char* name, CMS_Destination** destination);
+
+/**
+ * Destroy the given Destination instance.
+ *
+ * @param destination
+ *      The Destination to destroy.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status destroyDestination(CMS_Destination* destination);
+
 #ifdef __cplusplus
 }
 #endif

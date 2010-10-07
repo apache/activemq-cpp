@@ -40,9 +40,9 @@ cms_status createDefaultConnection(CMS_ConnectionFactory* factory, CMS_Connectio
             result = CMS_ERROR;
         } else {
             wrapper->connection = factory->factory->createConnection();
+            *connection = wrapper.release();
         }
 
-        *connection = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }
@@ -66,9 +66,9 @@ cms_status createConnection(CMS_ConnectionFactory* factory,
             result = CMS_ERROR;
         } else {
             wrapper->connection = factory->factory->createConnection(username, password, clientId);
+            *connection = wrapper.release();
         }
 
-        *connection = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }

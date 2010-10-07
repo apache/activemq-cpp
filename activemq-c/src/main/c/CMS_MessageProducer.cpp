@@ -42,9 +42,10 @@ cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CM
             } else {
                 wrapper->producer = session->session->createProducer(NULL);
             }
+
+            *producer = wrapper.release();
         }
 
-        *producer = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }

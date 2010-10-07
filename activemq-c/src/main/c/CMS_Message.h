@@ -24,6 +24,31 @@
 extern "C" {
 #endif
 
+/**
+ * Creates a New Text Message from the given Session instance, if set the value of the
+ * body parameter is assigned as the body of the Text Message.
+ *
+ * @param session
+ *      The Session to use to create the new Text Message
+ * @param message
+ *      The address of the location to store the new Message instance.
+ * @param body
+ *      The text that should be assigned to the body of the Text Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createTextMessage(CMS_Session* session, CMS_Message** message, const char* body);
+
+/**
+ * Destroy the given Message instance.
+ *
+ * @param message
+ *      The Message to destroy.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status destroyMessage(CMS_Message* message);
+
 #ifdef __cplusplus
 }
 #endif

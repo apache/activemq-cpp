@@ -38,9 +38,9 @@ cms_status createDefaultSession(CMS_Connection* connection, CMS_Session** sessio
             result = CMS_ERROR;
         } else {
             wrapper->session = connection->connection->createSession();
+            *session = wrapper.release();
         }
 
-        *session = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }
@@ -81,9 +81,9 @@ cms_status createSession(CMS_Connection* connection, CMS_Session** session, ACKN
                     return CMS_UNKNOWN_ACKTYPE;
             }
             wrapper->session = connection->connection->createSession(cmsAckType);
+            *session = wrapper.release();
         }
 
-        *session = wrapper.release();
     } catch(...) {
         result = CMS_ERROR;
     }

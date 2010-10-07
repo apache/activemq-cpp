@@ -16,3 +16,59 @@
  */
 
 #include <CMS_Message.h>
+
+#include <Config.h>
+#include <types/CMS_Types.h>
+
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+
+#include <memory>
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createTextMessage(CMS_Session* session, CMS_Message** message, const char* body) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            if (body == NULL) {
+                wrapper->message = session->session->createTextMessage();
+            } else {
+                wrapper->message = session->session->createTextMessage(body);
+            }
+
+            wrapper->type = CMS_TEXT_MESSAGE;
+            *message = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status destroyMessage(CMS_Message* message) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            delete message->message;
+            delete message;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
