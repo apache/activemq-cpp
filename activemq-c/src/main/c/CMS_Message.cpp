@@ -27,6 +27,30 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////
+cms_status createMessage(CMS_Session* session, CMS_Message** message) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            wrapper->message = session->session->createMessage();
+            wrapper->type = CMS_MESSAGE;
+            *message = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms_status createTextMessage(CMS_Session* session, CMS_Message** message, const char* body) {
 
     cms_status result = CMS_SUCCESS;
@@ -45,6 +69,83 @@ cms_status createTextMessage(CMS_Session* session, CMS_Message** message, const 
             }
 
             wrapper->type = CMS_TEXT_MESSAGE;
+            *message = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createBytesMessage(CMS_Session* session, CMS_Message** message, unsigned char* body, int length) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            if (body == NULL) {
+                wrapper->message = session->session->createBytesMessage();
+            } else {
+                wrapper->message = session->session->createBytesMessage(body, length);
+            }
+
+            wrapper->type = CMS_BYTES_MESSAGE;
+            *message = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createMapMessage(CMS_Session* session, CMS_Message** message) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            wrapper->message = session->session->createMapMessage();
+            wrapper->type = CMS_MAP_MESSAGE;
+            *message = wrapper.release();
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status createStreamMessage(CMS_Session* session, CMS_Message** message) {
+
+    cms_status result = CMS_SUCCESS;
+    std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+    try{
+
+        if (session == NULL) {
+            result = CMS_ERROR;
+        } else {
+
+            wrapper->message = session->session->createStreamMessage();
+            wrapper->type = CMS_STREAM_MESSAAGE;
             *message = wrapper.release();
         }
 

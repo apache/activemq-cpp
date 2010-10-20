@@ -25,8 +25,21 @@ extern "C" {
 #endif
 
 /**
+ * Creates a New Message from the given Session instance.
+ *
+ * @param session
+ *      The Session to use to create the new Message
+ * @param message
+ *      The address of the location to store the new Message instance.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createMessage(CMS_Session* session, CMS_Message** message);
+
+/**
  * Creates a New Text Message from the given Session instance, if set the value of the
- * body parameter is assigned as the body of the Text Message.
+ * body parameter is copied as the body of the Text Message.  The caller retains ownership
+ * of the body array and must handle its deallocation.
  *
  * @param session
  *      The Session to use to create the new Text Message
@@ -38,6 +51,49 @@ extern "C" {
  * @return result code indicating the success or failure of the operation.
  */
 cms_status createTextMessage(CMS_Session* session, CMS_Message** message, const char* body);
+
+/**
+ * Creates a New Bytes Message from the given Session instance.  If set the value of the
+ * body parameter is copied as the body of the Bytes Message.  The length parameter defines
+ * how many bytes are copied from the body array into the Bytes Message.  The caller retains
+ * ownership of the body array and must handle its deallocation.
+ *
+ * @param session
+ *      The Session to use to create the new Message
+ * @param message
+ *      The address of the location to store the new Message instance.
+ * @param body
+ *      The bytes that should be copied to the body of the Bytes Message.
+ * @param length
+ *      The number of bytes contained in the body array.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createBytesMessage(CMS_Session* session, CMS_Message** message, unsigned char* body, int length);
+
+/**
+ * Creates a New Map Message from the given Session instance.
+ *
+ * @param session
+ *      The Session to use to create the new Message
+ * @param message
+ *      The address of the location to store the new Message instance.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createMapMessage(CMS_Session* session, CMS_Message** message);
+
+/**
+ * Creates a New Stream Message from the given Session instance.
+ *
+ * @param session
+ *      The Session to use to create the new Message
+ * @param message
+ *      The address of the location to store the new Message instance.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status createStreamMessage(CMS_Session* session, CMS_Message** message);
 
 /**
  * Destroy the given Message instance.
