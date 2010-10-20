@@ -173,3 +173,75 @@ cms_status destroyMessage(CMS_Message* message) {
 
     return result;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status cloneMessage(CMS_Message* original, CMS_Message** clone) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(original != NULL) {
+
+        std::auto_ptr<CMS_Message> wrapper( new CMS_Message );
+
+        try{
+            wrapper->message = original->message->clone();
+            wrapper->type = original->type;
+            *clone = wrapper.release();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status acknowledgeMessage(CMS_Message* message) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->acknowledge();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status clearBody(CMS_Message* message) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->clearBody();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status clearMessageProperties(CMS_Message* message) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->clearProperties();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}

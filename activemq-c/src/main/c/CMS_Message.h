@@ -105,6 +105,46 @@ cms_status createStreamMessage(CMS_Session* session, CMS_Message** message);
  */
 cms_status destroyMessage(CMS_Message* message);
 
+/**
+ * Creates a Copy of the given Message instance.
+ *
+ * @param original
+ *      The Message to clone.
+ * @param clone
+ *      The address of the location to store the new Message instance.
+ */
+cms_status cloneMessage(CMS_Message* original, CMS_Message** clone);
+
+/**
+ * Acknowledge the given Message.
+ *
+ * @param message
+ *      The Message to acknowledge.
+ */
+cms_status acknowledgeMessage(CMS_Message* message);
+
+/**
+ * Clears out the body of the message.  This does not clear the
+ * headers or properties.
+ *
+ * @param message
+ *      The Message whose body is to be cleared.
+ */
+cms_status clearBody(CMS_Message* message);
+
+/**
+ * Clears out the message body. Clearing a message's body does not clear
+ * its header values or property entries.
+ *
+ * If this message body was read-only, calling this method leaves the
+ * message body in the same state as an empty body in a newly created
+ * message.
+ *
+ * @param message
+ *      The Message whose properties are to be cleared.
+ */
+cms_status clearMessageProperties(CMS_Message* message);
+
 #ifdef __cplusplus
 }
 #endif
