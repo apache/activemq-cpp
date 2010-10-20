@@ -43,6 +43,7 @@ namespace core{
     using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ActiveMQSession;
+    class ActiveMQConsumerMembers;
 
     class AMQCPP_API ActiveMQConsumer : public cms::MessageConsumer,
                                         public Dispatcher
@@ -50,89 +51,19 @@ namespace core{
     private:
 
         /**
-         * The session that owns this Consumer
+         * Internal Class that holds Members of this class, allows for changes without API breakage.
+         */
+        ActiveMQConsumerMembers* internal;
+
+        /**
+         * The ActiveMQSession that owns this class instance.
          */
         ActiveMQSession* session;
 
         /**
-         * The Consumer info for this Consumer
+         * The ConsumerInfo object for this class instance.
          */
         Pointer<commands::ConsumerInfo> consumerInfo;
-
-        /**
-         * The Message Listener for this Consumer
-         */
-        cms::MessageListener* listener;
-
-        /**
-         * Mutex to Protect access to the listener during delivery.
-         */
-        decaf::util::concurrent::Mutex listenerMutex;
-
-        /**
-         * Is the consumer currently delivering acks.
-         */
-        AtomicBoolean deliveringAcks;
-
-        /**
-         * Has this Consumer been started yet.
-         */
-        AtomicBoolean started;
-
-        /**
-         * Queue of unconsumed messages.
-         */
-        Pointer<MessageDispatchChannel> unconsumedMessages;
-
-        /**
-         * Queue of consumed messages.
-         */
-        decaf::util::StlQueue< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
-
-        /**
-         * The last delivered message's BrokerSequenceId.
-         */
-        long long lastDeliveredSequenceId;
-
-        /**
-         * Next Ack to go out.
-         */
-        Pointer<commands::MessageAck> pendingAck;
-
-        /**
-         * How many message's have been delivered so far since the last Ack was sent.
-         */
-        int deliveredCounter;
-
-        /**
-         * How big to grow the ack window next time.
-         */
-        int additionalWindowSize;
-
-        /**
-         * Has the Synchronization been added for this transaction
-         */
-        volatile bool synchronizationRegistered;
-
-        /**
-         * Boolean indicating if in progress messages should be cleared.
-         */
-        bool clearDispatchList;
-
-        /**
-         * Indicates if inprogress messages are to be cleared.
-         */
-        bool inProgressClearRequiredFlag;
-
-        /**
-         * The redelivery delay used for the last set of redeliveries.
-         */
-        long long redeliveryDelay;
-
-        /**
-         * The policy to use when Message Redelivery is in progress.
-         */
-        Pointer<RedeliveryPolicy> redeliveryPolicy;
 
     private:
 
@@ -174,9 +105,7 @@ namespace core{
 
         virtual void setMessageListener( cms::MessageListener* listener );
 
-        virtual cms::MessageListener* getMessageListener() const {
-            return this->listener;
-        }
+        virtual cms::MessageListener* getMessageListener() const;
 
         virtual std::string getMessageSelector() const;
 
@@ -220,19 +149,13 @@ namespace core{
          * Get the Consumer information for this consumer
          * @return Reference to a Consumer Info Object
          */
-        const Pointer<commands::ConsumerInfo>& getConsumerInfo() const {
-            this->checkClosed();
-            return this->consumerInfo;
-        }
+        const Pointer<commands::ConsumerInfo>& getConsumerInfo() const;
 
         /**
          * Get the Consumer Id for this consumer
          * @return Reference to a Consumer Id Object
          */
-        const Pointer<commands::ConsumerId>& getConsumerId() const {
-            this->checkClosed();
-            return this->consumerInfo->getConsumerId();
-        }
+        const Pointer<commands::ConsumerId>& getConsumerId() const;
 
         /**
          * @returns if this Consumer has been closed.
@@ -243,17 +166,13 @@ namespace core{
          * Has this Consumer Transaction Synchronization been added to the transaction
          * @return true if the synchronization has been added.
          */
-        bool isSynchronizationRegistered() const {
-            return this->synchronizationRegistered;
-        }
+        bool isSynchronizationRegistered() const ;
 
         /**
          * Sets the Synchronization Registered state of this consumer.
          * @param value - true if registered false otherwise.
          */
-        void setSynchronizationRegistered( bool value ) {
-            this->synchronizationRegistered = value;
-        }
+        void setSynchronizationRegistered( bool value );
 
         /**
          * Deliver any pending messages to the registered MessageListener if there
@@ -285,9 +204,7 @@ namespace core{
          *
          * @returns long long containing the sequence id of the last delivered Message.
          */
-        long long getLastDeliveredSequenceId() const {
-            return this->lastDeliveredSequenceId;
-        }
+        long long getLastDeliveredSequenceId() const;
 
         /**
          * Sets the value of the Last Delivered Sequence Id
@@ -295,9 +212,7 @@ namespace core{
          * @param value
          *      The new value to assign to the Last Delivered Sequence Id property.
          */
-        void setLastDeliveredSequenceId( long long value ) {
-            this->lastDeliveredSequenceId = value;
-        }
+        void setLastDeliveredSequenceId( long long value );
 
         /**
          * @returns the number of Message's this consumer is waiting to Dispatch.
@@ -322,6 +237,22 @@ namespace core{
          * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
          */
         RedeliveryPolicy* getRedeliveryPolicy() const;
+
+        /**
+         * Sets the Exception that has caused this Consumer to be in a failed state.
+         *
+         * @param error
+         *      The error that is to be thrown when a Receive call is made.
+         */
+        void setFailureError( decaf::lang::Exception* error );
+
+        /**
+         * Gets the error that caused this Consumer to be in a Failed state, or NULL if
+         * there is no Error.
+         *
+         * @returns pointer to the error that faulted this Consumer or NULL.
+         */
+        decaf::lang::Exception* getFailureError() const;
 
     protected:
 
