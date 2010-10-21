@@ -242,6 +242,14 @@ namespace core{
          */
         virtual void onProducerAck( const commands::ProducerAck& ack );
 
+        /**
+         * Performs Producer object cleanup but doesn't attempt to send the Remove command
+         * to the broker.  Called when the parent resource if closed first to avoid the message
+         * send and avoid any exceptions that might be thrown from an attempt to send a remove
+         * command to a failed transport.
+         */
+        void dispose();
+
    private:
 
        // Checks for the closed state and throws if so.

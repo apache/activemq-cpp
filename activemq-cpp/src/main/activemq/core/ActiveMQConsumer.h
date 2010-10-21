@@ -146,6 +146,13 @@ namespace core{
         void doClose();
 
         /**
+         * Cleans up this objects internal resources.
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
+         */
+        void dispose();
+
+        /**
          * Get the Consumer information for this consumer
          * @return Reference to a Consumer Info Object
          */

@@ -1093,3 +1093,8 @@ bool ActiveMQConnection::isMessagePrioritySupported() const {
 void ActiveMQConnection::setMessagePrioritySupported( bool value ) {
     this->config->messagePrioritySupported = value;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Exception* ActiveMQConnection::getFirstFailureError() const {
+    return this->config->firstFailureError.get();
+}

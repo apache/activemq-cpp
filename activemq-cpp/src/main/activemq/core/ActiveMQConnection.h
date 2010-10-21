@@ -644,6 +644,13 @@ namespace core{
          */
         void setTransportInterruptionProcessingComplete();
 
+        /**
+         * Gets the pointer to the first exception that caused the Connection to become failed.
+         *
+         * @returns pointer to and Exception instance or NULL if none is set.
+         */
+        decaf::lang::Exception* getFirstFailureError() const;
+
     private:
 
         // Sends a oneway disconnect message to the broker.
