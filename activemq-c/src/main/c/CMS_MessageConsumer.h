@@ -142,6 +142,23 @@ cms_status consumerReceiveNoWait(CMS_MessageConsumer* consumer, CMS_Message** me
 cms_status closeConsumer(CMS_MessageConsumer* consumer);
 
 /**
+ * Gets the Message Selector that is assigned to the given MessageConsumer if there is one.
+ * The method will copy the Selector into the provided char array.  The copied string is
+ * always null terminate so if the selector is larger than the provided size the number
+ * of chars copied will be size - 1.
+ *
+ * @param consumer
+ *      The Consumer whose selector string is to be retrieved.
+ * @param dest
+ *      The character array to copy the selector string to.
+ * @param size
+ *      The size of the provided character array.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getConsumerMessageSelector(CMS_MessageConsumer* consumer, char* dest, int size);
+
+/**
  * Destroys the given Consumer instance.
  *
  * @param consumer

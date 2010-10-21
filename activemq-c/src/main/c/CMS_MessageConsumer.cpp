@@ -218,6 +218,37 @@ cms_status closeConsumer(CMS_MessageConsumer* consumer) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms_status getConsumerMessageSelector(CMS_MessageConsumer* consumer, char* dest, int size) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(consumer != NULL && dest != NULL && size > 0) {
+
+        try{
+
+            std::string selector = consumer->consumer->getMessageSelector();
+
+            if(!selector.empty()) {
+
+                std::size_t pos = 0;
+                for(; pos < selector.size() && pos < size - 1; ++pos) {
+                    dest[pos] = selector.at(pos);
+                }
+
+                dest[pos] = '\0';
+            } else {
+                dest[0] = '\0';
+            }
+
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms_status destroyConsumer(CMS_MessageConsumer* consumer) {
 
     cms_status result = CMS_SUCCESS;
