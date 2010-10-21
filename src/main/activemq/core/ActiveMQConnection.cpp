@@ -112,7 +112,6 @@ namespace core{
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
 
-        cms::ExceptionListener* defaultListener;
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
@@ -137,7 +136,6 @@ namespace core{
                              sendTimeout( 0 ),
                              closeTimeout( 15000 ),
                              producerWindowSize( 0 ),
-                             defaultListener( NULL ),
                              defaultPrefetchPolicy( NULL ),
                              defaultRedeliveryPolicy( NULL ),
                              exceptionListener( NULL ) {
@@ -953,12 +951,12 @@ const std::string& ActiveMQConnection::getBrokerURL() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setExceptionListener( cms::ExceptionListener* listener ) {
-    this->config->defaultListener = listener;
+    this->config->exceptionListener = listener;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQConnection::getExceptionListener() const {
-    return this->config->defaultListener;
+    return this->config->exceptionListener;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
