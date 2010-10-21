@@ -91,6 +91,176 @@ cms_status closeProducer(CMS_MessageProducer* producer) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms_status setProducerDeliveryMode(CMS_MessageProducer* producer, int mode) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->setDeliveryMode(mode);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getProducerDeliveryMode(CMS_MessageProducer* producer, int* mode) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL && mode != NULL) {
+
+        try{
+            *mode = producer->producer->getDeliveryMode();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setProducerDisableMessageID(CMS_MessageProducer* producer, int enabled) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->setDisableMessageID(enabled > 0);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getProducerDisableMessageID(CMS_MessageProducer* producer, int* enabled) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL && enabled != NULL) {
+
+        try{
+            *enabled = producer->producer->getDisableMessageID();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setProducerDisableMessageTimeStamp(CMS_MessageProducer* producer, int enabled) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->setDisableMessageTimeStamp(enabled > 0);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getProducerDisableMessageTimeStamp(CMS_MessageProducer* producer, int* enabled) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL && enabled != NULL) {
+
+        try{
+            *enabled = producer->producer->getDisableMessageTimeStamp();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setProducerPriority(CMS_MessageProducer* producer, int priority) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->setPriority(priority);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getProducerPriority(CMS_MessageProducer* producer, int* priority) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL && priority != NULL) {
+
+        try{
+            *priority = producer->producer->getPriority();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setProducerTimeToLive(CMS_MessageProducer* producer, int timeToLive) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL) {
+
+        try{
+            producer->producer->setTimeToLive(timeToLive);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getProducerTimeToLive(CMS_MessageProducer* producer, int* timeToLive) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(producer != NULL && timeToLive != NULL) {
+
+        try{
+            *timeToLive = producer->producer->getTimeToLive();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms_status destroyProducer(CMS_MessageProducer* producer) {
 
     cms_status result = CMS_SUCCESS;

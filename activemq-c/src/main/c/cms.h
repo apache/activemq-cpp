@@ -79,6 +79,12 @@ typedef enum {
     INDIVIDUAL_ACKNOWLEDGE
 } ACKNOWLEDGMENT_MODE;
 
+/** Enum that defines the delivery modes available to a MessageProducer. */
+typedef enum {
+    PERSISTENT = 0,
+    NON_PERSISTENT = 1
+} DELIVERY_MODE;
+
 /** Result code returned from wrapper functions to indicate success or failure. */
 typedef int cms_status;
 
