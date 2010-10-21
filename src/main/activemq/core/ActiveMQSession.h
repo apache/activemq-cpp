@@ -364,12 +364,10 @@ namespace core{
          *
          * @param consumerId
          *      The ConsumerId of the MessageConsumer to remove from this Session.
-         * @param lastDeliveredSequenceId
-         *      The sequenceId of the last Message the consumer delivered.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId, long long lastDeliveredSequenceId = 0 );
+        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId );
 
         /**
          * Adds a MessageProducer to this session registering it with the Connection and store
@@ -446,6 +444,22 @@ namespace core{
          * @return the next id in the sequence.
          */
         Pointer<commands::ProducerId> getNextProducerId();
+
+        /**
+         * Performs the actual Session close operations.  This method is meant for use
+         * by ActiveMQConnection, the connection object calls this when it has been
+         * closed to skip some of the extraneous processing done by the client level
+         * close method.
+         */
+        void doClose();
+
+        /**
+         * Cleans up the Session object's resources without attempting to send the
+         * Remove command to the broker, this can be called from ActiveMQConnection when
+         * it knows that the transport is down and the doClose method would throw an
+         * exception when it attempt to send the Remove Command.
+         */
+        void dispose();
 
    private:
 

@@ -119,6 +119,53 @@ void ActiveMQSession::close() {
     }
 
     try {
+        doClose();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::doClose() {
+
+    try {
+        dispose();
+
+        // Remove this session from the Broker.
+        Pointer<RemoveInfo> info( new RemoveInfo() );
+        info->setObjectId( this->sessionInfo->getSessionId() );
+        info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
+        this->connection->oneway( info );
+    }
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::dispose() {
+
+    class Finalizer {
+    private:
+
+        ActiveMQSession* session;
+        ActiveMQConnection* connection;
+
+    public:
+
+        Finalizer(ActiveMQSession* session, ActiveMQConnection* connection) {
+            this->session = session;
+            this->connection = connection;
+        }
+
+        ~Finalizer() {
+            this->connection->removeSession(this->session);
+            this->session->closed = true;
+        }
+    };
+
+    try{
+
+        Finalizer final(this, this->connection);
 
         // Stop the dispatch executor.
         stop();
@@ -129,47 +176,40 @@ void ActiveMQSession::close() {
             this->transaction->rollback();
         }
 
-        // Close all Consumers
+        // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
         synchronized( &this->consumers ) {
 
             std::vector<ActiveMQConsumer*> closables = this->consumers.values();
 
             for( std::size_t i = 0; i < closables.size(); ++i ) {
                 try{
-                    closables[i]->close();
+                    closables[i]->setFailureError(this->connection->getFirstFailureError());
+                    closables[i]->dispose();
+                    this->lastDeliveredSequenceId =
+                        Math::max( this->lastDeliveredSequenceId, closables[i]->getLastDeliveredSequenceId() );
                 } catch( cms::CMSException& ex ){
                     /* Absorb */
                 }
             }
         }
 
-        // Close all Producers
+        // Dispose of all Producers, the dispose method skips the RemoveInfo command.
         synchronized( &this->producers ) {
 
             std::vector<ActiveMQProducer*> closables = this->producers.values();
 
             for( std::size_t i = 0; i < closables.size(); ++i ) {
                 try{
-                    closables[i]->close();
+                    closables[i]->dispose();
                 } catch( cms::CMSException& ex ){
                     /* Absorb */
                 }
             }
         }
-
-        // Now indicate that this session is closed.
-        closed = true;
-
-        // Remove this sessions from the connection
-        this->connection->removeSession( this );
-
-        // Remove this session from the Broker.
-        Pointer<RemoveInfo> info( new RemoveInfo() );
-        info->setObjectId( this->sessionInfo->getSessionId() );
-        info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
-        this->connection->oneway( info );
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -919,7 +959,7 @@ void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, long long lastDeliveredSequenceId ) {
+void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId ) {
 
     try{
 
@@ -933,8 +973,6 @@ void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, lon
                 // the Connection.
                 this->connection->removeDispatcher( consumerId );
                 this->consumers.remove( consumerId );
-                this->lastDeliveredSequenceId =
-                    Math::max( this->lastDeliveredSequenceId, lastDeliveredSequenceId );
             }
         }
     }

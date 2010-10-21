@@ -98,8 +98,7 @@ void ActiveMQProducer::close() {
 
         if( !this->isClosed() ) {
 
-            this->session->removeProducer( this->producerInfo->getProducerId() );
-            this->closed = true;
+            dispose();
 
             // Remove at the Broker Side, if this fails the producer has already
             // been removed from the session and connection objects so its safe
@@ -110,6 +109,15 @@ void ActiveMQProducer::close() {
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::dispose() {
+
+    if( !this->isClosed() ) {
+        this->session->removeProducer( this->producerInfo->getProducerId() );
+        this->closed = true;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
