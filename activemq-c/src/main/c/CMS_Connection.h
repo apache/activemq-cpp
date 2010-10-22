@@ -77,8 +77,61 @@ cms_status destroyConnection(CMS_Connection* connection);
  *
  * @param connection
  *      The Connection that is to be started.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status startConnection(CMS_Connection* connection);
+
+/**
+ * Stops the Connection instance.  Until a Connection is started any Message Consumers
+ * created by Sessions linked to the Connection will not be able to receive Messages.
+ *
+ * @param connection
+ *      The Connection that is to be stopped.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status stopConnection(CMS_Connection* connection);
+
+/**
+ * Closes the Connection instance.  Once closed a Connection cannot be restarted.  All the
+ * resources allocated from this connection will be closed as well, they must still be
+ * destroyed by the client.
+ *
+ * @param connection
+ *      The Connection that is to be closed.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status closeConnection(CMS_Connection* connection);
+
+/**
+ * Sets the Client Id for the given Connection instance.
+ *
+ * @param connection
+ *      The Connection whose client id is to be set.
+ * @param clientId
+ *      The new client Id to assign to the connection.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setConnectionClientId(CMS_Connection* connection, const char* clientId);
+
+/**
+ * Gets the Client Id for the given Connection instance.  The caller passes an array that
+ * the client id is copied into, if the array is not large enough to accommodate the client
+ * Id then an error status is returned.
+ *
+ * @param connection
+ *      The Connection whose client id is to be set.
+ * @param clientId
+ *      The new client Id to assign to the connection.
+ * @param size
+ *      The size of the character array that is to receive the client Id.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getConnectionClientId(CMS_Connection* connection, char* clientId, int size);
 
 #ifdef __cplusplus
 }

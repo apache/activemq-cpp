@@ -22,11 +22,16 @@
 
 #include <activemq/core/ActiveMQConnection.h>
 
+#include <cms/IllegalStateException.h>
+#include <cms/InvalidClientIdException.h>
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
 
 #include <memory>
+
+using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
 cms_status createDefaultConnection(CMS_ConnectionFactory* factory, CMS_Connection** connection) {
@@ -108,6 +113,91 @@ cms_status startConnection(CMS_Connection* connection) {
 
         try{
             connection->connection->start();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status stopConnection(CMS_Connection* connection) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL) {
+
+        try{
+            connection->connection->stop();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status closeConnection(CMS_Connection* connection) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL) {
+
+        try{
+            connection->connection->close();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setConnectionClientId(CMS_Connection* connection, const char* clientId) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL && clientId != NULL) {
+
+        try{
+            connection->connection->setClientID(clientId);
+        } catch(IllegalStateException& ex) {
+            result = CMS_ILLEGAL_STATE;
+        } catch(InvalidClientIdException& ex) {
+            result = CMS_INVALID_CLIENTID;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getConnectionClientId(CMS_Connection* connection, char* clientId, int size) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(connection != NULL && clientId != NULL && size > 0) {
+
+        try{
+            std::string theClientId = connection->connection->getClientID();
+
+            if(theClientId.size() < size) {
+
+                for(int i = 0; i < theClientId.size(); ++i) {
+                    clientId[i] = theClientId.at(i);
+                }
+
+                clientId[theClientId.size()] = '\0';
+
+            } else {
+                result = CMS_ERROR;
+            }
+
         } catch(...) {
             result = CMS_ERROR;
         }
