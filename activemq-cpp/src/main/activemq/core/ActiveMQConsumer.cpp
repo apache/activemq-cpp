@@ -291,6 +291,8 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     if( listener != NULL ) {
         this->setMessageListener( listener );
     }
+
+    applyDestinationOptions(this->consumerInfo);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
