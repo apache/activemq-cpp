@@ -70,6 +70,8 @@ cms_status destroySession(CMS_Session* session);
  *
  * @param session
  *      The Session that is to be closed.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status closeSession(CMS_Session* session);
 
@@ -78,6 +80,8 @@ cms_status closeSession(CMS_Session* session);
  *
  * @param session
  *      The Session that will have its current transaction committed.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status commitSession(CMS_Session* session);
 
@@ -86,8 +90,54 @@ cms_status commitSession(CMS_Session* session);
  *
  * @param session
  *      The Session that will have its current transaction rolled back.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status rollbackSession(CMS_Session* session);
+
+/**
+ * Stop Message delivery in the given session and restart from the oldest unacknowledged
+ * Message.
+ *
+ * @param session
+ *      The Session that will be recovered.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status recoverSession(CMS_Session* session);
+
+/**
+ * Get the Acknowledge Mode that was used to create the given Session.
+ *
+ * @param session
+ *      The session that is the target for this operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getSessionAcknowledgeMode(CMS_Session* session, int* mode);
+
+/**
+ * Query the given Session to determine if it is a Transacted Session, if the Session is
+ * transacted then a value of 1 is written into the result address, otherwise zero is
+ * written into the result location.
+ *
+ * @param session
+ *      The session that is the target for this operation.
+ * @param transacted
+ *      The address where the boolean value is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status isSessionTransacted(CMS_Session* session, int* transacted);
+
+/**
+ *
+ * @param session
+ *    The session that is the target for this operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status unsubscribeSessionDurableConsumer(CMS_Session* session, const char* subscription);
 
 #ifdef __cplusplus
 }

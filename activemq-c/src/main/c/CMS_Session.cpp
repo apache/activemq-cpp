@@ -159,3 +159,71 @@ cms_status rollbackSession(CMS_Session* session) {
 
     return result;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status recoverSession(CMS_Session* session) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL) {
+
+        try{
+            session->session->recover();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getSessionAcknowledgeMode(CMS_Session* session, int* mode) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL && mode != NULL) {
+
+        try{
+            *mode = (int) session->session->getAcknowledgeMode();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status isSessionTransacted(CMS_Session* session, int* transacted) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL && result != NULL) {
+
+        try{
+            *transacted = (int) session->session->isTransacted();
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status unsubscribeSessionDurableConsumer(CMS_Session* session, const char* subscription) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(session != NULL && subscription != NULL) {
+
+        try{
+            session->session->unsubscribe(subscription);
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
