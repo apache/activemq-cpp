@@ -52,6 +52,56 @@ cms_status createDestination(CMS_Session* session, DESTINATION_TYPE type, const 
  */
 cms_status destroyDestination(CMS_Destination* destination);
 
+/**
+ * Compares to CMS Destination instances for equality.
+ *
+ * @param lhs
+ *      The Destination on the left-hand side of the comparison.
+ * @param rhs
+ *      The Destination on the right-hand side of the comparison.
+ * @param areEqual
+ *      The address to write the boolean result of the comparison to.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status compareDestinations(CMS_Destination* lhs, CMS_Destination* rhs, int* areEqual);
+
+/**
+ * Checks if the supplied Destination is a Topic.
+ *
+ * @param destination
+ *      The Destination to check for its type.
+ * @param isTopic
+ *      The address to write the boolean result of the operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status isDestinationTopic(CMS_Destination* destination, int* isTopic);
+
+/**
+ * Checks if the supplied Destination is a Queue.
+ *
+ * @param destination
+ *      The Destination to check for its type.
+ * @param isTopic
+ *      The address to write the boolean result of the operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status isDestinationQueue(CMS_Destination* destination, int* isQueue);
+
+/**
+ * Checks if the supplied Destination is a Temporary type.
+ *
+ * @param destination
+ *      The Destination to check for its type.
+ * @param isTopic
+ *      The address to write the boolean result of the operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status isDestinationTemporary(CMS_Destination* destination, int* isTemporary);
+
 #ifdef __cplusplus
 }
 #endif
