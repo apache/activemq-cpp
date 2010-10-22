@@ -370,11 +370,11 @@ void ActiveMQConnection::close() {
 
         long long lastDeliveredSequenceId = 0;
 
-        // Close all of the resources.
+        // Dispose of all the Session resources we know are still open.
         for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
             ActiveMQSession* session = allSessions[ix];
             try{
-                session->close();
+                session->dispose();
 
                 lastDeliveredSequenceId =
                     Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
@@ -390,6 +390,45 @@ void ActiveMQConnection::close() {
         // of any new messages.
         this->started.set( false );
         this->closed.set( true );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::cleanup() {
+
+    try{
+
+        // Get the complete list of active sessions.
+        std::vector<ActiveMQSession*> allSessions;
+        synchronized( &activeSessions ) {
+            allSessions = activeSessions.toArray();
+        }
+
+        // Dispose of all the Session resources we know are still open.
+        for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
+            ActiveMQSession* session = allSessions[ix];
+            try{
+                session->dispose();
+            } catch( cms::CMSException& ex ){
+                /* Absorb */
+            }
+        }
+
+        if( this->config->isConnectionInfoSentToBroker ) {
+            if( !transportFailed.get() && !closing.get() ) {
+                this->syncRequest( this->config->connectionInfo->createRemoveCommand() );
+            }
+            this->config->isConnectionInfoSentToBroker = false;
+        }
+
+        if( this->config->userSpecifiedClientID ) {
+            this->config->connectionInfo->setClientId("");
+            this->config->userSpecifiedClientID = false;
+        }
+
+        this->config->clientIDSet = false;
+        this->started.set( false );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -445,14 +484,17 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
         // Clear the listener, we don't care about async errors at this point.
         this->config->transport->setTransportListener( NULL );
 
-        // Remove our ConnectionId from the Broker
-        Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
-        command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
-        this->syncRequest( command, this->getCloseTimeout() );
+        if( this->config->isConnectionInfoSentToBroker ) {
 
-        // Send the disconnect command to the broker.
-        Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
-        oneway( shutdown );
+            // Remove our ConnectionId from the Broker
+            Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
+            command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
+            this->syncRequest( command, this->config->closeTimeout );
+
+            // Send the disconnect command to the broker.
+            Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
+            oneway( shutdown );
+        }
 
         // Allow the Support class to shutdown its resources, including the Transport.
         bool hasException = false;
@@ -662,12 +704,26 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
             return;
         }
 
+        onAsyncException(ex);
+
+        // TODO This part should be done in a separate Thread.
+
         // Mark this Connection as having a Failed transport.
         this->transportFailed.set( true );
-        this->config->firstFailureError.reset( ex.clone() );
+        if( this->config->firstFailureError == NULL ) {
+            this->config->firstFailureError.reset( ex.clone() );
+        }
 
-        // Inform the user of the error.
-        fire( exceptions::ActiveMQException( ex ) );
+        // TODO - Until this fires in another thread we can't dipose of
+        //        the transport here since it could result in this method
+        //        being called again recursively.
+        try{
+            // this->config->transport->stop();
+        } catch(...) {
+        }
+
+        // Clean up the Connection resources.
+        cleanup();
 
         synchronized( &transportListeners ) {
 
@@ -682,6 +738,20 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onAsyncException( const decaf::lang::Exception& ex ) {
+
+    if( !this->isClosed() || !this->closing.get() ) {
+
+        if( this->config->exceptionListener != NULL ) {
+
+            // Inform the user of the error.
+            // TODO - This should be run by another Thread, i.e. Executor
+            fire( exceptions::ActiveMQException( ex ) );
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

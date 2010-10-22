@@ -615,6 +615,12 @@ namespace core{
         transport::Transport& getTransport() const;
 
         /**
+         * Clean up this connection object, reseting it back to a state that mirrors
+         * what a newly created ActiveMQConnection object has.
+         */
+        void cleanup();
+
+        /**
          * Sends a oneway message.
          * @param command The message to send.
          * @throws ConnectorException if not currently connected, or
@@ -650,6 +656,14 @@ namespace core{
          * @returns pointer to and Exception instance or NULL if none is set.
          */
         decaf::lang::Exception* getFirstFailureError() const;
+
+        /**
+         * Event handler for dealing with async exceptions.
+         *
+         * @param ex
+         *      The exception that caused the error condition.
+         */
+        void onAsyncException( const decaf::lang::Exception& ex );
 
     private:
 
