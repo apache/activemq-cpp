@@ -186,9 +186,9 @@ cms_status getConnectionClientId(CMS_Connection* connection, char* clientId, int
         try{
             std::string theClientId = connection->connection->getClientID();
 
-            if(theClientId.size() < size) {
+            if(theClientId.size() < (std::size_t)size) {
 
-                for(int i = 0; i < theClientId.size(); ++i) {
+                for(std::size_t i = 0; i < theClientId.size(); ++i) {
                     clientId[i] = theClientId.at(i);
                 }
 
