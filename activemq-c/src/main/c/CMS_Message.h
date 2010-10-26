@@ -412,6 +412,254 @@ cms_status setShortProperty(CMS_Message* message, const char* key, short value);
  */
 cms_status setStringProperty(CMS_Message* message, const char* key, const char* value);
 
+/**
+ * Gets the Correlation Id that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the correlation Id from.
+ * @param correlationId
+ *      The character array to write the correlation id to.
+ * @param size
+ *      The size of the passed correlationId character array.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageCorrelationID(CMS_Message* message, char* correlationId, int size);
+
+/**
+ * Sets the Correlation Id assigned to this Message.
+ *
+ * @param message
+ *      The message to assign the correlation Id to.
+ * @param correlationId
+ *      The character array to copy the correlation id from and assign to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageCorrelationID(CMS_Message* message, const char* correlationId);
+
+/**
+ * Gets the Delivery Mode that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the delivery mode from.
+ * @param mode
+ *      The address where the value of the retrieved option is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageDeliveryMode(CMS_Message* message, int* mode);
+
+/**
+ * Sets the Delivery Mode that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the delivery mode on.
+ * @param mode
+ *      The new value that should be applied to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageDeliveryMode(CMS_Message* message, int mode);
+
+/**
+ * Gets the Destination that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the Destination from.
+ * @param destination
+ *      The address where the value of the retrieved value is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageDestination(CMS_Message* message, CMS_Destination** destination);
+
+/**
+ * Sets the Destination that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the Destination to.
+ * @param destination
+ *      The new value that should be applied to the Message, the destination is cloned, caller
+ *      retains ownership of the original value.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageDestination(CMS_Message* message, CMS_Destination* destination);
+
+/**
+ * Gets the Message expiration time that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the expiration time from.
+ * @param expiration
+ *      The address where the value of the retrieved option is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageExpiration(CMS_Message* message, long long* expiration);
+
+/**
+ * Sets the Expiration time that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the expiration time on.
+ * @param expiration
+ *      The new value that should be applied to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageExpiration(CMS_Message* message, long long expiration);
+
+/**
+ * Gets the Message Id that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the message Id from.
+ * @param messageId
+ *      The character array to write the message id to.
+ * @param size
+ *      The size of the passed messageId character array.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageMessageID(CMS_Message* message, char* messageId, int size);
+
+/**
+ * Sets the Message Id assigned to this Message.
+ *
+ * @param message
+ *      The message to assign the correlation Id to.
+ * @param messageId
+ *      The character array to copy the message id from and assign to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageMessageID(CMS_Message* message, const char* messageId);
+
+/**
+ * Gets the Message Priority that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the priority from.
+ * @param priority
+ *      The address where the value of the retrieved option is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessagePriority(CMS_Message* message, int* priority);
+
+/**
+ * Sets the Message priority that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the priority on.
+ * @param priority
+ *      The new value that should be applied to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessagePriority(CMS_Message* message, int priority);
+
+/**
+ * Gets the Message Redelivered flag that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the redelivered value from.
+ * @param redelivered
+ *      The address where the value of the retrieved option is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageRedelivered(CMS_Message* message, int* redelivered);
+
+/**
+ * Sets the Redelivered flag that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the redelivered value on.
+ * @param redelivered
+ *      The new value that should be applied to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageRedelivered(CMS_Message* message, int redelivered);
+
+/**
+ * Gets the Reply To Destination that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the Reply To Destination from.
+ * @param destination
+ *      The address where the value of the retrieved value is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageReplyTo(CMS_Message* message, CMS_Destination** destination);
+
+/**
+ * Sets the Reply To Destination that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the Destination to.
+ * @param destination
+ *      The new value that should be applied to the Message, the destination is cloned, caller
+ *      retains ownership of the original value.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageReplyTo(CMS_Message* message, CMS_Destination* destination);
+
+/**
+ * Gets the Message time-stamp that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the time-stamp value from.
+ * @param timeStamp
+ *      The address where the value of the retrieved option is to be written.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageTimestamp(CMS_Message* message, long long* timeStamp);
+
+/**
+ * Sets the time stamp that is assigned to this Message.
+ *
+ * @param message
+ *      The message to set the time stamp on.
+ * @param timeStamp
+ *      The new value that should be applied to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageTimestamp(CMS_Message* message, long long timeStamp);
+
+/**
+ * Gets the Message Type that is assigned to this Message.
+ *
+ * @param message
+ *      The message to retrieve the message type from.
+ * @param type
+ *      The character array to write the message type to.
+ * @param size
+ *      The size of the passed type character array.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getCMSMessageType(CMS_Message* message, char* type, int size);
+
+/**
+ * Sets the Message Type assigned to this Message.
+ *
+ * @param message
+ *      The message to assign the type to.
+ * @param type
+ *      The character array to copy the message type from and assign to the Message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setCMSMessageType(CMS_Message* message, const char* type);
+
 #ifdef __cplusplus
 }
 #endif

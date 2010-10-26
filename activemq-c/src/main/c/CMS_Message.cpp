@@ -496,7 +496,7 @@ cms_status getMessageStringProperty(CMS_Message* message, const char* key, char*
             if(!property.empty()) {
 
                 std::size_t pos = 0;
-                for(; pos < property.size() && pos < size - 1; ++pos) {
+                for(; pos < property.size() && pos < (std::size_t)size - 1; ++pos) {
                     value[pos] = property.at(pos);
                 }
 
@@ -689,6 +689,472 @@ cms_status setStringProperty(CMS_Message* message, const char* key, const char* 
 
             if(strlen(key) > 0) {
                 message->message->setStringProperty(key, value);
+            }
+
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageCorrelationID(CMS_Message* message, char* correlationId, int size) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && correlationId != NULL && size > 0) {
+
+        try{
+
+            std::string id = message->message->getCMSCorrelationID();
+
+            if(!id.empty()) {
+
+                std::size_t pos = 0;
+                for(; pos < id.size() && pos < (std::size_t)size - 1; ++pos) {
+                    correlationId[pos] = id.at(pos);
+                }
+
+                correlationId[pos] = '\0';
+            } else {
+                correlationId[0] = '\0';
+            }
+
+        } catch(cms::MessageFormatException& ex) {
+            correlationId[0] = '\0';
+            result = CMS_MESSAGE_FORMAT_ERROR;
+        } catch(...) {
+            correlationId[0] = '\0';
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageCorrelationID(CMS_Message* message, const char* correlationId) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && correlationId != NULL) {
+
+        try{
+
+            if(strlen(correlationId) > 0) {
+                message->message->setCMSCorrelationID(correlationId);
+            }
+
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageDeliveryMode(CMS_Message* message, int* mode) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && mode != NULL) {
+
+        try{
+            *mode = message->message->getCMSDeliveryMode();
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageDeliveryMode(CMS_Message* message, int mode) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->setCMSDeliveryMode(mode);
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageDestination(CMS_Message* message, CMS_Destination** destination) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+
+            std::auto_ptr<CMS_Destination> wrapper( new CMS_Destination );
+
+            const cms::Destination* dest = message->message->getCMSDestination();
+
+            if (dest != NULL) {
+                wrapper->destination = dest->clone();
+                *destination = wrapper.release();
+            } else {
+                *destination = NULL;
+            }
+
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageDestination(CMS_Message* message, CMS_Destination* destination) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+
+            if (destination != NULL) {
+                message->message->setCMSDestination(destination->destination->clone());
+            } else {
+                message->message->setCMSDestination(NULL);
+            }
+
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageExpiration(CMS_Message* message, long long* expiration) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && expiration != NULL) {
+
+        try{
+            *expiration = message->message->getCMSExpiration();
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageExpiration(CMS_Message* message, long long expiration) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->setCMSExpiration(expiration);
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageMessageID(CMS_Message* message, char* messageId, int size) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && messageId != NULL && size > 0) {
+
+        try{
+
+            std::string id = message->message->getCMSMessageID();
+
+            if(!id.empty()) {
+
+                std::size_t pos = 0;
+                for(; pos < id.size() && pos < (std::size_t)size - 1; ++pos) {
+                    messageId[pos] = id.at(pos);
+                }
+
+                messageId[pos] = '\0';
+            } else {
+                messageId[0] = '\0';
+            }
+
+        } catch(cms::MessageFormatException& ex) {
+            messageId[0] = '\0';
+            result = CMS_MESSAGE_FORMAT_ERROR;
+        } catch(...) {
+            messageId[0] = '\0';
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageMessageID(CMS_Message* message, const char* messageId) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && messageId != NULL) {
+
+        try{
+
+            if(strlen(messageId) > 0) {
+                message->message->setCMSMessageID(messageId);
+            }
+
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessagePriority(CMS_Message* message, int* priority) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && priority != NULL) {
+
+        try{
+            *priority = message->message->getCMSPriority();
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessagePriority(CMS_Message* message, int priority) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->setCMSPriority(priority);
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageRedelivered(CMS_Message* message, int* redelivered) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && redelivered != NULL) {
+
+        try{
+            *redelivered = (int) message->message->getCMSRedelivered();
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageRedelivered(CMS_Message* message, int redelivered) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->setCMSRedelivered(redelivered == 0 ? false : true);
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageReplyTo(CMS_Message* message, CMS_Destination** destination) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+
+            std::auto_ptr<CMS_Destination> wrapper( new CMS_Destination );
+
+            const cms::Destination* dest = message->message->getCMSReplyTo();
+
+            if (dest != NULL) {
+                wrapper->destination = dest->clone();
+                *destination = wrapper.release();
+            } else {
+                *destination = NULL;
+            }
+
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageReplyTo(CMS_Message* message, CMS_Destination* destination) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+
+            if (destination != NULL) {
+                message->message->setCMSReplyTo(destination->destination->clone());
+            } else {
+                message->message->setCMSReplyTo(NULL);
+            }
+
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageTimestamp(CMS_Message* message, long long* timeStamp) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && timeStamp != NULL) {
+
+        try{
+            *timeStamp = message->message->getCMSTimestamp();
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageTimestamp(CMS_Message* message, long long timeStamp) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL) {
+
+        try{
+            message->message->setCMSTimestamp(timeStamp);
+        } catch(cms::MessageNotWriteableException& ex) {
+            result = CMS_MESSAGE_NOT_WRITABLE;
+        } catch(...) {
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status getCMSMessageType(CMS_Message* message, char* type, int size) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && type != NULL && size > 0) {
+
+        try{
+
+            std::string typeVal = message->message->getCMSType();
+
+            if(!typeVal.empty()) {
+
+                std::size_t pos = 0;
+                for(; pos < typeVal.size() && pos < (std::size_t)size - 1; ++pos) {
+                    type[pos] = typeVal.at(pos);
+                }
+
+                type[pos] = '\0';
+            } else {
+                type[0] = '\0';
+            }
+
+        } catch(cms::MessageFormatException& ex) {
+            type[0] = '\0';
+            result = CMS_MESSAGE_FORMAT_ERROR;
+        } catch(...) {
+            type[0] = '\0';
+            result = CMS_ERROR;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms_status setCMSMessageType(CMS_Message* message, const char* type) {
+
+    cms_status result = CMS_SUCCESS;
+
+    if(message != NULL && type != NULL) {
+
+        try{
+
+            if(strlen(type) > 0) {
+                message->message->setCMSType(type);
             }
 
         } catch(cms::MessageNotWriteableException& ex) {
