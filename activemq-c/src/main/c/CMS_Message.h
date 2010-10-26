@@ -112,6 +112,8 @@ cms_status destroyMessage(CMS_Message* message);
  *      The Message to clone.
  * @param clone
  *      The address of the location to store the new Message instance.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status cloneMessage(CMS_Message* original, CMS_Message** clone);
 
@@ -120,6 +122,8 @@ cms_status cloneMessage(CMS_Message* original, CMS_Message** clone);
  *
  * @param message
  *      The Message to acknowledge.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status acknowledgeMessage(CMS_Message* message);
 
@@ -129,6 +133,8 @@ cms_status acknowledgeMessage(CMS_Message* message);
  *
  * @param message
  *      The Message whose body is to be cleared.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status clearBody(CMS_Message* message);
 
@@ -142,8 +148,269 @@ cms_status clearBody(CMS_Message* message);
  *
  * @param message
  *      The Message whose properties are to be cleared.
+ *
+ * @return result code indicating the success or failure of the operation.
  */
 cms_status clearMessageProperties(CMS_Message* message);
+
+/**
+ * Gets a count of the number of properties that are contained in the given Message.
+ *
+ * @param message
+ *      The Message whose property count is to be fetched.
+ * @param numProperties
+ *      The address where the number of properties value is to be stored.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getNumMessageProperties(CMS_Message* message, int* numProperties);
+
+/*********************************/
+/* TODO                          */
+/*cms_status getMessagePropertyNames(CMS_Message* message, char** properties, int* size);*/
+/*********************************/
+
+/**
+ * Indicates whether or not a given property exists in the supplied Message instance.
+ * If the property is contained in the Message than the exists value is set to 1 otherwise
+ * it is set to zero.
+ *
+ * @param message
+ *      The message that should be queried for the given property name.
+ * @param key
+ *      The name of the property that the message should be checked for.
+ * @param exists
+ *      The address to store the boolean result of this operation.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status messagePropertyExists(CMS_Message* message, const char* key, int* exists);
+
+/**
+ * Gets a boolean property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageBooleanProperty(CMS_Message* message, const char* key, int* value);
+
+/**
+ * Gets a byte property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageByteProperty(CMS_Message* message, const char* key, unsigned char* value);
+
+/**
+ * Gets a double property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageDoubleProperty(CMS_Message* message, const char* key, double* value);
+
+/**
+ * Gets a float property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageFloatProperty(CMS_Message* message, const char* key, float* value);
+
+/**
+ * Gets a int property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageIntProperty(CMS_Message* message, const char* key, int* value);
+
+/**
+ * Gets a long property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageLongProperty(CMS_Message* message, const char* key, long long* value);
+
+/**
+ * Gets a short property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageShortProperty(CMS_Message* message, const char* key, short* value);
+
+/**
+ * Gets a string property.
+ *
+ * @param message
+ *      The message that should be queried for the given property.
+ * @param key
+ *      The name of the property that should be fetched from the Message instance.
+ * @param value
+ *      The address to store the value of the requested property.
+ * @param size
+ *      The size of the character array that is provided to receive the string payload.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status getMessageStringProperty(CMS_Message* message, const char* key, char* value, int size);
+
+/**
+ * Sets a boolean property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageBooleanProperty(CMS_Message* message, const char* key, int value);
+
+/**
+ * Sets a byte property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageByteProperty(CMS_Message* message, const char* key, unsigned char value);
+
+/**
+ * Sets a double property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageDoubleProperty(CMS_Message* message, const char* key, double value);
+
+/**
+ * Sets a float property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageFloatProperty(CMS_Message* message, const char* key, float value);
+
+/**
+ * Sets a int property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageIntProperty(CMS_Message* message, const char* key, int value);
+
+/**
+ * Sets a long property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setMessageLongProperty(CMS_Message* message, const char* key, long long value);
+
+/**
+ * Sets a short property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setShortProperty(CMS_Message* message, const char* key, short value);
+
+/**
+ * Sets a string property.
+ *
+ * @param message
+ *      The message that the property is to be set in.
+ * @param key
+ *      The name of the property that should be set in the Message instance.
+ * @param value
+ *      The value to store in the given message property.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status setStringProperty(CMS_Message* message, const char* key, const char* value);
 
 #ifdef __cplusplus
 }
