@@ -20,6 +20,12 @@
 #include <Config.h>
 #include <types/CMS_Types.h>
 
+#include <cms/Message.h>
+#include <cms/TextMessage.h>
+#include <cms/BytesMessage.h>
+#include <cms/StreamMessage.h>
+#include <cms/MapMessage.h>
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -127,10 +133,25 @@ cms_status consumerReceive(CMS_MessageConsumer* consumer, CMS_Message** message)
 
             cms::Message* msg = consumer->consumer->receive();
 
-            wrapper->message = msg;
-            // TODO set the message type
+            if(msg != NULL) {
+                wrapper->message = msg;
 
-            *message = wrapper.release();
+                if(dynamic_cast<cms::TextMessage*>(msg) != NULL) {
+                   wrapper->type = CMS_TEXT_MESSAGE;
+                } else if(dynamic_cast<cms::BytesMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_BYTES_MESSAGE;
+                } else if(dynamic_cast<cms::MapMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_MAP_MESSAGE;
+                } else if(dynamic_cast<cms::StreamMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_STREAM_MESSAAGE;
+                } else {
+                    wrapper->type = CMS_MESSAGE;
+                }
+
+                *message = wrapper.release();
+            } else {
+                *message = NULL;
+            }
 
         } catch(...) {
             result = CMS_ERROR;
@@ -155,7 +176,19 @@ cms_status consumerReceiveWithTimeout(CMS_MessageConsumer* consumer, CMS_Message
 
             if (msg != NULL) {
                 wrapper->message = msg;
-                // TODO set the message type
+
+                if(dynamic_cast<cms::TextMessage*>(msg) != NULL) {
+                   wrapper->type = CMS_TEXT_MESSAGE;
+                } else if(dynamic_cast<cms::BytesMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_BYTES_MESSAGE;
+                } else if(dynamic_cast<cms::MapMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_MAP_MESSAGE;
+                } else if(dynamic_cast<cms::StreamMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_STREAM_MESSAAGE;
+                } else {
+                    wrapper->type = CMS_MESSAGE;
+                }
+
                 *message = wrapper.release();
             } else {
                 *message = NULL;
@@ -185,7 +218,17 @@ cms_status consumerReceiveNoWait(CMS_MessageConsumer* consumer, CMS_Message** me
             if (msg != NULL) {
                 wrapper->message = msg;
 
-                // TODO set the message type
+                if(dynamic_cast<cms::TextMessage*>(msg) != NULL) {
+                   wrapper->type = CMS_TEXT_MESSAGE;
+                } else if(dynamic_cast<cms::BytesMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_BYTES_MESSAGE;
+                } else if(dynamic_cast<cms::MapMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_MAP_MESSAGE;
+                } else if(dynamic_cast<cms::StreamMessage*>(msg) != NULL) {
+                    wrapper->type = CMS_STREAM_MESSAAGE;
+                } else {
+                    wrapper->type = CMS_MESSAGE;
+                }
 
                 *message = wrapper.release();
             } else {
