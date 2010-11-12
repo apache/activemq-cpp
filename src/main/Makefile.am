@@ -225,18 +225,49 @@ cc_sources = \
     activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
+    cms/BytesMessage.cpp \
     cms/CMSException.cpp \
+    cms/CMSProperties.cpp \
     cms/CMSSecurityException.cpp \
+    cms/Closeable.cpp \
+    cms/Connection.cpp \
+    cms/ConnectionFactory.cpp \
+    cms/ConnectionMetaData.cpp \
+    cms/DeliveryMode.cpp \
+    cms/Destination.cpp \
+    cms/ExceptionListener.cpp \
     cms/IllegalStateException.cpp \
     cms/InvalidClientIdException.cpp \
     cms/InvalidDestinationException.cpp \
     cms/InvalidSelectorException.cpp \
+    cms/MapMessage.cpp \
     cms/Message.cpp \
+    cms/MessageConsumer.cpp \
     cms/MessageEOFException.cpp \
+    cms/MessageEnumeration.cpp \
     cms/MessageFormatException.cpp \
+    cms/MessageListener.cpp \
     cms/MessageNotReadableException.cpp \
     cms/MessageNotWriteableException.cpp \
+    cms/MessageProducer.cpp \
+    cms/ObjectMessage.cpp \
+    cms/Queue.cpp \
+    cms/QueueBrowser.cpp \
+    cms/Session.cpp \
+    cms/Startable.cpp \
+    cms/Stoppable.cpp \
+    cms/StreamMessage.cpp \
+    cms/TemporaryQueue.cpp \
+    cms/TemporaryTopic.cpp \
+    cms/TextMessage.cpp \
+    cms/Topic.cpp \
     cms/UnsupportedOperationException.cpp \
+    cms/XAConnection.cpp \
+    cms/XAConnectionFactory.cpp \
+    cms/XAException.cpp \
+    cms/XAResource.cpp \
+    cms/XASession.cpp \
+    cms/Xid.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/io/StandardErrorOutputStream.cpp \
@@ -687,6 +718,12 @@ h_sources = \
     cms/TextMessage.h \
     cms/Topic.h \
     cms/UnsupportedOperationException.h \
+    cms/XAConnection.h \
+    cms/XAConnectionFactory.h \
+    cms/XAException.h \
+    cms/XAResource.h \
+    cms/XASession.h \
+    cms/Xid.h \
     decaf/internal/AprPool.h \
     decaf/internal/DecafRuntime.h \
     decaf/internal/io/StandardErrorOutputStream.h \
