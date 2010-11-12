@@ -32,16 +32,18 @@ namespace cms{
     class CMS_API InvalidClientIdException : public CMSException {
     public:
 
-        InvalidClientIdException() throw();
+        InvalidClientIdException();
 
-        InvalidClientIdException( const InvalidClientIdException& ex ) throw();
+        InvalidClientIdException( const InvalidClientIdException& ex );
+
+        InvalidClientIdException( const std::string& message );
 
         InvalidClientIdException( const std::string& message,
-                                  const std::exception* cause ) throw();
+                                  const std::exception* cause );
 
         InvalidClientIdException( const std::string& message,
                                   const std::exception* cause,
-                                  const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                                  const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~InvalidClientIdException() throw();
 

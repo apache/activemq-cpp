@@ -32,16 +32,18 @@ namespace cms{
     class CMS_API MessageEOFException : public CMSException {
     public:
 
-        MessageEOFException() throw();
+        MessageEOFException();
 
-        MessageEOFException( const MessageEOFException& ex ) throw();
+        MessageEOFException( const MessageEOFException& ex );
+
+        MessageEOFException( const std::string& message );
 
         MessageEOFException( const std::string& message,
-                             const std::exception* cause ) throw();
+                             const std::exception* cause );
 
         MessageEOFException( const std::string& message,
                              const std::exception* cause,
-                             const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                             const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~MessageEOFException() throw();
 

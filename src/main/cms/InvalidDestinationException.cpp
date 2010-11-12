@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidDestinationException::InvalidDestinationException() throw() : CMSException() {
+InvalidDestinationException::InvalidDestinationException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidDestinationException::InvalidDestinationException( const InvalidDestinationException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InvalidDestinationException::InvalidDestinationException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidDestinationException::InvalidDestinationException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidDestinationException::InvalidDestinationException( const std::string& message,
                                                           const std::exception* cause,
                                                           const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -20,23 +20,28 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageEOFException::MessageEOFException() throw() : CMSException() {
+MessageEOFException::MessageEOFException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageEOFException::MessageEOFException( const MessageEOFException& ex ) throw() : CMSException( ex ) {
+MessageEOFException::MessageEOFException( const MessageEOFException& ex ) : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageEOFException::MessageEOFException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageEOFException::MessageEOFException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageEOFException::MessageEOFException( const std::string& message,
                                           const std::exception* cause,
                                           const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
