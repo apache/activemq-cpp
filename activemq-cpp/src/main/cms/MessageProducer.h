@@ -57,7 +57,7 @@ namespace cms{
     class CMS_API MessageProducer : public Closeable {
     public:
 
-        virtual ~MessageProducer() throw() {}
+        virtual ~MessageProducer() throw();
 
         /**
          * Sends the message to the default producer destination, but does

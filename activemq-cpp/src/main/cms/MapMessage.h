@@ -71,7 +71,7 @@ namespace cms{
     class CMS_API MapMessage : public Message {
     public:
 
-        virtual ~MapMessage() throw() {}
+        virtual ~MapMessage() throw();
 
         /**
          * Returns true if there are no values stored in the MapMessage body.

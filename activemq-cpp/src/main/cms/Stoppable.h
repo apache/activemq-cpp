@@ -33,10 +33,10 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Stoppable{
+    class CMS_API Stoppable {
     public:
 
-        virtual ~Stoppable() {}
+        virtual ~Stoppable();
 
         /**
          * Stops this service.

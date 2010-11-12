@@ -41,7 +41,7 @@ namespace cms{
     class CMS_API TextMessage : public Message{
     public:
 
-        virtual ~TextMessage() throw() {}
+        virtual ~TextMessage() throw();
 
         /**
          * Gets the message character buffer.

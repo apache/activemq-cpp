@@ -39,7 +39,7 @@ namespace cms{
     class CMS_API TemporaryQueue : public Destination {
     public:
 
-        virtual ~TemporaryQueue() throw() {}
+        virtual ~TemporaryQueue() throw();
 
         /**
          * Gets the name of this queue.

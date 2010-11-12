@@ -38,7 +38,7 @@ namespace cms{
     class CMS_API ConnectionFactory {
     public:
 
-        virtual ~ConnectionFactory() throw() {}
+        virtual ~ConnectionFactory() throw();
 
         /**
          * Creates a connection with the default user identity. The

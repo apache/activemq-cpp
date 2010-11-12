@@ -34,7 +34,7 @@ namespace cms{
     class CMS_API CMSProperties {
     public:
 
-        virtual ~CMSProperties() throw() {}
+        virtual ~CMSProperties() throw();
 
         /**
          * Returns the current count of all the Properties that are currently stored in

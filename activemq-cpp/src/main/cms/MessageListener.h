@@ -33,7 +33,7 @@ namespace cms{
     class CMS_API MessageListener{
     public:
 
-        virtual ~MessageListener() throw() {}
+        virtual ~MessageListener() throw();
 
         /**
          * Called asynchronously when a new message is received, the message
