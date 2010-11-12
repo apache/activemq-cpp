@@ -29,19 +29,21 @@ namespace cms {
      *
      * @since 2.0
      */
-    class CMS_API UnsupportedOperationException  : public CMSException {
+    class CMS_API UnsupportedOperationException : public CMSException {
     public:
 
-        UnsupportedOperationException() throw();
+        UnsupportedOperationException();
 
-        UnsupportedOperationException( const UnsupportedOperationException& ex ) throw();
+        UnsupportedOperationException( const UnsupportedOperationException& ex );
+
+        UnsupportedOperationException( const std::string& message );
 
         UnsupportedOperationException( const std::string& message,
-                                       const std::exception* cause ) throw();
+                                       const std::exception* cause );
 
         UnsupportedOperationException( const std::string& message,
                                        const std::exception* cause,
-                                       const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                                       const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~UnsupportedOperationException() throw();
 

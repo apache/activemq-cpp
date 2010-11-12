@@ -31,16 +31,18 @@ namespace cms{
     class CMS_API MessageNotWriteableException : public CMSException {
     public:
 
-        MessageNotWriteableException() throw();
+        MessageNotWriteableException();
 
-        MessageNotWriteableException( const MessageNotWriteableException& ex ) throw();
+        MessageNotWriteableException( const MessageNotWriteableException& ex );
+
+        MessageNotWriteableException( const std::string& message );
 
         MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause ) throw();
+                                      const std::exception* cause );
 
         MessageNotWriteableException( const std::string& message,
                                       const std::exception* cause,
-                                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                                      const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~MessageNotWriteableException() throw();
 

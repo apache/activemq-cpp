@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidSelectorException::InvalidSelectorException() throw() : CMSException() {
+InvalidSelectorException::InvalidSelectorException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidSelectorException::InvalidSelectorException( const InvalidSelectorException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InvalidSelectorException::InvalidSelectorException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidSelectorException::InvalidSelectorException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidSelectorException::InvalidSelectorException( const std::string& message,
                                                     const std::exception* cause,
                                                     const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

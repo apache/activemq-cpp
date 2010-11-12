@@ -33,16 +33,18 @@ namespace cms{
     class CMS_API CMSSecurityException : public CMSException {
     public:
 
-        CMSSecurityException() throw();
+        CMSSecurityException();
 
-        CMSSecurityException( const CMSSecurityException& ex ) throw();
+        CMSSecurityException( const CMSSecurityException& ex );
+
+        CMSSecurityException( const std::string& message );
 
         CMSSecurityException( const std::string& message,
-                              const std::exception* cause ) throw();
+                              const std::exception* cause );
 
         CMSSecurityException( const std::string& message,
                               const std::exception* cause,
-                              const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                              const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~CMSSecurityException() throw();
 

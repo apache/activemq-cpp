@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-UnsupportedOperationException::UnsupportedOperationException() throw() : CMSException() {
+UnsupportedOperationException::UnsupportedOperationException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 UnsupportedOperationException::UnsupportedOperationException( const UnsupportedOperationException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+UnsupportedOperationException::UnsupportedOperationException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 UnsupportedOperationException::UnsupportedOperationException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 UnsupportedOperationException::UnsupportedOperationException( const std::string& message,
                                                               const std::exception* cause,
                                                               const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

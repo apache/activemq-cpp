@@ -32,16 +32,18 @@ namespace cms{
     class CMS_API InvalidDestinationException : public CMSException {
     public:
 
-        InvalidDestinationException() throw();
+        InvalidDestinationException();
 
-        InvalidDestinationException( const InvalidDestinationException& ex ) throw();
+        InvalidDestinationException( const InvalidDestinationException& ex );
+
+        InvalidDestinationException( const std::string& message );
 
         InvalidDestinationException( const std::string& message,
-                                     const std::exception* cause ) throw();
+                                     const std::exception* cause );
 
         InvalidDestinationException( const std::string& message,
                                      const std::exception* cause,
-                                     const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                                     const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~InvalidDestinationException() throw();
 

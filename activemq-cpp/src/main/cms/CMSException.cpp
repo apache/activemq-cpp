@@ -39,12 +39,12 @@ namespace cms{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException::CMSException() throw() : std::exception() {
+CMSException::CMSException() : std::exception() {
     this->data = new CMSExceptionData();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException::CMSException( const CMSException& ex ) throw() : std::exception() {
+CMSException::CMSException( const CMSException& ex ) : std::exception() {
 
     this->data = new CMSExceptionData();
     this->data->cause.reset( ex.data->cause.release() );
@@ -53,8 +53,15 @@ CMSException::CMSException( const CMSException& ex ) throw() : std::exception() 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+CMSException::CMSException( const std::string& message ) : std::exception() {
+
+    this->data = new CMSExceptionData();
+    this->data->message = message;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 CMSException::CMSException( const std::string& message,
-                            const std::exception* cause ) throw() : std::exception() {
+                            const std::exception* cause ) : std::exception() {
 
     this->data = new CMSExceptionData();
     this->data->cause.reset( cause );
@@ -65,7 +72,7 @@ CMSException::CMSException( const std::string& message,
 CMSException::CMSException( const std::string& message,
                             const std::exception* cause,
                             const std::vector< std::pair< std::string, int> >& stackTrace )
-                                throw() : std::exception() {
+                                : std::exception() {
 
     this->data = new CMSExceptionData();
     this->data->cause.reset( cause );
