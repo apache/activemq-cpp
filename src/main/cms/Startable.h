@@ -36,7 +36,7 @@ namespace cms{
     class CMS_API Startable {
     public:
 
-        virtual ~Startable() throw() {}
+        virtual ~Startable() throw();
 
         /**
          * Starts the service.

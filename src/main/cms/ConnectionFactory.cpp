@@ -15,29 +15,11 @@
  * limitations under the License.
  */
 
-#ifndef _CMS_OBJECTMESSAGE_H_
-#define _CMS_OBJECTMESSAGE_H_
+#include <cms/ConnectionFactory.h>
 
-#include <cms/Config.h>
-#include <cms/Message.h>
+using namespace cms;
 
-namespace cms{
-
-    /**
-     * Place holder for interaction with JMS systems that support Java, the C++
-     * client is not responsible for deserializing the contained Object.
-     *
-     * serialized <code>ObjectMessage</code>s.
-     *
-     * @since 1.0
-     */
-    class CMS_API ObjectMessage : public Message {
-    public:
-
-        virtual ~ObjectMessage() throw();
-
-    };
+////////////////////////////////////////////////////////////////////////////////
+ConnectionFactory::~ConnectionFactory() throw() {
 
 }
-
-#endif /*_CMS_OBJECTMESSAGE_H_*/

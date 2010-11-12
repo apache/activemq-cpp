@@ -36,7 +36,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Destination{
+    class CMS_API Destination {
     public:
 
         enum DestinationType {
@@ -48,7 +48,7 @@ namespace cms{
 
     public:
 
-        virtual ~Destination() throw() {}
+        virtual ~Destination() throw();
 
         /**
          * Retrieve the Destination Type for this Destination

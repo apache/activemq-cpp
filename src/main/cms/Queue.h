@@ -37,7 +37,7 @@ namespace cms{
     class CMS_API Queue : public Destination{
     public:
 
-        virtual ~Queue() throw() {}
+        virtual ~Queue() throw();
 
         /**
          * Gets the name of this queue.
