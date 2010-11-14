@@ -615,6 +615,14 @@ namespace core{
         transport::Transport& getTransport() const;
 
         /**
+         * Returns the Id of the Resource Manager that this client will use should
+         * it be entered into an XA Transaction.
+         *
+         * @returns a string containing the resource manager Id for XA Transactions.
+         */
+        std::string getResourceManagerId() const;
+
+        /**
          * Clean up this connection object, reseting it back to a state that mirrors
          * what a newly created ActiveMQConnection object has.
          */

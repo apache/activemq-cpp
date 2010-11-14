@@ -121,6 +121,7 @@ namespace core{
         Pointer<commands::BrokerInfo> brokerInfo;
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
         Pointer<CountDownLatch> transportInterruptionProcessingComplete;
+        Pointer<CountDownLatch> brokerInfoReceived;
 
         Pointer<Exception> firstFailureError;
 
@@ -144,6 +145,7 @@ namespace core{
             this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
             this->clientIdGenerator.reset(new util::IdGenerator );
             this->connectionInfo.reset( new ConnectionInfo() );
+            this->brokerInfoReceived.reset( new CountDownLatch(1) );
 
             // Generate a connectionId
             decaf::lang::Pointer<ConnectionId> connectionId( new ConnectionId() );
@@ -151,6 +153,9 @@ namespace core{
             this->connectionInfo->setConnectionId( connectionId );
         }
 
+        void waitForBrokerInfo() {
+            this->brokerInfoReceived->await();
+        }
     };
 
     // Static init.
@@ -663,6 +668,7 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
         } else if( command->isBrokerInfo() ) {
             this->config->brokerInfo =
                 command.dynamicCast<BrokerInfo>();
+            this->config->brokerInfoReceived->countDown();
         } else if( command->isShutdownInfo() ) {
 
             try {
@@ -713,6 +719,8 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
         if( this->config->firstFailureError == NULL ) {
             this->config->firstFailureError.reset( ex.clone() );
         }
+
+        this->config->brokerInfoReceived->countDown();
 
         // TODO - Until this fires in another thread we can't dipose of
         //        the transport here since it could result in this method
@@ -1167,4 +1175,18 @@ void ActiveMQConnection::setMessagePrioritySupported( bool value ) {
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Exception* ActiveMQConnection::getFirstFailureError() const {
     return this->config->firstFailureError.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQConnection::getResourceManagerId() const {
+    try {
+        this->config->waitForBrokerInfo();
+
+        if( this->config->brokerInfo == NULL ) {
+            throw CMSException("Connection failed before Broker info was received.");
+        }
+
+        return this->config->brokerInfo->getBrokerId()->getValue();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
