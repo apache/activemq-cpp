@@ -37,7 +37,7 @@ namespace cms {
     class CMS_API XAConnection {
     public:
 
-        virtual ~XAConnection();
+        virtual ~XAConnection() throw();
 
         /**
          * Creates an XASession object.
