@@ -114,7 +114,7 @@ namespace cms {
          *
          * @throws CMSException if the size parameter is less than zero or buffer is NULL.
          */
-        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) = 0;
+        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const = 0;
 
     };
 
