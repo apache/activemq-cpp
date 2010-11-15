@@ -72,6 +72,14 @@ namespace commands{
 
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual bool isLocalTransactionId() const {
+            return false;
+        }
+
+        virtual bool isXATransactionId() const {
+            return false;
+        }
+
         virtual int compareTo( const TransactionId& value ) const;
 
         virtual bool equals( const TransactionId& value ) const;
