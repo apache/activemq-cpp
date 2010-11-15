@@ -75,6 +75,10 @@ namespace commands{
 
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual bool isXATransactionId() const {
+            return true;
+        }
+
         virtual int getFormatId() const;
         virtual void setFormatId( int formatId );
 

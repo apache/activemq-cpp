@@ -75,6 +75,10 @@ namespace commands{
 
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual bool isLocalTransactionId() const {
+            return true;
+        }
+
         virtual long long getValue() const;
         virtual void setValue( long long value );
 
