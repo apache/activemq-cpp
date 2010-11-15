@@ -190,6 +190,28 @@ namespace cms {
                      const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~XAException() throw();
+
+    public:
+
+        /**
+         * Sets the error code for this XAException
+         *
+         * @param errorCode
+         *      The error code to assign to this XAException.
+         */
+        void setErrorCode( int errorCode ) {
+            this->errorCode = errorCode;
+        }
+
+        /**
+         * Gets the error code that was assigned to this XAException.
+         *
+         * @returns the assigned error code.
+         */
+        int getErrorCode() const {
+            return this->errorCode;
+        }
+
     };
 
 }
