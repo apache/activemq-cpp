@@ -57,28 +57,6 @@ namespace commands{
      *
      */
     class AMQCPP_API Message : public BaseCommand {
-    private:
-
-        // Used to allow a client to call Message::acknowledge when in the Client
-        // Ack mode.
-        Pointer<core::ActiveMQAckHandler> ackHandler;
-
-        // Message properties, these are Marshaled and Unmarshaled from the Message
-        // Command's marshaledProperties vector.
-        activemq::util::PrimitiveMap properties;
-
-        // Indicates if the Message Properties are Read Only
-        bool readOnlyProperties;
-
-        // Indicates if the Message Body are Read Only
-        bool readOnlyBody;
-
-    protected:
-
-        core::ActiveMQConnection* connection;
-
-        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
-
     protected:
 
         Pointer<ProducerId> producerId;
@@ -114,6 +92,28 @@ namespace commands{
     public:
 
         const static unsigned char ID_MESSAGE = 0;
+
+    private:
+
+        // Used to allow a client to call Message::acknowledge when in the Client
+        // Ack mode.
+        Pointer<core::ActiveMQAckHandler> ackHandler;
+
+        // Message properties, these are Marshaled and Unmarshaled from the Message
+        // Command's marshaledProperties vector.
+        activemq::util::PrimitiveMap properties;
+
+        // Indicates if the Message Properties are Read Only
+        bool readOnlyProperties;
+
+        // Indicates if the Message Body are Read Only
+        bool readOnlyBody;
+
+    protected:
+
+        core::ActiveMQConnection* connection;
+
+        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
 
     private:
 

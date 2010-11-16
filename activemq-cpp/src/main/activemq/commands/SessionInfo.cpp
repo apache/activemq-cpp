@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo::SessionInfo() 
-    : BaseCommand(), ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE), sessionId(NULL) {
+    : BaseCommand(), sessionId(NULL), ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE) {
 
 }
 

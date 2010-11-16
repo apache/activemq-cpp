@@ -133,7 +133,7 @@ int TransactionId::compareTo( const TransactionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool TransactionId::equals( const TransactionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

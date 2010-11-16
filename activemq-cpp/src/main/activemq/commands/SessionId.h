@@ -49,10 +49,6 @@ namespace commands{
      *
      */
     class AMQCPP_API SessionId : public BaseDataStructure, public decaf::lang::Comparable<SessionId> {
-    private:
-
-        mutable Pointer<ConnectionId> parentId;
-
     protected:
 
         std::string connectionId;
@@ -63,6 +59,10 @@ namespace commands{
         const static unsigned char ID_SESSIONID = 121;
 
         typedef decaf::lang::PointerComparator<SessionId> COMPARATOR;
+
+    private:
+
+        mutable Pointer<ConnectionId> parentId;
 
     public:
 

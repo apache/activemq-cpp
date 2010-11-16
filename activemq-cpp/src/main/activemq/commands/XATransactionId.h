@@ -25,6 +25,7 @@
 
 #include <activemq/commands/TransactionId.h>
 #include <activemq/util/Config.h>
+#include <cms/Xid.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/Pointer.h>
 #include <string>
@@ -44,7 +45,7 @@ namespace commands{
      *         in the activemq-cpp-openwire-generator module
      *
      */
-    class AMQCPP_API XATransactionId : public TransactionId, public decaf::lang::Comparable<XATransactionId> {
+    class AMQCPP_API XATransactionId : public TransactionId, public cms::Xid, public decaf::lang::Comparable<XATransactionId> {
     protected:
 
         int formatId;
@@ -63,6 +64,8 @@ namespace commands{
 
         XATransactionId( const XATransactionId& other );
 
+        XATransactionId( const cms::Xid* xid );
+
         virtual ~XATransactionId();
 
         virtual unsigned char getDataStructureType() const;
@@ -78,6 +81,16 @@ namespace commands{
         virtual bool isXATransactionId() const {
             return true;
         }
+
+    public:  // Xid interface implementation.
+
+        virtual Xid* clone() const;
+
+        virtual bool equals( const Xid* other ) const;
+
+        virtual int getBranchQualifier( unsigned char* buffer, int size ) const;
+
+        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const;
 
         virtual int getFormatId() const;
         virtual void setFormatId( int formatId );
