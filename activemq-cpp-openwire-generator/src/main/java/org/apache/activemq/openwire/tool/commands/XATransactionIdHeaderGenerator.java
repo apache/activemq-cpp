@@ -17,13 +17,45 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class XATransactionIdHeaderGenerator extends CommandHeaderGenerator {
+
+    protected void populateIncludeFilesSet() {
+        Set<String> includes = getIncludeFiles();
+        includes.add("<cms/Xid.h>");
+
+        super.populateIncludeFilesSet();
+    }
+
+    protected void generateAdditionalConstructors( PrintWriter out ) {
+        out.println("        "+getClassName()+"( const cms::Xid* xid );");
+        out.println("");
+
+        super.generateAdditionalConstructors(out);
+    }
+
+    protected void populateBaseClassesSet() {
+        super.populateBaseClassesSet();
+        Set<String> classes = getBaseClasses();
+        classes.add("cms::Xid");
+    }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
         out.println("        virtual bool isXATransactionId() const {");
         out.println("            return true;");
         out.println("        }");
+        out.println("");
+
+        out.println("    public:  // Xid interface implementation.");
+        out.println("");
+        out.println("        virtual Xid* clone() const;");
+        out.println("");
+        out.println("        virtual bool equals( const Xid* other ) const;");
+        out.println("");
+        out.println("        virtual int getBranchQualifier( unsigned char* buffer, int size ) const;");
+        out.println("");
+        out.println("        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const;");
         out.println("");
 
         super.generateAdditonalMembers( out );

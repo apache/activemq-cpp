@@ -31,13 +31,13 @@ public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateProperties( PrintWriter out ) {
 
+        super.generateProperties(out);
+
         out.println("    private:");
         out.println("");
         out.println("        // The ACK mode that the Session was created with" );
         out.println("        unsigned int ackMode;");
         out.println("");
-
-        super.generateProperties(out);
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {

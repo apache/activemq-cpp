@@ -31,19 +31,17 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         includes.add("<decaf/lang/System.h>");
     }
 
-    protected String generateInitializerList(String current) {
+    protected String generateInitializerList() {
         StringBuilder result = new StringBuilder();
 
-        if( current != null ){
-            result.append(current);
-        }
+        result.append(super.generateInitializerList());
         result.append(", ackHandler(NULL)");
         result.append(", properties()");
         result.append(", readOnlyProperties(false)");
         result.append(", readOnlyBody(false)");
         result.append(", connection(NULL)");
 
-        return super.generateInitializerList(result.toString());
+        return result.toString();
     }
 
     protected void generateCopyDataStructureBody( PrintWriter out ) {

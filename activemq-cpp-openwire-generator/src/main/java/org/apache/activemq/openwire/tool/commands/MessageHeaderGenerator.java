@@ -42,6 +42,8 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateProperties( PrintWriter out ) {
 
+        super.generateProperties( out );
+
         out.println("    private:");
         out.println("");
         out.println("        // Used to allow a client to call Message::acknowledge when in the Client");
@@ -64,8 +66,6 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("");
         out.println("        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;");
         out.println("");
-
-        super.generateProperties( out );
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {

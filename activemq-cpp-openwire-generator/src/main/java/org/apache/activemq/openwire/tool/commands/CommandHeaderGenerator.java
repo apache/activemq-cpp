@@ -17,6 +17,7 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.codehaus.jam.JProperty;
@@ -28,6 +29,9 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         // Start with the license.
         generateLicence(out);
 
+        populateIncludeFilesSet();
+        populateBaseClassesSet();
+
         out.println("#ifndef _ACTIVEMQ_COMMANDS_"+getClassName().toUpperCase()+"_H_");
         out.println("#define _ACTIVEMQ_COMMANDS_"+getClassName().toUpperCase()+"_H_");
         out.println("");
@@ -37,7 +41,6 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         out.println("#endif");
         out.println("");
 
-        populateIncludeFilesSet();
         for( String include : getIncludeFiles() ) {
             if( include != null ) {
                 out.println("#include "+include);
@@ -165,6 +168,15 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         }
     }
 
+    protected void populateBaseClassesSet() {
+        Set<String> classes = getBaseClasses();
+        classes.add(getBaseClassName());
+
+        if( isComparable() ) {
+            classes.add("decaf::lang::Comparable<"+getClassName()+">");
+        }
+    }
+
     protected void generateNamespaceWrapper( PrintWriter out ) {
         out.println("namespace activemq{");
         out.println("namespace commands{");
@@ -177,11 +189,14 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
     protected void generateClassDefinition( PrintWriter out ) {
         out.print("    class AMQCPP_API "+getClassName()+" : " );
 
-        if( isComparable() ) {
-            out.println("public "+ getBaseClassName() +", public decaf::lang::Comparable<"+getClassName()+"> {" );
-        } else {
-            out.print("public "+ getBaseClassName() +" {" );
-            out.println("");
+        Iterator<String> iter = this.getBaseClasses().iterator();
+        while(iter.hasNext()) {
+            out.print("public " + iter.next());
+            if( iter.hasNext() ) {
+                out.print(", ");
+            } else {
+                out.println(" {");
+            }
         }
     }
 
