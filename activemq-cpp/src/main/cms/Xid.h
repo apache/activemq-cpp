@@ -56,6 +56,8 @@ namespace cms {
 
     public:
 
+        Xid();
+
         virtual ~Xid();
 
         /**
