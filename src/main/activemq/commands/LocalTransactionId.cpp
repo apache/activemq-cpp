@@ -189,7 +189,7 @@ int LocalTransactionId::compareTo( const LocalTransactionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool LocalTransactionId::equals( const LocalTransactionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

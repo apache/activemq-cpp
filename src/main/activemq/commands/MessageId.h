@@ -47,10 +47,6 @@ namespace commands{
      *
      */
     class AMQCPP_API MessageId : public BaseDataStructure, public decaf::lang::Comparable<MessageId> {
-    private:
-
-        mutable std::string key;
-
     protected:
 
         Pointer<ProducerId> producerId;
@@ -62,6 +58,10 @@ namespace commands{
         const static unsigned char ID_MESSAGEID = 110;
 
         typedef decaf::lang::PointerComparator<MessageId> COMPARATOR;
+
+    private:
+
+        mutable std::string key;
 
     public:
 

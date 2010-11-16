@@ -46,11 +46,6 @@ namespace commands{
      *
      */
     class AMQCPP_API SessionInfo : public BaseCommand {
-    private:
-
-        // The ACK mode that the Session was created with
-        unsigned int ackMode;
-
     protected:
 
         Pointer<SessionId> sessionId;
@@ -58,6 +53,11 @@ namespace commands{
     public:
 
         const static unsigned char ID_SESSIONINFO = 4;
+
+    private:
+
+        // The ACK mode that the Session was created with
+        unsigned int ackMode;
 
     private:
 
