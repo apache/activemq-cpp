@@ -174,11 +174,11 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory() : settings( new FactorySe
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
+ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& uri,
                                                       const std::string& username,
                                                       const std::string& password ) : settings( new FactorySettings() ) {
 
-    this->setBrokerURI( URI( url ) );
+    this->setBrokerURI( URI( uri ) );
 
     // Store login data in the properties
     if( !username.empty() ) {
@@ -272,7 +272,7 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net
         Pointer<Properties> properties( this->settings->properties->clone() );
 
         // Create and Return the new connection object.
-        connection.reset( new ActiveMQConnection( transport, properties ) );
+        connection.reset( createActiveMQConnection( transport, properties ) );
 
         // Set all options parsed from the URI.
         configureConnection( connection.get() );
@@ -301,6 +301,14 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net
     } catch(...) {
         throw cms::CMSException( "Caught Unknown Exception", NULL );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQConnection* ActiveMQConnectionFactory::createActiveMQConnection(
+    const Pointer<transport::Transport>& transport,
+    const Pointer<decaf::util::Properties>& properties ) {
+
+    return new ActiveMQConnection( transport, properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

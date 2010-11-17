@@ -67,7 +67,7 @@ namespace core{
 
         friend class ActiveMQSessionExecutor;
 
-    private:
+    protected:
 
         /**
          * SessionInfo for this Session
@@ -136,10 +136,10 @@ namespace core{
 
     public:
 
-        ActiveMQSession( const Pointer<commands::SessionInfo>& sessionInfo,
+        ActiveMQSession( ActiveMQConnection* connection,
+                         const Pointer<commands::SessionId>& id,
                          cms::Session::AcknowledgeMode ackMode,
-                         const decaf::util::Properties& properties,
-                         ActiveMQConnection* connection );
+                         const decaf::util::Properties& properties );
 
         virtual ~ActiveMQSession() throw();
 
@@ -147,7 +147,7 @@ namespace core{
          * Redispatches the given set of unconsumed messages to the consumers.
          * @param unconsumedMessages - unconsumed messages to be redelivered.
          */
-        void redispatch( MessageDispatchChannel& unconsumedMessages );
+        virtual void redispatch( MessageDispatchChannel& unconsumedMessages );
 
         /**
          * Stops asynchronous message delivery.
@@ -165,19 +165,19 @@ namespace core{
          */
         bool isStarted() const;
 
-        bool isAutoAcknowledge() const {
+        virtual bool isAutoAcknowledge() const {
             return this->ackMode == cms::Session::AUTO_ACKNOWLEDGE;
         }
 
-        bool isDupsOkAcknowledge() const {
+        virtual bool isDupsOkAcknowledge() const {
             return this->ackMode == cms::Session::DUPS_OK_ACKNOWLEDGE;
         }
 
-        bool isClientAcknowledge() const {
+        virtual bool isClientAcknowledge() const {
             return this->ackMode == cms::Session::CLIENT_ACKNOWLEDGE;
         }
 
-        bool isIndividualAcknowledge() const {
+        virtual bool isIndividualAcknowledge() const {
             return this->ackMode == cms::Session::INDIVIDUAL_ACKNOWLEDGE;
         }
 
@@ -399,7 +399,7 @@ namespace core{
          *
          * @throw ActiveMQException if this is not a Transacted Session.
          */
-        void doStartTransaction();
+        virtual void doStartTransaction();
 
         /**
          * Gets the Pointer to this Session's TransactionContext

@@ -67,30 +67,40 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSession::ActiveMQSession( const Pointer<SessionInfo>& sessionInfo,
+ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
+                                  const Pointer<SessionId>& id,
                                   cms::Session::AcknowledgeMode ackMode,
-                                  const Properties& properties,
-                                  ActiveMQConnection* connection ) {
+                                  const Properties& properties ) {
 
-    if( sessionInfo == NULL || connection == NULL ) {
+    if( id == NULL || connection == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
-            "ActiveMQSession::ActiveMQSession - Init with NULL data");
+            "ActiveMQSession::ActiveMQSession - Constructor called with NULL data");
     }
 
-    this->sessionInfo = sessionInfo;
+    this->sessionInfo.reset( new SessionInfo() );
+    this->sessionInfo->setAckMode( ackMode );
+    this->sessionInfo->setSessionId( id );
+
+    connection->oneway( this->sessionInfo );
+
     this->connection = connection;
     this->closed = false;
     this->ackMode = ackMode;
     this->lastDeliveredSequenceId = -1;
 
-    // Create a Transaction object only if the session is transacted
-    if( this->isTransacted() ) {
-        this->transaction.reset( new ActiveMQTransactionContext( this, properties ) );
-    }
+    // Create a Transaction objet
+    this->transaction.reset( new ActiveMQTransactionContext( this, properties ) );
 
     // Create the session executor object.
     this->executor.reset( new ActiveMQSessionExecutor( this ) );
+
+    this->connection->addSession( this );
+
+    // If the connection is already started, start the session.
+    if( this->connection->isStarted() ) {
+        this->start();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
