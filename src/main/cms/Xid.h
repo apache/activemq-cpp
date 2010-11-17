@@ -88,7 +88,7 @@ namespace cms {
          * @return the number of bytes copied into the buffer, or -1 if the buffer
          *         provided was not large enough.
          *
-         * @throws CMSException if the size parameter is less than zero or buffer is NULL.
+         * @throws XAException if the size parameter is less than zero or buffer is NULL.
          */
         virtual int getBranchQualifier( unsigned char* buffer, int size ) const = 0;
 
@@ -114,7 +114,7 @@ namespace cms {
          * @return the number of bytes copied into the buffer, or -1 if the buffer
          *         provided was not large enough.
          *
-         * @throws CMSException if the size parameter is less than zero or buffer is NULL.
+         * @throws XAException if the size parameter is less than zero or buffer is NULL.
          */
         virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const = 0;
 
