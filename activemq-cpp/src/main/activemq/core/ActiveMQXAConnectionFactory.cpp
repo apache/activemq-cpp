@@ -23,6 +23,11 @@ using namespace activemq;
 using namespace activemq::core;
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::XAConnectionFactory* cms::XAConnectionFactory::createCMSXAConnectionFactory( const std::string& brokerURI ) {
+    return new ActiveMQXAConnectionFactory( brokerURI );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQXAConnectionFactory::ActiveMQXAConnectionFactory() :
     ActiveMQConnectionFactory() {
 }
