@@ -48,16 +48,32 @@ AC_SUBST(CMSAPI_VERSION)
 
 ##
 ## When releasing a new version the ACTIVEMQ_LIBRARY_VERSION needs to be updated.
-## The following rules apply to the numbers in the version.
+## The following rules apply to the numbers in the version as defined by libtool.
 ##
-## MAJOR: a change in the MAJOR number is necessary for anything that changes
-##  binary compatibility (e.g. changing a function prototype or class definition),
-##  or when major internal changes occur
-## MINOR: a change in the MINOR number is necessary whenever new functionality is
-##  added without breaking binary compatibility (e.g. adding a new class), or when
-##  anything other than very minor internal changes occur
-## REVISION: a change in the REVISION number is made for any other type of change
-##  that does not justify a change to MINOR or MAJOR
+##   1. Start with version information of ‘0:0:0’ for each libtool library.
+##   2. Update the version information only immediately before a public release of your
+##      software. More frequent updates are unnecessary, and only guarantee that the current
+##      interface number gets larger faster.
+##   3. If the library source code has changed at all since the last update, then increment
+##      revision (‘c:r:a’ becomes ‘c:r+1:a’).
+##   4. If any interfaces have been added, removed, or changed since the last update, increment
+##      current, and set revision to 0.
+##   5. If any interfaces have been added since the last public release, then increment age.
+##   6. If any interfaces have been removed or changed since the last public release, then set
+##      age to 0.
+##
+## More plainly the follow rules should be used when changing this number.
+##
+##   1. Programs using the previous version may use the new version as drop-in replacement, and
+##      programs using the new version can also work with the previous one. In other words, no
+##      recompiling nor relinking is needed. In this case, bump revision only, don't touch current
+##      nor age.
+##   2. Programs using the previous version may use the new version as drop-in replacement, but
+##      programs using the new version may use APIs not present in the previous one. In other words,
+##      a program linking against the new version may fail with “unresolved symbols” if linking
+##      against the old version at runtime: set revision to 0, bump current and age.
+##   3. Programs may need to be changed, recompiled, relinked in order to use the new version. Bump
+##      current, set revision and age to 0.
 ##
 ACTIVEMQ_LIBRARY_VERSION=13:0:0
 
