@@ -29,6 +29,9 @@ namespace openwire {
 
         CPPUNIT_TEST_SUITE( OpenwireXATransactionsTest );
         CPPUNIT_TEST( testCreateXAConnectionFactory );
+        CPPUNIT_TEST( testCreateXAConnection );
+        CPPUNIT_TEST( testCreateXASession );
+        CPPUNIT_TEST( testSendReceiveOutsideTX );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -41,6 +44,9 @@ namespace openwire {
         }
 
         void testCreateXAConnectionFactory();
+        void testCreateXAConnection();
+        void testCreateXASession();
+        void testSendReceiveOutsideTX();
 
     };
 
