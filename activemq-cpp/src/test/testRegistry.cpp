@@ -42,6 +42,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 #include <activemq/commands/ActiveMQStreamMessageTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQStreamMessageTest );
+#include <activemq/commands/XATransactionIdTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::XATransactionIdTest );
 
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::BaseDataStreamMarshallerTest );

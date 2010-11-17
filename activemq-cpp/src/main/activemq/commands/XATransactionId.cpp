@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId() 
+XATransactionId::XATransactionId()
     : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
 }
@@ -329,7 +329,11 @@ bool XATransactionId::equals( const cms::Xid* other ) const {
 int XATransactionId::getBranchQualifier( unsigned char* buffer, int size ) const {
 
     if( size < 0 ) {
-        throw cms::XAException("Invalid negative size value passed to getBranchQualifier()");
+        throw cms::XAException("Error: Negative size value passed to getBranchQualifier()");
+    }
+
+    if( buffer == NULL ) {
+        throw cms::XAException("Error: NULL buffer pointer passed to getBranchQualifier()");
     }
 
     if( size < (int)this->branchQualifier.size() ) {
@@ -349,7 +353,11 @@ int XATransactionId::getBranchQualifier( unsigned char* buffer, int size ) const
 int XATransactionId::getGlobalTransactionId( unsigned char* buffer, int size ) const {
 
     if( size < 0 ) {
-        throw cms::XAException("Invalid negative size value passed to getGlobalTransactionId()");
+        throw cms::XAException("Error: Negative size value passed to getGlobalTransactionId()");
+    }
+
+    if( buffer == NULL ) {
+        throw cms::XAException("Error: NULL buffer pointer passed to getGlobalTransactionId()");
     }
 
     if( size < (int)this->globalTransactionId.size() ) {

@@ -33,6 +33,7 @@ cc_sources = \
     activemq/commands/ActiveMQTopicTest.cpp \
     activemq/commands/BrokerIdTest.cpp \
     activemq/commands/BrokerInfoTest.cpp \
+    activemq/commands/XATransactionIdTest.cpp \
     activemq/core/ActiveMQConnectionFactoryTest.cpp \
     activemq/core/ActiveMQConnectionTest.cpp \
     activemq/core/ActiveMQSessionTest.cpp \
@@ -244,6 +245,7 @@ h_sources = \
     activemq/commands/ActiveMQTopicTest.h \
     activemq/commands/BrokerIdTest.h \
     activemq/commands/BrokerInfoTest.h \
+    activemq/commands/XATransactionIdTest.h \
     activemq/core/ActiveMQConnectionFactoryTest.h \
     activemq/core/ActiveMQConnectionTest.h \
     activemq/core/ActiveMQSessionTest.h \
