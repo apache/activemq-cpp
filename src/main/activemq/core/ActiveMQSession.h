@@ -54,7 +54,7 @@ namespace core{
     class ActiveMQConsumer;
     class ActiveMQSessionExecutor;
 
-    class AMQCPP_API ActiveMQSession : public cms::Session, public Dispatcher {
+    class AMQCPP_API ActiveMQSession : public virtual cms::Session, public Dispatcher {
     private:
 
         typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,

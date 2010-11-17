@@ -20,6 +20,7 @@
 
 #include <cms/Config.h>
 
+#include <cms/Session.h>
 #include <cms/XAResource.h>
 
 namespace cms {
@@ -50,10 +51,10 @@ namespace cms {
      *
      * @since 2.3
      */
-    class CMS_API XASession {
+    class CMS_API XASession : public virtual cms::Session {
     public:
 
-        virtual ~XASession();
+        virtual ~XASession() throw();
 
         /**
          * Returns the XA resource associated with this Session to the caller.
