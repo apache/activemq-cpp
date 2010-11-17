@@ -58,7 +58,7 @@ namespace core{
      *
      * @since 2.0
      */
-    class AMQCPP_API ActiveMQConnection : public cms::Connection,
+    class AMQCPP_API ActiveMQConnection : public virtual cms::Connection,
                                           public transport::TransportListener {
     private:
 

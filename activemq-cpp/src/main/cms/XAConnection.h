@@ -34,7 +34,7 @@ namespace cms {
      *
      * @since 2.3
      */
-    class CMS_API XAConnection {
+    class CMS_API XAConnection : public virtual cms::Connection {
     public:
 
         virtual ~XAConnection() throw();
