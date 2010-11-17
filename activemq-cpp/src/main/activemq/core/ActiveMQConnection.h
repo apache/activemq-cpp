@@ -25,7 +25,9 @@
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/ConnectionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/SessionId.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/StlMap.h>
@@ -138,6 +140,16 @@ namespace core{
                             const Pointer<decaf::util::Properties>& properties );
 
         virtual ~ActiveMQConnection() throw();
+
+        /**
+         * Adds the session resources for the given session instance.
+         *
+         * @param session
+         *      The session to be added to this connection.
+         *
+         * @throws CMSException if an error occurs while removing performing the operation.
+         */
+        virtual void addSession( ActiveMQSession* session );
 
         /**
          * Removes the session resources for the given session instance.
@@ -524,12 +536,6 @@ namespace core{
         void setMessagePrioritySupported( bool value );
 
         /**
-         * Get the Next available Session Id.
-         * @return the next id in the sequence.
-         */
-        long long getNextSessionId();
-
-        /**
          * Get the Next Temporary Destination Id
          * @return the next id in the sequence.
          */
@@ -629,22 +635,32 @@ namespace core{
         void cleanup();
 
         /**
-         * Sends a oneway message.
-         * @param command The message to send.
-         * @throws ConnectorException if not currently connected, or
-         * if the operation fails for any reason.
+         * Sends a message without request that the broker send a response to indicate that
+         * it was received.
+         *
+         * @param command
+         *      The Command object to send to the Broker.
+         *
+         * @throws ActiveMQException if not currently connected, or if the operation
+         *         fails for any reason.
          */
         void oneway( Pointer<commands::Command> command );
 
         /**
-         * Sends a synchronous request and returns the response from the broker.
-         * Converts any error responses into an exception.
-         * @param command The request command.
-         * @param timeout The time to wait for a response, default is zero or infinite.
-         * @throws ConnectorException thrown if an error response was received
-         * from the broker, or if any other error occurred.
+         * Sends a synchronous request and returns the response from the broker.  This
+         * method converts any error responses it receives into an exception.
+         *
+         * @param command
+         *      The Command object that is to be sent to the broker.
+         * @param timeout
+         *      The time in milliseconds to wait for a response, default is zero or infinite.
+         *
+         * @returns a Pointer instance to the Response object sent from the Broker.
+         *
+         * @throws BrokerException if the response from the broker is of type ExceptionResponse.
+         * @throws ActiveMQException if any other error occurs while sending the Command.
          */
-        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
+        Pointer<commands::Response> syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
 
         /**
          * Notify the exception listener
@@ -673,25 +689,43 @@ namespace core{
          */
         void onAsyncException( const decaf::lang::Exception& ex );
 
-    private:
+        /**
+         * Check for Closed State and Throw an exception if true.
+         *
+         * @throws CMSException if the Connection is closed.
+         */
+        void checkClosed() const;
+
+        /**
+         * Check for Closed State and Failed State and Throw an exception if either is true.
+         *
+         * @throws CMSException if the Connection is closed or failed.
+         */
+        void checkClosedOrFailed() const;
+
+        /**
+         * If its not been sent, then send the ConnectionInfo to the Broker.
+         */
+        void ensureConnectionInfoSent();
+
+    protected:
+
+        /**
+         * @return the next available Session Id.
+         */
+        virtual Pointer<commands::SessionId> getNextSessionId();
 
         // Sends a oneway disconnect message to the broker.
         void disconnect( long long lastDeliveredSequenceId );
-
-        // Check for Closed State and Throw an exception if true.
-        void checkClosed() const;
-
-        // Check for Closed State and Throw an exception if true.
-        void checkClosedOrFailed() const;
-
-        // If its not been sent, then send the ConnectionInfo to the Broker.
-        void ensureConnectionInfoSent();
 
         // Waits for all Consumers to handle the Transport Interrupted event.
         void waitForTransportInterruptionProcessingToComplete();
 
         // Marks processing complete for a single caller when interruption processing completes.
         void signalInterruptionProcessingComplete();
+
+        // Allow subclasses to access the original Properties object for this connection.
+        const decaf::util::Properties& getProperties() const;
 
     };
 

@@ -22,10 +22,15 @@
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 
+#include <activemq/transport/Transport.h>
+
 #include <decaf/net/URI.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace core{
+
+    using decaf::lang::Pointer;
 
     class ActiveMQConnection;
     class FactorySettings;
@@ -49,11 +54,11 @@ namespace core{
 
         /**
          * Constructor
-         * @param url the URL of the Broker we are connecting to.
+         * @param url the URI of the Broker we are connecting to.
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory( const std::string& url,
+        ActiveMQConnectionFactory( const std::string& uri,
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
@@ -381,6 +386,23 @@ namespace core{
                                                   const std::string& username,
                                                   const std::string& password,
                                                   const std::string& clientId = "" );
+
+    protected:
+
+        /**
+         * Create a new ActiveMQConnection instnace using the provided Transport and Properties.
+         * Subclasses can override this to control the actual type of ActiveMQConnection that
+         * is created.
+         *
+         * @param transport
+         *      The Transport that the Connection should use to communicate with the Broker.
+         * @param properties
+         *      The Properties that are assigned to the new Connection instance.
+         *
+         * @returns a new ActiveMQConnection pointer instance.
+         */
+        virtual ActiveMQConnection* createActiveMQConnection( const Pointer<transport::Transport>& transport,
+                                                              const Pointer<decaf::util::Properties>& properties );
 
     private:
 

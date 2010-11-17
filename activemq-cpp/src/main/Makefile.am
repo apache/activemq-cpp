@@ -94,6 +94,9 @@ cc_sources = \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/core/ActiveMQTransactionContext.cpp \
+    activemq/core/ActiveMQXAConnection.cpp \
+    activemq/core/ActiveMQXAConnectionFactory.cpp \
+    activemq/core/ActiveMQXASession.cpp \
     activemq/core/FifoMessageDispatchChannel.cpp \
     activemq/core/PrefetchPolicy.cpp \
     activemq/core/RedeliveryPolicy.cpp \
@@ -261,6 +264,8 @@ cc_sources = \
     cms/TemporaryTopic.cpp \
     cms/TextMessage.cpp \
     cms/Topic.cpp \
+    cms/TransactionInProgressException.cpp \
+    cms/TransactionRolledBackException.cpp \
     cms/UnsupportedOperationException.cpp \
     cms/XAConnection.cpp \
     cms/XAConnectionFactory.cpp \
@@ -523,6 +528,9 @@ h_sources = \
     activemq/core/ActiveMQSession.h \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/ActiveMQTransactionContext.h \
+    activemq/core/ActiveMQXAConnection.h \
+    activemq/core/ActiveMQXAConnectionFactory.h \
+    activemq/core/ActiveMQXASession.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
     activemq/core/FifoMessageDispatchChannel.h \
@@ -717,6 +725,8 @@ h_sources = \
     cms/TemporaryTopic.h \
     cms/TextMessage.h \
     cms/Topic.h \
+    cms/TransactionInProgressException.h \
+    cms/TransactionRolledBackException.h \
     cms/UnsupportedOperationException.h \
     cms/XAConnection.h \
     cms/XAConnectionFactory.h \

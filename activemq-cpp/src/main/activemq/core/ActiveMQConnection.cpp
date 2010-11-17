@@ -240,32 +240,34 @@ cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode a
         checkClosedOrFailed();
         ensureConnectionInfoSent();
 
-        // Create and initialize a new SessionInfo object
-        Pointer<SessionInfo> sessionInfo( new SessionInfo() );
-        decaf::lang::Pointer<SessionId> sessionId( new SessionId() );
-        sessionId->setConnectionId( this->config->connectionInfo->getConnectionId()->getValue() );
-        sessionId->setValue( this->config->sessionIds.getNextSequenceId() );
-        sessionInfo->setSessionId( sessionId );
-        sessionInfo->setAckMode( ackMode );
-
-        // Send the subscription message to the broker.
-        syncRequest( sessionInfo );
-
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
-            sessionInfo, ackMode, *this->config->properties, this );
+            this, getNextSessionId(), ackMode, *this->config->properties );
 
-        // Add the session to the set of active sessions.
+        return session;
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<SessionId> ActiveMQConnection::getNextSessionId() {
+
+    decaf::lang::Pointer<SessionId> sessionId( new SessionId() );
+    sessionId->setConnectionId( this->config->connectionInfo->getConnectionId()->getValue() );
+    sessionId->setValue( this->config->sessionIds.getNextSequenceId() );
+
+    return sessionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::addSession( ActiveMQSession* session ) {
+
+    try {
+
+        // Remove this session from the set of active sessions.
         synchronized( &activeSessions ) {
             activeSessions.add( session );
         }
-
-        // If we're already started, start the session.
-        if( this->started.get() ) {
-            session->start();
-        }
-
-        return session;
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -816,7 +818,7 @@ void ActiveMQConnection::oneway( Pointer<Command> command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout ) {
+Pointer<Response> ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout ) {
 
     try {
 
@@ -841,6 +843,8 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
             // Throw the exception.
             throw exception;
         }
+
+        return response;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
@@ -1143,11 +1147,6 @@ void ActiveMQConnection::setProducerWindowSize( unsigned int windowSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQConnection::getNextSessionId() {
-    return this->config->sessionIds.getNextSequenceId();
-}
-
-////////////////////////////////////////////////////////////////////////////////
 long long ActiveMQConnection::getNextTempDestinationId() {
     return this->config->tempDestinationIds.getNextSequenceId();
 }
@@ -1189,4 +1188,9 @@ std::string ActiveMQConnection::getResourceManagerId() const {
         return this->config->brokerInfo->getBrokerId()->getValue();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const decaf::util::Properties& ActiveMQConnection::getProperties() const {
+    return *( this->config->properties );
 }
