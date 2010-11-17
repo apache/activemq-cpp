@@ -107,7 +107,7 @@ void ActiveMQBlobMessageMarshallerTest::testLooseMarshal() {
         CPPUNIT_ASSERT( dataType == outCommand.getDataStructureType() );
         marshaller.looseUnmarshal( &openWireFormat, &inCommand, &dataIn );
 
-        CPPUNIT_ASSERT( inCommand.equals( &outCommand ) == true );
+        CPPUNIT_ASSERT( inCommand.equals( (DataStructure*) &outCommand ) == true );
 
     } catch( ActiveMQException& e ) {
         e.printStackTrace();
@@ -169,7 +169,7 @@ void ActiveMQBlobMessageMarshallerTest::testTightMarshal() {
         bs.unmarshal( &dataIn );
         marshaller.tightUnmarshal( &openWireFormat, &inCommand, &dataIn, &bs );
 
-        CPPUNIT_ASSERT( inCommand.equals( &outCommand ) == true );
+        CPPUNIT_ASSERT( inCommand.equals( (DataStructure*) &outCommand ) == true );
 
     } catch( ActiveMQException& e ) {
         e.printStackTrace();
