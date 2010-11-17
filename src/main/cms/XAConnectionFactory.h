@@ -75,6 +75,29 @@ namespace cms {
          */
         virtual XAConnection* createXAConnection( const std::string& userName,
                                                   const std::string& password ) = 0;
+    public:
+
+        /**
+         * Static method that is used to create a provider specific XA Connection
+         * factory.  The provider implements this method in their library and
+         * returns an instance of a XAConnectionFactory derived object.  Clients can
+         * use this method to remain abstracted from the specific CMS implementation
+         * being used.
+         *
+         * The XA interfaces are optional in CMS however if a provider chooses to omit
+         * them it should still override this method and throw an UnsupportedOperationException
+         * to indicate that it doesn't provide this functionality.
+         *
+         * @param brokerURI
+         *      The remote address to use to connect to the Provider.
+         *
+         * @return A pointer to a provider specific implementation of the XAConnectionFactory
+         *         interface, the caller is responsible for deleting this resource.
+         *
+         * @throws CMSException if an internal error occurs while creating the XAConnectionFactory.
+         * @throws UnsupportedOperationException if the provider does not support the XA API.
+         */
+        static XAConnectionFactory* createCMSXAConnectionFactory( const std::string& brokerURI );
 
     };
 
