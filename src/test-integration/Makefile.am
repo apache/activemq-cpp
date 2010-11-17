@@ -48,6 +48,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireTempDestinationTest.cpp \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
+    activemq/test/openwire/OpenwireXATransactionsTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
     activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
@@ -97,6 +98,7 @@ h_sources = \
     activemq/test/openwire/OpenwireTempDestinationTest.h \
     activemq/test/openwire/OpenwireTransactionTest.h \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
+    activemq/test/openwire/OpenwireXATransactionsTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
     activemq/test/stomp/StompCmsTemplateTest.h \
     activemq/test/stomp/StompDurableTest.h \
