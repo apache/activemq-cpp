@@ -141,8 +141,8 @@ namespace cms {
          *      previously been used as the parameter to a start.
          *      method.
          * @param flags
-         *      a flags integer - one of: XAResource.TMSUCCESS,
-         *      XAResource.TMFAIL, or XAResource.TMSUSPEND.
+         *      a flags integer - one of: XAResource::TMSUCCESS,
+         *      XAResource::TMFAIL, or XAResource::TMSUSPEND.
          *      <p>
          *      TMSUCCESS means that this section of work completed
          *      successfully.
@@ -231,8 +231,8 @@ namespace cms {
          * states.
          *
          * @param flag
-         *      an integer. Must be one of: XAResource.TMSTARTRSCAN,
-         *      XAResource.TMENDRSCAN, XAResource.TMNOFLAGS.
+         *      an integer. Must be one of: XAResource::TMSTARTRSCAN,
+         *      XAResource::TMENDRSCAN, XAResource::TMNOFLAGS.
          *
          * @return an array of zero or more XIDs identifying the transaction
          *         branches in the prepared or heuristically completed states.
@@ -277,8 +277,8 @@ namespace cms {
          * @param xid
          *      the XID which identifies the transaction branch.
          * @param flags
-         *      an integer. Must be one of XAResource.TMNOFLAGS,
-         *      XAResource.TMJOIN, or XAResource.TMRESUME.
+         *      an integer. Must be one of XAResource::TMNOFLAGS,
+         *      XAResource::TMJOIN, or XAResource::TMRESUME.
          *      <p>
          *      TMJOIN implies that the start applies to joining a transaction
          *      previously passed to the Resource Manager.
