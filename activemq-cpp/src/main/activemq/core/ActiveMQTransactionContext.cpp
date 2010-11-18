@@ -303,11 +303,6 @@ void ActiveMQTransactionContext::afterRollback() {
 
 ////////////////////////////////////////////////////////////////////////////////
 const Pointer<TransactionId>& ActiveMQTransactionContext::getTransactionId() const {
-    if( this->context->transactionId == NULL ) {
-        throw decaf::lang::exceptions::InvalidStateException(
-            __FILE__, __LINE__, "Transaction Not Started." );
-    }
-
     return this->context->transactionId;
 }
 
@@ -590,6 +585,7 @@ void ActiveMQTransactionContext::end( const Xid* xid, int flags ) {
 
             setXid( NULL );
         }
+
     } else {
         throw XAException( XAException::XAER_INVAL );
     }
@@ -694,17 +690,6 @@ void ActiveMQTransactionContext::setXid( const Xid* xid ) {
             } catch( CMSException& e ) {
                 throw toXAException( e );
             }
-
-//            // Add our self to the list of contexts that are interested in
-//            // post commit/rollback events.
-//            List<TransactionContext> l = ENDED_XA_TRANSACTION_CONTEXTS.get(transactionId);
-//            if (l == NULL) {
-//                l = new ArrayList<TransactionContext>(3);
-//                ENDED_XA_TRANSACTION_CONTEXTS.put(transactionId, l);
-//                l.add(this);
-//            } else if (!l.contains(this)) {
-//                l.add(this);
-//            }
         }
 
         // remove the association currently in place.
