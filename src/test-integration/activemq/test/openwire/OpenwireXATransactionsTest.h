@@ -18,21 +18,41 @@
 #ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREXATRANSACTIONSTEST_H_
 #define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREXATRANSACTIONSTEST_H_
 
-#include <activemq/test/CMSTestFixture.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+
 #include <activemq/util/IntegrationCommon.h>
+#include <activemq/util/IdGenerator.h>
+
+#include <cms/Xid.h>
 
 namespace activemq {
 namespace test {
 namespace openwire {
 
-    class OpenwireXATransactionsTest : public CMSTestFixture {
+    class OpenwireXATransactionsTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( OpenwireXATransactionsTest );
         CPPUNIT_TEST( testCreateXAConnectionFactory );
         CPPUNIT_TEST( testCreateXAConnection );
         CPPUNIT_TEST( testCreateXASession );
+        CPPUNIT_TEST( testGetXAResource );
+        CPPUNIT_TEST( testXAResource_Exception1 );
+        CPPUNIT_TEST( testXAResource_Exception2 );
+        CPPUNIT_TEST( testXAResource_Exception3 );
         CPPUNIT_TEST( testSendReceiveOutsideTX );
+        CPPUNIT_TEST( testSendReceiveTransactedBatches );
+        CPPUNIT_TEST( testSendRollback );
+        CPPUNIT_TEST( testWithTTLSet );
+        CPPUNIT_TEST( testSendRollbackCommitRollback );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        static const int batchCount;
+        static const int batchSize;
+
+        util::IdGenerator txIdGen;
 
     public:
 
@@ -43,10 +63,25 @@ namespace openwire {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
         }
 
+        virtual void setUp() {}
+        virtual void tearDown() {}
+
         void testCreateXAConnectionFactory();
         void testCreateXAConnection();
         void testCreateXASession();
+        void testGetXAResource();
         void testSendReceiveOutsideTX();
+        void testSendReceiveTransactedBatches();
+        void testSendRollback();
+        void testWithTTLSet();
+        void testSendRollbackCommitRollback();
+        void testXAResource_Exception1();
+        void testXAResource_Exception2();
+        void testXAResource_Exception3();
+
+    private:
+
+        cms::Xid* createXid() const;
 
     };
 
