@@ -67,6 +67,47 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    /**
+     * Class used to Hook a session that has been closed into the Transaction
+     * it is currently a part of.  Once the Transaction has been Committed or
+     * Rolled back this Synchronization can finish the Close of the session.
+     */
+    class CloseSynhcronization : public Synchronization {
+    private:
+
+        ActiveMQSession* session;
+
+    public:
+
+        CloseSynhcronization( ActiveMQSession* session ) {
+
+            if( session == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Synchronization Created with NULL Session.");
+            }
+
+            this->session = session;
+        }
+
+        virtual ~CloseSynhcronization() {}
+
+        virtual void beforeEnd() {
+        }
+
+        virtual void afterCommit() {
+            session->doClose();
+        }
+
+        virtual void afterRollback() {
+            session->doClose();
+        }
+
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
                                   const Pointer<SessionId>& id,
                                   cms::Session::AcknowledgeMode ackMode,
@@ -86,6 +127,7 @@ ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
 
     this->connection = connection;
     this->closed = false;
+    this->synchronizationRegistered = false;
     this->ackMode = ackMode;
     this->lastDeliveredSequenceId = -1;
 
@@ -126,6 +168,20 @@ void ActiveMQSession::close() {
     // If we're already closed, just return.
     if( closed ) {
         return;
+    }
+
+    if( this->transaction->isInXATransaction() ) {
+
+        // TODO - Right now we don't have a safe way of dealing with this case
+        // since the session might be deleted before the XA Transaction is finalized
+        // registering a Synchronization could result in an segmentation fault.
+        //
+        // For now we just close badly and throw an exception.
+        doClose();
+
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "The Consumer is still in an Active XA Transaction, commit it first." );
     }
 
     try {
@@ -182,7 +238,7 @@ void ActiveMQSession::dispose() {
 
         // Roll Back the transaction since we were closed without an explicit call
         // to commit it.
-        if( this->transaction.get() != NULL && this->transaction->isInTransaction() ){
+        if( this->transaction->isInTransaction() ){
             this->transaction->rollback();
         }
 
@@ -693,7 +749,7 @@ cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSession::isTransacted() const {
-    return this->ackMode == Session::SESSION_TRANSACTED;
+    return ( this->ackMode == Session::SESSION_TRANSACTED ) || this->transaction->isInXATransaction();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -726,21 +782,10 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer, u
 
         amqMessage->setMessageId( id );
 
-        if( this->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
-
-            // Ensure that a new transaction is started if this is the first message
-            // sent since the last commit.
-            doStartTransaction();
-
-            if( this->transaction.get() == NULL ) {
-                throw ActiveMQException(
-                    __FILE__, __LINE__,
-                    "ActiveMQException::send - "
-                    "Transacted Session, has no Transaction Info.");
-            }
-
-            amqMessage->setTransactionId( this->transaction->getTransactionId() );
-        }
+        // Ensure that a new transaction is started if this is the first message
+        // sent since the last commit.
+        doStartTransaction();
+        amqMessage->setTransactionId( this->transaction->getTransactionId() );
 
         // NOTE:
         // Now we copy the message before sending, this allows the user to reuse the
@@ -928,11 +973,11 @@ void ActiveMQSession::oneway( Pointer<Command> command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout ) {
+Pointer<Response> ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout ) {
 
     try{
         this->checkClosed();
-        this->connection->syncRequest( command, timeout );
+        return this->connection->syncRequest( command, timeout );
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
@@ -1035,11 +1080,9 @@ void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::doStartTransaction() {
 
-    if( !this->isTransacted() ) {
-        throw ActiveMQException( __FILE__, __LINE__, "Not a Transacted Session" );
+    if( this->isTransacted() && !this->transaction->isInXATransaction() ) {
+        this->transaction->begin();
     }
-
-    this->transaction->begin();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

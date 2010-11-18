@@ -18,6 +18,7 @@
 
 #include <cms/Xid.h>
 #include <cms/XAException.h>
+#include <cms/TransactionInProgressException.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
@@ -61,11 +62,6 @@ namespace core{
         // To track XA transactions.
         Pointer<Xid> associatedXid;
         int beforeEndIndex;
-
-        // Global collection of all Ended XA Transactions.
-//        static ConcurrentStlMap< Pointer<TransactionId>,
-//                                 StlList<Synchronization*>,
-//                                 TransactionId::COMPARATOR >* ENDED_XA_TRANSACTION_CONTEXTS;
 
         TxContextData() {
         }
@@ -148,6 +144,11 @@ void ActiveMQTransactionContext::begin() {
 
     try{
 
+        if( isInXATransaction() ) {
+            throw cms::TransactionInProgressException(
+                "Cannot start a local transaction while an XA Transaction is in progress.");
+        }
+
         if( !isInTransaction() ) {
 
             synchronized( &this->synchronizations ) {
@@ -179,6 +180,11 @@ void ActiveMQTransactionContext::begin() {
 void ActiveMQTransactionContext::commit() {
 
     try{
+
+        if( isInXATransaction() ) {
+            throw cms::TransactionInProgressException(
+                "Cannot Commit a local transaction while an XA Transaction is in progress.");
+        }
 
         if( this->context->transactionId.get() == NULL ) {
             throw InvalidStateException(
@@ -212,6 +218,11 @@ void ActiveMQTransactionContext::commit() {
 void ActiveMQTransactionContext::rollback() {
 
     try{
+
+        if( isInXATransaction() ) {
+            throw cms::TransactionInProgressException(
+                "Cannot Rollback a local transaction while an XA Transaction is in progress.");
+        }
 
         if( this->context->transactionId == NULL ) {
             throw InvalidStateException(
@@ -425,13 +436,6 @@ int ActiveMQTransactionContext::prepare( const Xid* xid ) {
         if( XAResource::XA_RDONLY == intResponse->getResult() ) {
 
             // transaction stops now, may be syncs that need a callback
-//            StlList<TransactionContext> l = this->context->ENDED_XA_TRANSACTION_CONTEXTS.remove(x);
-//            if (l != NULL && !l.isEmpty()) {
-//                for (TransactionContext ctx : l) {
-//                    ctx.afterCommit();
-//                }
-//            }
-
             this->afterCommit();
         }
 
@@ -447,15 +451,6 @@ int ActiveMQTransactionContext::prepare( const Xid* xid ) {
         throw toXAException( e );
 
     } catch( CMSException& e ) {
-//        List<TransactionContext> l = ENDED_XA_TRANSACTION_CONTEXTS.remove(x);
-//        if (l != NULL && !l.isEmpty()) {
-//            for (TransactionContext ctx : l) {
-//                try {
-//                    ctx.afterRollback();
-//                } catch (Throwable ignored) {
-//                }
-//            }
-//        }
 
         try{
             this->afterRollback();
@@ -495,13 +490,6 @@ void ActiveMQTransactionContext::commit( const Xid* xid, bool onePhase ) {
 
         this->connection->syncRequest( info );
 
-//        List<TransactionContext> l = ENDED_XA_TRANSACTION_CONTEXTS.remove(x);
-//        if (l != NULL && !l.isEmpty()) {
-//            for (TransactionContext ctx : l) {
-//                ctx.afterCommit();
-//            }
-//        }
-
         this->afterCommit();
 
     } catch( Exception& ex ) {
@@ -514,15 +502,6 @@ void ActiveMQTransactionContext::commit( const Xid* xid, bool onePhase ) {
         throw toXAException( ex );
 
     } catch( CMSException& e ) {
-//        List<TransactionContext> l = ENDED_XA_TRANSACTION_CONTEXTS.remove(x);
-//        if (l != NULL && !l.isEmpty()) {
-//            for (TransactionContext ctx : l) {
-//                try {
-//                    ctx.afterRollback();
-//                } catch(...) {
-//                }
-//            }
-//        }
 
         try {
             this->afterRollback();
@@ -561,13 +540,6 @@ void ActiveMQTransactionContext::rollback( const Xid* xid ) {
         info->setType( ActiveMQConstants::TRANSACTION_STATE_ROLLBACK );
 
         this->connection->syncRequest( info );
-
-//        List<TransactionContext> l = ENDED_XA_TRANSACTION_CONTEXTS.remove(x);
-//        if (l != NULL && !l.isEmpty()) {
-//            for (TransactionContext ctx : l) {
-//                ctx.afterRollback();
-//            }
-//        }
 
         this->afterRollback();
 

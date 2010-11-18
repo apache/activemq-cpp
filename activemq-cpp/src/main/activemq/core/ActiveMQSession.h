@@ -25,6 +25,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
+#include <activemq/commands/Response.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/ConsumerId.h>
@@ -88,6 +89,11 @@ namespace core{
          * Bool to indicate if this session was closed.
          */
         bool closed;
+
+        /**
+         * Bool to indicate if the Session has added a Syncronization to a TransactionContext.
+         */
+        bool synchronizationRegistered;
 
         /**
          * Map of consumers.
@@ -329,22 +335,31 @@ namespace core{
         }
 
         /**
-         * Sends a oneway message.
-         * @param command The message to send.
-         * @throws ActiveMQException if not currently connected, or
-         * if the operation fails for any reason.
+         * Sends a Command to the broker without requesting any Response be returned.
+         * .
+         * @param command
+         *      The message to send to the Broker.
+         *
+         * @throws ActiveMQException if not currently connected, or if the
+         *         operation fails for any reason.
          */
         void oneway( Pointer<commands::Command> command );
 
         /**
          * Sends a synchronous request and returns the response from the broker.
          * Converts any error responses into an exception.
-         * @param command The request command.
-         * @param timeout The time to wait for a response, default is zero or infinite.
+         *
+         * @param command
+         *      The command to send to the broker.
+         * @param timeout
+         *      The time to wait for a response, default is zero or infinite.
+         *
+         * @returns Pointer to a Response object that the broker has returned for the Command sent.
+         *
          * @throws ActiveMQException thrown if an error response was received
-         * from the broker, or if any other error occurred.
+         *         from the broker, or if any other error occurred.
          */
-        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
+        Pointer<commands::Response> syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
 
         /**
          * Adds a MessageConsumer to this session registering it with the Connection and store
