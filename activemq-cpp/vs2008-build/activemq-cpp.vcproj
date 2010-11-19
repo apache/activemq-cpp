@@ -1243,7 +1243,15 @@
 			Name="cms"
 			>
 			<File
+				RelativePath="..\src\main\cms\BytesMessage.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\BytesMessage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\Closeable.cpp"
 				>
 			</File>
 			<File
@@ -1256,6 +1264,10 @@
 			</File>
 			<File
 				RelativePath="..\src\main\cms\CMSException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\CMSProperties.cpp"
 				>
 			</File>
 			<File
@@ -1275,7 +1287,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Connection.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Connection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\ConnectionFactory.cpp"
 				>
 			</File>
 			<File
@@ -1283,7 +1303,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\ConnectionMetaData.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\ConnectionMetaData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DeliveryMode.cpp"
 				>
 			</File>
 			<File
@@ -1291,7 +1319,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Destination.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Destination.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\ExceptionListener.cpp"
 				>
 			</File>
 			<File
@@ -1331,6 +1367,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MapMessage.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MapMessage.h"
 				>
 			</File>
@@ -1352,7 +1392,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageConsumer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MessageConsumer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\MessageEnumeration.cpp"
 				>
 			</File>
 			<File
@@ -1376,6 +1424,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageListener.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MessageListener.h"
 				>
 			</File>
@@ -1396,7 +1448,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageProducer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MessageProducer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\ObjectMessage.cpp"
 				>
 			</File>
 			<File
@@ -1404,7 +1464,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Queue.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Queue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\QueueBrowser.cpp"
 				>
 			</File>
 			<File
@@ -1412,7 +1480,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Session.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Session.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\Startable.cpp"
 				>
 			</File>
 			<File
@@ -1420,7 +1496,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Stoppable.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Stoppable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\StreamMessage.cpp"
 				>
 			</File>
 			<File
@@ -1428,7 +1512,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\TemporaryQueue.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\TemporaryQueue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\TemporaryTopic.cpp"
 				>
 			</File>
 			<File
@@ -1436,11 +1528,35 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\TextMessage.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\TextMessage.h"
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\Topic.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\Topic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\TransactionInProgressException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\TransactionInProgressException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\TransactionRolledBackException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\TransactionRolledBackException.h"
 				>
 			</File>
 			<File
@@ -1449,6 +1565,54 @@
 			</File>
 			<File
 				RelativePath="..\src\main\cms\UnsupportedOperationException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAConnection.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAConnection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAConnectionFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAConnectionFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAException.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAResource.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XAResource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XASession.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\XASession.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\Xid.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\Xid.h"
 				>
 			</File>
 		</Filter>
@@ -2164,6 +2328,30 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQTransactionContext.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXAConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXAConnection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXAConnectionFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXAConnectionFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXASession.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQXASession.h"
 					>
 				</File>
 				<File

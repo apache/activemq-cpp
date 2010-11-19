@@ -987,6 +987,14 @@
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="stomp"

@@ -1659,6 +1659,14 @@
 					RelativePath="..\src\test\activemq\commands\BrokerInfoTest.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\test\activemq\commands\XATransactionIdTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\commands\XATransactionIdTest.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="threads"
