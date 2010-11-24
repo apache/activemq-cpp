@@ -970,7 +970,7 @@ void ActiveMQConsumer::rollback() {
             }
 
             if( this->internal->redeliveryPolicy->getMaximumRedeliveries() != RedeliveryPolicy::NO_MAXIMUM_REDELIVERIES &&
-                lastMsg->getRedeliveryCounter() > this->internal->redeliveryPolicy->getMaximumRedeliveries() ) {
+                lastMsg->getMessage()->getRedeliveryCounter() > this->internal->redeliveryPolicy->getMaximumRedeliveries() ) {
 
                 // We need to NACK the messages so that they get sent to the DLQ.
                 // Acknowledge the last message.
