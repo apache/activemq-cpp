@@ -112,6 +112,28 @@ AprPool& System::getAprPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( const char* src, std::size_t srcPos,
+                        char* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void System::arraycopy( const unsigned char* src, std::size_t srcPos,
                         unsigned char* dest, std::size_t destPos, std::size_t length ) {
 
@@ -196,6 +218,50 @@ void System::arraycopy( const long long* src, std::size_t srcPos,
         ::memcpy( dest + destPos, src + srcPos, length * sizeof( long long ) );
     } else {
         ::memmove( dest + destPos, src + srcPos, length * sizeof( long long ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( const float* src, std::size_t srcPos,
+                        float* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length * sizeof( float ) );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length * sizeof( float ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::arraycopy( const double* src, std::size_t srcPos,
+                        double* dest, std::size_t destPos, std::size_t length ) {
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    if( src == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Given Source Pointer was null." );
+    }
+
+    // Now we try and copy, could still segfault.
+    if( src != dest ) {
+        ::memcpy( dest + destPos, src + srcPos, length * sizeof( double ) );
+    } else {
+        ::memmove( dest + destPos, src + srcPos, length * sizeof( double ) );
     }
 }
 
