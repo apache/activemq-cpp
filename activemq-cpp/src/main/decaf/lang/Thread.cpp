@@ -72,6 +72,7 @@ namespace lang{
     class ThreadProperties {
     public:
 
+        decaf::util::concurrent::Mutex mutex;
         Runnable* task;
 
         /**
@@ -79,7 +80,6 @@ namespace lang{
          */
         #ifdef HAVE_PTHREAD_H
             pthread_t handle;
-            pthread_attr_t attributes;
         #else
             HANDLE handle;
         #endif
@@ -90,7 +90,6 @@ namespace lang{
         bool interrupted;
         bool unparked;
         bool parked;
-        decaf::util::concurrent::Mutex mutex;
 
         static unsigned int id;
 
@@ -99,7 +98,7 @@ namespace lang{
 
     public:
 
-        ThreadProperties() {
+        ThreadProperties( const std::string& name ) : mutex( name + "-mutex" ) {
 
             this->priority = Thread::NORM_PRIORITY;
             this->state = Thread::NEW;
@@ -107,17 +106,10 @@ namespace lang{
             this->parked = false;
             this->unparked = false;
             this->parent = NULL;
-
-            #ifdef HAVE_PTHREAD_H
-                pthread_attr_init( &attributes );
-            #endif
         }
 
         ~ThreadProperties() {
-
-            #ifdef HAVE_PTHREAD_H
-                pthread_attr_destroy( &attributes );
-            #else
+            #ifndef HAVE_PTHREAD_H
                 ::CloseHandle( handle );
             #endif
         }
@@ -313,13 +305,15 @@ Thread::Thread( Runnable* task, const std::string& name ): Runnable(), propertie
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::initialize( Runnable* task, const std::string& name ) {
 
-    this->properties = new ThreadProperties();
+    std::string threadName = name;
 
-    if( name == "" ) {
-        this->properties->name = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
+    if( threadName.empty() ) {
+        threadName = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
     } else {
-        this->properties->name = name;
+        threadName = name;
     }
+
+    this->properties = new ThreadProperties( threadName );
 
     this->properties->state = Thread::NEW;
     this->properties->priority = Thread::NORM_PRIORITY;
@@ -361,9 +355,15 @@ void Thread::start() {
         synchronized( &this->properties->mutex ) {
 
             #ifdef HAVE_PTHREAD_H
-                int result = pthread_create( &( properties->handle ),
-                                             &( properties->attributes ),
-                                             threadWorker, properties );
+
+                pthread_attr_t attributes;
+
+                pthread_attr_init( &attributes );
+                pthread_attr_setdetachstate( &attributes, PTHREAD_CREATE_JOINABLE );
+
+                int result = pthread_create( &( properties->handle ), &attributes, threadWorker, properties );
+
+                pthread_attr_destroy( &attributes );
 
                 if( result != 0 ) {
                     throw RuntimeException(
