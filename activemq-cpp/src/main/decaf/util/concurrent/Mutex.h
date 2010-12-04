@@ -50,7 +50,15 @@ namespace concurrent{
 
         Mutex();
 
+        Mutex( const std::string& name );
+
         virtual ~Mutex();
+
+        std::string getName() const;
+
+        std::string toString() const;
+
+    public:  // Synchronizable API Implementation
 
         virtual void lock();
 
