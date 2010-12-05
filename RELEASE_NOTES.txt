@@ -3,6 +3,26 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.2.4                               ==
+=========================================================================
+
+This release is a bugfix release that addresses a couple issues found since
+the release of v3.2.3
+
+bug:
+
+    * [AMQCPP-316] - Unable to receive any messages after re-starting message broker
+    * [AMQCPP-317] - activemq-cpp 3.2.2 will not work with activemq 5.4.0 broker
+                     using Stomp
+    * [AMQCPP-322] - Found memory leaks in ActiveMQCPP
+    * [AMQCPP-323] - The OnException method of registered Exception listener is not
+                     called when broker is stopped.
+    * [AMQCPP-324] - Destination options are ignored
+    * [AMQCPP-331] - Small typo in TcpTransportFactory.cpp
+    * [AMQCPP-332] - First send after we restart broker seems to always get a CmsException
+    * [AMQCPP-335] - redeliveryPolicy: rollback always loops
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.3                               ==
 =========================================================================
 
