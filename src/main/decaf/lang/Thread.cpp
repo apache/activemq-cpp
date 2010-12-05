@@ -106,6 +106,7 @@ namespace lang{
             this->parked = false;
             this->unparked = false;
             this->parent = NULL;
+            this->name = name;
         }
 
         ~ThreadProperties() {
