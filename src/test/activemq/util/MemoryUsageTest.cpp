@@ -26,6 +26,7 @@ using namespace activemq;
 using namespace activemq::util;
 using namespace decaf::lang;
 
+////////////////////////////////////////////////////////////////////////////////
 class UsageRunner : public decaf::lang::Runnable {
 private:
 
@@ -43,6 +44,7 @@ public:
     }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 void MemoryUsageTest::testCTors() {
 
     MemoryUsage usage1;
@@ -55,6 +57,7 @@ void MemoryUsageTest::testCTors() {
     CPPUNIT_ASSERT( usage2.getUsage() == 0 );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void MemoryUsageTest::testUsage() {
 
     MemoryUsage usage1( 2048 );
@@ -82,6 +85,7 @@ void MemoryUsageTest::testUsage() {
     CPPUNIT_ASSERT( usage1.getUsage() == 3072 );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void MemoryUsageTest::testTimedWait() {
 
     MemoryUsage usage( 2048 );
@@ -96,6 +100,7 @@ void MemoryUsageTest::testTimedWait() {
     CPPUNIT_ASSERT( endTime - startTime >= 125 );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void MemoryUsageTest::testWait() {
 
     MemoryUsage usage( 2048 );
@@ -109,5 +114,4 @@ void MemoryUsageTest::testWait() {
     CPPUNIT_ASSERT( usage.getUsage() == 0 );
 
     myThread.join();
-
 }

@@ -22,6 +22,7 @@
 using namespace activemq;
 using namespace activemq::util;
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveValueNodeTest::testValueNode(){
 
     PrimitiveValueNode node;
@@ -85,6 +86,7 @@ void PrimitiveValueNodeTest::testValueNode(){
     CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::NULL_TYPE );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveValueNodeTest::testValueNodeCtors(){
 
     PrimitiveValueNode tfvalue = true;
