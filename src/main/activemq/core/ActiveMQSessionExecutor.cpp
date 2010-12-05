@@ -130,12 +130,12 @@ void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch
             if( this->session->consumers.containsKey( dispatch->getConsumerId() ) ) {
                 consumer = this->session->consumers.get( dispatch->getConsumerId() );
             }
+        }
 
-            // If the consumer is not available, just ignore the message.
-            // Otherwise, dispatch the message to the consumer.
-            if( consumer != NULL ) {
-                consumer->dispatch( dispatch );
-            }
+        // If the consumer is not available, just ignore the message.
+        // Otherwise, dispatch the message to the consumer.
+        if( consumer != NULL ) {
+            consumer->dispatch( dispatch );
         }
 
     } catch( decaf::lang::Exception& ex ) {
