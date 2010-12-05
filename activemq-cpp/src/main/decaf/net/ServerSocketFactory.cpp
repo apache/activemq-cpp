@@ -17,6 +17,7 @@
 
 #include "ServerSocketFactory.h"
 
+#include <decaf/lang/Runnable.h>
 #include <decaf/net/ServerSocket.h>
 #include <decaf/internal/net/DefaultServerSocketFactory.h>
 #include <decaf/io/IOException.h>
@@ -28,6 +29,25 @@ using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::internal::net;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class ShutdownTask : public decaf::lang::Runnable {
+    private:
+
+        ServerSocketFactory** defaultRef;
+
+    public:
+
+        ShutdownTask( ServerSocketFactory** defaultRef ) : defaultRef( defaultRef ) {}
+        virtual ~ShutdownTask() {}
+
+        virtual void run() {
+            *defaultRef = NULL;
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocketFactory* ServerSocketFactory::defaultFactory = NULL;
@@ -57,6 +77,7 @@ ServerSocketFactory* ServerSocketFactory::getDefault() {
         if( defaultFactory == NULL ) {
             defaultFactory = new DefaultServerSocketFactory();
             networkRuntime->addAsResource( defaultFactory );
+            networkRuntime->addShutdownTask( new ShutdownTask( &defaultFactory ) );
         }
     }
 

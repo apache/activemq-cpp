@@ -17,16 +17,36 @@
 
 #include "SSLSocketFactory.h"
 
+#include <decaf/lang/Runnable.h>
 #include <decaf/internal/net/Network.h>
-
 #include <decaf/internal/net/ssl/DefaultSSLContext.h>
 #include <decaf/internal/net/ssl/DefaultSSLSocketFactory.h>
 
 using namespace decaf;
+using namespace decaf::lang;
 using namespace decaf::net;
 using namespace decaf::net::ssl;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class ShutdownTask : public decaf::lang::Runnable {
+    private:
+
+        SocketFactory** defaultRef;
+
+    public:
+
+        ShutdownTask( SocketFactory** defaultRef ) : defaultRef( defaultRef ) {}
+        virtual ~ShutdownTask() {}
+
+        virtual void run() {
+            *defaultRef = NULL;
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketFactory* SSLSocketFactory::defaultSocketFactory = NULL;
@@ -64,8 +84,10 @@ SocketFactory* SSLSocketFactory::getDefault() {
 
             // Since we created this one we need to make sure it is destroyed when the Network
             // Runtime is shutdown.
-            Network::getNetworkRuntime()->addAsResource( defaultSocketFactory );
+            netRuntime->addAsResource( defaultSocketFactory );
         }
+
+        netRuntime->addShutdownTask( new ShutdownTask( &defaultSocketFactory ) );
     }
 
     return defaultSocketFactory;
