@@ -22,6 +22,7 @@
 using namespace activemq;
 using namespace activemq::util;
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testValueNode(){
 
     PrimitiveValueNode node;
@@ -85,6 +86,7 @@ void PrimitiveMapTest::testValueNode(){
     CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::NULL_TYPE );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testSetGet(){
 
     PrimitiveMap pmap;
@@ -176,6 +178,7 @@ void PrimitiveMapTest::testSetGet(){
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testRemove(){
 
     PrimitiveMap pmap;
@@ -189,6 +192,7 @@ void PrimitiveMapTest::testRemove(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testCount(){
 
     PrimitiveMap pmap;
@@ -205,6 +209,7 @@ void PrimitiveMapTest::testCount(){
     CPPUNIT_ASSERT( pmap.toString() != "" );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testCopy(){
 
     PrimitiveMap pmap;
@@ -220,6 +225,7 @@ void PrimitiveMapTest::testCopy(){
     CPPUNIT_ASSERT( pmap.equals( copy1 ) );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testClear(){
 
     PrimitiveMap pmap;
@@ -246,6 +252,7 @@ void PrimitiveMapTest::testClear(){
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testContains(){
 
     PrimitiveMap pmap;
@@ -265,6 +272,7 @@ void PrimitiveMapTest::testContains(){
     CPPUNIT_ASSERT( pmap.containsKey("int") == false );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testGetKeys(){
 
     PrimitiveMap pmap;
@@ -279,4 +287,3 @@ void PrimitiveMapTest::testGetKeys(){
     CPPUNIT_ASSERT( keys[1] == "int" || keys[1] == "float" || keys[1] == "int2" );
     CPPUNIT_ASSERT( keys[2] == "int" || keys[2] == "float" || keys[2] == "int2" );
 }
-

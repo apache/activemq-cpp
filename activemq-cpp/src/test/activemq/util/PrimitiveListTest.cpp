@@ -23,6 +23,7 @@
 using namespace activemq;
 using namespace activemq::util;
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testSetGet(){
 
     PrimitiveList plist;
@@ -120,6 +121,7 @@ void PrimitiveListTest::testSetGet(){
     CPPUNIT_ASSERT( plist.getByteArray(0) == byteArray );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testAdd(){
 
     bool boolValue = true;
@@ -171,6 +173,7 @@ void PrimitiveListTest::testAdd(){
     CPPUNIT_ASSERT( plist.get(9).getType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testRemove(){
 
     PrimitiveList plist;
@@ -190,6 +193,7 @@ void PrimitiveListTest::testRemove(){
     CPPUNIT_ASSERT( plist.isEmpty() );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testCount(){
 
     PrimitiveList plist;
@@ -206,6 +210,7 @@ void PrimitiveListTest::testCount(){
     CPPUNIT_ASSERT( plist.toString() != "" );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testCopy(){
 
     PrimitiveList plist;
@@ -221,6 +226,7 @@ void PrimitiveListTest::testCopy(){
     CPPUNIT_ASSERT( plist.equals( copy1 ) );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testClear(){
 
     PrimitiveList plist;
@@ -247,6 +253,7 @@ void PrimitiveListTest::testClear(){
         decaf::lang::exceptions::IndexOutOfBoundsException );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testContains(){
 
     PrimitiveList plist;
@@ -266,6 +273,7 @@ void PrimitiveListTest::testContains(){
     CPPUNIT_ASSERT( plist.contains( 5 ) == false );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testListOfLists() {
 
     PrimitiveList list;
@@ -287,6 +295,7 @@ void PrimitiveListTest::testListOfLists() {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testListOfMaps() {
 
     PrimitiveList list;
