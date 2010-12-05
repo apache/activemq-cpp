@@ -51,7 +51,7 @@ std::string ActiveMQConnectionMetaData::getCMSProviderName() const throw( cms::C
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnectionMetaData::getProviderVersion() const throw( cms::CMSException ) {
-    return "3.2.4";
+    return "3.2.5";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
