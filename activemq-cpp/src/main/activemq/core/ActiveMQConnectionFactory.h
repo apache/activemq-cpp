@@ -48,6 +48,11 @@ namespace core{
         // d-Pointer holding pre-configured factory settings
         FactorySettings* settings;
 
+    private:
+
+        ActiveMQConnectionFactory( const ActiveMQConnectionFactory& );
+        ActiveMQConnectionFactory& operator= ( const ActiveMQConnectionFactory& );
+
     public:
 
         ActiveMQConnectionFactory();
