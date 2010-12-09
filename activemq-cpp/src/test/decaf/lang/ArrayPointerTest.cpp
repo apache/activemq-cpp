@@ -176,6 +176,41 @@ void ArrayPointerTest::testBasics() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ArrayPointerTest::testConstructor1() {
+
+    const int SIZE = 50;
+
+    ArrayPointer<int> array( SIZE );
+
+    CPPUNIT_ASSERT_EQUAL( SIZE, array.length() );
+    CPPUNIT_ASSERT( array.get() != NULL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ArrayPointerTest::testConstructor2() {
+
+    const int SIZE = 50;
+
+    ArrayPointer<bool> trueArray( SIZE, true );
+
+    CPPUNIT_ASSERT_EQUAL( SIZE, trueArray.length() );
+    CPPUNIT_ASSERT( trueArray.get() != NULL );
+
+    for( int ix = 0; ix < SIZE; ix++ ) {
+        CPPUNIT_ASSERT_EQUAL( true, trueArray[ix] );
+    }
+
+    ArrayPointer<bool> falseArray( SIZE, true );
+
+    CPPUNIT_ASSERT_EQUAL( SIZE, falseArray.length() );
+    CPPUNIT_ASSERT( falseArray.get() != NULL );
+
+    for( int ix = 0; ix < SIZE; ix++ ) {
+        CPPUNIT_ASSERT_EQUAL( true, falseArray[ix] );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ArrayPointerTest::testClone() {
 
     const int SIZE = 50;
