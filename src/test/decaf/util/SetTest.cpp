@@ -18,6 +18,7 @@
 #include "SetTest.h"
 
 #include <decaf/util/StlSet.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/Iterator.h>
 
 using namespace std;
@@ -29,6 +30,109 @@ SetTest::SetTest(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SetTest::testConstructor1(){
+
+    StlSet<int> set;
+
+    CPPUNIT_ASSERT( set.size() == 0 );
+    CPPUNIT_ASSERT( set.isEmpty() );
+
+    set.add( 1 );
+
+    CPPUNIT_ASSERT( set.size() == 1 );
+    CPPUNIT_ASSERT( !set.isEmpty() );
+
+    set.add( 1 );
+
+    CPPUNIT_ASSERT( set.size() == 1 );
+    CPPUNIT_ASSERT( !set.isEmpty() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SetTest::testConstructor2(){
+
+    StlSet<int> set1;
+
+    for( int i = 0; i < 50; ++i ) {
+        set1.add( i );
+    }
+
+    StlSet<int> set2( set1 );
+
+    CPPUNIT_ASSERT( set1.size() == set2.size() );
+
+    for( int i = 0; i < 50; ++i ) {
+        CPPUNIT_ASSERT( set2.contains( i ) );
+    }
+
+    CPPUNIT_ASSERT( set2.equals( set1 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SetTest::testConstructor3(){
+
+    LinkedList<int> collection;
+
+    for( int i = 0; i < 50; ++i ) {
+        collection.add( i );
+    }
+
+    StlSet<int> set( collection );
+
+    CPPUNIT_ASSERT( collection.size() == set.size() );
+
+    for( int i = 0; i < 50; ++i ) {
+        CPPUNIT_ASSERT( set.contains( i ) );
+    }
+
+    CPPUNIT_ASSERT( set.equals( collection ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SetTest::testCopy1() {
+
+    StlSet<int> set1;
+
+    for( int i = 0; i < 50; ++i ) {
+        set1.add( i );
+    }
+
+    StlSet<int> set2;
+
+    set2.copy( set1 );
+
+    CPPUNIT_ASSERT( set1.size() == set2.size() );
+
+    for( int i = 0; i < 50; ++i ) {
+        CPPUNIT_ASSERT( set2.contains( i ) );
+    }
+
+    CPPUNIT_ASSERT( set2.equals( set1 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SetTest::testCopy2() {
+
+    LinkedList<int> collection;
+
+    for( int i = 0; i < 50; ++i ) {
+        collection.add( i );
+    }
+
+    StlSet<int> set;
+
+    set.copy( collection );
+
+    CPPUNIT_ASSERT( collection.size() == set.size() );
+
+    for( int i = 0; i < 50; ++i ) {
+        CPPUNIT_ASSERT( set.contains( i ) );
+    }
+
+    CPPUNIT_ASSERT( set.equals( collection ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SetTest::testContains(){
 
     StlSet<string> set;
@@ -36,8 +140,8 @@ void SetTest::testContains(){
 
     set.add( "bob" );
 
-    CPPUNIT_ASSERT(set.contains( "bob" ) == true );
-    CPPUNIT_ASSERT(set.contains( "fred" ) == false );
+    CPPUNIT_ASSERT( set.contains( "bob" ) == true );
+    CPPUNIT_ASSERT( set.contains( "fred" ) == false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

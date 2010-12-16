@@ -21,7 +21,7 @@
 #include <set>
 #include <vector>
 #include <memory>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
@@ -60,7 +60,7 @@ namespace util{
 
             virtual E next() {
                 if( this->current == set->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "Set::Iterator::next - No more elements to return" );
                 }
@@ -102,7 +102,7 @@ namespace util{
 
             virtual E next() {
                 if( this->current == set->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "Set::Iterator::next - No more elements to return" );
                 }
@@ -144,7 +144,7 @@ namespace util{
          * @param source The source set.
          */
         StlSet( const Collection<E>& source ) : AbstractSet<E>(), values() {
-            copy( source );
+            AbstractSet<E>::copy( source );
         }
 
         virtual ~StlSet() {}
@@ -159,17 +159,21 @@ namespace util{
             return new ConstSetIterator( &values );
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool equals( const StlSet& source ) const {
-            return this->values == source.values;
-        }
+        using AbstractSet<E>::equals;
 
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const StlSet& source ) {
+        bool equals( const StlSet& source ) const {
+            return this->values == source.values;
+        }
+
+        using AbstractSet<E>::copy;
+
+        /**
+         * {@inheritDoc}
+         */
+        void copy( const StlSet& source ) {
             this->values.clear();
             this->values = source.values;
         }

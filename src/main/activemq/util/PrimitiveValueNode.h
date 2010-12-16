@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_UTIL_PRIMITIVEVALUENODE_H_
 
 #include <activemq/util/Config.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/List.h>
 

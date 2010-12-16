@@ -394,22 +394,63 @@ cc_sources = \
     decaf/nio/ShortBuffer.cpp \
     decaf/security/SecureRandom.cpp \
     decaf/security/SecureRandomSpi.cpp \
+    decaf/util/AbstractCollection.cpp \
+    decaf/util/AbstractList.cpp \
+    decaf/util/AbstractMap.cpp \
+    decaf/util/AbstractQueue.cpp \
+    decaf/util/AbstractSequentialList.cpp \
+    decaf/util/AbstractSet.cpp \
+    decaf/util/ArrayList.cpp \
+    decaf/util/Arrays.cpp \
+    decaf/util/Collection.cpp \
+    decaf/util/Comparator.cpp \
+    decaf/util/ConcurrentModificationException.cpp \
     decaf/util/Date.cpp \
+    decaf/util/Deque.cpp \
+    decaf/util/Iterator.cpp \
+    decaf/util/LinkedList.cpp \
+    decaf/util/List.cpp \
+    decaf/util/ListIterator.cpp \
+    decaf/util/Map.cpp \
+    decaf/util/NoSuchElementException.cpp \
+    decaf/util/PriorityQueue.cpp \
     decaf/util/Properties.cpp \
+    decaf/util/Queue.cpp \
     decaf/util/Random.cpp \
+    decaf/util/Set.cpp \
+    decaf/util/StlList.cpp \
+    decaf/util/StlMap.cpp \
+    decaf/util/StlQueue.cpp \
+    decaf/util/StlSet.cpp \
     decaf/util/StringTokenizer.cpp \
     decaf/util/Timer.cpp \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
+    decaf/util/concurrent/BlockingQueue.cpp \
+    decaf/util/concurrent/BrokenBarrierException.cpp \
+    decaf/util/concurrent/Callable.cpp \
+    decaf/util/concurrent/ConcurrentMap.cpp \
+    decaf/util/concurrent/ConcurrentStlMap.cpp \
+    decaf/util/concurrent/CopyOnWriteArrayList.cpp \
+    decaf/util/concurrent/CopyOnWriteArraySet.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
+    decaf/util/concurrent/Delayed.cpp \
+    decaf/util/concurrent/Executor.cpp \
+    decaf/util/concurrent/ExecutorService.cpp \
+    decaf/util/concurrent/Future.cpp \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
     decaf/util/concurrent/PooledThread.cpp \
     decaf/util/concurrent/Semaphore.cpp \
+    decaf/util/concurrent/SynchronousQueue.cpp \
+    decaf/util/concurrent/TaskListener.cpp \
+    decaf/util/concurrent/ThreadFactory.cpp \
     decaf/util/concurrent/ThreadPool.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
+    decaf/util/concurrent/atomic/AtomicRefCounter.cpp \
+    decaf/util/concurrent/atomic/AtomicReference.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
@@ -430,10 +471,12 @@ cc_sources = \
     decaf/util/zip/CRC32.cpp \
     decaf/util/zip/CheckedInputStream.cpp \
     decaf/util/zip/CheckedOutputStream.cpp \
+    decaf/util/zip/DataFormatException.cpp \
     decaf/util/zip/Deflater.cpp \
     decaf/util/zip/DeflaterOutputStream.cpp \
     decaf/util/zip/Inflater.cpp \
-    decaf/util/zip/InflaterInputStream.cpp
+    decaf/util/zip/InflaterInputStream.cpp \
+    decaf/util/zip/ZipException.cpp
 
 
 h_sources = \
@@ -858,7 +901,6 @@ h_sources = \
     decaf/lang/exceptions/IndexOutOfBoundsException.h \
     decaf/lang/exceptions/InterruptedException.h \
     decaf/lang/exceptions/InvalidStateException.h \
-    decaf/lang/exceptions/NoSuchElementException.h \
     decaf/lang/exceptions/NullPointerException.h \
     decaf/lang/exceptions/NumberFormatException.h \
     decaf/lang/exceptions/RuntimeException.h \
@@ -938,14 +980,20 @@ h_sources = \
     decaf/util/AbstractQueue.h \
     decaf/util/AbstractSequentialList.h \
     decaf/util/AbstractSet.h \
+    decaf/util/ArrayList.h \
+    decaf/util/Arrays.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
+    decaf/util/ConcurrentModificationException.h \
     decaf/util/Config.h \
     decaf/util/Date.h \
+    decaf/util/Deque.h \
     decaf/util/Iterator.h \
+    decaf/util/LinkedList.h \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
     decaf/util/Map.h \
+    decaf/util/NoSuchElementException.h \
     decaf/util/PriorityQueue.h \
     decaf/util/Properties.h \
     decaf/util/Queue.h \
@@ -967,6 +1015,8 @@ h_sources = \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/ConcurrentMap.h \
     decaf/util/concurrent/ConcurrentStlMap.h \
+    decaf/util/concurrent/CopyOnWriteArrayList.h \
+    decaf/util/concurrent/CopyOnWriteArraySet.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/ExecutionException.h \

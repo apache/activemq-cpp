@@ -20,7 +20,7 @@
 
 #include <map>
 #include <vector>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Map.h>
@@ -169,7 +169,7 @@ namespace util{
             typename std::map<K,V,COMPARATOR>::iterator iter;
             iter = valueMap.find( key );
             if( iter == valueMap.end() ){
-                throw lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key does not exist in map" );
             }
 
@@ -184,7 +184,7 @@ namespace util{
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
             iter = valueMap.find( key );
             if( iter == valueMap.end() ){
-                throw lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key does not exist in map" );
             }
 
@@ -226,7 +226,7 @@ namespace util{
 
             typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
             if( iter == valueMap.end() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key is not present in this Map." );
             }
 

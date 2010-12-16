@@ -69,7 +69,7 @@ namespace concurrent {
 
             virtual E next() {
 
-                throw lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__,
                     "Cannot traverse a Synchronous Queue." );
             }

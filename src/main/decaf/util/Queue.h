@@ -21,8 +21,8 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/lang/Exception.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/util/NoSuchElementException.h>
 
 namespace decaf{
 namespace util{
@@ -52,7 +52,7 @@ namespace util{
      * @since 1.0
      */
     template <typename E>
-    class Queue : public decaf::util::AbstractCollection<E> {
+    class Queue : public virtual decaf::util::Collection<E> {
     public:
 
         virtual ~Queue() {}
@@ -118,8 +118,7 @@ namespace util{
          *
          * @return the element in the head of the queue.
          *
-         * @throws NoSuchElementException
-         *         if there is no element in the queue.
+         * @throws NoSuchElementException if there is no element in the queue.
          */
         virtual E element() const = 0;
 

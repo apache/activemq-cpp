@@ -184,8 +184,14 @@ cc_sources = \
     decaf/net/ssl/SSLSocketFactoryTest.cpp \
     decaf/nio/BufferTest.cpp \
     decaf/security/SecureRandomTest.cpp \
+    decaf/util/AbstractCollectionTest.cpp \
+    decaf/util/AbstractListTest.cpp \
+    decaf/util/AbstractSequentialListTest.cpp \
+    decaf/util/ArrayListTest.cpp \
+    decaf/util/ArraysTest.cpp \
     decaf/util/DateTest.cpp \
     decaf/util/Endian.cpp \
+    decaf/util/LinkedListTest.cpp \
     decaf/util/ListTest.cpp \
     decaf/util/PriorityQueueTest.cpp \
     decaf/util/PropertiesTest.cpp \
@@ -197,6 +203,8 @@ cc_sources = \
     decaf/util/TimerTest.cpp \
     decaf/util/UUIDTest.cpp \
     decaf/util/concurrent/ConcurrentStlMapTest.cpp \
+    decaf/util/concurrent/CopyOnWriteArrayListTest.cpp \
+    decaf/util/concurrent/CopyOnWriteArraySetTest.cpp \
     decaf/util/concurrent/CountDownLatchTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
     decaf/util/concurrent/SynchronousQueueTest.cpp \
@@ -396,8 +404,14 @@ h_sources = \
     decaf/net/ssl/SSLSocketFactoryTest.h \
     decaf/nio/BufferTest.h \
     decaf/security/SecureRandomTest.h \
+    decaf/util/AbstractCollectionTest.h \
+    decaf/util/AbstractListTest.h \
+    decaf/util/AbstractSequentialListTest.h \
+    decaf/util/ArrayListTest.h \
+    decaf/util/ArraysTest.h \
     decaf/util/DateTest.h \
     decaf/util/Endian.h \
+    decaf/util/LinkedListTest.h \
     decaf/util/ListTest.h \
     decaf/util/PriorityQueueTest.h \
     decaf/util/PropertiesTest.h \
@@ -409,6 +423,8 @@ h_sources = \
     decaf/util/TimerTest.h \
     decaf/util/UUIDTest.h \
     decaf/util/concurrent/ConcurrentStlMapTest.h \
+    decaf/util/concurrent/CopyOnWriteArrayListTest.h \
+    decaf/util/concurrent/CopyOnWriteArraySetTest.h \
     decaf/util/concurrent/CountDownLatchTest.h \
     decaf/util/concurrent/MutexTest.h \
     decaf/util/concurrent/SynchronousQueueTest.h \

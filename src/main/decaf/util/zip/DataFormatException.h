@@ -32,7 +32,7 @@ namespace zip{
         /**
          * Default Constructor
          */
-        DataFormatException() throw() {}
+        DataFormatException() throw();
 
         /**
          * Copy Constructor
@@ -110,7 +110,7 @@ namespace zip{
             return new DataFormatException( *this );
         }
 
-        virtual ~DataFormatException() throw() {}
+        virtual ~DataFormatException() throw();
 
     };
 

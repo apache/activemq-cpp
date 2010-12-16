@@ -24,7 +24,7 @@
 #include <cms/MessageProducer.h>
 #include <cms/MessageConsumer.h>
 #include <activemq/util/Config.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -37,11 +37,11 @@ namespace cmsutil {
     class AMQCPP_API ResourceLifecycleManager {
     private:
 
-        typedef decaf::util::StlList< cms::Connection* > ConnectionList;
-        typedef decaf::util::StlList< cms::Session* > SessionList;
-        typedef decaf::util::StlList< cms::Destination* > DestinationList;
-        typedef decaf::util::StlList< cms::MessageProducer* > ProducerList;
-        typedef decaf::util::StlList< cms::MessageConsumer* > ConsumerList;
+        typedef decaf::util::LinkedList< cms::Connection* > ConnectionList;
+        typedef decaf::util::LinkedList< cms::Session* > SessionList;
+        typedef decaf::util::LinkedList< cms::Destination* > DestinationList;
+        typedef decaf::util::LinkedList< cms::MessageProducer* > ProducerList;
+        typedef decaf::util::LinkedList< cms::MessageConsumer* > ConsumerList;
 
         ConnectionList connections;
         SessionList sessions;

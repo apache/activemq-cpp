@@ -20,7 +20,7 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/internal/util/ResourceLifecycleManager.h>
 
@@ -48,7 +48,7 @@ namespace net{
 
         ResourceLifecycleManager resources;
         Mutex lock;
-        StlList<Runnable*> shutdownTasks;
+        LinkedList<Runnable*> shutdownTasks;
 
         ~NetworkData() {
             try{

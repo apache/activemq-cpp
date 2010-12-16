@@ -18,11 +18,12 @@
 #ifndef _DECAF_UTIL_LIST_H_
 #define _DECAF_UTIL_LIST_H_
 
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/util/Collection.h>
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/util/ListIterator.h>
 
@@ -43,10 +44,17 @@ namespace util{
      * to insert them, but we expect this usage to be rare.
      */
     template <typename E>
-    class DECAF_API List : public decaf::util::AbstractCollection<E> {
+    class DECAF_API List : public virtual decaf::util::Collection<E> {
     public:
 
-        List() : AbstractCollection<E>() {}
+        // Un-hide any methods from Collection that the declarations in this interface hid.
+        using decaf::util::Collection<E>::add;
+        using decaf::util::Collection<E>::addAll;
+        using decaf::util::Collection<E>::remove;
+
+    public:
+
+        List() {}
 
         virtual ~List() {}
 
@@ -78,12 +86,15 @@ namespace util{
          * formally, returns the lowest index i such that get(i) == value, or
          * -1 if there is no such index.
          *
-         * @param value - element to search for
-         * @return the index of the first occurrence of the specified element in
-         * this list,
-         * @throw NoSuchElementException if value is not in the list
+         * @param value
+         *      The element to search for in this List.
+         *
+         * @return the index of the first occurrence of the specified element in this list,
+         *
+         * @throws NullPointerException if the Collection is a container of pointers
+         *         and does not allow NULL values.
          */
-        virtual int indexOf( const E& value ) = 0;
+        virtual int indexOf( const E& value ) const = 0;
 
         /**
          * Returns the index of the last occurrence of the specified element in
@@ -91,17 +102,26 @@ namespace util{
          * formally, returns the highest index i such that get(i) == value
          * or -1 if there is no such index.
          *
-         * @param value - element to search for
-         * @return the index of the last occurrence of the specified element in
-         * this list.
-         * @throw NoSuchElementException if value is not in the list
+         * @param value
+         *      The element to search for in this List.
+         *
+         * @return the index of the last occurrence of the specified element in this list.
+         *
+         * @throws NullPointerException if the Collection is a container of pointers
+         *         and does not allow NULL values.
          */
-        virtual int lastIndexOf( const E& value ) = 0;
+        virtual int lastIndexOf( const E& value ) const = 0;
 
         /**
-         * Gets the element contained at position passed
-         * @param index - position to get
-         * @return value at index
+         * Gets the element contained at position passed.
+         *
+         * @param index
+         *      The position to get.
+         *
+         * @return value at index specified.
+         *
+         * @throws IndexOutOfBoundsException if the index given is less than zero
+         *         or greater than the List size.
          */
         virtual E get( int index ) const = 0;
 
@@ -109,10 +129,22 @@ namespace util{
          * Replaces the element at the specified position in this list with the
          * specified element.
          *
-         * @param index - index of the element to replace
-         * @param element - element to be stored at the specified position
-         * @return the element previously at the specified position
-         * @throw IndexOutOfBoundsException - if the index is greater than size
+         * @param index
+         *      The index of the element to replace.
+         * @param element
+         *      The element to be stored at the specified position.
+         *
+         * @return the element previously at the specified position.
+         *
+         * @throws IndexOutOfBoundsException if the index given is less than zero
+         *         or greater than the List size.
+         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
+         * @throws NullPointerException if the Collection is a container of pointers
+         *         and does not allow NULL values.
+         * @throws IllegalArgumentException if some property of the element prevents it
+         *         from being added to this collection
+         * @throws IllegalStateException if the element cannot be added at this time due
+         *         to insertion restrictions.
          */
         virtual E set( int index, const E& element ) = 0;
 
@@ -121,11 +153,19 @@ namespace util{
          * Shifts the element currently at that position (if any) and any
          * subsequent elements to the right (adds one to their indices).
          *
-         * @param index - index at which the specified element is to be inserted
-         * @param element - element to be inserted
+         * @param index
+         *      The index at which the specified element is to be inserted.
+         * @param element
+         *      The element to be inserted in this List.
          *
-         * @throw IndexOutOfBoundsException - if the index is greater than size
-         * @throw UnsupportedOperationException - If the collection is non-modifiable.
+         * @throws IndexOutOfBoundsException if the index is greater than size of the List.
+         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
+         * @throws NullPointerException if the Collection is a container of pointers
+         *         and does not allow NULL values.
+         * @throws IllegalArgumentException if some property of the element prevents it
+         *         from being added to this collection
+         * @throws IllegalStateException if the element cannot be added at this time due
+         *         to insertion restrictions.
          */
         virtual void add( int index, const E& element ) = 0;
 
@@ -146,8 +186,15 @@ namespace util{
          *
          * @return true if this list changed as a result of the call
          *
-         * @throw IndexOutOfBoundsException - if the index is greater than size
-         * @throw UnsupportedOperationException - If the collection is non-modifiable.
+         * @throws IndexOutOfBoundsException if the index given is less than zero
+         *         or greater than the List size.
+         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
+         * @throws NullPointerException if the Collection is a container of pointers
+         *         and does not allow NULL values.
+         * @throws IllegalArgumentException if some property of the element prevents it
+         *         from being added to this collection
+         * @throws IllegalStateException if the element cannot be added at this time due
+         *         to insertion restrictions.
          */
         virtual bool addAll( int index, const Collection<E>& source ) = 0;
 
@@ -156,12 +203,15 @@ namespace util{
          * Shifts any subsequent elements to the left (subtracts one from their
          * indices). Returns the element that was removed from the list.
          *
-         * @param index - the index of the element to be removed
-         * @return the element previously at the specified position
-         * @throw IndexOutOfBoundsException - if the index is greater than size
-         * @throw UnsupportedOperationException - If the collection is non-modifiable.
+         * @param index - the index of the element to be removed.
+         *
+         * @return the element previously at the specified position.
+         *
+         * @throws IndexOutOfBoundsException if the index given is less than zero
+         *         or greater than the List size.
+         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          */
-        virtual E remove( int index ) = 0;
+        virtual E removeAt( int index ) = 0;
 
     };
 

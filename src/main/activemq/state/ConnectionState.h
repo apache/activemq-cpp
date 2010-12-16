@@ -34,7 +34,7 @@
 #include <decaf/util/StlMap.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/Pointer.h>
 
 #include <string>
@@ -57,7 +57,7 @@ namespace state {
         ConcurrentStlMap< Pointer<SessionId>,
                           Pointer<SessionState>,
                           SessionId::COMPARATOR > sessions;
-        StlList< Pointer<DestinationInfo> > tempDestinations;
+        LinkedList< Pointer<DestinationInfo> > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 
         bool connectionInterruptProcessingComplete;
@@ -133,7 +133,7 @@ namespace state {
             return sessions.get( id );
         }
 
-        const StlList< Pointer<DestinationInfo> >& getTempDesinations() const {
+        const LinkedList< Pointer<DestinationInfo> >& getTempDesinations() const {
             return tempDestinations;
         }
 

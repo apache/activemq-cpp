@@ -22,8 +22,8 @@
 #include <decaf/util/Map.h>
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/util/NoSuchElementException.h>
 
 namespace decaf {
 namespace util {

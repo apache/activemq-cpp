@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/util/CompositeData.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
@@ -112,7 +112,7 @@ namespace util{
          *
          * @param str - the set of Composite URIs
          */
-        static decaf::util::StlList<std::string> splitComponents( const std::string& str );
+        static decaf::util::LinkedList<std::string> splitComponents( const std::string& str );
 
         /**
          * Given a string value and a prefix value, return a new string that has the prefix

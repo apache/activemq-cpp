@@ -58,7 +58,7 @@ URI URIPool::getURI() {
                 index = rand.nextInt( (int)uriPool.size() );
             }
 
-            return uriPool.remove( index );
+            return uriPool.removeAt( index );
         }
     }
 
@@ -77,7 +77,7 @@ void URIPool::addURI( const URI& uri ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURIs( const StlList<URI>& uris ) {
+void URIPool::addURIs( const LinkedList<URI>& uris ) {
 
     synchronized( &uriPool ) {
 

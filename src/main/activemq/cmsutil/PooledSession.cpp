@@ -89,7 +89,7 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
         CachedProducer* cachedProducer = NULL;
         try {
             cachedProducer = producerCache.get( key );
-        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
+        } catch( decaf::util::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
             // a new producer resource.
@@ -132,7 +132,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
         CachedConsumer* cachedConsumer = NULL;
         try {
             cachedConsumer = consumerCache.get( key );
-        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
+        } catch( decaf::util::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
             // a new consumer resource.

@@ -200,7 +200,7 @@ namespace marshal{
          */
         static void unmarshalPrimitiveList(
             decaf::io::DataInputStream& dataIn,
-            decaf::util::StlList<util::PrimitiveValueNode>& list );
+            decaf::util::LinkedList<util::PrimitiveValueNode>& list );
 
         /**
          * Unmarshals a Primitive Type from the stream, and returns it as a

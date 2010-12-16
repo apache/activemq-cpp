@@ -85,7 +85,7 @@ namespace util{
 
             virtual T next() {
                 if( this->current == queue->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "Queue::Iterator::next - No more elements to return" );
                 }

@@ -93,7 +93,7 @@ namespace util {
             virtual E next() {
 
                 if( !hasNext() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "No more elements to Iterate over." );
                 }
@@ -265,7 +265,7 @@ namespace util {
 
         virtual bool poll( E& result ) {
 
-            if( Queue<E>::isEmpty() ) {
+            if( this->isEmpty() ) {
                 return false;
             }
 
@@ -276,7 +276,7 @@ namespace util {
 
         virtual bool peek( E& result ) const {
 
-            if( Queue<E>::isEmpty() ) {
+            if( this->isEmpty() ) {
                 return false;
             }
 
@@ -286,13 +286,13 @@ namespace util {
 
         virtual E remove() {
 
-            if( !Queue<E>::isEmpty() ) {
+            if( !this->isEmpty() ) {
                 E result = elements[0];
                 removeAt( 0 );
                 return result;
             }
 
-            throw decaf::lang::exceptions::NoSuchElementException(
+            throw decaf::util::NoSuchElementException(
                 __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
@@ -368,7 +368,7 @@ namespace util {
             int current = pos;
             int child = 2 * current + 1;
 
-            while( child < _size && !Queue<E>::isEmpty() ) {
+            while( child < _size && !this->isEmpty() ) {
 
                 // compare the children if they exist
                 if( child + 1 < _size && _comparator->compare( elements[child + 1], elements[child] ) < 0 ) {

@@ -39,6 +39,8 @@
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 
 #include <string>
 #include <memory>
@@ -47,7 +49,9 @@ namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
+    using decaf::util::concurrent::atomic::AtomicBoolean;
 
+    class SessionConfig;
     class ActiveMQConnection;
     class ActiveMQConsumer;
     class ActiveMQMessage;
@@ -62,13 +66,11 @@ namespace core{
                                      ActiveMQConsumer*,
                                      commands::ConsumerId::COMPARATOR> ConsumersMap;
 
-        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
-                                     ActiveMQProducer*,
-                                     commands::ProducerId::COMPARATOR> ProducersMap;
-
         friend class ActiveMQSessionExecutor;
 
     protected:
+
+        SessionConfig* config;
 
         /**
          * SessionInfo for this Session
@@ -86,24 +88,15 @@ namespace core{
         ActiveMQConnection* connection;
 
         /**
-         * Bool to indicate if this session was closed.
-         */
-        bool closed;
-
-        /**
-         * Bool to indicate if the Session has added a Syncronization to a TransactionContext.
-         */
-        bool synchronizationRegistered;
-
-        /**
          * Map of consumers.
          */
         ConsumersMap consumers;
 
         /**
-         * Map of producers.
+         * Indicates that this connection has been closed, it is no longer
+         * usable after this becomes true
          */
-        ProducersMap producers;
+        AtomicBoolean closed;
 
         /**
          * Sends incoming messages to the registered consumers.
@@ -394,7 +387,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addProducer( ActiveMQProducer* consumer );
+        void addProducer( ActiveMQProducer* producer );
 
         /**
          * Dispose of a MessageProducer from this session.  Removes it from the Connection
@@ -405,7 +398,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeProducer( const Pointer<commands::ProducerId>& producerId );
+        void removeProducer( ActiveMQProducer* producer );
 
         /**
          * Starts if not already start a Transaction for this Session.  If the session
@@ -492,14 +485,12 @@ namespace core{
        // Send the Destination Creation Request to the Broker, alerting it
        // that we've created a new Temporary Destination.
        // @param tempDestination - The new Temporary Destination
-       void createTemporaryDestination(
-           commands::ActiveMQTempDestination* tempDestination );
+       void createTemporaryDestination( commands::ActiveMQTempDestination* tempDestination );
 
        // Send the Destination Destruction Request to the Broker, alerting
        // it that we've removed an existing Temporary Destination.
        // @param tempDestination - The Temporary Destination to remove
-       void destroyTemporaryDestination(
-           commands::ActiveMQTempDestination* tempDestination );
+       void destroyTemporaryDestination( commands::ActiveMQTempDestination* tempDestination );
 
        // Creates a new Temporary Destination name using the connection id
        // and a rolling count.

@@ -22,7 +22,7 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/wireformat/WireFormat.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 

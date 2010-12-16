@@ -18,7 +18,7 @@
 #include "ConnectionStateTracker.h"
 
 #include <decaf/lang/Runnable.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 
 #include <activemq/commands/ConsumerControl.h>
 #include <activemq/commands/RemoveInfo.h>

@@ -21,7 +21,7 @@
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/StlMap.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -246,7 +246,7 @@ void PrimitiveValueNode::setBool( bool lvalue ) {
 bool PrimitiveValueNode::getBool() const {
 
     if( valueType != BOOLEAN_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not BOOLEAN_TYPE" );
     }
 
@@ -264,7 +264,7 @@ void PrimitiveValueNode::setByte( unsigned char lvalue ) {
 unsigned char PrimitiveValueNode::getByte() const {
 
     if( valueType != BYTE_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not BYTE_TYPE" );
     }
 
@@ -282,7 +282,7 @@ void PrimitiveValueNode::setChar( char lvalue ) {
 char PrimitiveValueNode::getChar() const {
 
     if( valueType != CHAR_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not CHAR_TYPE" );
     }
 
@@ -300,7 +300,7 @@ void PrimitiveValueNode::setShort( short lvalue ) {
 short PrimitiveValueNode::getShort() const {
 
     if( valueType != SHORT_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not SHORT_TYPE" );
     }
 
@@ -318,7 +318,7 @@ void PrimitiveValueNode::setInt( int lvalue ) {
 int PrimitiveValueNode::getInt() const {
 
     if( valueType != INTEGER_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not INTEGER_TYPE" );
     }
 
@@ -336,7 +336,7 @@ void PrimitiveValueNode::setLong( long long lvalue ) {
 long long PrimitiveValueNode::getLong() const {
 
     if( valueType != LONG_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not LONG_TYPE" );
     }
 
@@ -354,7 +354,7 @@ void PrimitiveValueNode::setDouble( double lvalue ) {
 double PrimitiveValueNode::getDouble() const {
 
     if( valueType != DOUBLE_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not DOUBLE_TYPE" );
     }
 
@@ -372,7 +372,7 @@ void PrimitiveValueNode::setFloat( float lvalue ) {
 float PrimitiveValueNode::getFloat() const {
 
     if( valueType != FLOAT_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not FLOAT_TYPE" );
     }
 
@@ -390,7 +390,7 @@ void PrimitiveValueNode::setString( const std::string& lvalue ) {
 std::string PrimitiveValueNode::getString() const {
 
     if( valueType != STRING_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not STRING_TYPE" );
     }
 
@@ -412,7 +412,7 @@ void PrimitiveValueNode::setByteArray( const std::vector<unsigned char>& lvalue 
 std::vector<unsigned char> PrimitiveValueNode::getByteArray() const {
 
     if( valueType != BYTE_ARRAY_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__, "PrimitiveValue is not BYTE_ARRAY_TYPE" );
     }
 
@@ -427,7 +427,7 @@ std::vector<unsigned char> PrimitiveValueNode::getByteArray() const {
 void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& lvalue ) {
     clear();
     valueType = LIST_TYPE;
-    value.listValue = new decaf::util::StlList<PrimitiveValueNode>();
+    value.listValue = new decaf::util::LinkedList<PrimitiveValueNode>();
     value.listValue->copy( lvalue );
 }
 
@@ -435,13 +435,13 @@ void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& l
 const decaf::util::List<PrimitiveValueNode>& PrimitiveValueNode::getList() const {
 
     if( valueType != LIST_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__,
             "PrimitiveValue is not LIST_TYPE" );
     }
 
     if( value.listValue == NULL ){
-        throw decaf::lang::exceptions::NullPointerException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__,
             "PrimitiveValue is not set but an element was placed in the Map" );
     }
@@ -462,7 +462,7 @@ void PrimitiveValueNode::setMap(
 const decaf::util::Map<std::string, PrimitiveValueNode>& PrimitiveValueNode::getMap() const {
 
     if( valueType != MAP_TYPE ){
-        throw decaf::lang::exceptions::NoSuchElementException(
+        throw decaf::util::NoSuchElementException(
             __FILE__, __LINE__,
             "PrimitiveValue is not MAP_TYPE" );
     }

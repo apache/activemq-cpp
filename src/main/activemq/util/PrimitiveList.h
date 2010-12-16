@@ -20,7 +20,7 @@
 
 #include <string>
 #include <vector>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <stdio.h>
@@ -33,7 +33,7 @@ namespace util{
     /**
      * List of primitives.
      */
-    class AMQCPP_API PrimitiveList : public decaf::util::StlList<PrimitiveValueNode> {
+    class AMQCPP_API PrimitiveList : public decaf::util::LinkedList<PrimitiveValueNode> {
     private:
 
         PrimitiveValueConverter converter;

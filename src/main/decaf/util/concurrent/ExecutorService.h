@@ -67,7 +67,7 @@ namespace concurrent {
          *
          * @throws InterruptedException - if interrupted while waiting.
          */
-        bool awaitTermination( long long timeout, const TimeUnit& unit ) = 0;
+        virtual bool awaitTermination( long long timeout, const TimeUnit& unit ) = 0;
 
     };
 

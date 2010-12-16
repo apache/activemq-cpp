@@ -63,6 +63,7 @@ using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -108,6 +109,39 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace activemq{
+namespace core{
+
+    class SessionConfig {
+    public:
+
+        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
+                                     ActiveMQConsumer*,
+                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
+
+    public:
+
+        /**
+         * Bool to indicate if the Session has added a Syncronization to a TransactionContext.
+         */
+        bool synchronizationRegistered;
+
+        /**
+         * Map of producers.
+         */
+        decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQProducer*> producers;
+
+    public:
+
+        SessionConfig() : synchronizationRegistered( false ), producers() {
+        }
+
+        ~SessionConfig() {}
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
                                   const Pointer<SessionId>& id,
                                   cms::Session::AcknowledgeMode ackMode,
@@ -119,6 +153,8 @@ ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
             "ActiveMQSession::ActiveMQSession - Constructor called with NULL data");
     }
 
+    this->config = new SessionConfig();
+
     this->sessionInfo.reset( new SessionInfo() );
     this->sessionInfo->setAckMode( ackMode );
     this->sessionInfo->setSessionId( id );
@@ -127,7 +163,6 @@ ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
 
     this->connection = connection;
     this->closed = false;
-    this->synchronizationRegistered = false;
     this->ackMode = ackMode;
     this->lastDeliveredSequenceId = -1;
 
@@ -153,6 +188,8 @@ ActiveMQSession::~ActiveMQSession() throw() {
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+
+    delete this->config;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +203,7 @@ void ActiveMQSession::fire( const activemq::exceptions::ActiveMQException& ex ) 
 void ActiveMQSession::close() {
 
     // If we're already closed, just return.
-    if( closed ) {
+    if( this->closed.get() ) {
         return;
     }
 
@@ -260,16 +297,13 @@ void ActiveMQSession::dispose() {
         }
 
         // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-        synchronized( &this->producers ) {
+        std::auto_ptr< Iterator<ActiveMQProducer*> > producerIter( this->config->producers.iterator() );
 
-            std::vector<ActiveMQProducer*> closables = this->producers.values();
-
-            for( std::size_t i = 0; i < closables.size(); ++i ) {
-                try{
-                    closables[i]->dispose();
-                } catch( cms::CMSException& ex ){
-                    /* Absorb */
-                }
+        while( producerIter->hasNext() ) {
+            try{
+                producerIter->next()->dispose();
+            } catch( cms::CMSException& ex ){
+                /* Absorb */
             }
         }
     }
@@ -532,7 +566,7 @@ cms::MessageProducer* ActiveMQSession::createProducer( const cms::Destination* d
             this->addProducer( producer.get() );
             this->connection->oneway( producer->getProducerInfo() );
         } catch( Exception& ex ) {
-            this->removeProducer( producer->getProducerId() );
+            this->removeProducer( producer.get() );
             throw ex;
         }
 
@@ -986,7 +1020,7 @@ Pointer<Response> ActiveMQSession::syncRequest( Pointer<Command> command, unsign
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::checkClosed() const {
-    if( closed ) {
+    if( this->closed.get() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQSession - Session Already Closed" );
@@ -1043,10 +1077,7 @@ void ActiveMQSession::addProducer( ActiveMQProducer* producer ) {
 
         this->checkClosed();
 
-        synchronized( &this->producers ) {
-            // Place the Producer into the Map.
-            this->producers.put( producer->getProducerInfo()->getProducerId(), producer );
-        }
+        this->config->producers.add( producer );
 
         // Add to the Connections list
         this->connection->addProducer( producer );
@@ -1057,20 +1088,14 @@ void ActiveMQSession::addProducer( ActiveMQProducer* producer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId ) {
+void ActiveMQSession::removeProducer( ActiveMQProducer* producer ) {
 
     try{
 
         this->checkClosed();
 
-        synchronized( &this->producers ) {
-
-            if( this->producers.containsKey( producerId ) ) {
-
-                this->connection->removeProducer( producerId );
-                this->producers.remove( producerId );
-            }
-        }
+        this->connection->removeProducer( producer->getProducerId() );
+        this->config->producers.remove( producer );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

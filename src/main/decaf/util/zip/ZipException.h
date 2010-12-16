@@ -35,7 +35,7 @@ namespace zip{
         /**
          * Default Constructor
          */
-        ZipException() throw(){}
+        ZipException() throw();
 
         /**
          * Copy Constructor
@@ -115,7 +115,7 @@ namespace zip{
             return new ZipException( *this );
         }
 
-        virtual ~ZipException() throw(){}
+        virtual ~ZipException() throw();
 
     };
 

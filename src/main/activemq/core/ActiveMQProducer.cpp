@@ -115,7 +115,7 @@ void ActiveMQProducer::close() {
 void ActiveMQProducer::dispose() {
 
     if( !this->isClosed() ) {
-        this->session->removeProducer( this->producerInfo->getProducerId() );
+        this->session->removeProducer( this );
         this->closed = true;
     }
 }

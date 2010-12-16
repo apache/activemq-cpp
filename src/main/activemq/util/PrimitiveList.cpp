@@ -32,12 +32,12 @@ PrimitiveList::PrimitiveList() {
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const decaf::util::List<PrimitiveValueNode>& src )
-  : StlList<PrimitiveValueNode>( src ){
+  : LinkedList<PrimitiveValueNode>( src ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const PrimitiveList& src )
-  : StlList<PrimitiveValueNode>( src ){
+  : LinkedList<PrimitiveValueNode>( src ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////

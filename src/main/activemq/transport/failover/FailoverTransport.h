@@ -32,7 +32,7 @@
 #include <activemq/transport/failover/URIPool.h>
 #include <activemq/wireformat/WireFormat.h>
 
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -87,7 +87,7 @@ namespace failover {
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
         Pointer<URIPool> uris;
-        decaf::util::StlList<URI> updated;
+        decaf::util::LinkedList<URI> updated;
         Pointer<URI> connectedTransportURI;
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
