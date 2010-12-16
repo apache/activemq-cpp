@@ -22,7 +22,7 @@
 #include <activemq/threads/TaskRunner.h>
 #include <activemq/threads/CompositeTask.h>
 #include <decaf/util/StlSet.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -44,7 +44,7 @@ namespace threads {
                                            public decaf::lang::Runnable {
     private:
 
-        decaf::util::StlList<CompositeTask*> tasks;
+        decaf::util::LinkedList<CompositeTask*> tasks;
         decaf::util::concurrent::Mutex mutex;
 
         Pointer<decaf::lang::Thread> thread;

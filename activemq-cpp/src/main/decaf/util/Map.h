@@ -21,7 +21,7 @@
 #include <functional>
 #include <vector>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 

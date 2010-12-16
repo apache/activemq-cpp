@@ -20,7 +20,7 @@
 
 #include <map>
 #include <vector>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/ConcurrentMap.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -194,8 +194,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V& get( const K& key )
-            throw( lang::exceptions::NoSuchElementException ) {
+        virtual V& get( const K& key ) {
 
             typename std::map<K,V,COMPARATOR>::iterator iter;
 
@@ -206,15 +205,14 @@ namespace concurrent{
                 }
             }
 
-            throw lang::exceptions::NoSuchElementException(
+            throw NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual const V& get( const K& key ) const
-            throw( lang::exceptions::NoSuchElementException ) {
+        virtual const V& get( const K& key ) const {
 
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
 
@@ -225,7 +223,7 @@ namespace concurrent{
                 }
             }
 
-            throw lang::exceptions::NoSuchElementException(
+            throw NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
@@ -274,7 +272,7 @@ namespace concurrent{
             synchronized( &mutex ) {
                 typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
                 if( iter == valueMap.end() ) {
-                    throw decaf::lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__, "Key is not present in this Map." );
                 }
 
@@ -445,7 +443,7 @@ namespace concurrent{
                 }
             }
 
-            throw decaf::lang::exceptions::NoSuchElementException(
+            throw NoSuchElementException(
                 __FILE__, __LINE__, "Value to Replace was not in the Map." );
         }
 

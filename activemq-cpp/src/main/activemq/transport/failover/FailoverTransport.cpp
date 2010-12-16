@@ -544,7 +544,7 @@ void FailoverTransport::processNewTransports( bool rebalance, std::string newTra
 
         if( newTransports.length() > 0 && isUpdateURIsSupported() ) {
 
-            StlList<URI> list;
+            LinkedList<URI> list;
             StringTokenizer tokenizer( newTransports, "," );
 
             while( tokenizer.hasMoreTokens() ) {
@@ -573,8 +573,8 @@ void FailoverTransport::updateURIs( bool rebalance, const decaf::util::List<deca
 
     if( isUpdateURIsSupported() ) {
 
-        StlList<URI> copy( this->updated );
-        StlList<URI> add;
+        LinkedList<URI> copy( this->updated );
+        LinkedList<URI> add;
 
         if( !updatedURIs.isEmpty() ) {
 
@@ -639,7 +639,7 @@ bool FailoverTransport::iterate() {
             return false;
         } else {
 
-            StlList<URI> failures;
+            LinkedList<URI> failures;
             Pointer<Transport> transport;
             URI uri;
 

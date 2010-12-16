@@ -14,52 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_LANG_EXCEPTIONS_NOSUCHELEMENTEXCEPTION_H_
-#define _DECAF_LANG_EXCEPTIONS_NOSUCHELEMENTEXCEPTION_H_
 
-#include <decaf/lang/Exception.h>
+#ifndef _DECAF_UTIL_CONCURRENTMODIFICATIONEXCEPTION_H_
+#define _DECAF_UTIL_CONCURRENTMODIFICATIONEXCEPTION_H_
+
+#include <decaf/util/Config.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 
 namespace decaf{
-namespace lang{
-namespace exceptions{
+namespace util{
 
-    /*
-     * Thrown from an operation that attempts to access some element that does
-     * not exist.
-     *
-     * @since 1.0
-     */
-    class DECAF_API NoSuchElementException : public Exception
-    {
+    class DECAF_API ConcurrentModificationException :
+        public lang::exceptions::RuntimeException {
     public:
 
         /**
          * Default Constructor
          */
-        NoSuchElementException() throw() {};
+        ConcurrentModificationException() throw();
 
         /**
-         * Conversion Constructor from some other Exception
-         *
-         * @param ex
-         *      The Exception whose data is to be copied into this one.
+         * Copy Constructor
+         * @param ex the exception to copy
          */
-        NoSuchElementException( const Exception& ex ) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
+        ConcurrentModificationException( const lang::Exception& ex ) throw()
+        : lang::exceptions::RuntimeException() {
+            *(lang::Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
-         *
-         * @param ex
-         *      The Exception whose data is to be copied into this one.
+         * @param ex the exception to copy, which is an instance of this type
          */
-        NoSuchElementException( const NoSuchElementException& ex ) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
+        ConcurrentModificationException( const ConcurrentModificationException& ex ) throw()
+        : lang::exceptions::RuntimeException() {
+            *(lang::Exception*)this = ex;
         }
 
         /**
@@ -72,9 +61,10 @@ namespace exceptions{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NoSuchElementException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... ) throw() : Exception( cause )
+        ConcurrentModificationException( const char* file, const int lineNumber,
+                                         const std::exception* cause,
+                                         const char* msg, ... )
+            throw() : lang::exceptions::RuntimeException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -89,22 +79,20 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        NoSuchElementException( const std::exception* cause ) throw() : Exception( cause ) {}
+        ConcurrentModificationException( const std::exception* cause )
+            throw() : lang::exceptions::RuntimeException( cause ) {}
 
         /**
-         * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
-         * optional list of arguments to parse into the message
+         * Constructor
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NoSuchElementException( const char* file,
-                                const int lineNumber,
-                                const char* msg, ... ) throw()
-        : Exception()
-        {
+        ConcurrentModificationException( const char* file, const int lineNumber,
+                                         const char* msg, ... ) throw()
+        : lang::exceptions::RuntimeException() {
+
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -117,17 +105,15 @@ namespace exceptions{
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
-         *
-         * @return an new Exception instance that is a copy of this one.
          */
-        virtual NoSuchElementException* clone() const{
-            return new NoSuchElementException(*this);
+        virtual ConcurrentModificationException* clone() const {
+            return new ConcurrentModificationException( *this );
         }
 
-        virtual ~NoSuchElementException() throw() {}
+        virtual ~ConcurrentModificationException() throw();
 
     };
 
-}}}
+}}
 
-#endif /*_DECAF_LANG_EXCEPTIONS_NOSUCHELEMENTEXCEPTION_H_*/
+#endif /*_DECAF_UTIL_CONCURRENTMODIFICATIONEXCEPTION_H_*/

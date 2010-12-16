@@ -180,15 +180,15 @@ void PrimitiveListTest::testRemove(){
     plist.add( 5 );
     plist.add( 5.5f );
     plist.add( 6 );
-    plist.remove( 0 );
+    plist.removeAt( 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw UnsupportedOperationException",
         plist.getInt( 0 ),
         decaf::lang::exceptions::UnsupportedOperationException );
 
-    plist.remove( 0 );
-    plist.remove( 0 );
+    plist.removeAt( 0 );
+    plist.removeAt( 0 );
 
     CPPUNIT_ASSERT( plist.isEmpty() );
 }
@@ -204,7 +204,7 @@ void PrimitiveListTest::testCount(){
     CPPUNIT_ASSERT( plist.size() == 2 );
     plist.add( 6 );
     CPPUNIT_ASSERT( plist.size() == 3 );
-    plist.remove( 0 );
+    plist.removeAt( 0 );
     CPPUNIT_ASSERT( plist.size() == 2 );
 
     CPPUNIT_ASSERT( plist.toString() != "" );

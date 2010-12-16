@@ -275,9 +275,9 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             std::vector<unsigned char> data = value.getByteArray();
 
             dataOut.writeInt( (int)data.size() );
-			if( !data.empty() ) {
-				dataOut.write( &data[0], (int)data.size() );
-			}
+            if( !data.empty() ) {
+                dataOut.write( &data[0], (int)data.size() );
+            }
 
         } else if( value.getType() == PrimitiveValueNode::STRING_TYPE ) {
 
@@ -343,7 +343,7 @@ void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
-    decaf::util::StlList<PrimitiveValueNode>& list ) {
+    decaf::util::LinkedList<PrimitiveValueNode>& list ) {
 
     try{
 

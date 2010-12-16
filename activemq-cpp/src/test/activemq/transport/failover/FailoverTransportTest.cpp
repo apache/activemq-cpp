@@ -573,7 +573,7 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
     }
 
-    StlList<URI> removals;
+    LinkedList<URI> removals;
     removals.add( URI("mock://localhost:61616") );
 
     mock->fireCommand( control );

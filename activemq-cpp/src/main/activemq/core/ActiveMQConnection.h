@@ -30,9 +30,8 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/StlMap.h>
-#include <decaf/util/StlSet.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -60,16 +59,6 @@ namespace core{
      */
     class AMQCPP_API ActiveMQConnection : public virtual cms::Connection,
                                           public transport::TransportListener {
-    private:
-
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     Dispatcher*,
-                                     commands::ConsumerId::COMPARATOR > DispatcherMap;
-
-        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
-                                     ActiveMQProducer*,
-                                     commands::ProducerId::COMPARATOR > ProducerMap;
-
     private:
 
         ConnectionConfig* config;
@@ -100,26 +89,6 @@ namespace core{
          * Indicates that this connection's Transport has failed.
          */
         AtomicBoolean transportFailed;
-
-        /**
-         * Map of message dispatchers indexed by consumer id.
-         */
-        DispatcherMap dispatchers;
-
-        /**
-         * Map of message producers indexed by consumer id.
-         */
-        ProducerMap activeProducers;
-
-        /**
-         * Maintain the set of all active sessions.
-         */
-        decaf::util::StlSet<ActiveMQSession*> activeSessions;
-
-        /**
-         * Maintain the set of all active sessions.
-         */
-        decaf::util::StlSet<transport::TransportListener*> transportListeners;
 
     private:
 

@@ -17,7 +17,7 @@
 #ifndef _DECAF_UTIL_STRINGTOKENIZER_H_
 #define _DECAF_UTIL_STRINGTOKENIZER_H_
 
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/Config.h>
 #include <string>
 

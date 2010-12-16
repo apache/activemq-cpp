@@ -299,7 +299,7 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
         params = "";
     }
 
-    StlList<std::string> components = splitComponents( componentString );
+    LinkedList<std::string> components = splitComponents( componentString );
     std::auto_ptr< Iterator<std::string> > iter( components.iterator() );
     while( iter->hasNext() ) {
         rc.getComponents().add( URI( iter->next() ) );
@@ -320,9 +320,9 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StlList<std::string> URISupport::splitComponents( const std::string& str ) {
+LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
 
-    StlList<std::string> components;
+    LinkedList<std::string> components;
 
     std::size_t last = 0;
     int depth = 0;

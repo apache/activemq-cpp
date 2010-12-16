@@ -133,7 +133,7 @@ Pointer<BackupTransport> BackupTransportPool::getBackup() {
 
     synchronized( &backups ) {
         if( !backups.isEmpty() ) {
-            result = backups.remove( 0 );
+            result = backups.removeAt( 0 );
         }
     }
 
@@ -157,7 +157,7 @@ bool BackupTransportPool::isPending() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool BackupTransportPool::iterate() {
 
-    StlList<URI> failures;
+    LinkedList<URI> failures;
 
     synchronized( &backups ) {
 

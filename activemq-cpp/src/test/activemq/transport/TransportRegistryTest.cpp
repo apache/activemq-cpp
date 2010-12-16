@@ -23,6 +23,7 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 

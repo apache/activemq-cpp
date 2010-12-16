@@ -83,6 +83,16 @@ namespace core{
     class ConnectionConfig {
     public:
 
+        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
+                                     Dispatcher*,
+                                     commands::ConsumerId::COMPARATOR > DispatcherMap;
+
+        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
+                                     ActiveMQProducer*,
+                                     commands::ProducerId::COMPARATOR > ProducerMap;
+
+    public:
+
         static util::IdGenerator CONNECTION_ID_GENERATOR;
 
         Pointer<decaf::util::Properties> properties;
@@ -124,6 +134,12 @@ namespace core{
         Pointer<CountDownLatch> brokerInfoReceived;
 
         Pointer<Exception> firstFailureError;
+
+        DispatcherMap dispatchers;
+        ProducerMap activeProducers;
+
+        decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQSession*> activeSessions;
+        decaf::util::concurrent::CopyOnWriteArrayList<transport::TransportListener*> transportListeners;
 
         ConnectionConfig() : clientIDSet( false ),
                              isConnectionInfoSentToBroker( false ),
@@ -205,8 +221,8 @@ void ActiveMQConnection::addDispatcher(
 
     try{
         // Add the consumer to the map.
-        synchronized( &dispatchers ) {
-            dispatchers.put( consumer, dispatcher );
+        synchronized( &this->config->dispatchers ) {
+            this->config->dispatchers.put( consumer, dispatcher );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -217,8 +233,8 @@ void ActiveMQConnection::removeDispatcher( const decaf::lang::Pointer<ConsumerId
 
     try{
         // Remove the consumer from the map.
-        synchronized( &dispatchers ) {
-            dispatchers.remove( consumer );
+        synchronized( &this->config->dispatchers ) {
+            this->config->dispatchers.remove( consumer );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -265,9 +281,7 @@ void ActiveMQConnection::addSession( ActiveMQSession* session ) {
     try {
 
         // Remove this session from the set of active sessions.
-        synchronized( &activeSessions ) {
-            activeSessions.add( session );
-        }
+        this->config->activeSessions.add( session );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -278,9 +292,7 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
     try {
 
         // Remove this session from the set of active sessions.
-        synchronized( &activeSessions ) {
-            activeSessions.remove( session );
-        }
+        this->config->activeSessions.remove( session );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -291,8 +303,8 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer ) {
     try {
 
         // Add this producer from the set of active consumer.
-        synchronized( &activeProducers ) {
-            activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
+        synchronized( &this->config->activeProducers ) {
+            this->config->activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -304,8 +316,8 @@ void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>&
     try {
 
         // Remove this producer from the set of active consumer.
-        synchronized( &activeProducers ) {
-            activeProducers.remove( producerId );
+        synchronized( &this->config->activeProducers ) {
+            this->config->activeProducers.remove( producerId );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -370,16 +382,13 @@ void ActiveMQConnection::close() {
         this->closing.set( true );
 
         // Get the complete list of active sessions.
-        std::vector<ActiveMQSession*> allSessions;
-        synchronized( &activeSessions ) {
-            allSessions = activeSessions.toArray();
-        }
+        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
 
         long long lastDeliveredSequenceId = 0;
 
         // Dispose of all the Session resources we know are still open.
-        for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
-            ActiveMQSession* session = allSessions[ix];
+        while( iter->hasNext() ) {
+            ActiveMQSession* session = iter->next();
             try{
                 session->dispose();
 
@@ -407,14 +416,11 @@ void ActiveMQConnection::cleanup() {
     try{
 
         // Get the complete list of active sessions.
-        std::vector<ActiveMQSession*> allSessions;
-        synchronized( &activeSessions ) {
-            allSessions = activeSessions.toArray();
-        }
+        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
 
         // Dispose of all the Session resources we know are still open.
-        for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
-            ActiveMQSession* session = allSessions[ix];
+        while( iter->hasNext() ) {
+            ActiveMQSession* session = iter->next();
             try{
                 session->dispose();
             } catch( cms::CMSException& ex ){
@@ -454,9 +460,9 @@ void ActiveMQConnection::start() {
         if( this->started.compareAndSet( false, true ) ) {
 
             // Start all the sessions.
-            std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
-            for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
-                sessions[ix]->start();
+            std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+            while( iter->hasNext() ) {
+                iter->next()->start();
             }
         }
     }
@@ -473,10 +479,12 @@ void ActiveMQConnection::stop() {
         // Once current deliveries are done this stops the delivery of any
         // new messages.
         if( this->started.compareAndSet( true, false ) ) {
-            std::auto_ptr< Iterator<ActiveMQSession*> > iter( activeSessions.iterator() );
+            synchronized( &this->config->activeSessions ) {
+                std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
 
-            while( iter->hasNext() ){
-                iter->next()->stop();
+                while( iter->hasNext() ){
+                    iter->next()->stop();
+                }
             }
         }
     }
@@ -629,9 +637,9 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
             // Look up the dispatcher.
             Dispatcher* dispatcher = NULL;
-            synchronized( &dispatchers ) {
+            synchronized( &this->config->dispatchers ) {
 
-                dispatcher = dispatchers.get( dispatch->getConsumerId() );
+                dispatcher = this->config->dispatchers.get( dispatch->getConsumerId() );
 
                 // If we have no registered dispatcher, the consumer was probably
                 // just closed.
@@ -652,13 +660,12 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
         } else if( command->isProducerAck() ) {
 
-            ProducerAck* producerAck =
-                dynamic_cast<ProducerAck*>( command.get() );
+            ProducerAck* producerAck = dynamic_cast<ProducerAck*>( command.get() );
 
             // Get the consumer info object for this consumer.
             ActiveMQProducer* producer = NULL;
-            synchronized( &this->activeProducers ) {
-                producer = this->activeProducers.get( producerAck->getProducerId() );
+            synchronized( &this->config->activeProducers ) {
+                producer = this->config->activeProducers.get( producerAck->getProducerId() );
                 if( producer != NULL ){
                     producer->onProducerAck( *producerAck );
                 }
@@ -686,15 +693,12 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             //LOGDECAF_WARN( logger, "Received an unknown command" );
         }
 
-        synchronized( &transportListeners ) {
+        Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
-            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
-
-            while( iter->hasNext() ) {
-                try{
-                    iter->next()->onCommand( command );
-                } catch(...) {}
-            }
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->onCommand( command );
+            } catch(...) {}
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -735,15 +739,12 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
         // Clean up the Connection resources.
         cleanup();
 
-        synchronized( &transportListeners ) {
+        Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
-            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
-
-            while( iter->hasNext() ) {
-                try{
-                    iter->next()->onException( ex );
-                } catch(...) {}
-            }
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->onException( ex );
+            } catch(...) {}
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -767,40 +768,33 @@ void ActiveMQConnection::onAsyncException( const decaf::lang::Exception& ex ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportInterrupted() {
 
-    this->config->transportInterruptionProcessingComplete.reset( new CountDownLatch( (int)dispatchers.size() ) );
+    this->config->transportInterruptionProcessingComplete.reset(
+        new CountDownLatch( (int)this->config->dispatchers.size() ) );
 
-    synchronized( &activeSessions ) {
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->activeSessions.iterator() );
+    std::auto_ptr< Iterator<ActiveMQSession*> > sessions( this->config->activeSessions.iterator() );
 
-        while( iter->hasNext() ) {
-            iter->next()->clearMessagesInProgress();
-        }
+    while( sessions->hasNext() ) {
+        sessions->next()->clearMessagesInProgress();
     }
 
-    synchronized( &transportListeners ) {
+    Pointer< Iterator<TransportListener*> > listeners( this->config->transportListeners.iterator() );
 
-        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
-
-        while( iter->hasNext() ) {
-            try{
-                iter->next()->transportInterrupted();
-            } catch(...) {}
-        }
+    while( listeners->hasNext() ) {
+        try{
+            listeners->next()->transportInterrupted();
+        } catch(...) {}
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportResumed() {
 
-    synchronized( &transportListeners ) {
+    Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
-        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
-
-        while( iter->hasNext() ) {
-            try{
-                iter->next()->transportResumed();
-            } catch(...) {}
-        }
+    while( iter->hasNext() ) {
+        try{
+            iter->next()->transportResumed();
+        } catch(...) {}
     }
 }
 
@@ -934,9 +928,7 @@ void ActiveMQConnection::addTransportListener( TransportListener* transportListe
     }
 
     // Add this listener from the set of active TransportListeners
-    synchronized( &transportListeners ) {
-        transportListeners.add( transportListener );
-    }
+    this->config->transportListeners.add( transportListener );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -947,9 +939,7 @@ void ActiveMQConnection::removeTransportListener( TransportListener* transportLi
     }
 
     // Remove this listener from the set of active TransportListeners
-    synchronized( &transportListeners ) {
-        transportListeners.remove( transportListener );
-    }
+    this->config->transportListeners.remove( transportListener );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

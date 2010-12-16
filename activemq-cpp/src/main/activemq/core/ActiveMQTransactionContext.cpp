@@ -33,7 +33,6 @@
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/StlList.h>
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
 
 using namespace std;

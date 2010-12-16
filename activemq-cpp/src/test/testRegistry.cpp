@@ -261,6 +261,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 #include <decaf/net/ssl/SSLSocketFactoryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::ssl::SSLSocketFactoryTest );
 
+#include <decaf/util/concurrent/CopyOnWriteArrayListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CopyOnWriteArrayListTest );
+#include <decaf/util/concurrent/CopyOnWriteArraySetTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CopyOnWriteArraySetTest );
 #include <decaf/util/concurrent/ConcurrentStlMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest );
 #include <decaf/util/concurrent/CountDownLatchTest.h>
@@ -282,12 +286,24 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicReferenc
 #include <decaf/util/concurrent/locks/LockSupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::LockSupportTest );
 
+#include <decaf/util/AbstractCollectionTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );
+#include <decaf/util/AbstractListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractListTest );
+#include <decaf/util/AbstractSequentialListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractSequentialListTest );
 #include <decaf/util/DateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 #include <decaf/util/UUIDTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
 #include <decaf/util/ListTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
+#include <decaf/util/LinkedListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::LinkedListTest );
+#include <decaf/util/ArrayListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ArrayListTest );
+#include <decaf/util/ArraysTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ArraysTest );
 #include <decaf/util/StlMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
 #include <decaf/util/PropertiesTest.h>

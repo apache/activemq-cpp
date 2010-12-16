@@ -44,7 +44,8 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class AbstractQueue : public decaf::util::Queue<E> {
+    class AbstractQueue : public decaf::util::Queue<E>,
+                          public decaf::util::AbstractCollection<E> {
     public:
 
         AbstractQueue() : Queue<E>() {}
@@ -52,18 +53,10 @@ namespace util {
         virtual ~AbstractQueue() {}
 
         /**
-         * Inserts the specified element into this queue if it is possible to do so
-         * immediately without violating capacity restrictions, returning true upon
-         * success and throwing an IllegalStateException  if no space is currently available.
+         * {@inheritDoc}
          *
          * This implementation returns true if offer succeeds, else throws an
          * IllegalStateException.
-         *
-         * @param value - the element to offer to the Queue.
-         *
-         * @return true if the add succeeds.
-         *
-         * @throw IllegalArgumentException if the element cannot be added.
          */
         virtual bool add( const E& value ) {
 
@@ -76,20 +69,11 @@ namespace util {
         }
 
         /**
-         * Adds all the elements of a collection to the queue. If the collection is
-         * the queue itself, then an IllegalArgumentException will be thrown out. If
-         * during the process, some runtime exception is thrown out, then part of
-         * the elements in the collection that have successfully added will remain
-         * in the queue.
+         * {@inheritDoc}
          *
-         * The result of the method is undefined if the collection is modified
-         * during the process of the method.
-         *
-         * @param collection - the collection to be added to the queue.
-         * @return true if the operation succeeds.
-         *
-         * @throws IllegalArgumentException If the collection to be added to the
-         *         queue is the queue itself.
+         * This implementation checks to see if the Queue is being added to itself and
+         * throws an IllegalArgumentException if so, otherwise it delegates the add to
+         * the AbstractCollection's addAll implementation.
          */
         virtual bool addAll( const Collection<E>& collection ) {
 
@@ -98,18 +82,13 @@ namespace util {
                     __FILE__, __LINE__, "A Queue cannot be added to itself." );
             }
 
-            return Queue<E>::addAll( collection );
+            return AbstractCollection<E>::addAll( collection );
         }
 
         /**
-         * Retrieves and removes the head of this queue. This method differs from poll
-         * only in that it throws an exception if this queue is empty.
+         * {@inheritDoc}
          *
          * This implementation returns the result of poll unless the queue is empty.
-         *
-         * @return a copy of the element in the head of the queue.
-         *
-         * @throws NoSuchElementException if the queue is empty.
          */
         virtual E remove() {
 
@@ -118,18 +97,15 @@ namespace util {
                 return result;
             }
 
-            throw decaf::lang::exceptions::NoSuchElementException(
+            throw decaf::util::NoSuchElementException(
                 __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
         /**
-         * Retrieves, but does not remove, the head of this queue. This method differs
-         * from peek only in that it throws an exception if this queue is empty.
+         * {@inheritDoc}
          *
-         * This implementation returns the result of peek  unless the queue is empty.
-         *
-         * @return the element in the head of the queue.
-         * @throws NoSuchElementException if the queue is empty.
+         * This implementation returns the result of peek unless the queue is empty otherwise
+         * it throws a NoSuchElementException.
          */
         virtual E element() const {
 
@@ -138,14 +114,14 @@ namespace util {
                 return result;
             }
 
-            throw decaf::lang::exceptions::NoSuchElementException(
+            throw decaf::util::NoSuchElementException(
                 __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
         /**
-         * Removes all elements of the queue.
+         * {@inheritDoc}
          *
-         * This implementation repeatedly invokes poll until it returns the empty marker.
+         * This implementation repeatedly invokes poll until it returns false.
          */
         virtual void clear() {
 

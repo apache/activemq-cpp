@@ -25,7 +25,7 @@
 #include <activemq/wireformat/WireFormatFactory.h>
 
 #include <decaf/util/StlMap.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 

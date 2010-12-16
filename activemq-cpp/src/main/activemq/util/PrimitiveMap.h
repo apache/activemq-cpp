@@ -23,7 +23,7 @@
 #include <activemq/util/Config.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/StlMap.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveValueConverter.h>
 

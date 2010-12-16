@@ -79,7 +79,7 @@ void PrimitiveValueNodeTest::testValueNode(){
     try{
         node.getFloat();
         CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){
+    } catch( decaf::util::NoSuchElementException& e ){
     }
 
     node.clear();

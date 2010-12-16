@@ -33,7 +33,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic( const std::st
         // See if we already have a topic with this name.
         topic = topicMap.get( topicName );
 
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
 
         // Create a new topic.
         topic = session->createTopic( topicName );
@@ -56,7 +56,7 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue( const std::st
         // See if we already have a queue with this name.
         queue = queueMap.get( queueName );
 
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
 
         // Create a new queue.
         queue = session->createQueue( queueName );
@@ -103,7 +103,7 @@ cms::Destination* DynamicDestinationResolver::resolveDestinationName(
     SessionResolver* resolver = NULL;
     try {
         resolver = sessionResolverMap.get( session );
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
         resolver = new SessionResolver( session, resourceLifecycleManager );
         sessionResolverMap.put( session, resolver );
     }
