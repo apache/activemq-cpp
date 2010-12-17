@@ -159,23 +159,32 @@ namespace util{
             return new ConstSetIterator( &values );
         }
 
-        using AbstractSet<E>::equals;
-
         /**
          * {@inheritDoc}
          */
-        bool equals( const StlSet& source ) const {
-            return this->values == source.values;
+        virtual bool equals( const Collection<E>& collection ) const {
+
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
+            if( setptr == NULL ) {
+                return AbstractSet<E>::equals( collection );
+            }
+
+            return this->values == setptr->values;
         }
 
-        using AbstractSet<E>::copy;
-
         /**
          * {@inheritDoc}
          */
-        void copy( const StlSet& source ) {
+        virtual void copy( const Collection<E>& collection ) {
+
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
+            if( setptr == NULL ) {
+                AbstractSet<E>::copy( collection );
+                return;
+            }
+
             this->values.clear();
-            this->values = source.values;
+            this->values = setptr->values;
         }
 
         /**
