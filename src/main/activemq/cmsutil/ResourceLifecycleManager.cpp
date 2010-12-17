@@ -38,7 +38,12 @@ using namespace activemq::cmsutil;
     }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResourceLifecycleManager::ResourceLifecycleManager() {
+ResourceLifecycleManager::ResourceLifecycleManager() : connections(),
+                                                       sessions(),
+                                                       destinations(),
+                                                       producers(),
+                                                       consumers() {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

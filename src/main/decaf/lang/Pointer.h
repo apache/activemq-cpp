@@ -354,6 +354,8 @@ namespace lang {
     class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
     public:
 
+        virtual ~PointerComparator() {}
+
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <
         virtual bool operator() ( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {

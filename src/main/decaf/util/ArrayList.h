@@ -96,6 +96,20 @@ namespace util {
 
     public:
 
+        ArrayList<E>& operator= ( const ArrayList<E>& list ) {
+            this->clear();
+            this->addAll( list );
+            return *this;
+        }
+
+        ArrayList<E>& operator= ( const Collection<E>& collection ) {
+            this->clear();
+            this->addAll( 0, collection );
+            return *this;
+        }
+
+    public:
+
         /**
          * Increases the capacity of this ArrayList instance, if necessary, to ensure that it can
          * hold at least the number of elements specified by the minimum capacity argument.  If the

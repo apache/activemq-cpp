@@ -404,6 +404,8 @@ namespace lang {
     class ArrayPointerComparator : public decaf::util::Comparator< ArrayPointer<T,R> > {
     public:
 
+        virtual ~ArrayPointerComparator() {}
+
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <
         virtual bool operator() ( const ArrayPointer<T,R>& left, const ArrayPointer<T,R>& right ) const {

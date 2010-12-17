@@ -45,10 +45,10 @@ namespace cmsutil {
 
         decaf::util::StlMap<std::string, CachedConsumer*> consumerCache;
 
-    protected:
+    private:
 
-        PooledSession( const PooledSession& ) {}
-        PooledSession& operator= ( const PooledSession& ) { return *this; }
+        PooledSession( const PooledSession& );
+        PooledSession& operator= ( const PooledSession& );
 
     public:
 

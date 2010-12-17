@@ -81,6 +81,11 @@ namespace activemq{
 namespace core{
 
     class ConnectionConfig {
+    private:
+
+        ConnectionConfig( const ConnectionConfig& );
+        ConnectionConfig& operator= ( const ConnectionConfig& );
+
     public:
 
         typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
@@ -141,9 +146,18 @@ namespace core{
         decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQSession*> activeSessions;
         decaf::util::concurrent::CopyOnWriteArrayList<transport::TransportListener*> transportListeners;
 
-        ConnectionConfig() : clientIDSet( false ),
+        ConnectionConfig() : properties(),
+                             transport(),
+                             clientIdGenerator(),
+                             sessionIds(),
+                             tempDestinationIds(),
+                             localTransactionIds(),
+                             brokerURL(""),
+                             clientIDSet( false ),
                              isConnectionInfoSentToBroker( false ),
                              userSpecifiedClientID( false ),
+                             ensureConnectionInfoSentMutex(),
+                             mutex(),
                              dispatchAsync( true ),
                              alwaysSyncSend( false ),
                              useAsyncSend( false ),
@@ -155,7 +169,17 @@ namespace core{
                              producerWindowSize( 0 ),
                              defaultPrefetchPolicy( NULL ),
                              defaultRedeliveryPolicy( NULL ),
-                             exceptionListener( NULL ) {
+                             exceptionListener( NULL ),
+                             connectionInfo(),
+                             brokerInfo(),
+                             brokerWireFormatInfo(),
+                             transportInterruptionProcessingComplete(),
+                             brokerInfoReceived(),
+                             firstFailureError(),
+                             dispatchers(),
+                             activeProducers(),
+                             activeSessions(),
+                             transportListeners() {
 
             this->defaultPrefetchPolicy.reset( new DefaultPrefetchPolicy() );
             this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
@@ -182,7 +206,11 @@ namespace core{
 ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& transport,
                                         const Pointer<decaf::util::Properties>& properties ) :
     config( NULL ),
-    connectionMetaData( new ActiveMQConnectionMetaData() ) {
+    connectionMetaData( new ActiveMQConnectionMetaData() ),
+    started(false),
+    closed(false),
+    closing(false),
+    transportFailed(false) {
 
     Pointer<ConnectionConfig> configuration( new ConnectionConfig );
 

@@ -89,7 +89,19 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser( ActiveMQSession* session,
                                             const Pointer<commands::ConsumerId>& consumerId,
                                             const Pointer<commands::ActiveMQDestination>& destination,
                                             const std::string& selector,
-                                            bool dispatchAsync ) {
+                                            bool dispatchAsync ) : cms::QueueBrowser(),
+                                                                   cms::MessageEnumeration(),
+                                                                   session(NULL),
+                                                                   consumerId(),
+                                                                   destination(),
+                                                                   selector(),
+                                                                   dispatchAsync(false),
+                                                                   queue(NULL),
+                                                                   closed(false),
+                                                                   mutex(),
+                                                                   wait(),
+                                                                   browseDone(),
+                                                                   browser(NULL) {
 
     if( session == NULL ) {
         throw ActiveMQException(

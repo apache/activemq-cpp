@@ -32,10 +32,10 @@ namespace cmsutil {
 
         cms::MessageConsumer* consumer;
 
-    protected:
+    private:
 
-        CachedConsumer( const CachedConsumer& ) {}
-        CachedConsumer& operator= ( const CachedConsumer& ) { return *this; }
+        CachedConsumer( const CachedConsumer& );
+        CachedConsumer& operator= ( const CachedConsumer& );
 
     public:
 
