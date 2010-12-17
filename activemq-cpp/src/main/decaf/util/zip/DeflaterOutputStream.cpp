@@ -29,33 +29,27 @@ const std::size_t DeflaterOutputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, bool own ) :
-    FilterOutputStream( outputStream, own ) {
+    FilterOutputStream( outputStream, own ), deflater(new Deflater()), buf(), ownDeflater(true), isDone(false) {
 
-    this->deflater = new Deflater();
-    this->ownDeflater = true;
     this->buf.resize( DEFAULT_BUFFER_SIZE );
-    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ) {
+ :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
 
     if( deflater == NULL ) {
         throw NullPointerException(
              __FILE__, __LINE__, "Deflater passed was NULL." );
     }
 
-    this->deflater = deflater;
-    this->ownDeflater = ownDeflater;
     this->buf.resize( DEFAULT_BUFFER_SIZE );
-    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
                                             int bufferSize, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ) {
+ :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
 
     if( deflater == NULL ) {
         throw NullPointerException(
@@ -67,10 +61,7 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater
              __FILE__, __LINE__, "Cannot create a zero sized buffer." );
     }
 
-    this->deflater = deflater;
-    this->ownDeflater = ownDeflater;
     this->buf.resize( bufferSize );
-    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

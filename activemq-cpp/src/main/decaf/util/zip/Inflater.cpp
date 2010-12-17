@@ -124,10 +124,7 @@ namespace zip{
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-Inflater::Inflater( bool nowrap ) {
-
-    this->data = new InflaterData();
-
+Inflater::Inflater( bool nowrap ) : data( new InflaterData() ) {
     InflaterData::initZlibInflate( this->data, nowrap );
 }
 

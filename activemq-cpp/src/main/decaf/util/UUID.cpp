@@ -26,13 +26,11 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID::UUID( long long mostSigBits, long long leastSigBits ) {
+UUID::UUID( long long mostSigBits, long long leastSigBits ) :
+    apr_uuid(), mostSigBits(mostSigBits), leastSigBits(leastSigBits), uuidVersion(0) {
 
     memcpy( &apr_uuid.data[0], &mostSigBits, sizeof( long long ) );
     memcpy( &apr_uuid.data[sizeof(long long)], &leastSigBits, sizeof(long long ) );
-
-    this->mostSigBits = mostSigBits;
-    this->leastSigBits = leastSigBits;
 
     // Version indicator, set when a UUID is generated
     this->uuidVersion = (int)( mostSigBits & 0x000000000000F000LL ) >> 12;

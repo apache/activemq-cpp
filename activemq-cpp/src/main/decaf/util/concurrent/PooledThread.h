@@ -49,6 +49,11 @@ namespace concurrent{
         // Logger Init
         LOGDECAF_DECLARE(logger)
 
+    private:
+
+        PooledThread( const PooledThread& );
+        PooledThread& operator= ( const PooledThread& );
+
      public:
 
         /**

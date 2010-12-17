@@ -42,6 +42,7 @@ namespace util{
 
         decaf::util::StlMap< std::string, std::string > properties;
 
+        PropertiesInternal() : properties() {}
     };
 
 }}

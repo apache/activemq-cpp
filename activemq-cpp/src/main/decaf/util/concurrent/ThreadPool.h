@@ -60,6 +60,11 @@ namespace concurrent{
 
     private:
 
+        ThreadPool( const ThreadPool& );
+        ThreadPool& operator= ( const ThreadPool& );
+
+    private:
+
         // Vector of threads that this object has created for its pool.
         std::vector< PooledThread* > pool;
 

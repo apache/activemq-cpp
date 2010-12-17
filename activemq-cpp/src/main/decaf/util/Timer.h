@@ -58,6 +58,11 @@ namespace util {
 
         TimerImpl* internal;
 
+    private:
+
+        Timer( const Timer& );
+        Timer operator= ( const Timer& );
+
     public:
 
         Timer();

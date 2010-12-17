@@ -26,8 +26,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::CountDownLatch( int count ) {
-    this->count = count;
+CountDownLatch::CountDownLatch( int count ) : count(count), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

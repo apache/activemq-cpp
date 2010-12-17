@@ -147,14 +147,12 @@ const int Deflater::FILTERED = 1;
 const int Deflater::HUFFMAN_ONLY = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater( int level, bool nowrap ) {
+Deflater::Deflater( int level, bool nowrap ) : data( new DeflaterData() ) {
 
     if( level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__, "Compression level passed was Invalid: %d", level );
     }
-
-    this->data = new DeflaterData();
 
     // Initialize all the ZLib structures.
     DeflaterData::initZLibDeflate( this->data, level, nowrap );
