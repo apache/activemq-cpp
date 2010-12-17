@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/core/MessageDispatchChannel.h>
 
-#include <decaf/util/StlQueue.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/ArrayPointer.h>
 #include <decaf/util/concurrent/Mutex.h>
 
@@ -40,7 +40,7 @@ namespace core {
 
         mutable decaf::util::concurrent::Mutex mutex;
 
-        mutable ArrayPointer< decaf::util::StlQueue< Pointer<MessageDispatch> > > channels;
+        mutable ArrayPointer< decaf::util::LinkedList< Pointer<MessageDispatch> > > channels;
 
         int enqueued;
 
@@ -138,7 +138,7 @@ namespace core {
 
     private:
 
-        decaf::util::StlQueue< Pointer<MessageDispatch> >& getChannel( const Pointer<MessageDispatch>& dispatch );
+        decaf::util::LinkedList< Pointer<MessageDispatch> >& getChannel( const Pointer<MessageDispatch>& dispatch );
 
         Pointer<MessageDispatch> removeFirst();
 

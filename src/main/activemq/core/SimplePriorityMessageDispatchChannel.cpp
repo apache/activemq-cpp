@@ -47,7 +47,7 @@ SimplePriorityMessageDispatchChannel::~SimplePriorityMessageDispatchChannel() {
 ////////////////////////////////////////////////////////////////////////////////
 void SimplePriorityMessageDispatchChannel::enqueue( const Pointer<MessageDispatch>& message ) {
     synchronized( &mutex ) {
-        this->getChannel( message ).push( message );
+        this->getChannel( message ).addLast( message );
         this->enqueued++;
         mutex.notify();
     }
@@ -56,7 +56,7 @@ void SimplePriorityMessageDispatchChannel::enqueue( const Pointer<MessageDispatc
 ////////////////////////////////////////////////////////////////////////////////
 void SimplePriorityMessageDispatchChannel::enqueueFirst( const Pointer<MessageDispatch>& message ) {
     synchronized( &mutex ) {
-        this->getChannel( message ).enqueueFront( message );
+        this->getChannel( message ).addFirst( message );
         this->enqueued++;
         mutex.notify();
     }
@@ -170,7 +170,7 @@ std::vector< Pointer<MessageDispatch> > SimplePriorityMessageDispatchChannel::re
         for( int i = MAX_PRIORITIES - 1; i >= 0; --i ) {
             std::vector< Pointer<MessageDispatch> > temp( channels[i].toArray() );
             result.insert( result.end(), temp.begin(), temp.end() );
-            this->enqueued -= temp.size();
+            this->enqueued -= (int)temp.size();
             channels[i].clear();
         }
     }
@@ -179,7 +179,7 @@ std::vector< Pointer<MessageDispatch> > SimplePriorityMessageDispatchChannel::re
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StlQueue< Pointer<MessageDispatch> >& SimplePriorityMessageDispatchChannel::getChannel( const Pointer<MessageDispatch>& dispatch ) {
+LinkedList< Pointer<MessageDispatch> >& SimplePriorityMessageDispatchChannel::getChannel( const Pointer<MessageDispatch>& dispatch ) {
 
     int priority = cms::Message::DEFAULT_MSG_PRIORITY;
 
@@ -196,8 +196,8 @@ Pointer<MessageDispatch> SimplePriorityMessageDispatchChannel::removeFirst() {
 
     if( this->enqueued > 0 ) {
         for( int i = MAX_PRIORITIES - 1; i >= 0; i-- ) {
-            StlQueue< Pointer<MessageDispatch> >& channel = channels[i];
-            if( !channel.empty() ) {
+            LinkedList< Pointer<MessageDispatch> >& channel = channels[i];
+            if( !channel.isEmpty() ) {
                 this->enqueued--;
                 return channel.pop();
             }
@@ -212,9 +212,9 @@ Pointer<MessageDispatch> SimplePriorityMessageDispatchChannel::getFirst() const 
 
     if( this->enqueued > 0 ) {
         for( int i = MAX_PRIORITIES - 1; i >= 0; i-- ) {
-            StlQueue< Pointer<MessageDispatch> >& channel = channels[i];
-            if( !channel.empty() ) {
-                return channel.front();
+            LinkedList< Pointer<MessageDispatch> >& channel = channels[i];
+            if( !channel.isEmpty() ) {
+                return channel.getFirst();
             }
         }
     }
