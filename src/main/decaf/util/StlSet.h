@@ -50,6 +50,11 @@ namespace util{
             typename std::set<E>::iterator previous;
             typename std::set<E>* set;
 
+        private:
+
+            SetIterator( const SetIterator& );
+            SetIterator operator= ( const SetIterator& );
+
         public:
 
             SetIterator( typename std::set<E>* set ) :
@@ -91,6 +96,11 @@ namespace util{
             typename std::set<E>::const_iterator current;
             typename std::set<E>::const_iterator previous;
             const typename std::set<E>* set;
+
+        private:
+
+            ConstSetIterator( const ConstSetIterator& );
+            ConstSetIterator operator= ( const ConstSetIterator& );
 
         public:
 

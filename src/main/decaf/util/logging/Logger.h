@@ -104,6 +104,11 @@ namespace logging{
         // Using Parent Handlers?
         bool useParentHandlers;
 
+    private:
+
+        Logger( const Logger& );
+        Logger& operator= ( const Logger& );
+
     protected:
 
         /**

@@ -23,16 +23,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StringTokenizer::StringTokenizer( const std::string& str,
-                                  const std::string& delim,
-                                  bool returnDelims ) {
-    // store off the data
-    this->str = str;
-    this->delim = delim;
-    this->returnDelims = returnDelims;
-
-    // Start and the beginning
-    pos = 0;
+StringTokenizer::StringTokenizer( const std::string& str, const std::string& delim, bool returnDelims ) :
+    str(str), delim(delim), returnDelims(returnDelims), pos(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

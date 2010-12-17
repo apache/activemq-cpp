@@ -25,7 +25,7 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
+ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ), stream(), formatter() {
 
     // Defaults level to Info
     setLevel( Level::INFO );

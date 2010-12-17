@@ -54,9 +54,8 @@ namespace util{
 
         private:
 
-            StlListIterator( const StlListIterator& ) :
-                ListIterator<E>(), current(), prev(), list( NULL ) {}
-            StlListIterator operator= ( const StlListIterator& ) { return *this; }
+            StlListIterator( const StlListIterator& );
+            StlListIterator operator= ( const StlListIterator& );
 
         public:
 
@@ -153,9 +152,8 @@ namespace util{
 
         private:
 
-            ConstStlListIterator( const ConstStlListIterator& ) :
-                ListIterator<E>(), current(), prev(), list( NULL ) {}
-            ConstStlListIterator operator= ( const ConstStlListIterator& ) { return *this; }
+            ConstStlListIterator( const ConstStlListIterator& );
+            ConstStlListIterator operator= ( const ConstStlListIterator& );
 
         public:
 

@@ -44,6 +44,9 @@ namespace logging{
     public:
 
         StlMap<string, Logger*> loggers;
+
+        LogManagerInternals() : loggers() {}
+
     };
 
 }}}
@@ -55,8 +58,7 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager::LogManager() {
-    this->internal.reset( new LogManagerInternals() );
+LogManager::LogManager() : listeners(), properties(), internal(new LogManagerInternals()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -32,33 +32,30 @@ const int InflaterInputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
-    FilterInputStream( inputStream, own ) {
+    FilterInputStream( inputStream, own ),
+    inflater(new Inflater()), buff(), length(0), atEOF(false), ownInflater(true) {
 
-    this->atEOF = false;
-    this->ownInflater = true;
-    this->inflater = new Inflater();
     this->buff.resize( DEFAULT_BUFFER_SIZE );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own, bool ownInflater )
- :  FilterInputStream( inputStream, own ) {
+ :  FilterInputStream( inputStream, own ),
+    inflater(inflater), buff(), length(0), atEOF(false), ownInflater(ownInflater) {
 
     if( inflater == NULL ) {
         throw NullPointerException(
              __FILE__, __LINE__, "Inflater passed was NULL." );
     }
 
-    this->inflater = inflater;
-    this->ownInflater = ownInflater;
     this->buff.resize( DEFAULT_BUFFER_SIZE );
-    this->atEOF = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater,
                                           int bufferSize, bool own, bool ownInflater )
- :  FilterInputStream( inputStream, own ) {
+ :  FilterInputStream( inputStream, own ),
+    inflater(inflater), buff(), length(0), atEOF(false), ownInflater(ownInflater) {
 
     if( inflater == NULL ) {
         throw NullPointerException(
@@ -70,10 +67,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
              __FILE__, __LINE__, "Cannot create a zero sized buffer." );
     }
 
-    this->inflater = inflater;
-    this->ownInflater = ownInflater;
     this->buff.resize( bufferSize );
-    this->atEOF = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

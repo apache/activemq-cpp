@@ -65,6 +65,11 @@ namespace logging{
         // Indicates if the writer has been initialized already
         bool writerNotInitialized;
 
+    private:
+
+        StreamHandler( const StreamHandler& );
+        StreamHandler& operator= ( const StreamHandler& );
+
     public:
 
         /**
