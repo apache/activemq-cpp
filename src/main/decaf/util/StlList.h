@@ -264,25 +264,32 @@ namespace util{
             AbstractList<E>::copy( source );
         }
 
-        virtual ~StlList() {}
-
-        using AbstractList<E>::equals;
-
         /**
          * {@inheritDoc}
          */
-        bool equals( const StlList& source ) const {
-            return this->values == source.values;
+        virtual bool equals( const Collection<E>& collection ) const {
+
+            const StlList<E>* listptr = dynamic_cast<const StlList<E>*>( &collection );
+            if( listptr == NULL ) {
+                return AbstractList<E>::equals( collection );
+            }
+
+            return this->values == listptr->values;
         }
 
-        using AbstractList<E>::copy;
-
         /**
          * {@inheritDoc}
          */
-        void copy( const StlList& source ) {
+        virtual void copy( const Collection<E>& collection ) {
+
+            const StlList<E>* listptr = dynamic_cast<const StlList<E>*>( &collection );
+            if( listptr == NULL ) {
+                AbstractList<E>::copy( collection );
+                return;
+            }
+
             this->values.clear();
-            this->values = source.values;
+            this->values = listptr->values;
         }
 
         /**
