@@ -48,6 +48,11 @@ namespace concurrent {
             ArrayPointer<E> array;
             int position;
 
+        private:
+
+            ArrayListIterator( const ArrayListIterator& );
+            ArrayListIterator& operator= ( const ArrayListIterator& );
+
         public:
 
             ArrayListIterator( const ArrayPointer<E>& array, int index ) :
@@ -113,14 +118,18 @@ namespace concurrent {
 
     public:
 
-        CopyOnWriteArrayList() : List<E>() {
+        CopyOnWriteArrayList() : List<E>(), mutex(), array() {
         }
 
-        CopyOnWriteArrayList( const Collection<E>& collection ) : List<E>() {
-            this->copy( collection );
+        CopyOnWriteArrayList( const Collection<E>& collection ) : List<E>(), mutex(), array() {
+            this->doCopyCollection( collection );
         }
 
-        CopyOnWriteArrayList( const E* array, int size ) : List<E>() {
+        CopyOnWriteArrayList( const CopyOnWriteArrayList<E>& collection ) : List<E>(), mutex(), array() {
+            this->doCopyCollection( collection );
+        }
+
+        CopyOnWriteArrayList( const E* array, int size ) : List<E>(), mutex(), array() {
 
             E* elements = new E[size];
             for( int i = 0; i < size; ++i ) {
@@ -132,27 +141,28 @@ namespace concurrent {
 
         virtual ~CopyOnWriteArrayList() {}
 
+    public:
+
+        CopyOnWriteArrayList<E>& operator= ( const CopyOnWriteArrayList<E>& list ) {
+            synchronized( &mutex ) {
+                this->clear();
+                this->doCopyCollection( list );
+            }
+            return *this;
+        }
+
+        CopyOnWriteArrayList<E>& operator= ( const Collection<E>& list ) {
+            synchronized( &mutex ) {
+                this->clear();
+                this->doCopyCollection( list );
+            }
+            return *this;
+        }
+
     public:  // Collections API
 
         virtual void copy( const Collection<E>& collection ) {
-
-            if( (void*)this == &collection ) {
-                return;
-            }
-
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> data( collection.size() );
-
-                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-                int index = 0;
-
-                while( iter->hasNext() ) {
-                    data[index++] = iter->next();
-                }
-
-                this->array = data;
-            }
+            this->doCopyCollection( collection );
         }
 
         virtual bool add( const E& value ) {
@@ -737,6 +747,27 @@ namespace concurrent {
 
         template<typename T>
         friend class CopyOnWriteArraySet;
+
+        void doCopyCollection( const Collection<E>& collection ) {
+
+            if( (void*)this == &collection ) {
+                return;
+            }
+
+            synchronized( &this->mutex ) {
+
+                ArrayPointer<E> data( collection.size() );
+
+                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
+                int index = 0;
+
+                while( iter->hasNext() ) {
+                    data[index++] = iter->next();
+                }
+
+                this->array = data;
+            }
+        }
 
         ArrayPointer<E> getArray() const {
             return this->array;

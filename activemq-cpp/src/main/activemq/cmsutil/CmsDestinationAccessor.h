@@ -50,10 +50,10 @@ namespace cmsutil {
          */
         bool pubSubDomain;
 
-    protected:
+    private:
 
-        CmsDestinationAccessor( const CmsDestinationAccessor& ) : CmsAccessor() {}
-        CmsDestinationAccessor& operator= ( const CmsDestinationAccessor& ) { return *this; }
+        CmsDestinationAccessor( const CmsDestinationAccessor& );
+        CmsDestinationAccessor& operator= ( const CmsDestinationAccessor& );
 
     public:
 

@@ -51,8 +51,8 @@ namespace cmsutil {
 
     protected:
 
-        ResourceLifecycleManager( const ResourceLifecycleManager& ) {}
-        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& ) { return *this; }
+        ResourceLifecycleManager( const ResourceLifecycleManager& );
+        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& );
 
     public:
 

@@ -75,10 +75,10 @@ namespace cmsutil {
          */
         ResourceLifecycleManager* resourceLifecycleManager;
 
-    protected:
+    private:
 
-        DynamicDestinationResolver( const DynamicDestinationResolver& ) {}
-        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& ) { return *this; }
+        DynamicDestinationResolver( const DynamicDestinationResolver& );
+        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& );
 
     public:
 

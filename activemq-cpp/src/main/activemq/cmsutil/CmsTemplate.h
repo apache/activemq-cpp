@@ -127,9 +127,10 @@ namespace cmsutil {
 
             std::string destinationName;
 
-        protected:
+        private:
 
-            ResolveProducerExecutor& operator= ( const ResolveProducerExecutor& ) { return *this; }
+            ResolveProducerExecutor( const ResolveProducerExecutor& );
+            ResolveProducerExecutor& operator= ( const ResolveProducerExecutor& );
 
         public:
 
@@ -155,10 +156,10 @@ namespace cmsutil {
             MessageCreator* messageCreator;
             CmsTemplate* parent;
 
-        protected:
+        private:
 
-            SendExecutor( const SendExecutor& ) : ProducerCallback() {}
-            SendExecutor& operator= ( const SendExecutor& ) { return *this; }
+            SendExecutor( const SendExecutor& );
+            SendExecutor& operator= ( const SendExecutor& );
 
         public:
 
@@ -189,10 +190,10 @@ namespace cmsutil {
             cms::Message* message;
             CmsTemplate* parent;
 
-        protected:
+        private:
 
-            ReceiveExecutor( const ReceiveExecutor& ) : SessionCallback() {}
-            ReceiveExecutor& operator= ( const ReceiveExecutor& )  { return *this; }
+            ReceiveExecutor( const ReceiveExecutor& );
+            ReceiveExecutor& operator= ( const ReceiveExecutor& );
 
         public:
 
@@ -231,9 +232,10 @@ namespace cmsutil {
 
             std::string destinationName;
 
-        protected:
+        private:
 
-            ResolveReceiveExecutor& operator= ( const ResolveReceiveExecutor& ) { return *this; }
+            ResolveReceiveExecutor( const ResolveReceiveExecutor& );
+            ResolveReceiveExecutor& operator= ( const ResolveReceiveExecutor& );
 
         public:
 
@@ -280,10 +282,10 @@ namespace cmsutil {
 
         bool initialized;
 
-    protected:
+    private:
 
-        CmsTemplate( const CmsTemplate& ) : CmsDestinationAccessor() {}
-        CmsTemplate& operator= ( const CmsTemplate& ) { return *this; }
+        CmsTemplate( const CmsTemplate& );
+        CmsTemplate& operator= ( const CmsTemplate& );
 
     public:
 

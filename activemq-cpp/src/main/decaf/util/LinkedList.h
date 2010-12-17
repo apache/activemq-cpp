@@ -63,6 +63,11 @@ namespace util {
             ListNode<U>* prev;
             ListNode<U>* next;
 
+        private:
+
+            ListNode( const ListNode& );
+            ListNode& operator= ( const ListNode& );
+
         public:
 
             ListNode() : value(), prev(NULL), next(NULL) {
@@ -748,6 +753,11 @@ namespace util {
             int expectedModCount;
             bool canRemove;
 
+        private:
+
+            ReverseIterator( const ReverseIterator& );
+            ReverseIterator operator= ( const ReverseIterator& );
+
         public:
 
             ReverseIterator( LinkedList<E>* list ) :
@@ -820,6 +830,11 @@ namespace util {
 
             const LinkedList<E>* list;
             const ListNode<E>* current;
+
+        private:
+
+            ConstReverseIterator( const ConstReverseIterator& );
+            ConstReverseIterator operator= ( const ConstReverseIterator& );
 
         public:
 

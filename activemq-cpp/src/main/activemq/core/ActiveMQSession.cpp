@@ -80,9 +80,14 @@ namespace {
 
         ActiveMQSession* session;
 
+    private:
+
+        CloseSynhcronization( const CloseSynhcronization& );
+        CloseSynhcronization& operator= ( const CloseSynhcronization& );
+
     public:
 
-        CloseSynhcronization( ActiveMQSession* session ) {
+        CloseSynhcronization( ActiveMQSession* session ) : Synchronization(), session(NULL) {
 
             if( session == NULL ) {
                 throw NullPointerException(
@@ -119,6 +124,11 @@ namespace core{
                                      ActiveMQConsumer*,
                                      commands::ConsumerId::COMPARATOR> ConsumersMap;
 
+    private:
+
+        SessionConfig( const SessionConfig& );
+        SessionConfig& operator= ( const SessionConfig& );
+
     public:
 
         /**
@@ -133,8 +143,7 @@ namespace core{
 
     public:
 
-        SessionConfig() : synchronizationRegistered( false ), producers() {
-        }
+        SessionConfig() : synchronizationRegistered( false ), producers() {}
 
         ~SessionConfig() {}
     };
@@ -145,15 +154,24 @@ namespace core{
 ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
                                   const Pointer<SessionId>& id,
                                   cms::Session::AcknowledgeMode ackMode,
-                                  const Properties& properties ) {
+                                  const Properties& properties ) : config( new SessionConfig ),
+                                                                   sessionInfo(),
+                                                                   transaction(),
+                                                                   connection(NULL),
+                                                                   consumers(),
+                                                                   closed(false),
+                                                                   executor(),
+                                                                   ackMode(),
+                                                                   producerIds(),
+                                                                   producerSequenceIds(),
+                                                                   consumerIds(),
+                                                                   lastDeliveredSequenceId(0){
 
     if( id == NULL || connection == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQSession::ActiveMQSession - Constructor called with NULL data");
     }
-
-    this->config = new SessionConfig();
 
     this->sessionInfo.reset( new SessionInfo() );
     this->sessionInfo->setAckMode( ackMode );
@@ -253,11 +271,15 @@ void ActiveMQSession::dispose() {
         ActiveMQSession* session;
         ActiveMQConnection* connection;
 
+    private:
+
+        Finalizer( const Finalizer& );
+        Finalizer& operator= ( const Finalizer& );
+
     public:
 
-        Finalizer(ActiveMQSession* session, ActiveMQConnection* connection) {
-            this->session = session;
-            this->connection = connection;
+        Finalizer(ActiveMQSession* session, ActiveMQConnection* connection) :
+            session( session ), connection( connection ) {
         }
 
         ~Finalizer() {

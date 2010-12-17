@@ -35,9 +35,8 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
-
-    this->session = session;
+ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) :
+            session( session ), messageQueue(), taskRunner() {
 
     if( this->session->getConnection()->isMessagePrioritySupported() ) {
         this->messageQueue.reset( new SimplePriorityMessageDispatchChannel() );

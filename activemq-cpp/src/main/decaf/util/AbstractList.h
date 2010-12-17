@@ -232,6 +232,11 @@ namespace util {
             int expectedModCount;
             int lastPosition;
 
+        private:
+
+            ConstSimpleListIterator( const ConstSimpleListIterator& );
+            ConstSimpleListIterator operator= ( const ConstSimpleListIterator& );
+
         public:
 
             ConstSimpleListIterator( const AbstractList<E>* parent, int start ) :

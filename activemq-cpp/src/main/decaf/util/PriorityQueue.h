@@ -82,6 +82,11 @@ namespace util {
         class PriorityQueueIterator : public Iterator<E> {
         private:
 
+            PriorityQueueIterator( const PriorityQueueIterator& );
+            PriorityQueueIterator& operator= ( const PriorityQueueIterator& );
+
+        private:
+
             int position;
             bool allowRemove;
             PriorityQueue* queue;
@@ -120,13 +125,17 @@ namespace util {
         };
 
         class ConstPriorityQueueIterator : public PriorityQueueIterator {
+        private:
+
+            ConstPriorityQueueIterator( const ConstPriorityQueueIterator& );
+            ConstPriorityQueueIterator& operator= ( const ConstPriorityQueueIterator& );
+
         public:
 
             ConstPriorityQueueIterator( const PriorityQueue* queue ) :
                 PriorityQueueIterator( const_cast<PriorityQueue*>( queue ) ) {}
 
             virtual void remove() {
-
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "PriorityQueue::Iterator::remove - Not Valid on a Const Iterator" );
@@ -227,6 +236,8 @@ namespace util {
         PriorityQueue<E>& operator= ( const PriorityQueue<E>& source ) {
             this->getFromPriorityQueue( source );
         }
+
+    public:
 
         virtual decaf::util::Iterator<E>* iterator() {
             return new PriorityQueueIterator( this );

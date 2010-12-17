@@ -74,12 +74,40 @@ const int CmsTemplate::DEFAULT_PRIORITY = 4;
 const long long CmsTemplate::DEFAULT_TIME_TO_LIVE = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate() : CmsDestinationAccessor() {
+CmsTemplate::CmsTemplate() : CmsDestinationAccessor(),
+                             connection(NULL),
+                             sessionPools(),
+                             defaultDestination(NULL),
+                             defaultDestinationName(""),
+                             messageIdEnabled(false),
+                             messageTimestampEnabled(false),
+                             noLocal(false),
+                             receiveTimeout(0),
+                             explicitQosEnabled(false),
+                             deliveryMode(0),
+                             priority(0),
+                             timeToLive(0),
+                             initialized(false) {
+
     initDefaults();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDestinationAccessor() {
+CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDestinationAccessor(),
+                                                                        connection(NULL),
+                                                                        sessionPools(),
+                                                                        defaultDestination(NULL),
+                                                                        defaultDestinationName(""),
+                                                                        messageIdEnabled(false),
+                                                                        messageTimestampEnabled(false),
+                                                                        noLocal(false),
+                                                                        receiveTimeout(0),
+                                                                        explicitQosEnabled(false),
+                                                                        deliveryMode(0),
+                                                                        priority(0),
+                                                                        timeToLive(0),
+                                                                        initialized(false) {
+
     initDefaults();
     setConnectionFactory(connectionFactory);
 }
