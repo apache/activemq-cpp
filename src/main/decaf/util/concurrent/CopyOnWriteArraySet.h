@@ -97,7 +97,7 @@ namespace concurrent {
         }
 
         virtual bool addAll( const Collection<E>& collection ) {
-            return this->array.addAllAbsent( collection );
+            return this->array.addAllAbsent( collection ) > 0 ? true : false;
         }
 
         virtual void clear() {
