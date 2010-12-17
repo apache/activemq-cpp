@@ -62,8 +62,11 @@ ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next )
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::~ResponseCorrelator(){
 
-    // Close the transport and destroy it.
-    close();
+    try{
+        // Close the transport and destroy it.
+        close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

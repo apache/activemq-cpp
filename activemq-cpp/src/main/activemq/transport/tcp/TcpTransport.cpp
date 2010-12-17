@@ -70,7 +70,6 @@ void TcpTransport::close() throw( decaf::io::IOException ) {
             socket->close();
         }
 
-        // Invoke the paren't close first.
         TransportFilter::close();
     }
     AMQ_CATCH_RETHROW( IOException )

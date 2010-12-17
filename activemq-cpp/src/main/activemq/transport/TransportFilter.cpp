@@ -99,7 +99,6 @@ void TransportFilter::close() throw( decaf::io::IOException ) {
 
     if( next != NULL ) {
         next->close();
-        next.reset( NULL );
     }
 }
 
