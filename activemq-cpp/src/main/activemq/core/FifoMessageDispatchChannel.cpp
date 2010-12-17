@@ -38,7 +38,7 @@ FifoMessageDispatchChannel::~FifoMessageDispatchChannel() {
 ////////////////////////////////////////////////////////////////////////////////
 void FifoMessageDispatchChannel::enqueue( const Pointer<MessageDispatch>& message ) {
     synchronized( &channel ) {
-        channel.push( message );
+        channel.addLast( message );
         channel.notify();
     }
 }
@@ -46,7 +46,7 @@ void FifoMessageDispatchChannel::enqueue( const Pointer<MessageDispatch>& messag
 ////////////////////////////////////////////////////////////////////////////////
 void FifoMessageDispatchChannel::enqueueFirst( const Pointer<MessageDispatch>& message ) {
     synchronized( &channel ) {
-        channel.enqueueFront( message );
+        channel.addFirst( message );
         channel.notify();
     }
 }
@@ -54,7 +54,7 @@ void FifoMessageDispatchChannel::enqueueFirst( const Pointer<MessageDispatch>& m
 ////////////////////////////////////////////////////////////////////////////////
 bool FifoMessageDispatchChannel::isEmpty() const {
     synchronized( &channel ) {
-        return channel.empty();
+        return channel.isEmpty();
     }
 
     return false;
@@ -65,7 +65,7 @@ Pointer<MessageDispatch> FifoMessageDispatchChannel::dequeue( long long timeout 
 
     synchronized( &channel ) {
         // Wait until the channel is ready to deliver messages.
-        while( timeout != 0 && !closed && ( channel.empty() || !running ) ) {
+        while( timeout != 0 && !closed && ( channel.isEmpty() || !running ) ) {
             if( timeout == -1 ) {
                 channel.wait();
             } else {
@@ -74,7 +74,7 @@ Pointer<MessageDispatch> FifoMessageDispatchChannel::dequeue( long long timeout 
             }
         }
 
-        if( closed || !running || channel.empty() ) {
+        if( closed || !running || channel.isEmpty() ) {
             return Pointer<MessageDispatch>();
         }
 
@@ -87,7 +87,7 @@ Pointer<MessageDispatch> FifoMessageDispatchChannel::dequeue( long long timeout 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<MessageDispatch> FifoMessageDispatchChannel::dequeueNoWait() {
     synchronized( &channel ) {
-        if( closed || !running || channel.empty() ) {
+        if( closed || !running || channel.isEmpty() ) {
             return Pointer<MessageDispatch>();
         }
         return channel.pop();
@@ -99,10 +99,10 @@ Pointer<MessageDispatch> FifoMessageDispatchChannel::dequeueNoWait() {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<MessageDispatch> FifoMessageDispatchChannel::peek() const {
     synchronized( &channel ) {
-        if( closed || !running || channel.empty() ) {
+        if( closed || !running || channel.isEmpty() ) {
             return Pointer<MessageDispatch>();
         }
-        return channel.front();
+        return channel.getFirst();
     }
 
     return Pointer<MessageDispatch>();
