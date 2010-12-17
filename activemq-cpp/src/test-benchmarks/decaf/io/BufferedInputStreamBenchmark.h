@@ -35,6 +35,11 @@ namespace io {
         unsigned char* buffer;
         ByteArrayInputStream source;
 
+    private:
+
+        BufferedInputStreamBenchmark( const BufferedInputStreamBenchmark& );
+        BufferedInputStreamBenchmark& operator= ( const BufferedInputStreamBenchmark& );
+
     public:
 
         BufferedInputStreamBenchmark();
