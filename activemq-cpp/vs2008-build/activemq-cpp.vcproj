@@ -131,7 +131,6 @@
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4290;4101"
 			/>
@@ -4342,10 +4341,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\decaf\lang\exceptions\NoSuchElementException.h"
-						>
-					</File>
-					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\NullPointerException.h"
 						>
 					</File>
@@ -4971,7 +4966,15 @@
 				Name="util"
 				>
 				<File
+					RelativePath="..\src\main\decaf\util\AbstractCollection.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\AbstractCollection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\AbstractList.cpp"
 					>
 				</File>
 				<File
@@ -4979,7 +4982,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\AbstractMap.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\AbstractMap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\AbstractQueue.cpp"
 					>
 				</File>
 				<File
@@ -4987,7 +4998,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\AbstractSequentialList.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\AbstractSequentialList.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\AbstractSet.cpp"
 					>
 				</File>
 				<File
@@ -4995,11 +5014,43 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\ArrayList.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\ArrayList.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Arrays.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Arrays.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Collection.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Collection.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\Comparator.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Comparator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\ConcurrentModificationException.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\ConcurrentModificationException.h"
 					>
 				</File>
 				<File
@@ -5015,7 +5066,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\Deque.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Deque.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Iterator.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Iterator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedList.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedList.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\List.cpp"
 					>
 				</File>
 				<File
@@ -5023,11 +5098,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\ListIterator.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\ListIterator.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\Map.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Map.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\NoSuchElementException.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\NoSuchElementException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\PriorityQueue.cpp"
 					>
 				</File>
 				<File
@@ -5043,6 +5138,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\Queue.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Queue.h"
 					>
 				</File>
@@ -5055,7 +5154,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\Set.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Set.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\StlList.cpp"
 					>
 				</File>
 				<File
@@ -5063,11 +5170,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\StlMap.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\StlMap.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\StlQueue.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\StlQueue.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\StlSet.cpp"
 					>
 				</File>
 				<File
@@ -5110,7 +5229,23 @@
 					Name="concurrent"
 					>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\BlockingQueue.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\BlockingQueue.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\BrokenBarrierException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\BrokenBarrierException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Callable.cpp"
 						>
 					</File>
 					<File
@@ -5126,11 +5261,35 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentMap.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentMap.h"
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentStlMap.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentStlMap.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CopyOnWriteArrayList.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CopyOnWriteArrayList.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CopyOnWriteArraySet.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CopyOnWriteArraySet.h"
 						>
 					</File>
 					<File
@@ -5142,6 +5301,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Delayed.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Delayed.h"
 						>
 					</File>
@@ -5150,7 +5313,23 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Executor.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Executor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ExecutorService.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ExecutorService.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Future.cpp"
 						>
 					</File>
 					<File
@@ -5190,11 +5369,39 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Semaphore.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Semaphore.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Synchronizable.h"
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\SynchronousQueue.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\SynchronousQueue.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\TaskListener.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\TaskListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ThreadFactory.cpp"
 						>
 					</File>
 					<File
@@ -5238,6 +5445,18 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicInteger.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicRefCounter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicRefCounter.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicReference.cpp"
 							>
 						</File>
 						<File
@@ -5594,6 +5813,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\zip\DataFormatException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\zip\DataFormatException.h"
 						>
 					</File>
@@ -5627,6 +5850,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\zip\InflaterInputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\ZipException.cpp"
 						>
 					</File>
 					<File
