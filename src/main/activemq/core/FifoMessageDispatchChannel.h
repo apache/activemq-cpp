@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/core/MessageDispatchChannel.h>
 
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
@@ -32,7 +33,7 @@ namespace core {
         bool closed;
         bool running;
 
-        mutable decaf::util::StlQueue< Pointer<MessageDispatch> > channel;
+        mutable decaf::util::LinkedList< Pointer<MessageDispatch> > channel;
 
     private:
 
