@@ -75,6 +75,7 @@
                 #define _CRT_SECURE_NO_DEPRECATE
             #endif
             #pragma warning(disable: 4996)
+            #pragma warning(disable: 4250)
         #endif
 
         /* Has windows.h already been included?  If so, our preferences don't matter,
