@@ -33,7 +33,6 @@
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq{

@@ -52,7 +52,7 @@ bool CloseTransportsTask::isPending() const {
     bool result = false;
 
     synchronized( &transports ) {
-        result = !transports.empty();
+        result = !transports.isEmpty();
     }
 
     return result;
@@ -63,7 +63,7 @@ bool CloseTransportsTask::iterate() {
 
     synchronized( &transports ) {
 
-        if( !transports.empty() ) {
+        if( !transports.isEmpty() ) {
             Pointer<Transport> transport = transports.pop();
 
             try{
@@ -73,7 +73,7 @@ bool CloseTransportsTask::iterate() {
 
             transport.reset( NULL );
 
-            return !transports.empty();
+            return !transports.isEmpty();
         }
 
     }

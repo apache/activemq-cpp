@@ -24,7 +24,7 @@
 #include <activemq/commands/Response.h>
 
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/StlQueue.h>
+#include <decaf/util/LinkedList.h>
 
 namespace activemq {
 namespace transport {
@@ -60,7 +60,7 @@ namespace mock {
          */
         virtual void buildIncomingCommands(
             const Pointer<Command>& command,
-            decaf::util::StlQueue< Pointer<Command> >& queue ) = 0;
+            decaf::util::LinkedList< Pointer<Command> >& queue ) = 0;
 
     };
 

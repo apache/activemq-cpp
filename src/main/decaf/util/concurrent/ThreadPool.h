@@ -22,7 +22,7 @@
 #include <decaf/util/concurrent/PooledThreadListener.h>
 #include <decaf/util/concurrent/TaskListener.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/StlQueue.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/util/Config.h>
 
@@ -64,7 +64,7 @@ namespace concurrent{
         std::vector< PooledThread* > pool;
 
         // Queue of Task that are in need of completion
-        util::StlQueue<Task> queue;
+        util::LinkedList<Task> queue;
 
         // Max number of Threads this Pool can contain
         std::size_t maxThreads;

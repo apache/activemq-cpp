@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/mock/ResponseBuilder.h>
-#include <decaf/util/StlQueue.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq{
@@ -43,7 +43,7 @@ namespace openwire{
 
         virtual void buildIncomingCommands(
             const Pointer<commands::Command>& command,
-            decaf::util::StlQueue< Pointer<commands::Command> >& queue );
+            decaf::util::LinkedList< Pointer<commands::Command> >& queue );
 
     };
 

@@ -37,7 +37,6 @@
 
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlMap.h>
-#include <decaf/util/StlQueue.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
