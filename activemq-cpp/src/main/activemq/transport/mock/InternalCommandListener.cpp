@@ -70,7 +70,7 @@ void InternalCommandListener::run() {
             while( !done ) {
                 startedLatch.countDown();
 
-                while( inboundQueue.empty() && !done ){
+                while( inboundQueue.isEmpty() && !done ){
                     inboundQueue.wait();
                 }
 
@@ -79,7 +79,7 @@ void InternalCommandListener::run() {
                 }
 
                 // If we created a response then send it.
-                while( !inboundQueue.empty() ) {
+                while( !inboundQueue.isEmpty() ) {
 
                     Pointer<Command> command = inboundQueue.pop();
 

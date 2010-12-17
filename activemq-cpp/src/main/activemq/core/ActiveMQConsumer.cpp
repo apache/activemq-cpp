@@ -68,7 +68,7 @@ namespace core {
         AtomicBoolean deliveringAcks;
         AtomicBoolean started;
         Pointer<MessageDispatchChannel> unconsumedMessages;
-        decaf::util::StlQueue< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
+        decaf::util::LinkedList< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
         long long lastDeliveredSequenceId;
         Pointer<commands::MessageAck> pendingAck;
         int deliveredCounter;
@@ -663,7 +663,7 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<MessageDispatch>& 
 
         // When not in an Auto
         synchronized( &this->internal->dispatchedMessages ) {
-            this->internal->dispatchedMessages.enqueueFront( dispatch );
+            this->internal->dispatchedMessages.addFirst( dispatch );
         }
 
         if( this->session->isTransacted() ) {
@@ -693,7 +693,7 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
             if( this->internal->deliveringAcks.compareAndSet( false, true ) ) {
 
                 synchronized( &this->internal->dispatchedMessages ) {
-                    if( !this->internal->dispatchedMessages.empty() ) {
+                    if( !this->internal->dispatchedMessages.isEmpty() ) {
                         Pointer<MessageAck> ack = makeAckForAllDeliveredMessages(
                             ActiveMQConstants::ACK_TYPE_CONSUMED );
 
@@ -837,9 +837,9 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 
     synchronized( &this->internal->dispatchedMessages ) {
 
-        if( !this->internal->dispatchedMessages.empty() ) {
+        if( !this->internal->dispatchedMessages.isEmpty() ) {
 
-            Pointer<MessageDispatch> dispatched = this->internal->dispatchedMessages.front();
+            Pointer<MessageDispatch> dispatched = this->internal->dispatchedMessages.getFirst();
 
             Pointer<MessageAck> ack( new MessageAck() );
             ack->setAckType( (unsigned char)type );
@@ -847,7 +847,7 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
             ack->setDestination( dispatched->getDestination() );
             ack->setMessageCount( (int)this->internal->dispatchedMessages.size() );
             ack->setLastMessageId( dispatched->getMessage()->getMessageId() );
-            ack->setFirstMessageId( this->internal->dispatchedMessages.back()->getMessage()->getMessageId() );
+            ack->setFirstMessageId( this->internal->dispatchedMessages.getLast()->getMessage()->getMessageId() );
 
             return ack;
         }
@@ -946,12 +946,12 @@ void ActiveMQConsumer::rollback() {
     synchronized( this->internal->unconsumedMessages.get() ) {
 
         synchronized( &this->internal->dispatchedMessages ) {
-            if( this->internal->dispatchedMessages.empty() ) {
+            if( this->internal->dispatchedMessages.isEmpty() ) {
                 return;
             }
 
             // Only increase the redelivery delay after the first redelivery..
-            Pointer<MessageDispatch> lastMsg = this->internal->dispatchedMessages.front();
+            Pointer<MessageDispatch> lastMsg = this->internal->dispatchedMessages.getFirst();
             const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
                 this->internal->redeliveryDelay = this->internal->redeliveryPolicy->getNextRedeliveryDelay( internal->redeliveryDelay );
@@ -960,7 +960,7 @@ void ActiveMQConsumer::rollback() {
             }
 
             Pointer<MessageId> firstMsgId =
-                this->internal->dispatchedMessages.back()->getMessage()->getMessageId();
+                this->internal->dispatchedMessages.getLast()->getMessage()->getMessageId();
 
             std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( internal->dispatchedMessages.iterator() );
 

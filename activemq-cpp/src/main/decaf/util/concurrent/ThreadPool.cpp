@@ -114,7 +114,7 @@ void ThreadPool::queueTask( ThreadPool::Task task ) {
             //LOGCMS_DEBUG(logger, "ThreadPool::QueueTask - pushing task");
 
             // queue the new work.
-            queue.push(task);
+            queue.offer(task);
 
             //LOGCMS_DEBUG(logger, "ThreadPool::QueueTask - calling notify");
 
@@ -140,7 +140,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             // Wait for work, wait in a while loop since another thread could
             // be waiting for a lock and get the work before we get woken up
             // from our wait.
-            while( queue.empty() && !shutdown ) {
+            while( queue.isEmpty() && !shutdown ) {
                //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - Q empty, waiting");
 
                queue.wait();
@@ -154,7 +154,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             }
 
             // check size again.
-            if( queue.empty() ) {
+            if( queue.isEmpty() ) {
                throw lang::Exception(
                    __FILE__, __LINE__,
                    "ThreadPool::DeQueueUserWorkItem - Empty Taskn, not in shutdown.");
@@ -163,7 +163,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - popping task");
 
             // not empty so get the new work to do
-            return queue.pop();
+            return queue.remove();
         }
 
         return Task();
@@ -275,7 +275,7 @@ void ThreadPool::onTaskStarted( PooledThread* thread DECAF_UNUSED ) {
             // having a chance to wake up and service the queue.  This would
             // cause the number of Task to exceed the number of free threads
             // once the Threads got a chance to wake up and service the queue
-            if( freeThreads == 0 && !queue.empty() ) {
+            if( freeThreads == 0 && !queue.isEmpty() ) {
                 // Allocate a new block of threads
                 AllocateThreads( blockSize );
             }

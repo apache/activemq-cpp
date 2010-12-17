@@ -29,7 +29,6 @@
 
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
