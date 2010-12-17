@@ -32,7 +32,12 @@ namespace io {
 
         unsigned char* buffer;
         std::vector<unsigned char> stlBuffer;
-        static const int bufferSize = 200000;
+        static const int bufferSize;
+
+    private:
+
+        ByteArrayInputStreamBenchmark( const ByteArrayInputStreamBenchmark& );
+        ByteArrayInputStreamBenchmark& operator= ( const ByteArrayInputStreamBenchmark& );
 
     public:
 

@@ -41,6 +41,7 @@ namespace benchmark{
 
     public:
 
+        BenchmarkBase() : timer() {}
         virtual ~BenchmarkBase() {}
 
         int getIterations() const {

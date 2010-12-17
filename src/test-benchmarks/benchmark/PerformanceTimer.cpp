@@ -24,8 +24,7 @@ using namespace benchmark;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-PerformanceTimer::PerformanceTimer(){
-    this->numberOfRuns = 0;
+PerformanceTimer::PerformanceTimer() : numberOfRuns(0), times(), startTime(0), endTime(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
