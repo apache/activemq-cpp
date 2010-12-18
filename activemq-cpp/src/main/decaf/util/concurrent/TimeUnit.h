@@ -65,11 +65,11 @@ namespace concurrent {
         /** This TimeUnit's index */
         int index;
 
-        /** Array of Time Unit multipliers */
-        static const long long multipliers[];
-
         /** Name of the Unit being represented. */
         std::string name;
+
+        /** Array of Time Unit multipliers */
+        static const long long multipliers[];
 
     public:
 

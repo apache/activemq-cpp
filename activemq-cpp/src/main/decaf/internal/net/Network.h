@@ -43,6 +43,11 @@ namespace net {
 
         static Network* networkRuntime;
 
+    private:
+
+        Network( const Network& );
+        Network& operator= ( const Network& );
+
     protected:
 
         Network();

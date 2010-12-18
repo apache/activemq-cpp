@@ -62,6 +62,11 @@ namespace net {
          */
         io::FileDescriptor* fd;
 
+    private:
+
+        SocketImpl( const SocketImpl& );
+        SocketImpl& operator= ( const SocketImpl& );
+
     public:
 
         SocketImpl();

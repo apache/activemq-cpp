@@ -34,14 +34,12 @@ using namespace decaf::internal;
 using namespace decaf::internal::security;
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandom::SecureRandom() {
-    this->secureRandom.reset( new SecureRandomImpl() );
+SecureRandom::SecureRandom() : secureRandom(new SecureRandomImpl()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandom::SecureRandom( const std::vector<unsigned char>& seed ) {
-
-    this->secureRandom.reset( new SecureRandomImpl() );
+SecureRandom::SecureRandom( const std::vector<unsigned char>& seed ) :
+    secureRandom(new SecureRandomImpl()) {
 
     if( !seed.empty() ) {
         this->secureRandom->providerSetSeed( &seed[0], (int)seed.size() );
@@ -49,7 +47,8 @@ SecureRandom::SecureRandom( const std::vector<unsigned char>& seed ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandom::SecureRandom( const unsigned char* seed, int size ) {
+SecureRandom::SecureRandom( const unsigned char* seed, int size ) :
+    secureRandom(new SecureRandomImpl()) {
 
     if( seed == NULL ) {
         throw NullPointerException( __FILE__, __LINE__, "Seed buffer pointer passed was NULL" );
@@ -58,8 +57,6 @@ SecureRandom::SecureRandom( const unsigned char* seed, int size ) {
     if( size < 0 ) {
         throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative." );
     }
-
-    this->secureRandom.reset( new SecureRandomImpl() );
 
     if( size > 0 ) {
         this->secureRandom->providerSetSeed( seed, size );

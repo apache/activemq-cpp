@@ -37,6 +37,11 @@ namespace internal {
 
        RuntimeData* runtimeData;
 
+    private:
+
+       DecafRuntime( const DecafRuntime& );
+       DecafRuntime& operator= ( const DecafRuntime& );
+
     public:
 
         /**

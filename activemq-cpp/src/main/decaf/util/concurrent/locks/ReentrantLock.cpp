@@ -67,6 +67,11 @@ namespace locks{
      * the supported platforms.
      */
     class LockHandle {
+    private:
+
+        LockHandle( const LockHandle& );
+        LockHandle& operator= ( const LockHandle& );
+
     public:
 
         // OS specific Lock Object.
@@ -83,11 +88,7 @@ namespace locks{
 
     public:
 
-        LockHandle() {
-
-            lock_count = 0;
-            lock_owner_tid = 0;
-            lock_owner = NULL;
+        LockHandle() : handle(), lock_owner(NULL), lock_owner_tid(0), lock_count(0) {
 
 #ifdef HAVE_PTHREAD_H
 
@@ -127,6 +128,11 @@ namespace locks{
     class ConditionObject : public Condition {
     private:
 
+        ConditionObject( const ConditionObject& );
+        ConditionObject& operator= ( const ConditionObject& );
+
+    private:
+
         LockHandle* lock;
 
 #ifdef HAVE_PTHREAD_H
@@ -141,9 +147,12 @@ namespace locks{
 
     public:
 
-        ConditionObject( LockHandle* lock ) {
-
-            this->lock = lock;
+        ConditionObject( LockHandle* lock ) : lock(lock),
+#ifdef HAVE_PTHREAD_H
+            condition() {
+#else
+            semaphore(), criticalSection(), numWaiting(0), numWake(0), generation(0) {
+#endif
 
 #ifdef HAVE_PTHREAD_H
             if( pthread_cond_init( &condition, NULL ) != 0 ) {
@@ -163,10 +172,6 @@ namespace locks{
                 throw RuntimeException(
                     __FILE__, __LINE__, "Failed to initialize OS Condition object." );
             }
-
-            this->numWaiting = 0;
-            this->numWake = 0;
-            this->generation = 0;
 #endif
         }
 
@@ -198,8 +203,7 @@ namespace locks{
 }}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-ReentrantLock::ReentrantLock() {
-    this->handle.reset( new LockHandle );
+ReentrantLock::ReentrantLock() : handle(new LockHandle) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

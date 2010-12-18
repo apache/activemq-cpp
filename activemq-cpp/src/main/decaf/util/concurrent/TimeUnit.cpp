@@ -58,9 +58,7 @@ const long long TimeUnit::multipliers[] = {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-TimeUnit::TimeUnit( int index, const std::string& name ) {
-    this->index = index;
-    this->name = name;
+TimeUnit::TimeUnit( int index, const std::string& name ) : index(index), name(name) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

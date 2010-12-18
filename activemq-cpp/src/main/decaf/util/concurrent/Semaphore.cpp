@@ -50,13 +50,11 @@ namespace concurrent {
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-Semaphore::Semaphore( int permits ) {
-    this->handle.reset( new SemaphoreHandle( permits ) );
+Semaphore::Semaphore( int permits ) : handle(new SemaphoreHandle( permits )) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Semaphore::Semaphore( int permits, bool fair ) {
-    this->handle.reset( new SemaphoreHandle( permits, fair ) );
+Semaphore::Semaphore( int permits, bool fair ) : handle(new SemaphoreHandle( permits, fair )) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

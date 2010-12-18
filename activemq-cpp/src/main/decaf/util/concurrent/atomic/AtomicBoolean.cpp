@@ -31,8 +31,7 @@ AtomicBoolean::AtomicBoolean() : value(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicBoolean::AtomicBoolean( bool initialValue ) {
-    this->value = initialValue ? 1 : 0;
+AtomicBoolean::AtomicBoolean( bool initialValue ) : value(initialValue ? 1 : 0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

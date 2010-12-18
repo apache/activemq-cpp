@@ -33,13 +33,12 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler() : Handler() {
-    this->stream = NULL;
-    this->writerNotInitialized = true;
+StreamHandler::StreamHandler() : Handler(), stream(NULL), writer(NULL), writerNotInitialized(true) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) : Handler() {
+StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) :
+    Handler(), stream(stream), writer(NULL), writerNotInitialized(true) {
 
     if( stream == NULL ) {
         throw NullPointerException(
@@ -50,9 +49,6 @@ StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) : Han
         throw NullPointerException(
             __FILE__, __LINE__, "Formatter cannot be NULL." );
     }
-
-    this->stream = stream;
-    this->writerNotInitialized = true;
 
     setFormatter( formatter );
 }
