@@ -53,6 +53,11 @@ namespace advisories {
         std::auto_ptr<cms::MessageConsumer> consumer;
         std::auto_ptr<cms::MessageProducer> producer;
 
+    private:
+
+        AdvisoryProducer( const AdvisoryProducer& );
+        AdvisoryProducer& operator= ( const AdvisoryProducer& );
+
     public:
 
         AdvisoryProducer( cms::Session* session );

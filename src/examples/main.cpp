@@ -57,20 +57,25 @@ private:
     bool sessionTransacted;
     std::string brokerURI;
 
+private:
+
+    HelloWorldProducer( const HelloWorldProducer& );
+    HelloWorldProducer& operator= ( const HelloWorldProducer& );
+
 public:
 
     HelloWorldProducer( const std::string& brokerURI,
                         int numMessages,
                         bool useTopic = false,
-                        bool sessionTransacted = false ){
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->producer = NULL;
-        this->numMessages = numMessages;
-        this->useTopic = useTopic;
-        this->sessionTransacted = sessionTransacted;
-        this->brokerURI = brokerURI;
+                        bool sessionTransacted = false ) :
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        producer(NULL),
+        numMessages(numMessages),
+        useTopic(useTopic),
+        sessionTransacted(sessionTransacted),
+        brokerURI(brokerURI) {
     }
 
     virtual ~HelloWorldProducer(){
@@ -183,23 +188,30 @@ private:
     bool sessionTransacted;
     std::string brokerURI;
 
+private:
+
+    HelloWorldConsumer( const HelloWorldConsumer& );
+    HelloWorldConsumer& operator= ( const HelloWorldConsumer& );
+
 public:
 
     HelloWorldConsumer( const std::string& brokerURI,
                         int numMessages,
                         bool useTopic = false,
                         bool sessionTransacted = false,
-                        int waitMillis = 30000 )
-                         : latch(1), doneLatch(numMessages){
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->consumer = NULL;
-        this->waitMillis = waitMillis;
-        this->useTopic = useTopic;
-        this->sessionTransacted = sessionTransacted;
-        this->brokerURI = brokerURI;
+                        int waitMillis = 30000 ) :
+        latch(1),
+        doneLatch(numMessages),
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        consumer(NULL),
+        waitMillis(waitMillis),
+        useTopic(useTopic),
+        sessionTransacted(sessionTransacted),
+        brokerURI(brokerURI) {
     }
+
     virtual ~HelloWorldConsumer() throw() {
         cleanup();
     }
