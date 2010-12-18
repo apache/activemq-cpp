@@ -70,6 +70,11 @@ namespace decaf{
 namespace lang{
 
     class ThreadProperties {
+    private:
+
+        ThreadProperties( const ThreadProperties& );
+        ThreadProperties& operator= ( const ThreadProperties& );
+
     public:
 
         decaf::util::concurrent::Mutex mutex;
@@ -85,28 +90,30 @@ namespace lang{
         #endif
 
         volatile Thread::State state;
-        std::string name;
         int priority;
         bool interrupted;
         bool unparked;
         bool parked;
-
-        static unsigned int id;
+        std::string name;
 
         Thread::UncaughtExceptionHandler* exHandler;
         Thread* parent;
 
+        static unsigned int id;
+
     public:
 
-        ThreadProperties( const std::string& name ) : mutex( name + "-mutex" ) {
-
-            this->priority = Thread::NORM_PRIORITY;
-            this->state = Thread::NEW;
-            this->interrupted = false;
-            this->parked = false;
-            this->unparked = false;
-            this->parent = NULL;
-            this->name = name;
+        ThreadProperties( const std::string& name ) : mutex( name + "-mutex" ),
+                                                      task(NULL),
+                                                      handle(),
+                                                      state(Thread::NEW),
+                                                      priority(Thread::NORM_PRIORITY),
+                                                      interrupted(false),
+                                                      unparked(false),
+                                                      parked(false),
+                                                      name(name),
+                                                      exHandler(NULL),
+                                                      parent(NULL) {
         }
 
         ~ThreadProperties() {

@@ -28,7 +28,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
-: FilterOutputStream( stream, own ) {
+: FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
 
     // Default to 1k buffer.
     init( 8192 );
@@ -36,7 +36,7 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own ) :
-    FilterOutputStream( stream, own ) {
+    FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
 
     try {
         this->init( bufSize );

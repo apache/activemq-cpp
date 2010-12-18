@@ -24,12 +24,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( unsigned char value ) {
-    this->value = value;
+Byte::Byte( unsigned char value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Byte::Byte( const std::string& value ) : value(0) {
     this->value = parseByte( value );
 }
 

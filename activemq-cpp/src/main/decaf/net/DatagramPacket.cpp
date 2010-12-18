@@ -24,59 +24,49 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length ) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length ) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(-1), mutex() {
 
     this->setData( bytes, size, 0, length );
-
-    this->port = -1;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length ) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length ) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(-1), mutex() {
 
     this->setData( bytes, size, offset, length );
-
-    this->port = -1;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length, const InetAddress& address DECAF_UNUSED, int port ) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length, const InetAddress& address DECAF_UNUSED, int port ) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(port), mutex() {
 
     this->setData( bytes, size, offset, length );
-
-    this->port = port;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length, const InetAddress& address DECAF_UNUSED, int port ) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length, const InetAddress& address DECAF_UNUSED, int port ) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(port), mutex() {
 
     this->setData( bytes, size, 0, length );
-
-    this->port = port;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length, const SocketAddress& address DECAF_UNUSED) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int length, const SocketAddress& address DECAF_UNUSED) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(-1), mutex() {
 
     this->setData( bytes, size, 0, length );
 
     // TODO
-    this->port = -1;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length, const SocketAddress& address DECAF_UNUSED ) {
+DatagramPacket::DatagramPacket( unsigned char* bytes, int size, int offset, int length, const SocketAddress& address DECAF_UNUSED ) :
+    buffer(NULL), size(0), offset(0), length(0), address(NULL), port(-1), mutex() {
 
     this->setData( bytes, size, offset, length );
 
     // TODO
-    this->port = -1;
-    this->address = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

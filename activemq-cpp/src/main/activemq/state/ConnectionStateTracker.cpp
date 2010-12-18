@@ -45,6 +45,11 @@ namespace state {
         const Pointer<TransactionInfo> info;
         ConnectionStateTracker* stateTracker;
 
+    private:
+
+        RemoveTransactionAction( const RemoveTransactionAction& );
+        RemoveTransactionAction& operator= ( const RemoveTransactionAction& );
+
     public:
 
         RemoveTransactionAction( ConnectionStateTracker* stateTracker,
@@ -63,17 +68,18 @@ namespace state {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ) {
-
-    this->trackTransactions = false;
-    this->restoreSessions = true;
-    this->restoreConsumers = true;
-    this->restoreProducers = true;
-    this->restoreTransaction = true;
-    this->trackMessages = true;
-    this->trackTransactionProducers = true;
-    this->maxCacheSize = 128 * 1024;
-    this->currentCacheSize = 0;
+ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ),
+                                                   connectionStates(),
+                                                   messageCache(),
+                                                   trackTransactions(false),
+                                                   restoreSessions(true),
+                                                   restoreConsumers(true),
+                                                   restoreProducers(true),
+                                                   restoreTransaction(true),
+                                                   trackMessages(true),
+                                                   trackTransactionProducers(true),
+                                                   maxCacheSize(128 * 1024),
+                                                   currentCacheSize(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

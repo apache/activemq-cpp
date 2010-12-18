@@ -37,6 +37,11 @@ namespace {
 
         SocketFactory** defaultRef;
 
+    private:
+
+        ShutdownTask( const ShutdownTask& );
+        ShutdownTask& operator= ( const ShutdownTask& );
+
     public:
 
         ShutdownTask( SocketFactory** defaultRef ) : defaultRef( defaultRef ) {}

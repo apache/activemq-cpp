@@ -60,7 +60,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket() : socketHandle( NULL ),
+TcpSocket::TcpSocket() : apr_pool(),
+                         socketHandle( NULL ),
                          localAddress( NULL ),
                          remoteAddress( NULL ),
                          inputStream( NULL ),

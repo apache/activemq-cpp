@@ -63,6 +63,11 @@ namespace net{
         int backlog;
         int port;
 
+    private:
+
+        ServerSocket( const ServerSocket& );
+        ServerSocket& operator= ( const ServerSocket& );
+
     public:
 
         /**

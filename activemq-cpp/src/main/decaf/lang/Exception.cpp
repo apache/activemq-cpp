@@ -29,22 +29,22 @@ using namespace decaf::lang;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception() throw() : Throwable(), cause( NULL ) {
+Exception::Exception() throw() : Throwable(), message(), cause(NULL), stackTrace() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception( const Exception& ex ) throw() : Throwable(), cause( NULL ) {
+Exception::Exception( const Exception& ex ) throw() : Throwable(), message(), cause(NULL), stackTrace() {
     *this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception( const std::exception* cause ) throw() : Throwable(), cause( NULL ) {
+Exception::Exception( const std::exception* cause ) throw() : Throwable(), message(), cause(NULL), stackTrace() {
     this->initCause( cause );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Exception::Exception( const char* file, const int lineNumber,
-                      const char* msg, ... ) throw() : Throwable(), cause( NULL ) {
+                      const char* msg, ... ) throw() : Throwable(), message(), cause(NULL), stackTrace() {
     va_list vargs;
     va_start( vargs, msg ) ;
     buildMessage( msg, vargs );
@@ -57,7 +57,7 @@ Exception::Exception( const char* file, const int lineNumber,
 ////////////////////////////////////////////////////////////////////////////////
 Exception::Exception( const char* file, const int lineNumber,
                       const std::exception* cause,
-                      const char* msg, ... ) throw() : Throwable(), cause( NULL ) {
+                      const char* msg, ... ) throw() : Throwable(), message(), cause(NULL), stackTrace() {
     va_list vargs;
     va_start( vargs, msg ) ;
     this->buildMessage( msg, vargs );

@@ -55,8 +55,7 @@ XAException::XAException( int errorCode ) : CMSException(), errorCode(errorCode)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( const XAException& ex ) : CMSException( ex ) {
-    this->errorCode = ex.errorCode;
+XAException::XAException( const XAException& ex ) : CMSException( ex ), errorCode(ex.errorCode) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

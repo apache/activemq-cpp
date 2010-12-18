@@ -38,11 +38,12 @@ const unsigned char InetAddress::loopbackBytes[4] = { 127, 0, 0, 1 };
 const unsigned char InetAddress::anyBytes[4] = { 0, 0, 0, 0 };
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress() {
+InetAddress::InetAddress() : hostname(), reached(false), addressBytes() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) {
+InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) :
+    hostname(), reached(false), addressBytes() {
 
     if( ipAddress == NULL ) {
         throw NullPointerException(
@@ -60,7 +61,8 @@ InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAddress, int numBytes ) {
+InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAddress, int numBytes ) :
+    hostname(hostname), reached(false), addressBytes() {
 
     if( ipAddress == NULL ) {
         throw NullPointerException(
@@ -75,7 +77,6 @@ InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAd
     unsigned char* copy = new unsigned char[numBytes];
     System::arraycopy( ipAddress, 0, copy, 0, numBytes );
     this->addressBytes.reset( copy, numBytes );
-    this->hostname = hostname;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

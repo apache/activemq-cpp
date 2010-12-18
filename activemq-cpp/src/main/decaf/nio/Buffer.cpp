@@ -25,22 +25,19 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer::Buffer( int capacity ) {
-    this->_capacity = capacity;
-    this->_limit = capacity;
-    this->_position = 0;
-    this->_mark = 0;
-    this->_markSet = false;
+Buffer::Buffer( int capacity ) : _position(0),
+                                 _capacity(capacity),
+                                 _limit(capacity),
+                                 _mark(0),
+                                 _markSet(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer::Buffer( const Buffer& other ) {
-
-    this->_capacity = other._capacity;
-    this->_limit = other._limit;
-    this->_position = other._position;
-    this->_mark = other._mark;
-    this->_markSet = other._markSet;
+Buffer::Buffer( const Buffer& other ) : _position(other._position),
+                                        _capacity(other._capacity),
+                                        _limit(other._limit),
+                                        _mark(other._mark),
+                                        _markSet(other._markSet) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

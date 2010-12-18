@@ -36,8 +36,13 @@ using namespace decaf::internal::net::ssl::openssl;
 #ifdef HAVE_OPENSSL
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) :
-    needClientAuth( false ), wantClientAuth( false ), useClientMode( true ), context( context ), ssl( NULL ) {
+OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) : needClientAuth( false ),
+                                                           wantClientAuth( false ),
+                                                           useClientMode( true ),
+                                                           context( context ),
+                                                           ssl( NULL ),
+                                                           enabledCipherSuites(),
+                                                           enabledProtocols() {
 
     if( context == NULL ) {
         throw NullPointerException( __FILE__, __LINE__, "SSL Context was NULL" );

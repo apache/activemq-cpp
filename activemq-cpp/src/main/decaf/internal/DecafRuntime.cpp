@@ -51,9 +51,7 @@ namespace internal{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-DecafRuntime::DecafRuntime() {
-
-    this->runtimeData = new RuntimeData();
+DecafRuntime::DecafRuntime() : runtimeData(new RuntimeData()) {
 
     // Initializes the APR Runtime from within a library.
     apr_initialize();

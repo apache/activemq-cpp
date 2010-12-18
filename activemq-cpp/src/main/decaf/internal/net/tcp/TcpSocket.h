@@ -58,6 +58,11 @@ namespace tcp {
 
     private:
 
+        TcpSocket( const TcpSocket& );
+        TcpSocket& operator= ( const TcpSocket& );
+
+    private:
+
         /**
          * APR Socket Pool to allocate from
          */

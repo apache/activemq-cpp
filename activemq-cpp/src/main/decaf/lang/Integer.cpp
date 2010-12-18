@@ -28,12 +28,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( int value ) {
-    this->value = value;
+Integer::Integer( int value ) :value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( const std::string& value ) {
+Integer::Integer( const std::string& value ) : value() {
     this->value = parseInt( value );
 }
 

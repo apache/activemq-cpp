@@ -37,9 +37,6 @@ namespace nio{
     class DECAF_API DoubleArrayBuffer : public decaf::nio::DoubleBuffer{
     private:
 
-        // Read / Write flag
-        bool readOnly;
-
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -48,6 +45,9 @@ namespace nio{
 
         // Number of bytes past offset to read to, or Limit.
         int length;
+
+        // Read / Write flag
+        bool readOnly;
 
     public:
 

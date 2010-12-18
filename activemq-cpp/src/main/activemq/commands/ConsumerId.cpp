@@ -40,21 +40,21 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId::ConsumerId() 
-    : BaseDataStructure(), connectionId(""), sessionId(0), value(0) {
+ConsumerId::ConsumerId()
+    : BaseDataStructure(), parentId(), connectionId(""), sessionId(0), value(0) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerId::ConsumerId( const ConsumerId& other )
-    : BaseDataStructure(), connectionId(""), sessionId(0), value(0) {
+    : BaseDataStructure(), parentId(), connectionId(""), sessionId(0), value(0) {
 
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerId::ConsumerId( const SessionId& sessionId, long long consumerIdd )
-    : BaseDataStructure(), connectionId(""), sessionId(0), value(0) {
+    : BaseDataStructure(), parentId(), connectionId(""), sessionId(0), value(0) {
 
     this->connectionId = sessionId.getConnectionId();
     this->sessionId = sessionId.getValue();

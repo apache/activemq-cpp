@@ -23,7 +23,7 @@ using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-SynchronizableImpl::SynchronizableImpl() {}
+SynchronizableImpl::SynchronizableImpl() : mutex() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 SynchronizableImpl::~SynchronizableImpl() {}

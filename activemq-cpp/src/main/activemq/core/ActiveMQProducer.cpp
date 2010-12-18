@@ -42,7 +42,17 @@ using namespace decaf::lang::exceptions;
 ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
                                     const Pointer<commands::ProducerId>& producerId,
                                     const Pointer<ActiveMQDestination>& destination,
-                                    long long sendTimeout ) {
+                                    long long sendTimeout ) : disableTimestamps(false),
+                                                              disableMessageId(false),
+                                                              defaultDeliveryMode(cms::Message::DEFAULT_DELIVERY_MODE),
+                                                              defaultPriority(cms::Message::DEFAULT_MSG_PRIORITY),
+                                                              defaultTimeToLive(cms::Message::DEFAULT_TIME_TO_LIVE),
+                                                              sendTimeout(sendTimeout),
+                                                              session(session),
+                                                              producerInfo(),
+                                                              closed(false),
+                                                              memoryUsage(),
+                                                              destination() {
 
     if( session == NULL || producerId == NULL ) {
         throw ActiveMQException(
@@ -68,18 +78,6 @@ ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
 
     // TODO - Check for need of MemoryUsage if there's a producer Windows size
     //        and the Protocol version is greater than 3.
-
-    // Init Producer Data
-    this->session = session;
-    this->closed = false;
-
-    // Default the Delivery options
-    this->defaultDeliveryMode = cms::Message::DEFAULT_DELIVERY_MODE;
-    this->disableTimestamps = false;
-    this->disableMessageId = false;
-    this->defaultPriority = cms::Message::DEFAULT_MSG_PRIORITY;
-    this->defaultTimeToLive = cms::Message::DEFAULT_TIME_TO_LIVE;
-    this->sendTimeout = sendTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -37,9 +37,6 @@ namespace nio{
     class DECAF_API FloatArrayBuffer : public decaf::nio::FloatBuffer{
     private:
 
-        // Read / Write flag
-        bool readOnly;
-
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -48,6 +45,9 @@ namespace nio{
 
         // Number of bytes to read past the offset, or Limit.
         int length;
+
+        // Read / Write flag
+        bool readOnly;
 
     public:
 

@@ -37,9 +37,6 @@ namespace nio{
     class DECAF_API IntArrayBuffer : public decaf::nio::IntBuffer {
     private:
 
-        // Read / Write flag
-        bool readOnly;
-
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -48,6 +45,9 @@ namespace nio{
 
         // The length of the sub-array, or limit
         int length;
+
+        // Read / Write flag
+        bool readOnly;
 
     public:
 

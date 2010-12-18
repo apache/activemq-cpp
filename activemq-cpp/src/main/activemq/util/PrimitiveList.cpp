@@ -27,17 +27,17 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveList::PrimitiveList() {
+PrimitiveList::PrimitiveList() : converter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const decaf::util::List<PrimitiveValueNode>& src )
-  : LinkedList<PrimitiveValueNode>( src ){
+  : LinkedList<PrimitiveValueNode>( src ), converter(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const PrimitiveList& src )
-  : LinkedList<PrimitiveValueNode>( src ){
+  : LinkedList<PrimitiveValueNode>( src ), converter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

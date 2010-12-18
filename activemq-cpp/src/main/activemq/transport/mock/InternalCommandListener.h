@@ -52,6 +52,11 @@ namespace mock {
         decaf::util::concurrent::CountDownLatch startedLatch;
         decaf::util::LinkedList< Pointer<Command> > inboundQueue;
 
+    private:
+
+        InternalCommandListener( const InternalCommandListener& );
+        InternalCommandListener operator= ( const InternalCommandListener& );
+
     public:
 
         InternalCommandListener();

@@ -52,7 +52,7 @@ namespace util {
         std::string hostname;
         mutable decaf::util::concurrent::Mutex mutex;
 
-        IdGeneratorKernel() : UNIQUE_STUB(), instanceCount(0), hostname() {
+        IdGeneratorKernel() : UNIQUE_STUB(), instanceCount(0), hostname(), mutex() {
 
             std::string stub = "";
 

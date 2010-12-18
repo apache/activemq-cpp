@@ -50,15 +50,19 @@ namespace lang{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String() {
-    this->contents = new Contents();
+String::String() : contents(new Contents()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String( const std::string& source ) {
+String::String( const String& source ) : contents(new Contents(source.length())) {
 
-    // Initialize the contents object.
-    this->contents = new Contents( (int)source.length() );
+    // TODO
+    // load the passed string into the contents value.
+    //System::arraycopy( (unsigned char*)source.c_str(), 0, contents->value.get(), 0, source.length() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String::String( const std::string& source ) : contents(new Contents((int)source.length())) {
 
     // load the passed string into the contents value.
     System::arraycopy( (unsigned char*)source.c_str(), 0, contents->value.get(), 0, source.length() );

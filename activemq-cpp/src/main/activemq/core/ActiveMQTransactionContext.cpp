@@ -53,6 +53,11 @@ namespace activemq{
 namespace core{
 
     class TxContextData {
+    private:
+
+        TxContextData( const TxContextData& );
+        TxContextData& operator= ( const TxContextData& );
+
     public:
 
         // Tracks local transactions
@@ -62,7 +67,7 @@ namespace core{
         Pointer<Xid> associatedXid;
         int beforeEndIndex;
 
-        TxContextData() {
+        TxContextData() : transactionId(), associatedXid(), beforeEndIndex() {
         }
 
     };
@@ -73,6 +78,11 @@ namespace core{
 namespace {
 
     class Finally {
+    private:
+
+        Finally( const Finally& );
+        Finally& operator= ( const Finally& );
+
     private:
 
         decaf::util::StlSet< Pointer<Synchronization> >* syncs;
@@ -92,8 +102,9 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session,
-                                                        const Properties& properties AMQCPP_UNUSED ) : context(NULL) {
+ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session, const Properties& properties AMQCPP_UNUSED ) :
+    context(new TxContextData()), session(session), connection(), synchronizations() {
+
     try {
 
         if( session == NULL ) {
@@ -103,10 +114,6 @@ ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session
                 "Initialized with a NULL session data");
         }
 
-        this->context = new TxContextData();
-
-        // Store State Data
-        this->session = session;
         this->connection = session->getConnection();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

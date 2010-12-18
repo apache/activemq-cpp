@@ -39,6 +39,11 @@ namespace util {
 
         static IdGeneratorKernel* kernel;
 
+    private:
+
+        IdGenerator( const IdGenerator& );
+        IdGenerator& operator= ( const IdGenerator& );
+
     public:
 
         IdGenerator();

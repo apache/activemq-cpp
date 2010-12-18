@@ -34,12 +34,11 @@ const double Double::POSITIVE_INFINITY = std::numeric_limits<double>::infinity()
 const double Double::NEGATIVE_INFINITY = -std::numeric_limits<double>::infinity();
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double( double value ) {
-    this->value = value;
+Double::Double( double value ) :value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double( const std::string& value ) {
+Double::Double( const std::string& value ) : value(0) {
     this->value = Double::parseDouble( value );
 }
 

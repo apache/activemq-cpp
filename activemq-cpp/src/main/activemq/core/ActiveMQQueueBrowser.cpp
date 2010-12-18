@@ -49,6 +49,11 @@ namespace core{
 
         ActiveMQQueueBrowser* parent;
 
+    private:
+
+        Browser( const Browser& );
+        Browser& operator= ( const Browser& );
+
     public:
 
         Browser( ActiveMQQueueBrowser* parent, ActiveMQSession* session,
@@ -80,7 +85,6 @@ namespace core{
             AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
             AMQ_CATCHALL_THROW( ActiveMQException )
         }
-
     };
 }}
 

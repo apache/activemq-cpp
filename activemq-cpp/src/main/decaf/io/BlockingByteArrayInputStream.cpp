@@ -25,16 +25,14 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockingByteArrayInputStream::BlockingByteArrayInputStream(){
-    pos = buffer.end();
-    closing = false;
+BlockingByteArrayInputStream::BlockingByteArrayInputStream() :
+    InputStream(), buffer(), pos(buffer.end()), closing(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockingByteArrayInputStream::BlockingByteArrayInputStream(
-    const unsigned char* buffer, int bufferSize ){
+BlockingByteArrayInputStream::BlockingByteArrayInputStream( const unsigned char* buffer, int bufferSize ):
+    InputStream(), buffer(), pos(0), closing(false) {
 
-    closing = false;
     setByteArray( buffer, bufferSize );
 }
 

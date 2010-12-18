@@ -53,9 +53,23 @@ namespace lang {
          * @param source
          *      The string to copy into this new String object.
          */
+        String( const String& source );
+
+        /**
+         * Create a new String object that represents the given STL string
+         *
+         * @param source
+         *      The string to copy into this new String object.
+         */
         String( const std::string& source );
 
         virtual ~String();
+
+    public:
+
+        // TODO
+        String& operator= ( const String& );
+        String& operator= ( const std::string& );
 
     public:  // String API
 

@@ -29,9 +29,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-InternalCommandListener::InternalCommandListener() : startedLatch(1) {
-    transport = NULL;
-    done = false;
+InternalCommandListener::InternalCommandListener() :
+    transport(NULL), responseBuilder(), done(false), startedLatch(1), inboundQueue() {
 
     this->start();
     startedLatch.await();

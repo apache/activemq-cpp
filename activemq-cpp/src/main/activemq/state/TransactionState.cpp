@@ -30,12 +30,11 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::TransactionState( const Pointer<TransactionId>& id ) :
-    id( id ), disposed( false ), prepared( false ), preparedResult( 0 ) {
+    commands(), id(id), disposed(false), prepared(false), preparedResult(0), producers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
-
     this->commands.clear();
 }
 

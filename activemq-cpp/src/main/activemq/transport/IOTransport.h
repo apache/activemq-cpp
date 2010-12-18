@@ -91,6 +91,11 @@ namespace transport{
 
     private:
 
+        IOTransport( const IOTransport& );
+        IOTransport& operator= ( const IOTransport& );
+
+    private:
+
         /**
          * Notify the exception listener
          * @param ex the exception to send

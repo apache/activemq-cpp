@@ -32,10 +32,14 @@ namespace concurrent {
     class MutexHandle;
 
     class DECAF_API ConditionHandle {
+    private:
+
+        ConditionHandle( const ConditionHandle& );
+        ConditionHandle& operator= ( const ConditionHandle& );
+
     public:
 
-        ConditionHandle() {
-            mutex = NULL;
+        ConditionHandle() : condition(), mutex(NULL) {
         }
 
         ~ConditionHandle() {
@@ -47,7 +51,6 @@ namespace concurrent {
 
         // The mutex object associated with this condition.
         MutexHandle* mutex;
-
 
     };
 

@@ -43,6 +43,11 @@ namespace openssl {
 
         OpenSSLParameters* parameters;
 
+    private:
+
+        OpenSSLServerSocket( const OpenSSLServerSocket& );
+        OpenSSLServerSocket& operator= ( const OpenSSLServerSocket& );
+
     public:
 
         OpenSSLServerSocket( OpenSSLParameters* parameters );

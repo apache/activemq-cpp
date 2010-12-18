@@ -26,15 +26,14 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : own( own ) {
+OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : stream(stream),
+                                                                           own(own),
+                                                                           closed(false) {
 
     if( stream == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "OutputStream pointer cannot be NULL" );
     }
-
-    this->stream = stream;
-    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

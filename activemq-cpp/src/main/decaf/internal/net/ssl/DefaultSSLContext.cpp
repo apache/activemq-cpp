@@ -44,6 +44,11 @@ namespace {
 
         SSLContext** defaultRef;
 
+    private:
+
+        ShutdownTask( const ShutdownTask& );
+        ShutdownTask& operator= ( const ShutdownTask& );
+
     public:
 
         ShutdownTask( SSLContext** defaultRef ) : defaultRef( defaultRef ) {}

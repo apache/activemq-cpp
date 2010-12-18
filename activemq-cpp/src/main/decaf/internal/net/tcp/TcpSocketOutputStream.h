@@ -40,6 +40,11 @@ namespace tcp {
         TcpSocket* socket;
         volatile bool closed;
 
+    private:
+
+        TcpSocketOutputStream( const TcpSocketOutputStream& );
+        TcpSocketOutputStream& operator= ( const TcpSocketOutputStream& );
+
     public:
 
         /**

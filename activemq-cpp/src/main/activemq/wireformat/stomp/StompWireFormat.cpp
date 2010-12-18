@@ -61,7 +61,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompWireFormat::StompWireFormat() {
+StompWireFormat::StompWireFormat() : helper(), clientId(), receiving() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,6 +155,11 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
         const std::string commandId = frame->getCommand();
 
         class Finally {
+        private:
+
+            Finally( const Finally& );
+            Finally& operator= ( const Finally& );
+
         private:
 
             decaf::util::concurrent::atomic::AtomicBoolean* state;

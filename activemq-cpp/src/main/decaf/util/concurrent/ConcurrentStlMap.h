@@ -54,14 +54,16 @@ namespace concurrent{
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>() {}
+        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const ConcurrentStlMap& source ) : ConcurrentMap<K,V,COMPARATOR>() {
+        ConcurrentStlMap( const ConcurrentStlMap& source ) :
+            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
+
             copy( source );
         }
 
@@ -70,7 +72,9 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) : ConcurrentMap<K,V,COMPARATOR>() {
+        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) :
+            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
+
             copy( source );
         }
 

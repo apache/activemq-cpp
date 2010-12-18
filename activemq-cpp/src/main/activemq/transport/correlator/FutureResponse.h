@@ -46,7 +46,7 @@ namespace correlator{
 
     public:
 
-        FutureResponse() : responseLatch( 1 ) {}
+        FutureResponse() : responseLatch( 1 ), response() {}
 
         virtual ~FutureResponse(){}
 

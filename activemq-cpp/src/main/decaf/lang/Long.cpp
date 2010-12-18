@@ -23,12 +23,11 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long( long long value ) {
-    this->value = value;
+Long::Long( long long value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long( const std::string& value ) {
+Long::Long( const std::string& value ) : value(0) {
     this->value = parseLong( value );
 }
 

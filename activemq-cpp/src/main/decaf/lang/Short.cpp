@@ -25,12 +25,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short( short value ) {
-    this->value = value;
+Short::Short( short value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short( const std::string& value ) {
+Short::Short( const std::string& value ) : value(0) {
     Short::parseShort( value );
 }
 
