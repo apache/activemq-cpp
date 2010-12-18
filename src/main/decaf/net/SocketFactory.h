@@ -41,6 +41,11 @@ namespace net{
 
         static SocketFactory* defaultFactory;
 
+    private:
+
+        SocketFactory( const SocketFactory& );
+        SocketFactory& operator= ( const SocketFactory& );
+
     protected:
 
         SocketFactory();

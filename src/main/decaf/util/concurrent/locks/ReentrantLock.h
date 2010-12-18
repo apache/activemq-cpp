@@ -82,6 +82,11 @@ namespace locks {
 
         decaf::lang::Pointer<LockHandle> handle;
 
+    private:
+
+        ReentrantLock( const ReentrantLock& );
+        ReentrantLock& operator= ( const ReentrantLock& );
+
     public:
 
         ReentrantLock();

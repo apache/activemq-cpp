@@ -33,7 +33,7 @@ const int InflaterInputStream::DEFAULT_BUFFER_SIZE = 512;
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
     FilterInputStream( inputStream, own ),
-    inflater(new Inflater()), buff(), length(0), atEOF(false), ownInflater(true) {
+    inflater(new Inflater()), buff(), length(0), ownInflater(true), atEOF(false) {
 
     this->buff.resize( DEFAULT_BUFFER_SIZE );
 }
@@ -41,7 +41,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own, bool ownInflater )
  :  FilterInputStream( inputStream, own ),
-    inflater(inflater), buff(), length(0), atEOF(false), ownInflater(ownInflater) {
+    inflater(inflater), buff(), length(0), ownInflater(ownInflater), atEOF(false) {
 
     if( inflater == NULL ) {
         throw NullPointerException(
@@ -55,7 +55,7 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater,
                                           int bufferSize, bool own, bool ownInflater )
  :  FilterInputStream( inputStream, own ),
-    inflater(inflater), buff(), length(0), atEOF(false), ownInflater(ownInflater) {
+    inflater(inflater), buff(), length(0), ownInflater(ownInflater), atEOF(false) {
 
     if( inflater == NULL ) {
         throw NullPointerException(

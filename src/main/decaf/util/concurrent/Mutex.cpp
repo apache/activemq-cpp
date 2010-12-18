@@ -38,6 +38,11 @@ namespace util{
 namespace concurrent{
 
     class MutexProperties {
+    private:
+
+        MutexProperties( const MutexProperties& );
+        MutexProperties& operator= ( const MutexProperties& );
+
     public:
 
         MutexProperties( const std::string& name ) : mutex( NULL ), condition( NULL ), name( name ) {

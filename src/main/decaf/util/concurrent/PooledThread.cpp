@@ -31,24 +31,16 @@ using namespace decaf::util::concurrent;
 LOGDECAF_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread")
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledThread::PooledThread(ThreadPool* pool) {
+PooledThread::PooledThread(ThreadPool* pool) : busy(false), done(false), listener(NULL), pool(pool) {
 
     if( pool == NULL ) {
         throw IllegalArgumentException( __FILE__, __LINE__,
             "PooledThread::PooledThread");
     }
-
-    busy = false;
-    done = false;
-
-    listener = NULL;
-
-    // Store our Pool.
-    this->pool = pool;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledThread::~PooledThread(){
+PooledThread::~PooledThread() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
