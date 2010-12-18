@@ -43,6 +43,11 @@ namespace internal {
 namespace security {
 
     class SRNGData {
+    private:
+
+        SRNGData( const SRNGData& );
+        SRNGData operator= ( const SRNGData& );
+
     public:
 
         std::auto_ptr<Random> random;

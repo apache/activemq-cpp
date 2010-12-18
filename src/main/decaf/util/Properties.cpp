@@ -111,11 +111,11 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties() : internal( new PropertiesInternal() ) {
+Properties::Properties() : internal( new PropertiesInternal() ), defaults() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ) {
+Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ), defaults() {
 
     this->internal->properties.copy( src.internal->properties );
 

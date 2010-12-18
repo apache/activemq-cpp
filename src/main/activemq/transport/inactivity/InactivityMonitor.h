@@ -54,6 +54,11 @@ namespace inactivity {
         friend class WriteChecker;
         friend class AsyncWriteTask;
 
+    private:
+
+        InactivityMonitor( const InactivityMonitor& );
+        InactivityMonitor operator= ( const InactivityMonitor& );
+
     public:
 
         InactivityMonitor( const Pointer<Transport>& next,

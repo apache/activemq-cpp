@@ -40,6 +40,11 @@ namespace openssl {
 
         ContextData* data;
 
+    private:
+
+        OpenSSLContextSpi( const OpenSSLContextSpi& );
+        OpenSSLContextSpi& operator= ( const OpenSSLContextSpi& );
+
     public:
 
         OpenSSLContextSpi();

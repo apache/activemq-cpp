@@ -53,10 +53,14 @@ namespace lang{
         Byte( unsigned char value );
 
         /**
-         * @param value - the string to convert to an unsigned char
-         * @throws NumberFormatException
+         * Creates a new Byte instance from the given string.
+         *
+         * @param value
+         *      The string to convert to an unsigned char
+         *
+         * @throws NumberFormatException if the string is not a valid byte.
          */
-        Byte( const std::string& value ) throw( exceptions::NumberFormatException );
+        Byte( const std::string& value );
 
         virtual ~Byte() {}
 

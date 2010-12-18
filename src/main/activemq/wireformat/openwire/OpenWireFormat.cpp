@@ -53,26 +53,21 @@ const int OpenWireFormat::DEFAULT_VERSION = 1;
 const int OpenWireFormat::MAX_SUPPORTED_VERSION = 6;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
-
-    // Copy config data
-    this->properties = properties;
-
-    // Fill in that DataStreamMarshallers collection
-    this->dataMarshallers.resize( 256 );
-
-    // Generate an ID
-    this->id = UUID::randomUUID().toString();
-    // Set defaults for initial WireFormat negotiation
-    this->version = 0;
-    this->stackTraceEnabled = true;
-    this->cacheEnabled = true;
-    this->cacheSize = 1024;
-    this->tcpNoDelayEnabled = true;
-    this->tightEncodingEnabled = false;
-    this->sizePrefixDisabled = false;
-    this->maxInactivityDuration = 30000;
-    this->maxInactivityDurationInitialDelay = 10000;
+OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) :
+    properties(properties),
+    preferedWireFormatInfo(),
+    dataMarshallers(256),
+    id(UUID::randomUUID().toString()),
+    receiving(),
+    version(0),
+    stackTraceEnabled(true),
+    tcpNoDelayEnabled(true),
+    cacheEnabled(true),
+    cacheSize(1024),
+    tightEncodingEnabled(false),
+    sizePrefixDisabled(false),
+    maxInactivityDuration(30000),
+    maxInactivityDurationInitialDelay(10000) {
 
     // initialize the universal marshalers, don't need to reset them again
     // after this so its safe to do this here.
@@ -282,6 +277,11 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
         private:
 
             decaf::util::concurrent::atomic::AtomicBoolean* state;
+
+        private:
+
+            Finally( const Finally& );
+            Finally& operator= ( const Finally& );
 
         public:
 

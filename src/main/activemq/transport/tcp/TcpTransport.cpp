@@ -43,7 +43,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const Pointer<Transport>& next ) :
-    TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
+    TransportFilter(next), connectTimeout(0), closed(false), socket(), dataInputStream(), dataOutputStream() {
 
 }
 

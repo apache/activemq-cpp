@@ -52,6 +52,11 @@ namespace activemq{
 namespace core{
 
     class FactorySettings {
+    private:
+
+        FactorySettings( const FactorySettings& );
+        FactorySettings& operator= ( const FactorySettings& );
+
     public:
 
         Pointer<Properties> properties;
@@ -76,7 +81,11 @@ namespace core{
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
-        FactorySettings() : brokerURI( ActiveMQConnectionFactory::DEFAULT_URI ),
+        FactorySettings() : properties( new Properties() ),
+                            username(),
+                            password(),
+                            clientId(),
+                            brokerURI( ActiveMQConnectionFactory::DEFAULT_URI ),
                             dispatchAsync( true ),
                             alwaysSyncSend( false ),
                             useAsyncSend( false ),
@@ -87,12 +96,8 @@ namespace core{
                             closeTimeout( 15000 ),
                             producerWindowSize( 0 ),
                             defaultListener( NULL ),
-                            defaultPrefetchPolicy( NULL ),
-                            defaultRedeliveryPolicy( NULL ) {
-
-            this->properties.reset( new Properties() );
-            this->defaultPrefetchPolicy.reset( new DefaultPrefetchPolicy() );
-            this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
+                            defaultPrefetchPolicy( new DefaultPrefetchPolicy() ),
+                            defaultRedeliveryPolicy( new DefaultRedeliveryPolicy() ) {
         }
 
         void updateConfiguration( const URI& uri ) {

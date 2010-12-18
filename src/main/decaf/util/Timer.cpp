@@ -44,7 +44,9 @@ namespace util{
         TimerTaskHeap heap;
         bool cancelled;
 
-        TimerImpl() : cancelled( false ) {}
+    public:
+
+        TimerImpl() : heap(), cancelled( false ) {}
 
         ~TimerImpl() {
             try{

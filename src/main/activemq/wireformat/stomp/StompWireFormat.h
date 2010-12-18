@@ -51,7 +51,10 @@ namespace stomp {
     public:
 
         StompWireFormat();
+
         virtual ~StompWireFormat();
+
+    public:
 
         /**
          * Stream based marshaling of a Command, this method blocks until the entire

@@ -62,6 +62,11 @@ namespace net{
 
         friend class ServerSocket;
 
+    private:
+
+        Socket( const Socket& );
+        Socket& operator= ( const Socket& );
+
     public:
 
         /**

@@ -53,6 +53,11 @@ namespace net {
 
         mutable decaf::util::concurrent::Mutex mutex;
 
+    private:
+
+        DatagramPacket( const DatagramPacket& );
+        DatagramPacket& operator= ( const DatagramPacket& );
+
     public:
 
         /**

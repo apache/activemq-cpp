@@ -41,21 +41,21 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId() 
-    : BaseDataStructure(), connectionId(""), value(0), sessionId(0) {
+ProducerId::ProducerId()
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId::ProducerId( const ProducerId& other )
-    : BaseDataStructure(), connectionId(""), value(0), sessionId(0) {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId::ProducerId( const SessionId& sessionId, long long consumerId )
-    : BaseDataStructure(), connectionId(""), value(0), sessionId(0) {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
     this->connectionId = sessionId.getConnectionId();
     this->sessionId = sessionId.getValue();
@@ -64,7 +64,7 @@ ProducerId::ProducerId( const SessionId& sessionId, long long consumerId )
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId::ProducerId( std::string producerKey )
-    : BaseDataStructure(), connectionId(""), value(0), sessionId(0) {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
     // Parse off the producerId
     std::size_t p = producerKey.rfind( ':' );

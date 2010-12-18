@@ -25,15 +25,11 @@ using namespace decaf::util::concurrent;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-MemoryUsage::MemoryUsage() {
-    this->limit = 0;
-    this->usage = 0;
+MemoryUsage::MemoryUsage() : limit(0), usage(0), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MemoryUsage::MemoryUsage( unsigned long long limit ) {
-    this->limit = limit;
-    this->usage = 0;
+MemoryUsage::MemoryUsage( unsigned long long limit ) : limit(limit), usage(), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

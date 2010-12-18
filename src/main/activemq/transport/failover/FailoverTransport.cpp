@@ -43,37 +43,44 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport() {
+FailoverTransport::FailoverTransport() : closed(false),
+                                         connected(false),
+                                         started(false),
+                                         timeout(-1),
+                                         initialReconnectDelay(10),
+                                         maxReconnectDelay(1000*30),
+                                         backOffMultiplier(2),
+                                         useExponentialBackOff(true),
+                                         initialized(false),
+                                         maxReconnectAttempts(0),
+                                         startupMaxReconnectAttempts(0),
+                                         connectFailures(0),
+                                         reconnectDelay(10),
+                                         trackMessages(false),
+                                         trackTransactionProducers(true),
+                                         maxCacheSize(128*1024),
+                                         connectionInterruptProcessingComplete(false),
+                                         firstConnection(true),
+                                         updateURIsSupported(true),
+                                         reconnectSupported(true),
+                                         reconnectMutex(),
+                                         sleepMutex(),
+                                         listenerMutex(),
+                                         stateTracker(),
+                                         requestMap(),
+                                         uris(new URIPool()),
+                                         updated(),
+                                         connectedTransportURI(),
+                                         connectedTransport(),
+                                         connectionFailure(),
+                                         backups(),
+                                         closeTask(new CloseTransportsTask()),
+                                         taskRunner(new CompositeTaskRunner()),
+                                         disposedListener(),
+                                         myTransportListener(new FailoverTransportListener( this )),
+                                         transportListener(NULL) {
 
-    this->timeout = -1;
-    this->initialReconnectDelay = 10;
-    this->maxReconnectDelay = 1000 * 30;
-    this->backOffMultiplier = 2;
-    this->useExponentialBackOff = true;
-    this->initialized = false;
-    this->maxReconnectAttempts = 0;
-    this->startupMaxReconnectAttempts = 0;
-    this->connectFailures = 0;
-    this->reconnectDelay = this->initialReconnectDelay;
-    this->trackMessages = false;
-    this->trackTransactionProducers = true;
-    this->maxCacheSize = 128 * 1024;
-
-    this->started = false;
-    this->closed = false;
-    this->connected = false;
-    this->connectionInterruptProcessingComplete = false;
-    this->firstConnection = true;
-
-    this->updateURIsSupported = true;
-    this->reconnectSupported = true;
-
-    this->transportListener = NULL;
-    this->uris.reset( new URIPool() );
     this->stateTracker.setTrackTransactions( true );
-    this->myTransportListener.reset( new FailoverTransportListener( this ) );
-    this->closeTask.reset( new CloseTransportsTask() );
-    this->taskRunner.reset( new CompositeTaskRunner() );
     this->backups.reset( new BackupTransportPool( taskRunner, closeTask, uris ) );
 
     this->taskRunner->addTask( this );

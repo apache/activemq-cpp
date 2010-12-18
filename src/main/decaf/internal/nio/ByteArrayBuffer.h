@@ -104,9 +104,6 @@ namespace nio{
     class DECAF_API ByteArrayBuffer : public decaf::nio::ByteBuffer {
     private:
 
-        // Read / Write flag
-        bool readOnly;
-
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -115,6 +112,9 @@ namespace nio{
 
         // The number of bytes we are limited to.
         int length;
+
+        // Read / Write flag
+        bool readOnly;
 
     public:
 

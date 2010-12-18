@@ -26,19 +26,17 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatArrayBuffer::FloatArrayBuffer( int size, bool readOnly ) : FloatBuffer( size ){
+FloatArrayBuffer::FloatArrayBuffer( int size, bool readOnly ) :
+    FloatBuffer(size), _array(), offset(0), length(size), readOnly(readOnly) {
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
     this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(float) ) );
-    this->offset = 0;
-    this->length = size;
-    this->readOnly = readOnly;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int length, bool readOnly ) :
-    FloatBuffer( length ) {
+    FloatBuffer(length), _array(), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
@@ -54,9 +52,6 @@ FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int leng
 
         // Allocate using the ByteArray, not read-only initially.
         this->_array.reset( new ByteArrayAdapter( array, size, false ) );
-        this->offset = offset;
-        this->length = length;
-        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -65,8 +60,8 @@ FloatArrayBuffer::FloatArrayBuffer( float* array, int size, int offset, int leng
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatArrayBuffer::FloatArrayBuffer( const Pointer<ByteArrayAdapter>& array,
-                                    int offset, int length, bool readOnly ) : FloatBuffer( length ) {
+FloatArrayBuffer::FloatArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
+    FloatBuffer(length), _array(array), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
@@ -79,12 +74,6 @@ FloatArrayBuffer::FloatArrayBuffer( const Pointer<ByteArrayAdapter>& array,
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
-
-        // Allocate using the ByteArray, not read-only initially.
-        this->_array = array;
-        this->offset = offset;
-        this->length = length;
-        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -93,23 +82,12 @@ FloatArrayBuffer::FloatArrayBuffer( const Pointer<ByteArrayAdapter>& array,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-FloatArrayBuffer::FloatArrayBuffer( const FloatArrayBuffer& other )
-    : FloatBuffer( other ) {
-
-    // get the byte buffer of the caller and take a reference
-    this->_array = other._array;
-    this->offset = other.offset;
-    this->length = other.length;
-    this->readOnly = other.readOnly;
+FloatArrayBuffer::FloatArrayBuffer( const FloatArrayBuffer& other ) :
+    FloatBuffer(other), _array(other._array), offset(other.offset), length(other.length), readOnly(other.readOnly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 FloatArrayBuffer::~FloatArrayBuffer() {
-
-    try{
-    }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -61,6 +61,11 @@ namespace activemq{
 namespace core {
 
     class ActiveMQConsumerMembers {
+    private:
+
+        ActiveMQConsumerMembers( const ActiveMQConsumerMembers& );
+        ActiveMQConsumerMembers& operator= ( const ActiveMQConsumerMembers& );
+
     public:
 
         cms::MessageListener* listener;
@@ -81,13 +86,21 @@ namespace core {
         Pointer<Exception> failureError;
 
         ActiveMQConsumerMembers() : listener(NULL),
+                                    listenerMutex(),
+                                    deliveringAcks(),
+                                    started(),
+                                    unconsumedMessages(),
+                                    dispatchedMessages(),
                                     lastDeliveredSequenceId(0),
+                                    pendingAck(),
                                     deliveredCounter(0),
                                     additionalWindowSize(0),
                                     synchronizationRegistered(false),
                                     clearDispatchList(false),
                                     inProgressClearRequiredFlag(false),
-                                    redeliveryDelay(0) {
+                                    redeliveryDelay(0),
+                                    redeliveryPolicy(),
+                                    failureError() {
         }
 
     };
@@ -102,16 +115,19 @@ namespace core {
 
         ActiveMQConsumer* consumer;
 
+    private:
+
+        TransactionSynhcronization( const TransactionSynhcronization& );
+        TransactionSynhcronization& operator= ( const TransactionSynhcronization& );
+
     public:
 
-        TransactionSynhcronization( ActiveMQConsumer* consumer ) {
+        TransactionSynhcronization( ActiveMQConsumer* consumer ) : consumer(consumer) {
 
             if( consumer == NULL ) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
-
-            this->consumer = consumer;
         }
 
         virtual ~TransactionSynhcronization() {}
@@ -143,16 +159,19 @@ namespace core {
 
         ActiveMQConsumer* consumer;
 
+    private:
+
+        CloseSynhcronization( const CloseSynhcronization& );
+        CloseSynhcronization& operator= ( const CloseSynhcronization& );
+
     public:
 
-        CloseSynhcronization( ActiveMQConsumer* consumer ) {
+        CloseSynhcronization( ActiveMQConsumer* consumer ) : consumer(consumer) {
 
             if( consumer == NULL ) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
-
-            this->consumer = consumer;
         }
 
         virtual ~CloseSynhcronization() {}
@@ -178,10 +197,18 @@ namespace core {
 
         ActiveMQSession* session;
 
+    private:
+
+        ClientAckHandler( const ClientAckHandler& );
+        ClientAckHandler& operator= ( const ClientAckHandler& );
+
     public:
 
-        ClientAckHandler( ActiveMQSession* session ) {
-            this->session = session;
+        ClientAckHandler( ActiveMQSession* session ) : session(session) {
+            if( session == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Ack Handler Created with NULL Session.");
+            }
         }
 
         void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
@@ -199,14 +226,23 @@ namespace core {
     class IndividualAckHandler : public ActiveMQAckHandler {
     private:
 
-        Pointer<commands::MessageDispatch> dispatch;
         ActiveMQConsumer* consumer;
+        Pointer<commands::MessageDispatch> dispatch;
+
+    private:
+
+        IndividualAckHandler( const IndividualAckHandler& );
+        IndividualAckHandler& operator= ( const IndividualAckHandler& );
 
     public:
 
-        IndividualAckHandler( ActiveMQConsumer* consumer, const Pointer<MessageDispatch>& dispatch ) {
-            this->consumer = consumer;
-            this->dispatch = dispatch;
+        IndividualAckHandler( ActiveMQConsumer* consumer, const Pointer<MessageDispatch>& dispatch ) :
+            consumer(consumer), dispatch(dispatch) {
+
+            if( consumer == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Ack Handler Created with NULL consumer.");
+            }
         }
 
         void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
@@ -235,7 +271,7 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
                                     bool noLocal,
                                     bool browser,
                                     bool dispatchAsync,
-                                    cms::MessageListener* listener ) {
+                                    cms::MessageListener* listener ) : internal(NULL), session(NULL), consumerInfo() {
 
     if( session == NULL ) {
         throw ActiveMQException(

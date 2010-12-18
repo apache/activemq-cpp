@@ -30,11 +30,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::BooleanStream() {
-
-    this->arrayLimit = 0;
-    this->arrayPos = 0;
-    this->bytePos = 0;
+BooleanStream::BooleanStream() : data(), arrayLimit(0), arrayPos(0), bytePos(0) {
 
     // Reserve 1K
     this->data.resize( 1000, 0 );

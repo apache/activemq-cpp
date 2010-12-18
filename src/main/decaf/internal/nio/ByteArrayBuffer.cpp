@@ -30,18 +30,13 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly ) : decaf::nio::ByteBuffer( size ) {
-
-    // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
-    this->_array.reset( new ByteArrayAdapter( size ) );
-    this->offset = 0;
-    this->length = size;
-    this->readOnly = readOnly;
+ByteArrayBuffer::ByteArrayBuffer( int size, bool readOnly ) :
+    decaf::nio::ByteBuffer( size ), _array(new ByteArrayAdapter(size)), offset(0), length(size), readOnly(readOnly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, int length, bool readOnly ) :
-    decaf::nio::ByteBuffer( length ) {
+    decaf::nio::ByteBuffer(length), _array(), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
@@ -57,9 +52,6 @@ ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, in
 
         // Allocate using the ByteArray, not read-only initially.
         this->_array.reset( new ByteArrayAdapter( array, size, false ) );
-        this->offset = offset;
-        this->length = length;
-        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -69,7 +61,7 @@ ByteArrayBuffer::ByteArrayBuffer( unsigned char* array, int size, int offset, in
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
-    decaf::nio::ByteBuffer( length ) {
+    decaf::nio::ByteBuffer(length), _array(array), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
@@ -82,11 +74,6 @@ ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int of
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
-
-        this->_array = array;
-        this->offset = offset;
-        this->length = length;
-        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -95,23 +82,15 @@ ByteArrayBuffer::ByteArrayBuffer( const Pointer<ByteArrayAdapter>& array, int of
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayBuffer::ByteArrayBuffer( const ByteArrayBuffer& other )
-    : decaf::nio::ByteBuffer( other ) {
-
-    // get the byte buffer of the caller and take a reference
-    this->_array = other._array;
-    this->offset = other.offset;
-    this->length = other.length;
-    this->readOnly = other.readOnly;
+ByteArrayBuffer::ByteArrayBuffer( const ByteArrayBuffer& other ) : decaf::nio::ByteBuffer(other),
+                                                                   _array(other._array),
+                                                                   offset(other.offset),
+                                                                   length(other.length),
+                                                                   readOnly(other.readOnly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayBuffer::~ByteArrayBuffer() {
-
-    try{
-    }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

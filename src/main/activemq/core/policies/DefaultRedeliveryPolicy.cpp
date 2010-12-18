@@ -28,15 +28,13 @@ using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() {
-
-    this->collisionAvoidanceFactor = 0.15;
-    this->maximumRedeliveries = 6;
-    this->initialRedeliveryDelay = 1000LL;
-    this->useCollisionAvoidance = false;
-    this->useExponentialBackOff = false;
-    this->backOffMultiplier = 5.0;
-    this->redeliveryDelay = initialRedeliveryDelay;
+DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() : backOffMultiplier(5.0),
+                                                     collisionAvoidanceFactor(0.15),
+                                                     initialRedeliveryDelay(1000LL),
+                                                     maximumRedeliveries(6),
+                                                     useCollisionAvoidance(false),
+                                                     useExponentialBackOff(false),
+                                                     redeliveryDelay(initialRedeliveryDelay) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

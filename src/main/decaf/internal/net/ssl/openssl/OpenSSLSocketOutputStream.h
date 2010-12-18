@@ -41,6 +41,11 @@ namespace openssl {
         OpenSSLSocket* socket;
         volatile bool closed;
 
+    private:
+
+        OpenSSLSocketOutputStream( const OpenSSLSocketOutputStream& );
+        OpenSSLSocketOutputStream& operator= ( const OpenSSLSocketOutputStream& );
+
     public:
 
         OpenSSLSocketOutputStream( OpenSSLSocket* socket );

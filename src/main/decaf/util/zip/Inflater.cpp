@@ -45,6 +45,15 @@ namespace zip{
 
         z_stream* stream;
 
+    private:
+
+        InflaterData( const InflaterData& );
+        InflaterData& operator= ( const InflaterData& );
+
+    public:
+
+        InflaterData() : nowrap(true), finished(false), needDictionary(false), flush(0), stream(NULL) {}
+
     public:
 
         static void initZlibInflate( InflaterData* handle, bool nowrap = false ) {
@@ -129,10 +138,7 @@ Inflater::Inflater( bool nowrap ) : data( new InflaterData() ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Inflater::Inflater() {
-
-    this->data = new InflaterData();
-
+Inflater::Inflater() : data( new InflaterData() ) {
     InflaterData::initZlibInflate( this->data );
 }
 

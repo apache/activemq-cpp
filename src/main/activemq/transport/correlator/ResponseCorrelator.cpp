@@ -34,6 +34,11 @@ namespace {
     class ResponseFinalizer {
     private:
 
+        ResponseFinalizer( const ResponseFinalizer& );
+        ResponseFinalizer operator= ( const ResponseFinalizer& );
+
+    private:
+
         Mutex* mutex;
         int commandId;
         std::map<unsigned int, Pointer<FutureResponse> >* map;
@@ -53,10 +58,8 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next )
- :  TransportFilter( next ), closed( true ) {
-
-    nextCommandId.set(1);
+ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next ) :
+    TransportFilter( next ), nextCommandId(1), requestMap(), mapMutex(), closed( true ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

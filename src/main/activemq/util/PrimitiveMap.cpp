@@ -28,21 +28,21 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveMap::PrimitiveMap(){
+PrimitiveMap::PrimitiveMap() : converter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveMap::~PrimitiveMap(){
+PrimitiveMap::~PrimitiveMap() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMap::PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& src )
-  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ) {
+  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ), converter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMap::PrimitiveMap( const PrimitiveMap& src )
-  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ) {
+  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ), converter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

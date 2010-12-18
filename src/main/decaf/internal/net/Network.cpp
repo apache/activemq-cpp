@@ -44,11 +44,19 @@ namespace internal{
 namespace net{
 
     class NetworkData {
+    private:
+
+        NetworkData( const NetworkData& );
+        NetworkData& operator=( const NetworkData& );
+
     public:
 
         ResourceLifecycleManager resources;
         Mutex lock;
         LinkedList<Runnable*> shutdownTasks;
+
+        NetworkData() : resources(), lock(), shutdownTasks() {
+        }
 
         ~NetworkData() {
             try{

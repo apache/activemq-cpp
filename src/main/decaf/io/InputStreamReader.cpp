@@ -26,15 +26,13 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStreamReader::InputStreamReader( InputStream* stream, bool own ) : Reader(), own( own ) {
+InputStreamReader::InputStreamReader( InputStream* stream, bool own ) :
+    Reader(), stream(stream), own(own), closed(false) {
 
     if( stream == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "The passed InputStream cannot be NULL." );
     }
-
-    this->stream = stream;
-    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

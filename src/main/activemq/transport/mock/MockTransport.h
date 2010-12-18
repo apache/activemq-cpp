@@ -85,6 +85,11 @@ namespace mock{
         bool failOnStop;
         bool failOnClose;
 
+    private:
+
+        MockTransport( const MockTransport& );
+        MockTransport operator= ( const MockTransport& );
+
     public:
 
         MockTransport( const Pointer<wireformat::WireFormat>& wireFormat,

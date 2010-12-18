@@ -33,17 +33,15 @@ const float Float::POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
 const float Float::NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( float value ) {
-    this->value = value;
+Float::Float( float value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( double value ) {
-    this->value = (float)value;
+Float::Float( double value ) : value((float)value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( const std::string& value ) {
+Float::Float( const std::string& value ) : value(0) {
     this->value = Float::parseFloat( value );
 }
 

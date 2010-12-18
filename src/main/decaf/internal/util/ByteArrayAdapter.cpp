@@ -31,7 +31,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( int size ) {
+ByteArrayAdapter::ByteArrayAdapter( int size ) : array(), size(size), own(true) {
 
     try{
 
@@ -49,7 +49,8 @@ ByteArrayAdapter::ByteArrayAdapter( int size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( array, size, own );
@@ -60,7 +61,8 @@ ByteArrayAdapter::ByteArrayAdapter( unsigned char* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ), size, own );
@@ -71,7 +73,8 @@ ByteArrayAdapter::ByteArrayAdapter( char* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -83,7 +86,8 @@ ByteArrayAdapter::ByteArrayAdapter( double* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -95,7 +99,8 @@ ByteArrayAdapter::ByteArrayAdapter( float* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -107,7 +112,8 @@ ByteArrayAdapter::ByteArrayAdapter( long long* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),
@@ -119,7 +125,8 @@ ByteArrayAdapter::ByteArrayAdapter( int* array, int size, bool own ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own ) {
+ByteArrayAdapter::ByteArrayAdapter( short* array, int size, bool own ) :
+    array(), size(size), own(own) {
 
     try{
         this->initialize( reinterpret_cast<unsigned char*>( array ),

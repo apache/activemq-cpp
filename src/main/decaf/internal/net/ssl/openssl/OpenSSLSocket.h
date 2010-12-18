@@ -55,6 +55,11 @@ namespace openssl {
         // The OutputStream owned by this Socket
         decaf::io::OutputStream* output;
 
+    private:
+
+        OpenSSLSocket( const OpenSSLSocket& );
+        OpenSSLSocket& operator= ( const OpenSSLSocket& );
+
     public:
 
         OpenSSLSocket( OpenSSLParameters* parameters );

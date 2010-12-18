@@ -24,7 +24,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 StringTokenizer::StringTokenizer( const std::string& str, const std::string& delim, bool returnDelims ) :
-    str(str), delim(delim), returnDelims(returnDelims), pos(0) {
+    str(str), delim(delim), pos(0), returnDelims(returnDelims) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

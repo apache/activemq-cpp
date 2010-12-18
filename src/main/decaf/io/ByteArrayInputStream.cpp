@@ -41,14 +41,14 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own ) :
-               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, 0, bufferSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own ) :
-               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, offset, length );
 }

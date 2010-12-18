@@ -38,14 +38,14 @@ using namespace decaf::internal::net::tcp;
 SocketImplFactory* ServerSocket::factory = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket() : impl(NULL), created(false), closed(false), bound(false) {
+ServerSocket::ServerSocket() : impl(NULL), created(false), closed(false), bound(false), backlog(0), port(0) {
 
     this->impl = this->factory != NULL ? factory->createSocketImpl() : new TcpSocket();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::ServerSocket( int port ) :
-        impl(NULL), created(false), closed(false), bound(false) {
+        impl(NULL), created(false), closed(false), bound(false), backlog(0), port(0) {
 
     if( port < 0 ) {
         throw IllegalArgumentException(
@@ -59,7 +59,7 @@ ServerSocket::ServerSocket( int port ) :
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::ServerSocket( int port, int backlog ) :
-        impl(NULL), created(false), closed(false), bound(false) {
+        impl(NULL), created(false), closed(false), bound(false), backlog(0), port(0) {
 
     if( port < 0 ) {
         throw IllegalArgumentException(
@@ -73,7 +73,7 @@ ServerSocket::ServerSocket( int port, int backlog ) :
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocket::ServerSocket( int port, int backlog, const InetAddress* ifAddress ) :
-        impl(NULL), created(false), closed(false), bound(false) {
+        impl(NULL), created(false), closed(false), bound(false), backlog(0), port(0) {
 
     if( port < 0 ) {
         throw IllegalArgumentException(

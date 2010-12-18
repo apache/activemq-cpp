@@ -42,13 +42,18 @@ namespace internal {
 namespace security {
 
     class SRNGData {
+    private:
+
+        SRNGData( const SRNGData& );
+        SRNGData operator= ( const SRNGData& );
+
     public:
 
         AprPool pool;
         apr_file_t* randFile;
         std::auto_ptr<Random> random;
 
-        SRNGData() : randFile( NULL ), random() {
+        SRNGData() : pool(), randFile( NULL ), random() {
         }
 
     };
@@ -56,9 +61,7 @@ namespace security {
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandomImpl::SecureRandomImpl() {
-
-    this->config = new SRNGData();
+SecureRandomImpl::SecureRandomImpl() : config( new SRNGData() ) {
 
     try{
 

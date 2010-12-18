@@ -46,6 +46,22 @@ namespace zip{
 
         z_stream* stream;
 
+    private:
+
+        DeflaterData( const DeflaterData& );
+        DeflaterData& operator= ( const DeflaterData& );
+
+    public:
+
+        DeflaterData() : level(0),
+                         nowrap(true),
+                         strategy(0),
+                         flush(0),
+                         finished(false),
+                         ended(false),
+                         stream(NULL) {
+        }
+
     public:
 
         static void initZLibDeflate( DeflaterData* handle, int level, bool nowrap = false ) {
@@ -159,10 +175,7 @@ Deflater::Deflater( int level, bool nowrap ) : data( new DeflaterData() ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater() {
-
-    this->data = new DeflaterData();
-
+Deflater::Deflater() : data( new DeflaterData() ) {
     // Initialize all the ZLib structures.
     DeflaterData::initZLibDeflate( this->data, DEFAULT_COMPRESSION );
 }

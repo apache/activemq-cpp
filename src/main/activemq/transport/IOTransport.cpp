@@ -38,22 +38,21 @@ using namespace decaf::util::concurrent;
 LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport" )
 
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport(){
-
-    this->listener = NULL;
-    this->inputStream = NULL;
-    this->outputStream = NULL;
-    this->closed = false;
+IOTransport::IOTransport() : wireFormat(),
+                             listener(NULL),
+                             inputStream(NULL),
+                             outputStream(NULL),
+                             thread(),
+                             closed(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport( const Pointer<WireFormat>& wireFormat ) {
-
-    this->listener = NULL;
-    this->inputStream = NULL;
-    this->outputStream = NULL;
-    this->closed = false;
-    this->wireFormat = wireFormat;
+IOTransport::IOTransport( const Pointer<WireFormat>& wireFormat ) : wireFormat(wireFormat),
+                                                                    listener(NULL),
+                                                                    inputStream(NULL),
+                                                                    outputStream(NULL),
+                                                                    thread(),
+                                                                    closed(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

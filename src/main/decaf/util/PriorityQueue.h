@@ -149,7 +149,7 @@ namespace util {
         /**
          * Creates a Priority Queue with the default initial capacity.
          */
-        PriorityQueue() : AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
+        PriorityQueue() : AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
             this->initQueue( DEFAULT_CAPACITY, new comparators::Less<E>() );
         }
 
@@ -160,7 +160,7 @@ namespace util {
          *      The initial number of elements allocated to this PriorityQueue.
          */
         PriorityQueue( int initialCapacity ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
 
             this->initQueue( initialCapacity, new comparators::Less<E>() );
         }
@@ -178,7 +178,7 @@ namespace util {
          * @throws NullPointerException if the passed Comparator is NULL.
          */
         PriorityQueue( int initialCapacity, Comparator<E>* comparator ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
 
             if( comparator == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
@@ -195,7 +195,7 @@ namespace util {
          *      the Collection whose elements are to be placed into this priority queue
          */
         PriorityQueue( const Collection<E>& source ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
 
             this->getFromCollection( source );
         }
@@ -208,7 +208,7 @@ namespace util {
          *      the priority queue whose elements are to be placed into this priority queue
          */
         PriorityQueue( const PriorityQueue<E>& source ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
 
             this->getFromPriorityQueue( source );
         }

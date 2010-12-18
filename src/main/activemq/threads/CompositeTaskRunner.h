@@ -53,6 +53,11 @@ namespace threads {
         bool pending;
         bool shutDown;
 
+    private:
+
+        CompositeTaskRunner( const CompositeTaskRunner& );
+        CompositeTaskRunner& operator= ( const CompositeTaskRunner& );
+
     public:
 
         CompositeTaskRunner();

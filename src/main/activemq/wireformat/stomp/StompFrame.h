@@ -51,12 +51,12 @@ namespace stomp{
         /**
          * Default constructor.
          */
-        StompFrame(){}
+        StompFrame();
 
         /**
          * Destruction.
          */
-        virtual ~StompFrame() {}
+        virtual ~StompFrame();
 
         /**
          * Clonse this message exactly, returns a new instance that the

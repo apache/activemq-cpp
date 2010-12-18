@@ -38,12 +38,13 @@ LOGDECAF_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
 LOGDECAF_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::ThreadPool() {
-
-    this->maxThreads  = DEFAULT_MAX_POOL_SIZE;
-    this->blockSize   = DEFAULT_MAX_BLOCK_SIZE;
-    this->freeThreads = 0;
-    this->shutdown = false;
+ThreadPool::ThreadPool() : pool(),
+                           queue(),
+                           maxThreads(DEFAULT_MAX_POOL_SIZE),
+                           blockSize(DEFAULT_MAX_BLOCK_SIZE),
+                           shutdown(false),
+                           freeThreads(0),
+                           poolLock() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

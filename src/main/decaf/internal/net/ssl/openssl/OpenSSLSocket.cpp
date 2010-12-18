@@ -68,7 +68,10 @@ namespace openssl {
 
     public:
 
-        SocketData() : handshakeStarted( false ), handshakeCompleted( false ) {
+        SocketData() : handshakeStarted( false ),
+                       handshakeCompleted( false ),
+                       commonName(),
+                       handshakeLock() {
         }
 
         ~SocketData() {
@@ -615,6 +618,11 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
     }
 
     class Finalizer {
+    private:
+
+        Finalizer( const Finalizer& );
+        Finalizer& operator= ( const Finalizer& );
+
     private:
 
         X509* cert;

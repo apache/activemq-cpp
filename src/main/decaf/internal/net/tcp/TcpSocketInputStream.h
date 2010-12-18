@@ -45,6 +45,11 @@ namespace tcp {
 
         volatile bool closed;
 
+    private:
+
+        TcpSocketInputStream( const TcpSocketInputStream& );
+        TcpSocketInputStream& operator= ( const TcpSocketInputStream& );
+
     public:
 
         /**

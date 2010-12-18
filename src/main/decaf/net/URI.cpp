@@ -40,24 +40,20 @@ const std::string URI::someLegal = unreserved + punct;
 const std::string URI::allLegal = unreserved + reserved;
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI() {
+URI::URI() : uri(), uriString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const URI& uri ) {
-    this->uri = uri.uri;
-    this->uriString = uri.uriString;
+URI::URI( const URI& uri ) : uri(uri.uri), uriString(uri.uriString) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const std::string& uri ) {
-
-    this->uriString = uri;
+URI::URI( const std::string& uri ) : uri(), uriString(uri) {
     this->parseURI( uri, false );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const std::string& scheme, const std::string& ssp, const std::string& fragment ) {
+URI::URI( const std::string& scheme, const std::string& ssp, const std::string& fragment ) : uri(), uriString() {
 
     std::string uri = "";
 
@@ -85,7 +81,7 @@ URI::URI( const std::string& scheme, const std::string& ssp, const std::string& 
 URI::URI( const std::string& scheme, const std::string& userInfo,
           const std::string& host, int port,
           const std::string& path, const std::string& query,
-          const std::string& fragment ) {
+          const std::string& fragment ) : uri(), uriString() {
 
     if( scheme == "" && userInfo == "" && host == "" &&
         path == "" && query == "" && fragment == "" ) {
@@ -156,7 +152,7 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
 
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& scheme, const std::string& host,
-          const std::string& path, const std::string& fragment ) {
+          const std::string& path, const std::string& fragment ) : uri(), uriString() {
 
     if( scheme == "" && host == "" && path == "" && fragment == "" ) {
         return;
@@ -212,7 +208,7 @@ URI::URI( const std::string& scheme, const std::string& host,
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& scheme, const std::string& authority,
           const std::string& path, const std::string& query,
-          const std::string& fragment ) {
+          const std::string& fragment ) : uri(), uriString() {
 
     if( scheme != "" && !path.empty() && path.at(0) != '/' ) {
          throw URISyntaxException(

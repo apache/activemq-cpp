@@ -42,6 +42,8 @@ namespace commands{
             std::string FileName;
             std::string MethodName;
             int LineNumber;
+
+            StackTraceElement() : ClassName(), FileName(), MethodName(), LineNumber() {}
         };
 
     private:
