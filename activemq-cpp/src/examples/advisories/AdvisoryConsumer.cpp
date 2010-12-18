@@ -36,7 +36,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
+AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) : session(session),
+                                                              consumer(),
+                                                              advisoryConsumer() {
 
     if( session == NULL ) {
         throw NullPointerException(
@@ -48,7 +50,6 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
     std::auto_ptr<cms::Topic> advisories( session->createTopic(
         "ActiveMQ.Advisory.Producer.Topic.HEART-BEAT-CHANNEL" ) );
 
-    this->session = session;
     this->consumer.reset( session->createConsumer( destination.get() ) );
     this->advisoryConsumer.reset( session->createConsumer( advisories.get() ) );
     this->consumer->setMessageListener( this );

@@ -40,7 +40,8 @@ const char* Chat::DEFAULT_BROKER_URI = "tcp://127.0.0.1:61616";
 const char* Chat::DEFAULT_TOPIC_NAME = "cms.sample.chat";
 
 ////////////////////////////////////////////////////////////////////////////////
-Chat::Chat() {
+Chat::Chat() : connection(), session(),  consumer(), producer(), topic(),
+               brokerURI(), username(), password(), topicName() {
 
     this->setBrokerURI( DEFAULT_BROKER_URI );
     this->setTopicName( DEFAULT_TOPIC_NAME );
@@ -138,6 +139,9 @@ void Chat::run() {
                 char *text = new char[cch];
 
                 class finalizer {
+                private:
+                    finalizer( const finalizer& );
+                    finalizer& operator= ( const finalizer& );
                 private:
                     char* text;
                 public:

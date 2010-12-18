@@ -47,6 +47,11 @@ namespace advisories {
          std::auto_ptr<cms::MessageConsumer> consumer;
          std::auto_ptr<cms::MessageConsumer> advisoryConsumer;
 
+     private:
+
+         AdvisoryConsumer( const AdvisoryConsumer& );
+         AdvisoryConsumer& operator= ( const AdvisoryConsumer& );
+
     public:
 
         AdvisoryConsumer( cms::Session* session );

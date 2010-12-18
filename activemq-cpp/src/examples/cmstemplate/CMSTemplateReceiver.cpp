@@ -58,10 +58,15 @@ namespace {
         CmsTemplate* cmsTemplate;
         Thread* asyncReceiverThread;
 
+    private:
+
+        Receiver( const Receiver& );
+        Receiver& operator= ( const Receiver& );
+
     public:
 
         Receiver( string name, CmsTemplate* cmsTemplate ) :
-            name(name), ready( 1 ), isClosing( false ), cmsTemplate( cmsTemplate ) {
+            name(name), ready(1), isClosing(false), cmsTemplate(cmsTemplate), asyncReceiverThread(NULL) {
 
             asyncReceiverThread = new Thread( this, "AsyncReceiver" );
             asyncReceiverThread->start();

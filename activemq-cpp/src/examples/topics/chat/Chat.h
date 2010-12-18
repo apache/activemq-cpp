@@ -49,6 +49,11 @@ namespace chat{
         std::string password;
         std::string topicName;
 
+    private:
+
+        Chat( const Chat& );
+        Chat& operator= ( const Chat& );
+
     public:
 
         static const char* DEFAULT_BROKER_URI;
