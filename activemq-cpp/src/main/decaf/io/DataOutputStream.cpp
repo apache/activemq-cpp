@@ -28,9 +28,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataOutputStream::DataOutputStream( OutputStream* outputStream, bool own )
- : FilterOutputStream( outputStream, own ) {
-    // Init the written count
-    written = 0;
+ : FilterOutputStream( outputStream, own ), written(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
