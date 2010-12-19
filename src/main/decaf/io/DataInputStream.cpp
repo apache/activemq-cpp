@@ -35,7 +35,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::DataInputStream( InputStream* inputStream, bool own )
- : FilterInputStream( inputStream, own ) {}
+ : FilterInputStream( inputStream, own ), buffer() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::~DataInputStream() {}
