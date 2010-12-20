@@ -36,7 +36,6 @@ namespace concurrent {
         }
 
         ~MutexHandle() {
-            pthread_mutex_destroy( &mutex );
         }
 
         // The mutex object.
