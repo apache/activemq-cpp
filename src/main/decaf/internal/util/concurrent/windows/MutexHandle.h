@@ -32,7 +32,6 @@ namespace concurrent {
         }
 
         ~MutexHandle() {
-            DeleteCriticalSection( &mutex );
         }
 
         // The mutex object.

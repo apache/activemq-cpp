@@ -43,7 +43,6 @@ namespace concurrent {
         }
 
         ~ConditionHandle() {
-            pthread_cond_destroy( &condition );
         }
 
         // The actual condition object

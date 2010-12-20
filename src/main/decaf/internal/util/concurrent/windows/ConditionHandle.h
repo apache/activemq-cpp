@@ -39,8 +39,6 @@ namespace concurrent {
         }
 
         ~ConditionHandle() {
-            CloseHandle( semaphore );
-            ::DeleteCriticalSection( &criticalSection );
         }
 
         // The actual condition object

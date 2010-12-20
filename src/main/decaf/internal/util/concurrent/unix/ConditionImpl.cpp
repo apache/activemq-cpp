@@ -76,6 +76,13 @@ ConditionHandle* ConditionImpl::create( MutexHandle* mutex ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConditionImpl::destroy( decaf::util::concurrent::ConditionHandle* handle ) {
+
+    if( handle == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Handle to Condition was NULL." );
+    }
+
+    pthread_cond_destroy( &handle->condition );
     delete handle;
 }
 
