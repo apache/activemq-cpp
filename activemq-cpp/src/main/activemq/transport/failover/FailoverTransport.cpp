@@ -97,19 +97,6 @@ FailoverTransport::~FailoverTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool FailoverTransport::isShutdownCommand( const Pointer<Command>& command ) const {
-
-    if( command != NULL ) {
-
-        if( command->isShutdownInfo() || command->isRemoveInfo() ) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::add( const std::string& uri ) {
 
     try {
@@ -201,7 +188,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
 
         synchronized( &reconnectMutex ) {
 
-            if( isShutdownCommand( command ) && connectedTransport == NULL ) {
+            if( command != NULL && connectedTransport == NULL ) {
 
                 if( command->isShutdownInfo() ) {
                     // Skipping send of ShutdownInfo command when not connected.
@@ -211,9 +198,13 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
                 if( command->isRemoveInfo() || command->isMessageAck() ) {
                     // Simulate response to RemoveInfo command or Ack as they will be stale.
                     stateTracker.track( command );
-                    Pointer<Response> response( new Response() );
-                    response->setCorrelationId( command->getCommandId() );
-                    myTransportListener->onCommand( response );
+
+                    if( command->isResponseRequired() ) {
+                        Pointer<Response> response( new Response() );
+                        response->setCorrelationId( command->getCommandId() );
+                        myTransportListener->onCommand( response );
+                    }
+
                     return;
                 }
             }

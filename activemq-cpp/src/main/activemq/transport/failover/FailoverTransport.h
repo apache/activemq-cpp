@@ -371,15 +371,6 @@ namespace failover {
     private:
 
         /**
-         * @param command
-         *      The Command object to check.
-         *
-         * @return Returns true if the command is one sent when a connection
-         *         is being closed.
-         */
-        bool isShutdownCommand( const Pointer<Command>& command ) const;
-
-        /**
          * Looks up the correct Factory and create a new Composite version of the
          * Transport requested.
          *
