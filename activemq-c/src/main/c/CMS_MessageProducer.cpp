@@ -74,6 +74,26 @@ cms_status producerSendWithDefaults(CMS_MessageProducer* producer, CMS_Message* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms_status producerSendWithTimeOut(CMS_MessageProducer* producer, CMS_Message* message, long long timeOut) {
+
+    cms_status result = CMS_SUCCESS;
+
+    try{
+
+        if (producer == NULL || message == NULL) {
+            result = CMS_ERROR;
+        } else {
+            producer->producer->send(message->message, producer->producer->getDeliveryMode(), producer->producer->getPriority(), timeOut);
+        }
+
+    } catch(...) {
+        result = CMS_ERROR;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms_status closeProducer(CMS_MessageProducer* producer) {
 
     cms_status result = CMS_SUCCESS;

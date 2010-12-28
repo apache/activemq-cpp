@@ -51,6 +51,20 @@ cms_status createProducer(CMS_Session* session, CMS_Destination* destination, CM
 cms_status producerSendWithDefaults(CMS_MessageProducer* producer, CMS_Message* message);
 
 /**
+ * Given a Message Producer, send the given Message using that Producer.
+ *
+ * @param producer
+ *      The Message Producer to use for this send operation.
+ * @param message
+ *      The Message to send via the given Message Producer.
+ * @param timeOut
+ *      The timeout for the message.
+ *
+ * @return result code indicating the success or failure of the operation.
+ */
+cms_status producerSendWithTimeOut(CMS_MessageProducer* producer, CMS_Message* message, long long timeOut);
+
+/**
  * Sets the delivery mode used by the given producer.
  *
  * @param producer
