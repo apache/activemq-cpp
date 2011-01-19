@@ -33,6 +33,8 @@ namespace stomp {
     using decaf::lang::Pointer;
     using activemq::commands::Command;
 
+    class StompWireformatProperties;
+
     class AMQCPP_API StompWireFormat : public WireFormat {
     private:
 
@@ -47,6 +49,10 @@ namespace stomp {
 
         // Indicates when we are in the doUnmarshal call
         decaf::util::concurrent::atomic::AtomicBoolean receiving;
+
+        // Internal structure for holding class internal data that can change without
+        // affecting binary compatibility.
+        StompWireformatProperties* properties;
 
     public:
 
