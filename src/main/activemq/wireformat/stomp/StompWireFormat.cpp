@@ -61,11 +61,38 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompWireFormat::StompWireFormat() : helper(), clientId(), receiving() {
+namespace activemq {
+namespace wireformat {
+namespace stomp {
+
+    class StompWireformatProperties {
+    public:
+
+        int connectResponseId;
+
+    public:
+
+        StompWireformatProperties() : connectResponseId(-1) {
+
+        }
+
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+StompWireFormat::StompWireFormat() : helper(), clientId(), receiving(), properties(NULL) {
+
+    this->properties = new StompWireformatProperties();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 StompWireFormat::~StompWireFormat() {
+
+    try{
+        delete this->properties;
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -264,9 +291,9 @@ Pointer<Command> StompWireFormat::unmarshalReceipt( const Pointer<StompFrame>& f
 Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame ) {
 
     Pointer<Response> response( new Response() );
-    if( frame->hasProperty( StompCommandConstants::HEADER_RESPONSEID ) ) {
-        response->setCorrelationId( Integer::parseInt(
-            frame->getProperty( StompCommandConstants::HEADER_RESPONSEID ) ) );
+
+    if( this->properties->connectResponseId != -1 ) {
+        response->setCorrelationId(this->properties->connectResponseId);
     } else {
         throw IOException(
             __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
@@ -379,8 +406,8 @@ Pointer<StompFrame> StompWireFormat::marshalConnectionInfo( const Pointer<Comman
     frame->setProperty( StompCommandConstants::HEADER_CLIENT_ID, info->getClientId() );
     frame->setProperty( StompCommandConstants::HEADER_LOGIN, info->getUserName() );
     frame->setProperty( StompCommandConstants::HEADER_PASSWORD, info->getPassword() );
-    frame->setProperty( StompCommandConstants::HEADER_REQUESTID,
-                        Integer::toString( info->getCommandId() ) );
+
+    this->properties->connectResponseId = info->getCommandId();
 
     // Store this for later.
     this->clientId = info->getClientId();
