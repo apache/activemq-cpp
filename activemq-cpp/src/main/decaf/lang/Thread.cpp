@@ -188,7 +188,9 @@ namespace{
             ThreadProperties::runCallback( properties );
 
             pthread_setspecific( currentThreadKey, NULL );
-            pthread_detach( properties->handle );
+
+            //pthread_detach( properties->handle );
+            pthread_exit(NULL);
 
             properties->state = Thread::TERMINATED;
 
@@ -333,6 +335,14 @@ void Thread::initialize( Runnable* task, const std::string& name ) {
 ////////////////////////////////////////////////////////////////////////////////
 Thread::~Thread() {
     try{
+
+        #ifdef HAVE_PTHREAD_H
+            void* theReturn = 0;
+            pthread_join( properties->handle, &theReturn );
+        #else
+            ::WaitForSingleObject( properties->handle, INFINITE );
+        #endif
+
         delete this->properties;
     }
     DECAF_CATCH_NOTHROW( Exception )
@@ -417,18 +427,18 @@ void Thread::start() {
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::join() {
 
-    if( this->properties->state < Thread::RUNNABLE ) {
+    if( this->properties->state == Thread::TERMINATED ) {
         return;
     }
 
-    if( this->properties->state != Thread::TERMINATED ) {
+    synchronized( &this->properties->mutex ) {
 
-        #ifdef HAVE_PTHREAD_H
-            void* theReturn = 0;
-            pthread_join( properties->handle, &theReturn );
-        #else
-            ::WaitForSingleObject( properties->handle, INFINITE );
-        #endif
+        if( this->properties->state < Thread::RUNNABLE ||
+            this->properties->state == Thread::TERMINATED ) {
+            return;
+        }
+
+        this->properties->mutex.wait();
     }
 }
 
@@ -439,10 +449,6 @@ void Thread::join( long long millisecs ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
-    }
-
-    if( this->properties->state < Thread::RUNNABLE ) {
-        return;
     }
 
     this->join( millisecs, 0 );
@@ -463,9 +469,14 @@ void Thread::join( long long millisecs, unsigned int nanos ) {
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
     }
 
+    if( this->properties->state == Thread::TERMINATED ) {
+        return;
+    }
+
     synchronized( &this->properties->mutex ) {
 
-        if( this->properties->state < Thread::RUNNABLE ) {
+        if( this->properties->state < Thread::RUNNABLE ||
+            this->properties->state == Thread::TERMINATED ) {
             return;
         }
 
