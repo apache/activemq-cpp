@@ -336,12 +336,15 @@ void Thread::initialize( Runnable* task, const std::string& name ) {
 Thread::~Thread() {
     try{
 
-        #ifdef HAVE_PTHREAD_H
-            void* theReturn = 0;
-            pthread_join( properties->handle, &theReturn );
-        #else
-            ::WaitForSingleObject( properties->handle, INFINITE );
-        #endif
+        // Don't join foreign threads on destruction, we don't control them.
+        if( properties->parent != NULL ) {
+            #ifdef HAVE_PTHREAD_H
+                void* theReturn = 0;
+                pthread_join( properties->handle, &theReturn );
+            #else
+                ::WaitForSingleObject( properties->handle, INFINITE );
+            #endif
+        }
 
         delete this->properties;
     }
