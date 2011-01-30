@@ -286,7 +286,7 @@ void BaseDataStreamMarshaller::tightMarshalString2(
                 dataOut->writeShort( (short)value.length() );
                 dataOut->writeBytes( value );
             } else {
-                dataOut->writeChars( value );
+                dataOut->writeUTF( value );
             }
         }
     }
