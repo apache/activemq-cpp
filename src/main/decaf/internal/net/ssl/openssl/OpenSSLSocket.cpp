@@ -662,7 +662,9 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
             const unsigned char* data = extension->value->data;
             STACK_OF(CONF_VALUE)* confValue =
-                method->i2v( method, method->d2i( NULL, &data, extension->value->length ), NULL );
+                method->i2v( method, method->it ?
+                             ASN1_item_d2i(NULL, &data, extension->value->length, ASN1_ITEM_ptr(method->it)) :
+                             method->d2i( NULL, &data, extension->value->length ), NULL );
 
             CONF_VALUE* value = NULL;
 
