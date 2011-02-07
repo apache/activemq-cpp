@@ -26,3 +26,17 @@ bin_PROGRAMS = example
 example_SOURCES = $(main_example_sources)
 example_LDADD= $(AMQ_TEST_LIBS)
 example_CFLAGS = $(AMQ_TEST_CFLAGS) -I$(srcdir)/../main/c
+
+## Simple Consumer
+simple_consumer_sources = ./consumers/SimpleConsumer.c
+noinst_PROGRAMS = simple_consumer 
+simple_consumer_SOURCES = $(simple_consumer_sources)
+simple_consumer_LDADD= $(AMQ_TEST_LIBS)
+simple_consumer_CFLAGS = $(AMQ_TEST_CFLAGS) -I$(srcdir)/../main/c
+
+## Simple Producer
+simple_producer_sources = ./producers/SimpleProducer.c
+noinst_PROGRAMS += simple_producer 
+simple_producer_SOURCES = $(simple_producer_sources)
+simple_producer_LDADD= $(AMQ_TEST_LIBS)
+simple_producer_CFLAGS = $(AMQ_TEST_CFLAGS) -I$(srcdir)/../main/c
