@@ -80,6 +80,13 @@
             #pragma warning(disable: 4822)
         #endif
 
+        #ifndef _SECURE_SCL
+            #define _SECURE_SCL 1
+        #endif
+        #ifndef _SCL_SECURE_NO_WARNINGS
+            #define _SCL_SECURE_NO_WARNINGS 1
+        #endif
+
         /* Has windows.h already been included?  If so, our preferences don't matter,
          * but we will still need the winsock things no matter what was included.
          * If not, include a restricted set of windows headers to our tastes.
