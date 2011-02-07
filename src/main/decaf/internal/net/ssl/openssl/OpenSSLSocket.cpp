@@ -29,6 +29,7 @@
 #include <decaf/net/SocketImpl.h>
 #include <decaf/io/IOException.h>
 #include <decaf/net/SocketException.h>
+#include <decaf/lang/Boolean.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/internal/net/SocketFileDescriptor.h>
@@ -352,11 +353,18 @@ void OpenSSLSocket::startHandshake() {
 
             this->data->handshakeStarted = true;
 
+            bool peerVerifyDisabled =
+                Boolean::parseBoolean( System::getProperty( "decaf.net.ssl.disablePeerVerification", "false" ) );
+
             if( this->parameters->getUseClientMode() ) {
 
                 // Since we are a client we want to enforce peer verification, we set a
                 // callback so we can collect data on why a verify failed for debugging.
-                SSL_set_verify( this->parameters->getSSL(), SSL_VERIFY_PEER, SocketData::verifyCallback );
+                if(!peerVerifyDisabled) {
+                    SSL_set_verify( this->parameters->getSSL(), SSL_VERIFY_PEER, SocketData::verifyCallback );
+                } else {
+                    SSL_set_verify( this->parameters->getSSL(), SSL_VERIFY_NONE, NULL );
+                }
 
                 int result = SSL_connect( this->parameters->getSSL() );
 
@@ -366,7 +374,9 @@ void OpenSSLSocket::startHandshake() {
                 // signed by a signing authority that we trust.
                 switch( SSL_get_error( this->parameters->getSSL(), result ) ) {
                     case SSL_ERROR_NONE:
-                        verifyServerCert( this->data->commonName );
+                        if(!peerVerifyDisabled) {
+                            verifyServerCert( this->data->commonName );
+                        }
                         break;
                     case SSL_ERROR_SSL:
                     case SSL_ERROR_ZERO_RETURN:
@@ -379,12 +389,15 @@ void OpenSSLSocket::startHandshake() {
 
                 int mode = SSL_VERIFY_NONE;
 
-                if( this->parameters->getWantClientAuth() ) {
-                    mode = SSL_VERIFY_PEER;
-                }
+                if(!peerVerifyDisabled) {
 
-                if( this->parameters->getNeedClientAuth() ) {
-                    mode = SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
+                    if( this->parameters->getWantClientAuth() ) {
+                        mode = SSL_VERIFY_PEER;
+                    }
+
+                    if( this->parameters->getNeedClientAuth() ) {
+                        mode = SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
+                    }
                 }
 
                 // Since we are a client we want to enforce peer verification, we set a
