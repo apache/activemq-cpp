@@ -77,6 +77,7 @@
             #pragma warning(disable: 4996)
             #pragma warning(disable: 4250)
             #pragma warning(disable: 4351)
+            #pragma warning(disable: 4822)
         #endif
 
         /* Has windows.h already been included?  If so, our preferences don't matter,
