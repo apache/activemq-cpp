@@ -31,7 +31,7 @@ BlockingByteArrayInputStream::BlockingByteArrayInputStream() :
 
 ////////////////////////////////////////////////////////////////////////////////
 BlockingByteArrayInputStream::BlockingByteArrayInputStream( const unsigned char* buffer, int bufferSize ):
-    InputStream(), buffer(), pos(0), closing(false) {
+    InputStream(), buffer(), pos(), closing(false) {
 
     setByteArray( buffer, bufferSize );
 }
