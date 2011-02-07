@@ -22,7 +22,6 @@
 #include <cppunit/Outputter.h>
 #include <cppunit/XmlOutputter.h>
 #include <cppunit/TestResult.h>
-#include <util/teamcity/TeamCityProgressListener.h>
 #include <activemq/util/Config.h>
 #include <activemq/library/ActiveMQCPP.h>
 #include <decaf/lang/Runtime.h>
@@ -55,8 +54,6 @@ int main( int argc, char **argv ) {
                               << argv[i] << std::endl;
                     return -1;
                 }
-            } else if( arg == "-teamcity" ) {
-                listener.reset( new test::util::teamcity::TeamCityProgressListener() );
             } else if( arg == "-quiet" ) {
                 listener.reset( NULL );
             } else if( arg == "-xml" ) {
