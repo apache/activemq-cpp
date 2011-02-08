@@ -26,6 +26,7 @@
 #include <memory>
 #include <typeinfo>
 #include <algorithm>
+#include <functional>
 
 namespace decaf {
 namespace lang {
