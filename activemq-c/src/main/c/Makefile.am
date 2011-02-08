@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    CMS_BytesMessage.cpp \
     CMS_Connection.cpp \
     CMS_ConnectionFactory.cpp \
     CMS_Destination.cpp \
@@ -28,6 +29,7 @@ cc_sources = \
 
 
 h_sources = \
+    CMS_BytesMessage.h \
     CMS_Connection.h \
     CMS_ConnectionFactory.h \
     CMS_Destination.h \

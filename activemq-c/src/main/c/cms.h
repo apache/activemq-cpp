@@ -107,6 +107,7 @@ typedef int cms_status;
 #define CMS_MESSAGE_NOT_WRITABLE    11
 #define CMS_MESSAGE_FORMAT_ERROR    12
 #define CMS_UNKNOWN_ACKTYPE         13
+#define CMS_INCOMPLETE_READ         14
 
 /**
  * C Functions used to initialize and shutdown the ActiveMQ-C library.
