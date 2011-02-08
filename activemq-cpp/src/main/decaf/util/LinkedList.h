@@ -997,7 +997,7 @@ namespace util {
             std::auto_ptr< ArrayList<E> > copy;
             std::auto_ptr< Iterator<E> > iter;
 
-            if( (void*)this == &collection ) {
+            if( this == &collection ) {
                 copy.reset( new ArrayList<E>( collection ) );
                 iter.reset( copy->iterator() );
             } else {
