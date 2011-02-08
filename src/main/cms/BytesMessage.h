@@ -462,8 +462,7 @@ namespace cms{
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
-         * @throws MessageEOFException - if unexpected end of bytes stream has been reached.
-         * @throws MessageNotReadableException - if the message is in write-only mode.
+         * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
         virtual void writeUTF( const std::string& value ) = 0;
 
