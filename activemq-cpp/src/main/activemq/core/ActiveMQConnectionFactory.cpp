@@ -29,6 +29,7 @@
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/util/URISupport.h>
+#include <activemq/util/CompositeData.h>
 #include <memory>
 
 using namespace std;
@@ -94,7 +95,16 @@ namespace core{
 
             this->brokerURL = uri.toString();
             this->properties->clear();
-            activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
+
+            if( uri.getQuery() != "" ) {
+                // Not a composite URI so this works fine.
+                activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
+            } else {
+                // Composite URI won't indicate it has a query even if it does.
+                activemq::util::CompositeData composite = activemq::util::URISupport::parseComposite( uri );
+
+                *this->properties = composite.getParameters();
+            }
 
             // Check the connection options
             this->alwaysSyncSend = Boolean::parseBoolean(
