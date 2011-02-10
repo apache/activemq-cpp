@@ -208,7 +208,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
-        ")?startupMaxReconnectAttempts=10&initialReconnectDelay=1";
+        ")";
 
     //============================================================
     // Total number of messages for this producer to send.
