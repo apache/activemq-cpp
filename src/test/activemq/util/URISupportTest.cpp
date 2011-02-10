@@ -65,6 +65,26 @@ void URISupportTest::test() {
     } catch(...) {
         CPPUNIT_ASSERT( false );
     }
+
+    string test5 = "failover:(tcp://127.0.0.1:61616)?startupMaxReconnectAttempts=10&initialReconnectDelay=10";
+
+    map = URISupport::parseQuery( test5 );
+
+    CPPUNIT_ASSERT( map.hasProperty( "startupMaxReconnectAttempts" ) == true );
+    CPPUNIT_ASSERT( map.hasProperty( "initialReconnectDelay" ) == true );
+
+    CPPUNIT_ASSERT( map.getProperty( "startupMaxReconnectAttempts", "" ) == "10" );
+    CPPUNIT_ASSERT( map.getProperty( "initialReconnectDelay", "" ) == "10" );
+
+    string test6 = "failover://(tcp://127.0.0.1:61616)?startupMaxReconnectAttempts=10&initialReconnectDelay=10";
+
+    map = URISupport::parseQuery( test6 );
+
+    CPPUNIT_ASSERT( map.hasProperty( "startupMaxReconnectAttempts" ) == true );
+    CPPUNIT_ASSERT( map.hasProperty( "initialReconnectDelay" ) == true );
+
+    CPPUNIT_ASSERT( map.getProperty( "startupMaxReconnectAttempts", "" ) == "10" );
+    CPPUNIT_ASSERT( map.getProperty( "initialReconnectDelay", "" ) == "10" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,5 +170,27 @@ void URISupportTest::testParseComposite() {
     CPPUNIT_ASSERT( data.getComponents().size() == 1 );
     CPPUNIT_ASSERT( data.getComponents().get(0).toString() ==
                     "tcp://localhost:61616?wireformat=openwire" );
+
+    data = URISupport::parseComposite(
+        URI( "broker:(tcp://localhost:61616?wireformat=openwire)?name=foo" ) );
+
+    CPPUNIT_ASSERT( data.getScheme() == "broker" );
+    CPPUNIT_ASSERT( data.getParameters().hasProperty( "name" ) );
+    CPPUNIT_ASSERT( !data.getParameters().hasProperty( "wireformat" ) );
+    CPPUNIT_ASSERT( string( data.getParameters().getProperty( "name" ) ) == "foo" );
+    CPPUNIT_ASSERT( data.getComponents().size() == 1 );
+    CPPUNIT_ASSERT( data.getComponents().get(0).toString() ==
+                    "tcp://localhost:61616?wireformat=openwire" );
+
+    data = URISupport::parseComposite(
+        URI( "broker:(tcp://localhost:61616)?name=foo" ) );
+
+    CPPUNIT_ASSERT( data.getScheme() == "broker" );
+    CPPUNIT_ASSERT( data.getParameters().hasProperty( "name" ) );
+    CPPUNIT_ASSERT( !data.getParameters().hasProperty( "wireformat" ) );
+    CPPUNIT_ASSERT( string( data.getParameters().getProperty( "name" ) ) == "foo" );
+    CPPUNIT_ASSERT( data.getComponents().size() == 1 );
+    CPPUNIT_ASSERT( data.getComponents().get(0).toString() ==
+                    "tcp://localhost:61616" );
 
 }
