@@ -75,14 +75,7 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
         }
     }
 
-    if( !parent->isInitialized() && command->isBrokerInfo() ) {
-
-        Pointer<BrokerInfo> info = command.dynamicCast<BrokerInfo>();
-        std::vector< Pointer<BrokerInfo> >& peers = info->getPeerBrokerInfos();
-        for( std::size_t i = 0; i < peers.size(); ++i ) {
-            std::string brokerString = peers[i]->getBrokerURL();
-            parent->add( brokerString );
-        }
+    if( !parent->isInitialized() ) {
         parent->setInitialized( true );
     }
 
