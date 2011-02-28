@@ -193,4 +193,20 @@ void URISupportTest::testParseComposite() {
     CPPUNIT_ASSERT( data.getComponents().get(0).toString() ==
                     "tcp://localhost:61616" );
 
+    data = URISupport::parseComposite(
+        URI( "test:(part1://host,part2://host,part3://host,part4://host)" ) );
+    CPPUNIT_ASSERT( 4 == data.getComponents().size() );
+    CPPUNIT_ASSERT( data.getComponents().get(0).toString() == "part1://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(1).toString() == "part2://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(2).toString() == "part3://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(3).toString() == "part4://host" );
+
+    data = URISupport::parseComposite(
+        URI( "test:(part1://host,part2://host,part3://host,part4://host?option=value)" ) );
+    CPPUNIT_ASSERT( 4 == data.getComponents().size() );
+    CPPUNIT_ASSERT( data.getComponents().get(0).toString() == "part1://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(1).toString() == "part2://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(2).toString() == "part3://host" );
+    CPPUNIT_ASSERT( data.getComponents().get(3).toString() == "part4://host?option=value" );
+
 }

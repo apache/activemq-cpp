@@ -347,7 +347,7 @@ StlList<std::string> URISupport::splitComponents( const std::string& str ) {
             break;
         case ',':
             if( depth == 0 ) {
-                std::string s = str.substr( last, i );
+                std::string s = str.substr( last, i - last );
                 components.add( s );
                 last = i + 1;
             }
