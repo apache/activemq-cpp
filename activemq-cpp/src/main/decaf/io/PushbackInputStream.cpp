@@ -32,6 +32,7 @@ PushbackInputStream::PushbackInputStream( InputStream* stream, bool own )
 
 ////////////////////////////////////////////////////////////////////////////////
 PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool own )
+    throw( decaf::lang::exceptions::IllegalArgumentException )
  :  FilterInputStream( stream, own ), buffer( NULL ), bufferSize( bufSize ), pos( bufSize ) {
 
     if( bufSize < 0 ) {
@@ -54,7 +55,7 @@ PushbackInputStream::~PushbackInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PushbackInputStream::available() const {
+int PushbackInputStream::available() const throw ( decaf::io::IOException ) {
 
     try{
         return ( this->bufferSize - this->pos ) + inputStream->available();
@@ -64,7 +65,9 @@ int PushbackInputStream::available() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PushbackInputStream::skip( long long num ) {
+long long PushbackInputStream::skip( long long num )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -101,13 +104,14 @@ void PushbackInputStream::mark( int readLimit DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::reset() {
+void PushbackInputStream::reset() throw ( decaf::io::IOException ) {
     throw IOException(
         __FILE__, __LINE__, "Reset is not Supported by the PushbackInputStream." );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( unsigned char value ) {
+void PushbackInputStream::unread( unsigned char value )
+    throw( decaf::io::IOException ) {
 
     try{
 
@@ -123,7 +127,10 @@ void PushbackInputStream::unread( unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, int size ) {
+void PushbackInputStream::unread( const unsigned char* buffer, int size )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -140,7 +147,10 @@ void PushbackInputStream::unread( const unsigned char* buffer, int size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, int size, int offset, int length ) {
+void PushbackInputStream::unread( const unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -179,7 +189,7 @@ void PushbackInputStream::unread( const unsigned char* buffer, int size, int off
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PushbackInputStream::doReadByte() {
+int PushbackInputStream::doReadByte() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -199,7 +209,10 @@ int PushbackInputStream::doReadByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 

@@ -120,11 +120,11 @@ namespace lang {
          * then this method throws a ClassCastException.
          *
          * @param value - Pointer instance to cast to this type.
-         *
          * @throw ClassCastException if the dynamic cast returns NULL
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& ) :
+        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& )
+            throw( decaf::lang::exceptions::ClassCastException ) :
                 REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
 
             if( this->value == NULL ) {
@@ -353,8 +353,6 @@ namespace lang {
     template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
     class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
     public:
-
-        virtual ~PointerComparator() {}
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <

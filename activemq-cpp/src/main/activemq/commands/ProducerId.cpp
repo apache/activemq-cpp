@@ -41,7 +41,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId()
+ProducerId::ProducerId() 
     : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
 }
@@ -224,7 +224,7 @@ int ProducerId::compareTo( const ProducerId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ProducerId::equals( const ProducerId& value ) const {
-    return this->equals( (const DataStructure*)&value );
+    return this->equals( &value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -145,7 +145,7 @@ namespace util{
         /*
          * Calculates the offset between the normalized number and unnormalized
          * number. In a normalized representation, significand is represented by the
-         * characters "0x1." followed by a lower-case hexadecimal representation of
+         * characters "0x1." followed by a lowercase hexadecimal representation of
          * the rest of the significand as a fraction.
          */
         int getOffset( const std::string& strIntegerPart,

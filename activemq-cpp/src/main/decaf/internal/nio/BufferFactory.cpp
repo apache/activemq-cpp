@@ -33,7 +33,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* BufferFactory::createByteBuffer( int capacity ) {
+ByteBuffer* BufferFactory::createByteBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new ByteArrayBuffer( capacity );
@@ -43,7 +44,9 @@ ByteBuffer* BufferFactory::createByteBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteBuffer* BufferFactory::createByteBuffer( unsigned char* buffer, int size, int offset, int length ) {
+ByteBuffer* BufferFactory::createByteBuffer( unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new ByteArrayBuffer( buffer, size, offset, length, false );
@@ -65,7 +68,8 @@ ByteBuffer* BufferFactory::createByteBuffer( std::vector<unsigned char>& buffer 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer* BufferFactory::createCharBuffer( int capacity ) {
+CharBuffer* BufferFactory::createCharBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new CharArrayBuffer( capacity );
@@ -75,7 +79,9 @@ CharBuffer* BufferFactory::createCharBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CharBuffer* BufferFactory::createCharBuffer( char* buffer, int size, int offset, int length ) {
+CharBuffer* BufferFactory::createCharBuffer( char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new CharArrayBuffer( buffer, size, offset, length, false );
@@ -97,7 +103,8 @@ CharBuffer* BufferFactory::createCharBuffer( std::vector<char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* BufferFactory::createDoubleBuffer( int capacity ) {
+DoubleBuffer* BufferFactory::createDoubleBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new DoubleArrayBuffer( capacity );
@@ -107,7 +114,9 @@ DoubleBuffer* BufferFactory::createDoubleBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* BufferFactory::createDoubleBuffer( double* buffer, int size, int offset, int length ) {
+DoubleBuffer* BufferFactory::createDoubleBuffer( double* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new DoubleArrayBuffer( buffer, size, offset, length, false );
@@ -129,7 +138,8 @@ DoubleBuffer* BufferFactory::createDoubleBuffer( std::vector<double>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer* BufferFactory::createFloatBuffer( int capacity ) {
+FloatBuffer* BufferFactory::createFloatBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new FloatArrayBuffer( capacity );
@@ -139,7 +149,9 @@ FloatBuffer* BufferFactory::createFloatBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer* BufferFactory::createFloatBuffer( float* buffer, int size, int offset, int length ) {
+FloatBuffer* BufferFactory::createFloatBuffer( float* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new FloatArrayBuffer( buffer, size, offset, length, false );
@@ -161,7 +173,8 @@ FloatBuffer* BufferFactory::createFloatBuffer( std::vector<float>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer* BufferFactory::createLongBuffer( int capacity ) {
+LongBuffer* BufferFactory::createLongBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new LongArrayBuffer( capacity );
@@ -171,7 +184,9 @@ LongBuffer* BufferFactory::createLongBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer* BufferFactory::createLongBuffer( long long* buffer, int size,  int offset, int length ) {
+LongBuffer* BufferFactory::createLongBuffer( long long* buffer, int size,  int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new LongArrayBuffer( buffer, size, offset, length, false );
@@ -193,7 +208,8 @@ LongBuffer* BufferFactory::createLongBuffer( std::vector<long long>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* BufferFactory::createIntBuffer( int capacity ) {
+IntBuffer* BufferFactory::createIntBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new IntArrayBuffer( capacity );
@@ -203,7 +219,9 @@ IntBuffer* BufferFactory::createIntBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* BufferFactory::createIntBuffer( int* buffer, int size, int offset, int length ) {
+IntBuffer* BufferFactory::createIntBuffer( int* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new IntArrayBuffer( buffer, size, offset, length, false );
@@ -225,7 +243,8 @@ IntBuffer* BufferFactory::createIntBuffer( std::vector<int>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* BufferFactory::createShortBuffer( int capacity ) {
+ShortBuffer* BufferFactory::createShortBuffer( int capacity )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new ShortArrayBuffer( capacity );
@@ -235,7 +254,9 @@ ShortBuffer* BufferFactory::createShortBuffer( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* BufferFactory::createShortBuffer( short* buffer, int size, int offset, int length ) {
+ShortBuffer* BufferFactory::createShortBuffer( short* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         return new ShortArrayBuffer( buffer, size, offset, length, false );

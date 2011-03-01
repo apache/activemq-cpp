@@ -32,30 +32,33 @@ const int InflaterInputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, bool own ) :
-    FilterInputStream( inputStream, own ),
-    inflater(new Inflater()), buff(), length(0), ownInflater(true), atEOF(false) {
+    FilterInputStream( inputStream, own ) {
 
+    this->atEOF = false;
+    this->ownInflater = true;
+    this->inflater = new Inflater();
     this->buff.resize( DEFAULT_BUFFER_SIZE );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own, bool ownInflater )
- :  FilterInputStream( inputStream, own ),
-    inflater(inflater), buff(), length(0), ownInflater(ownInflater), atEOF(false) {
+InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater, bool own )
+ :  FilterInputStream( inputStream, own ) {
 
     if( inflater == NULL ) {
         throw NullPointerException(
              __FILE__, __LINE__, "Inflater passed was NULL." );
     }
 
+    this->inflater = inflater;
+    this->ownInflater = false;
     this->buff.resize( DEFAULT_BUFFER_SIZE );
+    this->atEOF = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* inflater,
-                                          int bufferSize, bool own, bool ownInflater )
- :  FilterInputStream( inputStream, own ),
-    inflater(inflater), buff(), length(0), ownInflater(ownInflater), atEOF(false) {
+                                          int bufferSize, bool own )
+ :  FilterInputStream( inputStream, own ) {
 
     if( inflater == NULL ) {
         throw NullPointerException(
@@ -67,7 +70,10 @@ InflaterInputStream::InflaterInputStream( InputStream* inputStream, Inflater* in
              __FILE__, __LINE__, "Cannot create a zero sized buffer." );
     }
 
+    this->inflater = inflater;
+    this->ownInflater = false;
     this->buff.resize( bufferSize );
+    this->atEOF = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +95,7 @@ bool InflaterInputStream::markSupported() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::reset() {
+void InflaterInputStream::reset() throw ( decaf::io::IOException ) {
     throw IOException(
          __FILE__, __LINE__, "Not Supported for this class." );
 }
@@ -100,7 +106,9 @@ void InflaterInputStream::mark( int readLimit DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long InflaterInputStream::skip( long long num ) {
+long long InflaterInputStream::skip( long long num )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -129,7 +137,7 @@ long long InflaterInputStream::skip( long long num ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::close() {
+void InflaterInputStream::close() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -144,7 +152,7 @@ void InflaterInputStream::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::available() const {
+int InflaterInputStream::available() const throw ( decaf::io::IOException ) {
 
     try{
 
@@ -164,7 +172,7 @@ int InflaterInputStream::available() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::doReadByte() {
+int InflaterInputStream::doReadByte() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -180,7 +188,10 @@ int InflaterInputStream::doReadByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -266,7 +277,7 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InflaterInputStream::fill() {
+void InflaterInputStream::fill() throw ( decaf::io::IOException ) {
 
     try{
 

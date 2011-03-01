@@ -22,9 +22,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/net/InetAddress.h>
 #include <decaf/net/ServerSocket.h>
-#include <decaf/util/concurrent/Mutex.h>
-
-#include <decaf/lang/exceptions/RuntimeException.h>
+#include <decaf/internal/net/Network.h>
 
 #include <apr_strings.h>
 
@@ -32,46 +30,30 @@ using namespace activemq;
 using namespace activemq::util;
 using namespace decaf;
 using namespace decaf::lang;
-using namespace decaf::lang::exceptions;
 using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-IdGeneratorKernel* IdGenerator::kernel = NULL;
+IdGenerator::StaticData::StaticData() : UNIQUE_STUB(), instanceCount(0), hostname() {
 
-////////////////////////////////////////////////////////////////////////////////
-namespace activemq {
-namespace util {
+    std::string stub = "";
 
-    class IdGeneratorKernel {
-    public:
+    try {
+        hostname = InetAddress::getLocalHost().getHostName();
+        ServerSocket ss( 0 );
+        stub = "-" + Long::toString( ss.getLocalPort() ) + "-" +
+                     Long::toString( System::currentTimeMillis() ) + "-";
+        Thread::sleep( 100 );
+        ss.close();
+    } catch( Exception& ioe ) {
+        hostname = "localhost";
+        stub = "-1-" + Long::toString( System::currentTimeMillis() ) + "-";
+    }
 
-        std::string UNIQUE_STUB;
-        int instanceCount;
-        std::string hostname;
-        mutable decaf::util::concurrent::Mutex mutex;
-
-        IdGeneratorKernel() : UNIQUE_STUB(), instanceCount(0), hostname(), mutex() {
-
-            std::string stub = "";
-
-            try {
-                hostname = InetAddress::getLocalHost().getHostName();
-                ServerSocket ss( 0 );
-                stub = "-" + Long::toString( ss.getLocalPort() ) + "-" +
-                             Long::toString( System::currentTimeMillis() ) + "-";
-                Thread::sleep( 100 );
-                ss.close();
-            } catch( Exception& ioe ) {
-                hostname = "localhost";
-                stub = "-1-" + Long::toString( System::currentTimeMillis() ) + "-";
-            }
-
-            UNIQUE_STUB = stub;
-        }
-    };
-}}
+    UNIQUE_STUB = stub;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 IdGenerator::IdGenerator() : prefix(), seed(), sequence(0) {
@@ -90,21 +72,17 @@ std::string IdGenerator::generateId() const {
 
     std::string result;
 
-    if( IdGenerator::kernel == NULL ) {
-        throw RuntimeException( __FILE__, __LINE__, "Library is not initialized." );
-    }
+    StaticData& statics = IdGenerator::getClassStaticData();
 
-    synchronized( &( IdGenerator::kernel->mutex ) ) {
+    synchronized( &statics.mutex ) {
 
         if( seed.empty() ) {
 
             if( prefix.empty() ) {
-                this->seed = std::string( "ID:" ) + IdGenerator::kernel->hostname +
-                             IdGenerator::kernel->UNIQUE_STUB +
-                             Long::toString( IdGenerator::kernel->instanceCount++ ) + ":";
+                this->seed = std::string( "ID:" ) + statics.hostname +
+                             statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
             } else {
-                this->seed = prefix + IdGenerator::kernel->UNIQUE_STUB +
-                             Long::toString( IdGenerator::kernel->instanceCount++ ) + ":";
+                this->seed = prefix + statics.UNIQUE_STUB + Long::toString( statics.instanceCount++ ) + ":";
             }
         }
 
@@ -167,11 +145,12 @@ int IdGenerator::compare( const std::string& id1, const std::string& id2 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IdGenerator::initialize() {
-    IdGenerator::kernel = new IdGeneratorKernel();
-}
+IdGenerator::StaticData& IdGenerator::getClassStaticData() {
 
-////////////////////////////////////////////////////////////////////////////////
-void IdGenerator::shutdown() {
-    delete IdGenerator::kernel;
+    Network* netRuntime = Network::getNetworkRuntime();
+
+    synchronized( netRuntime->getRuntimeLock() ) {
+        static IdGenerator::StaticData statics;
+        return statics;
+    }
 }

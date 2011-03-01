@@ -30,17 +30,13 @@ using namespace decaf::lang::exceptions;
 unsigned long long Random::multiplier = 0x5deece66dLL;
 
 ////////////////////////////////////////////////////////////////////////////////
-Random::Random() : haveNextNextGaussian(false), seed(0), nextNextGaussian(0) {
+Random::Random() {
     setSeed( System::currentTimeMillis() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Random::Random( unsigned long long seed ) : haveNextNextGaussian(false), seed(0), nextNextGaussian(0) {
+Random::Random( unsigned long long seed ) {
     setSeed( seed );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Random::~Random() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

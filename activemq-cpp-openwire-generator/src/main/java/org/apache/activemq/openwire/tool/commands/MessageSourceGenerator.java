@@ -31,17 +31,19 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         includes.add("<decaf/lang/System.h>");
     }
 
-    protected String generateInitializerList() {
+    protected String generateInitializerList(String current) {
         StringBuilder result = new StringBuilder();
 
-        result.append(super.generateInitializerList());
+        if( current != null ){
+            result.append(current);
+        }
         result.append(", ackHandler(NULL)");
         result.append(", properties()");
         result.append(", readOnlyProperties(false)");
         result.append(", readOnlyBody(false)");
         result.append(", connection(NULL)");
 
-        return result.toString();
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateCopyDataStructureBody( PrintWriter out ) {
@@ -109,7 +111,8 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
+        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+        out.println("    throw ( decaf::io::IOException ) {");
         out.println("");
         out.println("    try{");
         out.println("");
@@ -125,7 +128,8 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
+        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+        out.println("    throw ( decaf::io::IOException ) {");
         out.println("");
         out.println("    try{");
         out.println("");

@@ -46,22 +46,6 @@ namespace zip{
 
         z_stream* stream;
 
-    private:
-
-        DeflaterData( const DeflaterData& );
-        DeflaterData& operator= ( const DeflaterData& );
-
-    public:
-
-        DeflaterData() : level(0),
-                         nowrap(true),
-                         strategy(0),
-                         flush(0),
-                         finished(false),
-                         ended(false),
-                         stream(NULL) {
-        }
-
     public:
 
         static void initZLibDeflate( DeflaterData* handle, int level, bool nowrap = false ) {
@@ -163,19 +147,24 @@ const int Deflater::FILTERED = 1;
 const int Deflater::HUFFMAN_ONLY = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater( int level, bool nowrap ) : data( new DeflaterData() ) {
+Deflater::Deflater( int level, bool nowrap ) {
 
     if( level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__, "Compression level passed was Invalid: %d", level );
     }
 
+    this->data = new DeflaterData();
+
     // Initialize all the ZLib structures.
     DeflaterData::initZLibDeflate( this->data, level, nowrap );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater() : data( new DeflaterData() ) {
+Deflater::Deflater() {
+
+    this->data = new DeflaterData();
+
     // Initialize all the ZLib structures.
     DeflaterData::initZLibDeflate( this->data, DEFAULT_COMPRESSION );
 }
@@ -191,7 +180,10 @@ Deflater::~Deflater() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const unsigned char* buffer, int size, int offset, int length ) {
+void Deflater::setInput( const unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     try{
 
@@ -226,13 +218,16 @@ void Deflater::setInput( const unsigned char* buffer, int size, int offset, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length ) {
+void Deflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     this->setInput( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const std::vector<unsigned char>& buffer ) {
+void Deflater::setInput( const std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalStateException ) {
 
     if( buffer.empty() ) {
         return;
@@ -242,7 +237,10 @@ void Deflater::setInput( const std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const unsigned char* buffer, int size, int offset, int length ) {
+void Deflater::setDictionary( const unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     try{
 
@@ -278,13 +276,16 @@ void Deflater::setDictionary( const unsigned char* buffer, int size, int offset,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length ) {
+void Deflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     this->setDictionary( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const std::vector<unsigned char>& buffer ) {
+void Deflater::setDictionary( const std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalStateException ) {
 
     if( buffer.empty() ) {
         return;
@@ -294,7 +295,9 @@ void Deflater::setDictionary( const std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setStrategy( int strategy ) {
+void Deflater::setStrategy( int strategy )
+    throw( decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( strategy < DEFAULT_STRATEGY || strategy > HUFFMAN_ONLY ) {
         throw IllegalArgumentException(
@@ -310,7 +313,9 @@ void Deflater::setStrategy( int strategy ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setLevel( int level ) {
+void Deflater::setLevel( int level )
+    throw( decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION ) {
         throw IllegalArgumentException(
@@ -345,7 +350,10 @@ bool Deflater::finished() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( unsigned char* buffer, int size, int offset, int length ) {
+int Deflater::deflate( unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     try{
 
@@ -395,19 +403,22 @@ int Deflater::deflate( unsigned char* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( std::vector<unsigned char>& buffer, int offset, int length ) {
+int Deflater::deflate( std::vector<unsigned char>& buffer, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     return this->deflate( &buffer[0], (int)buffer.size(), offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( std::vector<unsigned char>& buffer ) {
+int Deflater::deflate( std::vector<unsigned char>& buffer )
+    throw( decaf::lang::exceptions::IllegalStateException ){
 
     return this->deflate( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Deflater::getAdler() const {
+long long Deflater::getAdler() const throw( decaf::lang::exceptions::IllegalStateException ) {
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__, "The Deflator has already been ended." );
@@ -417,7 +428,7 @@ long long Deflater::getAdler() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Deflater::getBytesRead() const {
+long long Deflater::getBytesRead() const throw( decaf::lang::exceptions::IllegalStateException ) {
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__, "The Deflator has already been ended." );
@@ -427,7 +438,7 @@ long long Deflater::getBytesRead() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Deflater::getBytesWritten() const {
+long long Deflater::getBytesWritten() const throw( decaf::lang::exceptions::IllegalStateException ) {
     if( this->data->stream == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__, "The Deflator has already been ended." );
@@ -437,7 +448,7 @@ long long Deflater::getBytesWritten() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::reset() {
+void Deflater::reset() throw( decaf::lang::exceptions::IllegalStateException ) {
 
     if( this->data->stream == NULL ) {
         throw IllegalStateException(

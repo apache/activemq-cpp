@@ -20,9 +20,6 @@
 #include <memory>
 
 #include <cms/Message.h>
-#include <cms/XAResource.h>
-#include <cms/CMSException.h>
-#include <cms/XAException.h>
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -40,10 +37,8 @@ namespace core{
 
     using decaf::lang::Pointer;
 
-    class LocalTransactionEventListener;
     class ActiveMQSession;
     class ActiveMQConnection;
-    class TxContextData;
 
     /**
      * Transaction Management class, hold messages that are to be redelivered
@@ -54,17 +49,17 @@ namespace core{
      *
      * @since 2.0
      */
-    class AMQCPP_API ActiveMQTransactionContext : public cms::XAResource {
+    class AMQCPP_API ActiveMQTransactionContext {
     private:
-
-        // Internal structure to hold all class TX data.
-        TxContextData* context;
 
         // Session this Transaction is associated with
         ActiveMQSession* session;
 
         // The Connection that is the parent of the Session.
         ActiveMQConnection* connection;
+
+        // Transaction Info for the current Transaction
+        Pointer<commands::TransactionId> transactionId;
 
         // List of Registered Synchronizations
         decaf::util::StlSet< Pointer<Synchronization> > synchronizations;
@@ -105,19 +100,19 @@ namespace core{
          * Begins a new transaction if one is not currently in progress.
          * @throw ActiveMQException
          */
-        virtual void begin();
+        virtual void begin() throw ( exceptions::ActiveMQException );
 
         /**
          * Commit the current Transaction
          * @throw ActiveMQException
          */
-        virtual void commit();
+        virtual void commit() throw ( exceptions::ActiveMQException );
 
         /**
          * Rollback the current Transaction
          * @throw ActiveMQException
          */
-        virtual void rollback();
+        virtual void rollback() throw ( exceptions::ActiveMQException );
 
         /**
          * Get the Transaction Id object for the current
@@ -135,51 +130,7 @@ namespace core{
          */
         virtual bool isInTransaction() const;
 
-        /**
-         * Checks to see if there is currently an Local Transaction in progess, returns
-         * false if not, true otherwise.
-         *
-         * @returns true if an Local Transaction is in progress.
-         */
-        virtual bool isInLocalTransaction() const;
-
-        /**
-         * Checks to see if there is currently an XA Transaction in progess, returns
-         * false if not, true otherwise.
-         *
-         * @returns true if an XA Transaction is in progress.
-         */
-        virtual bool isInXATransaction() const;
-
-    public:  // XAResource implementation.
-
-        virtual void commit( const cms::Xid* xid, bool onePhase );
-
-        virtual void end( const cms::Xid* xid, int flags );
-
-        virtual void forget( const cms::Xid* xid );
-
-        virtual int getTransactionTimeout() const;
-
-        virtual bool isSameRM( const cms::XAResource* theXAResource );
-
-        virtual int prepare( const cms::Xid* xid );
-
-        virtual int recover(int flag, cms::Xid** recovered );
-
-        virtual void rollback( const cms::Xid* xid );
-
-        virtual bool setTransactionTimeout( int seconds );
-
-        virtual void start( const cms::Xid* xid, int flags );
-
     private:
-
-        std::string getResourceManagerId() const;
-        void setXid( const cms::Xid* xid );
-        bool equals( const cms::Xid* local, const cms::Xid* remote );
-        cms::XAException toXAException( cms::CMSException& ex );
-        cms::XAException toXAException( decaf::lang::Exception& ex );
 
         void beforeEnd();
         void afterCommit();

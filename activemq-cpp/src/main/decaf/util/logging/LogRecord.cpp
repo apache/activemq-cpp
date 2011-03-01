@@ -22,8 +22,7 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-LogRecord::LogRecord() : level(Level::OFF), loggerName(), sourceFile(), sourceLine(), message(),
-                         functionName(), timeStamp(0), threadId(0), thrown() {
+LogRecord::LogRecord() : level( Level::OFF ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////

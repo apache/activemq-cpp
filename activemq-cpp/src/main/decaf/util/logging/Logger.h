@@ -104,11 +104,6 @@ namespace logging{
         // Using Parent Handlers?
         bool useParentHandlers;
 
-    private:
-
-        Logger( const Logger& );
-        Logger& operator= ( const Logger& );
-
     protected:
 
         /**
@@ -175,7 +170,8 @@ namespace logging{
          *
          * @throws NullPointerException if the Handler given is NULL.
          */
-        void addHandler( Handler* handler );
+        void addHandler( Handler* handler )
+            throw ( lang::exceptions::NullPointerException );
 
         /**
          * Removes the specified Handler from this logger, ownership of the

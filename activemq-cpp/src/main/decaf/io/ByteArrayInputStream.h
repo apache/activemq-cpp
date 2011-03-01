@@ -121,7 +121,9 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own = false );
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Create an instance of the ByteArrayInputStream with the given buffer as
@@ -141,7 +143,9 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false );
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         virtual ~ByteArrayInputStream();
 
@@ -170,7 +174,9 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize );
+        virtual void setByteArray( const unsigned char* buffer, int bufferSize )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Sets the data that this reader uses, replaces any existing
@@ -188,17 +194,20 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length );
+        virtual void setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int available() const;
+        virtual int available() const throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip( long long num )
+            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
 
         /**
          * {@inheritDoc}
@@ -208,7 +217,7 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual void reset();
+        virtual void reset() throw ( IOException );
 
         /**
          * {@inheritDoc}
@@ -217,9 +226,12 @@ namespace io{
 
     protected:
 
-        virtual int doReadByte();
+        virtual int doReadByte() throw ( IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     };
 

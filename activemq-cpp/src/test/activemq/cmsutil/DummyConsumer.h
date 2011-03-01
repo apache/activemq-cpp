@@ -41,7 +41,7 @@ namespace cmsutil {
             this->dest = dest;
             this->listener = NULL;
         }
-        virtual ~DummyConsumer() throw() {}
+        virtual ~DummyConsumer() {}
 
         virtual void close() throw( cms::CMSException ){}
 

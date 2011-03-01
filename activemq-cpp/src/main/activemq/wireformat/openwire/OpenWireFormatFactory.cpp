@@ -36,7 +36,8 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(
-    const decaf::util::Properties& properties ) {
+    const decaf::util::Properties& properties )
+        throw ( decaf::lang::exceptions::IllegalStateException ) {
 
     try{
 

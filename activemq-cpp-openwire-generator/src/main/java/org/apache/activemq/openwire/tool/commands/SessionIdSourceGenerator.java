@@ -39,15 +39,22 @@ public class SessionIdSourceGenerator extends CommandSourceGenerator {
         out.println("    return stream.str();");
     }
 
-    protected String generateInitializerList() {
-        return super.generateInitializerList() + ", parentId()";
+    protected String generateInitializerList(String current) {
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", parentId()");
+
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("SessionId::SessionId( const ConnectionId* connectionId, long long sessionId )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         out.println("    this->connectionId = connectionId->getValue();");
         out.println("    this->value = sessionId;");
@@ -55,7 +62,7 @@ public class SessionIdSourceGenerator extends CommandSourceGenerator {
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("SessionId::SessionId( const ProducerId* producerId )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         out.println("    this->connectionId = producerId->getConnectionId();");
         out.println("    this->value = producerId->getSessionId();");
@@ -63,7 +70,7 @@ public class SessionIdSourceGenerator extends CommandSourceGenerator {
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("SessionId::SessionId( const ConsumerId* consumerId )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         out.println("    this->connectionId = consumerId->getConnectionId();");
         out.println("    this->value = consumerId->getSessionId();");

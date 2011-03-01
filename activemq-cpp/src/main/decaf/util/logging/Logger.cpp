@@ -28,8 +28,9 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger::Logger( const std::string& name )
-    : name(name), parent(NULL), handlers(), filter(NULL), level(Level::INHERIT), useParentHandlers(true) {
+Logger::Logger( const std::string& name ) : level( Level::INHERIT ) {
+
+    this->name = name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +43,7 @@ Logger::~Logger() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::addHandler( Handler* handler ) {
+void Logger::addHandler( Handler* handler ) throw ( NullPointerException ) {
 
     if( handler == NULL ) {
         NullPointerException(

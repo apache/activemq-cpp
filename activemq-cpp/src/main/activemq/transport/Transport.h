@@ -22,7 +22,6 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/IOException.h>
 #include <decaf/io/Closeable.h>
-#include <decaf/util/List.h>
 #include <decaf/net/URI.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -65,56 +64,54 @@ namespace transport{
          *
          * @throw IOException if and error occurs while starting the Transport.
          */
-        virtual void start() = 0;
+        virtual void start() throw( decaf::io::IOException ) = 0;
 
         /**
          * Stops the Transport.
          *
          * @throw IOException if an error occurs while stopping the transport.
          */
-        virtual void stop() = 0;
+        virtual void stop() throw( decaf::io::IOException ) = 0;
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
-         *
-         * @param command
-         *      The command to be sent.
-         *
-         * @throws IOException if an exception occurs during writing of the command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         *         by this transport.
-         */
-        virtual void oneway( const Pointer<Command>& command ) = 0;
-
-        /**
-         * Sends the given command to the broker and then waits for the response.
-         *
          * @param command the command to be sent.
-         *
-         * @return the response from the broker.
-         *
-         * @throws IOException if an exception occurs during the read of the command.
+         * @throws IOException if an exception occurs during writing of
+         * the command.
          * @throws UnsupportedOperationException if this method is not implemented
-         *         by this transport.
+         * by this transport.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command ) = 0;
+        virtual void oneway( const Pointer<Command>& command )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends the given command to the broker and then waits for the response.
-         *
-         * @param command
-         *      The command to be sent.
-         * @param timeout
-         *      The time to wait for this response.
-         *
+         * @param command the command to be sent.
          * @return the response from the broker.
-         *
-         * @throws IOException if an exception occurs during the read of the command.
+         * @throws IOException if an exception occurs during the read of the
+         * command.
          * @throws UnsupportedOperationException if this method is not implemented
-         *         by this transport.
+         * by this transport.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout ) = 0;
+        virtual Pointer<Response> request( const Pointer<Command>& command )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+
+        /**
+         * Sends the given command to the broker and then waits for the response.
+         * @param command - The command to be sent.
+         * @param timeout - The time to wait for this response.
+         * @return the response from the broker.
+         * @throws IOException if an exception occurs during the read of the
+         * command.
+         * @throws UnsupportedOperationException if this method is not implemented
+         * by this transport.
+         */
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sets the WireFormat instance to use.
@@ -169,42 +166,17 @@ namespace transport{
         virtual bool isClosed() const = 0;
 
         /**
-         * @return true if reconnect is supported.
-         */
-        virtual bool isReconnectSupported() const = 0;
-
-        /**
-         * @return true if updating uris is supported.
-         */
-        virtual bool isUpdateURIsSupported() const = 0;
-
-        /**
          * @return the remote address for this connection
          */
         virtual std::string getRemoteAddress() const = 0;
 
         /**
          * reconnect to another location
-         *
          * @param uri
-         *      The new URI to connect this Transport to.
-         *
-         * @throws IOException on failure or if reconnect is not supported.
+         * @throws IOException on failure of if not supported
          */
-        virtual void reconnect( const decaf::net::URI& uri ) = 0;
-
-        /**
-         * Updates the set of URIs the Transport can connect to.  If the Transport
-         * doesn't support updating its URIs then an IOException is thrown.
-         *
-         * @param rebalance
-         *      Indicates if a forced reconnection should be performed as a result of the update.
-         * @param uris
-         *      The new list of URIs that can be used for connection.
-         *
-         * @throws IOException if an error occurs or updates aren't supported.
-         */
-        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris ) = 0;
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException ) = 0;
 
     };
 

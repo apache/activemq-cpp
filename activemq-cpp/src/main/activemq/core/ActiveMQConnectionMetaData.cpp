@@ -26,46 +26,47 @@ ActiveMQConnectionMetaData::ActiveMQConnectionMetaData() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionMetaData::~ActiveMQConnectionMetaData() throw() {
+ActiveMQConnectionMetaData::~ActiveMQConnectionMetaData() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnectionMetaData::getCMSVersion() const {
-    return "2.3";
+std::string ActiveMQConnectionMetaData::getCMSVersion() const throw( cms::CMSException ) {
+    return "2.2";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnectionMetaData::getCMSMajorVersion() const {
+int ActiveMQConnectionMetaData::getCMSMajorVersion() const throw( cms::CMSException ) {
     return 2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnectionMetaData::getCMSMinorVersion() const {
-    return 3;
+int ActiveMQConnectionMetaData::getCMSMinorVersion() const throw( cms::CMSException ) {
+    return 2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnectionMetaData::getCMSProviderName() const {
+std::string ActiveMQConnectionMetaData::getCMSProviderName() const throw( cms::CMSException ) {
     return "activemq-cpp";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnectionMetaData::getProviderVersion() const {
-    return "3.3.0";
+std::string ActiveMQConnectionMetaData::getProviderVersion() const throw( cms::CMSException ) {
+    return "3.2.5";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnectionMetaData::getProviderMajorVersion() const {
+int ActiveMQConnectionMetaData::getProviderMajorVersion() const throw( cms::CMSException ) {
     return 3;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnectionMetaData::getProviderMinorVersion() const {
-    return 3;
+int ActiveMQConnectionMetaData::getProviderMinorVersion() const throw( cms::CMSException ) {
+    return 2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> ActiveMQConnectionMetaData::getCMSXPropertyNames() const {
+std::vector<std::string> ActiveMQConnectionMetaData::getCMSXPropertyNames() const
+    throw( cms::CMSException ) {
 
     std::vector<std::string> jmxProperties;
 

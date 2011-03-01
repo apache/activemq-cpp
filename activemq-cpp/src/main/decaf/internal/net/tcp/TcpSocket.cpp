@@ -60,18 +60,18 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket() : apr_pool(),
-                         socketHandle( NULL ),
-                         localAddress( NULL ),
-                         remoteAddress( NULL ),
-                         inputStream( NULL ),
-                         outputStream( NULL ),
-                         inputShutdown( false ),
-                         outputShutdown( false ),
-                         closed( false ),
-                         trafficClass( 0 ),
-                         soTimeout( -1 ),
-                         soLinger( -1 ) {
+TcpSocket::TcpSocket() throw ( SocketException )
+  : socketHandle( NULL ),
+    localAddress( NULL ),
+    remoteAddress( NULL ),
+    inputStream( NULL ),
+    outputStream( NULL ),
+    inputShutdown( false ),
+    outputShutdown( false ),
+    closed( false ),
+    trafficClass( 0 ),
+    soTimeout( -1 ),
+    soLinger( -1 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ TcpSocket::~TcpSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::create() {
+void TcpSocket::create() throw( decaf::io::IOException ) {
 
     try{
 
@@ -123,7 +123,8 @@ void TcpSocket::create() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::accept( SocketImpl* socket ) {
+void TcpSocket::accept( SocketImpl* socket )
+    throw( decaf::io::IOException ) {
 
     try{
 
@@ -158,7 +159,7 @@ void TcpSocket::accept( SocketImpl* socket ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStream* TcpSocket::getInputStream() {
+InputStream* TcpSocket::getInputStream() throw( IOException ) {
 
     if( this->socketHandle == NULL || this->closed ) {
         throw IOException( __FILE__, __LINE__, "The Socket is not Connected." );
@@ -182,7 +183,7 @@ InputStream* TcpSocket::getInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStream* TcpSocket::getOutputStream() {
+OutputStream* TcpSocket::getOutputStream() throw( IOException ) {
 
     if( this->socketHandle == NULL || this->closed ) {
         throw IOException( __FILE__, __LINE__, "The Socket is not Connected." );
@@ -206,7 +207,8 @@ OutputStream* TcpSocket::getOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::bind( const std::string& ipaddress, int port ) {
+void TcpSocket::bind( const std::string& ipaddress, int port )
+    throw( decaf::io::IOException ) {
 
     try{
 
@@ -254,7 +256,10 @@ void TcpSocket::bind( const std::string& ipaddress, int port ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::connect( const std::string& hostname, int port, int timeout ) {
+void TcpSocket::connect( const std::string& hostname, int port, int timeout )
+    throw( decaf::io::IOException,
+           decaf::net::SocketException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
 
@@ -334,7 +339,7 @@ std::string TcpSocket::getLocalAddress() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::listen( int backlog ) {
+void TcpSocket::listen( int backlog ) throw( decaf::io::IOException ) {
 
     try{
 
@@ -359,7 +364,7 @@ void TcpSocket::listen( int backlog ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::available() {
+int TcpSocket::available() throw( decaf::io::IOException ) {
 
     if( isClosed() ){
         throw IOException(
@@ -423,7 +428,7 @@ int TcpSocket::available() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::close() {
+void TcpSocket::close() throw( decaf::io::IOException ) {
 
     try{
 
@@ -463,7 +468,7 @@ void TcpSocket::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::shutdownInput() {
+void TcpSocket::shutdownInput() throw( decaf::io::IOException ) {
 
     if( isClosed() ){
         throw IOException(
@@ -475,7 +480,7 @@ void TcpSocket::shutdownInput() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::shutdownOutput() {
+void TcpSocket::shutdownOutput() throw( decaf::io::IOException ) {
 
     if( isClosed() ){
         throw IOException(
@@ -487,7 +492,7 @@ void TcpSocket::shutdownOutput() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getOption( int option ) const {
+int TcpSocket::getOption( int option ) const throw( decaf::io::IOException ) {
 
     try{
 
@@ -544,7 +549,7 @@ int TcpSocket::getOption( int option ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setOption( int option, int value ) {
+void TcpSocket::setOption( int option, int value ) throw( decaf::io::IOException ) {
 
     try{
 
@@ -595,7 +600,7 @@ void TcpSocket::setOption( int option, int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::checkResult( apr_status_t value ) const {
+void TcpSocket::checkResult( apr_status_t value ) const throw ( SocketException ) {
 
     if( value != APR_SUCCESS ){
         throw SocketException(
@@ -605,7 +610,10 @@ void TcpSocket::checkResult( apr_status_t value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::read( unsigned char* buffer, int size, int offset, int length ) {
+int TcpSocket::read( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
         if( this->isClosed() ){
@@ -677,7 +685,10 @@ int TcpSocket::read( unsigned char* buffer, int size, int offset, int length ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::write( const unsigned char* buffer, int size, int offset, int length ) {
+void TcpSocket::write( const unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 

@@ -23,7 +23,8 @@ using namespace activemq::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-LongSequenceGenerator::LongSequenceGenerator() : lastSequenceId(0), mutex() {
+LongSequenceGenerator::LongSequenceGenerator() {
+    this->lastSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

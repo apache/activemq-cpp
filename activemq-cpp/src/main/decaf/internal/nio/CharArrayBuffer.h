@@ -37,6 +37,9 @@ namespace nio{
     class DECAF_API CharArrayBuffer : public decaf::nio::CharBuffer {
     protected:
 
+        // Read / Write flag
+        bool readOnly;
+
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -45,9 +48,6 @@ namespace nio{
 
         // The length of the sub-array, or limit
         int length;
-
-        // Read / Write flag
-        bool readOnly;
 
     public:
 
@@ -63,7 +63,8 @@ namespace nio{
          *
          * @throws IllegalArguementException if the capacity value is negative.
          */
-        CharArrayBuffer( int size, bool readOnly = false );
+        CharArrayBuffer( int size, bool readOnly = false )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Creates a CharArrayBuffer object that wraps the given array.  If the own flag
@@ -83,7 +84,9 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
-        CharArrayBuffer( char* array, int size, int offset, int length, bool readOnly = false );
+        CharArrayBuffer( char* array, int size, int offset, int length, bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Creates a byte buffer that wraps the passed ByteArrayAdapter and
@@ -103,7 +106,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if offset + length is greater than array size.
          */
         CharArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array,
-                         int offset, int length, bool readOnly = false );
+                         int offset, int length, bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Create a CharArrayBuffer that mirrors this one, meaning it shares a
@@ -122,12 +127,16 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual char* array();
+        virtual char* array()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int arrayOffset();
+        virtual int arrayOffset()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -137,7 +146,7 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual CharBuffer& compact();
+        virtual CharBuffer& compact() throw( decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -147,12 +156,13 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual char get();
+        virtual char get() throw ( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual char get( int index ) const;
+        virtual char get( int index ) const
+            throw ( lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
@@ -169,12 +179,16 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual CharBuffer& put( char value );
+        virtual CharBuffer& put( char value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual CharBuffer& put( int index, char value );
+        virtual CharBuffer& put( int index, char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -184,7 +198,8 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual lang::CharSequence* subSequence( int start, int end ) const;
+        virtual lang::CharSequence* subSequence( int start, int end ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
     protected:
 

@@ -46,12 +46,10 @@ namespace transport {
          * Add a URI to the list of URI's that will represent the set of Transports
          * that this Transport is a composite of.
          *
-         * @param rebalance
-         *      Indicates if the addition should cause a forced reconnect or not.
          * @param uris
-         *      The new URI set to add to the set this composite maintains.
+         *        The new URI set to add to the set this composite maintains.
          */
-        virtual void addURI( bool rebalance, const List<URI>& uris ) = 0;
+        virtual void addURI( const List<URI>& uris ) = 0;
 
         /**
          * Remove a URI from the set of URI's that represents the set of Transports
@@ -59,12 +57,10 @@ namespace transport {
          * has created a connected Transport should result in that Transport being
          * disposed of.
          *
-         * @param rebalance
-         *      Indicates if the removal should cause a forced reconnect or not.
          * @param uris
          *        The new URI set to remove to the set this composite maintains.
          */
-        virtual void removeURI( bool rebalance, const List<URI>& uris ) = 0;
+        virtual void removeURI( const List<URI>& uris ) = 0;
 
     };
 

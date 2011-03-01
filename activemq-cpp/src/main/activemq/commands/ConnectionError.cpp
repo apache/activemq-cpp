@@ -176,7 +176,8 @@ void ConnectionError::setConnectionId( const decaf::lang::Pointer<ConnectionId>&
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConnectionError( this );
 }

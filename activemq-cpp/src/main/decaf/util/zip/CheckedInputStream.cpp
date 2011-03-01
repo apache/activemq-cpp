@@ -41,7 +41,7 @@ CheckedInputStream::~CheckedInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long CheckedInputStream::skip( long long num ) {
+long long CheckedInputStream::skip( long long num ) throw( decaf::io::IOException ) {
 
     try{
 
@@ -86,7 +86,7 @@ long long CheckedInputStream::skip( long long num ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int CheckedInputStream::doReadByte() {
+int CheckedInputStream::doReadByte() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -108,7 +108,10 @@ int CheckedInputStream::doReadByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 

@@ -71,68 +71,72 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual void writeBoolean( bool value );
+        virtual void writeBoolean( bool value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-       virtual void writeByte( unsigned char value );
+       virtual void writeByte( unsigned char value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeShort( short value );
+        virtual void writeShort( short value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeUnsignedShort( unsigned short value );
+        virtual void writeUnsignedShort( unsigned short value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeChar( char value );
+        virtual void writeChar( char value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeInt( int value );
+        virtual void writeInt( int value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeLong( long long value );
+        virtual void writeLong( long long value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeFloat( float value );
+        virtual void writeFloat( float value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeDouble( double value );
+        virtual void writeDouble( double value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeBytes( const std::string& value );
+        virtual void writeBytes( const std::string& value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeChars( const std::string& value );
+        virtual void writeChars( const std::string& value ) throw ( IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeUTF( const std::string& value );
+        virtual void writeUTF( const std::string& value )
+            throw ( IOException, UTFDataFormatException );
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     private:
 

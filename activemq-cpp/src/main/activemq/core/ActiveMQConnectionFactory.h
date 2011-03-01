@@ -22,15 +22,8 @@
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 
-#include <activemq/transport/Transport.h>
-
-#include <decaf/net/URI.h>
-#include <decaf/util/Properties.h>
-
 namespace activemq{
 namespace core{
-
-    using decaf::lang::Pointer;
 
     class ActiveMQConnection;
     class FactorySettings;
@@ -48,36 +41,21 @@ namespace core{
         // d-Pointer holding pre-configured factory settings
         FactorySettings* settings;
 
-    private:
-
-        ActiveMQConnectionFactory( const ActiveMQConnectionFactory& );
-        ActiveMQConnectionFactory& operator= ( const ActiveMQConnectionFactory& );
-
     public:
 
         ActiveMQConnectionFactory();
 
         /**
          * Constructor
-         * @param url the URI of the Broker we are connecting to.
+         * @param url the URL of the Broker we are connecting to.
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory( const std::string& uri,
+        ActiveMQConnectionFactory( const std::string& url,
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
-        /**
-         * Constructor
-         * @param uri the URI of the Broker we are connecting to.
-         * @param username to authenticate with, defaults to ""
-         * @param password to authenticate with, defaults to ""
-         */
-        ActiveMQConnectionFactory( const decaf::net::URI& uri,
-                                   const std::string& username = "",
-                                   const std::string& password = "" );
-
-        virtual ~ActiveMQConnectionFactory() throw();
+        virtual ~ActiveMQConnectionFactory();
 
         /**
          * Creates a connection with the default user identity. The
@@ -87,7 +65,8 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection();
+        virtual cms::Connection* createConnection()
+            throw ( cms::CMSException );
 
         /**
          * Creates a connection with the specified user identity. The
@@ -103,7 +82,8 @@ namespace core{
          * @throws CMSException
          */
         virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password );
+                                                   const std::string& password )
+            throw ( cms::CMSException );
 
         /**
          * Creates a connection with the specified user identity. The
@@ -122,7 +102,8 @@ namespace core{
          */
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password,
-                                                   const std::string& clientId );
+                                                   const std::string& clientId )
+            throw ( cms::CMSException );
 
     public:   // Configuration Options
 
@@ -165,27 +146,18 @@ namespace core{
         void setClientId( const std::string& clientId );
 
         /**
-         * Sets the Broker URI that should be used when creating a new connection instance.
-         *
-         * @param brokerURI
-         *      The string form of the Broker URI, this will be converted to a URI object.
+         * Sets the Broker URL that should be used when creating a new
+         * connection instance
+         * @param brokerURL string
          */
-        void setBrokerURI( const std::string& uri );
+        void setBrokerURL( const std::string& brokerURL );
 
         /**
-         * Sets the Broker URI that should be used when creating a new connection instance.
-         *
-         * @param brokerURI
-         *      The URI of the broker that this client will connect to.
-         */
-        void setBrokerURI( const decaf::net::URI& uri );
-
-        /**
-         * Gets the Broker URI that this factory will use when creating a new
+         * Gets the Broker URL that this factory will use when creating a new
          * connection instance.
-         * @return brokerURI string
+         * @return brokerURL string
          */
-        const decaf::net::URI& getBrokerURI() const;
+        const std::string& getBrokerURL() const;
 
         /**
          * Set an CMS ExceptionListener that will be set on eat connection once it has been
@@ -295,24 +267,6 @@ namespace core{
         void setUseCompression( bool value );
 
         /**
-         * Sets the Compression level used when Message body compression is enabled, a
-         * value of -1 causes the Compression Library to use the default setting which
-         * is a balance of speed and compression.  The range of compression levels is
-         * [0..9] where 0 indicates best speed and 9 indicates best compression.
-         *
-         * @param value
-         *      A signed int value that controls the compression level.
-         */
-        void setCompressionLevel( int value );
-
-        /**
-         * Gets the currently configured Compression level for Message bodies.
-         *
-         * @return the int value of the current compression level.
-         */
-        int getCompressionLevel() const;
-
-        /**
          * Gets the assigned send timeout for this Connector
          * @return the send timeout configured in the connection uri
          */
@@ -354,67 +308,31 @@ namespace core{
          */
         void setProducerWindowSize( unsigned int windowSize );
 
-        /**
-         * @returns true if the Connections that this factory creates should support the
-         * message based priority settings.
-         */
-        bool isMessagePrioritySupported() const;
-
-        /**
-         * Set whether or not this factory should create Connection objects with the Message
-         * priority support function enabled.
-         *
-         * @param value
-         *      Boolean indicating if Message priority should be enabled.
-         */
-        void setMessagePrioritySupported( bool value );
-
     public:
 
         /**
          * Creates a connection with the specified user identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly called.
-         *
-         * @param uri
-         *      The URI of the Broker we are connecting to.
-         * @param username
-         *      The name of the user to authenticate with.
-         * @param password
-         *      The password for the user to authenticate with.
-         * @param clientId
-         *      The unique client id to assign to connection, defaults to "".
-         *
+         * @param url the URL of the Broker we are connecting to.
+         * @param username to authenticate with
+         * @param password to authenticate with
+         * @param clientId to assign to connection, defaults to ""
          * @throw CMSException.
          */
-        static cms::Connection* createConnection( const std::string& uri,
+        static cms::Connection* createConnection( const std::string& url,
                                                   const std::string& username,
                                                   const std::string& password,
-                                                  const std::string& clientId = "" );
-
-    protected:
-
-        /**
-         * Create a new ActiveMQConnection instnace using the provided Transport and Properties.
-         * Subclasses can override this to control the actual type of ActiveMQConnection that
-         * is created.
-         *
-         * @param transport
-         *      The Transport that the Connection should use to communicate with the Broker.
-         * @param properties
-         *      The Properties that are assigned to the new Connection instance.
-         *
-         * @returns a new ActiveMQConnection pointer instance.
-         */
-        virtual ActiveMQConnection* createActiveMQConnection( const Pointer<transport::Transport>& transport,
-                                                              const Pointer<decaf::util::Properties>& properties );
+                                                  const std::string& clientId = "" )
+            throw ( cms::CMSException );
 
     private:
 
-        cms::Connection* doCreateConnection( const decaf::net::URI& uri,
+        cms::Connection* doCreateConnection( const std::string& url,
                                              const std::string& username,
                                              const std::string& password,
-                                             const std::string& clientId );
+                                             const std::string& clientId )
+            throw ( cms::CMSException );
 
         void configureConnection( ActiveMQConnection* connection );
 

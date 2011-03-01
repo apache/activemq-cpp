@@ -40,11 +40,6 @@ namespace openssl {
 
         OpenSSLContextSpi* parent;
 
-    private:
-
-        OpenSSLServerSocketFactory( const OpenSSLServerSocketFactory& );
-        OpenSSLServerSocketFactory& operator= ( const OpenSSLServerSocketFactory& );
-
     public:
 
         OpenSSLServerSocketFactory( OpenSSLContextSpi* parent );

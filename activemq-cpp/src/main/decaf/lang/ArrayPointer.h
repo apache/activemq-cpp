@@ -25,7 +25,6 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/concurrent/atomic/AtomicRefCounter.h>
 #include <decaf/util/Comparator.h>
-#include <decaf/util/Arrays.h>
 #include <memory>
 #include <typeinfo>
 #include <algorithm>
@@ -111,36 +110,6 @@ namespace lang {
 
             try{
                 T* value = new T[size];
-                this->array = new ArrayData( value, size );
-            } catch( std::exception& ex ) {
-                REFCOUNTER::release();
-                throw ex;
-            } catch(...) {
-                REFCOUNTER::release();
-                throw std::bad_alloc();
-            }
-        }
-
-        /**
-         * Create a new ArrayPointer instance and allocates an internal array that is sized
-         * using the passed in size value.  The array elements are initialized with the given
-         * value.
-         *
-         * @param size
-         *      The size of the array to allocate for this ArrayPointer instance.
-         * @param fillWith
-         *      The value to initialize each element of the newly allocated array with.
-         */
-        ArrayPointer( int size, const T& fillWith ) :
-            REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
-
-            if( size == 0 ) {
-                return;
-            }
-
-            try{
-                T* value = new T[size];
-                decaf::util::Arrays::fill( value, size, 0, size, fillWith );
                 this->array = new ArrayData( value, size );
             } catch( std::exception& ex ) {
                 REFCOUNTER::release();
@@ -403,8 +372,6 @@ namespace lang {
     template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
     class ArrayPointerComparator : public decaf::util::Comparator< ArrayPointer<T,R> > {
     public:
-
-        virtual ~ArrayPointerComparator() {}
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <

@@ -27,17 +27,17 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveList::PrimitiveList() : converter() {
+PrimitiveList::PrimitiveList() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const decaf::util::List<PrimitiveValueNode>& src )
-  : LinkedList<PrimitiveValueNode>( src ), converter(){
+  : StlList<PrimitiveValueNode>( src ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const PrimitiveList& src )
-  : LinkedList<PrimitiveValueNode>( src ), converter() {
+  : StlList<PrimitiveValueNode>( src ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ std::string PrimitiveList::toString() const {
 
     stream << "Begin Class PrimitiveList:" << std::endl;
 
-    for( int i = 0; i < this->size(); ++i ) {
+    for( std::size_t i = 0; i < this->size(); ++i ) {
         stream << "list[" << i << "] = "
                << this->get( i ).toString() << std::endl;
     }
@@ -63,14 +63,16 @@ std::string PrimitiveList::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool PrimitiveList::getBool( int index ) const {
+bool PrimitiveList::getBool( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<bool>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setBool( int index, bool value ) {
+void PrimitiveList::setBool( std::size_t index, bool value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setBool( value );
@@ -79,14 +81,16 @@ void PrimitiveList::setBool( int index, bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PrimitiveList::getByte( int index ) const {
+unsigned char PrimitiveList::getByte( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<unsigned char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByte( int index, unsigned char value ) {
+void PrimitiveList::setByte( std::size_t index, unsigned char value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setByte( value );
@@ -95,14 +99,16 @@ void PrimitiveList::setByte( int index, unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char PrimitiveList::getChar( int index ) const {
+char PrimitiveList::getChar( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<char>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setChar( int index, char value ) {
+void PrimitiveList::setChar( std::size_t index, char value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setChar( value );
@@ -111,14 +117,16 @@ void PrimitiveList::setChar( int index, char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short PrimitiveList::getShort( int index ) const {
+short PrimitiveList::getShort( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<short>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setShort( int index, short value ) {
+void PrimitiveList::setShort( std::size_t index, short value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setShort( value );
@@ -127,14 +135,16 @@ void PrimitiveList::setShort( int index, short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveList::getInt( int index ) const {
+int PrimitiveList::getInt( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<int>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setInt( int index, int value ) {
+void PrimitiveList::setInt( std::size_t index, int value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setInt( value );
@@ -143,14 +153,16 @@ void PrimitiveList::setInt( int index, int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PrimitiveList::getLong( int index ) const {
+long long PrimitiveList::getLong( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<long long>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setLong( int index, long long value ) {
+void PrimitiveList::setLong( std::size_t index, long long value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setLong( value );
@@ -159,14 +171,16 @@ void PrimitiveList::setLong( int index, long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double PrimitiveList::getDouble( int index ) const {
+double PrimitiveList::getDouble( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<double>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setDouble( int index, double value ) {
+void PrimitiveList::setDouble( std::size_t index, double value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setDouble( value );
@@ -175,14 +189,16 @@ void PrimitiveList::setDouble( int index, double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float PrimitiveList::getFloat( int index ) const {
+float PrimitiveList::getFloat( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<float>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setFloat( int index, float value ) {
+void PrimitiveList::setFloat( std::size_t index, float value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setFloat( value );
@@ -191,14 +207,16 @@ void PrimitiveList::setFloat( int index, float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-string PrimitiveList::getString( int index ) const {
+string PrimitiveList::getString( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ){
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert<std::string>( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setString( int index, const string& value ) {
+void PrimitiveList::setString( std::size_t index, const string& value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setString( value );
@@ -207,14 +225,17 @@ void PrimitiveList::setString( int index, const string& value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PrimitiveList::getByteArray( int index ) const  {
+std::vector<unsigned char> PrimitiveList::getByteArray( std::size_t index ) const
+    throw( IndexOutOfBoundsException, UnsupportedOperationException ) {
 
     PrimitiveValueNode node = this->get( index );
     return converter.convert< std::vector<unsigned char> >( node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByteArray( int index, const std::vector<unsigned char>& value ) {
+void PrimitiveList::setByteArray( std::size_t index,
+                                  const std::vector<unsigned char>& value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setByteArray( value );

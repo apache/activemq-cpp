@@ -101,7 +101,9 @@ namespace concurrent {
          *
          * @throws NullPointerException if command is null
          */
-        virtual void execute( decaf::lang::Runnable* command ) = 0;
+        virtual void execute( Runnable* command )
+            throw ( decaf::util::concurrent::RejectedExecutionException,
+                    decaf::lang::exceptions::NullPointerException ) = 0;
 
     };
 

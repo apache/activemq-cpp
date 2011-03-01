@@ -39,9 +39,6 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/ActiveMQAckHandler.h>
-#include <activemq/core/FifoMessageDispatchChannel.h>
-#include <activemq/core/SimplePriorityMessageDispatchChannel.h>
-#include <activemq/core/RedeliveryPolicy.h>
 #include <cms/ExceptionListener.h>
 #include <memory>
 
@@ -60,51 +57,6 @@ using namespace decaf::util::concurrent;
 namespace activemq{
 namespace core {
 
-    class ActiveMQConsumerMembers {
-    private:
-
-        ActiveMQConsumerMembers( const ActiveMQConsumerMembers& );
-        ActiveMQConsumerMembers& operator= ( const ActiveMQConsumerMembers& );
-
-    public:
-
-        cms::MessageListener* listener;
-        decaf::util::concurrent::Mutex listenerMutex;
-        AtomicBoolean deliveringAcks;
-        AtomicBoolean started;
-        Pointer<MessageDispatchChannel> unconsumedMessages;
-        decaf::util::LinkedList< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
-        long long lastDeliveredSequenceId;
-        Pointer<commands::MessageAck> pendingAck;
-        int deliveredCounter;
-        int additionalWindowSize;
-        volatile bool synchronizationRegistered;
-        bool clearDispatchList;
-        bool inProgressClearRequiredFlag;
-        long long redeliveryDelay;
-        Pointer<RedeliveryPolicy> redeliveryPolicy;
-        Pointer<Exception> failureError;
-
-        ActiveMQConsumerMembers() : listener(NULL),
-                                    listenerMutex(),
-                                    deliveringAcks(),
-                                    started(),
-                                    unconsumedMessages(),
-                                    dispatchedMessages(),
-                                    lastDeliveredSequenceId(0),
-                                    pendingAck(),
-                                    deliveredCounter(0),
-                                    additionalWindowSize(0),
-                                    synchronizationRegistered(false),
-                                    clearDispatchList(false),
-                                    inProgressClearRequiredFlag(false),
-                                    redeliveryDelay(0),
-                                    redeliveryPolicy(),
-                                    failureError() {
-        }
-
-    };
-
     /**
      * Class used to deal with consumers in an active transaction.  This
      * class calls back into the consumer when the transaction is Committed or
@@ -115,34 +67,31 @@ namespace core {
 
         ActiveMQConsumer* consumer;
 
-    private:
-
-        TransactionSynhcronization( const TransactionSynhcronization& );
-        TransactionSynhcronization& operator= ( const TransactionSynhcronization& );
-
     public:
 
-        TransactionSynhcronization( ActiveMQConsumer* consumer ) : consumer(consumer) {
+        TransactionSynhcronization( ActiveMQConsumer* consumer ) {
 
             if( consumer == NULL ) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
+
+            this->consumer = consumer;
         }
 
         virtual ~TransactionSynhcronization() {}
 
-        virtual void beforeEnd() {
+        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
             consumer->acknowledge();
             consumer->setSynchronizationRegistered( false );
         }
 
-        virtual void afterCommit() {
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
             consumer->commit();
             consumer->setSynchronizationRegistered( false );
         }
 
-        virtual void afterRollback() {
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
             consumer->rollback();
             consumer->setSynchronizationRegistered( false );
         }
@@ -159,31 +108,28 @@ namespace core {
 
         ActiveMQConsumer* consumer;
 
-    private:
-
-        CloseSynhcronization( const CloseSynhcronization& );
-        CloseSynhcronization& operator= ( const CloseSynhcronization& );
-
     public:
 
-        CloseSynhcronization( ActiveMQConsumer* consumer ) : consumer(consumer) {
+        CloseSynhcronization( ActiveMQConsumer* consumer ) {
 
             if( consumer == NULL ) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
+
+            this->consumer = consumer;
         }
 
         virtual ~CloseSynhcronization() {}
 
-        virtual void beforeEnd() {
+        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
         }
 
-        virtual void afterCommit() {
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
             consumer->doClose();
         }
 
-        virtual void afterRollback() {
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
             consumer->doClose();
         }
 
@@ -197,21 +143,14 @@ namespace core {
 
         ActiveMQSession* session;
 
-    private:
-
-        ClientAckHandler( const ClientAckHandler& );
-        ClientAckHandler& operator= ( const ClientAckHandler& );
-
     public:
 
-        ClientAckHandler( ActiveMQSession* session ) : session(session) {
-            if( session == NULL ) {
-                throw NullPointerException(
-                    __FILE__, __LINE__, "Ack Handler Created with NULL Session.");
-            }
+        ClientAckHandler( ActiveMQSession* session ) {
+            this->session = session;
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
+            throw ( cms::CMSException ) {
 
             try {
                 this->session->acknowledge();
@@ -226,26 +165,18 @@ namespace core {
     class IndividualAckHandler : public ActiveMQAckHandler {
     private:
 
-        ActiveMQConsumer* consumer;
         Pointer<commands::MessageDispatch> dispatch;
-
-    private:
-
-        IndividualAckHandler( const IndividualAckHandler& );
-        IndividualAckHandler& operator= ( const IndividualAckHandler& );
+        ActiveMQConsumer* consumer;
 
     public:
 
-        IndividualAckHandler( ActiveMQConsumer* consumer, const Pointer<MessageDispatch>& dispatch ) :
-            consumer(consumer), dispatch(dispatch) {
-
-            if( consumer == NULL ) {
-                throw NullPointerException(
-                    __FILE__, __LINE__, "Ack Handler Created with NULL consumer.");
-            }
+        IndividualAckHandler( ActiveMQConsumer* consumer, const Pointer<MessageDispatch>& dispatch ) {
+            this->consumer = consumer;
+            this->dispatch = dispatch;
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
+        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
+            throw ( cms::CMSException ) {
 
             try {
 
@@ -271,7 +202,7 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
                                     bool noLocal,
                                     bool browser,
                                     bool dispatchAsync,
-                                    cms::MessageListener* listener ) : internal(NULL), session(NULL), consumerInfo() {
+                                    cms::MessageListener* listener ) {
 
     if( session == NULL ) {
         throw ActiveMQException(
@@ -291,8 +222,6 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
             "ActiveMQConsumer::ActiveMQConsumer - Destination given has no Physical Name." );
     }
 
-    this->internal = new ActiveMQConsumerMembers();
-
     Pointer<ConsumerInfo> consumerInfo( new ConsumerInfo() );
 
     consumerInfo->setConsumerId( id );
@@ -308,21 +237,15 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     // Initialize Consumer Data
     this->session = session;
     this->consumerInfo = consumerInfo;
-    this->internal->lastDeliveredSequenceId = -1;
-    this->internal->synchronizationRegistered = false;
-    this->internal->additionalWindowSize = 0;
-    this->internal->deliveredCounter = 0;
-    this->internal->clearDispatchList = false;
-    this->internal->inProgressClearRequiredFlag = false;
-    this->internal->listener = NULL;
-    this->internal->redeliveryDelay = 0;
-    this->internal->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
-
-    if( this->session->getConnection()->isMessagePrioritySupported() ) {
-        this->internal->unconsumedMessages.reset( new SimplePriorityMessageDispatchChannel() );
-    } else {
-        this->internal->unconsumedMessages.reset( new FifoMessageDispatchChannel() );
-    }
+    this->lastDeliveredSequenceId = -1;
+    this->synchronizationRegistered = false;
+    this->additionalWindowSize = 0;
+    this->deliveredCounter = 0;
+    this->clearDispatchList = false;
+    this->inProgressClearRequiredFlag = false;
+    this->listener = NULL;
+    this->redeliveryDelay = 0;
+    this->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
 
     if( listener != NULL ) {
         this->setMessageListener( listener );
@@ -332,15 +255,10 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::~ActiveMQConsumer() throw() {
+ActiveMQConsumer::~ActiveMQConsumer() {
 
     try {
-
-        try{
-            this->close();
-        } catch(...) {}
-
-        delete this->internal;
+        close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -349,28 +267,24 @@ ActiveMQConsumer::~ActiveMQConsumer() throw() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::start() {
 
-    if( this->internal->unconsumedMessages->isClosed() ) {
+    if( this->unconsumedMessages.isClosed() ) {
         return;
     }
 
-    this->internal->started.set( true );
-    this->internal->unconsumedMessages->start();
+    this->started.set( true );
+    this->unconsumedMessages.start();
     this->session->wakeup();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::stop() {
-    this->internal->started.set( false );
-    this->internal->unconsumedMessages->stop();
+    this->started.set( false );
+    this->unconsumedMessages.stop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQConsumer::isClosed() const {
-    return this->internal->unconsumedMessages->isClosed();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::close() {
+void ActiveMQConsumer::close()
+    throw ( cms::CMSException ) {
 
     try{
         if( !this->isClosed() ) {
@@ -400,35 +314,17 @@ void ActiveMQConsumer::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::doClose() {
+void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
 
     try {
 
-        dispose();
-        // Remove at the Broker Side, consumer has been removed from the local
-        // Session and Connection objects so if the remote call to remove throws
-        // it is okay to propagate to the client.
-        Pointer<RemoveInfo> info( new RemoveInfo );
-        info->setObjectId( this->consumerInfo->getConsumerId() );
-        info->setLastDeliveredSequenceId( this->internal->lastDeliveredSequenceId );
-        this->session->oneway( info );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::dispose() {
-
-    try{
         if( !this->isClosed() ) {
 
             if( !session->isTransacted() ) {
                 deliverAcks();
             }
 
-            this->internal->started.set( false );
+            this->started.set( false );
 
             // Identifies any errors encountered during shutdown.
             bool haveException = false;
@@ -436,7 +332,7 @@ void ActiveMQConsumer::dispose() {
 
             // Purge all the pending messages
             try{
-                this->internal->unconsumedMessages->clear();
+                unconsumedMessages.clear();
             } catch ( ActiveMQException& ex ){
                 if( !haveException ){
                     ex.setMark( __FILE__, __LINE__ );
@@ -446,23 +342,31 @@ void ActiveMQConsumer::dispose() {
             }
 
             // Stop and Wakeup all sync consumers.
-            this->internal->unconsumedMessages->close();
+            unconsumedMessages.close();
 
             if( this->session->isIndividualAcknowledge() ) {
                 // For IndividualAck Mode we need to unlink the ack handler to remove a
                 // cyclic reference to the MessageDispatch that brought the message to us.
-                synchronized( &internal->dispatchedMessages ) {
-                    std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->internal->dispatchedMessages.iterator() );
+                synchronized( &dispatchedMessages ) {
+                    std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
                     while( iter->hasNext() ) {
                         iter->next()->getMessage()->setAckHandler( Pointer<ActiveMQAckHandler>() );
                     }
 
-                    this->internal->dispatchedMessages.clear();
+                    dispatchedMessages.clear();
                 }
             }
 
             // Remove this Consumer from the Connections set of Dispatchers
-            this->session->removeConsumer( this->consumerInfo->getConsumerId() );
+            this->session->removeConsumer( this->consumerInfo->getConsumerId(), lastDeliveredSequenceId );
+
+            // Remove at the Broker Side, consumer has been removed from the local
+            // Session and Connection objects so if the remote call to remove throws
+            // it is okay to propagate to the client.
+            Pointer<RemoveInfo> info( new RemoveInfo );
+            info->setObjectId( this->consumerInfo->getConsumerId() );
+            info->setLastDeliveredSequenceId( lastDeliveredSequenceId );
+            this->session->oneway( info );
 
             // If we encountered an error, propagate it.
             if( haveException ){
@@ -477,7 +381,8 @@ void ActiveMQConsumer::dispose() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConsumer::getMessageSelector() const {
+std::string ActiveMQConsumer::getMessageSelector() const
+    throw ( cms::CMSException ) {
 
     try {
         // Fetch the Selector
@@ -487,7 +392,8 @@ std::string ActiveMQConsumer::getMessageSelector() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeout ) {
+decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeout )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -502,17 +408,13 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
         // Loop until the time is up or we get a non-expired message
         while( true ) {
 
-            Pointer<MessageDispatch> dispatch = this->internal->unconsumedMessages->dequeue( timeout );
+            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeue( timeout );
             if( dispatch == NULL ) {
 
-                if( timeout > 0 && !this->internal->unconsumedMessages->isClosed() ) {
+                if( timeout > 0 && !unconsumedMessages.isClosed() ) {
                     timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
                 } else {
-                    if( this->internal->failureError != NULL ) {
-                        throw CMSExceptionSupport::create(*this->internal->failureError);
-                    } else {
-                        return Pointer<MessageDispatch>();
-                    }
+                    return Pointer<MessageDispatch>();
                 }
 
             } else if( dispatch->getMessage() == NULL ) {
@@ -540,7 +442,7 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( long long timeo
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive() {
+cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
 
     try{
 
@@ -573,7 +475,8 @@ cms::Message* ActiveMQConsumer::receive() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive( int millisecs ) {
+cms::Message* ActiveMQConsumer::receive( int millisecs )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -606,7 +509,8 @@ cms::Message* ActiveMQConsumer::receive( int millisecs ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receiveNoWait() {
+cms::Message* ActiveMQConsumer::receiveNoWait()
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -639,7 +543,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
+void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
 
     try{
 
@@ -661,18 +565,18 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
                 session->stop();
             }
 
-            synchronized( &(this->internal->listenerMutex) ) {
-                this->internal->listener = listener;
+            synchronized( &listenerMutex ) {
+                this->listener = listener;
             }
 
-            this->session->redispatch( *(this->internal->unconsumedMessages) );
+            session->redispatch( unconsumedMessages );
 
             if( wasStarted ) {
-                this->session->start();
+                session->start();
             }
         } else {
-            synchronized( &(this->internal->listenerMutex) ) {
-                this->internal->listener = NULL;
+            synchronized( &listenerMutex ) {
+                this->listener = NULL;
             }
         }
     }
@@ -692,14 +596,14 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<MessageDispatch>& 
         dispatch->getMessage()->setAckHandler( ackHandler );
     }
 
-    this->internal->lastDeliveredSequenceId =
+    this->lastDeliveredSequenceId =
         dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
 
     if( !isAutoAcknowledgeBatch() ) {
 
         // When not in an Auto
-        synchronized( &this->internal->dispatchedMessages ) {
-            this->internal->dispatchedMessages.addFirst( dispatch );
+        synchronized( &dispatchedMessages ) {
+            dispatchedMessages.enqueueFront( dispatch );
         }
 
         if( this->session->isTransacted() ) {
@@ -714,7 +618,7 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
 
     try{
 
-        if( this->internal->unconsumedMessages->isClosed() ) {
+        if( unconsumedMessages.isClosed() ) {
             return;
         }
 
@@ -726,21 +630,21 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
             return;
         } else if( isAutoAcknowledgeEach() ) {
 
-            if( this->internal->deliveringAcks.compareAndSet( false, true ) ) {
+            if( this->deliveringAcks.compareAndSet( false, true ) ) {
 
-                synchronized( &this->internal->dispatchedMessages ) {
-                    if( !this->internal->dispatchedMessages.isEmpty() ) {
+                synchronized( &dispatchedMessages ) {
+                    if( !dispatchedMessages.empty() ) {
                         Pointer<MessageAck> ack = makeAckForAllDeliveredMessages(
                             ActiveMQConstants::ACK_TYPE_CONSUMED );
 
                         if( ack != NULL ) {
-                            this->internal->dispatchedMessages.clear();
+                            dispatchedMessages.clear();
                             session->oneway( ack );
                         }
                     }
                 }
 
-                this->internal->deliveringAcks.set( false );
+                this->deliveringAcks.set( false );
             }
 
         } else if( isAutoAcknowledgeBatch() ) {
@@ -750,8 +654,8 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
 
             bool messageUnackedByConsumer = false;
 
-            synchronized( &this->internal->dispatchedMessages ) {
-                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->internal->dispatchedMessages.iterator() );
+            synchronized( &dispatchedMessages ) {
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
                 while( iter->hasNext() ) {
                     if( iter->next() == message ) {
                         messageUnackedByConsumer = true;
@@ -774,31 +678,32 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::deliverAcks() {
+void ActiveMQConsumer::deliverAcks()
+    throw ( ActiveMQException ) {
 
     try{
 
         Pointer<MessageAck> ack;
 
-        if( this->internal->deliveringAcks.compareAndSet( false, true ) ) {
+        if( this->deliveringAcks.compareAndSet( false, true ) ) {
 
             if( isAutoAcknowledgeEach() ) {
 
-                synchronized( &this->internal->dispatchedMessages ) {
+                synchronized( &dispatchedMessages ) {
 
                     ack = makeAckForAllDeliveredMessages( ActiveMQConstants::ACK_TYPE_CONSUMED );
 
                     if( ack != NULL ) {
-                        this->internal->dispatchedMessages.clear();
+                        dispatchedMessages.clear();
                     } else {
-                        ack.swap( internal->pendingAck );
+                        ack.swap( pendingAck );
                     }
                 }
 
-            } else if( this->internal->pendingAck != NULL &&
-                       this->internal->pendingAck->getAckType() == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
+            } else if( pendingAck != NULL &&
+                       pendingAck->getAckType() == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
 
-                ack.swap( this->internal->pendingAck );
+                ack.swap( pendingAck );
             }
 
             if( ack != NULL ) {
@@ -808,7 +713,7 @@ void ActiveMQConsumer::deliverAcks() {
                 } catch(...) {}
 
             } else {
-                this->internal->deliveringAcks.set( false );
+                this->deliveringAcks.set( false );
             }
         }
     }
@@ -818,14 +723,15 @@ void ActiveMQConsumer::deliverAcks() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int ackType ) {
+void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int ackType )
+    throw ( ActiveMQException ) {
 
     // Don't acknowledge now, but we may need to let the broker know the
     // consumer got the message to expand the pre-fetch window
     if( session->isTransacted() ) {
         session->doStartTransaction();
-        if( !this->internal->synchronizationRegistered ) {
-            this->internal->synchronizationRegistered = true;
+        if( !synchronizationRegistered ) {
+            synchronizationRegistered = true;
 
             Pointer<Synchronization> sync( new TransactionSynhcronization( this ) );
             this->session->getTransactionContext()->addSynchronization( sync );
@@ -834,20 +740,20 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
 
     // The delivered message list is only needed for the recover method
     // which is only used with client ack.
-    this->internal->deliveredCounter++;
+    deliveredCounter++;
 
-    Pointer<MessageAck> oldPendingAck = this->internal->pendingAck;
-    this->internal->pendingAck.reset( new MessageAck() );
-    this->internal->pendingAck->setConsumerId( dispatch->getConsumerId() );
-    this->internal->pendingAck->setAckType( (unsigned char)ackType );
-    this->internal->pendingAck->setDestination( dispatch->getDestination() );
-    this->internal->pendingAck->setLastMessageId( dispatch->getMessage()->getMessageId() );
-    this->internal->pendingAck->setMessageCount( internal->deliveredCounter );
+    Pointer<MessageAck> oldPendingAck = pendingAck;
+    pendingAck.reset( new MessageAck() );
+    pendingAck->setConsumerId( dispatch->getConsumerId() );
+    pendingAck->setAckType( (unsigned char)ackType );
+    pendingAck->setDestination( dispatch->getDestination() );
+    pendingAck->setLastMessageId( dispatch->getMessage()->getMessageId() );
+    pendingAck->setMessageCount( deliveredCounter );
 
     if( oldPendingAck == NULL ) {
-        this->internal->pendingAck->setFirstMessageId( this->internal->pendingAck->getLastMessageId() );
-    } else if ( oldPendingAck->getAckType() == this->internal->pendingAck->getAckType() ) {
-        this->internal->pendingAck->setFirstMessageId( oldPendingAck->getFirstMessageId() );
+        pendingAck->setFirstMessageId( pendingAck->getLastMessageId() );
+    } else if ( oldPendingAck->getAckType() == pendingAck->getAckType() ) {
+        pendingAck->setFirstMessageId( oldPendingAck->getFirstMessageId() );
     } else {
         // old pending ack being superseded by ack of another type, if is is not a delivered
         // ack and hence important, send it now so it is not lost.
@@ -857,33 +763,33 @@ void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int a
     }
 
     if( session->isTransacted() ) {
-        this->internal->pendingAck->setTransactionId( this->session->getTransactionContext()->getTransactionId() );
+        pendingAck->setTransactionId( this->session->getTransactionContext()->getTransactionId() );
     }
 
-    if( ( 0.5 * this->consumerInfo->getPrefetchSize() ) <= ( internal->deliveredCounter - internal->additionalWindowSize ) ) {
-        session->oneway( this->internal->pendingAck );
-        this->internal->pendingAck.reset( NULL );
-        this->internal->deliveredCounter = 0;
-        this->internal->additionalWindowSize = 0;
+    if( ( 0.5 * this->consumerInfo->getPrefetchSize() ) <= ( deliveredCounter - additionalWindowSize ) ) {
+        session->oneway( pendingAck );
+        pendingAck.reset( NULL );
+        deliveredCounter = 0;
+        additionalWindowSize = 0;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type ) {
 
-    synchronized( &this->internal->dispatchedMessages ) {
+    synchronized( &dispatchedMessages ) {
 
-        if( !this->internal->dispatchedMessages.isEmpty() ) {
+        if( !dispatchedMessages.empty() ) {
 
-            Pointer<MessageDispatch> dispatched = this->internal->dispatchedMessages.getFirst();
+            Pointer<MessageDispatch> dispatched = dispatchedMessages.front();
 
             Pointer<MessageAck> ack( new MessageAck() );
             ack->setAckType( (unsigned char)type );
             ack->setConsumerId( dispatched->getConsumerId() );
             ack->setDestination( dispatched->getDestination() );
-            ack->setMessageCount( (int)this->internal->dispatchedMessages.size() );
+            ack->setMessageCount( (int)dispatchedMessages.size() );
             ack->setLastMessageId( dispatched->getMessage()->getMessageId() );
-            ack->setFirstMessageId( this->internal->dispatchedMessages.getLast()->getMessage()->getMessageId() );
+            ack->setFirstMessageId( dispatchedMessages.back()->getMessage()->getMessageId() );
 
             return ack;
         }
@@ -893,7 +799,8 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& dispatch ) {
+void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
+   throw ( cms::CMSException ) {
 
     try{
 
@@ -911,8 +818,8 @@ void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& di
 
             session->oneway( ack );
 
-            synchronized( &this->internal->dispatchedMessages ) {
-                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->internal->dispatchedMessages.iterator() );
+            synchronized( &dispatchedMessages ) {
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->dispatchedMessages.iterator() );
                 while( iter->hasNext() ) {
                     if( iter->next() == dispatch ) {
                         iter->remove();
@@ -931,11 +838,11 @@ void ActiveMQConsumer::acknowledge( const Pointer<commands::MessageDispatch>& di
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledge() {
+void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
 
     try{
 
-        synchronized( &this->internal->dispatchedMessages ) {
+        synchronized( &dispatchedMessages ) {
 
             // Acknowledge all messages so far.
             Pointer<MessageAck> ack =
@@ -951,16 +858,14 @@ void ActiveMQConsumer::acknowledge() {
             }
 
             session->oneway( ack );
-            this->internal->pendingAck.reset( NULL );
+            pendingAck.reset( NULL );
 
             // Adjust the counters
-            this->internal->deliveredCounter =
-                Math::max( 0, this->internal->deliveredCounter - (int)this->internal->dispatchedMessages.size());
-            this->internal->additionalWindowSize =
-                Math::max(0, this->internal->additionalWindowSize - (int)this->internal->dispatchedMessages.size());
+            deliveredCounter = Math::max( 0, deliveredCounter - (int)dispatchedMessages.size());
+            additionalWindowSize = Math::max(0, additionalWindowSize - (int)dispatchedMessages.size());
 
             if( !session->isTransacted() ) {
-                this->internal->dispatchedMessages.clear();
+                dispatchedMessages.clear();
             }
         }
     }
@@ -968,45 +873,43 @@ void ActiveMQConsumer::acknowledge() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::commit() {
+void ActiveMQConsumer::commit() throw( ActiveMQException ) {
 
-    synchronized( &(this->internal->dispatchedMessages) ) {
-        this->internal->dispatchedMessages.clear();
+    synchronized( &dispatchedMessages ) {
+        dispatchedMessages.clear();
     }
-    this->internal->redeliveryDelay = 0;
+    redeliveryDelay = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::rollback() {
+void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
 
-    synchronized( this->internal->unconsumedMessages.get() ) {
+    synchronized( &unconsumedMessages ) {
 
-        synchronized( &this->internal->dispatchedMessages ) {
-            if( this->internal->dispatchedMessages.isEmpty() ) {
+        synchronized( &dispatchedMessages ) {
+            if( dispatchedMessages.empty() ) {
                 return;
             }
 
             // Only increase the redelivery delay after the first redelivery..
-            Pointer<MessageDispatch> lastMsg = this->internal->dispatchedMessages.getFirst();
+            Pointer<MessageDispatch> lastMsg = dispatchedMessages.front();
             const int currentRedeliveryCount = lastMsg->getMessage()->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
-                this->internal->redeliveryDelay = this->internal->redeliveryPolicy->getNextRedeliveryDelay( internal->redeliveryDelay );
-            } else {
-                this->internal->redeliveryDelay = this->internal->redeliveryPolicy->getInitialRedeliveryDelay();
+                redeliveryDelay = this->redeliveryPolicy->getRedeliveryDelay( redeliveryDelay );
             }
 
             Pointer<MessageId> firstMsgId =
-                this->internal->dispatchedMessages.getLast()->getMessage()->getMessageId();
+                dispatchedMessages.back()->getMessage()->getMessageId();
 
-            std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( internal->dispatchedMessages.iterator() );
+            std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( dispatchedMessages.iterator() );
 
             while( iter->hasNext() ) {
                 Pointer<Message> message = iter->next()->getMessage();
                 message->setRedeliveryCounter( message->getRedeliveryCounter() + 1 );
             }
 
-            if( this->internal->redeliveryPolicy->getMaximumRedeliveries() != RedeliveryPolicy::NO_MAXIMUM_REDELIVERIES &&
-                lastMsg->getMessage()->getRedeliveryCounter() > this->internal->redeliveryPolicy->getMaximumRedeliveries() ) {
+            if( this->redeliveryPolicy->getMaximumRedeliveries() != RedeliveryPolicy::NO_MAXIMUM_REDELIVERIES &&
+                lastMsg->getMessage()->getRedeliveryCounter() > this->redeliveryPolicy->getMaximumRedeliveries() ) {
 
                 // We need to NACK the messages so that they get sent to the DLQ.
                 // Acknowledge the last message.
@@ -1014,15 +917,15 @@ void ActiveMQConsumer::rollback() {
                 ack->setAckType( ActiveMQConstants::ACK_TYPE_POISON );
                 ack->setConsumerId( this->consumerInfo->getConsumerId() );
                 ack->setDestination( lastMsg->getDestination() );
-                ack->setMessageCount( (int)this->internal->dispatchedMessages.size() );
+                ack->setMessageCount( (int)dispatchedMessages.size() );
                 ack->setLastMessageId( lastMsg->getMessage()->getMessageId() );
                 ack->setFirstMessageId( firstMsgId );
 
                 session->oneway( ack );
                 // Adjust the window size.
-                this->internal->additionalWindowSize =
-                    Math::max( 0, this->internal->additionalWindowSize - (int)this->internal->dispatchedMessages.size() );
-                this->internal->redeliveryDelay = 0;
+                additionalWindowSize =
+                    Math::max( 0, additionalWindowSize - (int)dispatchedMessages.size() );
+                redeliveryDelay = 0;
 
             } else {
 
@@ -1032,7 +935,7 @@ void ActiveMQConsumer::rollback() {
                     ack->setAckType( ActiveMQConstants::ACK_TYPE_REDELIVERED );
                     ack->setConsumerId( this->consumerInfo->getConsumerId() );
                     ack->setDestination( lastMsg->getDestination() );
-                    ack->setMessageCount( (int)this->internal->dispatchedMessages.size() );
+                    ack->setMessageCount( (int)dispatchedMessages.size() );
                     ack->setLastMessageId( lastMsg->getMessage()->getMessageId() );
                     ack->setFirstMessageId( firstMsgId );
 
@@ -1040,15 +943,15 @@ void ActiveMQConsumer::rollback() {
                 }
 
                 // stop the delivery of messages.
-                this->internal->unconsumedMessages->stop();
+                unconsumedMessages.stop();
 
-                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->internal->dispatchedMessages.iterator() );
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( dispatchedMessages.iterator() );
 
                 while( iter->hasNext() ) {
-                    this->internal->unconsumedMessages->enqueueFirst( iter->next() );
+                    unconsumedMessages.enqueueFirst( iter->next() );
                 }
 
-                if( internal->redeliveryDelay > 0 && !this->internal->unconsumedMessages->isClosed() ) {
+                if (redeliveryDelay > 0 && !unconsumedMessages.isClosed()) {
                     // TODO
                     // Start up the delivery again a little later.
                     //scheduler.executeAfterDelay(new Runnable() {
@@ -1068,13 +971,13 @@ void ActiveMQConsumer::rollback() {
                 }
 
             }
-            this->internal->deliveredCounter -= (int)internal->dispatchedMessages.size();
-            this->internal->dispatchedMessages.clear();
+            deliveredCounter -= (int)dispatchedMessages.size();
+            dispatchedMessages.clear();
         }
     }
 
-    if( this->internal->listener != NULL ) {
-        session->redispatch( *this->internal->unconsumedMessages );
+    if( this->listener != NULL ) {
+        session->redispatch( unconsumedMessages );
     }
 }
 
@@ -1083,17 +986,17 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
     try {
 
-        synchronized( this->internal->unconsumedMessages.get() ) {
+        synchronized( &unconsumedMessages ) {
 
             clearMessagesInProgress();
-            if( this->internal->clearDispatchList ) {
+            if( this->clearDispatchList ) {
                 // we are reconnecting so lets flush the in progress
                 // messages
-                this->internal->clearDispatchList = false;
-                this->internal->unconsumedMessages->clear();
+                clearDispatchList = false;
+                unconsumedMessages.clear();
             }
 
-            if( !this->internal->unconsumedMessages->isClosed() ) {
+            if( !unconsumedMessages.isClosed() ) {
 
                 // Don't dispatch expired messages, ack it and then destroy it
                 if( dispatch->getMessage()->isExpired() ) {
@@ -1103,15 +1006,15 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
                     return;
                 }
 
-                synchronized( &this->internal->listenerMutex ) {
+                synchronized( &listenerMutex ) {
                     // If we have a listener, send the message.
-                    if( this->internal->listener != NULL && internal->unconsumedMessages->isRunning() ) {
+                    if( this->listener != NULL && unconsumedMessages.isRunning() ) {
 
                         // Preprocessing.
                         beforeMessageIsConsumed( dispatch );
 
                         // Notify the listener
-                        this->internal->listener->onMessage(
+                        this->listener->onMessage(
                             dynamic_cast<cms::Message*>( dispatch->getMessage().get() ) );
 
                         // Postprocessing
@@ -1120,7 +1023,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
                     } else {
 
                         // No listener, add it to the unconsumed messages list
-                        this->internal->unconsumedMessages->enqueue( dispatch );
+                        this->unconsumedMessages.enqueue( dispatch );
                     }
                 }
             }
@@ -1132,14 +1035,15 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::sendPullRequest( long long timeout ) {
+void ActiveMQConsumer::sendPullRequest( long long timeout )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 
         this->checkClosed();
 
         // There are still local message, consume them first.
-        if( !this->internal->unconsumedMessages->isEmpty() ) {
+        if( !this->unconsumedMessages.isEmpty() ) {
             return;
         }
 
@@ -1159,7 +1063,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::checkClosed() const {
+void ActiveMQConsumer::checkClosed() const throw( ActiveMQException ) {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
@@ -1170,16 +1074,16 @@ void ActiveMQConsumer::checkClosed() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQConsumer::iterate() {
 
-    synchronized( &this->internal->listenerMutex ) {
+    synchronized( &listenerMutex ) {
 
-        if( this->internal->listener != NULL ) {
+        if( this->listener != NULL ) {
 
-            Pointer<MessageDispatch> dispatch = internal->unconsumedMessages->dequeueNoWait();
+            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeueNoWait();
             if( dispatch != NULL ) {
 
                 try {
                     beforeMessageIsConsumed( dispatch );
-                    this->internal->listener->onMessage(
+                    this->listener->onMessage(
                         dynamic_cast<cms::Message*>( dispatch->getMessage().get() ) );
                     afterMessageIsConsumed( dispatch, false );
                 } catch( ActiveMQException& ex ) {
@@ -1197,22 +1101,22 @@ bool ActiveMQConsumer::iterate() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::inProgressClearRequired() {
 
-    this->internal->inProgressClearRequiredFlag = true;
+    inProgressClearRequiredFlag = true;
     // Clears dispatched messages async to avoid lock contention with inprogress acks.
-    this->internal->clearDispatchList = true;
+    clearDispatchList = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::clearMessagesInProgress() {
-    if( this->internal->inProgressClearRequiredFlag ) {
-        synchronized( this->internal->unconsumedMessages.get() ) {
-            if( this->internal->inProgressClearRequiredFlag ) {
+    if( inProgressClearRequiredFlag ) {
+        synchronized( &unconsumedMessages ) {
+            if( inProgressClearRequiredFlag ) {
 
                 // TODO - Rollback duplicates.
 
                 // allow dispatch on this connection to resume
                 this->session->getConnection()->setTransportInterruptionProcessingComplete();
-                this->internal->inProgressClearRequiredFlag = false;
+                inProgressClearRequiredFlag = false;
             }
         }
     }
@@ -1231,7 +1135,7 @@ bool ActiveMQConsumer::isAutoAcknowledgeBatch() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConsumer::getMessageAvailableCount() const {
-    return this->internal->unconsumedMessages->size();
+    return this->unconsumedMessages.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1307,69 +1211,4 @@ void ActiveMQConsumer::applyDestinationOptions( const Pointer<ConsumerInfo>& inf
             Boolean::parseBoolean(
                 options.getProperty( networkSubscriptionStr ) ) );
     }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setRedeliveryPolicy( RedeliveryPolicy* policy ) {
-    if( policy != NULL ) {
-        this->internal->redeliveryPolicy.reset( policy );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-RedeliveryPolicy* ActiveMQConsumer::getRedeliveryPolicy() const {
-    return this->internal->redeliveryPolicy.get();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-cms::MessageListener* ActiveMQConsumer::getMessageListener() const {
-    return this->internal->listener;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const Pointer<commands::ConsumerInfo>& ActiveMQConsumer::getConsumerInfo() const {
-    this->checkClosed();
-    return this->consumerInfo;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const Pointer<commands::ConsumerId>& ActiveMQConsumer::getConsumerId() const {
-    this->checkClosed();
-    return this->consumerInfo->getConsumerId();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQConsumer::isSynchronizationRegistered() const {
-    return this->internal->synchronizationRegistered;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setSynchronizationRegistered( bool value ) {
-    this->internal->synchronizationRegistered = value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQConsumer::getLastDeliveredSequenceId() const {
-    return this->internal->lastDeliveredSequenceId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setLastDeliveredSequenceId( long long value ) {
-    this->internal->lastDeliveredSequenceId = value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setFailureError( decaf::lang::Exception* error ) {
-    if( error != NULL ) {
-        this->internal->failureError.reset( error->clone() );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Exception* ActiveMQConsumer::getFailureError() const {
-    if( this->internal->failureError == NULL ) {
-        return NULL;
-    }
-
-    return this->internal->failureError.get();
 }

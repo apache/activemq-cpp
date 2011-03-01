@@ -43,11 +43,6 @@ namespace net {
 
         static Network* networkRuntime;
 
-    private:
-
-        Network( const Network& );
-        Network& operator= ( const Network& );
-
     protected:
 
         Network();
@@ -86,24 +81,6 @@ namespace net {
             util::GenericResource<T>* resource = new util::GenericResource<T>( value );
             this->addNetworkResource( resource );
         }
-
-        /**
-         * Register a Runnable to be called when the Network Runtime is shutdown to provide
-         * a chance to cleanup any data or references that could cause problems should the
-         * Network Runtime be re-initialized.  The Runnable pointer ownership is transfered
-         * to the NetworkRuntime to guarantee the timing of resource cleanup.
-         *
-         * The cleanup tasks are run at a critical time in the Shutdown process and should
-         * be as simple as possible and make every attempt to no throw any exceptions.  If an
-         * exception is thrown it is ignored and processing of the next task is started.
-         *
-         * The tasks should not assume that any Network resources are still available and
-         * should execute as quickly as possible.
-         *
-         * @param task
-         *      Pointer to a Runnable object that will now be owned by the Network Runtime.
-         */
-        void addShutdownTask( decaf::lang::Runnable* task );
 
     public:   // Static methods
 

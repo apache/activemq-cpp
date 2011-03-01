@@ -69,7 +69,7 @@ namespace lang{
         /**
          * @param value - the string to convert to a primitive type to wrap
          */
-        Float( const std::string& value );
+        Float( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Float() {}
 
@@ -115,7 +115,7 @@ namespace lang{
          * @param f - the Float instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object represents a value
+         * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
         virtual int compareTo( const float& f ) const;
@@ -312,7 +312,8 @@ namespace lang{
          * @returns a float parsed from the string
          * @throw NumberFormatException
          */
-        static float parseFloat( const std::string& value );
+        static float parseFloat( const std::string& value )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Returns a hexadecimal string representation of the float argument. All
@@ -391,14 +392,15 @@ namespace lang{
         static Float valueOf( float value );
 
         /**
-         * Returns a Float instance that wraps a primitive float which is parsed
+         * Returns a Float instance that wraps a primtive float which is parsed
          * from the string value passed.
          *
          * @param value - the string to parse
          * @returns a new Float instance wrapping the float parsed from value
          * @throws NumberFormatException on error.
          */
-        static Float valueOf( const std::string& value );
+        static Float valueOf( const std::string& value )
+            throw ( exceptions::NumberFormatException );
 
     private:
 

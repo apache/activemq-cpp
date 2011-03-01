@@ -34,7 +34,8 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 MessagePropertyInterceptor::MessagePropertyInterceptor(
-    commands::Message* message, PrimitiveMap* properties ) : message( message ), properties( properties ) {
+    commands::Message* message, PrimitiveMap* properties )
+        throw( decaf::lang::exceptions::NullPointerException ) : message( message ), properties( properties ) {
 
     if( message == NULL ) {
         throw NullPointerException(
@@ -59,7 +60,7 @@ MessagePropertyInterceptor& MessagePropertyInterceptor::operator= ( const Messag
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagePropertyInterceptor::~MessagePropertyInterceptor() throw() {
+MessagePropertyInterceptor::~MessagePropertyInterceptor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

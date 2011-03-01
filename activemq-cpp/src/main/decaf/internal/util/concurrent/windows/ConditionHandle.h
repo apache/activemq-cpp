@@ -30,15 +30,12 @@ namespace concurrent {
     class DECAF_API ConditionHandle {
     public:
 
-        ConditionHandle() : semaphore(),
-                            criticalSection(),
-                            numWaiting(0),
-                            numWake(0),
-                            generation(0),
-                            mutex(NULL) {
+        ConditionHandle() : numWaiting(0), numWake(0), generation(0), mutex(NULL) {
         }
 
         ~ConditionHandle() {
+            CloseHandle( semaphore );
+            ::DeleteCriticalSection( &criticalSection );
         }
 
         // The actual condition object

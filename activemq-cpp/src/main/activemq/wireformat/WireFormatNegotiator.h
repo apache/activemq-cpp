@@ -34,10 +34,8 @@ namespace wireformat {
     public:
 
         /**
-         * Creates a new instance of a WireFormat Negotiator wrapping the Transport passed.
-         *
-         * @param next
-         *      The next Transport in the chain
+         * Constructor.
+         * @param next - the next Transport in the chain
          */
         WireFormatNegotiator( const Pointer<transport::Transport>& next ) :
             transport::TransportFilter( next ) {}

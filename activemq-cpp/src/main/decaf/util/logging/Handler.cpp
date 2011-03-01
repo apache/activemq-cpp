@@ -31,8 +31,12 @@ using namespace decaf::util::logging;
 const Level Handler::DEFAULT_LEVEL = Level::ALL;
 
 ////////////////////////////////////////////////////////////////////////////////
-Handler::Handler() : formatter(NULL), filter(NULL), errorManager(new ErrorManager()),
-                     level(DEFAULT_LEVEL), prefix("Handler") {
+Handler::Handler() : level( DEFAULT_LEVEL ) {
+
+    this->errorManager = new ErrorManager();
+    this->formatter = NULL;
+    this->filter = NULL;
+    this->prefix = "Handler";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

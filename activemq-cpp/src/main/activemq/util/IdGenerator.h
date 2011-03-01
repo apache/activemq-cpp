@@ -20,29 +20,29 @@
 
 #include <activemq/util/Config.h>
 
+#include <decaf/util/concurrent/Mutex.h>
 #include <string>
 
 namespace activemq {
-namespace library {
-    class ActiveMQCPP;
-}
 namespace util {
-
-    class IdGeneratorKernel;
 
     class AMQCPP_API IdGenerator {
     private:
 
+        class StaticData {
+        public:
+
+            std::string UNIQUE_STUB;
+            int instanceCount;
+            std::string hostname;
+            mutable decaf::util::concurrent::Mutex mutex;
+
+            StaticData();
+        };
+
         std::string prefix;
         mutable std::string seed;
         mutable long long sequence;
-
-        static IdGeneratorKernel* kernel;
-
-    private:
-
-        IdGenerator( const IdGenerator& );
-        IdGenerator& operator= ( const IdGenerator& );
 
     public:
 
@@ -97,10 +97,8 @@ namespace util {
 
     private:
 
-        static void initialize();
-        static void shutdown();
+        static StaticData& getClassStaticData();
 
-        friend class activemq::library::ActiveMQCPP;
     };
 
 }}

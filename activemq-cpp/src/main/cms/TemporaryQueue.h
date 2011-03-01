@@ -39,7 +39,7 @@ namespace cms{
     class CMS_API TemporaryQueue : public Destination {
     public:
 
-        virtual ~TemporaryQueue() throw();
+        virtual ~TemporaryQueue() {}
 
         /**
          * Gets the name of this queue.
@@ -48,14 +48,14 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual std::string getQueueName() const = 0;
+        virtual std::string getQueueName() const throw( CMSException ) = 0;
 
         /**
          * Destroy's the Temporary Destination at the Provider.
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void destroy() = 0;
+        virtual void destroy() throw ( CMSException ) = 0;
 
    };
 

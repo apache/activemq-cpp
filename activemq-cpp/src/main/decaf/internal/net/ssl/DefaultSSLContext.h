@@ -39,11 +39,6 @@ namespace ssl {
 
         static decaf::net::ssl::SSLContext* defaultSSLContext;
 
-    private:
-
-        DefaultSSLContext( const DefaultSSLContext& );
-        DefaultSSLContext& operator= ( const DefaultSSLContext& );
-
     protected:
 
         DefaultSSLContext();

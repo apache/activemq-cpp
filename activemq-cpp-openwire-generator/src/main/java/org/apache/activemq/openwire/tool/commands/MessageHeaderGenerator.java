@@ -42,8 +42,6 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateProperties( PrintWriter out ) {
 
-        super.generateProperties( out );
-
         out.println("    private:");
         out.println("");
         out.println("        // Used to allow a client to call Message::acknowledge when in the Client");
@@ -66,6 +64,8 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("");
         out.println("        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;");
         out.println("");
+
+        super.generateProperties( out );
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
@@ -78,14 +78,16 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * wire");
         out.println("         * @param wireFormat - the wireformat controller");
         out.println("         */");
-        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
+        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+        out.println("            throw ( decaf::io::IOException );");
         out.println("");
         out.println("        /**");
         out.println("         * Called after unmarshaling is started to cleanup the object being");
         out.println("         * unmarshaled.");
         out.println("         * @param wireFormat - the wireformat object to control unmarshaling");
         out.println("         */");
-        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
+        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+        out.println("            throw ( decaf::io::IOException );");
         out.println("");
         out.println("        /**");
         out.println("         * Indicates that this command is aware of Marshaling, and needs");

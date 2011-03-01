@@ -64,7 +64,7 @@ ActiveMQStreamMessage::ActiveMQStreamMessage() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQStreamMessage::~ActiveMQStreamMessage() throw() {
+ActiveMQStreamMessage::~ActiveMQStreamMessage() {
     this->reset();
 }
 
@@ -113,7 +113,7 @@ bool ActiveMQStreamMessage::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::clearBody() {
+void ActiveMQStreamMessage::clearBody() throw( cms::CMSException ) {
 
     // Invoke base class's version.
     ActiveMQMessageTemplate<cms::StreamMessage>::clearBody();
@@ -132,7 +132,7 @@ void ActiveMQStreamMessage::onSend() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::reset() {
+void ActiveMQStreamMessage::reset() throw ( cms::CMSException ) {
 
     try{
         storeContent();
@@ -146,7 +146,10 @@ void ActiveMQStreamMessage::reset() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQStreamMessage::readBoolean() const {
+bool ActiveMQStreamMessage::readBoolean() const throw ( cms::MessageEOFException,
+                                                        cms::MessageFormatException,
+                                                        cms::MessageNotReadableException,
+                                                        cms::CMSException ) {
 
     try{
 
@@ -184,7 +187,8 @@ bool ActiveMQStreamMessage::readBoolean() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeBoolean( bool value ) {
+void ActiveMQStreamMessage::writeBoolean( bool value ) throw ( cms::MessageNotWriteableException,
+                                                               cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -195,7 +199,10 @@ void ActiveMQStreamMessage::writeBoolean( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQStreamMessage::readByte() const {
+unsigned char ActiveMQStreamMessage::readByte() const throw ( cms::MessageEOFException,
+                                                              cms::MessageFormatException,
+                                                              cms::MessageNotReadableException,
+                                                              cms::CMSException ) {
 
     initializeReading();
     try {
@@ -241,7 +248,8 @@ unsigned char ActiveMQStreamMessage::readByte() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeByte( unsigned char value ) {
+void ActiveMQStreamMessage::writeByte( unsigned char value ) throw ( cms::MessageNotWriteableException,
+                                                                     cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -252,7 +260,11 @@ void ActiveMQStreamMessage::writeByte( unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value ) const {
+int ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value ) const
+    throw ( cms::MessageEOFException,
+            cms::MessageFormatException,
+            cms::MessageNotReadableException,
+            cms::CMSException ) {
 
     if( value.size() == 0 ) {
         return 0;
@@ -262,7 +274,9 @@ int ActiveMQStreamMessage::readBytes( std::vector<unsigned char>& value ) const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value ) {
+void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value )
+    throw ( cms::MessageNotWriteableException,
+            cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -276,7 +290,11 @@ void ActiveMQStreamMessage::writeBytes( const std::vector<unsigned char>& value 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQStreamMessage::readBytes( unsigned char* buffer, int length ) const {
+int ActiveMQStreamMessage::readBytes( unsigned char* buffer, int length ) const
+    throw ( cms::MessageEOFException,
+            cms::MessageFormatException,
+            cms::MessageNotReadableException,
+            cms::CMSException ) {
 
     initializeReading();
     try {
@@ -327,7 +345,8 @@ int ActiveMQStreamMessage::readBytes( unsigned char* buffer, int length ) const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeBytes( const unsigned char* value, int offset, int length ) {
+void ActiveMQStreamMessage::writeBytes( const unsigned char* value, int offset, int length )
+    throw ( cms::MessageNotWriteableException, cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -339,7 +358,10 @@ void ActiveMQStreamMessage::writeBytes( const unsigned char* value, int offset, 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char ActiveMQStreamMessage::readChar() const {
+char ActiveMQStreamMessage::readChar() const throw ( cms::MessageEOFException,
+                                                     cms::MessageFormatException,
+                                                     cms::MessageNotReadableException,
+                                                     cms::CMSException ) {
 
     initializeReading();
     try {
@@ -382,7 +404,8 @@ char ActiveMQStreamMessage::readChar() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeChar( char value ) {
+void ActiveMQStreamMessage::writeChar( char value ) throw ( cms::MessageNotWriteableException,
+                                                            cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -393,7 +416,10 @@ void ActiveMQStreamMessage::writeChar( char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ActiveMQStreamMessage::readFloat() const {
+float ActiveMQStreamMessage::readFloat() const throw ( cms::MessageEOFException,
+                                                       cms::MessageFormatException,
+                                                       cms::MessageNotReadableException,
+                                                       cms::CMSException ) {
 
     initializeReading();
     try {
@@ -439,7 +465,8 @@ float ActiveMQStreamMessage::readFloat() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeFloat( float value ) {
+void ActiveMQStreamMessage::writeFloat( float value ) throw ( cms::MessageNotWriteableException,
+                                                              cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -450,7 +477,10 @@ void ActiveMQStreamMessage::writeFloat( float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ActiveMQStreamMessage::readDouble() const {
+double ActiveMQStreamMessage::readDouble() const throw ( cms::MessageEOFException,
+                                                         cms::MessageFormatException,
+                                                         cms::MessageNotReadableException,
+                                                         cms::CMSException ) {
 
     initializeReading();
     try {
@@ -499,7 +529,8 @@ double ActiveMQStreamMessage::readDouble() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeDouble( double value ) {
+void ActiveMQStreamMessage::writeDouble( double value ) throw ( cms::MessageNotWriteableException,
+                                                                cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -510,7 +541,10 @@ void ActiveMQStreamMessage::writeDouble( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ActiveMQStreamMessage::readShort() const {
+short ActiveMQStreamMessage::readShort() const throw ( cms::MessageEOFException,
+                                                       cms::MessageFormatException,
+                                                       cms::MessageNotReadableException,
+                                                       cms::CMSException ) {
 
     initializeReading();
     try {
@@ -559,7 +593,8 @@ short ActiveMQStreamMessage::readShort() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeShort( short value ) {
+void ActiveMQStreamMessage::writeShort( short value ) throw ( cms::MessageNotWriteableException,
+                                                              cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -570,7 +605,10 @@ void ActiveMQStreamMessage::writeShort( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short ActiveMQStreamMessage::readUnsignedShort() const {
+unsigned short ActiveMQStreamMessage::readUnsignedShort() const throw ( cms::MessageEOFException,
+                                                                        cms::MessageFormatException,
+                                                                        cms::MessageNotReadableException,
+                                                                        cms::CMSException ) {
 
     initializeReading();
     try {
@@ -619,7 +657,9 @@ unsigned short ActiveMQStreamMessage::readUnsignedShort() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeUnsignedShort( unsigned short value ) {
+void ActiveMQStreamMessage::writeUnsignedShort( unsigned short value )
+    throw ( cms::MessageNotWriteableException,
+            cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -630,7 +670,10 @@ void ActiveMQStreamMessage::writeUnsignedShort( unsigned short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQStreamMessage::readInt() const {
+int ActiveMQStreamMessage::readInt() const throw ( cms::MessageEOFException,
+                                                   cms::MessageFormatException,
+                                                   cms::MessageNotReadableException,
+                                                   cms::CMSException ) {
 
     initializeReading();
     try {
@@ -682,7 +725,8 @@ int ActiveMQStreamMessage::readInt() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeInt( int value ) {
+void ActiveMQStreamMessage::writeInt( int value ) throw ( cms::MessageNotWriteableException,
+                                                          cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -693,7 +737,10 @@ void ActiveMQStreamMessage::writeInt( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQStreamMessage::readLong() const {
+long long ActiveMQStreamMessage::readLong() const throw ( cms::MessageEOFException,
+                                                          cms::MessageFormatException,
+                                                          cms::MessageNotReadableException,
+                                                          cms::CMSException ) {
 
     initializeReading();
     try {
@@ -748,7 +795,8 @@ long long ActiveMQStreamMessage::readLong() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeLong( long long value ) {
+void ActiveMQStreamMessage::writeLong( long long value ) throw ( cms::MessageNotWriteableException,
+                                                                 cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -759,7 +807,10 @@ void ActiveMQStreamMessage::writeLong( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQStreamMessage::readString() const {
+std::string ActiveMQStreamMessage::readString() const throw ( cms::MessageEOFException,
+                                                              cms::MessageFormatException,
+                                                              cms::MessageNotReadableException,
+                                                              cms::CMSException ) {
 
     initializeReading();
     try {
@@ -828,7 +879,8 @@ std::string ActiveMQStreamMessage::readString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQStreamMessage::writeString( const std::string& value ) {
+void ActiveMQStreamMessage::writeString( const std::string& value ) throw ( cms::MessageNotWriteableException,
+                                                                            cms::CMSException ) {
 
     initializeWriting();
     try{
@@ -886,10 +938,7 @@ void ActiveMQStreamMessage::initializeWriting() {
 
             if( this->connection != NULL && this->connection->isUseCompression() ) {
                 this->compressed = true;
-
-                Deflater* deflator = new Deflater( this->connection->getCompressionLevel() );
-
-                os = new DeflaterOutputStream( os, deflator, true, true );
+                os = new DeflaterOutputStream( os, true );
             }
 
             this->dataOut.reset( new DataOutputStream( os, true ) );

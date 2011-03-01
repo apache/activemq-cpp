@@ -26,14 +26,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : stream(stream),
-                                                                           own(own),
-                                                                           closed(false) {
+OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : own( own ) {
 
     if( stream == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "OutputStream pointer cannot be NULL" );
     }
+
+    this->stream = stream;
+    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ OutputStreamWriter::~OutputStreamWriter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::close() {
+void OutputStreamWriter::close() throw( decaf::io::IOException ) {
 
     try{
 
@@ -68,7 +69,7 @@ void OutputStreamWriter::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::flush() {
+void OutputStreamWriter::flush() throw( decaf::io::IOException ) {
 
     try{
         checkClosed();
@@ -79,7 +80,10 @@ void OutputStreamWriter::flush() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::doWriteArrayBounded( const char* buffer, int size, int offset, int length ) {
+void OutputStreamWriter::doWriteArrayBounded( const char* buffer, int size, int offset, int length )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         checkClosed();
@@ -97,7 +101,7 @@ void OutputStreamWriter::doWriteArrayBounded( const char* buffer, int size, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::checkClosed() const {
+void OutputStreamWriter::checkClosed() const throw( decaf::io::IOException ) {
     if( closed ) {
         throw IOException( __FILE__, __LINE__, "This Writer is Closed" );
     }

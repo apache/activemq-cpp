@@ -31,8 +31,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CompositeTaskRunner::CompositeTaskRunner() :
-    tasks(), mutex(), thread(), threadTerminated(false), pending(false), shutDown(false) {
+CompositeTaskRunner::CompositeTaskRunner() {
+
+    this->threadTerminated = false;
+    this->pending = false;
+    this->shutDown = false;
 
     this->thread.reset( new Thread( this ) );
     this->thread->start();

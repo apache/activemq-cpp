@@ -27,33 +27,34 @@ namespace activemq{
 namespace cmsutil{
 
     class DummyConnectionFactory;
-
+    
     class CmsAccessorTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( CmsAccessorTest );
         CPPUNIT_TEST( testConnectionFactory );
         CPPUNIT_TEST( testAckMode );
         CPPUNIT_TEST( testCreateResources );
-        CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE_END();               
 
         class MyAccessor : public CmsAccessor {
-
+        
         public:
-
-            virtual ~MyAccessor() throw(){}
-
-            virtual cms::Connection* createConnection() {
+            
+            virtual ~MyAccessor(){}
+            
+            virtual cms::Connection* createConnection() throw (cms::CMSException) {
                 return CmsAccessor::createConnection();
             }
-
-            virtual cms::Session* createSession(cms::Connection* con) {
+                
+            virtual cms::Session* createSession(cms::Connection* con) 
+                throw (cms::CMSException) {
                 return CmsAccessor::createSession(con);
             }
         };
-
+        
         MyAccessor* accessor;
         DummyConnectionFactory* cf;
-
+        
     public:
 
         CmsAccessorTest() {}
@@ -61,7 +62,7 @@ namespace cmsutil{
 
         virtual void setUp();
         virtual void tearDown();
-
+        
         void testConnectionFactory();
         void testAckMode();
         void testCreateResources();

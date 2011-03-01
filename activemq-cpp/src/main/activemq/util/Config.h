@@ -69,12 +69,6 @@
         #ifndef HAVE_WINDOWS_H
             #define HAVE_WINDOWS_H
         #endif
-        #ifndef _SECURE_SCL
-            #define _SECURE_SCL 1
-        #endif
-        #ifndef _SCL_SECURE_NO_WARNINGS
-            #define _SCL_SECURE_NO_WARNINGS 1
-        #endif
     #else
         #ifndef HAVE_UUID_UUID_H
             #define HAVE_UUID_UUID_H

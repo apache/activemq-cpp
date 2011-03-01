@@ -33,7 +33,7 @@ ActiveMQTempQueue::ActiveMQTempQueue( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempQueue::~ActiveMQTempQueue() throw() {
+ActiveMQTempQueue::~ActiveMQTempQueue() {
     try {
         this->close();
     }
@@ -68,13 +68,7 @@ bool ActiveMQTempQueue::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempQueue::equals( const cms::Destination& value ) const {
-    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
-    return ActiveMQDestination::equals( dest );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempQueue::destroy() {
+void ActiveMQTempQueue::destroy() throw ( cms::CMSException ) {
     try{
         close();
     }

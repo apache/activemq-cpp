@@ -39,10 +39,9 @@ namespace cmsutil {
          *
          * @param session
          *          the CMS <code>Session</code>
-         *
-         * @throws CMSException if thrown by CMS API methods
+         * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual void doInCms( cms::Session* session ) = 0;
+        virtual void doInCms( cms::Session* session ) throw ( cms::CMSException ) = 0;
 
     };
 

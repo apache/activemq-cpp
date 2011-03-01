@@ -37,6 +37,9 @@ namespace nio{
     class DECAF_API ShortArrayBuffer : public decaf::nio::ShortBuffer{
     private:
 
+        // Read / Write flag
+        bool readOnly;
+
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -45,9 +48,6 @@ namespace nio{
 
         // The length of the sub-array, or limit
         int length;
-
-        // Read / Write flag
-        bool readOnly;
 
     public:
 
@@ -63,7 +63,8 @@ namespace nio{
          *
          * @throws IllegalArguementException if the capacity value is negative.
          */
-        ShortArrayBuffer( int size, bool readOnly = false );
+        ShortArrayBuffer( int size, bool readOnly = false )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Creates a ShortArrayBuffer object that wraps the given array.  If the own flag
@@ -83,7 +84,9 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
-        ShortArrayBuffer( short* array, int size, int offset, int length, bool readOnly = false );
+        ShortArrayBuffer( short* array, int size, int offset, int length, bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Creates a byte buffer that wraps the passed ByteArrayAdapter and
@@ -103,7 +106,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if offset + length is greater than array size.
          */
         ShortArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array, int offset, int length,
-                          bool readOnly = false );
+                          bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Create a ShortArrayBuffer that mirrors this one, meaning it shares a
@@ -122,12 +127,16 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual short* array();
+        virtual short* array()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int arrayOffset();
+        virtual int arrayOffset()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -137,7 +146,7 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual ShortBuffer& compact();
+        virtual ShortBuffer& compact() throw( decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -147,12 +156,13 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual short get();
+        virtual short get() throw ( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual short get( int index ) const;
+        virtual short get( int index ) const
+            throw ( lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
@@ -169,12 +179,16 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual ShortBuffer& put( short value );
+        virtual ShortBuffer& put( short value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ShortBuffer& put( int index, short value );
+        virtual ShortBuffer& put( int index, short value )
+            throw( lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}

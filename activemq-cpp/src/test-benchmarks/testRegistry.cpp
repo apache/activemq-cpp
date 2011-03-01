@@ -31,10 +31,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetBenchmark );
 #include <decaf/util/MapBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapBenchmark );
-#include <decaf/util/StlListBenchmark.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlListBenchmark );
-#include <decaf/util/LinkedListBenchmark.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::LinkedListBenchmark );
 
 #include <decaf/io/ByteArrayOutputStreamBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamBenchmark );

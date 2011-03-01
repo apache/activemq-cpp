@@ -44,9 +44,6 @@ namespace logging{
     public:
 
         StlMap<string, Logger*> loggers;
-
-        LogManagerInternals() : loggers() {}
-
     };
 
 }}}
@@ -58,7 +55,8 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager::LogManager() : listeners(), properties(), internal(new LogManagerInternals()) {
+LogManager::LogManager() {
+    this->internal.reset( new LogManagerInternals() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +90,9 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool LogManager::addLogger( Logger* logger DECAF_UNUSED ) {
+bool LogManager::addLogger( Logger* logger DECAF_UNUSED )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     return false;
 }
@@ -138,11 +138,14 @@ void LogManager::shutdown() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::readConfiguration() {
+void LogManager::readConfiguration()
+    throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED ) {
+void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

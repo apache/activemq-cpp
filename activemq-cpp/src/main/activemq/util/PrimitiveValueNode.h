@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_UTIL_PRIMITIVEVALUENODE_H_
 
 #include <activemq/util/Config.h>
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/List.h>
 
@@ -239,7 +239,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        bool getBool() const;
+        bool getBool() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -255,7 +256,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        unsigned char getByte() const;
+        unsigned char getByte() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -271,7 +273,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        char getChar() const;
+        char getChar() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -287,7 +290,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        short getShort() const;
+        short getShort() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -303,7 +307,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        int getInt() const;
+        int getInt() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -319,7 +324,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        long long getLong() const;
+        long long getLong() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -335,7 +341,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        float getFloat() const;
+        float getFloat() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -351,7 +358,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        double getDouble() const;
+        double getDouble() const
+            throw(decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -367,7 +375,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        std::string getString() const;
+        std::string getString() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -383,7 +392,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        std::vector<unsigned char> getByteArray() const;
+        std::vector<unsigned char> getByteArray() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -399,7 +409,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        const decaf::util::List<PrimitiveValueNode>& getList() const;
+        const decaf::util::List<PrimitiveValueNode>& getList() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Sets the value of this value node to the new value specified,
@@ -415,7 +426,8 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        const decaf::util::Map<std::string, PrimitiveValueNode>& getMap() const;
+        const decaf::util::Map<std::string, PrimitiveValueNode>& getMap() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Creates a string representation of this value.

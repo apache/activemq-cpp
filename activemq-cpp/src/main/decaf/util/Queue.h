@@ -21,8 +21,8 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
-#include <decaf/util/NoSuchElementException.h>
 
 namespace decaf{
 namespace util{
@@ -52,7 +52,7 @@ namespace util{
      * @since 1.0
      */
     template <typename E>
-    class Queue : public virtual decaf::util::Collection<E> {
+    class Queue : public decaf::util::AbstractCollection<E> {
     public:
 
         virtual ~Queue() {}
@@ -73,7 +73,9 @@ namespace util{
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& value ) = 0;
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Gets and removes the element in the head of the queue.  If the operation succeeds the
@@ -98,7 +100,7 @@ namespace util{
          * @throws NoSuchElementException
          *         if there is no element in the queue.
          */
-        virtual E remove() = 0;
+        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Gets but not removes the element in the head of the queue.  The result if successful is
@@ -118,9 +120,11 @@ namespace util{
          *
          * @return the element in the head of the queue.
          *
-         * @throws NoSuchElementException if there is no element in the queue.
+         * @throws NoSuchElementException
+         *         if there is no element in the queue.
          */
-        virtual E element() const = 0;
+        virtual E element() const
+            throw( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
     };
 

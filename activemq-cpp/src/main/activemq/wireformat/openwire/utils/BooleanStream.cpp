@@ -30,18 +30,18 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::BooleanStream() : data(), arrayLimit(0), arrayPos(0), bytePos(0) {
+BooleanStream::BooleanStream() {
+
+    this->arrayLimit = 0;
+    this->arrayPos = 0;
+    this->bytePos = 0;
 
     // Reserve 1K
     this->data.resize( 1000, 0 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::~BooleanStream() throw() {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-bool BooleanStream::readBoolean() {
+bool BooleanStream::readBoolean() throw ( IOException ) {
 
     try {
 
@@ -60,7 +60,7 @@ bool BooleanStream::readBoolean() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::writeBoolean( bool value ) {
+void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
 
     try{
 
@@ -91,7 +91,7 @@ void BooleanStream::writeBoolean( bool value ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::marshal( DataOutputStream* dataOut ) {
+void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
 
     try {
 
@@ -139,7 +139,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::unmarshal( DataInputStream* dataIn ) {
+void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
 
     try{
 

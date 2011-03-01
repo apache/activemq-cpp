@@ -40,10 +40,6 @@ namespace net {
 
         virtual ~Inet4Address();
 
-    public:
-
-        virtual InetAddress* clone() const;
-
         /**
          * Check if this InetAddress is a valid wildcard address.
          *

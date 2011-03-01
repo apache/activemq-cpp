@@ -65,11 +65,6 @@ namespace logging{
         // Indicates if the writer has been initialized already
         bool writerNotInitialized;
 
-    private:
-
-        StreamHandler( const StreamHandler& );
-        StreamHandler& operator= ( const StreamHandler& );
-
     public:
 
         /**
@@ -94,7 +89,7 @@ namespace logging{
          *
          * @throw IOException if an I/O error occurs.
          */
-        virtual void close();
+        virtual void close() throw ( decaf::io::IOException );
 
         /**
          * Flush the Handler's output, clears any buffers.
@@ -133,7 +128,8 @@ namespace logging{
          *
          * @throws NullPointerException if the passed stream is NULL.
          */
-        virtual void setOuputStream( decaf::io::OutputStream* stream );
+        virtual void setOuputStream( decaf::io::OutputStream* stream )
+            throw( decaf::lang::exceptions::NullPointerException );
 
         /**
          * Closes this handler, but the underlying output stream is only closed if

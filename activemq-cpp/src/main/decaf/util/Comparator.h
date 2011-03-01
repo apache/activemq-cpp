@@ -19,6 +19,8 @@
 #define _DECAF_UTIL_COMPARATOR_H_
 
 #include <decaf/util/Config.h>
+#include <algorithm>
+#include <functional>
 
 namespace decaf{
 namespace util{
@@ -33,11 +35,9 @@ namespace util{
      * be consistent with equals if and only if
      * ( compare( e1, e2) == 0 ) has the same boolean value as ( e1 == e2 ) for
      * every e1 and e2 in S.
-     *
-     * @since 1.0
      */
     template<typename T>
-    class Comparator {
+    class Comparator : public std::binary_function< T, T, bool > {
     public:
 
         virtual ~Comparator() {}
@@ -46,10 +46,8 @@ namespace util{
          * Implementation of the Binary function interface as a means of allowing
          * a Comparator to be passed to an STL Map for use as the sorting criteria.
          *
-         * @param left
-         *      The Left hand side operand.
-         * @param right
-         *      The Right hand side operand.
+         * @param left - the Left hand side operand.
+         * @param right - the Right hand side operand.
          *
          * @return true if the vale of left is less than the value of right.
          */
@@ -76,14 +74,10 @@ namespace util{
          * that violates this condition should clearly indicate this fact. The
          * recommended language is "Note: this comparator imposes orderings that
          * are inconsistent with equals."
-         *
-         * @param o1
-         *      The first object to be compared
-         * @param o2
-         *      The second object to be compared
-         *
+         * @param o1 - the first object to be compared
+         * @param o2 - the second object to be compared
          * @returns a negative integer, zero, or a positive integer as the first
-         *          argument is less than, equal to, or greater than the second.
+         * argument is less than, equal to, or greater than the second.
          */
         virtual int compare( const T& o1, const T& o2 ) const = 0;
 

@@ -22,7 +22,6 @@
 #include <activemq/transport/mock/MockTransport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ActiveMQMessage.h>
-#include <activemq/commands/ConnectionControl.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/UUID.h>
@@ -535,58 +534,4 @@ void FailoverTransportTest::disposeOf( const Pointer<ProducerInfo>& producer,
     Pointer<RemoveInfo> command( new RemoveInfo() );
     command->setObjectId( producer->getProducerId() );
     transport->oneway( command );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportTest::testTransportHandlesConnectionControl() {
-
-    std::string uri =
-        "failover://(mock://localhost:61616)?randomize=false";
-
-    std::string reconnectStr = "mock://localhost:61613?name=Reconnect";
-
-    Pointer<ConnectionControl> control( new ConnectionControl() );
-    control->setReconnectTo( reconnectStr );
-    control->setRebalanceConnection( true );
-
-    DefaultTransportListener listener;
-    FailoverTransportFactory factory;
-
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
-
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
-
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
-
-    transport->start();
-
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
-
-    MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        Thread::sleep( 100 );
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
-    }
-
-    LinkedList<URI> removals;
-    removals.add( URI("mock://localhost:61616") );
-
-    mock->fireCommand( control );
-    Thread::sleep( 1000 );
-    failover->removeURI( true, removals );
-
-    Thread::sleep( 2000 );
-
-    mock = NULL;
-    while( mock == NULL ) {
-        Thread::sleep( 100 );
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
-    }
-
-    CPPUNIT_ASSERT_EQUAL( mock->getName() ,std::string( "Reconnect" ) );
 }

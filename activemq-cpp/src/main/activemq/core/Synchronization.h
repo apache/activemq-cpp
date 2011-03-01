@@ -33,11 +33,11 @@ namespace core {
 
         virtual ~Synchronization() {}
 
-        virtual void beforeEnd() = 0;
+        virtual void beforeEnd() throw( exceptions::ActiveMQException ) = 0;
 
-        virtual void afterCommit() = 0;
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) = 0;
 
-        virtual void afterRollback() = 0;
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) = 0;
 
     };
 

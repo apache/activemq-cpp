@@ -50,31 +50,34 @@ namespace concurrent{
 
         Mutex();
 
-        Mutex( const std::string& name );
-
         virtual ~Mutex();
 
-        std::string getName() const;
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException );
 
-        std::string toString() const;
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException );
 
-    public:  // Synchronizable API Implementation
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException );
 
-        virtual void lock();
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException );
 
-        virtual bool tryLock();
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException );
 
-        virtual void unlock();
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException );
 
-        virtual void wait();
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException );
 
-        virtual void wait( long long millisecs );
-
-        virtual void wait( long long millisecs, int nanos );
-
-        virtual void notify();
-
-        virtual void notifyAll();
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException );
 
     };
 

@@ -36,9 +36,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) : session(session),
-                                                              consumer(),
-                                                              advisoryConsumer() {
+AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
 
     if( session == NULL ) {
         throw NullPointerException(
@@ -50,6 +48,7 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) : session(session),
     std::auto_ptr<cms::Topic> advisories( session->createTopic(
         "ActiveMQ.Advisory.Producer.Topic.HEART-BEAT-CHANNEL" ) );
 
+    this->session = session;
     this->consumer.reset( session->createConsumer( destination.get() ) );
     this->advisoryConsumer.reset( session->createConsumer( advisories.get() ) );
     this->consumer->setMessageListener( this );
@@ -57,7 +56,7 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) : session(session),
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::~AdvisoryConsumer() throw() {
+AdvisoryConsumer::~AdvisoryConsumer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +65,7 @@ void AdvisoryConsumer::close() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AdvisoryConsumer::onMessage( const cms::Message* message ) throw() {
+void AdvisoryConsumer::onMessage( const cms::Message* message ) {
 
     if( message->getCMSType() == "Advisory" ) {
 

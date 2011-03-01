@@ -25,7 +25,7 @@
 #include <activemq/transport/TransportFactory.h>
 
 #include <decaf/util/StlMap.h>
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
@@ -71,7 +71,8 @@ namespace transport {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        TransportFactory* findFactory( const std::string& name ) const;
+        TransportFactory* findFactory( const std::string& name ) const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Registers a new TransportFactory with this Registry.  If a Factory with the
@@ -87,7 +88,9 @@ namespace transport {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, TransportFactory* factory );
+        void registerFactory( const std::string& name, TransportFactory* factory )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the

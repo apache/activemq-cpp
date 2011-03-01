@@ -38,11 +38,6 @@ namespace util {
 
         T* managed;
 
-    private:
-
-        GenericResource( const GenericResource& );
-        GenericResource& operator= ( const GenericResource& );
-
     public:
 
         explicit GenericResource( T* value ) : managed( value ) {

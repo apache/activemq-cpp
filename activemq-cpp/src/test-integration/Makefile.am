@@ -24,7 +24,6 @@ cc_sources = \
     activemq/test/JmsMessageGroupsTest.cpp \
     activemq/test/MapMessageTest.cpp \
     activemq/test/MessageCompressionTest.cpp \
-    activemq/test/MessagePriorityTest.cpp \
     activemq/test/QueueBrowserTest.cpp \
     activemq/test/SimpleRollbackTest.cpp \
     activemq/test/SimpleTest.cpp \
@@ -40,7 +39,6 @@ cc_sources = \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
     activemq/test/openwire/OpenwireMapMessageTest.cpp \
     activemq/test/openwire/OpenwireMessageCompressionTest.cpp \
-    activemq/test/openwire/OpenwireMessagePriorityTest.cpp \
     activemq/test/openwire/OpenwireQueueBrowserTest.cpp \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
     activemq/test/openwire/OpenwireSimpleTest.cpp \
@@ -48,7 +46,6 @@ cc_sources = \
     activemq/test/openwire/OpenwireTempDestinationTest.cpp \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
-    activemq/test/openwire/OpenwireXATransactionsTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
     activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
@@ -74,7 +71,6 @@ h_sources = \
     activemq/test/JmsMessageGroupsTest.h \
     activemq/test/MapMessageTest.h \
     activemq/test/MessageCompressionTest.h \
-    activemq/test/MessagePriorityTest.h \
     activemq/test/QueueBrowserTest.h \
     activemq/test/SimpleRollbackTest.h \
     activemq/test/SimpleTest.h \
@@ -90,7 +86,6 @@ h_sources = \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
     activemq/test/openwire/OpenwireMapMessageTest.h \
     activemq/test/openwire/OpenwireMessageCompressionTest.h \
-    activemq/test/openwire/OpenwireMessagePriorityTest.h \
     activemq/test/openwire/OpenwireQueueBrowserTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
     activemq/test/openwire/OpenwireSimpleTest.h \
@@ -98,7 +93,6 @@ h_sources = \
     activemq/test/openwire/OpenwireTempDestinationTest.h \
     activemq/test/openwire/OpenwireTransactionTest.h \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
-    activemq/test/openwire/OpenwireXATransactionsTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
     activemq/test/stomp/StompCmsTemplateTest.h \
     activemq/test/stomp/StompDurableTest.h \

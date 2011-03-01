@@ -24,7 +24,6 @@
 #include <activemq/threads/DedicatedTaskRunner.h>
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <decaf/util/Random.h>
-#include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Integer.h>
 
@@ -43,44 +42,34 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport() : closed(false),
-                                         connected(false),
-                                         started(false),
-                                         timeout(-1),
-                                         initialReconnectDelay(10),
-                                         maxReconnectDelay(1000*30),
-                                         backOffMultiplier(2),
-                                         useExponentialBackOff(true),
-                                         initialized(false),
-                                         maxReconnectAttempts(0),
-                                         startupMaxReconnectAttempts(0),
-                                         connectFailures(0),
-                                         reconnectDelay(10),
-                                         trackMessages(false),
-                                         trackTransactionProducers(true),
-                                         maxCacheSize(128*1024),
-                                         connectionInterruptProcessingComplete(false),
-                                         firstConnection(true),
-                                         updateURIsSupported(true),
-                                         reconnectSupported(true),
-                                         reconnectMutex(),
-                                         sleepMutex(),
-                                         listenerMutex(),
-                                         stateTracker(),
-                                         requestMap(),
-                                         uris(new URIPool()),
-                                         updated(),
-                                         connectedTransportURI(),
-                                         connectedTransport(),
-                                         connectionFailure(),
-                                         backups(),
-                                         closeTask(new CloseTransportsTask()),
-                                         taskRunner(new CompositeTaskRunner()),
-                                         disposedListener(),
-                                         myTransportListener(new FailoverTransportListener( this )),
-                                         transportListener(NULL) {
+FailoverTransport::FailoverTransport() {
 
+    this->timeout = -1;
+    this->initialReconnectDelay = 10;
+    this->maxReconnectDelay = 1000 * 30;
+    this->backOffMultiplier = 2;
+    this->useExponentialBackOff = true;
+    this->initialized = false;
+    this->maxReconnectAttempts = 0;
+    this->startupMaxReconnectAttempts = 0;
+    this->connectFailures = 0;
+    this->reconnectDelay = this->initialReconnectDelay;
+    this->trackMessages = false;
+    this->trackTransactionProducers = true;
+    this->maxCacheSize = 128 * 1024;
+
+    this->started = false;
+    this->closed = false;
+    this->connected = false;
+    this->connectionInterruptProcessingComplete = false;
+    this->firstConnection = true;
+
+    this->transportListener = NULL;
+    this->uris.reset( new URIPool() );
     this->stateTracker.setTrackTransactions( true );
+    this->myTransportListener.reset( new FailoverTransportListener( this ) );
+    this->closeTask.reset( new CloseTransportsTask() );
+    this->taskRunner.reset( new CompositeTaskRunner() );
     this->backups.reset( new BackupTransportPool( taskRunner, closeTask, uris ) );
 
     this->taskRunner->addTask( this );
@@ -97,18 +86,31 @@ FailoverTransport::~FailoverTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isShutdownCommand( const Pointer<Command>& command ) const {
+
+    if( command != NULL ) {
+
+        if( command->isShutdownInfo() || command->isRemoveInfo() ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::add( const std::string& uri ) {
 
     try {
         uris->addURI( URI( uri ) );
 
-        reconnect( false );
+        reconnect();
     }
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::addURI( bool rebalance, const List<URI>& uris ) {
+void FailoverTransport::addURI( const List<URI>& uris ) {
 
     std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
@@ -116,36 +118,30 @@ void FailoverTransport::addURI( bool rebalance, const List<URI>& uris ) {
         this->uris->addURI( iter->next() );
     }
 
-    reconnect( rebalance );
+    reconnect();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::removeURI( bool rebalance, const List<URI>& uris ) {
+void FailoverTransport::removeURI( const List<URI>& uris ) {
 
     std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
-    synchronized( &reconnectMutex ) {
-
-        // We need to lock so that the reconnect doesn't get kicked off until
-        // we have a chance to remove the URIs in case one of them was the one
-        // we had a connection to and it gets reinserted into the URI pool.
-
-        reconnect( rebalance );
-
-        while( iter->hasNext() ) {
-            this->uris->removeURI( iter->next() );
-        }
+    while( iter->hasNext() ) {
+        this->uris->removeURI( iter->next() );
     }
+
+    reconnect();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::reconnect( const decaf::net::URI& uri ) {
+void FailoverTransport::reconnect( const decaf::net::URI& uri )
+    throw( decaf::io::IOException ) {
 
     try {
 
         this->uris->addURI( uri );
 
-        reconnect( true );
+        reconnect();
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
@@ -180,7 +176,8 @@ std::string FailoverTransport::getRemoteAddress() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::oneway( const Pointer<Command>& command ) {
+void FailoverTransport::oneway( const Pointer<Command>& command )
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     Pointer<Exception> error;
 
@@ -188,7 +185,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
 
         synchronized( &reconnectMutex ) {
 
-            if( command != NULL && connectedTransport == NULL ) {
+            if( isShutdownCommand( command ) && connectedTransport == NULL ) {
 
                 if( command->isShutdownInfo() ) {
                     // Skipping send of ShutdownInfo command when not connected.
@@ -198,13 +195,9 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
                 if( command->isRemoveInfo() || command->isMessageAck() ) {
                     // Simulate response to RemoveInfo command or Ack as they will be stale.
                     stateTracker.track( command );
-
-                    if( command->isResponseRequired() ) {
-                        Pointer<Response> response( new Response() );
-                        response->setCorrelationId( command->getCommandId() );
-                        myTransportListener->onCommand( response );
-                    }
-
+                    Pointer<Response> response( new Response() );
+                    response->setCorrelationId( command->getCommandId() );
+                    myTransportListener->onCommand( response );
                     return;
                 }
             }
@@ -310,7 +303,9 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED ) {
+Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
+    throw( IOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
@@ -318,14 +313,16 @@ Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AM
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED,
-                                                unsigned int timeout AMQCPP_UNUSED ) {
+                                                unsigned int timeout AMQCPP_UNUSED )
+    throw( IOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::start() {
+void FailoverTransport::start() throw( IOException ) {
 
     try{
 
@@ -344,7 +341,7 @@ void FailoverTransport::start() {
             if( connectedTransport != NULL ) {
                 stateTracker.restore( connectedTransport );
             } else {
-                reconnect( false );
+                reconnect();
             }
         }
     }
@@ -354,7 +351,7 @@ void FailoverTransport::start() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::stop() {
+void FailoverTransport::stop() throw( IOException ) {
 
     try{
     }
@@ -364,7 +361,7 @@ void FailoverTransport::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::close() {
+void FailoverTransport::close() throw( IOException ) {
 
     try{
 
@@ -405,40 +402,18 @@ void FailoverTransport::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::reconnect( bool rebalance ) {
-
-    Pointer<Transport> transport;
+void FailoverTransport::reconnect() {
 
     synchronized( &reconnectMutex  ) {
         if( started ) {
-
-            if( rebalance ) {
-
-                transport.swap( this->connectedTransport );
-
-                if( transport != NULL ) {
-
-                    if( this->disposedListener != NULL ) {
-                        transport->setTransportListener( disposedListener.get() );
-                    }
-
-                    // Hand off to the close task so it gets done in a different thread.
-                    closeTask->add( transport );
-
-                    if( this->connectedTransportURI != NULL ) {
-                        this->uris->addURI( *this->connectedTransportURI );
-                        this->connectedTransportURI.reset( NULL );
-                    }
-                }
-            }
-
             taskRunner->wakeup();
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::restoreTransport( const Pointer<Transport>& transport ) {
+void FailoverTransport::restoreTransport( const Pointer<Transport>& transport )
+    throw( IOException ) {
 
     try{
 
@@ -466,7 +441,8 @@ void FailoverTransport::restoreTransport( const Pointer<Transport>& transport ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error AMQCPP_UNUSED ) {
+void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error AMQCPP_UNUSED )
+    throw( decaf::lang::Exception ) {
 
     Pointer<Transport> transport;
     synchronized( &reconnectMutex ) {
@@ -474,6 +450,8 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
     }
 
     if( transport != NULL ) {
+
+        //std::cout << "Failover: Connection to has been unexpectedly terminated." << std::endl;
 
         if( this->disposedListener != NULL ) {
             transport->setTransportListener( disposedListener.get() );
@@ -500,110 +478,6 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
             if( started ) {
                 taskRunner->wakeup();
-            }
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::handleConnectionControl( const Pointer<Command>& control ) {
-
-    try {
-
-        Pointer<ConnectionControl> ctrlCommand = control.dynamicCast<ConnectionControl>();
-
-        std::string reconnectStr = ctrlCommand->getReconnectTo();
-        if( !reconnectStr.empty() ) {
-
-            std::remove( reconnectStr.begin(), reconnectStr.end(), ' ' );
-
-            if( reconnectStr.length() > 0 ) {
-                try {
-                    if( isReconnectSupported() ) {
-                        reconnect( URI( reconnectStr ) );
-                    }
-                } catch( Exception e ) {
-                }
-            }
-        }
-
-        processNewTransports( ctrlCommand->isRebalanceConnection(), ctrlCommand->getConnectedBrokers() );
-    }
-    AMQ_CATCH_RETHROW( Exception )
-    AMQ_CATCHALL_THROW( Exception )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::processNewTransports( bool rebalance, std::string newTransports ) {
-
-    if( !newTransports.empty() ) {
-
-        std::remove( newTransports.begin(), newTransports.end(), ' ' );
-
-        if( newTransports.length() > 0 && isUpdateURIsSupported() ) {
-
-            LinkedList<URI> list;
-            StringTokenizer tokenizer( newTransports, "," );
-
-            while( tokenizer.hasMoreTokens() ) {
-                std::string str = tokenizer.nextToken();
-                try {
-                    URI uri( str );
-                    list.add( uri );
-                } catch( Exception e ) {
-                    //LOG.error( "Failed to parse broker address: " + str, e );
-                }
-            }
-
-            if( !list.isEmpty() ) {
-                try {
-                    updateURIs( rebalance, list );
-                } catch( IOException e ) {
-                    //LOG.error( "Failed to update transport URI's from: " + newTransports, e );
-                }
-            }
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& updatedURIs ) {
-
-    if( isUpdateURIsSupported() ) {
-
-        LinkedList<URI> copy( this->updated );
-        LinkedList<URI> add;
-
-        if( !updatedURIs.isEmpty() ) {
-
-            StlSet<URI> set;
-
-            for( int i = 0; i < updatedURIs.size(); i++ ) {
-                set.add( updatedURIs.get(i) );
-            }
-
-            Pointer< Iterator<URI> > setIter( set.iterator() );
-            while( setIter->hasNext() ) {
-                URI value = setIter->next();
-                if( copy.remove( value ) == false ) {
-                    add.add( value );
-                }
-            }
-
-            synchronized( &reconnectMutex ) {
-
-                this->updated.clear();
-                Pointer< Iterator<URI> > listIter1( add.iterator() );
-                while( listIter1->hasNext() ) {
-                    this->updated.add( listIter1->next() );
-                }
-
-                Pointer< Iterator<URI> > listIter2( copy.iterator() );
-                while( listIter2->hasNext() ) {
-                    this->uris->removeURI( listIter2->next() );
-                }
-
-                this->addURI( rebalance, add );
             }
         }
     }
@@ -637,7 +511,7 @@ bool FailoverTransport::iterate() {
             return false;
         } else {
 
-            LinkedList<URI> failures;
+            StlList<URI> failures;
             Pointer<Transport> transport;
             URI uri;
 
@@ -692,6 +566,9 @@ bool FailoverTransport::iterate() {
 
                 try {
 
+                    //std::cout << "Failover: Attempting to connect to: "
+                    //          << uri.toString() << std::endl;
+
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
@@ -702,6 +579,8 @@ bool FailoverTransport::iterate() {
 
                 } catch( Exception& e ) {
                     e.setMark( __FILE__, __LINE__ );
+                    //std::cout << "Failover: Failed while attempting to connect to: "
+                    //          << uri.toString() << std::endl;
 
                     if( transport != NULL ) {
                         if( this->disposedListener != NULL ) {
@@ -753,6 +632,9 @@ bool FailoverTransport::iterate() {
                 if( firstConnection ) {
                     firstConnection = false;
                 }
+
+                //std::cout << "Failover: Successfully connected to Broker at: "
+                //          << connectedTransportURI->toString() << std::endl;
 
                 return false;
             }
@@ -820,7 +702,8 @@ bool FailoverTransport::iterate() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransport::createTransport( const URI& location ) const {
+Pointer<Transport> FailoverTransport::createTransport( const URI& location ) const
+    throw ( decaf::io::IOException ) {
 
     try{
 

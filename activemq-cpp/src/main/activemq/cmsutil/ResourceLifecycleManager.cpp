@@ -17,33 +17,13 @@
 
 #include "ResourceLifecycleManager.h"
 
-#include <cms/CMSException.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
-using namespace cms;
 using namespace activemq::cmsutil;
 
 ////////////////////////////////////////////////////////////////////////////////
-#define CMSTEMPLATE_CATCHALL() \
-    catch( cms::CMSException& ex ){ \
-        throw ex; \
-    } catch( std::exception& ex ) { \
-        throw CMSException( ex.what(), NULL ); \
-    } catch( ... ){ \
-        throw CMSException( "caught unknown exception", NULL ); \
-    }
-
-////////////////////////////////////////////////////////////////////////////////
-#define CMSTEMPLATE_CATCHALL_NOTHROW( ) \
-    catch( ... ){ \
-    }
-
-////////////////////////////////////////////////////////////////////////////////
-ResourceLifecycleManager::ResourceLifecycleManager() : connections(),
-                                                       sessions(),
-                                                       destinations(),
-                                                       producers(),
-                                                       consumers() {
-
+ResourceLifecycleManager::ResourceLifecycleManager() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +34,7 @@ ResourceLifecycleManager::~ResourceLifecycleManager() {
         // Destroy all the resources
         destroy();
     }
-    CMSTEMPLATE_CATCHALL_NOTHROW()
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +48,7 @@ void ResourceLifecycleManager::releaseAll() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::destroy() {
+void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
 
     try{
         // Close all the connections.
@@ -139,11 +119,12 @@ void ResourceLifecycleManager::destroy() {
         // Empty all the lists.
         releaseAll();
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addConnection( cms::Connection* connection ) {
+void ResourceLifecycleManager::addConnection( cms::Connection* connection )
+    throw ( cms::CMSException ) {
 
     try{
         // Add the connection to the list.
@@ -151,11 +132,12 @@ void ResourceLifecycleManager::addConnection( cms::Connection* connection ) {
             connections.add( connection );
         }
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addSession( cms::Session* session ) {
+void ResourceLifecycleManager::addSession( cms::Session* session )
+    throw ( cms::CMSException ) {
 
     try{
         // Add the session to the list.
@@ -163,11 +145,13 @@ void ResourceLifecycleManager::addSession( cms::Session* session ) {
             sessions.add( session );
         }
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addDestination( cms::Destination* dest ) {
+void ResourceLifecycleManager::addDestination( cms::Destination* dest )
+    throw ( cms::CMSException ) {
 
     try{
         // Add the destination to the list.
@@ -175,11 +159,12 @@ void ResourceLifecycleManager::addDestination( cms::Destination* dest ) {
             destinations.add( dest );
         }
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer ) {
+void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer )
+    throw ( cms::CMSException ) {
 
     try{
         // Add the producer to the list.
@@ -187,11 +172,12 @@ void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* produce
             producers.add( producer );
         }
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer ) {
+void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer )
+    throw ( cms::CMSException ) {
 
     try{
         // Add the consumer to the list.
@@ -199,5 +185,5 @@ void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consume
             consumers.add( consumer );
         }
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

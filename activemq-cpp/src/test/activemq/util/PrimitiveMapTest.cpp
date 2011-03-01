@@ -22,7 +22,6 @@
 using namespace activemq;
 using namespace activemq::util;
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testValueNode(){
 
     PrimitiveValueNode node;
@@ -79,14 +78,13 @@ void PrimitiveMapTest::testValueNode(){
     try{
         node.getFloat();
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){
     }
 
     node.clear();
     CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::NULL_TYPE );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testSetGet(){
 
     PrimitiveMap pmap;
@@ -94,7 +92,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getBool( "bool" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setBool( "bool", true );
     CPPUNIT_ASSERT( pmap.getBool("bool") == true );
     pmap.setBool( "bool", false );
@@ -103,7 +101,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getByte( "byte" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setByte( "byte", 1 );
     CPPUNIT_ASSERT( pmap.getByte("byte") == 1 );
     CPPUNIT_ASSERT( pmap.getString("byte") == "1" );
@@ -111,7 +109,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getChar( "char" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setChar( "char", 'a' );
     CPPUNIT_ASSERT( pmap.getChar("char") == 'a' );
     CPPUNIT_ASSERT( pmap.getString("char") == "a" );
@@ -119,7 +117,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getShort( "short" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setShort( "short", 2 );
     CPPUNIT_ASSERT( pmap.getShort("short") == 2 );
     CPPUNIT_ASSERT( pmap.getString("short") == "2" );
@@ -127,7 +125,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getInt( "int" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setInt( "int", 3 );
     CPPUNIT_ASSERT( pmap.getInt("int") == 3 );
     CPPUNIT_ASSERT( pmap.getString("int") == "3" );
@@ -135,7 +133,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getLong( "long" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setLong( "long", 4L );
     CPPUNIT_ASSERT( pmap.getLong("long") == 4L );
     CPPUNIT_ASSERT( pmap.getString("long") == "4" );
@@ -143,7 +141,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getDouble( "double" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setDouble( "double", 2.3 );
     CPPUNIT_ASSERT( pmap.getDouble("double") == 2.3 );
     CPPUNIT_ASSERT( pmap.getString("double") == "2.3" );
@@ -151,7 +149,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getFloat( "float" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setFloat( "float", 3.2f );
     CPPUNIT_ASSERT( pmap.getFloat("float") == 3.2f );
     CPPUNIT_ASSERT( pmap.getString("float") == "3.2" );
@@ -159,7 +157,7 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getString( "string" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setString( "string", "hello" );
     CPPUNIT_ASSERT( pmap.getString("string") == "hello" );
 
@@ -172,13 +170,12 @@ void PrimitiveMapTest::testSetGet(){
     try{
         pmap.getByteArray( "byteArray" );
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
     pmap.setByteArray( "byteArray", byteArray );
     CPPUNIT_ASSERT( pmap.getByteArray("byteArray") == byteArray );
 
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testRemove(){
 
     PrimitiveMap pmap;
@@ -189,10 +186,9 @@ void PrimitiveMapTest::testRemove(){
     try{
         pmap.getInt("int");
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testCount(){
 
     PrimitiveMap pmap;
@@ -209,7 +205,6 @@ void PrimitiveMapTest::testCount(){
     CPPUNIT_ASSERT( pmap.toString() != "" );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testCopy(){
 
     PrimitiveMap pmap;
@@ -225,7 +220,6 @@ void PrimitiveMapTest::testCopy(){
     CPPUNIT_ASSERT( pmap.equals( copy1 ) );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testClear(){
 
     PrimitiveMap pmap;
@@ -239,20 +233,19 @@ void PrimitiveMapTest::testClear(){
     try{
         pmap.getInt("int");
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 
     try{
         pmap.getFloat("float");
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 
     try{
         pmap.getInt("int2");
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){}
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testContains(){
 
     PrimitiveMap pmap;
@@ -272,7 +265,6 @@ void PrimitiveMapTest::testContains(){
     CPPUNIT_ASSERT( pmap.containsKey("int") == false );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapTest::testGetKeys(){
 
     PrimitiveMap pmap;
@@ -287,3 +279,4 @@ void PrimitiveMapTest::testGetKeys(){
     CPPUNIT_ASSERT( keys[1] == "int" || keys[1] == "float" || keys[1] == "int2" );
     CPPUNIT_ASSERT( keys[2] == "int" || keys[2] == "float" || keys[2] == "int2" );
 }
+

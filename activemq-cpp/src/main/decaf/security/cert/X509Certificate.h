@@ -36,9 +36,11 @@ namespace cert {
 
         virtual ~X509Certificate() {}
 
-        virtual void checkValidity() const = 0;
+        virtual void checkValidity() const
+            throw(CertificateExpiredException, CertificateNotYetValidException) = 0;
 
-        virtual void checkValidity(const decaf::util::Date& date) const = 0;
+        virtual void checkValidity(const decaf::util::Date& date) const
+                    throw(CertificateExpiredException, CertificateNotYetValidException) = 0;
 
         virtual int getBasicConstraints() const = 0;
 
@@ -66,7 +68,8 @@ namespace cert {
 
         virtual const X500Principal* getSubjectX500Principal() const = 0;
 
-        virtual void getTBSCertificate( std::vector<unsigned char>& output ) const = 0;
+        virtual void getTBSCertificate( std::vector<unsigned char>& output ) const
+            throw( CertificateEncodingException ) = 0;
 
         virtual int getVersion() const = 0;
     };

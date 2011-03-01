@@ -34,18 +34,16 @@ namespace cms{
     class CMS_API IllegalStateException : public CMSException {
     public:
 
-        IllegalStateException();
+        IllegalStateException() throw();
 
-        IllegalStateException( const IllegalStateException& ex );
-
-        IllegalStateException( const std::string& message );
+        IllegalStateException( const IllegalStateException& ex ) throw();
 
         IllegalStateException( const std::string& message,
-                               const std::exception* cause );
+                               const std::exception* cause ) throw();
 
         IllegalStateException( const std::string& message,
                                const std::exception* cause,
-                               const std::vector< std::pair< std::string, int> >& stackTrace );
+                               const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
         virtual ~IllegalStateException() throw();
 

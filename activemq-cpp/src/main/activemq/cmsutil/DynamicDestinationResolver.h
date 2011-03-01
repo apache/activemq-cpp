@@ -42,10 +42,10 @@ namespace cmsutil {
             decaf::util::StlMap<std::string, cms::Topic*> topicMap;
             decaf::util::StlMap<std::string, cms::Queue*> queueMap;
 
-        private:
+        protected:
 
-            SessionResolver( const SessionResolver& );
-            SessionResolver& operator= ( const SessionResolver& );
+            SessionResolver( const SessionResolver& ) {}
+            SessionResolver& operator= ( const SessionResolver& ) { return *this; }
 
         public:
 
@@ -57,11 +57,13 @@ namespace cmsutil {
                   queueMap() {
             }
 
-            virtual ~SessionResolver() throw() {}
+            virtual ~SessionResolver() {}
 
-            cms::Topic* getTopic(const std::string& topicName );
+            cms::Topic* getTopic(const std::string& topicName )
+                throw ( cms::CMSException );
 
-            cms::Queue* getQueue(const std::string& queueName );
+            cms::Queue* getQueue(const std::string& queueName )
+                throw ( cms::CMSException );
 
         };
 
@@ -75,16 +77,16 @@ namespace cmsutil {
          */
         ResourceLifecycleManager* resourceLifecycleManager;
 
-    private:
+    protected:
 
-        DynamicDestinationResolver( const DynamicDestinationResolver& );
-        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& );
+        DynamicDestinationResolver( const DynamicDestinationResolver& ) {}
+        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& ) { return *this; }
 
     public:
 
         DynamicDestinationResolver();
 
-        virtual ~DynamicDestinationResolver() throw();
+        virtual ~DynamicDestinationResolver();
 
         virtual void init( ResourceLifecycleManager* mgr ) {
 
@@ -113,9 +115,11 @@ namespace cmsutil {
          * @return the resolved destination
          * @throws cms::CMSException if resolution failed.
          */
-        virtual cms::Destination* resolveDestinationName( cms::Session* session,
-                                                          const std::string& destName,
-                                                          bool pubSubDomain );
+        virtual cms::Destination* resolveDestinationName(
+            cms::Session* session,
+            const std::string& destName,
+            bool pubSubDomain )
+                throw ( cms::CMSException );
 
     };
 

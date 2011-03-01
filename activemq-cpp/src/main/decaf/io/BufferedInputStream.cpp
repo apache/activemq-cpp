@@ -36,7 +36,8 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, bool own ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, bool own ) :
+BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, bool own )
+    throw ( lang::exceptions::IllegalArgumentException ) :
         FilterInputStream( stream, own ),
         pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(bufferSize), buff(NULL), proxyBuffer(NULL) {
 
@@ -60,7 +61,7 @@ BufferedInputStream::~BufferedInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStream::close() {
+void BufferedInputStream::close() throw( IOException ) {
 
     // let parent close the inputStream
     FilterInputStream::close();
@@ -71,7 +72,7 @@ void BufferedInputStream::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::available() const {
+int BufferedInputStream::available() const throw ( IOException ) {
 
     if( this->proxyBuffer == NULL || this->isClosed() ) {
         throw IOException(
@@ -92,7 +93,7 @@ void BufferedInputStream::mark( int readLimit ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStream::reset() {
+void BufferedInputStream::reset() throw ( IOException ) {
 
     if( this->proxyBuffer == NULL ) {
         throw IOException(
@@ -110,7 +111,7 @@ void BufferedInputStream::reset() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::doReadByte() {
+int BufferedInputStream::doReadByte() throw ( IOException ){
 
     try{
 
@@ -147,7 +148,10 @@ int BufferedInputStream::doReadByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -262,7 +266,8 @@ int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long BufferedInputStream::skip( long long amount ) {
+long long BufferedInputStream::skip( long long amount )
+    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     try{
 
@@ -317,7 +322,8 @@ long long BufferedInputStream::skip( long long amount ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::bufferData( InputStream* inputStream, unsigned char*& buffer ) {
+int BufferedInputStream::bufferData( InputStream* inputStream, unsigned char*& buffer )
+    throw ( decaf::io::IOException ){
 
     try{
 

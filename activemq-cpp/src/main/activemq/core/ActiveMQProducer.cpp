@@ -16,7 +16,6 @@
  */
 #include "ActiveMQProducer.h"
 
-#include <cms/Message.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/commands/RemoveInfo.h>
@@ -42,17 +41,7 @@ using namespace decaf::lang::exceptions;
 ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
                                     const Pointer<commands::ProducerId>& producerId,
                                     const Pointer<ActiveMQDestination>& destination,
-                                    long long sendTimeout ) : disableTimestamps(false),
-                                                              disableMessageId(false),
-                                                              defaultDeliveryMode(cms::Message::DEFAULT_DELIVERY_MODE),
-                                                              defaultPriority(cms::Message::DEFAULT_MSG_PRIORITY),
-                                                              defaultTimeToLive(cms::Message::DEFAULT_TIME_TO_LIVE),
-                                                              sendTimeout(sendTimeout),
-                                                              session(session),
-                                                              producerInfo(),
-                                                              closed(false),
-                                                              memoryUsage(),
-                                                              destination() {
+                                    long long sendTimeout ) {
 
     if( session == NULL || producerId == NULL ) {
         throw ActiveMQException(
@@ -78,10 +67,22 @@ ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
 
     // TODO - Check for need of MemoryUsage if there's a producer Windows size
     //        and the Protocol version is greater than 3.
+
+    // Init Producer Data
+    this->session = session;
+    this->closed = false;
+
+    // Default the Delivery options
+    this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
+    this->disableTimestamps = false;
+    this->disableMessageId = false;
+    this->defaultPriority = 4;
+    this->defaultTimeToLive = 0;
+    this->sendTimeout = sendTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::~ActiveMQProducer() throw() {
+ActiveMQProducer::~ActiveMQProducer() {
     try {
         close();
     }
@@ -90,13 +91,14 @@ ActiveMQProducer::~ActiveMQProducer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::close() {
+void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
     try{
 
         if( !this->isClosed() ) {
 
-            dispose();
+            this->session->removeProducer( this->producerInfo->getProducerId() );
+            this->closed = true;
 
             // Remove at the Broker Side, if this fails the producer has already
             // been removed from the session and connection objects so its safe
@@ -110,16 +112,10 @@ void ActiveMQProducer::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::dispose() {
-
-    if( !this->isClosed() ) {
-        this->session->removeProducer( this );
-        this->closed = true;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message ) {
+void ActiveMQProducer::send( cms::Message* message ) throw ( cms::CMSException,
+                                                             cms::MessageFormatException,
+                                                             cms::InvalidDestinationException,
+                                                             cms::UnsupportedOperationException ) {
 
     try {
 
@@ -131,7 +127,11 @@ void ActiveMQProducer::send( cms::Message* message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priority, long long timeToLive ) {
+void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priority, long long timeToLive )
+    throw ( cms::CMSException,
+            cms::MessageFormatException,
+            cms::InvalidDestinationException,
+            cms::UnsupportedOperationException ) {
 
     try {
 
@@ -143,7 +143,11 @@ void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priori
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message ) {
+void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message )
+    throw ( cms::CMSException,
+            cms::MessageFormatException,
+            cms::InvalidDestinationException,
+            cms::UnsupportedOperationException ) {
 
     try {
 
@@ -156,7 +160,11 @@ void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* 
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message,
-                             int deliveryMode, int priority, long long timeToLive ) {
+                             int deliveryMode, int priority, long long timeToLive )
+    throw ( cms::CMSException,
+            cms::MessageFormatException,
+            cms::InvalidDestinationException,
+            cms::UnsupportedOperationException ) {
 
     try {
 
@@ -228,7 +236,7 @@ void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::checkClosed() const {
+void ActiveMQProducer::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

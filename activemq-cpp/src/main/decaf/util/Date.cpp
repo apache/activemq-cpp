@@ -29,15 +29,17 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date() : time( System::currentTimeMillis() ) {
+Date::Date(){
+    time = System::currentTimeMillis();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date( long long milliseconds ) : time(milliseconds) {
+Date::Date( long long milliseconds ){
+    this->time = milliseconds;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date( const Date& source ) : time(0) {
+Date::Date( const Date& source ){
     (*this) = source;
 }
 

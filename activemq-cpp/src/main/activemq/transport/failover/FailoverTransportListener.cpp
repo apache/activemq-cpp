@@ -86,10 +86,6 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
         parent->setInitialized( true );
     }
 
-    if( command->isConnectionControl() ) {
-        parent->handleConnectionControl( command );
-    }
-
     if( parent->transportListener != NULL ) {
         parent->transportListener->onCommand( command );
     }

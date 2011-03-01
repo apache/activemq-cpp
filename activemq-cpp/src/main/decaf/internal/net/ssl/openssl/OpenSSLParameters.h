@@ -53,11 +53,6 @@ namespace openssl {
         std::vector<std::string> enabledCipherSuites;
         std::vector<std::string> enabledProtocols;
 
-    private:
-
-        OpenSSLParameters( const OpenSSLParameters& );
-        OpenSSLParameters& operator= ( const OpenSSLParameters& );
-
     public:
 
 #ifdef HAVE_OPENSSL

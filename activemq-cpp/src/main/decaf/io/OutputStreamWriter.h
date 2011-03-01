@@ -67,16 +67,19 @@ namespace io {
 
         virtual ~OutputStreamWriter();
 
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
-        virtual void flush();
+        virtual void flush() throw( decaf::io::IOException );
 
     protected:
 
-        virtual void doWriteArrayBounded( const char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded( const char* buffer, int size, int offset, int length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         // Used to check state and throw error when closed.
-        virtual void checkClosed() const;
+        virtual void checkClosed() const throw( decaf::io::IOException );
 
     };
 

@@ -18,8 +18,9 @@
 #include "SSLServerSocketFactory.h"
 
 #include <decaf/io/IOException.h>
-#include <decaf/lang/Runnable.h>
+
 #include <decaf/internal/net/Network.h>
+
 #include <decaf/internal/net/ssl/DefaultSSLContext.h>
 #include <decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h>
 
@@ -29,30 +30,6 @@ using namespace decaf::net::ssl;
 using namespace decaf::lang;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
-
-////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    class ShutdownTask : public decaf::lang::Runnable {
-    private:
-
-        ServerSocketFactory** defaultRef;
-
-    private:
-
-        ShutdownTask( const ShutdownTask& );
-        ShutdownTask& operator= ( const ShutdownTask& );
-
-    public:
-
-        ShutdownTask( ServerSocketFactory** defaultRef ) : defaultRef( defaultRef ) {}
-        virtual ~ShutdownTask() {}
-
-        virtual void run() {
-            *defaultRef = NULL;
-        }
-    };
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 ServerSocketFactory* SSLServerSocketFactory::defaultFactory = NULL;
@@ -92,8 +69,6 @@ ServerSocketFactory* SSLServerSocketFactory::getDefault() {
             // Runtime is shutdown.
             netRuntime->addAsResource( defaultFactory );
         }
-
-        netRuntime->addShutdownTask( new ShutdownTask( &defaultFactory ) );
     }
 
     return defaultFactory;

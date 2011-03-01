@@ -42,8 +42,6 @@ namespace commands{
             std::string FileName;
             std::string MethodName;
             int LineNumber;
-
-            StackTraceElement() : ClassName(), FileName(), MethodName(), LineNumber() {}
         };
 
     private:
@@ -94,7 +92,7 @@ namespace commands{
          * @return a Response to the visitor being called or NULL if no response.
          */
         virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor );
+            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException );
 
         /**
          * Gets the string holding the error message

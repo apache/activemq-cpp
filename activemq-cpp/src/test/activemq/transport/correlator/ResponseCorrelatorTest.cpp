@@ -230,19 +230,6 @@ namespace correlator{
         virtual void reconnect( const decaf::net::URI& uri )
             throw( decaf::io::IOException ) {}
 
-        virtual bool isReconnectSupported() const {
-            return false;
-        }
-
-        virtual bool isUpdateURIsSupported() const {
-            return false;
-        }
-
-        virtual void updateURIs( bool rebalance AMQCPP_UNUSED,
-                                 const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED ) {
-            throw decaf::io::IOException();
-        }
-
     };
 
     class MyBrokenTransport : public MyTransport{

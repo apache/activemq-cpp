@@ -17,10 +17,8 @@
 
 #include "CmsDestinationAccessor.h"
 
-#include <cms/IllegalStateException.h>
-
-using namespace cms;
 using namespace activemq::cmsutil;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsDestinationAccessor::CmsDestinationAccessor() : CmsAccessor(),
@@ -36,7 +34,8 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::init() {
+void CmsDestinationAccessor::init()
+    throw ( cms::CMSException, IllegalStateException ) {
 
     CmsAccessor::init();
 
@@ -48,7 +47,8 @@ void CmsDestinationAccessor::init() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::destroy() {
+void CmsDestinationAccessor::destroy()
+    throw ( cms::CMSException, IllegalStateException ) {
 
     if( destinationResolver != NULL ) {
         destinationResolver->destroy();
@@ -58,8 +58,10 @@ void CmsDestinationAccessor::destroy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* session,
-                                                                  const std::string& destName ) {
+cms::Destination* CmsDestinationAccessor::resolveDestinationName(
+    cms::Session* session,
+    const std::string& destName )
+        throw ( cms::CMSException, IllegalStateException ) {
 
     checkDestinationResolver();
 
@@ -68,9 +70,12 @@ cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::checkDestinationResolver() {
+void CmsDestinationAccessor::checkDestinationResolver()
+    throw ( IllegalStateException ) {
 
     if( getDestinationResolver() == NULL ) {
-        throw IllegalStateException( "Property 'destinationResolver' is required", NULL );
+        throw IllegalStateException(
+                __FILE__, __LINE__,
+                "Property 'destinationResolver' is required" );
     }
 }

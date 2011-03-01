@@ -26,7 +26,8 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::CountDownLatch( int count ) : count(count), mutex() {
+CountDownLatch::CountDownLatch( int count ) {
+    this->count = count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,9 @@ CountDownLatch::~CountDownLatch() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CountDownLatch::await() {
+void CountDownLatch::await()
+    throw ( decaf::lang::exceptions::InterruptedException,
+            decaf::lang::Exception ) {
 
     try {
 
@@ -59,7 +62,9 @@ void CountDownLatch::await() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( long long timeOut ) {
+bool CountDownLatch::await( long long timeOut )
+    throw ( decaf::lang::exceptions::InterruptedException,
+            decaf::lang::Exception ) {
 
     try {
 
@@ -86,7 +91,9 @@ bool CountDownLatch::await( long long timeOut ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( long long timeout, const TimeUnit& unit ) {
+bool CountDownLatch::await( long long timeout, const TimeUnit& unit )
+    throw ( decaf::lang::exceptions::InterruptedException,
+            decaf::lang::Exception ) {
 
     try{
         return this->await( unit.toMillis( timeout ) );

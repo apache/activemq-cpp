@@ -21,12 +21,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
 using namespace decaf;
-using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportRegistry::TransportRegistry() : registry() {
+TransportRegistry::TransportRegistry() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +43,8 @@ TransportRegistry::~TransportRegistry() {
  }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory* TransportRegistry::findFactory( const std::string& name ) const {
+TransportFactory* TransportRegistry::findFactory( const std::string& name ) const
+    throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,7 +55,9 @@ TransportFactory* TransportRegistry::findFactory( const std::string& name ) cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory ) {
+void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory )
+    throw( decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,

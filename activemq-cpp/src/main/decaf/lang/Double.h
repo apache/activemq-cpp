@@ -57,24 +57,14 @@ namespace lang{
     public:
 
         /**
-         * Constructs a new instance of a Double object and assigns it the given value.
-         *
-         * @param value
-         *      The primitive type to wrap.
+         * @param value - the primitve type to wrap
          */
         Double( double value );
 
         /**
-         * Constructs a new Double and attempts to convert the given string to a double
-         * value, assigning it to the new object is successful or throwing a
-         * NumberFormatException if the string is not a properly formatted double.
-         *
-         * @param value
-         *      The string to convert to a primitive type to wrap.
-         *
-         * @throws NumberFormatException if the string is not a a valid double.
+         * @param value - the string to convert to a primitve type to wrap
          */
-        Double( const std::string& value );
+        Double( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Double() {}
 
@@ -120,7 +110,7 @@ namespace lang{
          * @param d - the Double instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object represents a value
+         * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
         virtual int compareTo( const double& d ) const;
@@ -318,7 +308,8 @@ namespace lang{
          * @returns a double parsed from the passed string
          * @throws NumberFormatException
          */
-        static double parseDouble( const std::string value );
+        static double parseDouble( const std::string value )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Returns a hexadecimal string representation of the double argument. All
@@ -403,7 +394,8 @@ namespace lang{
          * @returns a new Double instance wrapping the double parsed from value
          * @throws NumberFormatException on error.
          */
-        static Double valueOf( const std::string& value );
+        static Double valueOf( const std::string& value )
+            throw ( exceptions::NumberFormatException );
 
     private:
 

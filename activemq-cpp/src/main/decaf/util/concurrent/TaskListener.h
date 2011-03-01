@@ -29,29 +29,24 @@ namespace concurrent{
     {
     public:
 
-        virtual ~TaskListener();
+        virtual ~TaskListener() {}
 
         /**
          * Called when a queued task has completed, the task that
-         * finished is passed along for user consumption.
-         *
-         * @param task
-         *      A Runnable Pointer to the task that finished.
+         * finished is passed along for user consumption
+         * @param task Runnable Pointer to the task that finished
          */
-        virtual void onTaskComplete( decaf::lang::Runnable* task ) = 0;
+        virtual void onTaskComplete( lang::Runnable* task ) = 0;
 
         /**
          * Called when a queued task has thrown an exception while
          * being run.  The Callee should assume that this was an
-         * unrecoverable exception and that this task is now defunct.
-         *
-         * @param task
-         *      A Runnable Pointer to the task.
-         * @param ex
-         *      The ActiveMQException that was thrown.
+         * unrecoverable exeption and that this task is now defunct.
+         * @param task Runnable Pointer to the task
+         * @param ex The ActiveMQException that was thrown.
          */
-        virtual void onTaskException( decaf::lang::Runnable* task,
-                                      decaf::lang::Exception& ex ) = 0;
+        virtual void onTaskException( lang::Runnable* task,
+                                      lang::Exception& ex ) = 0;
 
     };
 

@@ -255,7 +255,8 @@ void ConnectionControl::setRebalanceConnection( bool rebalanceConnection ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConnectionControl( this );
 }

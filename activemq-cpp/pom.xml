@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.3.x-SNAPSHOT</version>
+    <version>3.2.5</version>
   </parent>
 
   <artifactId>activemq-cpp-library</artifactId>
@@ -105,6 +105,7 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.cpp</exclude>
                 </excludes>
               </sources>
               <headers>
@@ -114,6 +115,7 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.h</exclude>
                 </excludes>
               </headers>
             </configuration>
@@ -220,7 +222,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2</version>
+            <version>1.1</version>
             <executions>
               <execution>
                 <id>Configure</id>
@@ -291,7 +293,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2</version>
+            <version>1.1</version>
             <executions>
               <execution>
                 <phase>compile</phase>

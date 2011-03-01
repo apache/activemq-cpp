@@ -35,7 +35,7 @@ InputStream::~InputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStream::close() {
+void InputStream::close() throw( decaf::io::IOException ) {
     // Nothing to do by default.
 }
 
@@ -50,14 +50,14 @@ std::string InputStream::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStream::reset() {
+void InputStream::reset() throw ( decaf::io::IOException ) {
     throw IOException(
         __FILE__, __LINE__,
         "Base InputStream class does not support Reset." );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::read() {
+int InputStream::read() throw ( decaf::io::IOException ) {
     try{
         return this->doReadByte();
     }
@@ -66,7 +66,9 @@ int InputStream::read() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::read( unsigned char* buffer, int size ) {
+int InputStream::read( unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
         return this->doReadArray( buffer, size );
@@ -78,7 +80,10 @@ int InputStream::read( unsigned char* buffer, int size ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int InputStream::read( unsigned char* buffer, int size,
-                       int offset, int length ) {
+                       int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
         return this->doReadArrayBounded( buffer, size, offset, length );
@@ -90,7 +95,9 @@ int InputStream::read( unsigned char* buffer, int size,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long InputStream::skip( long long num ) {
+long long InputStream::skip( long long num )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -132,7 +139,10 @@ long long InputStream::skip( long long num ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStream::doReadArray( unsigned char* buffer, int size ) {
+int InputStream::doReadArray( unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
         return this->doReadArrayBounded( buffer, size, 0, size );
@@ -144,7 +154,10 @@ int InputStream::doReadArray( unsigned char* buffer, int size ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int InputStream::doReadArrayBounded( unsigned char* buffer, int size,
-                                     int offset, int length ) {
+                                     int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 

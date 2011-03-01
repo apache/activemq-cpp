@@ -29,8 +29,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-InternalCommandListener::InternalCommandListener() :
-    transport(NULL), responseBuilder(), done(false), startedLatch(1), inboundQueue() {
+InternalCommandListener::InternalCommandListener() : startedLatch(1) {
+    transport = NULL;
+    done = false;
 
     this->start();
     startedLatch.await();
@@ -69,7 +70,7 @@ void InternalCommandListener::run() {
             while( !done ) {
                 startedLatch.countDown();
 
-                while( inboundQueue.isEmpty() && !done ){
+                while( inboundQueue.empty() && !done ){
                     inboundQueue.wait();
                 }
 
@@ -78,7 +79,7 @@ void InternalCommandListener::run() {
                 }
 
                 // If we created a response then send it.
-                while( !inboundQueue.isEmpty() ) {
+                while( !inboundQueue.empty() ) {
 
                     Pointer<Command> command = inboundQueue.pop();
 

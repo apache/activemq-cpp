@@ -72,8 +72,8 @@ namespace util {
         static const int DEFAULT_CAPACITY = 11;
         static const int DEFAULT_CAPACITY_RATIO = 2;
 
-        int _size;
-        int capacity;
+        std::size_t _size;
+        std::size_t capacity;
         E* elements;
         decaf::lang::Pointer< Comparator<E> > _comparator;
 
@@ -82,12 +82,7 @@ namespace util {
         class PriorityQueueIterator : public Iterator<E> {
         private:
 
-            PriorityQueueIterator( const PriorityQueueIterator& );
-            PriorityQueueIterator& operator= ( const PriorityQueueIterator& );
-
-        private:
-
-            int position;
+            std::size_t position;
             bool allowRemove;
             PriorityQueue* queue;
 
@@ -95,10 +90,10 @@ namespace util {
 
             PriorityQueueIterator( PriorityQueue* queue ) : position( 0 ), allowRemove( false ), queue( queue ) {}
 
-            virtual E next() {
+            virtual E next() throw( lang::exceptions::NoSuchElementException ) {
 
                 if( !hasNext() ) {
-                    throw NoSuchElementException(
+                    throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
                         "No more elements to Iterate over." );
                 }
@@ -111,7 +106,8 @@ namespace util {
                 return position < queue->_size;
             }
 
-            virtual void remove() {
+            virtual void remove() throw ( lang::exceptions::IllegalStateException,
+                                          lang::exceptions::UnsupportedOperationException ) {
 
                 if( !allowRemove ) {
                     throw lang::exceptions::IllegalStateException(
@@ -125,17 +121,14 @@ namespace util {
         };
 
         class ConstPriorityQueueIterator : public PriorityQueueIterator {
-        private:
-
-            ConstPriorityQueueIterator( const ConstPriorityQueueIterator& );
-            ConstPriorityQueueIterator& operator= ( const ConstPriorityQueueIterator& );
-
         public:
 
             ConstPriorityQueueIterator( const PriorityQueue* queue ) :
                 PriorityQueueIterator( const_cast<PriorityQueue*>( queue ) ) {}
 
-            virtual void remove() {
+            virtual void remove() throw ( lang::exceptions::IllegalStateException,
+                                          lang::exceptions::UnsupportedOperationException ) {
+
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "PriorityQueue::Iterator::remove - Not Valid on a Const Iterator" );
@@ -149,7 +142,7 @@ namespace util {
         /**
          * Creates a Priority Queue with the default initial capacity.
          */
-        PriorityQueue() : AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
+        PriorityQueue() : AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
             this->initQueue( DEFAULT_CAPACITY, new comparators::Less<E>() );
         }
 
@@ -159,8 +152,8 @@ namespace util {
          * @param initialCapacity
          *      The initial number of elements allocated to this PriorityQueue.
          */
-        PriorityQueue( int initialCapacity ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
+        PriorityQueue( std::size_t initialCapacity ) :
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             this->initQueue( initialCapacity, new comparators::Less<E>() );
         }
@@ -177,8 +170,8 @@ namespace util {
          *
          * @throws NullPointerException if the passed Comparator is NULL.
          */
-        PriorityQueue( int initialCapacity, Comparator<E>* comparator ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
+        PriorityQueue( std::size_t initialCapacity, Comparator<E>* comparator ) :
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             if( comparator == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
@@ -195,7 +188,7 @@ namespace util {
          *      the Collection whose elements are to be placed into this priority queue
          */
         PriorityQueue( const Collection<E>& source ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             this->getFromCollection( source );
         }
@@ -208,7 +201,7 @@ namespace util {
          *      the priority queue whose elements are to be placed into this priority queue
          */
         PriorityQueue( const PriorityQueue<E>& source ) :
-            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ), _comparator() {
+            AbstractQueue<E>(), _size( 0 ), capacity( 0 ), elements( NULL ) {
 
             this->getFromPriorityQueue( source );
         }
@@ -237,8 +230,6 @@ namespace util {
             this->getFromPriorityQueue( source );
         }
 
-    public:
-
         virtual decaf::util::Iterator<E>* iterator() {
             return new PriorityQueueIterator( this );
         }
@@ -247,11 +238,12 @@ namespace util {
             return new ConstPriorityQueueIterator( this );
         }
 
-        virtual int size() const {
+        virtual std::size_t size() const {
             return this->_size;
         }
 
-        virtual void clear() {
+        virtual void clear()
+            throw ( lang::exceptions::UnsupportedOperationException ) {
 
             // TODO - Provide a more efficient way to clear the array without reallocating it
             //        we should keep the size it grew to since if reused it could get that big
@@ -264,7 +256,9 @@ namespace util {
             this->_size = 0;
         }
 
-        virtual bool offer( const E& value ) {
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             // TODO - Check for Null and throw exception
 
@@ -276,7 +270,7 @@ namespace util {
 
         virtual bool poll( E& result ) {
 
-            if( this->isEmpty() ) {
+            if( Queue<E>::isEmpty() ) {
                 return false;
             }
 
@@ -287,7 +281,7 @@ namespace util {
 
         virtual bool peek( E& result ) const {
 
-            if( this->isEmpty() ) {
+            if( Queue<E>::isEmpty() ) {
                 return false;
             }
 
@@ -295,21 +289,23 @@ namespace util {
             return true;
         }
 
-        virtual E remove() {
+        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) {
 
-            if( !this->isEmpty() ) {
+            if( !Queue<E>::isEmpty() ) {
                 E result = elements[0];
                 removeAt( 0 );
                 return result;
             }
 
-            throw decaf::util::NoSuchElementException(
+            throw decaf::lang::exceptions::NoSuchElementException(
                 __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
         }
 
-        virtual bool remove( const E& value ) {
+        virtual bool remove( const E& value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
 
-            int targetIndex = 0;
+            std::size_t targetIndex = 0;
             for( targetIndex = 0; targetIndex < _size; targetIndex++ ) {
                 if( 0 == _comparator->compare( value, elements[targetIndex] ) ) {
                     break;
@@ -324,7 +320,10 @@ namespace util {
             return true;
         }
 
-        virtual bool add( const E& value ) {
+        virtual bool add( const E& value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) {
 
             try {
                 return offer( value );
@@ -349,7 +348,7 @@ namespace util {
 
     private:
 
-        void initQueue( int initialSize, Comparator<E>* comparator ) {
+        void initQueue( std::size_t initialSize, Comparator<E>* comparator ) {
             this->elements = new E[initialSize];
             this->capacity = initialSize;
             this->_size = 0;
@@ -358,8 +357,8 @@ namespace util {
 
         void upHeap() {
 
-            int current = _size - 1;
-            int parent = ( current - 1 ) / 2;
+            std::size_t current = _size - 1;
+            std::size_t parent = ( current - 1 ) / 2;
 
             while( current != 0 && _comparator->compare( elements[current], elements[parent] ) < 0 ) {
 
@@ -374,12 +373,12 @@ namespace util {
             }
         }
 
-        void downHeap( int pos ) {
+        void downHeap( std::size_t pos ) {
 
-            int current = pos;
-            int child = 2 * current + 1;
+            std::size_t current = pos;
+            std::size_t child = 2 * current + 1;
 
-            while( child < _size && !this->isEmpty() ) {
+            while( child < _size && !Queue<E>::isEmpty() ) {
 
                 // compare the children if they exist
                 if( child + 1 < _size && _comparator->compare( elements[child + 1], elements[child] ) < 0 ) {
@@ -405,7 +404,7 @@ namespace util {
         void getFromPriorityQueue( const PriorityQueue<E>& c ) {
             initCapacity( c );
             _comparator = c.comparator();
-            for( int ix = 0; ix < c.size(); ++ix ) {
+            for( std::size_t ix = 0; ix < c.size(); ++ix ) {
                 this->elements[ix] = c.elements[ix];
             }
             _size = c.size();
@@ -420,7 +419,7 @@ namespace util {
             }
         }
 
-        void removeAt( int index ) {
+        void removeAt( std::size_t index ) {
             _size--;
             elements[index] = elements[_size];
             downHeap(index);
@@ -436,17 +435,17 @@ namespace util {
                 capacity = 1;
                 elements = new E[capacity];
             } else {
-                capacity = (int) lang::Math::ceil( (double)c.size() * 1.1 );
+                capacity = (std::size_t) lang::Math::ceil( (double)c.size() * 1.1 );
                 elements = new E[capacity];
             }
         }
 
-        void increaseCapacity( int size ) {
+        void increaseCapacity( std::size_t size ) {
 
             if( size > capacity ) {
                 E* newElements = new E[ size * DEFAULT_CAPACITY_RATIO ];
 
-                for( int ix = 0; ix < capacity; ix++ ) {
+                for( std::size_t ix = 0; ix < capacity; ix++ ) {
                     newElements[ix] = elements[ix];
                 }
 

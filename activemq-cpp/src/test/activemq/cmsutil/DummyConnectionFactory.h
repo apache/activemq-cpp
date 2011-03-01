@@ -27,22 +27,22 @@ namespace cmsutil {
 
     class DummyConnectionFactory : public cms::ConnectionFactory {
     private:
-
+        
         MessageContext messageContext;
-
+        
     public:
-
-        virtual ~DummyConnectionFactory() throw() {}
+        
+        virtual ~DummyConnectionFactory() {}
 
         virtual cms::Connection* createConnection() throw ( cms::CMSException ) {
-
+            
             return new DummyConnection(&messageContext);
         }
 
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password )
             throw ( cms::CMSException ) {
-
+            
             return new DummyConnection(&messageContext);
         }
 
@@ -50,19 +50,19 @@ namespace cmsutil {
                                                    const std::string& password,
                                                    const std::string& clientId )
             throw ( cms::CMSException ) {
-
+            
             DummyConnection* c = new DummyConnection(&messageContext);
             c->setClientID(clientId);
-
+            
             return c;
         }
-
+        
         MessageContext* getMessageContext() {
             return &messageContext;
         }
-
+        
     };
-
+    
 }}
 
 #endif /*ACTIVEMQ_CMSUTIL_DUMMYCONNECTIONFACTORY_H_*/

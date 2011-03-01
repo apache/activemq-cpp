@@ -40,10 +40,6 @@ namespace net {
 
         virtual ~Inet6Address();
 
-    public:
-
-        virtual InetAddress* clone() const;
-
     };
 
 }}

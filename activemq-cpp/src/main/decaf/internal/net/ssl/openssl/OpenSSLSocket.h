@@ -55,11 +55,6 @@ namespace openssl {
         // The OutputStream owned by this Socket
         decaf::io::OutputStream* output;
 
-    private:
-
-        OpenSSLSocket( const OpenSSLSocket& );
-        OpenSSLSocket& operator= ( const OpenSSLSocket& );
-
     public:
 
         OpenSSLSocket( OpenSSLParameters* parameters );
@@ -81,42 +76,44 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void connect( const std::string& host, int port, int timeout );
+        virtual void connect( const std::string& host, int port, int timeout )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::InputStream* getInputStream();
+        virtual decaf::io::InputStream* getInputStream() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual decaf::io::OutputStream* getOutputStream();
+        virtual decaf::io::OutputStream* getOutputStream() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownInput();
+        virtual void shutdownInput() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void shutdownOutput();
+        virtual void shutdownOutput() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void setOOBInline( bool value );
+        virtual void setOOBInline( bool value ) throw( decaf::net::SocketException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void sendUrgentData( int data );
+        virtual void sendUrgentData( int data ) throw( decaf::io::IOException );
 
     public:  // SSLSocket Overrides
 

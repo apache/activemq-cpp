@@ -54,12 +54,10 @@ namespace lang{
         Short( short value );
 
         /**
-         * @param value
-         *      The string value to convert to short and wrap.
-         *
-         * @throws NumberFormatException if the string is not well formed number value.
+         * @param value - string value to convert to short and wrap
+         * @throws NumberFormatException
          */
-        Short( const std::string& value );
+        Short( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Short() {}
 
@@ -68,7 +66,7 @@ namespace lang{
          * @param s - the Short instance to be compared
          * @return zero if this object represents the same short value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object represents a value
+         * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
         virtual int compareTo( const Short& s ) const;
@@ -104,7 +102,7 @@ namespace lang{
          * @param s - the Short instance to be compared
          * @return zero if this object represents the same short value as the
          * argument; a positive value if this object represents a value greater
-         * than the passed in value, and -1 if this object represents a value
+         * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
         virtual int compareTo( const short& s ) const;
@@ -210,7 +208,8 @@ namespace lang{
          * @returns a Short object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Short decode( const std::string& value );
+        static Short decode( const std::string& value )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -243,7 +242,8 @@ namespace lang{
          * @return the short represented by the string argument in the specified radix.
          * @throws NumberFormatException - If String does not contain a parsable short.
          */
-        static short parseShort( const std::string& s, int radix );
+        static short parseShort( const std::string& s, int radix )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Parses the string argument as a signed decimal short. The characters
@@ -257,7 +257,8 @@ namespace lang{
          * @returns the converted short value
          * @throws NumberFormatException if the string is not a short.
          */
-        static short parseShort( const std::string& s );
+        static short parseShort( const std::string& s )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Returns a Short instance representing the specified short value.
@@ -276,7 +277,8 @@ namespace lang{
          * @return new Short Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal short.
          */
-        static Short valueOf( const std::string& value );
+        static Short valueOf( const std::string& value )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Returns a Short object holding the value extracted from the specified
@@ -290,7 +292,8 @@ namespace lang{
          * @return new Short Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid short.
          */
-        static Short valueOf( const std::string& value, int radix );
+        static Short valueOf( const std::string& value, int radix )
+            throw ( exceptions::NumberFormatException );
 
     };
 

@@ -172,7 +172,9 @@ namespace logging{
          * @throws NullPointerException if logger is NULL.
          * @throws IllegalArgumentException if the logger has no name.
          */
-        bool addLogger( Logger* logger );
+        bool addLogger( Logger* logger )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Retrieves or creates a new Logger using the name specified
@@ -252,7 +254,7 @@ namespace logging{
          *
          * @throws IOException if an I/O error occurs.
          */
-        void readConfiguration();
+        void readConfiguration() throw( decaf::io::IOException );
 
         /**
          * Reinitialize the logging properties and reread the logging configuration from the
@@ -268,7 +270,9 @@ namespace logging{
          * @throws NullPointerException if stream is NULL.
          * @throws IOException if an I/O error occurs.
          */
-        void readConfiguration( decaf::io::InputStream* stream );
+        void readConfiguration( decaf::io::InputStream* stream )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Reset the logging configuration.

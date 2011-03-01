@@ -299,7 +299,8 @@ void MessageAck::setMessageCount( int messageCount ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessageAck( this );
 }

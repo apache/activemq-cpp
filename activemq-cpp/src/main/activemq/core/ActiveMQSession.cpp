@@ -63,151 +63,44 @@ using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::util;
-using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    /**
-     * Class used to Hook a session that has been closed into the Transaction
-     * it is currently a part of.  Once the Transaction has been Committed or
-     * Rolled back this Synchronization can finish the Close of the session.
-     */
-    class CloseSynhcronization : public Synchronization {
-    private:
-
-        ActiveMQSession* session;
-
-    private:
-
-        CloseSynhcronization( const CloseSynhcronization& );
-        CloseSynhcronization& operator= ( const CloseSynhcronization& );
-
-    public:
-
-        CloseSynhcronization( ActiveMQSession* session ) : Synchronization(), session(NULL) {
-
-            if( session == NULL ) {
-                throw NullPointerException(
-                    __FILE__, __LINE__, "Synchronization Created with NULL Session.");
-            }
-
-            this->session = session;
-        }
-
-        virtual ~CloseSynhcronization() {}
-
-        virtual void beforeEnd() {
-        }
-
-        virtual void afterCommit() {
-            session->doClose();
-        }
-
-        virtual void afterRollback() {
-            session->doClose();
-        }
-
-    };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace core{
-
-    class SessionConfig {
-    public:
-
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     ActiveMQConsumer*,
-                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
-
-    private:
-
-        SessionConfig( const SessionConfig& );
-        SessionConfig& operator= ( const SessionConfig& );
-
-    public:
-
-        /**
-         * Bool to indicate if the Session has added a Syncronization to a TransactionContext.
-         */
-        bool synchronizationRegistered;
-
-        /**
-         * Map of producers.
-         */
-        decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQProducer*> producers;
-
-    public:
-
-        SessionConfig() : synchronizationRegistered( false ), producers() {}
-
-        ~SessionConfig() {}
-    };
-
-}}
-
-////////////////////////////////////////////////////////////////////////////////
-ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
-                                  const Pointer<SessionId>& id,
+ActiveMQSession::ActiveMQSession( const Pointer<SessionInfo>& sessionInfo,
                                   cms::Session::AcknowledgeMode ackMode,
-                                  const Properties& properties ) : config( new SessionConfig ),
-                                                                   sessionInfo(),
-                                                                   transaction(),
-                                                                   connection(NULL),
-                                                                   consumers(),
-                                                                   closed(false),
-                                                                   executor(),
-                                                                   ackMode(),
-                                                                   producerIds(),
-                                                                   producerSequenceIds(),
-                                                                   consumerIds(),
-                                                                   lastDeliveredSequenceId(0){
+                                  const Properties& properties,
+                                  ActiveMQConnection* connection ) {
 
-    if( id == NULL || connection == NULL ) {
+    if( sessionInfo == NULL || connection == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
-            "ActiveMQSession::ActiveMQSession - Constructor called with NULL data");
+            "ActiveMQSession::ActiveMQSession - Init with NULL data");
     }
 
-    this->sessionInfo.reset( new SessionInfo() );
-    this->sessionInfo->setAckMode( ackMode );
-    this->sessionInfo->setSessionId( id );
-
-    connection->oneway( this->sessionInfo );
-
+    this->sessionInfo = sessionInfo;
     this->connection = connection;
     this->closed = false;
     this->ackMode = ackMode;
     this->lastDeliveredSequenceId = -1;
 
-    // Create a Transaction objet
-    this->transaction.reset( new ActiveMQTransactionContext( this, properties ) );
+    // Create a Transaction object only if the session is transacted
+    if( this->isTransacted() ) {
+        this->transaction.reset( new ActiveMQTransactionContext( this, properties ) );
+    }
 
     // Create the session executor object.
     this->executor.reset( new ActiveMQSessionExecutor( this ) );
-
-    this->connection->addSession( this );
-
-    // If the connection is already started, start the session.
-    if( this->connection->isStarted() ) {
-        this->start();
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSession::~ActiveMQSession() throw() {
+ActiveMQSession::~ActiveMQSession() {
     try{
         // Destroy this session's resources
         close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
-
-    delete this->config;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,38 +111,57 @@ void ActiveMQSession::fire( const activemq::exceptions::ActiveMQException& ex ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::close() {
-
+void ActiveMQSession::close() throw ( cms::CMSException )
+{
     // If we're already closed, just return.
-    if( this->closed.get() ) {
+    if( closed ) {
         return;
     }
 
-    if( this->transaction->isInXATransaction() ) {
-
-        // TODO - Right now we don't have a safe way of dealing with this case
-        // since the session might be deleted before the XA Transaction is finalized
-        // registering a Synchronization could result in an segmentation fault.
-        //
-        // For now we just close badly and throw an exception.
-        doClose();
-
-        throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "The Consumer is still in an Active XA Transaction, commit it first." );
-    }
-
     try {
-        doClose();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
 
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::doClose() {
+        // Stop the dispatch executor.
+        stop();
 
-    try {
-        dispose();
+        // Roll Back the transaction since we were closed without an explicit call
+        // to commit it.
+        if( this->transaction.get() != NULL && this->transaction->isInTransaction() ){
+            this->transaction->rollback();
+        }
+
+        // Close all Consumers
+        synchronized( &this->consumers ) {
+
+            std::vector<ActiveMQConsumer*> closables = this->consumers.values();
+
+            for( std::size_t i = 0; i < closables.size(); ++i ) {
+                try{
+                    closables[i]->close();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
+            }
+        }
+
+        // Close all Producers
+        synchronized( &this->producers ) {
+
+            std::vector<ActiveMQProducer*> closables = this->producers.values();
+
+            for( std::size_t i = 0; i < closables.size(); ++i ) {
+                try{
+                    closables[i]->close();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
+            }
+        }
+
+        // Now indicate that this session is closed.
+        closed = true;
+
+        // Remove this sessions from the connection
+        this->connection->removeSession( this );
 
         // Remove this session from the Broker.
         Pointer<RemoveInfo> info( new RemoveInfo() );
@@ -257,85 +169,11 @@ void ActiveMQSession::doClose() {
         info->setLastDeliveredSequenceId( this->lastDeliveredSequenceId );
         this->connection->oneway( info );
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::dispose() {
-
-    class Finalizer {
-    private:
-
-        ActiveMQSession* session;
-        ActiveMQConnection* connection;
-
-    private:
-
-        Finalizer( const Finalizer& );
-        Finalizer& operator= ( const Finalizer& );
-
-    public:
-
-        Finalizer(ActiveMQSession* session, ActiveMQConnection* connection) :
-            session( session ), connection( connection ) {
-        }
-
-        ~Finalizer() {
-            this->connection->removeSession(this->session);
-            this->session->closed = true;
-        }
-    };
-
-    try{
-
-        Finalizer final(this, this->connection);
-
-        // Stop the dispatch executor.
-        stop();
-
-        // Roll Back the transaction since we were closed without an explicit call
-        // to commit it.
-        if( this->transaction->isInTransaction() ){
-            this->transaction->rollback();
-        }
-
-        // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
-        synchronized( &this->consumers ) {
-
-            std::vector<ActiveMQConsumer*> closables = this->consumers.values();
-
-            for( std::size_t i = 0; i < closables.size(); ++i ) {
-                try{
-                    closables[i]->setFailureError(this->connection->getFirstFailureError());
-                    closables[i]->dispose();
-                    this->lastDeliveredSequenceId =
-                        Math::max( this->lastDeliveredSequenceId, closables[i]->getLastDeliveredSequenceId() );
-                } catch( cms::CMSException& ex ){
-                    /* Absorb */
-                }
-            }
-        }
-
-        // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-        std::auto_ptr< Iterator<ActiveMQProducer*> > producerIter( this->config->producers.iterator() );
-
-        while( producerIter->hasNext() ) {
-            try{
-                producerIter->next()->dispose();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
-            }
-        }
-    }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::commit() {
+void ActiveMQSession::commit() throw ( cms::CMSException ) {
 
     try {
 
@@ -354,7 +192,7 @@ void ActiveMQSession::commit() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::rollback() {
+void ActiveMQSession::rollback() throw ( cms::CMSException ) {
 
     try{
 
@@ -373,7 +211,7 @@ void ActiveMQSession::rollback() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::recover() {
+void ActiveMQSession::recover() throw( cms::CMSException ) {
 
     try{
 
@@ -430,7 +268,9 @@ void ActiveMQSession::deliverAcks() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer(
+    const cms::Destination* destination )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -442,8 +282,10 @@ cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* d
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination,
-                                                       const std::string& selector ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer(
+    const cms::Destination* destination,
+    const std::string& selector )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -455,9 +297,11 @@ cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* d
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* destination,
-                                                       const std::string& selector,
-                                                       bool noLocal ) {
+cms::MessageConsumer* ActiveMQSession::createConsumer(
+    const cms::Destination* destination,
+    const std::string& selector,
+    bool noLocal )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -507,10 +351,12 @@ cms::MessageConsumer* ActiveMQSession::createConsumer( const cms::Destination* d
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSession::createDurableConsumer( const cms::Topic* destination,
-                                                              const std::string& name,
-                                                              const std::string& selector,
-                                                              bool noLocal ) {
+cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
+    const cms::Topic* destination,
+    const std::string& name,
+    const std::string& selector,
+    bool noLocal )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -554,7 +400,9 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer( const cms::Topic* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* ActiveMQSession::createProducer( const cms::Destination* destination ) {
+cms::MessageProducer* ActiveMQSession::createProducer(
+    const cms::Destination* destination )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -588,7 +436,7 @@ cms::MessageProducer* ActiveMQSession::createProducer( const cms::Destination* d
             this->addProducer( producer.get() );
             this->connection->oneway( producer->getProducerInfo() );
         } catch( Exception& ex ) {
-            this->removeProducer( producer.get() );
+            this->removeProducer( producer->getProducerId() );
             throw ex;
         }
 
@@ -598,7 +446,8 @@ cms::MessageProducer* ActiveMQSession::createProducer( const cms::Destination* d
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue ) {
+cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue )
+    throw( cms::CMSException ) {
 
     try{
         return ActiveMQSession::createBrowser( queue, "" );
@@ -608,7 +457,8 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue,
-                                                   const std::string& selector ) {
+                                                   const std::string& selector )
+    throw( cms::CMSException ) {
 
     try{
 
@@ -638,7 +488,8 @@ cms::QueueBrowser* ActiveMQSession::createBrowser( const cms::Queue* queue,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* ActiveMQSession::createQueue( const std::string& queueName ) {
+cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -655,7 +506,8 @@ cms::Queue* ActiveMQSession::createQueue( const std::string& queueName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* ActiveMQSession::createTopic( const std::string& topicName ) {
+cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -672,7 +524,8 @@ cms::Topic* ActiveMQSession::createTopic( const std::string& topicName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue() {
+cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -690,7 +543,8 @@ cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic() {
+cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -708,7 +562,8 @@ cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQSession::createMessage() {
+cms::Message* ActiveMQSession::createMessage()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -721,7 +576,8 @@ cms::Message* ActiveMQSession::createMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage() {
+cms::BytesMessage* ActiveMQSession::createBytesMessage()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -734,7 +590,8 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* bytes, int bytesSize ) {
+cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* bytes, int bytesSize )
+        throw ( cms::CMSException ) {
 
     try{
 
@@ -747,7 +604,8 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage( const unsigned char* byt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::StreamMessage* ActiveMQSession::createStreamMessage() {
+cms::StreamMessage* ActiveMQSession::createStreamMessage()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -760,7 +618,8 @@ cms::StreamMessage* ActiveMQSession::createStreamMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage() {
+cms::TextMessage* ActiveMQSession::createTextMessage()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -773,7 +632,8 @@ cms::TextMessage* ActiveMQSession::createTextMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text ) {
+cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -786,7 +646,8 @@ cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text ) 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MapMessage* ActiveMQSession::createMapMessage() {
+cms::MapMessage* ActiveMQSession::createMapMessage()
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -799,17 +660,19 @@ cms::MapMessage* ActiveMQSession::createMapMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const {
+cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const throw ( cms::CMSException ) {
     return this->ackMode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQSession::isTransacted() const {
-    return ( this->ackMode == Session::SESSION_TRANSACTED ) || this->transaction->isInXATransaction();
+bool ActiveMQSession::isTransacted() const throw ( cms::CMSException ) {
+    return this->ackMode == Session::SESSION_TRANSACTED;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage ) {
+void ActiveMQSession::send(
+    cms::Message* message, ActiveMQProducer* producer, util::Usage* usage )
+        throw ( cms::CMSException ) {
 
     try {
 
@@ -838,10 +701,21 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer, u
 
         amqMessage->setMessageId( id );
 
-        // Ensure that a new transaction is started if this is the first message
-        // sent since the last commit.
-        doStartTransaction();
-        amqMessage->setTransactionId( this->transaction->getTransactionId() );
+        if( this->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            // Ensure that a new transaction is started if this is the first message
+            // sent since the last commit.
+            doStartTransaction();
+
+            if( this->transaction.get() == NULL ) {
+                throw ActiveMQException(
+                    __FILE__, __LINE__,
+                    "ActiveMQException::send - "
+                    "Transacted Session, has no Transaction Info.");
+            }
+
+            amqMessage->setTransactionId( this->transaction->getTransactionId() );
+        }
 
         // NOTE:
         // Now we copy the message before sending, this allows the user to reuse the
@@ -878,8 +752,8 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer, u
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::ExceptionListener* ActiveMQSession::getExceptionListener() {
-
+cms::ExceptionListener* ActiveMQSession::getExceptionListener()
+{
     if( connection != NULL ) {
         return connection->getExceptionListener();
     }
@@ -888,7 +762,8 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::unsubscribe( const std::string& name ) {
+void ActiveMQSession::unsubscribe( const std::string& name )
+    throw ( cms::CMSException ) {
 
     try{
 
@@ -962,7 +837,8 @@ bool ActiveMQSession::isStarted() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::createTemporaryDestination(
-    commands::ActiveMQTempDestination* tempDestination ) {
+    commands::ActiveMQTempDestination* tempDestination )
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 
@@ -985,7 +861,8 @@ void ActiveMQSession::createTemporaryDestination(
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::destroyTemporaryDestination(
-    commands::ActiveMQTempDestination* tempDestination ) {
+    commands::ActiveMQTempDestination* tempDestination )
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 
@@ -1005,8 +882,9 @@ void ActiveMQSession::destroyTemporaryDestination(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQSession::createTemporaryDestinationName() {
-
+std::string ActiveMQSession::createTemporaryDestinationName()
+    throw ( activemq::exceptions::ActiveMQException )
+{
     try {
         return this->connection->getConnectionId().getValue() + ":" +
                Long::toString( this->connection->getNextTempDestinationId() );
@@ -1017,7 +895,8 @@ std::string ActiveMQSession::createTemporaryDestinationName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::oneway( Pointer<Command> command ) {
+void ActiveMQSession::oneway( Pointer<Command> command )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         this->checkClosed();
@@ -1029,11 +908,12 @@ void ActiveMQSession::oneway( Pointer<Command> command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout ) {
+void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeout )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         this->checkClosed();
-        return this->connection->syncRequest( command, timeout );
+        this->connection->syncRequest( command, timeout );
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
@@ -1041,8 +921,8 @@ Pointer<Response> ActiveMQSession::syncRequest( Pointer<Command> command, unsign
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::checkClosed() const {
-    if( this->closed.get() ) {
+void ActiveMQSession::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
+    if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQSession - Session Already Closed" );
@@ -1050,7 +930,8 @@ void ActiveMQSession::checkClosed() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer ) {
+void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -1070,7 +951,8 @@ void ActiveMQSession::addConsumer( ActiveMQConsumer* consumer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId ) {
+void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId, long long lastDeliveredSequenceId )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -1084,6 +966,8 @@ void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId ) {
                 // the Connection.
                 this->connection->removeDispatcher( consumerId );
                 this->consumers.remove( consumerId );
+                this->lastDeliveredSequenceId =
+                    Math::max( this->lastDeliveredSequenceId, lastDeliveredSequenceId );
             }
         }
     }
@@ -1093,13 +977,17 @@ void ActiveMQSession::removeConsumer( const Pointer<ConsumerId>& consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::addProducer( ActiveMQProducer* producer ) {
+void ActiveMQSession::addProducer( ActiveMQProducer* producer )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
         this->checkClosed();
 
-        this->config->producers.add( producer );
+        synchronized( &this->producers ) {
+            // Place the Producer into the Map.
+            this->producers.put( producer->getProducerInfo()->getProducerId(), producer );
+        }
 
         // Add to the Connections list
         this->connection->addProducer( producer );
@@ -1110,14 +998,21 @@ void ActiveMQSession::addProducer( ActiveMQProducer* producer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::removeProducer( ActiveMQProducer* producer ) {
+void ActiveMQSession::removeProducer( const Pointer<ProducerId>& producerId )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
         this->checkClosed();
 
-        this->connection->removeProducer( producer->getProducerId() );
-        this->config->producers.remove( producer );
+        synchronized( &this->producers ) {
+
+            if( this->producers.containsKey( producerId ) ) {
+
+                this->connection->removeProducer( producerId );
+                this->producers.remove( producerId );
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1125,11 +1020,13 @@ void ActiveMQSession::removeProducer( ActiveMQProducer* producer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::doStartTransaction() {
+void ActiveMQSession::doStartTransaction() throw ( ActiveMQException ) {
 
-    if( this->isTransacted() && !this->transaction->isInXATransaction() ) {
-        this->transaction->begin();
+    if( !this->isTransacted() ) {
+        throw ActiveMQException( __FILE__, __LINE__, "Not a Transacted Session" );
     }
+
+    this->transaction->begin();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

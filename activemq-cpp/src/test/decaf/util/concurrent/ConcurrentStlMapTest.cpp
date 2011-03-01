@@ -87,7 +87,7 @@ void ConcurrentStlMapTest::testValue(){
     try{
         boolMap.get( "mike" );
         CPPUNIT_ASSERT(false);
-    } catch( decaf::util::NoSuchElementException& e ){
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){
     }
 }
 

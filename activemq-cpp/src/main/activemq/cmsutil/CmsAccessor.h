@@ -20,6 +20,7 @@
 #include <cms/ConnectionFactory.h>
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -47,8 +48,8 @@ namespace cmsutil {
 
     protected:
 
-        CmsAccessor( const CmsAccessor& );
-        CmsAccessor& operator= ( const CmsAccessor& );
+        CmsAccessor( const CmsAccessor& ) {}
+        CmsAccessor& operator= ( const CmsAccessor& ) { return *this; }
 
     public:
 
@@ -91,9 +92,7 @@ namespace cmsutil {
          * Set the CMS acknowledgment mode that is used when creating a CMS
          * Session to send a message.
          * <p>Default is <code>AUTO_ACKNOWLEDGE</code>.
-         *
-         * @param sessionAcknowledgeMode
-         *      The acknowledgment mode to assign to the Session.
+         * @param sessionAcknowledgeMode the acknowledgment mode
          */
         virtual void setSessionAcknowledgeMode(
                 cms::Session::AcknowledgeMode sessionAcknowledgeMode ) {
@@ -102,7 +101,6 @@ namespace cmsutil {
 
         /**
          * Return the acknowledgment mode for CMS sessions.
-         *
          * @return the acknowledgment mode applied by this accessor
          */
         virtual cms::Session::AcknowledgeMode getSessionAcknowledgeMode() const {
@@ -114,51 +112,40 @@ namespace cmsutil {
         /**
          * Initializes this object and prepares it for use.  This should be called
          * before any other methods are called.  This version does nothing.
-         *
-         * @throws CMSException if an error occurs during initialization.
-         * @throws IllegalStateException if this object has already been initialized.
          */
-        virtual void init();
+        virtual void init()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException ) {}
 
         /**
          * Shuts down this object and destroys any allocated resources.
-         *
-         * @throws CMSException if an error occurs during destruction.
-         * @throws IllegalStateException if this object has already been destroyed.
          */
-        virtual void destroy() {
+        virtual void destroy()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException ) {
             resourceLifecycleManager.destroy();
         }
 
         /**
          * Create a CMS Connection via this template's ConnectionFactory.
-         *
          * @return the new CMS Connection
-         *
-         * @throws CMSException if thrown by CMS API methods
-         * @throws IllegalStateException if this object has not been initialized.
+         * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Connection* createConnection();
+        virtual cms::Connection* createConnection()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Create a CMS Session for the given Connection.
-         *
-         * @param con
-         *      The CMS Connection to create a Session for
-         *
+         * @param con the CMS Connection to create a Session for
          * @return the new CMS Session
-         *
-         * @throws CMSException if thrown by CMS API methods
-         * @throws IllegalStateException if this object has not been initialized.
+         * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Session* createSession( cms::Connection* con );
+        virtual cms::Session* createSession( cms::Connection* con )
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Verifies that the connection factory is valid.
-         *
-         * @throws IllegalStateException if this object has not been initialized.
          */
-        virtual void checkConnectionFactory();
+        virtual void checkConnectionFactory()
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
     };
 

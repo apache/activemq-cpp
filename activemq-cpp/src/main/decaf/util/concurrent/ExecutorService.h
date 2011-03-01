@@ -67,7 +67,8 @@ namespace concurrent {
          *
          * @throws InterruptedException - if interrupted while waiting.
          */
-        virtual bool awaitTermination( long long timeout, const TimeUnit& unit ) = 0;
+        bool awaitTermination( long long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException ) = 0;
 
     };
 

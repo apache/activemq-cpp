@@ -46,7 +46,7 @@ namespace cms{
     class CMS_API DeliveryMode {
     public:
 
-        virtual ~DeliveryMode();
+        virtual ~DeliveryMode() {}
 
         /**
          * Enumeration values for Message Delivery Mode

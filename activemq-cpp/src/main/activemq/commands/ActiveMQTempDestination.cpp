@@ -36,7 +36,7 @@ ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempDestination::~ActiveMQTempDestination() throw() {
+ActiveMQTempDestination::~ActiveMQTempDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ std::string ActiveMQTempDestination::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestination::close() {
+void ActiveMQTempDestination::close() throw( cms::CMSException ) {
     try {
         if( this->connection != NULL ) {
             this->connection->destroyDestination( this );

@@ -74,24 +74,27 @@ namespace io{
          *
          * @throws IllegalArgumentException is the size is zero or negative.
          */
-        BufferedInputStream( InputStream* stream, int bufferSize, bool own = false );
+        BufferedInputStream( InputStream* stream, int bufferSize, bool own = false )
+            throw ( lang::exceptions::IllegalArgumentException );
 
         virtual ~BufferedInputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual int available() const;
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip( long long num )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * {@inheritDoc}
@@ -101,7 +104,7 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual void reset();
+        virtual void reset() throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -110,13 +113,17 @@ namespace io{
 
     protected:
 
-        virtual int doReadByte();
+        virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     private:
 
-        int bufferData( InputStream* stream, unsigned char*& buffer );
+        int bufferData( InputStream* stream, unsigned char*& buffer )
+            throw ( decaf::io::IOException );
 
     };
 

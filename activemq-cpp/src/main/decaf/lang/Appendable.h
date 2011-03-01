@@ -59,7 +59,7 @@ namespace lang{
          *
          * @throws Exception if an error occurs.
          */
-        virtual Appendable& append( char value ) = 0;
+        virtual Appendable& append( char value ) throw( decaf::lang::Exception ) = 0;
 
         /**
          * Appends the specified character sequence to this Appendable.
@@ -73,7 +73,8 @@ namespace lang{
          *
          * @throws Exception if an error occurs.
          */
-        virtual Appendable& append( const CharSequence* csq ) = 0;
+        virtual Appendable& append( const CharSequence* csq )
+            throw ( decaf::lang::Exception ) = 0;
 
         /**
          * Appends a subsequence of the specified character sequence to this Appendable.
@@ -92,7 +93,8 @@ namespace lang{
          * @throws IndexOutOfBoundsException start is greater than end, or end is
          *         greater than csq.length()
          */
-        virtual Appendable& append( const CharSequence* csq, int start, int end ) = 0;
+        virtual Appendable& append( const CharSequence* csq, int start, int end )
+            throw( decaf::lang::Exception ) = 0;
 
     };
 

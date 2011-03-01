@@ -91,7 +91,7 @@ namespace util{
         /**
          * @return The number of Properties in this Properties Object.
          */
-        int size() const;
+        std::size_t size() const;
 
         /**
          * Looks up the value for the given property.
@@ -224,7 +224,10 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::InputStream* stream );
+        void load( decaf::io::InputStream* stream )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Reads a property list (key and element pairs) from the input character stream in a
@@ -325,7 +328,10 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::Reader* reader );
+        void load( decaf::io::Reader* reader )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the
@@ -355,7 +361,9 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::OutputStream* out, const std::string& comment );
+        void store( decaf::io::OutputStream* out, const std::string& comment )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the output
@@ -393,7 +401,9 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::Writer* writer, const std::string& comments );
+        void store( decaf::io::Writer* writer, const std::string& comments )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::NullPointerException );
 
     private:
 

@@ -16,15 +16,15 @@
  */
 
 #include "CmsTemplate.h"
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
 #include "ProducerCallback.h"
 #include "MessageCreator.h"
 #include <iostream>
 
-#include <cms/IllegalStateException.h>
-#include <cms/CMSException.h>
-
-using namespace cms;
 using namespace activemq::cmsutil;
+using namespace activemq::exceptions;
+using namespace decaf::lang::exceptions;
 using namespace std;
 
 /**
@@ -42,7 +42,7 @@ using namespace std;
         try { \
             t->destroy(); \
         } catch( ... ) {} \
-        throw CMSException( ex.what(), NULL ); \
+        throw ActiveMQException(ex).convertToCMSException(); \
     }
 
 /**
@@ -60,11 +60,8 @@ using namespace std;
         try { \
             t->destroy(); \
         } catch( ... ) {} \
-        throw CMSException( "caught unknown exception", NULL ); \
-    }
-
-#define CMSTEMPLATE_CATCHALL_NOTHROW( ) \
-    catch( ... ){ \
+        throw ActiveMQException( __FILE__, __LINE__, \
+            "caught unknown exception" ).convertToCMSException(); \
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,46 +71,18 @@ const int CmsTemplate::DEFAULT_PRIORITY = 4;
 const long long CmsTemplate::DEFAULT_TIME_TO_LIVE = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate() : CmsDestinationAccessor(),
-                             connection(NULL),
-                             sessionPools(),
-                             defaultDestination(NULL),
-                             defaultDestinationName(""),
-                             messageIdEnabled(false),
-                             messageTimestampEnabled(false),
-                             noLocal(false),
-                             receiveTimeout(0),
-                             explicitQosEnabled(false),
-                             deliveryMode(0),
-                             priority(0),
-                             timeToLive(0),
-                             initialized(false) {
-
+CmsTemplate::CmsTemplate() : CmsDestinationAccessor() {
     initDefaults();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDestinationAccessor(),
-                                                                        connection(NULL),
-                                                                        sessionPools(),
-                                                                        defaultDestination(NULL),
-                                                                        defaultDestinationName(""),
-                                                                        messageIdEnabled(false),
-                                                                        messageTimestampEnabled(false),
-                                                                        noLocal(false),
-                                                                        receiveTimeout(0),
-                                                                        explicitQosEnabled(false),
-                                                                        deliveryMode(0),
-                                                                        priority(0),
-                                                                        timeToLive(0),
-                                                                        initialized(false) {
-
+CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDestinationAccessor() {
     initDefaults();
     setConnectionFactory(connectionFactory);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::~CmsTemplate() throw() {
+CmsTemplate::~CmsTemplate() {
 
     try {
         destroy();
@@ -174,7 +143,7 @@ void CmsTemplate::destroySessionPools() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::init() {
+void CmsTemplate::init() throw ( cms::CMSException, IllegalStateException ) {
 
     try {
 
@@ -186,12 +155,13 @@ void CmsTemplate::init() {
             initialized = true;
         }
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroy() {
+void CmsTemplate::destroy() throw ( cms::CMSException, IllegalStateException ) {
 
     try {
 
@@ -210,21 +180,24 @@ void CmsTemplate::destroy() {
         // Call the base class.
         CmsDestinationAccessor::destroy();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::checkDefaultDestination() {
+void CmsTemplate::checkDefaultDestination() throw ( IllegalStateException ) {
     if( this->defaultDestination == NULL && this->defaultDestinationName.size()==0 ) {
         throw IllegalStateException(
+            __FILE__, __LINE__,
             "No defaultDestination or defaultDestinationName specified."
-            "Check configuration of CmsTemplate.", NULL );
+            "Check configuration of CmsTemplate." );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session ) {
+cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -244,12 +217,14 @@ cms::Destination* CmsTemplate::resolveDefaultDestination( cms::Session* session 
 
         return dest;
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsTemplate::getConnection() {
+cms::Connection* CmsTemplate::getConnection()
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -270,11 +245,24 @@ cms::Connection* CmsTemplate::getConnection() {
         return connection;
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
-    CMSTEMPLATE_CATCHALL( this )
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
+    catch( cms::CMSException& ex ){
+        try {
+            this->destroy();
+        } catch( ... ) {}
+        throw ex;
+    } catch( ... ){
+        try {
+            this->destroy();
+        } catch( ... ) {}
+        throw ActiveMQException( __FILE__, __LINE__, \
+            "caught unknown exception" ).convertToCMSException();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession* CmsTemplate::takeSession() {
+PooledSession* CmsTemplate::takeSession()
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -285,11 +273,13 @@ PooledSession* CmsTemplate::takeSession() {
         // Take a session from the pool.
         return sessionPools[getSessionAcknowledgeMode()]->takeSession();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::returnSession( PooledSession*& session ) {
+void CmsTemplate::returnSession( PooledSession*& session )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -301,12 +291,13 @@ void CmsTemplate::returnSession( PooledSession*& session ) {
         session->close();
         session = NULL;
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageProducer* CmsTemplate::createProducer(
-    cms::Session* session, cms::Destination* dest ) {
+    cms::Session* session, cms::Destination* dest) throw ( cms::CMSException ) {
 
     try {
 
@@ -332,13 +323,15 @@ cms::MessageProducer* CmsTemplate::createProducer(
 
         return producer;
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageConsumer* CmsTemplate::createConsumer(
-    cms::Session* session, cms::Destination* dest, const std::string& selector, bool noLocal ) {
+    cms::Session* session, cms::Destination* dest, const std::string& selector, bool noLocal )
+        throw ( cms::CMSException ) {
 
     try {
 
@@ -360,12 +353,14 @@ cms::MessageConsumer* CmsTemplate::createConsumer(
 
         return consumer;
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyProducer( cms::MessageProducer*& producer ) {
+void CmsTemplate::destroyProducer( cms::MessageProducer*& producer )
+    throw ( cms::CMSException ) {
 
     if( producer == NULL ) {
         return;
@@ -376,7 +371,7 @@ void CmsTemplate::destroyProducer( cms::MessageProducer*& producer ) {
         // Close the producer, then destroy it.
         producer->close();
     }
-    CMSTEMPLATE_CATCHALL_NOTHROW()
+    AMQ_CATCH_NOTHROW( cms::CMSException )
 
     // Destroy if it's not a cached producer.
     CachedProducer* cachedProducer = dynamic_cast<CachedProducer*>( producer );
@@ -388,7 +383,8 @@ void CmsTemplate::destroyProducer( cms::MessageProducer*& producer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer ) {
+void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer )
+    throw ( cms::CMSException ) {
 
     if( consumer == NULL ) {
         return;
@@ -399,7 +395,7 @@ void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer ) {
         // Close the producer, then destroy it.
         consumer->close();
     }
-    CMSTEMPLATE_CATCHALL_NOTHROW()
+    AMQ_CATCH_NOTHROW( cms::CMSException )
 
     // Destroy if it's not a cached consumer.
     CachedConsumer* cachedConsumer = dynamic_cast<CachedConsumer*>( consumer );
@@ -411,7 +407,7 @@ void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyMessage( cms::Message*& message ) {
+void CmsTemplate::destroyMessage( cms::Message*& message) {
 
     if( message == NULL ) {
         return;
@@ -423,7 +419,7 @@ void CmsTemplate::destroyMessage( cms::Message*& message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( SessionCallback* action ) {
+void CmsTemplate::execute( SessionCallback* action ) throw ( cms::CMSException ) {
 
     PooledSession* pooledSession = NULL;
 
@@ -446,11 +442,12 @@ void CmsTemplate::execute( SessionCallback* action ) {
         returnSession( pooledSession );
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( ProducerCallback* action ) {
+void CmsTemplate::execute( ProducerCallback* action ) throw ( cms::CMSException ) {
 
     try {
 
@@ -464,11 +461,13 @@ void CmsTemplate::execute( ProducerCallback* action ) {
         execute( &cb );
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action ) {
+void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -482,11 +481,13 @@ void CmsTemplate::execute( cms::Destination* dest, ProducerCallback* action ) {
         execute( &cb );
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::execute( const std::string& destinationName, ProducerCallback* action ) {
+void CmsTemplate::execute( const std::string& destinationName, ProducerCallback* action )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -500,11 +501,13 @@ void CmsTemplate::execute( const std::string& destinationName, ProducerCallback*
         execute( &cb );
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session ) {
+void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session )
+    throw ( cms::CMSException ) {
 
     cms::MessageProducer* producer = NULL;
 
@@ -524,54 +527,63 @@ void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session ) {
         parent->destroyProducer( producer );
 
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, parent )
     CMSTEMPLATE_CATCHALL( parent )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination( cms::Session* session ) {
+cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination(
+    cms::Session* session ) throw ( cms::CMSException ) {
 
     try {
         return parent->resolveDestinationName( session, destinationName );
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, parent )
     CMSTEMPLATE_CATCH( IllegalStateException, parent )
     CMSTEMPLATE_CATCHALL( parent )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::send( MessageCreator* messageCreator ) {
+void CmsTemplate::send( MessageCreator* messageCreator )
+    throw ( cms::CMSException ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
         execute( &senderExecutor );
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::send( cms::Destination* dest, MessageCreator* messageCreator ) {
+void CmsTemplate::send( cms::Destination* dest, MessageCreator* messageCreator )
+    throw ( cms::CMSException ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
         execute( dest, &senderExecutor );
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::send( const std::string& destinationName,
-                        MessageCreator* messageCreator ) {
+                        MessageCreator* messageCreator )
+    throw ( cms::CMSException ) {
 
     try {
         SendExecutor senderExecutor( messageCreator, this );
         execute( destinationName, &senderExecutor );
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::doSend( cms::Session* session,
                           cms::MessageProducer* producer,
-                          MessageCreator* messageCreator) {
+                          MessageCreator* messageCreator) throw ( cms::CMSException ) {
 
     cms::Message* message = NULL;
 
@@ -594,7 +606,7 @@ void CmsTemplate::doSend( cms::Session* session,
         // Destroy the resources.
         destroyMessage( message );
 
-    } catch( CMSException& e ) {
+    } catch( ActiveMQException& e ) {
 
         e.setMark(__FILE__, __LINE__ );
 
@@ -606,12 +618,13 @@ void CmsTemplate::doSend( cms::Session* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer ) {
+cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer )
+    throw ( cms::CMSException ) {
 
     try {
 
         if( consumer == NULL ) {
-            throw CMSException( "consumer is NULL", NULL );
+            throw new ActiveMQException( __FILE__, __LINE__, "consumer is NULL" );
         }
 
         long long receiveTime = getReceiveTimeout();
@@ -629,11 +642,13 @@ cms::Message* CmsTemplate::doReceive( cms::MessageConsumer* consumer ) {
         }
 
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session ) {
+void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session )
+    throw ( cms::CMSException ) {
 
     cms::MessageConsumer* consumer = NULL;
     message = NULL;
@@ -649,7 +664,15 @@ void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session ) {
         // Destroy the consumer resource.
         parent->destroyConsumer( consumer );
 
-    } catch( CMSException& e ) {
+    } catch( ActiveMQException& e ) {
+
+        e.setMark( __FILE__, __LINE__ );
+
+        // Destroy the message resource.
+        parent->destroyMessage( message );
+
+        throw e;
+    } catch( cms::CMSException& e ) {
 
         e.setMark( __FILE__, __LINE__ );
 
@@ -662,17 +685,18 @@ void CmsTemplate::ReceiveExecutor::doInCms( cms::Session* session ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* CmsTemplate::ResolveReceiveExecutor::getDestination(
-    cms::Session* session ) {
+    cms::Session* session ) throw ( cms::CMSException ) {
 
     try {
         return parent->resolveDestinationName( session, destinationName );
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, parent )
     CMSTEMPLATE_CATCH( IllegalStateException, parent )
     CMSTEMPLATE_CATCHALL( parent )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive() {
+cms::Message* CmsTemplate::receive() throw ( cms::CMSException ) {
 
     try {
 
@@ -681,11 +705,13 @@ cms::Message* CmsTemplate::receive() {
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive( cms::Destination* destination ) {
+cms::Message* CmsTemplate::receive( cms::Destination* destination )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -694,11 +720,13 @@ cms::Message* CmsTemplate::receive( cms::Destination* destination ) {
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receive( const std::string& destinationName ) {
+cms::Message* CmsTemplate::receive( const std::string& destinationName )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -708,11 +736,13 @@ cms::Message* CmsTemplate::receive( const std::string& destinationName ) {
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::receiveSelected( const std::string& selector ) {
+cms::Message* CmsTemplate::receiveSelected( const std::string& selector )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -722,12 +752,14 @@ cms::Message* CmsTemplate::receiveSelected( const std::string& selector ) {
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* CmsTemplate::receiveSelected( cms::Destination* destination,
-                                            const std::string& selector ) {
+                                            const std::string& selector )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -737,12 +769,14 @@ cms::Message* CmsTemplate::receiveSelected( cms::Destination* destination,
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* CmsTemplate::receiveSelected( const std::string& destinationName,
-                                            const std::string& selector ) {
+                                            const std::string& selector )
+    throw ( cms::CMSException ) {
 
     try {
 
@@ -752,5 +786,6 @@ cms::Message* CmsTemplate::receiveSelected( const std::string& destinationName,
 
         return receiveExecutor.getMessage();
     }
+    CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL( this )
 }

@@ -29,8 +29,15 @@ public class SessionInfoSourceGenerator extends CommandSourceGenerator {
         super.populateIncludeFilesSet();
     }
 
-    protected String generateInitializerList() {
-        return super.generateInitializerList() + ", ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE)";
+    protected String generateInitializerList(String current) {
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE)");
+
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateAdditionalMethods( PrintWriter out ) {

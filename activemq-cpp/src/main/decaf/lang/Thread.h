@@ -190,7 +190,8 @@ namespace lang{
          * @throws IllegalThreadStateException if the thread has already been started.
          * @throws RuntimeException if the Thread cannot be created for some reason.
          */
-        virtual void start();
+        virtual void start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
+                                     decaf::lang::exceptions::RuntimeException );
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -199,7 +200,7 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join();
+        virtual void join() throw ( decaf::lang::exceptions::InterruptedException );
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -211,7 +212,9 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs );
+        virtual void join( long long millisecs )
+            throw ( decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::InterruptedException );
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -225,7 +228,9 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs, unsigned int nanos );
+        virtual void join( long long millisecs, unsigned int nanos )
+            throw ( decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::InterruptedException );
 
         /**
          * Default implementation of the run method - does nothing.
@@ -260,7 +265,7 @@ namespace lang{
          *
          * @throws IllegalArgumentException if the value is out of range.
          */
-        void setPriority( int value );
+        void setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
@@ -313,7 +318,9 @@ namespace lang{
          * @throws IllegalArgumentException if the milliseconds parameter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs );
+        static void sleep( long long millisecs )
+            throw( lang::exceptions::InterruptedException,
+                   lang::exceptions::IllegalArgumentException );
 
         /**
          * Causes the currently executing thread to halt execution for the specified number of
@@ -330,7 +337,9 @@ namespace lang{
          *         or the milliseconds paramter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs, unsigned int nanos );
+        static void sleep( long long millisecs, unsigned int nanos )
+            throw( lang::exceptions::InterruptedException,
+                   lang::exceptions::IllegalArgumentException );
 
         /**
          * Causes the currently executing thread object to temporarily pause

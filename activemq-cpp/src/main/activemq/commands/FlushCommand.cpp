@@ -116,7 +116,8 @@ bool FlushCommand::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> FlushCommand::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> FlushCommand::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processFlushCommand( this );
 }

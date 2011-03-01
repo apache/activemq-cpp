@@ -32,18 +32,16 @@ namespace cms{
     class CMS_API InvalidSelectorException : public CMSException {
     public:
 
-        InvalidSelectorException();
+        InvalidSelectorException() throw();
 
-        InvalidSelectorException( const InvalidSelectorException& ex );
-
-        InvalidSelectorException( const std::string& message );
+        InvalidSelectorException( const InvalidSelectorException& ex ) throw();
 
         InvalidSelectorException( const std::string& message,
-                                  const std::exception* cause );
+                                  const std::exception* cause ) throw();
 
         InvalidSelectorException( const std::string& message,
                                   const std::exception* cause,
-                                  const std::vector< std::pair< std::string, int> >& stackTrace );
+                                  const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
         virtual ~InvalidSelectorException() throw();
 

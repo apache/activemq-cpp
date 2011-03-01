@@ -56,10 +56,6 @@ void RedeliveryPolicy::configure( const decaf::util::Properties& properties ) {
             this->setInitialRedeliveryDelay( Long::parseLong(
                 properties.getProperty( "cms.RedeliveryPolicy.initialRedeliveryDelay" ) ) );
         }
-        if( properties.hasProperty( "cms.RedeliveryPolicy.redeliveryDelay" ) ) {
-            this->setRedeliveryDelay( Long::parseLong(
-                properties.getProperty( "cms.RedeliveryPolicy.redeliveryDelay" ) ) );
-        }
         if( properties.hasProperty( "cms.RedeliveryPolicy.maximumRedeliveries" ) ) {
             this->setMaximumRedeliveries( Integer::parseInt(
                 properties.getProperty( "cms.RedeliveryPolicy.maximumRedeliveries" ) ) );

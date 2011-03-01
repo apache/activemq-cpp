@@ -22,7 +22,6 @@
 using namespace activemq;
 using namespace activemq::util;
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveValueNodeTest::testValueNode(){
 
     PrimitiveValueNode node;
@@ -79,14 +78,13 @@ void PrimitiveValueNodeTest::testValueNode(){
     try{
         node.getFloat();
         CPPUNIT_ASSERT( false );
-    } catch( decaf::util::NoSuchElementException& e ){
+    } catch( decaf::lang::exceptions::NoSuchElementException& e ){
     }
 
     node.clear();
     CPPUNIT_ASSERT( node.getType() == PrimitiveValueNode::NULL_TYPE );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveValueNodeTest::testValueNodeCtors(){
 
     PrimitiveValueNode tfvalue = true;

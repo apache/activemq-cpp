@@ -52,11 +52,14 @@ namespace lang {
          * @return The number of char values added to the buffer, or -1 if this source of
          *         characters is at its end
          *
-         * @throws IOException if an I/O error occurs.
-         * @throws NullPointerException if buffer is NULL.
-         * @throws ReadOnlyBufferException if charBuffer is a read only buffer.
+         * @throw IOException - if an I/O error occurs
+         * @throws NullPointerException - if buffer is NULL.
+         * @throw ReadOnlyBufferException - if charBuffer is a read only buffer
          */
-        virtual int read( decaf::nio::CharBuffer* charBuffer ) = 0;
+        virtual int read( decaf::nio::CharBuffer* charBuffer )
+                 throw( decaf::io::IOException,
+                        decaf::lang::exceptions::NullPointerException,
+                        decaf::nio::ReadOnlyBufferException ) = 0;
 
     };
 

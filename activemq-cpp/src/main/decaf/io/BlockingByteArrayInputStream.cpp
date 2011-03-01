@@ -25,14 +25,16 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockingByteArrayInputStream::BlockingByteArrayInputStream() :
-    InputStream(), buffer(), pos(buffer.end()), closing(false) {
+BlockingByteArrayInputStream::BlockingByteArrayInputStream(){
+    pos = buffer.end();
+    closing = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockingByteArrayInputStream::BlockingByteArrayInputStream( const unsigned char* buffer, int bufferSize ):
-    InputStream(), buffer(), pos(), closing(false) {
+BlockingByteArrayInputStream::BlockingByteArrayInputStream(
+    const unsigned char* buffer, int bufferSize ){
 
+    closing = false;
     setByteArray( buffer, bufferSize );
 }
 
@@ -61,12 +63,12 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::available() const {
+int BlockingByteArrayInputStream::available() const throw ( decaf::io::IOException ){
     return (int)std::distance( pos, buffer.end() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BlockingByteArrayInputStream::close() {
+void BlockingByteArrayInputStream::close() throw ( io::IOException ){
 
     synchronized( this ){
 
@@ -82,7 +84,7 @@ void BlockingByteArrayInputStream::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::doReadByte() {
+int BlockingByteArrayInputStream::doReadByte() throw ( IOException ){
 
     try{
 
@@ -108,7 +110,10 @@ int BlockingByteArrayInputStream::doReadByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     if( length == 0 ) {
         return 0;
@@ -172,7 +177,8 @@ int BlockingByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long BlockingByteArrayInputStream::skip( long long num ) {
+long long BlockingByteArrayInputStream::skip( long long num )
+    throw ( io::IOException, lang::exceptions::UnsupportedOperationException ){
 
     long long ix = 0;
 

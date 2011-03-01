@@ -38,11 +38,6 @@ namespace inactivity {
     class AMQCPP_API WriteChecker : public decaf::util::TimerTask {
     private:
 
-        WriteChecker( const WriteChecker& );
-        WriteChecker operator= ( const WriteChecker& );
-
-    private:
-
         // The InactivityMonitor instance that created this object.
         InactivityMonitor* parent;
 

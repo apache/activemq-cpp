@@ -26,7 +26,6 @@
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/exceptions/BrokerException.h>
-#include <activemq/exceptions/ConnectionFailedException.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/IdGenerator.h>
 #include <activemq/transport/failover/FailoverTransport.h>
@@ -81,21 +80,6 @@ namespace activemq{
 namespace core{
 
     class ConnectionConfig {
-    private:
-
-        ConnectionConfig( const ConnectionConfig& );
-        ConnectionConfig& operator= ( const ConnectionConfig& );
-
-    public:
-
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     Dispatcher*,
-                                     commands::ConsumerId::COMPARATOR > DispatcherMap;
-
-        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
-                                     ActiveMQProducer*,
-                                     commands::ProducerId::COMPARATOR > ProducerMap;
-
     public:
 
         static util::IdGenerator CONNECTION_ID_GENERATOR;
@@ -120,9 +104,7 @@ namespace core{
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
-        bool messagePrioritySupported;
         bool useCompression;
-        int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
@@ -136,56 +118,25 @@ namespace core{
         Pointer<commands::BrokerInfo> brokerInfo;
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
         Pointer<CountDownLatch> transportInterruptionProcessingComplete;
-        Pointer<CountDownLatch> brokerInfoReceived;
 
-        Pointer<Exception> firstFailureError;
-
-        DispatcherMap dispatchers;
-        ProducerMap activeProducers;
-
-        decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQSession*> activeSessions;
-        decaf::util::concurrent::CopyOnWriteArrayList<transport::TransportListener*> transportListeners;
-
-        ConnectionConfig() : properties(),
-                             transport(),
-                             clientIdGenerator(),
-                             sessionIds(),
-                             tempDestinationIds(),
-                             localTransactionIds(),
-                             brokerURL(""),
-                             clientIDSet( false ),
+        ConnectionConfig() : clientIDSet( false ),
                              isConnectionInfoSentToBroker( false ),
                              userSpecifiedClientID( false ),
-                             ensureConnectionInfoSentMutex(),
-                             mutex(),
                              dispatchAsync( true ),
                              alwaysSyncSend( false ),
                              useAsyncSend( false ),
-                             messagePrioritySupported( true ),
                              useCompression( false ),
-                             compressionLevel( -1 ),
                              sendTimeout( 0 ),
                              closeTimeout( 15000 ),
                              producerWindowSize( 0 ),
                              defaultPrefetchPolicy( NULL ),
                              defaultRedeliveryPolicy( NULL ),
-                             exceptionListener( NULL ),
-                             connectionInfo(),
-                             brokerInfo(),
-                             brokerWireFormatInfo(),
-                             transportInterruptionProcessingComplete(),
-                             brokerInfoReceived(),
-                             firstFailureError(),
-                             dispatchers(),
-                             activeProducers(),
-                             activeSessions(),
-                             transportListeners() {
+                             exceptionListener( NULL ) {
 
             this->defaultPrefetchPolicy.reset( new DefaultPrefetchPolicy() );
             this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
             this->clientIdGenerator.reset(new util::IdGenerator );
             this->connectionInfo.reset( new ConnectionInfo() );
-            this->brokerInfoReceived.reset( new CountDownLatch(1) );
 
             // Generate a connectionId
             decaf::lang::Pointer<ConnectionId> connectionId( new ConnectionId() );
@@ -193,9 +144,6 @@ namespace core{
             this->connectionInfo->setConnectionId( connectionId );
         }
 
-        void waitForBrokerInfo() {
-            this->brokerInfoReceived->await();
-        }
     };
 
     // Static init.
@@ -206,11 +154,7 @@ namespace core{
 ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& transport,
                                         const Pointer<decaf::util::Properties>& properties ) :
     config( NULL ),
-    connectionMetaData( new ActiveMQConnectionMetaData() ),
-    started(false),
-    closed(false),
-    closing(false),
-    transportFailed(false) {
+    connectionMetaData( new ActiveMQConnectionMetaData() ) {
 
     Pointer<ConnectionConfig> configuration( new ConnectionConfig );
 
@@ -229,7 +173,7 @@ ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& tra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::~ActiveMQConnection() throw() {
+ActiveMQConnection::~ActiveMQConnection() {
     try {
 
         try{
@@ -245,31 +189,34 @@ ActiveMQConnection::~ActiveMQConnection() throw() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addDispatcher(
-    const decaf::lang::Pointer<ConsumerId>& consumer, Dispatcher* dispatcher ) {
+    const decaf::lang::Pointer<ConsumerId>& consumer, Dispatcher* dispatcher )
+        throw ( cms::CMSException ) {
 
     try{
         // Add the consumer to the map.
-        synchronized( &this->config->dispatchers ) {
-            this->config->dispatchers.put( consumer, dispatcher );
+        synchronized( &dispatchers ) {
+            dispatchers.put( consumer, dispatcher );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeDispatcher( const decaf::lang::Pointer<ConsumerId>& consumer ) {
+void ActiveMQConnection::removeDispatcher(
+    const decaf::lang::Pointer<ConsumerId>& consumer )
+        throw ( cms::CMSException ) {
 
     try{
         // Remove the consumer from the map.
-        synchronized( &this->config->dispatchers ) {
-            this->config->dispatchers.remove( consumer );
+        synchronized( &dispatchers ) {
+            dispatchers.remove( consumer );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession() {
+cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException ) {
     try {
         return createSession( Session::AUTO_ACKNOWLEDGE );
     }
@@ -277,16 +224,38 @@ cms::Session* ActiveMQConnection::createSession() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode ackMode ) {
+cms::Session* ActiveMQConnection::createSession(
+    cms::Session::AcknowledgeMode ackMode ) throw ( cms::CMSException ) {
 
     try {
 
-        checkClosedOrFailed();
+        checkClosed();
         ensureConnectionInfoSent();
+
+        // Create and initialize a new SessionInfo object
+        Pointer<SessionInfo> sessionInfo( new SessionInfo() );
+        decaf::lang::Pointer<SessionId> sessionId( new SessionId() );
+        sessionId->setConnectionId( this->config->connectionInfo->getConnectionId()->getValue() );
+        sessionId->setValue( this->config->sessionIds.getNextSequenceId() );
+        sessionInfo->setSessionId( sessionId );
+        sessionInfo->setAckMode( ackMode );
+
+        // Send the subscription message to the broker.
+        syncRequest( sessionInfo );
 
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
-            this, getNextSessionId(), ackMode, *this->config->properties );
+            sessionInfo, ackMode, *this->config->properties, this );
+
+        // Add the session to the set of active sessions.
+        synchronized( &activeSessions ) {
+            activeSessions.add( session );
+        }
+
+        // If we're already started, start the session.
+        if( this->started.get() ) {
+            session->start();
+        }
 
         return session;
     }
@@ -294,58 +263,42 @@ cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode a
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<SessionId> ActiveMQConnection::getNextSessionId() {
-
-    decaf::lang::Pointer<SessionId> sessionId( new SessionId() );
-    sessionId->setConnectionId( this->config->connectionInfo->getConnectionId()->getValue() );
-    sessionId->setValue( this->config->sessionIds.getNextSequenceId() );
-
-    return sessionId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addSession( ActiveMQSession* session ) {
+void ActiveMQConnection::removeSession( ActiveMQSession* session )
+    throw ( cms::CMSException ) {
 
     try {
 
         // Remove this session from the set of active sessions.
-        this->config->activeSessions.add( session );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
-
-    try {
-
-        // Remove this session from the set of active sessions.
-        this->config->activeSessions.remove( session );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addProducer( ActiveMQProducer* producer ) {
-
-    try {
-
-        // Add this producer from the set of active consumer.
-        synchronized( &this->config->activeProducers ) {
-            this->config->activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
+        synchronized( &activeSessions ) {
+            activeSessions.remove( session );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>& producerId ) {
+void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
+    throw ( cms::CMSException ) {
+
+    try {
+
+        // Add this producer from the set of active consumer.
+        synchronized( &activeProducers ) {
+            activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
+        }
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>& producerId )
+    throw ( cms::CMSException ) {
 
     try {
 
         // Remove this producer from the set of active consumer.
-        synchronized( &this->config->activeProducers ) {
-            this->config->activeProducers.remove( producerId );
+        synchronized( &activeProducers ) {
+            activeProducers.remove( producerId );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -392,8 +345,8 @@ void ActiveMQConnection::setDefaultClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::close() {
-
+void ActiveMQConnection::close() throw ( cms::CMSException )
+{
     try {
 
         if( this->isClosed() ) {
@@ -410,15 +363,18 @@ void ActiveMQConnection::close() {
         this->closing.set( true );
 
         // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+        std::vector<ActiveMQSession*> allSessions;
+        synchronized( &activeSessions ) {
+            allSessions = activeSessions.toArray();
+        }
 
         long long lastDeliveredSequenceId = 0;
 
-        // Dispose of all the Session resources we know are still open.
-        while( iter->hasNext() ) {
-            ActiveMQSession* session = iter->next();
+        // Close all of the resources.
+        for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
+            ActiveMQSession* session = allSessions[ix];
             try{
-                session->dispose();
+                session->close();
 
                 lastDeliveredSequenceId =
                     Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
@@ -439,47 +395,10 @@ void ActiveMQConnection::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::cleanup() {
-
+void ActiveMQConnection::start() throw ( cms::CMSException ) {
     try{
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
-
-        // Dispose of all the Session resources we know are still open.
-        while( iter->hasNext() ) {
-            ActiveMQSession* session = iter->next();
-            try{
-                session->dispose();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
-            }
-        }
-
-        if( this->config->isConnectionInfoSentToBroker ) {
-            if( !transportFailed.get() && !closing.get() ) {
-                this->syncRequest( this->config->connectionInfo->createRemoveCommand() );
-            }
-            this->config->isConnectionInfoSentToBroker = false;
-        }
-
-        if( this->config->userSpecifiedClientID ) {
-            this->config->connectionInfo->setClientId("");
-            this->config->userSpecifiedClientID = false;
-        }
-
-        this->config->clientIDSet = false;
-        this->started.set( false );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::start() {
-
-    try{
-
-        checkClosedOrFailed();
+        checkClosed();
         ensureConnectionInfoSent();
 
         // This starts or restarts the delivery of all incoming messages
@@ -488,9 +407,9 @@ void ActiveMQConnection::start() {
         if( this->started.compareAndSet( false, true ) ) {
 
             // Start all the sessions.
-            std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
-            while( iter->hasNext() ) {
-                iter->next()->start();
+            std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
+            for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
+                sessions[ix]->start();
             }
         }
     }
@@ -498,21 +417,19 @@ void ActiveMQConnection::start() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::stop() {
+void ActiveMQConnection::stop() throw ( cms::CMSException ) {
 
     try {
 
-        checkClosedOrFailed();
+        checkClosed();
 
         // Once current deliveries are done this stops the delivery of any
         // new messages.
         if( this->started.compareAndSet( true, false ) ) {
-            synchronized( &this->config->activeSessions ) {
-                std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+            std::auto_ptr< Iterator<ActiveMQSession*> > iter( activeSessions.iterator() );
 
-                while( iter->hasNext() ){
-                    iter->next()->stop();
-                }
+            while( iter->hasNext() ){
+                iter->next()->stop();
             }
         }
     }
@@ -520,24 +437,22 @@ void ActiveMQConnection::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
+void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
         // Clear the listener, we don't care about async errors at this point.
         this->config->transport->setTransportListener( NULL );
 
-        if( this->config->isConnectionInfoSentToBroker ) {
+        // Remove our ConnectionId from the Broker
+        Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
+        command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
+        this->syncRequest( command, this->getCloseTimeout() );
 
-            // Remove our ConnectionId from the Broker
-            Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
-            command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
-            this->syncRequest( command, this->config->closeTimeout );
-
-            // Send the disconnect command to the broker.
-            Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
-            oneway( shutdown );
-        }
+        // Send the disconnect command to the broker.
+        Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
+        oneway( shutdown );
 
         // Allow the Support class to shutdown its resources, including the Transport.
         bool hasException = false;
@@ -578,7 +493,8 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::sendPullRequest( const ConsumerInfo* consumer, long long timeout ) {
+void ActiveMQConnection::sendPullRequest(
+    const ConsumerInfo* consumer, long long timeout ) throw ( ActiveMQException ) {
 
     try {
 
@@ -598,7 +514,11 @@ void ActiveMQConnection::sendPullRequest( const ConsumerInfo* consumer, long lon
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destination ) {
+void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destination )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::lang::exceptions::UnsupportedOperationException,
+           activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -607,7 +527,7 @@ void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destinat
                 __FILE__, __LINE__, "Destination passed was NULL" );
         }
 
-        checkClosedOrFailed();
+        checkClosed();
         ensureConnectionInfoSent();
 
         Pointer<DestinationInfo> command( new DestinationInfo() );
@@ -627,7 +547,11 @@ void ActiveMQConnection::destroyDestination( const ActiveMQDestination* destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::destroyDestination( const cms::Destination* destination ) {
+void ActiveMQConnection::destroyDestination( const cms::Destination* destination )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::lang::exceptions::UnsupportedOperationException,
+           activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -636,7 +560,7 @@ void ActiveMQConnection::destroyDestination( const cms::Destination* destination
                 __FILE__, __LINE__, "Destination passed was NULL" );
         }
 
-        checkClosedOrFailed();
+        checkClosed();
         ensureConnectionInfoSent();
 
         const ActiveMQDestination* amqDestination =
@@ -665,9 +589,9 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
             // Look up the dispatcher.
             Dispatcher* dispatcher = NULL;
-            synchronized( &this->config->dispatchers ) {
+            synchronized( &dispatchers ) {
 
-                dispatcher = this->config->dispatchers.get( dispatch->getConsumerId() );
+                dispatcher = dispatchers.get( dispatch->getConsumerId() );
 
                 // If we have no registered dispatcher, the consumer was probably
                 // just closed.
@@ -688,12 +612,13 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
         } else if( command->isProducerAck() ) {
 
-            ProducerAck* producerAck = dynamic_cast<ProducerAck*>( command.get() );
+            ProducerAck* producerAck =
+                dynamic_cast<ProducerAck*>( command.get() );
 
             // Get the consumer info object for this consumer.
             ActiveMQProducer* producer = NULL;
-            synchronized( &this->config->activeProducers ) {
-                producer = this->config->activeProducers.get( producerAck->getProducerId() );
+            synchronized( &this->activeProducers ) {
+                producer = this->activeProducers.get( producerAck->getProducerId() );
                 if( producer != NULL ){
                     producer->onProducerAck( *producerAck );
                 }
@@ -705,7 +630,6 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
         } else if( command->isBrokerInfo() ) {
             this->config->brokerInfo =
                 command.dynamicCast<BrokerInfo>();
-            this->config->brokerInfoReceived->countDown();
         } else if( command->isShutdownInfo() ) {
 
             try {
@@ -721,12 +645,15 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             //LOGDECAF_WARN( logger, "Received an unknown command" );
         }
 
-        Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
+        synchronized( &transportListeners ) {
 
-        while( iter->hasNext() ) {
-            try{
-                iter->next()->onCommand( command );
-            } catch(...) {}
+            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+            while( iter->hasNext() ) {
+                try{
+                    iter->next()->onCommand( command );
+                } catch(...) {}
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -744,35 +671,21 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
             return;
         }
 
-        onAsyncException(ex);
-
-        // TODO This part should be done in a separate Thread.
-
         // Mark this Connection as having a Failed transport.
         this->transportFailed.set( true );
-        if( this->config->firstFailureError == NULL ) {
-            this->config->firstFailureError.reset( ex.clone() );
-        }
 
-        this->config->brokerInfoReceived->countDown();
+        // Inform the user of the error.
+        fire( exceptions::ActiveMQException( ex ) );
 
-        // TODO - Until this fires in another thread we can't dipose of
-        //        the transport here since it could result in this method
-        //        being called again recursively.
-        try{
-            // this->config->transport->stop();
-        } catch(...) {
-        }
+        synchronized( &transportListeners ) {
 
-        // Clean up the Connection resources.
-        cleanup();
+            Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
 
-        Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
-
-        while( iter->hasNext() ) {
-            try{
-                iter->next()->onException( ex );
-            } catch(...) {}
+            while( iter->hasNext() ) {
+                try{
+                    iter->next()->onException( ex );
+                } catch(...) {}
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -780,57 +693,51 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::onAsyncException( const decaf::lang::Exception& ex ) {
-
-    if( !this->isClosed() || !this->closing.get() ) {
-
-        if( this->config->exceptionListener != NULL ) {
-
-            // Inform the user of the error.
-            // TODO - This should be run by another Thread, i.e. Executor
-            fire( exceptions::ActiveMQException( ex ) );
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportInterrupted() {
 
-    this->config->transportInterruptionProcessingComplete.reset(
-        new CountDownLatch( (int)this->config->dispatchers.size() ) );
+    this->config->transportInterruptionProcessingComplete.reset( new CountDownLatch( (int)dispatchers.size() ) );
 
-    std::auto_ptr< Iterator<ActiveMQSession*> > sessions( this->config->activeSessions.iterator() );
+    synchronized( &activeSessions ) {
+        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->activeSessions.iterator() );
 
-    while( sessions->hasNext() ) {
-        sessions->next()->clearMessagesInProgress();
+        while( iter->hasNext() ) {
+            iter->next()->clearMessagesInProgress();
+        }
     }
 
-    Pointer< Iterator<TransportListener*> > listeners( this->config->transportListeners.iterator() );
+    synchronized( &transportListeners ) {
 
-    while( listeners->hasNext() ) {
-        try{
-            listeners->next()->transportInterrupted();
-        } catch(...) {}
+        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->transportInterrupted();
+            } catch(...) {}
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportResumed() {
 
-    Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
+    synchronized( &transportListeners ) {
 
-    while( iter->hasNext() ) {
-        try{
-            iter->next()->transportResumed();
-        } catch(...) {}
+        Pointer< Iterator<TransportListener*> > iter( transportListeners.iterator() );
+
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->transportResumed();
+            } catch(...) {}
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::oneway( Pointer<Command> command ) {
+void ActiveMQConnection::oneway( Pointer<Command> command )
+    throw ( ActiveMQException ) {
 
     try {
-        checkClosedOrFailed();
+        checkClosed();
         this->config->transport->oneway( command );
     }
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
@@ -840,11 +747,12 @@ void ActiveMQConnection::oneway( Pointer<Command> command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout ) {
+void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int timeout )
+    throw ( ActiveMQException ) {
 
     try {
 
-        checkClosedOrFailed();
+        checkClosed();
 
         Pointer<Response> response;
 
@@ -865,8 +773,6 @@ Pointer<Response> ActiveMQConnection::syncRequest( Pointer<Command> command, uns
             // Throw the exception.
             throw exception;
         }
-
-        return response;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
@@ -876,20 +782,11 @@ Pointer<Response> ActiveMQConnection::syncRequest( Pointer<Command> command, uns
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::checkClosed() const {
+void ActiveMQConnection::checkClosed() const throw ( ActiveMQException ) {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQConnection::enforceConnected - Connection has already been closed!" );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::checkClosedOrFailed() const {
-
-    checkClosed();
-    if( this->transportFailed.get() == true ) {
-        throw ConnectionFailedException( *this->config->firstFailureError );
     }
 }
 
@@ -937,14 +834,20 @@ void ActiveMQConnection::fire( const ActiveMQException& ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const {
+const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const
+    throw( ActiveMQException ) {
+
     checkClosed();
+
     return *this->config->connectionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId& ActiveMQConnection::getConnectionId() const {
+const ConnectionId& ActiveMQConnection::getConnectionId() const
+    throw( ActiveMQException ) {
+
     checkClosed();
+
     return *( this->config->connectionInfo->getConnectionId() );
 }
 
@@ -956,7 +859,9 @@ void ActiveMQConnection::addTransportListener( TransportListener* transportListe
     }
 
     // Add this listener from the set of active TransportListeners
-    this->config->transportListeners.add( transportListener );
+    synchronized( &transportListeners ) {
+        transportListeners.add( transportListener );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -967,16 +872,23 @@ void ActiveMQConnection::removeTransportListener( TransportListener* transportLi
     }
 
     // Remove this listener from the set of active TransportListeners
-    this->config->transportListeners.remove( transportListener );
+    synchronized( &transportListeners ) {
+        transportListeners.remove( transportListener );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete() {
+void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete()
+    throw( decaf::lang::exceptions::InterruptedException ) {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
     if( cdl != NULL ) {
 
         while( !closed.get() && !transportFailed.get() && cdl->getCount() > 0 ) {
+
+            //std::cout << "dispatch paused, waiting for outstanding dispatch interruption processing ("
+            //          << Integer::toString( cdl->getCount() ) << ") to complete.." << std::endl;
+
             cdl->await( 10, TimeUnit::SECONDS );
         }
 
@@ -989,6 +901,8 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
     if( cdl != NULL ) {
+
+        //std::cout << "Set Transport interruption processing complete." << std::endl;
         cdl->countDown();
 
         try {
@@ -998,11 +912,14 @@ void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::signalInterruptionProcessingComplete() {
+void ActiveMQConnection::signalInterruptionProcessingComplete()
+    throw( decaf::lang::exceptions::InterruptedException ) {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
 
     if( cdl->getCount() == 0 ) {
+
+        //std::cout << "Signaling Transport interruption processing complete." << std::endl;
 
         this->config->transportInterruptionProcessingComplete.reset( NULL );
         FailoverTransport* failoverTransport =
@@ -1120,21 +1037,6 @@ void ActiveMQConnection::setUseCompression( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnection::getCompressionLevel() const {
-    return this->config->compressionLevel;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::setCompressionLevel( int value ) {
-
-    if( value < 0 ) {
-        this->config->compressionLevel = -1;
-    }
-
-    this->config->compressionLevel = Math::min( value, 9 );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 unsigned int ActiveMQConnection::getSendTimeout() const {
     return this->config->sendTimeout;
 }
@@ -1165,6 +1067,11 @@ void ActiveMQConnection::setProducerWindowSize( unsigned int windowSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnection::getNextSessionId() {
+    return this->config->sessionIds.getNextSequenceId();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 long long ActiveMQConnection::getNextTempDestinationId() {
     return this->config->tempDestinationIds.getNextSequenceId();
 }
@@ -1177,38 +1084,4 @@ long long ActiveMQConnection::getNextLocalTransactionId() {
 ////////////////////////////////////////////////////////////////////////////////
 transport::Transport& ActiveMQConnection::getTransport() const {
     return *( this->config->transport );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQConnection::isMessagePrioritySupported() const {
-    return this->config->messagePrioritySupported;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::setMessagePrioritySupported( bool value ) {
-    this->config->messagePrioritySupported = value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Exception* ActiveMQConnection::getFirstFailureError() const {
-    return this->config->firstFailureError.get();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnection::getResourceManagerId() const {
-    try {
-        this->config->waitForBrokerInfo();
-
-        if( this->config->brokerInfo == NULL ) {
-            throw CMSException("Connection failed before Broker info was received.");
-        }
-
-        return this->config->brokerInfo->getBrokerId()->getValue();
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const decaf::util::Properties& ActiveMQConnection::getProperties() const {
-    return *( this->config->properties );
 }

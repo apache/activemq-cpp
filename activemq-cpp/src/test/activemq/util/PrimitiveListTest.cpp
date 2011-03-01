@@ -23,7 +23,6 @@
 using namespace activemq;
 using namespace activemq::util;
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testSetGet(){
 
     PrimitiveList plist;
@@ -121,7 +120,6 @@ void PrimitiveListTest::testSetGet(){
     CPPUNIT_ASSERT( plist.getByteArray(0) == byteArray );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testAdd(){
 
     bool boolValue = true;
@@ -173,27 +171,25 @@ void PrimitiveListTest::testAdd(){
     CPPUNIT_ASSERT( plist.get(9).getType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testRemove(){
 
     PrimitiveList plist;
     plist.add( 5 );
     plist.add( 5.5f );
     plist.add( 6 );
-    plist.removeAt( 0 );
+    plist.remove( 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw UnsupportedOperationException",
         plist.getInt( 0 ),
         decaf::lang::exceptions::UnsupportedOperationException );
 
-    plist.removeAt( 0 );
-    plist.removeAt( 0 );
+    plist.remove( 0 );
+    plist.remove( 0 );
 
     CPPUNIT_ASSERT( plist.isEmpty() );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testCount(){
 
     PrimitiveList plist;
@@ -204,13 +200,12 @@ void PrimitiveListTest::testCount(){
     CPPUNIT_ASSERT( plist.size() == 2 );
     plist.add( 6 );
     CPPUNIT_ASSERT( plist.size() == 3 );
-    plist.removeAt( 0 );
+    plist.remove( 0 );
     CPPUNIT_ASSERT( plist.size() == 2 );
 
     CPPUNIT_ASSERT( plist.toString() != "" );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testCopy(){
 
     PrimitiveList plist;
@@ -226,7 +221,6 @@ void PrimitiveListTest::testCopy(){
     CPPUNIT_ASSERT( plist.equals( copy1 ) );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testClear(){
 
     PrimitiveList plist;
@@ -253,7 +247,6 @@ void PrimitiveListTest::testClear(){
         decaf::lang::exceptions::IndexOutOfBoundsException );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testContains(){
 
     PrimitiveList plist;
@@ -273,7 +266,6 @@ void PrimitiveListTest::testContains(){
     CPPUNIT_ASSERT( plist.contains( 5 ) == false );
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testListOfLists() {
 
     PrimitiveList list;
@@ -295,7 +287,6 @@ void PrimitiveListTest::testListOfLists() {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void PrimitiveListTest::testListOfMaps() {
 
     PrimitiveList list;

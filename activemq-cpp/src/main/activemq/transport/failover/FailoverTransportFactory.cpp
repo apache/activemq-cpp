@@ -38,12 +38,12 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& location ) {
+Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& location )
+throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
-        Properties properties =
-            activemq::util::URISupport::parseQuery( location.getQuery() );
+        Properties properties;  // unused but necessary for now.
 
         // Create the initial Transport, then wrap it in the normal Filters
         Pointer<Transport> transport( doCreateComposite( location, properties ) );
@@ -59,12 +59,12 @@ Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& loca
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::URI& location ) {
+Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::URI& location )
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
-        Properties properties =
-            activemq::util::URISupport::parseQuery( location.getQuery() );
+        Properties properties;  // unused but necessary for now.
 
         // Create the initial Transport, then wrap it in the normal Filters
         return doCreateComposite( location, properties );
@@ -77,37 +77,40 @@ Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> FailoverTransportFactory::doCreateComposite(
     const decaf::net::URI& location,
-    const decaf::util::Properties& properties ) {
+    const decaf::util::Properties& properties )
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 
         CompositeData data = URISupport::parseComposite( location );
         Pointer<FailoverTransport> transport( new FailoverTransport() );
 
-        transport->setInitialReconnectDelay(
-            Long::parseLong( properties.getProperty( "initialReconnectDelay", "10" ) ) );
-        transport->setMaxReconnectDelay(
-            Long::parseLong( properties.getProperty( "maxReconnectDelay", "30000" ) ) );
-        transport->setUseExponentialBackOff(
-            Boolean::parseBoolean( properties.getProperty( "useExponentialBackOff", "true" ) ) );
-        transport->setMaxReconnectAttempts(
-            Integer::parseInt( properties.getProperty( "maxReconnectAttempts", "0" ) ) );
-        transport->setStartupMaxReconnectAttempts(
-            Integer::parseInt( properties.getProperty( "startupMaxReconnectAttempts", "0" ) ) );
-        transport->setRandomize(
-            Boolean::parseBoolean( properties.getProperty( "randomize", "true" ) ) );
-        transport->setBackup(
-            Boolean::parseBoolean( properties.getProperty( "backup", "false" ) ) );
-        transport->setBackupPoolSize(
-            Integer::parseInt( properties.getProperty( "backupPoolSize", "1" ) ) );
-        transport->setTimeout(
-            Long::parseLong( properties.getProperty( "timeout", "-1" ) ) );
-        transport->setTrackMessages(
-            Boolean::parseBoolean( properties.getProperty( "trackMessages", "false" ) ) );
-        transport->setMaxCacheSize(
-            Integer::parseInt( properties.getProperty( "maxCacheSize", "131072" ) ) );
+        Properties topLvlProperties = data.getParameters();
 
-        transport->addURI( false, data.getComponents() );
+        transport->setInitialReconnectDelay(
+            Long::parseLong( topLvlProperties.getProperty( "initialReconnectDelay", "10" ) ) );
+        transport->setMaxReconnectDelay(
+            Long::parseLong( topLvlProperties.getProperty( "maxReconnectDelay", "30000" ) ) );
+        transport->setUseExponentialBackOff(
+            Boolean::parseBoolean( topLvlProperties.getProperty( "useExponentialBackOff", "true" ) ) );
+        transport->setMaxReconnectAttempts(
+            Integer::parseInt( topLvlProperties.getProperty( "maxReconnectAttempts", "0" ) ) );
+        transport->setStartupMaxReconnectAttempts(
+            Integer::parseInt( topLvlProperties.getProperty( "startupMaxReconnectAttempts", "0" ) ) );
+        transport->setRandomize(
+            Boolean::parseBoolean( topLvlProperties.getProperty( "randomize", "true" ) ) );
+        transport->setBackup(
+            Boolean::parseBoolean( topLvlProperties.getProperty( "backup", "false" ) ) );
+        transport->setBackupPoolSize(
+            Integer::parseInt( topLvlProperties.getProperty( "backupPoolSize", "1" ) ) );
+        transport->setTimeout(
+            Long::parseLong( topLvlProperties.getProperty( "timeout", "-1" ) ) );
+        transport->setTrackMessages(
+            Boolean::parseBoolean( topLvlProperties.getProperty( "trackMessages", "false" ) ) );
+        transport->setMaxCacheSize(
+            Integer::parseInt( topLvlProperties.getProperty( "maxCacheSize", "131072" ) ) );
+
+        transport->addURI( data.getComponents() );
 
         return transport;
     }

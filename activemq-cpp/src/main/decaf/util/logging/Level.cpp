@@ -80,7 +80,8 @@ bool Level::operator<( const Level& value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Level Level::parse( const std::string& name ) {
+Level Level::parse( const std::string& name )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     bool isNameAnInt;
     int nameAsInt;

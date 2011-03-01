@@ -28,11 +28,12 @@ const Boolean Boolean::_FALSE( false );
 const Boolean Boolean::_TRUE( true );
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean::Boolean( bool value ) : value(value) {
+Boolean::Boolean( bool value ) {
+    this->value = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean::Boolean( const std::string& value ) : value(false) {
+Boolean::Boolean( const std::string& value ) {
     this->value = parseBoolean( value );
 }
 

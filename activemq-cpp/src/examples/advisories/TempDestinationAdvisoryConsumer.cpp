@@ -55,11 +55,11 @@ TempDestinationAdvisoryConsumer::TempDestinationAdvisoryConsumer( cms::Session* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TempDestinationAdvisoryConsumer::~TempDestinationAdvisoryConsumer() throw() {
+TempDestinationAdvisoryConsumer::~TempDestinationAdvisoryConsumer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TempDestinationAdvisoryConsumer::onMessage( const cms::Message* message ) throw() {
+void TempDestinationAdvisoryConsumer::onMessage( const cms::Message* message ) {
 
     if( message->getCMSType() == "Advisory" ) {
 

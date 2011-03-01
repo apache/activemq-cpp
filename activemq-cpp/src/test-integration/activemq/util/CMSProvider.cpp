@@ -23,7 +23,6 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/util/IntegrationCommon.h>
 
-#include <decaf/lang/Thread.h>
 #include <decaf/util/UUID.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
@@ -34,7 +33,6 @@ using namespace activemq::util;
 using namespace activemq::core;
 using namespace decaf;
 using namespace decaf::util;
-using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +51,7 @@ CMSProvider::CMSProvider( const std::string& brokerURL,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSProvider::~CMSProvider() throw() {
+CMSProvider::~CMSProvider() {
     try{
         close();
     }
@@ -222,10 +220,6 @@ void CMSProvider::unsubscribe() {
 
         if( this->consumer.get() && this->durable && this->topic ) {
              this->consumer->close();
-
-             // Wait a bit to let the broker clean out the consumer.
-             Thread::sleep( 1000 );
-
              this->session->unsubscribe( this->subscription );
         }
     }

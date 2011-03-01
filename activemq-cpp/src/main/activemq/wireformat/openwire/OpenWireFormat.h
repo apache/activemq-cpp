@@ -47,10 +47,7 @@ namespace marshal {
         static const unsigned char NULL_TYPE;
 
         // V1 if the default version we start at.
-        static const int DEFAULT_VERSION;
-
-        // Defines the maximum supported openwire version
-        static const int MAX_SUPPORTED_VERSION;
+        static const int DEFAULT_VERSION = 1;
 
     private:
 
@@ -91,17 +88,22 @@ namespace marshal {
         virtual ~OpenWireFormat();
 
         /**
-         * {@inheritDoc}
+         * Returns true if this WireFormat has a Negotiator that needs to wrap the
+         * Transport that uses it.
+         * @returns true if the WireFormat provides a Negotiator.
          */
         virtual bool hasNegotiator() const {
             return true;
         }
 
         /**
-         * {@inheritDoc}
+         * If the Transport Provides a Negotiator this method will create and return
+         * a news instance of the Negotiator.
+         * @returns new instance of a WireFormatNegotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport );
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Allows an external source to add marshalers to this object for
@@ -111,19 +113,35 @@ namespace marshal {
         void addMarshaller( marshal::DataStreamMarshaller* marshaler );
 
         /**
-         * {@inheritDoc}
+         * Stream based marshaling of a Command, this method blocks until the entire
+         * Command has been written out to the output stream.
+         *
+         * @param command
+         *      The Command to Marshal.
+         * @param transport
+         *      The Transport instance that called this method.
+         * @param out
+         *      The output stream to write the command to.
+         * @throws IOException
          */
         virtual void marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out );
+                              decaf::io::DataOutputStream* out )
+            throw ( decaf::io::IOException );
 
         /**
-         * {@inheritDoc}
+         * Stream based un-marshaling, blocks on reads on the input stream until a complete
+         * command has been read and un-marshaled into the correct form.  Returns a Pointer
+         * to the newly un-marshaled Command.
+         *
+         * @param transport - Pointer to the transport that is making this request.
+         * @param in - the input stream to read the command from.
+         * @returns the newly marshaled Command, caller owns the pointer
+         * @throws IOException
          */
         virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in );
-
-    public:
+                                                      decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method for Tight Marshaling the given object to the boolean
@@ -133,7 +151,8 @@ namespace marshal {
          * @returns size of the data returned.
          */
         virtual int tightMarshalNestedObject1( commands::DataStructure* object,
-                                               utils::BooleanStream* bs );
+                                               utils::BooleanStream* bs )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method that will Tight marshal some internally nested object
@@ -146,7 +165,8 @@ namespace marshal {
          */
         void tightMarshalNestedObject2( commands::DataStructure* o,
                                         decaf::io::DataOutputStream* ds,
-                                        utils::BooleanStream* bs );
+                                        utils::BooleanStream* bs )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method used to Unmarshal a Nested DataStructure type object
@@ -158,7 +178,8 @@ namespace marshal {
          * @throws IOException if an error occurs.
          */
         commands::DataStructure* tightUnmarshalNestedObject( decaf::io::DataInputStream* dis,
-                                                             utils::BooleanStream* bs );
+                                                             utils::BooleanStream* bs )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method to unmarshal an DataStructure object from an
@@ -169,7 +190,9 @@ namespace marshal {
          * @returns a new DataStructure derived Object pointer
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* looseUnmarshalNestedObject( decaf::io::DataInputStream* dis );
+        commands::DataStructure* looseUnmarshalNestedObject(
+            decaf::io::DataInputStream* dis )
+                throw ( decaf::io::IOException );
 
         /**
          * Utility method to loosely Marshal an object that is derived from the
@@ -180,34 +203,30 @@ namespace marshal {
          * @throw IOException if an error occurs.
          */
         void looseMarshalNestedObject( commands::DataStructure* o,
-                                       decaf::io::DataOutputStream* dataOut );
+                                       decaf::io::DataOutputStream* dataOut )
+                                           throw ( decaf::io::IOException );
 
         /**
          * Called to re-negotiate the settings for the WireFormatInfo, these
          * determine how the client and broker communicate.
-         *
-         * @param info
-         *      The new Wireformat Info settings.
-         *
+         * @param info - The new Wireformat Info settings
          * @throws IllegalStateException is wire format can't be negotiated.
          */
-        void renegotiateWireFormat( const commands::WireFormatInfo& info );
+        void renegotiateWireFormat( const commands::WireFormatInfo& info )
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Configures this object using the provided WireformatInfo object
-         *
-         * @param info
-         *      A WireFormatInfo object, takes ownership.
-         *
-         * @throws IllegalStateException if the WireFormat object has not been initialized.
+         * @param info - a WireFormatInfo object, takes ownership.
          */
-        void setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info );
+        virtual void setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info )
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Gets the Preferred WireFormatInfo object that this class holds
          * @return pointer to a preferred WireFormatInfo object
          */
-        const Pointer<commands::WireFormatInfo>& getPreferedWireFormatInfo() const {
+        virtual const Pointer<commands::WireFormatInfo>& getPreferedWireFormatInfo() const {
             return this->preferedWireFormatInfo;
         }
 
@@ -253,13 +272,9 @@ namespace marshal {
 
         /**
          * Set the current Wireformat Version
-         *
-         * @param version
-         *      An int that identifies the version
-         *
-         * @throws IllegalArgumentException if the version given is not supported.
+         * @param version - int that identifies the version
          */
-        void setVersion( int version );
+        void setVersion( int version ) throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Is there a Message being unmarshaled?
@@ -373,15 +388,12 @@ namespace marshal {
          * return the unmarshalled DataStrucutre object once done, caller takes
          * ownership of this object.  This method can return null if the type
          * of the object to unmarshal is NULL, empty data.
-         *
-         * @param dis
-         *      The DataInputStream to read from.
-         *
-         * @returns new DataStructure* that the caller owns.
-         *
-         * @throws IOException if an error occurs during the unmarshal.
+         * @param dis - DataInputStream to read from
+         * @returns new DataStructure* that the caller owns
+         * @throws IOException if an error occurs during the unmarshal
          */
-        commands::DataStructure* doUnmarshal( decaf::io::DataInputStream* dis );
+        commands::DataStructure* doUnmarshal( decaf::io::DataInputStream* dis )
+            throw ( decaf::io::IOException );
 
         /**
          * Cleans up all registered Marshallers and empties the dataMarshallers

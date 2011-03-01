@@ -18,7 +18,6 @@
 #include "DefaultSSLContext.h"
 
 #include <decaf/io/IOException.h>
-#include <decaf/lang/Runnable.h>
 
 #include <decaf/security/SecureRandom.h>
 #include <decaf/internal/net/Network.h>
@@ -35,30 +34,6 @@ using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
 using namespace decaf::internal::net::ssl::openssl;
-
-////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    class ShutdownTask : public decaf::lang::Runnable {
-    private:
-
-        SSLContext** defaultRef;
-
-    private:
-
-        ShutdownTask( const ShutdownTask& );
-        ShutdownTask& operator= ( const ShutdownTask& );
-
-    public:
-
-        ShutdownTask( SSLContext** defaultRef ) : defaultRef( defaultRef ) {}
-        virtual ~ShutdownTask() {}
-
-        virtual void run() {
-            *defaultRef = NULL;
-        }
-    };
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLContext* DefaultSSLContext::defaultSSLContext = NULL;
@@ -90,7 +65,6 @@ SSLContext* DefaultSSLContext::getContext() {
         // Store the default in the Network Runtime, it will be destroyed when the
         // Application calls the Decaf shutdownLibrary method.
         Network::getNetworkRuntime()->addAsResource( defaultSSLContext );
-        Network::getNetworkRuntime()->addShutdownTask( new ShutdownTask( &defaultSSLContext ) );
     }
 
 #endif

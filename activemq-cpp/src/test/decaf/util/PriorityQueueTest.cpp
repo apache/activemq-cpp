@@ -19,7 +19,7 @@
 
 #include <decaf/util/PriorityQueue.h>
 #include <decaf/util/Comparator.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlList.h>
 
 #include <algorithm>
 #include <memory>
@@ -72,7 +72,7 @@ void PriorityQueueTest::testConstructor_2() {
 void PriorityQueueTest::testConstructor_3() {
 
     PriorityQueue<int> intQueue;
-    LinkedList<int> collection;
+    StlList<int> collection;
 
     int array[] = { 12, 2, 456, -11, 99, 111, 456 };
 
@@ -97,7 +97,7 @@ void PriorityQueueTest::testConstructor_3() {
 void PriorityQueueTest::testAssignment() {
 
     PriorityQueue<int> intQueue;
-    LinkedList<int> collection;
+    StlList<int> collection;
 
     int array[] = { 12, 2, 456, -11, 99, 111, 456 };
 
@@ -161,7 +161,7 @@ void PriorityQueueTest::testOfferString() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw a NoSuchElementException",
         queue.remove(),
-        decaf::util::NoSuchElementException );
+        decaf::lang::exceptions::NoSuchElementException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ void PriorityQueueTest::testAdd() {
 void PriorityQueueTest::testAddAll() {
     PriorityQueue<int> integerQueue;
 
-    LinkedList<int> list;
+    StlList<int> list;
     list.add( 2 );
     list.add( 45 );
     list.add( 7 );
@@ -444,7 +444,7 @@ void PriorityQueueTest::testIteratorRemove() {
 
     int result;
     std::sort( newArray.begin(), newArray.end() );
-    for( int i = 0; i < intQueue.size(); i++ ) {
+    for( std::size_t i = 0; i < intQueue.size(); i++ ) {
         CPPUNIT_ASSERT( intQueue.poll( result ) );
         CPPUNIT_ASSERT( newArray[i] == result );
     }

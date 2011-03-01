@@ -42,7 +42,6 @@ namespace util{
 
         decaf::util::StlMap< std::string, std::string > properties;
 
-        PropertiesInternal() : properties() {}
     };
 
 }}
@@ -111,11 +110,11 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties() : internal( new PropertiesInternal() ), defaults() {
+Properties::Properties() : internal( new PropertiesInternal() ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ), defaults() {
+Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ) {
 
     this->internal->properties.copy( src.internal->properties );
 
@@ -155,10 +154,10 @@ bool Properties::isEmpty() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Properties::size() const {
+std::size_t Properties::size() const {
 
     synchronized( &( internal->properties ) ) {
-        return (int)internal->properties.size();
+        return internal->properties.size();
     }
 
     return 0;
@@ -342,7 +341,10 @@ void Properties::selectProperties( StlMap<std::string, std::string>& selectPrope
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::InputStream* stream ) {
+void Properties::load( decaf::io::InputStream* stream )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -504,7 +506,10 @@ void Properties::load( decaf::io::InputStream* stream ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::Reader* reader ) {
+void Properties::load( decaf::io::Reader* reader )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -526,7 +531,9 @@ void Properties::load( decaf::io::Reader* reader ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED ) {
+void Properties::store( decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -575,7 +582,9 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED ) {
+void Properties::store( decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 

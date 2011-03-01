@@ -49,37 +49,106 @@ namespace commands{
     public:
 
         ActiveMQTextMessage();
-        virtual ~ActiveMQTextMessage() throw();
+        virtual ~ActiveMQTextMessage();
 
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
         virtual ActiveMQTextMessage* cloneDataStructure() const;
 
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
         virtual std::string toString() const;
 
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual void clearBody();
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
+        virtual void clearBody() throw( cms::CMSException );
 
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat );
+        /**
+         * Performs any cleanup or other tasks that must be done before the Message is
+         * marshalled to its binary WireFormat version.
+         *
+         * @param wireFormat the WireFormat instance that is marshalling this message.
+         */
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
+            throw ( decaf::io::IOException );
 
+        /**
+         * Returns the Size of this message in Bytes.
+         * @returns number of bytes this message equates to.
+         */
         virtual unsigned int getSize() const;
 
     public:   // CMS Message
 
+        /**
+         * Clone this message exactly, returns a new instance that the
+         * caller is required to delete.
+         * @return new copy of this message
+         */
         virtual cms::TextMessage* clone() const {
             return dynamic_cast<cms::TextMessage*>( this->cloneDataStructure() );
         }
 
     public:   // cms::TextMessage
 
-        virtual std::string getText() const;
+        /**
+         * Gets the message character buffer.
+         *
+         * @return The message character buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         */
+        virtual std::string getText() const throw( cms::CMSException );
 
-        virtual void setText( const char* msg );
+        /**
+         * Sets the message contents, does not take ownership of the passed
+         * char*, but copies it instead.
+         *
+         * @param msg
+         *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
+         */
+        virtual void setText( const char* msg ) throw( cms::MessageNotWriteableException,
+                                                       cms::CMSException );
 
-        virtual void setText( const std::string& msg );
+        /**
+         * Sets the message contents
+         *
+         * @param msg
+         *      The message buffer.
+         *
+         * @throws CMSException - if an internal error occurs.
+         * @throws MessageNotWriteableException - if the message is in read-only mode..
+         */
+        virtual void setText( const std::string& msg ) throw( cms::MessageNotWriteableException,
+                                                              cms::CMSException );
 
     };
 

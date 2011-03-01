@@ -57,36 +57,28 @@ namespace net{
 
         /**
          * Constructs a URI as a copy of another URI
-         *
          * @param uri - uri to copy
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const URI& uri );
+        URI( const URI& uri ) throw ( URISyntaxException );
 
         /**
-         * Constructs a URI from the given string.
-         *
+         * Constructs a URI from the given string
          * @param uri - string uri to parse.
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& uri );
+        URI( const std::string& uri ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
-         *
          * @param scheme - the uri scheme
          * @param ssp - Scheme specific part
          * @param fragment - Fragment
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& scheme, const std::string& ssp, const std::string& fragment );
+        URI( const std::string& scheme,
+             const std::string& ssp,
+             const std::string& fragment ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
-         *
          * @param scheme - Scheme name
          * @param userInfo - User name and authorization information
          * @param host - Host name
@@ -94,13 +86,11 @@ namespace net{
          * @param path - Path
          * @param query - Query
          * @param fragment - Fragment
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
         URI( const std::string& scheme, const std::string& userInfo,
              const std::string& host, int port,
              const std::string& path, const std::string& query,
-             const std::string& fragment );
+             const std::string& fragment ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -108,11 +98,10 @@ namespace net{
          * @param host - Host name
          * @param path - Path
          * @param fragment - Fragment
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
         URI( const std::string& scheme, const std::string& host,
-             const std::string& path, const std::string& fragment );
+             const std::string& path, const std::string& fragment )
+                 throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -121,12 +110,10 @@ namespace net{
          * @param path - Path
          * @param query - Query
          * @param fragment - Fragment
-         *
-         * @throws URISyntaxException if the URI passed is malformed.
          */
         URI( const std::string& scheme, const std::string& authority,
              const std::string& path, const std::string& query,
-             const std::string& fragment );
+             const std::string& fragment ) throw ( URISyntaxException);
 
         virtual ~URI() {}
 
@@ -321,7 +308,7 @@ namespace net{
          * @throws URISyntaxException - If the authority component of this URI is
          * defined but cannot be parsed as a server-based authority.
          */
-        URI parseServerAuthority() const;
+        URI parseServerAuthority() const throw ( URISyntaxException );
 
         /**
          * Relativizes the given URI against this URI.  The relativization of the
@@ -351,7 +338,8 @@ namespace net{
          * @returns The resulting URI
          * @throws IllegalArgumentException - If the given string violates RFC 2396
          */
-        URI resolve( const std::string& str ) const;
+        URI resolve( const std::string& str ) const
+            throw ( lang::exceptions::IllegalArgumentException );
 
         /**
          * Resolves the given URI against this URI.
@@ -415,7 +403,8 @@ namespace net{
          * @throws MalformedURLException - If a protocol handler for the URL could not
          * be found, or if some other error occurred while constructing the URL
          */
-        URL toURL() const;
+        URL toURL() const
+            throw ( MalformedURLException, lang::exceptions::IllegalArgumentException );
 
     public:   // Static Methods
 
@@ -424,12 +413,11 @@ namespace net{
          * This convenience factory method works as if by invoking the URI(string)
          * constructor; any URISyntaxException thrown by the constructor is caught
          * and wrapped in a new IllegalArgumentException object, which is then thrown.
-         *
          * @param uri - URI string to parse
-         *
          * @throws IllegalArgumentException
          */
-        static URI create( const std::string uri );
+        static URI create( const std::string uri )
+            throw ( lang::exceptions::IllegalArgumentException );
 
     private:
 
@@ -441,7 +429,7 @@ namespace net{
          * @param forceServer - should a server authority be enforced.
          * @throws URISyntaxException if an error occurs.
          */
-        void parseURI( const std::string& uri, bool forceServer );
+        void parseURI( const std::string& uri, bool forceServer ) throw ( URISyntaxException );
 
         /*
          * Quote illegal chars for each component, but not the others

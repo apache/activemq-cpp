@@ -49,11 +49,6 @@ namespace chat{
         std::string password;
         std::string topicName;
 
-    private:
-
-        Chat( const Chat& );
-        Chat& operator= ( const Chat& );
-
     public:
 
         static const char* DEFAULT_BROKER_URI;
@@ -62,9 +57,9 @@ namespace chat{
     public:
 
         Chat();
-        virtual ~Chat() throw();
+        virtual ~Chat();
 
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage( const cms::Message* message );
         virtual void onException( const cms::CMSException& ex );
 
         /**

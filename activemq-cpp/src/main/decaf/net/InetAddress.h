@@ -88,14 +88,6 @@ namespace net {
          */
         virtual std::string toString() const;
 
-        /**
-         * Returns a newly allocated copy of this InetAddress.  The caller owns the resulting
-         * copy and must delete it.
-         *
-         * @return a new InetAddress instance that is a copy of this one, caller owns.
-         */
-        virtual InetAddress* clone() const;
-
     public:  // Address Property Tests, override in the subclasses for correct results
 
         /**

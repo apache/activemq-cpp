@@ -27,7 +27,7 @@ namespace cmsutil{
     {
     public:
 
-        virtual ~DummyMessage() throw() {}
+        virtual ~DummyMessage(){}
 
         virtual Message* clone() const { return NULL; }
 

@@ -24,11 +24,12 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( unsigned char value ) : value(value) {
+Byte::Byte( unsigned char value ) {
+    this->value = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( const std::string& value ) : value(0) {
+Byte::Byte( const std::string& value ) throw( exceptions::NumberFormatException ) {
     this->value = parseByte( value );
 }
 
@@ -43,7 +44,8 @@ std::string Byte::toString( unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s, int radix ) {
+unsigned char Byte::parseByte( const std::string& s, int radix )
+    throw ( exceptions::NumberFormatException ) {
 
     int intValue = Integer::parseInt( s, radix );
     unsigned char result = (unsigned char)intValue;
@@ -57,12 +59,15 @@ unsigned char Byte::parseByte( const std::string& s, int radix ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s ) {
+unsigned char Byte::parseByte( const std::string& s )
+    throw ( exceptions::NumberFormatException ) {
+
     return parseByte( s, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::decode( const std::string& value ) {
+Byte Byte::decode( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
 
     int intValue = Integer::decode( value ).intValue();
     unsigned char result = (unsigned char)intValue;
@@ -76,11 +81,15 @@ Byte Byte::decode( const std::string& value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value ) {
+Byte Byte::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
     return Byte( parseByte( value, 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value, int radix ) {
+Byte Byte::valueOf( const std::string& value, int radix )
+    throw ( exceptions::NumberFormatException ) {
+
     return Byte( parseByte( value, radix ) );
 }

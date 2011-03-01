@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo::ConnectionInfo() 
     : BaseCommand(), connectionId(NULL), clientId(""), password(""), userName(""), brokerPath(), brokerMasterConnector(false), 
-      manageable(false), clientMaster(false), faultTolerant(false), failoverReconnect(false) {
+      manageable(false), clientMaster(false), faultTolerant(false) {
 
 }
 
@@ -86,7 +86,6 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     this->setManageable( srcPtr->isManageable() );
     this->setClientMaster( srcPtr->isClientMaster() );
     this->setFaultTolerant( srcPtr->isFaultTolerant() );
-    this->setFailoverReconnect( srcPtr->isFailoverReconnect() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,8 +137,6 @@ std::string ConnectionInfo::toString() const {
     stream << "ClientMaster = " << this->isClientMaster();
     stream << ", ";
     stream << "FaultTolerant = " << this->isFaultTolerant();
-    stream << ", ";
-    stream << "FailoverReconnect = " << this->isFailoverReconnect();
     stream << " }";
 
     return stream.str();
@@ -193,9 +190,6 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->isFaultTolerant() != valuePtr->isFaultTolerant() ) {
-        return false;
-    }
-    if( this->isFailoverReconnect() != valuePtr->isFailoverReconnect() ) {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
@@ -320,17 +314,8 @@ void ConnectionInfo::setFaultTolerant( bool faultTolerant ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::isFailoverReconnect() const {
-    return failoverReconnect;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ConnectionInfo::setFailoverReconnect( bool failoverReconnect ) {
-    this->failoverReconnect = failoverReconnect;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConnectionInfo( this );
 }

@@ -123,7 +123,7 @@ namespace concurrent{
             return new BrokenBarrierException( *this );
         }
 
-        virtual ~BrokenBarrierException() throw();
+        virtual ~BrokenBarrierException() throw() {}
 
     };
 

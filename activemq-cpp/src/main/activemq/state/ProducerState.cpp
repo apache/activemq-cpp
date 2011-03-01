@@ -25,7 +25,7 @@ using namespace activemq::commands;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerState::ProducerState( const Pointer<ProducerInfo>& info ) : info(info), transactionState() {
+ProducerState::ProducerState( const Pointer<ProducerInfo>& info ) : info( info ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

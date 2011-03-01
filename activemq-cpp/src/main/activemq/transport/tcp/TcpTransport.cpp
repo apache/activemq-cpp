@@ -43,7 +43,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const Pointer<Transport>& next ) :
-    TransportFilter(next), connectTimeout(0), closed(false), socket(), dataInputStream(), dataOutputStream() {
+    TransportFilter( next ), connectTimeout( 0 ), closed( false ) {
 
 }
 
@@ -59,7 +59,7 @@ TcpTransport::~TcpTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() {
+void TcpTransport::close() throw( decaf::io::IOException ) {
 
     try {
 
@@ -70,7 +70,6 @@ void TcpTransport::close() {
             socket->close();
         }
 
-        // Invoke the paren't close first.
         TransportFilter::close();
     }
     AMQ_CATCH_RETHROW( IOException )

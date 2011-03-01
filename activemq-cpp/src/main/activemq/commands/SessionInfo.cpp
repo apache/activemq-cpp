@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo::SessionInfo() 
-    : BaseCommand(), sessionId(NULL), ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE) {
+    : BaseCommand(), ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE), sessionId(NULL) {
 
 }
 
@@ -147,7 +147,8 @@ void SessionInfo::setSessionId( const decaf::lang::Pointer<SessionId>& sessionId
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processSessionInfo( this );
 }

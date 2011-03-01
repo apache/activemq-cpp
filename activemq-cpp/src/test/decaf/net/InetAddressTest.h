@@ -30,7 +30,6 @@ namespace net {
         CPPUNIT_TEST( testGetByAddress );
         CPPUNIT_TEST( testGetHostAddress );
         CPPUNIT_TEST( testGetLocalHost );
-        CPPUNIT_TEST( testClone );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,7 +37,6 @@ namespace net {
         InetAddressTest();
         virtual ~InetAddressTest();
 
-        void testClone();
         void testGetByAddress();
         void testGetHostAddress();
         void testGetLocalHost();

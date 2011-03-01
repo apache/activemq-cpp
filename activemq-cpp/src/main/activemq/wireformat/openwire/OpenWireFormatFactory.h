@@ -53,8 +53,14 @@ namespace openwire{
 
         virtual ~OpenWireFormatFactory() {}
 
+        /**
+         * Creates a new WireFormat Object passing it a set of
+         * properties from which it can obtain any optional settings
+         * @param properties - the Properties for this WireFormat
+         */
         virtual Pointer<wireformat::WireFormat> createWireFormat(
-            const decaf::util::Properties& properties );
+            const decaf::util::Properties& properties )
+                throw ( decaf::lang::exceptions::IllegalStateException );
 
     };
 

@@ -22,7 +22,6 @@
 #include <decaf/net/Inet4Address.h>
 #include <decaf/net/Inet6Address.h>
 #include <decaf/net/UnknownHostException.h>
-#include <decaf/lang/exceptions/RuntimeException.h>
 
 #include <apr_network_io.h>
 #include <decaf/internal/AprPool.h>
@@ -38,12 +37,11 @@ const unsigned char InetAddress::loopbackBytes[4] = { 127, 0, 0, 1 };
 const unsigned char InetAddress::anyBytes[4] = { 0, 0, 0, 0 };
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress() : hostname(), reached(false), addressBytes() {
+InetAddress::InetAddress() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) :
-    hostname(), reached(false), addressBytes() {
+InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) {
 
     if( ipAddress == NULL ) {
         throw NullPointerException(
@@ -61,8 +59,7 @@ InetAddress::InetAddress( const unsigned char* ipAddress, int numBytes ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAddress, int numBytes ) :
-    hostname(hostname), reached(false), addressBytes() {
+InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAddress, int numBytes ) {
 
     if( ipAddress == NULL ) {
         throw NullPointerException(
@@ -77,16 +74,11 @@ InetAddress::InetAddress( const std::string& hostname, const unsigned char* ipAd
     unsigned char* copy = new unsigned char[numBytes];
     System::arraycopy( ipAddress, 0, copy, 0, numBytes );
     this->addressBytes.reset( copy, numBytes );
+    this->hostname = hostname;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InetAddress::~InetAddress() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-InetAddress* InetAddress::clone() const {
-
-    return new InetAddress( *this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

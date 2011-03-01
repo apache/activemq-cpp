@@ -67,9 +67,9 @@ namespace concurrent {
         class EmptyIterator : public Iterator<E> {
         public:
 
-            virtual E next() {
+            virtual E next() throw( lang::exceptions::NoSuchElementException ) {
 
-                throw NoSuchElementException(
+                throw lang::exceptions::NoSuchElementException(
                     __FILE__, __LINE__,
                     "Cannot traverse a Synchronous Queue." );
             }
@@ -78,7 +78,8 @@ namespace concurrent {
                 return false;
             }
 
-            virtual void remove() {
+            virtual void remove() throw ( lang::exceptions::IllegalStateException,
+                                          lang::exceptions::UnsupportedOperationException ) {
 
                 throw lang::exceptions::IllegalStateException(
                     __FILE__, __LINE__,
@@ -107,7 +108,10 @@ namespace concurrent {
          * @throws NullPointerException {@inheritDoc}
          * @throws IllegalArgumentException {@inheritDoc}
          */
-        virtual void put( const E& value ) {
+        virtual void put( const E& value )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             //if (o == null) throw new NullPointerException();
             //if (transferer.transfer(o, false, 0) == null) {
@@ -127,7 +131,10 @@ namespace concurrent {
          * @throws NullPointerException {@inheritDoc}
          * @throws IllegalArgumentException {@inheritDoc}
          */
-        virtual bool offer( const E& e, long long timeout, const TimeUnit& unit ) {
+        virtual bool offer( const E& e, long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             //if (o == null) throw new NullPointerException();
             //if (transferer.transfer(o, true, unit.toNanos(timeout)) != null)
@@ -153,7 +160,9 @@ namespace concurrent {
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& value ) {
+        virtual bool offer( const E& value )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             //if (e == null) throw new NullPointerException();
             //return transferer.transfer(e, true, 0) != null;
@@ -168,7 +177,7 @@ namespace concurrent {
          * @return the head of this queue
          * @throws InterruptedException {@inheritDoc}
          */
-        virtual E take() {
+        virtual E take() throw( decaf::lang::exceptions::InterruptedException ) {
             //Object e = transferer.transfer(null, false, 0);
             //if (e != null)
             //    return (E)e;
@@ -192,7 +201,8 @@ namespace concurrent {
          * @return true if the head of the Queue was copied to the result param
          *         or false if no value could be returned.
          */
-        virtual bool poll( E& result, long long timeout, const TimeUnit& unit ) {
+        virtual bool poll( E& result, long long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException ) {
 
             //Object e = transferer.transfer(null, true, unit.toNanos(timeout));
             //if (e != null || !Thread.interrupted())
@@ -236,7 +246,7 @@ namespace concurrent {
             return true;
         }
 
-        virtual int size() const {
+        virtual std::size_t size() const {
             return 0;
         }
 
@@ -244,25 +254,37 @@ namespace concurrent {
             return 0;
         }
 
-        virtual void clear() {}
+        virtual void clear()
+            throw ( lang::exceptions::UnsupportedOperationException ) {}
 
-        virtual bool contains( const E& value DECAF_UNUSED ) const {
+        virtual bool contains( const E& value DECAF_UNUSED ) const throw ( lang::Exception ) {
             return false;
         }
 
-        virtual bool containsAll( const Collection<E>& collection ) const {
+        virtual bool containsAll( const Collection<E>& collection ) const
+            throw ( lang::Exception ) {
+
             return collection.isEmpty();
         }
 
-        virtual bool remove( const E& value DECAF_UNUSED ) {
+        virtual bool remove( const E& value DECAF_UNUSED )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
+
             return false;
         }
 
-        virtual bool removeAll( const Collection<E>& collection DECAF_UNUSED ) {
+        virtual bool removeAll( const Collection<E>& collection DECAF_UNUSED )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
+
             return false;
         }
 
-        virtual bool retainAll( const Collection<E>& collection DECAF_UNUSED ) {
+        virtual bool retainAll( const Collection<E>& collection DECAF_UNUSED )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
+
             return false;
         }
 
@@ -272,7 +294,9 @@ namespace concurrent {
 
         virtual std::vector<E> toArray() const { return std::vector<E>(); }
 
-        virtual int drainTo( Collection<E>& c ) {
+        virtual std::size_t drainTo( Collection<E>& c )
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             if( (void*)&c == this ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -280,7 +304,7 @@ namespace concurrent {
                     "Cannot drain a Collection to Itself." );
             }
 
-            int count = 0;
+            std::size_t count = 0;
             E element;
 
             while( ( poll( element ) ) != false ) {
@@ -291,7 +315,9 @@ namespace concurrent {
             return count;
         }
 
-        virtual int drainTo( Collection<E>& c, int maxElements ) {
+        virtual std::size_t drainTo( Collection<E>& c, std::size_t maxElements )
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   decaf::lang::exceptions::IllegalArgumentException ) {
 
             if( (void*)&c == this ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
@@ -299,7 +325,7 @@ namespace concurrent {
                     "Cannot drain a Collection to Itself." );
             }
 
-            int count = 0;
+            std::size_t count = 0;
             E element;
 
             while( count < maxElements && ( poll( element ) != false ) ) {

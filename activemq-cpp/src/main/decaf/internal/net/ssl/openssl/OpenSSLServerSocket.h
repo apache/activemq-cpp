@@ -43,11 +43,6 @@ namespace openssl {
 
         OpenSSLParameters* parameters;
 
-    private:
-
-        OpenSSLServerSocket( const OpenSSLServerSocket& );
-        OpenSSLServerSocket& operator= ( const OpenSSLServerSocket& );
-
     public:
 
         OpenSSLServerSocket( OpenSSLParameters* parameters );
@@ -111,7 +106,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual decaf::net::Socket* accept();
+        virtual decaf::net::Socket* accept() throw( decaf::io::IOException );
 
     };
 

@@ -36,7 +36,7 @@ LoggingInputStream::LoggingInputStream( decaf::io::InputStream* inputStream, boo
 LoggingInputStream::~LoggingInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::doReadByte() {
+int LoggingInputStream::doReadByte() throw ( IOException ) {
     try {
 
         unsigned char c = (unsigned char)FilterInputStream::doReadByte();
@@ -49,7 +49,10 @@ int LoggingInputStream::doReadByte() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, int size,
-                                            int offset, int length ) {
+                                            int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try {
 

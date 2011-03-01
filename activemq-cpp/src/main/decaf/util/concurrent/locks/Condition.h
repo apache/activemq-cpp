@@ -182,7 +182,10 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual void await() = 0;
+        virtual void await()
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Causes the current thread to wait until it is signalled.
@@ -218,7 +221,9 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual void awaitUninterruptibly() = 0;
+        virtual void awaitUninterruptibly()
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Causes the current thread to wait until it is signaled or interrupted, or
@@ -300,7 +305,10 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual long long awaitNanos( long long nanosTimeout ) = 0;
+        virtual long long awaitNanos( long long nanosTimeout )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Causes the current thread to wait until it is signaled or interrupted, or the
@@ -324,7 +332,10 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual bool await( long long time, const TimeUnit& unit ) = 0;
+        virtual bool await( long long time, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /*
          * Causes the current thread to wait until it is signaled or interrupted, or the
@@ -395,7 +406,10 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual bool awaitUntil( const Date& deadline ) = 0;
+        virtual bool awaitUntil( const Date& deadline )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::IllegalMonitorStateException ) = 0;
 
         /**
          * Wakes up one waiting thread.
@@ -406,7 +420,7 @@ namespace locks {
          * @throws RuntimeException
          *         if an unexpected error occurs while trying to wait on the Condition.
          */
-        virtual void signal() = 0;
+        virtual void signal() throw ( decaf::lang::exceptions::RuntimeException ) = 0;
 
         /**
          * Wakes up all waiting threads.
@@ -417,7 +431,7 @@ namespace locks {
          * @throws RuntimeException
          *         if an unexpected error occurs while trying to wait on the Condition.
          */
-        virtual void signalAll() = 0;
+        virtual void signalAll() throw ( decaf::lang::exceptions::RuntimeException ) = 0;
 
     };
 

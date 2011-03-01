@@ -18,8 +18,8 @@
 cc_sources = \
     ${source}
 
-##h_sources = \
-##    ${headers}
+h_sources = \
+    ${headers}
 
 ## Compile this as part of make check
 check_PROGRAMS = activemqc-test

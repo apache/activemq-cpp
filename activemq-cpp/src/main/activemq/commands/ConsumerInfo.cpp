@@ -506,7 +506,8 @@ void ConsumerInfo::setNetworkConsumerPath( const std::vector< decaf::lang::Point
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConsumerInfo( this );
 }

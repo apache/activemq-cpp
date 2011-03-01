@@ -116,7 +116,8 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processKeepAliveInfo( this );
 }

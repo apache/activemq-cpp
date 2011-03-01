@@ -67,11 +67,6 @@ namespace logging{
         // Name of this class used to read properties
         std::string prefix;
 
-    private:
-
-        Handler( const Handler& );
-        Handler& operator= ( const Handler& );
-
     public:
 
         Handler();

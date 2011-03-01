@@ -47,7 +47,7 @@ FilterOutputStream::~FilterOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteByte( unsigned char c ) {
+void FilterOutputStream::doWriteByte( unsigned char c ) throw ( decaf::io::IOException ) {
     try {
 
         if( isClosed()  ) {
@@ -63,7 +63,10 @@ void FilterOutputStream::doWriteByte( unsigned char c ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
+void FilterOutputStream::doWriteArray( const unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
 
@@ -82,7 +85,10 @@ void FilterOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
+void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
 
@@ -125,7 +131,7 @@ void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::flush() {
+void FilterOutputStream::flush() throw ( decaf::io::IOException ) {
     try {
 
         if( isClosed() ) {
@@ -141,7 +147,7 @@ void FilterOutputStream::flush() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::close() {
+void FilterOutputStream::close() throw ( decaf::io::IOException ) {
     try {
         if( !this->closed && this->outputStream != NULL ) {
             this->outputStream->flush();

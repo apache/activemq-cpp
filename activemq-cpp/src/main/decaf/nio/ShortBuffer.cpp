@@ -29,12 +29,14 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer::ShortBuffer( int capacity ) : Buffer( capacity ) {
+ShortBuffer::ShortBuffer( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* ShortBuffer::allocate( int capacity ) {
+ShortBuffer* ShortBuffer::allocate( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
         return BufferFactory::createShortBuffer( capacity );
@@ -44,7 +46,9 @@ ShortBuffer* ShortBuffer::allocate( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer* ShortBuffer::wrap( short* buffer, int size, int offset, int length ) {
+ShortBuffer* ShortBuffer::wrap( short* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -93,7 +97,8 @@ std::string ShortBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::get( std::vector<short> buffer ) {
+ShortBuffer& ShortBuffer::get( std::vector<short> buffer )
+    throw ( BufferUnderflowException ) {
 
     try{
 
@@ -108,7 +113,10 @@ ShortBuffer& ShortBuffer::get( std::vector<short> buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::get( short* buffer, int size, int offset, int length ) {
+ShortBuffer& ShortBuffer::get( short* buffer, int size, int offset, int length )
+    throw( BufferUnderflowException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -147,7 +155,9 @@ ShortBuffer& ShortBuffer::get( short* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::put( ShortBuffer& src ) {
+ShortBuffer& ShortBuffer::put( ShortBuffer& src )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           lang::exceptions::IllegalArgumentException ) {
 
     try{
 
@@ -183,7 +193,10 @@ ShortBuffer& ShortBuffer::put( ShortBuffer& src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::put( const short* buffer, int size, int offset, int length ) {
+ShortBuffer& ShortBuffer::put( const short* buffer, int size, int offset, int length )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -230,7 +243,8 @@ ShortBuffer& ShortBuffer::put( const short* buffer, int size, int offset, int le
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortBuffer::put( std::vector<short>& buffer ) {
+ShortBuffer& ShortBuffer::put( std::vector<short>& buffer )
+    throw( BufferOverflowException, ReadOnlyBufferException ) {
 
     try{
 

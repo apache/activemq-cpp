@@ -31,7 +31,7 @@ namespace cms{
     class CMS_API ConnectionMetaData {
     public:
 
-        virtual ~ConnectionMetaData() throw();
+        virtual ~ConnectionMetaData() {}
 
         /**
          * Gets the CMS API version.
@@ -41,7 +41,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getCMSVersion() const = 0;
+        virtual std::string getCMSVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS major version number.
@@ -51,7 +51,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getCMSMajorVersion() const = 0;
+        virtual int getCMSMajorVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS minor version number.
@@ -61,7 +61,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getCMSMinorVersion() const = 0;
+        virtual int getCMSMinorVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS provider name.
@@ -71,7 +71,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getCMSProviderName() const = 0;
+        virtual std::string getCMSProviderName() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS provider version.
@@ -81,7 +81,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getProviderVersion() const = 0;
+        virtual std::string getProviderVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS provider major version number.
@@ -91,7 +91,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getProviderMajorVersion() const = 0;
+        virtual int getProviderMajorVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets the CMS provider minor version number.
@@ -101,7 +101,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getProviderMinorVersion() const = 0;
+        virtual int getProviderMinorVersion() const throw( cms::CMSException ) = 0;
 
         /**
          * Gets an Vector of the CMSX property names.
@@ -111,7 +111,7 @@ namespace cms{
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::vector<std::string> getCMSXPropertyNames() const = 0;
+        virtual std::vector<std::string> getCMSXPropertyNames() const throw( cms::CMSException ) = 0;
 
     };
 

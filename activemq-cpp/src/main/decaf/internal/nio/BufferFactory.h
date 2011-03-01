@@ -54,7 +54,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::ByteBuffer* createByteBuffer( int capacity );
+        static decaf::nio::ByteBuffer* createByteBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new ByteBuffer.
@@ -80,7 +81,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
         static decaf::nio::ByteBuffer* createByteBuffer(
-                        unsigned char* buffer, int size, int offset, int length );
+                        unsigned char* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Byte Vector in a ByteBuffer.
@@ -110,7 +113,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::CharBuffer* createCharBuffer( int capacity );
+        static decaf::nio::CharBuffer* createCharBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new CharBuffer.
@@ -135,7 +139,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::CharBuffer* createCharBuffer( char* buffer, int size, int offset, int length );
+        static decaf::nio::CharBuffer* createCharBuffer( char* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Byte Vector in a CharBuffer.
@@ -165,7 +171,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::DoubleBuffer* createDoubleBuffer( int capacity );
+        static decaf::nio::DoubleBuffer* createDoubleBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new DoubleBuffer.
@@ -190,7 +197,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::DoubleBuffer* createDoubleBuffer( double* buffer, int size, int offset, int length );
+        static decaf::nio::DoubleBuffer* createDoubleBuffer( double* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Double Vector in a DoubleBuffer.
@@ -220,7 +229,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::FloatBuffer* createFloatBuffer( int capacity );
+        static decaf::nio::FloatBuffer* createFloatBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new FloatBuffer.
@@ -245,7 +255,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::FloatBuffer* createFloatBuffer( float* buffer, int size, int offset, int length );
+        static decaf::nio::FloatBuffer* createFloatBuffer( float* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Float Vector in a FloatBuffer.
@@ -272,7 +284,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::LongBuffer* createLongBuffer( int capacity );
+        static decaf::nio::LongBuffer* createLongBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new LongBuffer.
@@ -297,7 +310,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::LongBuffer* createLongBuffer( long long* buffer, int size, int offset, int length );
+        static decaf::nio::LongBuffer* createLongBuffer( long long* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Long Vector in a LongBuffer.
@@ -327,7 +342,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::IntBuffer* createIntBuffer( int capacity );
+        static decaf::nio::IntBuffer* createIntBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new IntBuffer.
@@ -352,7 +368,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::IntBuffer* createIntBuffer( int* buffer, int size,  int offset, int length );
+        static decaf::nio::IntBuffer* createIntBuffer( int* buffer, int size,  int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL int Vector in a IntBuffer.
@@ -382,7 +400,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::ShortBuffer* createShortBuffer( int capacity );
+        static decaf::nio::ShortBuffer* createShortBuffer( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new ShortBuffer.
@@ -407,7 +426,9 @@ namespace nio{
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
-        static decaf::nio::ShortBuffer* createShortBuffer( short* buffer, int size, int offset, int length );
+        static decaf::nio::ShortBuffer* createShortBuffer( short* buffer, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL Short Vector in a ShortBuffer.

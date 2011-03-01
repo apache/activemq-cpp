@@ -33,7 +33,7 @@ namespace cms{
     class CMS_API MessageListener{
     public:
 
-        virtual ~MessageListener() throw();
+        virtual ~MessageListener(){}
 
         /**
          * Called asynchronously when a new message is received, the message
@@ -45,14 +45,12 @@ namespace cms{
          * was contained in this Message.
          *
          * It is considered a programming error for this method to throw an
-         * exception.  The method has been tagged with the 'throw()' qualifier,
-         * this implies that you application will segfault if you throw an error
-         * from an implementation of this method.
+         * exception.
          *
          * @param message
          *      Message object {const} pointer recipient does not own.
          */
-        virtual void onMessage( const Message* message ) throw() = 0;
+        virtual void onMessage( const Message* message ) = 0;
 
     };
 

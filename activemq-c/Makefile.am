@@ -18,15 +18,15 @@
 # Since we don't strictly follow the GNU standard of having 'NEWS README AUTHORS ChangeLog' files
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = src/main/c src/examples
+SUBDIRS = src/main/c src/examples/c
 if BUILD_CPPUNIT_TESTS
-  SUBDIRS += src/test/c
+  SUBDIRS += src/test/c src/test-integration/c src/test-benchmarks/c
 endif
 
 #Distribute these directories:
 DIST_SUBDIRS = src/main/c 
 
-bin_SCRIPTS = activemqc-config 
+bin_SCRIPTS = activemqc-1-config 
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = activemq-c.pc

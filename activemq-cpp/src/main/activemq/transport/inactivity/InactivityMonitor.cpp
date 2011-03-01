@@ -52,11 +52,6 @@ namespace transport{
 namespace inactivity{
 
     class InactivityMonitorData {
-    private:
-
-        InactivityMonitorData( const InactivityMonitorData& );
-        InactivityMonitorData operator= ( const InactivityMonitorData& );
-
     public:
 
         // The configured WireFormat for the Transport Chain.
@@ -94,30 +89,6 @@ namespace inactivity{
         long long initialDelayTime;
 
         bool keepAliveResponseRequired;
-
-        InactivityMonitorData() : wireFormat(),
-                                  localWireFormatInfo(),
-                                  remoteWireFormatInfo(),
-                                  readCheckerTask(),
-                                  writeCheckerTask(),
-                                  readCheckTimer(),
-                                  writeCheckTimer(),
-                                  asyncTasks(),
-                                  asyncReadTask(),
-                                  asyncWriteTask(),
-                                  monitorStarted(),
-                                  commandSent(),
-                                  commandReceived(),
-                                  failed(),
-                                  inRead(),
-                                  inWrite(),
-                                  inWriteMutex(),
-                                  monitor(),
-                                  readCheckTime(0),
-                                  writeCheckTime(0),
-                                  initialDelayTime(0),
-                                  keepAliveResponseRequired(false) {
-        }
     };
 
     // Task that fires when the TaskRunner is signaled by the ReadCheck Timer Task.
@@ -128,15 +99,11 @@ namespace inactivity{
         std::string remote;
         AtomicBoolean failed;
 
-    private:
-
-        AsyncSignalReadErrorkTask( const AsyncSignalReadErrorkTask& );
-        AsyncSignalReadErrorkTask operator= ( const AsyncSignalReadErrorkTask& );
-
     public:
 
-        AsyncSignalReadErrorkTask( InactivityMonitor* parent, const std::string& remote ) :
-            parent(parent), remote(remote), failed() {
+        AsyncSignalReadErrorkTask( InactivityMonitor* parent, const std::string& remote ) {
+            this->parent = parent;
+            this->remote = remote;
         }
 
         void setFailed( bool failed ) {
@@ -169,14 +136,9 @@ namespace inactivity{
         InactivityMonitor* parent;
         AtomicBoolean write;
 
-    private:
-
-        AsyncWriteTask( const AsyncWriteTask& );
-        AsyncWriteTask operator= ( const AsyncWriteTask& );
-
     public:
 
-        AsyncWriteTask( InactivityMonitor* parent ) : parent( parent ), write() {
+        AsyncWriteTask( InactivityMonitor* parent ) : parent( parent ) {
         }
 
         void setWrite( bool write ) {
@@ -294,7 +256,7 @@ void InactivityMonitor::setKeepAliveResponseRequired( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::close() {
+void InactivityMonitor::close() throw( decaf::io::IOException ) {
     try{
         stopMonitorThreads();
         TransportFilter::close();
@@ -345,7 +307,8 @@ void InactivityMonitor::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::oneway( const Pointer<Command>& command ) {
+void InactivityMonitor::oneway( const Pointer<Command>& command )
+    throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         // Disable inactivity monitoring while processing a command.  Synchronize this

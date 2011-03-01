@@ -53,14 +53,14 @@ namespace cms{
     class CMS_API QueueBrowser : public Closeable {
     public:
 
-        virtual ~QueueBrowser() throw();
+        virtual ~QueueBrowser() {}
 
         /**
          * @returns the Queue that this browser is listening on.
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual const Queue* getQueue() const = 0;
+        virtual const Queue* getQueue() const throw ( cms::CMSException ) = 0;
 
         /**
          * @returns the MessageSelector that is used on when this browser was
@@ -68,7 +68,7 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual std::string getMessageSelector() const = 0;
+        virtual std::string getMessageSelector() const throw ( cms::CMSException ) = 0;
 
         /**
          * Gets a pointer to an Enumeration object for browsing the Messages currently in
@@ -80,7 +80,7 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual cms::MessageEnumeration* getEnumeration() = 0;
+        virtual cms::MessageEnumeration* getEnumeration() throw( cms::CMSException ) = 0;
 
     };
 

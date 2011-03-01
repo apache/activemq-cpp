@@ -53,7 +53,7 @@ namespace test {
             this->text = text;
         }
 
-        virtual ~TextMessageCreator() throw() {}
+        virtual ~TextMessageCreator() {}
 
         std::string getText() const {
             return text;
@@ -76,7 +76,7 @@ namespace test {
     public:
 
         Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
-            cf.setBrokerURI(url);
+            cf.setBrokerURL(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);
@@ -116,7 +116,7 @@ namespace test {
         Receiver( const std::string& url, bool pubSub, const std::string& destName, int count )
             : ready(1) {
 
-            cf.setBrokerURI(url);
+            cf.setBrokerURL(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);
@@ -124,7 +124,7 @@ namespace test {
             this->count = count;
         }
 
-        virtual ~Receiver() throw() {
+        virtual ~Receiver(){
         }
 
         int getNumReceived() const {

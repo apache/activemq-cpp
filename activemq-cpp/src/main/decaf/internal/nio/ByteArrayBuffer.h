@@ -104,6 +104,9 @@ namespace nio{
     class DECAF_API ByteArrayBuffer : public decaf::nio::ByteBuffer {
     private:
 
+        // Read / Write flag
+        bool readOnly;
+
         // The reference array object that backs this buffer.
         decaf::lang::Pointer<ByteArrayAdapter> _array;
 
@@ -112,9 +115,6 @@ namespace nio{
 
         // The number of bytes we are limited to.
         int length;
-
-        // Read / Write flag
-        bool readOnly;
 
     public:
 
@@ -130,7 +130,8 @@ namespace nio{
          *
          * @throws IllegalArguementException if the capacity value is negative.
          */
-        ByteArrayBuffer( int capacity, bool readOnly = false );
+        ByteArrayBuffer( int capacity, bool readOnly = false )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Creates a ByteArrayBuffer object that wraps the given array.
@@ -151,7 +152,9 @@ namespace nio{
          *         length are violated.
          */
         ByteArrayBuffer( unsigned char* array, int size, int offset, int length,
-                         bool readOnly = false );
+                         bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Creates a byte buffer that wraps the passed ByteArrayAdapter and
@@ -171,7 +174,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
         ByteArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array,
-                         int offset, int length, bool readOnly = false );
+                         int offset, int length, bool readOnly = false )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Create a ByteArrayBuffer that mirrors this one, meaning it shares a
@@ -197,12 +202,16 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual unsigned char* array();
+        virtual unsigned char* array()
+            throw( decaf::nio::ReadOnlyBufferException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int arrayOffset() const;
+        virtual int arrayOffset() const
+            throw( decaf::nio::ReadOnlyBufferException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * {@inheritDoc}
@@ -249,7 +258,7 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& compact();
+        virtual ByteArrayBuffer& compact() throw( decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
@@ -259,24 +268,26 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual unsigned char get() const;
+        virtual unsigned char get() const throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual unsigned char get( int index ) const;
+        virtual unsigned char get( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual char getChar() {
+        virtual char getChar() throw( decaf::nio::BufferUnderflowException ) {
             return (char)this->get();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual char getChar( int index ) const {
+        virtual char getChar( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
             return (char)this->get( index );
         }
@@ -284,122 +295,155 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual double getDouble();
+        virtual double getDouble() throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual double getDouble( int index ) const;
+        virtual double getDouble( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual float getFloat();
+        virtual float getFloat() throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual float getFloat( int index ) const;
+        virtual float getFloat( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual long long getLong();
+        virtual long long getLong() throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual long long getLong( int index ) const;
+        virtual long long getLong( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int getInt();
+        virtual int getInt() throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual int getInt( int index ) const;
+        virtual int getInt( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual short getShort();
+        virtual short getShort() throw( decaf::nio::BufferUnderflowException );
 
         /**
          * {@inheritDoc}
          */
-        virtual short getShort( int index ) const;
+        virtual short getShort( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& put( unsigned char value );
+        virtual ByteArrayBuffer& put( unsigned char value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& put( int index, unsigned char value );
+        virtual ByteArrayBuffer& put( int index, unsigned char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putChar( char value );
+        virtual ByteArrayBuffer& putChar( char value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putChar( int index, char value );
+        virtual ByteArrayBuffer& putChar( int index, char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putDouble( double value );
+        virtual ByteArrayBuffer& putDouble( double value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putDouble( int index, double value );
+        virtual ByteArrayBuffer& putDouble( int index, double value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putFloat( float value );
+        virtual ByteArrayBuffer& putFloat( float value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putFloat( int index, float value );
+        virtual ByteArrayBuffer& putFloat( int index, float value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putLong( long long value );
+        virtual ByteArrayBuffer& putLong( long long value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putLong( int index, long long value );
+        virtual ByteArrayBuffer& putLong( int index, long long value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putInt( int value );
+        virtual ByteArrayBuffer& putInt( int value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putInt( int index, int value );
+        virtual ByteArrayBuffer& putInt( int index, int value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putShort( short value );
+        virtual ByteArrayBuffer& putShort( short value )
+            throw( decaf::nio::BufferOverflowException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}
          */
-        virtual ByteArrayBuffer& putShort( int index, short value );
+        virtual ByteArrayBuffer& putShort( int index, short value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::nio::ReadOnlyBufferException );
 
         /**
          * {@inheritDoc}

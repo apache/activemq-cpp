@@ -54,11 +54,6 @@ namespace inactivity {
         friend class WriteChecker;
         friend class AsyncWriteTask;
 
-    private:
-
-        InactivityMonitor( const InactivityMonitor& );
-        InactivityMonitor operator= ( const InactivityMonitor& );
-
     public:
 
         InactivityMonitor( const Pointer<Transport>& next,
@@ -70,17 +65,14 @@ namespace inactivity {
 
         virtual ~InactivityMonitor();
 
-    public:  // TransportFilter Methods
-
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
         virtual void onException( const decaf::lang::Exception& ex );
 
         virtual void onCommand( const Pointer<Command>& command );
 
-        virtual void oneway( const Pointer<Command>& command );
-
-    public:
+        virtual void oneway( const Pointer<Command>& command )
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         bool isKeepAliveResponseRequired() const;
 

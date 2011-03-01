@@ -25,11 +25,12 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short( short value ) : value(value) {
+Short::Short( short value ) {
+    this->value = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short( const std::string& value ) : value(0) {
+Short::Short( const std::string& value ) throw( exceptions::NumberFormatException ) {
     Short::parseShort( value );
 }
 
@@ -54,7 +55,8 @@ std::string Short::toString( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short Short::parseShort( const std::string& s, int radix ) {
+short Short::parseShort( const std::string& s, int radix )
+    throw ( exceptions::NumberFormatException ) {
 
     int intValue = Integer::parseInt( s, radix );
     short result = (short)intValue;
@@ -68,12 +70,14 @@ short Short::parseShort( const std::string& s, int radix ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short Short::parseShort( const std::string& s ) {
+short Short::parseShort( const std::string& s )
+    throw ( exceptions::NumberFormatException ) {
     return parseShort( s, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::decode( const std::string& value ) {
+Short Short::decode( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
 
     int intValue = Integer::decode( value ).intValue();
     short result = (short)intValue;
@@ -99,13 +103,15 @@ Short Short::valueOf( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::valueOf( const std::string& value ) {
+Short Short::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
 
     return Short( parseShort( value, 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Short Short::valueOf( const std::string& value, int radix ) {
+Short Short::valueOf( const std::string& value, int radix )
+    throw ( exceptions::NumberFormatException ) {
 
     return Short( parseShort( value, radix ) );
 }

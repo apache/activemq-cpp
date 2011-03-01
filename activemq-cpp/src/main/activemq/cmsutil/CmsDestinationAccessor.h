@@ -50,10 +50,10 @@ namespace cmsutil {
          */
         bool pubSubDomain;
 
-    private:
+    protected:
 
-        CmsDestinationAccessor( const CmsDestinationAccessor& );
-        CmsDestinationAccessor& operator= ( const CmsDestinationAccessor& );
+        CmsDestinationAccessor( const CmsDestinationAccessor& ) : CmsAccessor() {}
+        CmsDestinationAccessor& operator= ( const CmsDestinationAccessor& ) { return *this; }
 
     public:
 
@@ -83,14 +83,39 @@ namespace cmsutil {
 
     protected:
 
-        virtual void init();
+        /**
+         * Initializes the destination resolver.
+         */
+        virtual void init()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
-        virtual void destroy();
+        /**
+         * Calls destroy() on the destination resolver.
+         */
+        virtual void destroy()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
-        virtual cms::Destination* resolveDestinationName( cms::Session* session,
-                                                          const std::string& destName );
+        /**
+         * Resolves the destination via the <code>DestinationResolver</code>.
+         * @param session
+         *      the session
+         * @param destName
+         *      the name of the destination.
+         * @return the destination
+         * @throws cms::CMSException if resolution failed.
+         * @throws decaf::lang::exceptions::IllegalStateException if the destination
+         *      resolver property is NULL.
+         */
+        virtual cms::Destination* resolveDestinationName(
+            cms::Session* session,
+            const std::string& destName )
+                throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
-        virtual void checkDestinationResolver();
+        /**
+         * Verifies that the destination resolver is valid.
+         */
+        virtual void checkDestinationResolver()
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
     };
 

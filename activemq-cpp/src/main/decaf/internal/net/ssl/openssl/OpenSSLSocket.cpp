@@ -69,10 +69,7 @@ namespace openssl {
 
     public:
 
-        SocketData() : handshakeStarted( false ),
-                       handshakeCompleted( false ),
-                       commonName(),
-                       handshakeLock() {
+        SocketData() : handshakeStarted( false ), handshakeCompleted( false ) {
         }
 
         ~SocketData() {
@@ -172,7 +169,9 @@ OpenSSLSocket::~OpenSSLSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::connect( const std::string& host, int port, int timeout ) {
+void OpenSSLSocket::connect( const std::string& host, int port, int timeout )
+    throw( decaf::io::IOException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
 
@@ -217,7 +216,7 @@ void OpenSSLSocket::connect( const std::string& host, int port, int timeout ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::close() {
+void OpenSSLSocket::close() throw( decaf::io::IOException ) {
 
     try{
 
@@ -240,7 +239,7 @@ void OpenSSLSocket::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::io::InputStream* OpenSSLSocket::getInputStream() {
+decaf::io::InputStream* OpenSSLSocket::getInputStream() throw( decaf::io::IOException ) {
 
     checkClosed();
 
@@ -257,7 +256,7 @@ decaf::io::InputStream* OpenSSLSocket::getInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::io::OutputStream* OpenSSLSocket::getOutputStream() {
+decaf::io::OutputStream* OpenSSLSocket::getOutputStream() throw( decaf::io::IOException ) {
 
     checkClosed();
 
@@ -274,28 +273,28 @@ decaf::io::OutputStream* OpenSSLSocket::getOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::shutdownInput() {
+void OpenSSLSocket::shutdownInput() throw( decaf::io::IOException ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::shutdownOutput() {
+void OpenSSLSocket::shutdownOutput() throw( decaf::io::IOException ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::setOOBInline( bool value DECAF_UNUSED ) {
+void OpenSSLSocket::setOOBInline( bool value DECAF_UNUSED ) throw( SocketException ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) {
+void OpenSSLSocket::sendUrgentData( int data DECAF_UNUSED ) throw( decaf::io::IOException ) {
 
     throw SocketException(
         __FILE__, __LINE__, "Not supported for SSL Sockets" );
@@ -631,11 +630,6 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
     }
 
     class Finalizer {
-    private:
-
-        Finalizer( const Finalizer& );
-        Finalizer& operator= ( const Finalizer& );
-
     private:
 
         X509* cert;

@@ -33,7 +33,6 @@ namespace core{
         CPPUNIT_TEST( testCreateWithURIOptions );
         CPPUNIT_TEST( testTransportListener );
         CPPUNIT_TEST( testExceptionWithPortOutOfRange );
-        CPPUNIT_TEST( testURIOptionsProcessing );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -55,7 +54,6 @@ namespace core{
         void testExceptionWithPortOutOfRange();
         void testCreateWithURIOptions();
         void testTransportListener();
-        void testURIOptionsProcessing();
 
     };
 

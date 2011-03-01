@@ -46,7 +46,8 @@ SslTransportFactory::~SslTransportFactory() {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> SslTransportFactory::doCreateComposite( const decaf::net::URI& location,
                                                            const Pointer<wireformat::WireFormat>& wireFormat,
-                                                           const decaf::util::Properties& properties ) {
+                                                           const decaf::util::Properties& properties )
+    throw ( ActiveMQException ) {
 
     try {
 

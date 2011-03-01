@@ -27,13 +27,16 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-DedicatedTaskRunner::DedicatedTaskRunner( Task* task ) :
-    mutex(), thread(), threadTerminated(false), pending(false), shutDown(false), task(task) {
+DedicatedTaskRunner::DedicatedTaskRunner( Task* task ) : task( task ) {
 
     if( this->task == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "Task passed was null" );
     }
+
+    this->threadTerminated = false;
+    this->pending = false;
+    this->shutDown = false;
 
     this->thread.reset( new Thread( this ) );
     this->thread->start();

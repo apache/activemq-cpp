@@ -36,7 +36,7 @@ namespace cms{
 
     public:
 
-        virtual ~Closeable() throw();
+        virtual ~Closeable() {}
 
         /**
          * Closes this object and deallocates the appropriate resources.
@@ -44,7 +44,7 @@ namespace cms{
          *
          * @throws CMSException - If an error occurs while the resource is being closed.
          */
-        virtual void close() = 0;
+        virtual void close() throw( CMSException ) = 0;
 
     };
 }

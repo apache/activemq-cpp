@@ -43,21 +43,32 @@ namespace concurrent {
         SynchronizableImpl();
         virtual ~SynchronizableImpl();
 
-        virtual void lock();
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException );
 
-        virtual bool tryLock();
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException );
 
-        virtual void unlock();
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException );
 
-        virtual void wait();
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException );
 
-        virtual void wait( long long millisecs );
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException );
 
-        virtual void wait( long long millisecs, int nanos );
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException );
 
-        virtual void notify();
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException );
 
-        virtual void notifyAll();
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException );
 
     };
 

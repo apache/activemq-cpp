@@ -47,7 +47,7 @@ namespace concurrent {
          * @throws Exception
          *      If unable to compute a result.
          */
-        virtual V call() = 0;
+        virtual V call() throw ( decaf::lang::Exception ) = 0;
 
     };
 

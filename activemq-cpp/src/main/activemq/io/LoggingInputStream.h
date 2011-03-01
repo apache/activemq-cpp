@@ -46,9 +46,12 @@ namespace io{
 
     protected:
 
-        virtual int doReadByte();
+        virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     private:
 

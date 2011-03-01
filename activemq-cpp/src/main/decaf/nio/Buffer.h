@@ -164,7 +164,8 @@ namespace nio{
          *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& position( int newPosition );
+        virtual Buffer& position( int newPosition )
+            throw( lang::exceptions::IllegalArgumentException );
 
         /**
          * @returns this buffers Limit
@@ -185,7 +186,8 @@ namespace nio{
          *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& limit( int newLimit );
+        virtual Buffer& limit( int newLimit )
+            throw( lang::exceptions::IllegalArgumentException );
 
         /**
          * Sets this buffer's mark at its position.
@@ -201,7 +203,7 @@ namespace nio{
          *
          * @throws InvalidMarkException - If the mark has not been set
          */
-        virtual Buffer& reset();
+        virtual Buffer& reset() throw( InvalidMarkException );
 
         /**
          * Clears this buffer. The position is set to zero, the limit is set to the

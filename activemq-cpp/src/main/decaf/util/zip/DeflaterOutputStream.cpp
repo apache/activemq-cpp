@@ -29,27 +29,33 @@ const std::size_t DeflaterOutputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, bool own ) :
-    FilterOutputStream( outputStream, own ), deflater(new Deflater()), buf(), ownDeflater(true), isDone(false) {
+    FilterOutputStream( outputStream, own ) {
 
+    this->deflater = new Deflater();
+    this->ownDeflater = true;
     this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
+DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own )
+ :  FilterOutputStream( outputStream, own ) {
 
     if( deflater == NULL ) {
         throw NullPointerException(
              __FILE__, __LINE__, "Deflater passed was NULL." );
     }
 
+    this->deflater = deflater;
+    this->ownDeflater = false;
     this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
-                                            int bufferSize, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
+                                            int bufferSize, bool own )
+ :  FilterOutputStream( outputStream, own ) {
 
     if( deflater == NULL ) {
         throw NullPointerException(
@@ -61,7 +67,10 @@ DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater
              __FILE__, __LINE__, "Cannot create a zero sized buffer." );
     }
 
+    this->deflater = deflater;
+    this->ownDeflater = false;
     this->buf.resize( bufferSize );
+    this->isDone = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +88,7 @@ DeflaterOutputStream::~DeflaterOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::finish() {
+void DeflaterOutputStream::finish() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -106,7 +115,7 @@ void DeflaterOutputStream::finish() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::close() {
+void DeflaterOutputStream::close() throw ( decaf::io::IOException ) {
 
     try{
 
@@ -121,7 +130,7 @@ void DeflaterOutputStream::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::doWriteByte( unsigned char value ) {
+void DeflaterOutputStream::doWriteByte( unsigned char value ) throw ( decaf::io::IOException ) {
 
     try{
         this->doWriteArrayBounded( &value, 1, 0, 1 );
@@ -132,7 +141,10 @@ void DeflaterOutputStream::doWriteByte( unsigned char value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                int offset, int length ) {
+                                                int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
@@ -186,7 +198,7 @@ void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::deflate() {
+void DeflaterOutputStream::deflate() throw ( decaf::io::IOException ) {
 
     try{
 

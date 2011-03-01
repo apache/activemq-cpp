@@ -29,7 +29,11 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/DataStructure.h>
 #include <activemq/wireformat/openwire/marshal/DataStreamMarshaller.h>
-#include <activemq/wireformat/openwire/marshal/generated/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/v5/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/v4/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/v3/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/v2/MarshallerFactory.h>
+#include <activemq/wireformat/openwire/marshal/v1/MarshallerFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
@@ -49,29 +53,28 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned char OpenWireFormat::NULL_TYPE = 0;
-const int OpenWireFormat::DEFAULT_VERSION = 1;
-const int OpenWireFormat::MAX_SUPPORTED_VERSION = 6;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) :
-    properties(properties),
-    preferedWireFormatInfo(),
-    dataMarshallers(256),
-    id(UUID::randomUUID().toString()),
-    receiving(),
-    version(0),
-    stackTraceEnabled(true),
-    tcpNoDelayEnabled(true),
-    cacheEnabled(true),
-    cacheSize(1024),
-    tightEncodingEnabled(false),
-    sizePrefixDisabled(false),
-    maxInactivityDuration(30000),
-    maxInactivityDurationInitialDelay(10000) {
+OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 
-    // initialize the universal marshalers, don't need to reset them again
-    // after this so its safe to do this here.
-    generated::MarshallerFactory().configure( this );
+    // Copy config data
+    this->properties = properties;
+
+    // Fill in that DataStreamMarshallers collection
+    this->dataMarshallers.resize( 256 );
+
+    // Generate an ID
+    this->id = UUID::randomUUID().toString();
+    // Set defaults for initial WireFormat negotiation
+    this->version = 0;
+    this->stackTraceEnabled = true;
+    this->cacheEnabled = true;
+    this->cacheSize = 1024;
+    this->tcpNoDelayEnabled = true;
+    this->tightEncodingEnabled = false;
+    this->sizePrefixDisabled = false;
+    this->maxInactivityDuration = 30000;
+    this->maxInactivityDurationInitialDelay = 10000;
 
     // Set to Default as lowest common denominator, then we will try
     // and move up to the preferred when the wireformat is negotiated.
@@ -88,7 +91,8 @@ OpenWireFormat::~OpenWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport ) {
+Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport )
+    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         return Pointer<Transport>( new OpenWireFormatNegotiator( this, transport ) );
@@ -99,7 +103,6 @@ Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& t
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::destroyMarshalers() {
-
     try {
         for( size_t i = 0; i < dataMarshallers.size(); ++i ) {
             delete dataMarshallers[i];
@@ -111,23 +114,39 @@ void OpenWireFormat::destroyMarshalers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setVersion( int version ) {
+void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
 
     try{
-
         if( version == this->getVersion() ){
             return;
         }
 
-        if( version > MAX_SUPPORTED_VERSION ) {
+        // Clear old marshalers in preparation for the new set.
+        this->destroyMarshalers();
+        this->version = version;
+
+        switch( this->version ){
+        case 1:
+            v1::MarshallerFactory().configure( this );
+            break;
+        case 2:
+            v2::MarshallerFactory().configure( this );
+            break;
+        case 3:
+            v3::MarshallerFactory().configure( this );
+            break;
+        case 4:
+            v4::MarshallerFactory().configure( this );
+            break;
+        case 5:
+            v5::MarshallerFactory().configure( this );
+            break;
+        default:
             throw IllegalArgumentException(
                 __FILE__, __LINE__,
                 "OpenWireFormat::setVersion - "
-                "Given Version: %d , is not yet supported", version );
+                "Given Version: %d , is not supported", version );
         }
-
-        // Clear old marshalers in preparation for the new set.
-        this->version = version;
     }
     AMQ_CATCH_RETHROW( IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )
@@ -140,14 +159,17 @@ void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info ) {
+void OpenWireFormat::setPreferedWireFormatInfo(
+    const Pointer<commands::WireFormatInfo>& info ) throw ( IllegalStateException ) {
+
     this->preferedWireFormatInfo = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* dataOut ) {
+                              decaf::io::DataOutputStream* dataOut )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -232,7 +254,8 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
-                                                      decaf::io::DataInputStream* dis ) {
+                                                      decaf::io::DataInputStream* dis )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -269,7 +292,8 @@ Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
+commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
+    throw ( IOException ) {
 
     try {
 
@@ -277,11 +301,6 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
         private:
 
             decaf::util::concurrent::atomic::AtomicBoolean* state;
-
-        private:
-
-            Finally( const Finally& );
-            Finally& operator= ( const Finally& );
 
         public:
 
@@ -334,7 +353,8 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
-                                               utils::BooleanStream* bs ) {
+                                               utils::BooleanStream* bs )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -380,7 +400,8 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
                                                 DataOutputStream* ds,
-                                                BooleanStream* bs ) {
+                                                BooleanStream* bs )
+                                                    throw ( IOException ) {
 
     try {
 
@@ -420,7 +441,8 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
-                                                           BooleanStream* bs ) {
+                                                           BooleanStream* bs )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -464,7 +486,8 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis ) {
+DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis )
+    throw ( IOException ) {
 
     try{
 
@@ -498,7 +521,8 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputS
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
-                                               decaf::io::DataOutputStream* dataOut ) {
+                                               decaf::io::DataOutputStream* dataOut )
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -528,7 +552,8 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info ) {
+void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info )
+    throw ( IllegalStateException ) {
 
     if( preferedWireFormatInfo == NULL ) {
         throw IllegalStateException(

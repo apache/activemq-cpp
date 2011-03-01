@@ -32,47 +32,49 @@ namespace cmsutil {
 
         cms::MessageConsumer* consumer;
 
-    private:
+    protected:
 
-        CachedConsumer( const CachedConsumer& );
-        CachedConsumer& operator= ( const CachedConsumer& );
+        CachedConsumer( const CachedConsumer& ) {}
+        CachedConsumer& operator= ( const CachedConsumer& ) { return *this; }
 
     public:
 
         CachedConsumer( cms::MessageConsumer* consumer ) : consumer( consumer ) {
         }
 
-        virtual ~CachedConsumer() throw() {}
+        virtual ~CachedConsumer() {}
 
         /**
          * Does nothing - the real producer resource will be closed
          * by the lifecycle manager.
          */
-        virtual void close() {
+        virtual void close() throw( cms::CMSException ){
             // Do nothing.
         }
 
-        virtual cms::Message* receive() {
+        virtual cms::Message* receive() throw ( cms::CMSException ) {
             return consumer->receive();
         }
 
-        virtual cms::Message* receive( int millisecs ) {
+        virtual cms::Message* receive( int millisecs ) throw ( cms::CMSException ) {
             return consumer->receive(millisecs);
         }
 
-        virtual cms::Message* receiveNoWait() {
+        virtual cms::Message* receiveNoWait() throw ( cms::CMSException ) {
             return consumer->receiveNoWait();
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) {
+        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
             consumer->setMessageListener( listener );
         }
 
-        virtual cms::MessageListener* getMessageListener() const {
+        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
             return consumer->getMessageListener();
         }
 
-        virtual std::string getMessageSelector() const {
+        virtual std::string getMessageSelector() const
+            throw ( cms::CMSException ) {
+
             return consumer->getMessageSelector();
         }
 

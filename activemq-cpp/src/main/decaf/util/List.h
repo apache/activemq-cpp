@@ -18,12 +18,11 @@
 #ifndef _DECAF_UTIL_LIST_H_
 #define _DECAF_UTIL_LIST_H_
 
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/Collection.h>
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/util/ListIterator.h>
 
@@ -44,17 +43,10 @@ namespace util{
      * to insert them, but we expect this usage to be rare.
      */
     template <typename E>
-    class DECAF_API List : public virtual decaf::util::Collection<E> {
+    class DECAF_API List : public decaf::util::AbstractCollection<E> {
     public:
 
-        // Un-hide any methods from Collection that the declarations in this interface hid.
-        using decaf::util::Collection<E>::add;
-        using decaf::util::Collection<E>::addAll;
-        using decaf::util::Collection<E>::remove;
-
-    public:
-
-        List() {}
+        List() : AbstractCollection<E>() {}
 
         virtual ~List() {}
 
@@ -77,8 +69,10 @@ namespace util{
          * @throws IndexOutOfBoundsException if the index is out of range
          *         (index < 0 || index > size())
          */
-        virtual ListIterator<E>* listIterator( int index ) = 0;
-        virtual ListIterator<E>* listIterator( int index ) const = 0;
+        virtual ListIterator<E>* listIterator( std::size_t index )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual ListIterator<E>* listIterator( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Returns the index of the first occurrence of the specified element in
@@ -86,15 +80,13 @@ namespace util{
          * formally, returns the lowest index i such that get(i) == value, or
          * -1 if there is no such index.
          *
-         * @param value
-         *      The element to search for in this List.
-         *
-         * @return the index of the first occurrence of the specified element in this list,
-         *
-         * @throws NullPointerException if the Collection is a container of pointers
-         *         and does not allow NULL values.
+         * @param value - element to search for
+         * @return the index of the first occurrence of the specified element in
+         * this list,
+         * @throw NoSuchElementException if value is not in the list
          */
-        virtual int indexOf( const E& value ) const = 0;
+        virtual std::size_t indexOf( const E& value )
+            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Returns the index of the last occurrence of the specified element in
@@ -102,72 +94,48 @@ namespace util{
          * formally, returns the highest index i such that get(i) == value
          * or -1 if there is no such index.
          *
-         * @param value
-         *      The element to search for in this List.
-         *
-         * @return the index of the last occurrence of the specified element in this list.
-         *
-         * @throws NullPointerException if the Collection is a container of pointers
-         *         and does not allow NULL values.
+         * @param value - element to search for
+         * @return the index of the last occurrence of the specified element in
+         * this list.
+         * @throw NoSuchElementException if value is not in the list
          */
-        virtual int lastIndexOf( const E& value ) const = 0;
+        virtual size_t lastIndexOf( const E& value )
+            throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
-         * Gets the element contained at position passed.
-         *
-         * @param index
-         *      The position to get.
-         *
-         * @return value at index specified.
-         *
-         * @throws IndexOutOfBoundsException if the index given is less than zero
-         *         or greater than the List size.
+         * Gets the element contained at position passed
+         * @param index - position to get
+         * @return value at index
          */
-        virtual E get( int index ) const = 0;
+        virtual E get( std::size_t index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Replaces the element at the specified position in this list with the
          * specified element.
          *
-         * @param index
-         *      The index of the element to replace.
-         * @param element
-         *      The element to be stored at the specified position.
-         *
-         * @return the element previously at the specified position.
-         *
-         * @throws IndexOutOfBoundsException if the index given is less than zero
-         *         or greater than the List size.
-         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
-         * @throws NullPointerException if the Collection is a container of pointers
-         *         and does not allow NULL values.
-         * @throws IllegalArgumentException if some property of the element prevents it
-         *         from being added to this collection
-         * @throws IllegalStateException if the element cannot be added at this time due
-         *         to insertion restrictions.
+         * @param index - index of the element to replace
+         * @param element - element to be stored at the specified position
+         * @return the element previously at the specified position
+         * @throw IndexOutOfBoundsException - if the index is greater than size
          */
-        virtual E set( int index, const E& element ) = 0;
+        virtual E set( std::size_t index, const E& element )
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Inserts the specified element at the specified position in this list.
          * Shifts the element currently at that position (if any) and any
          * subsequent elements to the right (adds one to their indices).
          *
-         * @param index
-         *      The index at which the specified element is to be inserted.
-         * @param element
-         *      The element to be inserted in this List.
+         * @param index - index at which the specified element is to be inserted
+         * @param element - element to be inserted
          *
-         * @throws IndexOutOfBoundsException if the index is greater than size of the List.
-         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
-         * @throws NullPointerException if the Collection is a container of pointers
-         *         and does not allow NULL values.
-         * @throws IllegalArgumentException if some property of the element prevents it
-         *         from being added to this collection
-         * @throws IllegalStateException if the element cannot be added at this time due
-         *         to insertion restrictions.
+         * @throw IndexOutOfBoundsException - if the index is greater than size
+         * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual void add( int index, const E& element ) = 0;
+        virtual void add( std::size_t index, const E& element )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Inserts all of the elements in the specified collection into this list at
@@ -186,32 +154,26 @@ namespace util{
          *
          * @return true if this list changed as a result of the call
          *
-         * @throws IndexOutOfBoundsException if the index given is less than zero
-         *         or greater than the List size.
-         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
-         * @throws NullPointerException if the Collection is a container of pointers
-         *         and does not allow NULL values.
-         * @throws IllegalArgumentException if some property of the element prevents it
-         *         from being added to this collection
-         * @throws IllegalStateException if the element cannot be added at this time due
-         *         to insertion restrictions.
+         * @throw IndexOutOfBoundsException - if the index is greater than size
+         * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual bool addAll( int index, const Collection<E>& source ) = 0;
+        virtual bool addAll( std::size_t index, const Collection<E>& source )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Removes the element at the specified position in this list.
          * Shifts any subsequent elements to the left (subtracts one from their
          * indices). Returns the element that was removed from the list.
          *
-         * @param index - the index of the element to be removed.
-         *
-         * @return the element previously at the specified position.
-         *
-         * @throws IndexOutOfBoundsException if the index given is less than zero
-         *         or greater than the List size.
-         * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
+         * @param index - the index of the element to be removed
+         * @return the element previously at the specified position
+         * @throw IndexOutOfBoundsException - if the index is greater than size
+         * @throw UnsupportedOperationException - If the collection is non-modifiable.
          */
-        virtual E removeAt( int index ) = 0;
+        virtual E remove( std::size_t index )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
     };
 

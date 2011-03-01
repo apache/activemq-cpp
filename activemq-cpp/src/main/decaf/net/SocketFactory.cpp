@@ -16,7 +16,6 @@
  */
 #include <decaf/net/SocketFactory.h>
 
-#include <decaf/lang/Runnable.h>
 #include <decaf/internal/net/DefaultSocketFactory.h>
 #include <decaf/internal/net/Network.h>
 
@@ -26,30 +25,6 @@ using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::internal::net;
-
-////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    class ShutdownTask : public decaf::lang::Runnable {
-    private:
-
-        SocketFactory** defaultRef;
-
-    private:
-
-        ShutdownTask( const ShutdownTask& );
-        ShutdownTask& operator= ( const ShutdownTask& );
-
-    public:
-
-        ShutdownTask( SocketFactory** defaultRef ) : defaultRef( defaultRef ) {}
-        virtual ~ShutdownTask() {}
-
-        virtual void run() {
-            *defaultRef = NULL;
-        }
-    };
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketFactory* SocketFactory::defaultFactory = NULL;
@@ -63,7 +38,7 @@ SocketFactory::~SocketFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* SocketFactory::createSocket() {
+Socket* SocketFactory::createSocket() throw( decaf::io::IOException ) {
 
     throw IOException(
         __FILE__, __LINE__, "Unconnected Sockets not implemented for this Socket Type." );
@@ -79,7 +54,6 @@ SocketFactory* SocketFactory::getDefault() {
         if( defaultFactory == NULL ) {
             defaultFactory = new DefaultSocketFactory();
             networkRuntime->addAsResource( defaultFactory );
-            networkRuntime->addShutdownTask( new ShutdownTask( &defaultFactory ) );
         }
     }
 

@@ -72,15 +72,18 @@ namespace io {
 
         virtual ~InputStreamReader();
 
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
-        virtual bool ready() const;
+        virtual bool ready() const throw( decaf::io::IOException );
 
     protected:
 
-        virtual int doReadArrayBounded( char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( char* buffer, int size, int offset, int length )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
-        virtual void checkClosed() const;
+        virtual void checkClosed() const throw( decaf::io::IOException );
 
     };
 

@@ -62,15 +62,6 @@ ConditionHandle* ConditionImpl::create( MutexHandle* mutex ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConditionImpl::destroy( decaf::util::concurrent::ConditionHandle* handle ) {
-
-    if( handle == NULL ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Handle to Condition Object was Null." );
-    }
-
-    CloseHandle( handle->semaphore );
-    ::DeleteCriticalSection( &handle->criticalSection );
-
     delete handle;
 }
 

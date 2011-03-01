@@ -17,7 +17,6 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.codehaus.jam.JProperty;
@@ -29,7 +28,6 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         // Start with the license.
         generateLicence(out);
 
-        populateBaseClassesSet();
         populateIncludeFilesSet();
         for( String include : getIncludeFiles() ) {
             if( include != null ) {
@@ -56,7 +54,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println(""+getClassName()+"::"+getClassName()+"() " );
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         generateDefaultConstructorBody(out);
         out.println("}");
@@ -64,7 +62,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         if( isAssignable() ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
             out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other )");
-            out.println("    : " + generateInitializerList() + " {");
+            out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
             out.println("");
             out.println("    this->copyDataStructure( &other );");
             out.println("}");
@@ -153,7 +151,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             out.println("");
             out.println("////////////////////////////////////////////////////////////////////////////////");
             out.println("bool " + getClassName() + "::equals( const "+getClassName()+"& value ) const {");
-            out.println("    return this->equals( (const DataStructure*)&value );");
+            out.println("    return this->equals( &value );");
             out.println("}");
             out.println("");
             out.println("////////////////////////////////////////////////////////////////////////////////");
@@ -179,7 +177,8 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
 
         if( getBaseClassName().equals( "BaseCommand" ) ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("decaf::lang::Pointer<commands::Command> "+getClassName()+"::visit( activemq::state::CommandVisitor* visitor ) {");
+            out.println("decaf::lang::Pointer<commands::Command> "+getClassName()+"::visit( activemq::state::CommandVisitor* visitor ) ");
+            out.println("    throw( activemq::exceptions::ActiveMQException ) {");
             out.println("");
             out.println("    return visitor->process"+getClassName()+"( this );");
             out.println("}");
@@ -199,29 +198,18 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         }
     }
 
-    protected void populateBaseClassesSet() {
-        Set<String> classes = getBaseClasses();
-        classes.add(getBaseClassName());
-    }
-
     protected void generateDefaultConstructorBody( PrintWriter out ) {
     }
 
-    protected String generateInitializerList() {
+    protected String generateInitializerList(String current) {
 
         StringBuilder result = new StringBuilder();
+        int lastLineEnds = 0;
 
-        Iterator<String> iter = getBaseClasses().iterator();
-        while(iter.hasNext()) {
-            result.append(iter.next());
-            result.append("()");
-
-            if(iter.hasNext()) {
-                result.append(", ");
-            }
+        if( current != null ) {
+            result.append(current);
         }
 
-        int lastLineEnds = 0;
         for( JProperty property : getProperties() ) {
             String type = toCppType(property.getType());
             String value = toCppDefaultValue(property.getType());

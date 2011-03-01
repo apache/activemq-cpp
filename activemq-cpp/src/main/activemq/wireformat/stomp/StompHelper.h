@@ -53,11 +53,8 @@ namespace stomp {
 
     public:
 
-        StompHelper();
-
-        virtual ~StompHelper();
-
-    public:
+        StompHelper() {}
+        virtual ~StompHelper() {}
 
         /**
          * Converts the Headers in a Stomp Frame into Headers in the given Message

@@ -35,9 +35,21 @@ namespace tcp {
 
     protected:
 
+        /**
+         * Creates a slimed down Transport instance which can be used in composite
+         * transport instances.
+         *
+         * @param location - URI location to connect to.
+         * @param wireFormat - the assigned WireFormat for the new Transport.
+         * @param properties - Properties to apply to the transport.
+         *
+         * @return new Pointer to a SslTransport.
+         * @throws ActiveMQexception if an error occurs
+         */
         virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
                                                       const Pointer<wireformat::WireFormat>& wireFormat,
-                                                      const decaf::util::Properties& properties );
+                                                      const decaf::util::Properties& properties )
+            throw ( exceptions::ActiveMQException );
 
     };
 

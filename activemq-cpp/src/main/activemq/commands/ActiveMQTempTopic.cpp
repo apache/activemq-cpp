@@ -32,7 +32,7 @@ ActiveMQTempTopic::ActiveMQTempTopic( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempTopic::~ActiveMQTempTopic() throw() {
+ActiveMQTempTopic::~ActiveMQTempTopic() {
     try {
         this->close();
     }
@@ -67,13 +67,7 @@ bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempTopic::equals( const cms::Destination& value ) const {
-    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
-    return ActiveMQDestination::equals( dest );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempTopic::destroy() {
+void ActiveMQTempTopic::destroy() throw ( cms::CMSException ) {
     try{
         close();
     }

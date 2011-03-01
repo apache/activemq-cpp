@@ -50,7 +50,9 @@ void Adler32::update( const std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( const std::vector<unsigned char>& buffer, int offset, int length ) {
+void Adler32::update( const std::vector<unsigned char>& buffer, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+
     this->update( &buffer[0], (int)buffer.size(), offset, length );
 }
 
@@ -60,7 +62,9 @@ void Adler32::update( int byte ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( const unsigned char* buffer, int size, int offset, int length ) {
+void Adler32::update( const unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     if( size < 0 ) {
         throw IndexOutOfBoundsException(

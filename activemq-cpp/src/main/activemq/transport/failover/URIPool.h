@@ -21,20 +21,20 @@
 #include <activemq/util/Config.h>
 
 #include <decaf/net/URI.h>
-#include <decaf/util/LinkedList.h>
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/util/StlList.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 
 namespace activemq {
 namespace transport {
 namespace failover {
 
-    using decaf::util::LinkedList;
+    using decaf::util::StlList;
     using decaf::net::URI;
 
     class AMQCPP_API URIPool {
     private:
 
-        LinkedList<URI> uriPool;
+        StlList<URI> uriPool;
         bool randomize;
 
     public:
@@ -60,10 +60,9 @@ namespace failover {
          * in the future, the caller should react accordingly.
          *
          * @return the next free URI in the Pool.
-         *
          * @throw NoSuchElementException if there are none free currently.
          */
-        URI getURI();
+        URI getURI() throw ( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Adds a URI to the free list, callers that have previously taken one using
@@ -80,7 +79,7 @@ namespace failover {
          *
          * @param uris - List of URIs to add into the Pool.
          */
-        void addURIs( const LinkedList<URI>& uris );
+        void addURIs( const StlList<URI>& uris );
 
         /**
          * Remove a given URI from the Free List.

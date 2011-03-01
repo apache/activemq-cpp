@@ -29,10 +29,6 @@ namespace transport {
     using decaf::lang::Pointer;
     using activemq::commands::Command;
 
-    /**
-     * A Utility class that create empty implementations for the TransportListener interface
-     * so that a subclass only needs to override the one's its interested.
-     */
     class AMQCPP_API DefaultTransportListener : public TransportListener {
     public:
 

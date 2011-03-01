@@ -39,7 +39,8 @@ namespace openwire {
         virtual ~OpenwireQueueBrowserTest();
 
         virtual std::string getBrokerURL() const {
-            return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
+            return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();// +
+                         //   "?transport.commandTracingEnabled=true";
         }
 
     };

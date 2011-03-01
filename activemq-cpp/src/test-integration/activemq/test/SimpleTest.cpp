@@ -17,7 +17,6 @@
 
 #include "SimpleTest.h"
 
-#include <activemq/library/ActiveMQCPP.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -438,22 +437,4 @@ void SimpleTest::testBytesMessageSendRecv() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void SimpleTest::testLibraryInitShutdownInit() {
-
-    {
-        cmsProvider.release();
-
-        // Shutdown the ActiveMQ library
-        CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::shutdownLibrary() );
-    }
-
-    {
-        // Initialize the ActiveMQ library
-        CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::initializeLibrary() );
-
-        cmsProvider.reset( new util::CMSProvider( getBrokerURL() ) );
-    }
 }

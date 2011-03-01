@@ -25,7 +25,7 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("ConsumerId::ConsumerId( const SessionId& sessionId, long long consumerIdd )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("    : " + generateInitializerList(getBaseClassName() + "()") + " {");
         out.println("");
         out.println("    this->connectionId = sessionId.getConnectionId();");
         out.println("    this->sessionId = sessionId.getValue();");
@@ -37,7 +37,14 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
     }
 
     protected String generateInitializerList(String current) {
-        return super.generateInitializerList() + ", parentId()";
+        StringBuilder result = new StringBuilder();
+
+        if( current != null ){
+            result.append(current);
+        }
+        result.append(", parentId()");
+
+        return super.generateInitializerList(result.toString());
     }
 
     protected void generateAdditionalMethods( PrintWriter out ) {

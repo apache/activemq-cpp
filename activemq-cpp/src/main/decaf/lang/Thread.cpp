@@ -70,14 +70,8 @@ namespace decaf{
 namespace lang{
 
     class ThreadProperties {
-    private:
-
-        ThreadProperties( const ThreadProperties& );
-        ThreadProperties& operator= ( const ThreadProperties& );
-
     public:
 
-        decaf::util::concurrent::Mutex mutex;
         Runnable* task;
 
         /**
@@ -85,39 +79,45 @@ namespace lang{
          */
         #ifdef HAVE_PTHREAD_H
             pthread_t handle;
+            pthread_attr_t attributes;
         #else
             HANDLE handle;
         #endif
 
         volatile Thread::State state;
+        std::string name;
         int priority;
         bool interrupted;
         bool unparked;
         bool parked;
-        std::string name;
+        decaf::util::concurrent::Mutex mutex;
+
+        static unsigned int id;
 
         Thread::UncaughtExceptionHandler* exHandler;
         Thread* parent;
 
-        static unsigned int id;
-
     public:
 
-        ThreadProperties( const std::string& name ) : mutex( name + "-mutex" ),
-                                                      task(NULL),
-                                                      handle(),
-                                                      state(Thread::NEW),
-                                                      priority(Thread::NORM_PRIORITY),
-                                                      interrupted(false),
-                                                      unparked(false),
-                                                      parked(false),
-                                                      name(name),
-                                                      exHandler(NULL),
-                                                      parent(NULL) {
+        ThreadProperties() {
+
+            this->priority = Thread::NORM_PRIORITY;
+            this->state = Thread::NEW;
+            this->interrupted = false;
+            this->parked = false;
+            this->unparked = false;
+            this->parent = NULL;
+
+            #ifdef HAVE_PTHREAD_H
+                pthread_attr_init( &attributes );
+            #endif
         }
 
         ~ThreadProperties() {
-            #ifndef HAVE_PTHREAD_H
+
+            #ifdef HAVE_PTHREAD_H
+                pthread_attr_destroy( &attributes );
+            #else
                 ::CloseHandle( handle );
             #endif
         }
@@ -315,15 +315,13 @@ Thread::Thread( Runnable* task, const std::string& name ): Runnable(), propertie
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::initialize( Runnable* task, const std::string& name ) {
 
-    std::string threadName = name;
+    this->properties = new ThreadProperties();
 
-    if( threadName.empty() ) {
-        threadName = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
+    if( name == "" ) {
+        this->properties->name = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
     } else {
-        threadName = name;
+        this->properties->name = name;
     }
-
-    this->properties = new ThreadProperties( threadName );
 
     this->properties->state = Thread::NEW;
     this->properties->priority = Thread::NORM_PRIORITY;
@@ -358,7 +356,8 @@ void Thread::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::start() {
+void Thread::start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
+                             decaf::lang::exceptions::RuntimeException ) {
 
     try {
 
@@ -376,15 +375,9 @@ void Thread::start() {
         synchronized( &this->properties->mutex ) {
 
             #ifdef HAVE_PTHREAD_H
-
-                pthread_attr_t attributes;
-
-                pthread_attr_init( &attributes );
-                pthread_attr_setdetachstate( &attributes, PTHREAD_CREATE_JOINABLE );
-
-                int result = pthread_create( &( properties->handle ), &attributes, threadWorker, properties );
-
-                pthread_attr_destroy( &attributes );
+                int result = pthread_create( &( properties->handle ),
+                                             &( properties->attributes ),
+                                             threadWorker, properties );
 
                 if( result != 0 ) {
                     throw RuntimeException(
@@ -428,7 +421,7 @@ void Thread::start() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join() {
+void Thread::join() throw( decaf::lang::exceptions::InterruptedException ) {
 
     if( this->properties->state == Thread::TERMINATED ) {
         return;
@@ -446,7 +439,9 @@ void Thread::join() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join( long long millisecs ) {
+void Thread::join( long long millisecs )
+    throw ( decaf::lang::exceptions::IllegalArgumentException,
+            decaf::lang::exceptions::InterruptedException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -458,7 +453,9 @@ void Thread::join( long long millisecs ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join( long long millisecs, unsigned int nanos ) {
+void Thread::join( long long millisecs, unsigned int nanos )
+    throw ( decaf::lang::exceptions::IllegalArgumentException,
+            decaf::lang::exceptions::InterruptedException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -488,13 +485,17 @@ void Thread::join( long long millisecs, unsigned int nanos ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( long long millisecs ) {
+void Thread::sleep( long long millisecs )
+    throw( decaf::lang::exceptions::InterruptedException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     Thread::sleep( millisecs, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( long long millisecs, unsigned int nanos ) {
+void Thread::sleep( long long millisecs, unsigned int nanos )
+    throw( decaf::lang::exceptions::InterruptedException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -560,7 +561,7 @@ std::string Thread::getName() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setPriority( int value ) {
+void Thread::setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( value < Thread::MIN_PRIORITY || value > Thread::MAX_PRIORITY ) {
         throw IllegalArgumentException(

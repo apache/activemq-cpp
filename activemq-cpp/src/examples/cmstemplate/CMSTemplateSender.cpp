@@ -57,7 +57,7 @@ namespace{
 
         virtual ~TextMessageCreator() throw() {}
 
-        virtual cms::Message* createMessage( cms::Session* session ) {
+        virtual cms::Message* createMessage( cms::Session* session ) throw ( cms::CMSException ) {
 
             cms::Message* message = NULL;
 

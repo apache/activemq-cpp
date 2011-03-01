@@ -32,7 +32,6 @@ public abstract class CommandCodeGenerator {
     private String className;
     private String baseClassName;
     private Set<String> includeFiles = new TreeSet<String>();
-    private Set<String> baseClasses = new TreeSet<String>();
     private String openWireOpCode;
     private boolean comparable = false;
     private boolean assignable = false;
@@ -130,14 +129,6 @@ public abstract class CommandCodeGenerator {
 
     public void setIncludeFiles(Set<String> includeFiles) {
         this.includeFiles = includeFiles;
-    }
-
-    public Set<String> getBaseClasses() {
-        return baseClasses;
-    }
-
-    public void setBaseClasses(Set<String> baseClasses) {
-        this.baseClasses = baseClasses;
     }
 
     public String getOpenWireOpCode() {

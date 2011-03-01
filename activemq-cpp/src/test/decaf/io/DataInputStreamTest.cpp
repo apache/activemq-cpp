@@ -386,7 +386,7 @@ void DataInputStreamTest::test_skipBytes() {
 
         CPPUNIT_ASSERT_NO_THROW_MESSAGE(
             "Should throw an EOFException",
-			skipped = (std::size_t)is->skip( 500000 ) );
+            skipped = is->skip( 500000 ) );
 
         CPPUNIT_ASSERT_MESSAGE(
             "Skipped should report " +

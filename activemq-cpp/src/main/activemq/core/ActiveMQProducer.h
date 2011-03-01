@@ -98,26 +98,120 @@ namespace core{
                           const Pointer<commands::ActiveMQDestination>& destination,
                           long long sendTimeout );
 
-        virtual ~ActiveMQProducer() throw();
+        virtual ~ActiveMQProducer();
 
-    public:  // cms::MessageProducer methods.
+        /**
+         * Closes the Consumer.  This will return all allocated resources
+         * and purge any outstanding messages.  This method will block if
+         * there is a call to receive in progress, or a dispatch to a
+         * MessageListener in place
+         * @throws CMSException
+         */
+        virtual void close() throw ( cms::CMSException );
 
-        virtual void close();
+        /**
+         * Sends the message to the default producer destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         * Uses default values for deliveryMode, priority, and time to live.
+         *
+         * @param message
+         *      The message to be sent.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send( cms::Message* message ) throw ( cms::CMSException,
+                                                           cms::MessageFormatException,
+                                                           cms::InvalidDestinationException,
+                                                           cms::UnsupportedOperationException );
 
-        virtual void send( cms::Message* message );
+        /**
+         * Sends the message to the default producer destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         *
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send( cms::Message* message, int deliveryMode, int priority, long long timeToLive )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
 
-        virtual void send( cms::Message* message, int deliveryMode, int priority, long long timeToLive );
+        /**
+         * Sends the message to the designated destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         * Uses default values for deliveryMode, priority, and time to live.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      the message to be sent.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send( const cms::Destination* destination, cms::Message* message )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
 
-        virtual void send( const cms::Destination* destination, cms::Message* message );
-
+        /**
+         * Sends the message to the designated destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
         virtual void send( const cms::Destination* destination, cms::Message* message,
-                           int deliveryMode, int priority, long long timeToLive );
+                           int deliveryMode, int priority, long long timeToLive )
+            throw ( cms::CMSException,
+                    cms::MessageFormatException,
+                    cms::InvalidDestinationException,
+                    cms::UnsupportedOperationException );
 
         /**
          * Sets the delivery mode for this Producer
          * @param mode - The DeliveryMode to use for Message sends.
          */
-        virtual void setDeliveryMode( int mode ) {
+        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ){
             this->defaultDeliveryMode = mode;
         }
 
@@ -125,7 +219,7 @@ namespace core{
          * Gets the delivery mode for this Producer
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const {
+        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
             return this->defaultDeliveryMode;
         }
 
@@ -133,7 +227,7 @@ namespace core{
          * Sets if Message Ids are disabled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID( bool value ) {
+        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
             this->disableMessageId = value;
         }
 
@@ -141,7 +235,7 @@ namespace core{
          * Gets if Message Ids are disabled for this Producer
          * @return a boolean indicating state enable / disable (true / false) for MessageIds.
          */
-        virtual bool getDisableMessageID() const {
+        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
             return this->disableMessageId;
         }
 
@@ -149,7 +243,7 @@ namespace core{
          * Sets if Message Time Stamps are disabled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp( bool value ) {
+        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
             this->disableTimestamps = value;
         }
 
@@ -157,7 +251,7 @@ namespace core{
          * Gets if Message Time Stamps are disabled for this Producer
          * @returns boolean indicating state of enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const {
+        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
             return this->disableTimestamps;
         }
 
@@ -165,7 +259,7 @@ namespace core{
          * Sets the Priority that this Producers sends messages at
          * @param priority int value for Priority level
          */
-        virtual void setPriority( int priority ) {
+        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
             this->defaultPriority = priority;
         }
 
@@ -173,7 +267,7 @@ namespace core{
          * Gets the Priority level that this producer sends messages at
          * @return int based priority level
          */
-        virtual int getPriority() const {
+        virtual int getPriority() const throw ( cms::CMSException ) {
             return this->defaultPriority;
         }
 
@@ -181,7 +275,7 @@ namespace core{
          * Sets the Time to Live that this Producers sends messages with
          * @param time The new default time to live value in milliseconds.
          */
-        virtual void setTimeToLive( long long time ) {
+        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
             this->defaultTimeToLive = time;
         }
 
@@ -189,7 +283,7 @@ namespace core{
          * Gets the Time to Live that this producer sends messages with
          * @return The default time to live value in milliseconds.
          */
-        virtual long long getTimeToLive() const {
+        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
             return this->defaultTimeToLive;
         }
 
@@ -197,7 +291,7 @@ namespace core{
          * Sets the Send Timeout that this Producers sends messages with
          * @param time The new default send timeout value in milliseconds.
          */
-        virtual void setSendTimeout( long long time ) {
+        virtual void setSendTimeout( long long time ) throw ( cms::CMSException ) {
             this->sendTimeout = time;
         }
 
@@ -205,7 +299,7 @@ namespace core{
          * Gets the Send Timeout that this producer sends messages with
          * @return The default send timeout value in milliseconds.
          */
-        virtual long long getSendTimeout() const {
+        virtual long long getSendTimeout() const throw ( cms::CMSException ) {
             return this->sendTimeout;
         }
 
@@ -242,18 +336,10 @@ namespace core{
          */
         virtual void onProducerAck( const commands::ProducerAck& ack );
 
-        /**
-         * Performs Producer object cleanup but doesn't attempt to send the Remove command
-         * to the broker.  Called when the parent resource if closed first to avoid the message
-         * send and avoid any exceptions that might be thrown from an attempt to send a remove
-         * command to a failed transport.
-         */
-        void dispose();
-
    private:
 
        // Checks for the closed state and throws if so.
-       void checkClosed() const;
+       void checkClosed() const throw( exceptions::ActiveMQException );
 
    };
 

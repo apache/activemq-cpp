@@ -31,18 +31,16 @@ namespace cms{
     class CMS_API MessageNotReadableException : public CMSException {
     public:
 
-        MessageNotReadableException();
+        MessageNotReadableException() throw();
 
-        MessageNotReadableException( const MessageNotReadableException& ex );
-
-        MessageNotReadableException( const std::string& message );
+        MessageNotReadableException( const MessageNotReadableException& ex ) throw();
 
         MessageNotReadableException( const std::string& message,
-                                     const std::exception* cause );
+                                     const std::exception* cause ) throw();
 
         MessageNotReadableException( const std::string& message,
                                      const std::exception* cause,
-                                     const std::vector< std::pair< std::string, int> >& stackTrace );
+                                     const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
         virtual ~MessageNotReadableException() throw();
 

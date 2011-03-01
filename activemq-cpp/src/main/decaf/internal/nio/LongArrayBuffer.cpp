@@ -26,17 +26,21 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( int size, bool readOnly ) :
-    LongBuffer(size), _array(), offset(0), length(size), readOnly(readOnly) {
+LongArrayBuffer::LongArrayBuffer( int size, bool readOnly )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : LongBuffer( size ){
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
     this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(long long) ) );
+    this->offset = 0;
+    this->length = size;
+    this->readOnly = readOnly;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int length, bool readOnly ) :
-    LongBuffer(length), _array(), offset(offset), length(length), readOnly(readOnly) {
+LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
 
     try{
 
@@ -52,6 +56,9 @@ LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int le
 
         // Allocate using the ByteArray, not read-only initially.
         this->_array.reset( new ByteArrayAdapter( array, size, false ) );
+        this->offset = offset;
+        this->length = length;
+        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -60,8 +67,10 @@ LongArrayBuffer::LongArrayBuffer( long long* array, int size, int offset, int le
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
-    LongBuffer(length), _array(array), offset(offset), length(length), readOnly(readOnly) {
+LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array,
+                                  int offset, int length, bool readOnly )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) : LongBuffer( length ) {
 
     try{
 
@@ -74,6 +83,12 @@ LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array, int of
             throw IndexOutOfBoundsException(
                 __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
+
+        // Allocate using the ByteArray, not read-only initially.
+        this->_array = array;
+        this->offset = offset;
+        this->length = length;
+        this->readOnly = readOnly;
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
@@ -82,16 +97,29 @@ LongArrayBuffer::LongArrayBuffer( const Pointer<ByteArrayAdapter>& array, int of
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongArrayBuffer::LongArrayBuffer( const LongArrayBuffer& other ) :
-    LongBuffer(other), _array(other._array), offset(other.offset), length(other.length), readOnly(other.readOnly) {
+LongArrayBuffer::LongArrayBuffer( const LongArrayBuffer& other )
+    : LongBuffer( other ) {
+
+    // get the byte buffer of the caller and take a reference
+    this->_array = other._array;
+    this->offset = other.offset;
+    this->length = other.length;
+    this->readOnly = other.readOnly;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 LongArrayBuffer::~LongArrayBuffer() {
+
+    try{
+    }
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long* LongArrayBuffer::array() {
+long long* LongArrayBuffer::array()
+    throw( decaf::lang::exceptions::UnsupportedOperationException,
+           decaf::nio::ReadOnlyBufferException ) {
 
     try{
 
@@ -116,7 +144,9 @@ long long* LongArrayBuffer::array() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int LongArrayBuffer::arrayOffset() {
+int LongArrayBuffer::arrayOffset()
+    throw( decaf::lang::exceptions::UnsupportedOperationException,
+           decaf::nio::ReadOnlyBufferException ) {
 
     try{
 
@@ -155,7 +185,7 @@ LongBuffer* LongArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::compact() {
+LongBuffer& LongArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
 
     try{
 
@@ -193,7 +223,7 @@ LongBuffer* LongArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long LongArrayBuffer::get() {
+long long LongArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 
     try{
         return this->get( this->_position++ );
@@ -204,7 +234,8 @@ long long LongArrayBuffer::get() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-long long LongArrayBuffer::get( int index ) const {
+long long LongArrayBuffer::get( int index ) const
+    throw ( lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
@@ -222,7 +253,8 @@ long long LongArrayBuffer::get( int index ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::put( long long value ) {
+LongBuffer& LongArrayBuffer::put( long long value )
+    throw( BufferOverflowException, ReadOnlyBufferException ) {
 
     try{
 
@@ -236,7 +268,9 @@ LongBuffer& LongArrayBuffer::put( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LongBuffer& LongArrayBuffer::put( int index, long long value ) {
+LongBuffer& LongArrayBuffer::put( int index, long long value )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::nio::ReadOnlyBufferException ) {
 
     try{
 

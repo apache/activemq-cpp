@@ -34,11 +34,12 @@ const double Double::POSITIVE_INFINITY = std::numeric_limits<double>::infinity()
 const double Double::NEGATIVE_INFINITY = -std::numeric_limits<double>::infinity();
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double( double value ) :value(value) {
+Double::Double( double value ) {
+    this->value = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double( const std::string& value ) : value(0) {
+Double::Double( const std::string& value ) throw( exceptions::NumberFormatException ) {
     this->value = Double::parseDouble( value );
 }
 
@@ -137,7 +138,8 @@ double Double::longBitsToDouble( long long bits ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Double::parseDouble( const std::string value ) {
+double Double::parseDouble( const std::string value )
+    throw ( exceptions::NumberFormatException ) {
 
     // TODO - This is not going to parse the formats we say we do.
     float result = 0.0;
@@ -255,7 +257,8 @@ Double Double::valueOf( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Double Double::valueOf( const std::string& value ) {
+Double Double::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
 
     return valueOf( parseDouble( value ) );
 }

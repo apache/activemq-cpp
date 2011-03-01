@@ -18,20 +18,12 @@
 #include "PooledSession.h"
 #include "SessionPool.h"
 #include "ResourceLifecycleManager.h"
-#include <cms/CMSException.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
+#include <activemq/util/CMSExceptionSupport.h>
 
-using namespace cms;
 using namespace activemq::cmsutil;
-
-/**
- * A catch-all that throws an CMSException.
- */
-#define CMSTEMPLATE_CATCHALL() \
-    catch( cms::CMSException& ex ){ \
-        throw ex; \
-    } catch( ... ){ \
-        throw CMSException( "caught unknown exception", NULL ); \
-    }
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
@@ -39,7 +31,7 @@ PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession::~PooledSession() throw() {
+PooledSession::~PooledSession(){
 
     // Destroy cached producers.
     std::vector<CachedProducer*> cachedProducers = producerCache.values();
@@ -57,7 +49,7 @@ PooledSession::~PooledSession() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledSession::close() {
+void PooledSession::close() throw( cms::CMSException ) {
 
     if( pool != NULL ) {
         pool->returnSession( this );
@@ -65,22 +57,28 @@ void PooledSession::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue ) {
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue )
+    throw( cms::CMSException ) {
+
     return session->createBrowser( queue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector ) {
+cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector )
+    throw( cms::CMSException ) {
+
     return session->createBrowser( queue, selector );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destination* destination ) {
+cms::MessageProducer* PooledSession::createCachedProducer(
+        const cms::Destination* destination )
+    throw ( cms::CMSException ) {
 
     try {
 
         if( destination == NULL ) {
-            throw CMSException( "destination is NULL", NULL );
+            throw ActiveMQException(__FILE__, __LINE__, "destination is NULL");
         }
 
         std::string key = getUniqueDestName(destination);
@@ -89,7 +87,7 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
         CachedProducer* cachedProducer = NULL;
         try {
             cachedProducer = producerCache.get( key );
-        } catch( decaf::util::NoSuchElementException& e ) {
+        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
             // a new producer resource.
@@ -107,18 +105,19 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
 
         return cachedProducer;
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destination* destination,
-                                                           const std::string& selector,
-                                                           bool noLocal ) {
+cms::MessageConsumer* PooledSession::createCachedConsumer(
+    const cms::Destination* destination,
+    const std::string& selector,
+    bool noLocal ) throw ( cms::CMSException ) {
 
     try {
 
         if( destination == NULL ) {
-            throw CMSException( "destination is NULL", NULL );
+            throw ActiveMQException( __FILE__, __LINE__, "destination is NULL" );
         }
 
         // Append the selector and noLocal flag onto the key.
@@ -132,7 +131,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
         CachedConsumer* cachedConsumer = NULL;
         try {
             cachedConsumer = consumerCache.get( key );
-        } catch( decaf::util::NoSuchElementException& e ) {
+        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
             // a new consumer resource.
@@ -150,7 +149,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
 
         return cachedConsumer;
     }
-    CMSTEMPLATE_CATCHALL()
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

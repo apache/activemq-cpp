@@ -35,17 +35,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const int OpenWireFormatNegotiator::negotiationTimeout = 15000;
-
-////////////////////////////////////////////////////////////////////////////////
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
                                                     const Pointer<Transport>& next ) :
     WireFormatNegotiator( next ),
-    firstTime(true),
     wireInfoSentDownLatch(1),
-    readyCountDownLatch(1),
-    openWireFormat(wireFormat),
-    closed(true) {
+    readyCountDownLatch(1)
+{
+    this->firstTime.set( true );
+    this->openWireFormat = wireFormat;
+    this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

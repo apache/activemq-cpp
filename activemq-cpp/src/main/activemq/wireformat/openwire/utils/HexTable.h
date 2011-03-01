@@ -35,11 +35,6 @@ namespace utils{
      * the table.
      */
     class AMQCPP_API HexTable {
-    private:
-
-        // Vector of Strings mapping hex to the value of the index.
-        std::vector<std::string> table;
-
     public:
 
         HexTable();
@@ -54,19 +49,25 @@ namespace utils{
          *
          * @returns string containing the hex value if the index
          *
-         * @throws IndexOutOfBoundsException if the index exceeds the table size.
+         * @throws IndexOutOfBoundsException
          */
-        virtual const std::string& operator[]( std::size_t index );
-        virtual const std::string& operator[]( std::size_t index ) const;
+        virtual const std::string& operator[]( std::size_t index )
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual const std::string& operator[]( std::size_t index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Returns the max size of this Table.
-         *
-         * @returns an integer size value for the table.
+         * @returns an integer size value
          */
         virtual std::size_t size() const{
             return table.size();
         }
+
+    private:
+
+        // Vector of Strings mapping hex to the value of the index.
+        std::vector<std::string> table;
 
     };
 

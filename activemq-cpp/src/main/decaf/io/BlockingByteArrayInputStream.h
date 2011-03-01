@@ -76,23 +76,28 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual int available() const;
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual void close();
+        virtual void close() throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip( long long num )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
     protected:
 
-        virtual int doReadByte();
+        virtual int doReadByte() throw ( IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     };
 

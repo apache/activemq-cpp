@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/mock/ResponseBuilder.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq{
@@ -29,10 +29,8 @@ namespace openwire{
 
     using decaf::lang::Pointer;
 
-    /**
-     * Used to allow a MockTransport to generate response commands to OpenWire Commands.
-     */
-    class AMQCPP_API OpenWireResponseBuilder : public transport::mock::ResponseBuilder {
+    class AMQCPP_API OpenWireResponseBuilder :
+        public transport::mock::ResponseBuilder{
     public:
 
         OpenWireResponseBuilder() {}
@@ -43,7 +41,7 @@ namespace openwire{
 
         virtual void buildIncomingCommands(
             const Pointer<commands::Command>& command,
-            decaf::util::LinkedList< Pointer<commands::Command> >& queue );
+            decaf::util::StlQueue< Pointer<commands::Command> >& queue );
 
     };
 

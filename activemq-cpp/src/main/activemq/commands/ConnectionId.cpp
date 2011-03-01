@@ -176,7 +176,7 @@ int ConnectionId::compareTo( const ConnectionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ConnectionId::equals( const ConnectionId& value ) const {
-    return this->equals( (const DataStructure*)&value );
+    return this->equals( &value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

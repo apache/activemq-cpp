@@ -21,7 +21,6 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/lang/Math.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/transport/TransportRegistry.h>
@@ -30,6 +29,7 @@
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/util/URISupport.h>
+#include <activemq/util/CompositeData.h>
 #include <memory>
 
 using namespace std;
@@ -52,11 +52,6 @@ namespace activemq{
 namespace core{
 
     class FactorySettings {
-    private:
-
-        FactorySettings( const FactorySettings& );
-        FactorySettings& operator= ( const FactorySettings& );
-
     public:
 
         Pointer<Properties> properties;
@@ -65,14 +60,12 @@ namespace core{
         std::string password;
         std::string clientId;
 
-        URI brokerURI;
+        std::string brokerURL;
 
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
-        bool messagePrioritySupported;
         bool useCompression;
-        int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
@@ -81,30 +74,37 @@ namespace core{
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
-        FactorySettings() : properties( new Properties() ),
-                            username(),
-                            password(),
-                            clientId(),
-                            brokerURI( ActiveMQConnectionFactory::DEFAULT_URI ),
+        FactorySettings() : brokerURL( ActiveMQConnectionFactory::DEFAULT_URI ),
                             dispatchAsync( true ),
                             alwaysSyncSend( false ),
                             useAsyncSend( false ),
-                            messagePrioritySupported( true ),
                             useCompression( false ),
-                            compressionLevel( -1 ),
                             sendTimeout( 0 ),
                             closeTimeout( 15000 ),
                             producerWindowSize( 0 ),
                             defaultListener( NULL ),
-                            defaultPrefetchPolicy( new DefaultPrefetchPolicy() ),
-                            defaultRedeliveryPolicy( new DefaultRedeliveryPolicy() ) {
+                            defaultPrefetchPolicy( NULL ),
+                            defaultRedeliveryPolicy( NULL ) {
+
+            this->properties.reset( new Properties() );
+            this->defaultPrefetchPolicy.reset( new DefaultPrefetchPolicy() );
+            this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
         }
 
         void updateConfiguration( const URI& uri ) {
 
-            this->brokerURI = uri;
+            this->brokerURL = uri.toString();
             this->properties->clear();
-            activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
+
+            if( uri.getQuery() != "" ) {
+                // Not a composite URI so this works fine.
+                activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
+            } else {
+                // Composite URI won't indicate it has a query even if it does.
+                activemq::util::CompositeData composite = activemq::util::URISupport::parseComposite( uri );
+
+                *this->properties = composite.getParameters();
+            }
 
             // Check the connection options
             this->alwaysSyncSend = Boolean::parseBoolean(
@@ -122,18 +122,12 @@ namespace core{
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_USECOMPRESSION ), "false" ) );
 
-            this->compressionLevel = Integer::parseInt(
-                properties->getProperty( "connection.compressionLevel", "-1" ) );
-
-            this->messagePrioritySupported = Boolean::parseBoolean(
-                properties->getProperty( "connection.messagePrioritySupported", "true" ) );
-
             this->dispatchAsync = Boolean::parseBoolean(
                 properties->getProperty(
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_DISPATCHASYNC ), "true" ) );
 
-            this->producerWindowSize = Integer::parseInt(
+            this->producerWindowSize = decaf::lang::Integer::parseInt(
                 properties->getProperty(
                     core::ActiveMQConstants::toString(
                         core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) );
@@ -169,7 +163,8 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI ) {
+cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
+    throw ( cms::CMSException ) {
 
     return new ActiveMQConnectionFactory( brokerURI );
 }
@@ -179,39 +174,17 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory() : settings( new FactorySe
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& uri,
+ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& url,
                                                       const std::string& username,
                                                       const std::string& password ) : settings( new FactorySettings() ) {
 
-    this->setBrokerURI( URI( uri ) );
-
-    // Store login data in the properties
-    if( !username.empty() ) {
-        this->settings->username = username;
-    }
-    if( !password.empty() ) {
-        this->settings->password = password;
-    }
+    settings->brokerURL = url;
+    settings->username = username;
+    settings->password = password;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory( const decaf::net::URI& uri,
-                                                      const std::string& username,
-                                                      const std::string& password ) : settings( new FactorySettings() ) {
-
-    this->setBrokerURI( uri );
-
-    // Store login data in the properties
-    if( !username.empty() ) {
-        this->settings->username = username;
-    }
-    if( !password.empty() ) {
-        this->settings->password = password;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::~ActiveMQConnectionFactory() throw() {
+ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
     try{
         delete this->settings;
     }
@@ -220,37 +193,48 @@ ActiveMQConnectionFactory::~ActiveMQConnectionFactory() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection() {
-    return doCreateConnection( settings->brokerURI, settings->username, settings->password, settings->clientId );
+cms::Connection* ActiveMQConnectionFactory::createConnection()
+    throw ( cms::CMSException ) {
+
+    return createConnection( settings->brokerURL, settings->username, settings->password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
-                                                              const std::string& password ) {
+cms::Connection* ActiveMQConnectionFactory::createConnection(
+    const std::string& username,
+    const std::string& password )
+        throw ( cms::CMSException ) {
 
-    return doCreateConnection( settings->brokerURI, username, password, settings->clientId );
+    return createConnection( settings->brokerURL, username, password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
-                                                              const std::string& password,
-                                                              const std::string& clientId ) {
+cms::Connection* ActiveMQConnectionFactory::createConnection(
+    const std::string& username,
+    const std::string& password,
+    const std::string& clientId )
+        throw ( cms::CMSException ) {
 
-    return doCreateConnection( settings->brokerURI, username, password, clientId );
+    return createConnection( settings->brokerURL, username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net::URI& uri,
+cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const std::string& url,
                                                                 const std::string& username,
                                                                 const std::string& password,
-                                                                const std::string& clientId ) {
+                                                                const std::string& clientId )
+    throw ( cms::CMSException ) {
 
     Pointer<Transport> transport;
     auto_ptr<ActiveMQConnection> connection;
 
     try{
 
-        this->setBrokerURI( uri );
+        // Try to convert the String URL into a valid URI
+        URI uri( url );
+
+        // Update configuration with new authentication info if any was provided.
+        this->settings->updateConfiguration( uri );
 
         // Store login data in the properties
         if( !username.empty() ) {
@@ -277,7 +261,7 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net
         Pointer<Properties> properties( this->settings->properties->clone() );
 
         // Create and Return the new connection object.
-        connection.reset( createActiveMQConnection( transport, properties ) );
+        connection.reset( new ActiveMQConnection( transport, properties ) );
 
         // Set all options parsed from the URI.
         configureConnection( connection.get() );
@@ -309,23 +293,16 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection* ActiveMQConnectionFactory::createActiveMQConnection(
-    const Pointer<transport::Transport>& transport,
-    const Pointer<decaf::util::Properties>& properties ) {
-
-    return new ActiveMQConnection( transport, properties );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& uri,
+    const std::string& url,
     const std::string& username,
     const std::string& password,
-    const std::string& clientId ) {
+    const std::string& clientId )
+       throw ( cms::CMSException ) {
 
     ActiveMQConnectionFactory factory;
 
-    return factory.doCreateConnection( URI( uri ), username, password, clientId );
+    return factory.doCreateConnection( url, username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -337,13 +314,11 @@ void ActiveMQConnectionFactory::configureConnection( ActiveMQConnection* connect
     connection->setAlwaysSyncSend( this->settings->alwaysSyncSend );
     connection->setUseAsyncSend( this->settings->useAsyncSend );
     connection->setUseCompression( this->settings->useCompression );
-    connection->setCompressionLevel( this->settings->compressionLevel );
     connection->setSendTimeout( this->settings->sendTimeout );
     connection->setCloseTimeout( this->settings->closeTimeout );
     connection->setProducerWindowSize( this->settings->producerWindowSize );
     connection->setPrefetchPolicy( this->settings->defaultPrefetchPolicy->clone() );
     connection->setRedeliveryPolicy( this->settings->defaultRedeliveryPolicy->clone() );
-    connection->setMessagePrioritySupported( this->settings->messagePrioritySupported );
 
     if( this->settings->defaultListener ) {
         connection->setExceptionListener( this->settings->defaultListener );
@@ -381,20 +356,13 @@ void ActiveMQConnectionFactory::setClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setBrokerURI( const std::string& uri ) {
-    this->setBrokerURI( URI( uri ) );
+void ActiveMQConnectionFactory::setBrokerURL( const std::string& brokerURL ){
+    settings->brokerURL = brokerURL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setBrokerURI( const decaf::net::URI& uri ) {
-
-    // Update configuration with new authentication info if any was provided.
-    this->settings->updateConfiguration( uri );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const decaf::net::URI& ActiveMQConnectionFactory::getBrokerURI() const {
-    return settings->brokerURI;
+const std::string& ActiveMQConnectionFactory::getBrokerURL() const {
+    return settings->brokerURL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -468,21 +436,6 @@ void ActiveMQConnectionFactory::setUseCompression( bool value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQConnectionFactory::getCompressionLevel() const {
-    return this->settings->compressionLevel;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setCompressionLevel( int value ) {
-
-    if( value < 0 ) {
-        this->settings->compressionLevel = -1;
-    }
-
-    this->settings->compressionLevel = Math::min( value, 9 );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 unsigned int ActiveMQConnectionFactory::getSendTimeout() const {
     return this->settings->sendTimeout;
 }
@@ -510,14 +463,4 @@ unsigned int ActiveMQConnectionFactory::getProducerWindowSize() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setProducerWindowSize( unsigned int windowSize ) {
     this->settings->producerWindowSize = windowSize;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQConnectionFactory::isMessagePrioritySupported() const {
-    return this->settings->messagePrioritySupported;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setMessagePrioritySupported( bool value ) {
-    this->settings->messagePrioritySupported = value;
 }

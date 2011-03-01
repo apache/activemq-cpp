@@ -32,13 +32,8 @@ namespace io{
     private:
 
         unsigned char* buffer;
+        static const int bufferSize = 200000;
         ByteArrayInputStream bis;
-        static const int bufferSize;
-
-    private:
-
-        DataInputStreamBenchmark( const DataInputStreamBenchmark& );
-        DataInputStreamBenchmark& operator= ( const DataInputStreamBenchmark& );
 
     public:
 

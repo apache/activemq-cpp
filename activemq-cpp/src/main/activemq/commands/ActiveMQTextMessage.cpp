@@ -45,7 +45,7 @@ ActiveMQTextMessage::ActiveMQTextMessage() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTextMessage::~ActiveMQTextMessage() throw() {
+ActiveMQTextMessage::~ActiveMQTextMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,13 +107,14 @@ bool ActiveMQTextMessage::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::clearBody() {
+void ActiveMQTextMessage::clearBody() throw( cms::CMSException ) {
     ActiveMQMessageTemplate<cms::TextMessage>::clearBody();
     this->text.reset( NULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat ) {
+void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat )
+    throw ( decaf::io::IOException ) {
 
     ActiveMQMessageTemplate<cms::TextMessage>::beforeMarshal( wireFormat );
 
@@ -124,8 +125,7 @@ void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat ) {
 
         if( this->connection != NULL && this->connection->isUseCompression() ) {
             this->compressed = true;
-            Deflater* deflator = new Deflater( this->connection->getCompressionLevel() );
-            os = new DeflaterOutputStream( os, deflator, true, true );
+            os = new DeflaterOutputStream( os, true );
         }
 
         DataOutputStream dataOut( os, true );
@@ -164,7 +164,7 @@ unsigned int ActiveMQTextMessage::getSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQTextMessage::getText() const {
+std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
 
@@ -201,7 +201,8 @@ std::string ActiveMQTextMessage::getText() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::setText( const char* msg ) {
+void ActiveMQTextMessage::setText( const char* msg )
+    throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
     try{
         setText( std::string(msg) );
@@ -210,7 +211,8 @@ void ActiveMQTextMessage::setText( const char* msg ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::setText( const std::string& msg ) {
+void ActiveMQTextMessage::setText( const std::string& msg )
+    throw( cms::MessageNotWriteableException, cms::CMSException ) {
 
     try{
         failIfReadOnlyBody();

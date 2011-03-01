@@ -33,10 +33,10 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Topic : public Destination {
+    class CMS_API Topic : public Destination{
     public:
 
-        virtual ~Topic() throw();
+        virtual ~Topic() {}
 
         /**
          * Gets the name of this topic.
@@ -45,7 +45,8 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual std::string getTopicName() const = 0;
+        virtual std::string getTopicName()
+            const throw( CMSException ) = 0;
 
     };
 

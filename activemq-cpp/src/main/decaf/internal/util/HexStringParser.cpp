@@ -45,16 +45,11 @@ const std::string HexStringParser::HEX_PATTERN =
     "[\\x00-\\x20]*([+-]?)" + HEX_SIGNIFICANT + BINARY_EXPONENT + FLOAT_TYPE_SUFFIX + "[\\x00-\\x20]*";
 
 ////////////////////////////////////////////////////////////////////////////////
-HexStringParser::HexStringParser( int exponentWidth, int mantissaWidth ) : EXPONENT_WIDTH(exponentWidth),
-                                                                           MANTISSA_WIDTH(mantissaWidth),
-                                                                           EXPONENT_BASE(0),
-                                                                           MAX_EXPONENT(0),
-                                                                           MIN_EXPONENT(),
-                                                                           MANTISSA_MASK(),
-                                                                           sign(0),
-                                                                           exponent(0),
-                                                                           mantissa(0),
-                                                                           abandonedNumber() {
+HexStringParser::HexStringParser( int exponentWidth, int mantissaWidth ) {
+
+    this->EXPONENT_WIDTH = exponentWidth;
+    this->MANTISSA_WIDTH = mantissaWidth;
+
     this->EXPONENT_BASE = ~( -1 << (exponentWidth - 1) );
     this->MAX_EXPONENT = ~( -1 << exponentWidth );
     this->MIN_EXPONENT = -( MANTISSA_WIDTH + 1 );

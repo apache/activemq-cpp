@@ -44,20 +44,20 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId() 
-    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId( const SessionId& other )
-    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId( const ConnectionId* connectionId, long long sessionId )
-    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
     this->connectionId = connectionId->getValue();
     this->value = sessionId;
@@ -65,7 +65,7 @@ SessionId::SessionId( const ConnectionId* connectionId, long long sessionId )
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId( const ProducerId* producerId )
-    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
     this->connectionId = producerId->getConnectionId();
     this->value = producerId->getSessionId();
@@ -73,7 +73,7 @@ SessionId::SessionId( const ProducerId* producerId )
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId( const ConsumerId* consumerId )
-    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+    : BaseDataStructure(), parentId(), connectionId(""), value(0) {
 
     this->connectionId = consumerId->getConnectionId();
     this->value = consumerId->getSessionId();
@@ -204,7 +204,7 @@ int SessionId::compareTo( const SessionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool SessionId::equals( const SessionId& value ) const {
-    return this->equals( (const DataStructure*)&value );
+    return this->equals( &value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

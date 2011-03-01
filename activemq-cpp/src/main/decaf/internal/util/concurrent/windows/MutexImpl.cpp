@@ -52,14 +52,6 @@ MutexHandle* MutexImpl::create() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void MutexImpl::destroy( decaf::util::concurrent::MutexHandle* handle ) {
-
-    if( handle == NULL ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Handle to Mutex Object was Null." );
-    }
-
-    DeleteCriticalSection( &handle->mutex );
-
     delete handle;
 }
 

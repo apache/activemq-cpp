@@ -35,18 +35,16 @@ namespace cms{
     class CMS_API MessageFormatException : public CMSException {
     public:
 
-        MessageFormatException();
+        MessageFormatException() throw();
 
-        MessageFormatException( const MessageFormatException& ex );
-
-        MessageFormatException( const std::string& message );
+        MessageFormatException( const MessageFormatException& ex ) throw();
 
         MessageFormatException( const std::string& message,
-                                const std::exception* cause );
+                                const std::exception* cause ) throw();
 
         MessageFormatException( const std::string& message,
                                 const std::exception* cause,
-                                const std::vector< std::pair< std::string, int> >& stackTrace );
+                                const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
 
         virtual ~MessageFormatException() throw();
 

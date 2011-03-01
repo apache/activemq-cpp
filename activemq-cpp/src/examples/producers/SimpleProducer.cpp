@@ -58,24 +58,23 @@ private:
     std::string brokerURI;
     std::string destURI;
 
-private:
-
-    SimpleProducer( const SimpleProducer& );
-    SimpleProducer& operator= ( const SimpleProducer& );
-
 public:
 
-    SimpleProducer( const std::string& brokerURI, unsigned int numMessages,
-                    const std::string& destURI, bool useTopic = false, bool clientAck = false ) :
-        connection(NULL),
-        session(NULL),
-        destination(NULL),
-        producer(NULL),
-        useTopic(useTopic),
-        clientAck(clientAck),
-        numMessages(numMessages),
-        brokerURI(brokerURI),
-        destURI(destURI) {
+    SimpleProducer( const std::string& brokerURI,
+                    unsigned int numMessages,
+                    const std::string& destURI,
+                    bool useTopic = false,
+                    bool clientAck = false ){
+
+        this->connection = NULL;
+        this->session = NULL;
+        this->destination = NULL;
+        this->producer = NULL;
+        this->numMessages = numMessages;
+        this->useTopic = useTopic;
+        this->brokerURI = brokerURI;
+        this->destURI = destURI;
+        this->clientAck = clientAck;
     }
 
     virtual ~SimpleProducer(){

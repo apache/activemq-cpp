@@ -148,7 +148,8 @@ void ReplayCommand::setLastNakNumber( int lastNakNumber ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) {
+decaf::lang::Pointer<commands::Command> ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processReplayCommand( this );
 }

@@ -25,12 +25,9 @@ ActiveMQQueue::ActiveMQQueue() : ActiveMQDestination()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::ActiveMQQueue( const std::string& name ) : ActiveMQDestination( name )
+ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
+    ActiveMQDestination( name )
 {}
-
-////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::~ActiveMQQueue() throw() {
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQQueue::getDataStructureType() const {
@@ -57,10 +54,4 @@ std::string ActiveMQQueue::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQQueue::equals( const DataStructure* value ) const {
     return ActiveMQDestination::equals( value );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQQueue::equals( const cms::Destination& value ) const {
-    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
-    return ActiveMQDestination::equals( dest );
 }

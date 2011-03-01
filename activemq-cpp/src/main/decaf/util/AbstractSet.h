@@ -43,14 +43,16 @@ namespace util {
      * @since 1.0
      */
     template<typename E >
-    class AbstractSet : public virtual decaf::util::Set<E>,
-                        public virtual decaf::util::AbstractCollection<E> {
+    class AbstractSet : public decaf::util::Set<E> {
     public:
 
         virtual ~AbstractSet() {}
 
         /**
-         * {@inheritDoc}
+         * Removes from this set all of its elements that are contained in the specified
+         * collection (optional operation). If the specified collection is also a set, this
+         * operation effectively modifies this set so that its value is the asymmetric set
+         * difference of the two sets.
          *
          * This implementation determines which is the smaller of this set and the specified
          * collection, by invoking the size method on each. If this set has fewer elements,
@@ -63,8 +65,16 @@ namespace util {
          *
          * Note that this implementation will throw an UnsupportedOperationException if the
          * iterator returned by the iterator method does not implement the remove method.
+         *
+         * @param collection - The Collection whose elements are to be retained
+         * @returns true if the collection changed as a result of this call
+         *
+         * @throw UnsupportedOperationException
+         * @throw IllegalArgumentException
          */
-        virtual bool removeAll( const Collection<E>& collection ) {
+        virtual bool removeAll( const Collection<E>& collection )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
 
             bool result = false;
             if( this->size() <= collection.size() ) {

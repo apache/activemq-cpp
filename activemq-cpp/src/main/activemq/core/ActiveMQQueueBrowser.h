@@ -73,21 +73,21 @@ namespace core {
                               const std::string& selector,
                               bool dispatchAsync );
 
-        virtual ~ActiveMQQueueBrowser() throw();
+        virtual ~ActiveMQQueueBrowser();
 
     public:
 
-        virtual const cms::Queue* getQueue() const;
+        virtual const cms::Queue* getQueue() const throw ( cms::CMSException );
 
-        virtual std::string getMessageSelector() const;
+        virtual std::string getMessageSelector() const throw ( cms::CMSException );
 
-        virtual cms::MessageEnumeration* getEnumeration();
+        virtual cms::MessageEnumeration* getEnumeration() throw ( cms::CMSException );
 
-        virtual void close();
+        virtual void close() throw( cms::CMSException );
 
         virtual bool hasMoreMessages();
 
-        virtual cms::Message* nextMessage();
+        virtual cms::Message* nextMessage() throw( cms::CMSException );
 
     private:
 

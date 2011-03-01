@@ -37,14 +37,6 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompFrame::StompFrame() : command(), properties(), body() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-StompFrame::~StompFrame() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
 StompFrame* StompFrame::clone() const {
     StompFrame* frame = new StompFrame();
     frame->copy( this );
@@ -71,7 +63,8 @@ void StompFrame::setBody( const unsigned char* bytes, std::size_t numBytes ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const {
+void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const
+    throw( decaf::io::IOException ) {
 
     if( stream == NULL ) {
         throw NullPointerException(
@@ -117,7 +110,8 @@ void StompFrame::toStream( decaf::io::DataOutputStream* stream ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompFrame::fromStream( decaf::io::DataInputStream* in ) {
+void StompFrame::fromStream( decaf::io::DataInputStream* in )
+    throw ( decaf::io::IOException ) {
 
     if( in == NULL ) {
         throw decaf::io::IOException(
@@ -141,7 +135,8 @@ void StompFrame::fromStream( decaf::io::DataInputStream* in ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompFrame::readCommandHeader( decaf::io::DataInputStream* in ) {
+void StompFrame::readCommandHeader( decaf::io::DataInputStream* in )
+   throw ( decaf::io::IOException ) {
 
     try{
 
@@ -176,7 +171,8 @@ void StompFrame::readCommandHeader( decaf::io::DataInputStream* in ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompFrame::readHeaders( decaf::io::DataInputStream* in ) {
+void StompFrame::readHeaders( decaf::io::DataInputStream* in )
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -234,7 +230,8 @@ void StompFrame::readHeaders( decaf::io::DataInputStream* in ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t StompFrame::readHeaderLine( std::vector<unsigned char>& buffer,
-                                        decaf::io::DataInputStream* in ) {
+                                        decaf::io::DataInputStream* in )
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -272,7 +269,8 @@ std::size_t StompFrame::readHeaderLine( std::vector<unsigned char>& buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompFrame::readBody( decaf::io::DataInputStream* in ) {
+void StompFrame::readBody( decaf::io::DataInputStream* in )
+   throw ( decaf::io::IOException ) {
 
     try{
 

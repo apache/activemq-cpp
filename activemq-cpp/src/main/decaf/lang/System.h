@@ -71,27 +71,6 @@ namespace lang{
          *
          * @throws NullPointerException if src or dest are NULL.
          */
-        static void arraycopy( const char* src, std::size_t srcPos,
-                               char* dest, std::size_t destPos, std::size_t length );
-
-        /**
-         * Copies the number of elements specified by length from the source array starting at
-         * the given source offset specified by srcPos to the dest array starting at the given
-         * destination offset given by destPos.
-         *
-         * @param src
-         *      The source array to copy from.
-         * @param srcPos
-         *      The position in the array to start copying from.
-         * @param dest
-         *      The destination array to copy to.
-         * @param destPos
-         *      The position in the destination array to start writing at.
-         * @param length
-         *      The number of elements to copy from src to dest.
-         *
-         * @throws NullPointerException if src or dest are NULL.
-         */
         static void arraycopy( const unsigned char* src, std::size_t srcPos,
                                unsigned char* dest, std::size_t destPos, std::size_t length );
 
@@ -157,85 +136,6 @@ namespace lang{
          */
         static void arraycopy( const long long* src, std::size_t srcPos,
                                long long* dest, std::size_t destPos, std::size_t length );
-
-        /**
-         * Copies the number of elements specified by length from the source array starting at
-         * the given source offset specified by srcPos to the dest array starting at the given
-         * destination offset given by destPos.
-         *
-         * @param src
-         *      The source array to copy from.
-         * @param srcPos
-         *      The position in the array to start copying from.
-         * @param dest
-         *      The destination array to copy to.
-         * @param destPos
-         *      The position in the destination array to start writing at.
-         * @param length
-         *      The number of elements to copy from src to dest.
-         *
-         * @throws NullPointerException if src or dest are NULL.
-         */
-        static void arraycopy( const float* src, std::size_t srcPos,
-                               float* dest, std::size_t destPos, std::size_t length );
-
-        /**
-         * Copies the number of elements specified by length from the source array starting at
-         * the given source offset specified by srcPos to the dest array starting at the given
-         * destination offset given by destPos.
-         *
-         * @param src
-         *      The source array to copy from.
-         * @param srcPos
-         *      The position in the array to start copying from.
-         * @param dest
-         *      The destination array to copy to.
-         * @param destPos
-         *      The position in the destination array to start writing at.
-         * @param length
-         *      The number of elements to copy from src to dest.
-         *
-         * @throws NullPointerException if src or dest are NULL.
-         */
-        static void arraycopy( const double* src, std::size_t srcPos,
-                               double* dest, std::size_t destPos, std::size_t length );
-
-        /**
-         * Copies the number of elements specified by length from the source array starting at
-         * the given source offset specified by srcPos to the dest array starting at the given
-         * destination offset given by destPos.
-         *
-         * @param src
-         *      The source array to copy from.
-         * @param srcPos
-         *      The position in the array to start copying from.
-         * @param dest
-         *      The destination array to copy to.
-         * @param destPos
-         *      The position in the destination array to start writing at.
-         * @param length
-         *      The number of elements to copy from src to dest.
-         *
-         * @throws NullPointerException if src or dest are NULL.
-         */
-        template< typename E >
-        static void arraycopy( const E* src, std::size_t srcPos,
-                               E* dest, std::size_t destPos, std::size_t length ) {
-
-            if( src == NULL ) {
-                throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Given Source Pointer was null." );
-            }
-
-            if( src == NULL ) {
-                throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Given Source Pointer was null." );
-            }
-
-            for( std::size_t i = 0; i < length; ++i ) {
-                dest[destPos+i] = src[srcPos+i];
-            }
-        }
 
         /**
          * Enumerates the system environment and returns a map of env variable

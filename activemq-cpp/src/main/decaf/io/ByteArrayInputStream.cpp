@@ -40,15 +40,19 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own ) :
-    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) :
+               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, 0, bufferSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own ) :
-    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) :
+               InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
 
     setByteArray( buffer, bufferSize, offset, length );
 }
@@ -72,13 +76,17 @@ void ByteArrayInputStream::setByteArray( const vector<unsigned char>& buffer ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize ) {
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     setByteArray( buffer, bufferSize, 0, bufferSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length ) {
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     if( buffer == NULL ) {
         throw NullPointerException(
@@ -109,7 +117,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int buffer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::available() const {
+int ByteArrayInputStream::available() const throw ( IOException ) {
 
     return this->count - this->pos;
 }
@@ -123,7 +131,7 @@ void ByteArrayInputStream::mark( int readLimit DECAF_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::reset() {
+void ByteArrayInputStream::reset() throw ( IOException ){
 
     try{
 
@@ -136,7 +144,7 @@ void ByteArrayInputStream::reset() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::doReadByte() {
+int ByteArrayInputStream::doReadByte() throw ( IOException ){
 
     try{
         return pos < count ? buffer[pos++] : -1;
@@ -147,7 +155,10 @@ int ByteArrayInputStream::doReadByte() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size,
-                                              int offset, int length ) {
+                                              int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -192,7 +203,8 @@ int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ByteArrayInputStream::skip( long long num ) {
+long long ByteArrayInputStream::skip( long long num )
+    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     try{
 

@@ -27,14 +27,14 @@
 
 #include <decaf/lang/Pointer.h>
 #include <decaf/io/IOException.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlList.h>
 
 namespace activemq {
 namespace transport {
 namespace failover {
 
     using decaf::lang::Pointer;
-    using decaf::util::LinkedList;
+    using decaf::util::StlList;
     using activemq::threads::CompositeTaskRunner;
 
     class AMQCPP_API BackupTransportPool : public activemq::threads::CompositeTask {
@@ -42,7 +42,7 @@ namespace failover {
 
         friend class BackupTransport;
 
-        mutable LinkedList< Pointer<BackupTransport> > backups;
+        mutable StlList< Pointer<BackupTransport> > backups;
         Pointer<CompositeTaskRunner> taskRunner;
         Pointer<CloseTransportsTask> closeTask;
         Pointer<URIPool> uriPool;
@@ -123,7 +123,8 @@ namespace failover {
         // the internal transport to the close transport's task for cleanup.
         void onBackupTransportFailure( BackupTransport* failedTransport );
 
-        Pointer<Transport> createTransport( const URI& location ) const;
+        Pointer<Transport> createTransport( const URI& location ) const
+            throw ( decaf::io::IOException );
 
     };
 

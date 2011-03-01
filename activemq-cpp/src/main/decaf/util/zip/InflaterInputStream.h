@@ -78,8 +78,7 @@ namespace zip {
         /**
          * Creates a new InflaterInputStream with a user supplied Inflater and a default buffer size.
          * When the user supplied a Inflater instance the InflaterInputStream does not take ownership
-         * of the Inflater pointer unless the ownInflater parameter is set to true, otherwise the
-         * caller is still responsible for deleting the Inflater.
+         * of the Inflater pointer, the caller is still responsible for deleting the Inflater.
          *
          * @param inputStream
          *      The InputStream instance to wrap.
@@ -87,19 +86,15 @@ namespace zip {
          *      The user supplied Inflater to use for decompression. (
          * @param own
          *      Should this filter take ownership of the InputStream pointer (default is false).
-         * @param ownInflater
-         *      Should the filter take ownership of the passed Inflater object (default is false).
          *
          * @throws NullPointerException if the Inflater given is NULL.
          */
-        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                             bool own = false, bool ownInflater = false );
+        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater, bool own = false );
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Inflater and specified buffer size.
          * When the user supplied a Inflater instance the InflaterInputStream does not take ownership
-         * of the Inflater pointer unless the ownInflater parameter is set to true, otherwise the caller
-         * is still responsible for deleting the Inflater.
+         * of the Inflater pointer, the caller is still responsible for deleting the Inflater.
          *
          * @param inputStream
          *      The InputStream instance to wrap.
@@ -109,14 +104,12 @@ namespace zip {
          *      The size of the input buffer.
          * @param own
          *      Should this filter take ownership of the InputStream pointer (default is false).
-         * @param ownInflater
-         *      Should the filter take ownership of the passed Inflater object (default is false).
          *
          * @throws NullPointerException if the Inflater given is NULL.
          * @throws IllegalArgumentException if the bufferSize value is zero.
          */
         InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                             int bufferSize, bool own = false, bool ownInflater = false );
+                             int bufferSize, bool own = false );
 
         virtual ~InflaterInputStream();
 
@@ -125,21 +118,23 @@ namespace zip {
          *
          * Until EOF this method always returns 1, thereafter it always returns 0.
          */
-        virtual int available() const;
+        virtual int available() const throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          *
          * Closes any resources associated with this InflaterInputStream.
          */
-        virtual void close();
+        virtual void close() throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          *
          * Skips the specified amount of uncompressed input data.
          */
-        virtual long long skip( long long num );
+        virtual long long skip( long long num )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * {@inheritDoc}
@@ -153,7 +148,7 @@ namespace zip {
          *
          * Always throws an IOException when called.
          */
-        virtual void reset();
+        virtual void reset() throw ( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
@@ -169,13 +164,16 @@ namespace zip {
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void fill();
+        virtual void fill() throw( decaf::io::IOException );
 
     protected:
 
-        virtual int doReadByte();
+        virtual int doReadByte() throw ( decaf::io::IOException );
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException,
+                    decaf::lang::exceptions::NullPointerException );
 
     };
 

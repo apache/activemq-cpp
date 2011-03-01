@@ -32,10 +32,11 @@ namespace concurrent {
     class DECAF_API MutexHandle {
     public:
 
-        MutexHandle() : mutex(), lock_owner(0), lock_count(0) {
+        MutexHandle() {
         }
 
         ~MutexHandle() {
+            pthread_mutex_destroy( &mutex );
         }
 
         // The mutex object.

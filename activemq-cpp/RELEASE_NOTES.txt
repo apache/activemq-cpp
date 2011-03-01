@@ -1,6 +1,23 @@
 =========================================================================
-==  Release Notes for ActiveMQ CPP 3.3.0                               ==
+==  Release Notes for ActiveMQ CPP 3.2.5                               ==
 =========================================================================
+
+This release is a bugfix release that addresses a couple issues found since
+the release of v3.2.4
+
+Bug
+
+    * [AMQCPP-294] - RemoveInfo Segmentation Fault
+    * [AMQCPP-298] - Example code crashes in 3.2.0 on MacOSX
+    * [AMQCPP-347] - SEGFAULT on ssl connections with certificates
+    * [AMQCPP-350] - URI Query params are sometimes missed when creating
+                     Connections and Transports.
+    * [AMQCPP-352] - FailoverTransportFactory doesn't work correctly with more
+                     than two composite uris
+
+Improvement
+
+    * [AMQCPP-348] - Allow unverified SSL peer
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.4                               ==

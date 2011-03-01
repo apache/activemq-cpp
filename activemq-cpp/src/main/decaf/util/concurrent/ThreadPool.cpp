@@ -38,13 +38,12 @@ LOGDECAF_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
 LOGDECAF_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::ThreadPool() : pool(),
-                           queue(),
-                           maxThreads(DEFAULT_MAX_POOL_SIZE),
-                           blockSize(DEFAULT_MAX_BLOCK_SIZE),
-                           shutdown(false),
-                           freeThreads(0),
-                           poolLock() {
+ThreadPool::ThreadPool() {
+
+    this->maxThreads  = DEFAULT_MAX_POOL_SIZE;
+    this->blockSize   = DEFAULT_MAX_BLOCK_SIZE;
+    this->freeThreads = 0;
+    this->shutdown = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +90,8 @@ ThreadPool* ThreadPool::getInstance() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::queueTask( ThreadPool::Task task ) {
+void ThreadPool::queueTask( ThreadPool::Task task )
+   throw ( lang::Exception ) {
 
     try{
 
@@ -115,7 +115,7 @@ void ThreadPool::queueTask( ThreadPool::Task task ) {
             //LOGCMS_DEBUG(logger, "ThreadPool::QueueTask - pushing task");
 
             // queue the new work.
-            queue.offer(task);
+            queue.push(task);
 
             //LOGCMS_DEBUG(logger, "ThreadPool::QueueTask - calling notify");
 
@@ -128,7 +128,8 @@ void ThreadPool::queueTask( ThreadPool::Task task ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::Task ThreadPool::deQueueTask() {
+ThreadPool::Task ThreadPool::deQueueTask()
+    throw ( lang::Exception ) {
 
     try{
         //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - syncing on queue");
@@ -141,7 +142,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             // Wait for work, wait in a while loop since another thread could
             // be waiting for a lock and get the work before we get woken up
             // from our wait.
-            while( queue.isEmpty() && !shutdown ) {
+            while( queue.empty() && !shutdown ) {
                //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - Q empty, waiting");
 
                queue.wait();
@@ -155,7 +156,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             }
 
             // check size again.
-            if( queue.isEmpty() ) {
+            if( queue.empty() ) {
                throw lang::Exception(
                    __FILE__, __LINE__,
                    "ThreadPool::DeQueueUserWorkItem - Empty Taskn, not in shutdown.");
@@ -164,7 +165,7 @@ ThreadPool::Task ThreadPool::deQueueTask() {
             //LOGCMS_DEBUG(logger, "ThreadPool::DeQueueTask - popping task");
 
             // not empty so get the new work to do
-            return queue.remove();
+            return queue.pop();
         }
 
         return Task();
@@ -276,7 +277,7 @@ void ThreadPool::onTaskStarted( PooledThread* thread DECAF_UNUSED ) {
             // having a chance to wake up and service the queue.  This would
             // cause the number of Task to exceed the number of free threads
             // once the Threads got a chance to wake up and service the queue
-            if( freeThreads == 0 && !queue.isEmpty() ) {
+            if( freeThreads == 0 && !queue.empty() ) {
                 // Allocate a new block of threads
                 AllocateThreads( blockSize );
             }

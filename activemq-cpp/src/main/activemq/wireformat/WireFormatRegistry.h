@@ -25,7 +25,7 @@
 #include <activemq/wireformat/WireFormatFactory.h>
 
 #include <decaf/util/StlMap.h>
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
@@ -71,7 +71,8 @@ namespace wireformat {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        WireFormatFactory* findFactory( const std::string& name ) const;
+        WireFormatFactory* findFactory( const std::string& name ) const
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
          * Registers a new WireFormatFactory with this Registry.  If a Factory with the
@@ -87,7 +88,9 @@ namespace wireformat {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, WireFormatFactory* factory );
+        void registerFactory( const std::string& name, WireFormatFactory* factory )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the

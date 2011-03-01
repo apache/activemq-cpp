@@ -17,10 +17,8 @@
 
 #include "Network.h"
 
-#include <decaf/lang/Runnable.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
-#include <decaf/util/LinkedList.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/internal/util/ResourceLifecycleManager.h>
 
@@ -44,32 +42,11 @@ namespace internal{
 namespace net{
 
     class NetworkData {
-    private:
-
-        NetworkData( const NetworkData& );
-        NetworkData& operator=( const NetworkData& );
-
     public:
 
         ResourceLifecycleManager resources;
         Mutex lock;
-        LinkedList<Runnable*> shutdownTasks;
 
-        NetworkData() : resources(), lock(), shutdownTasks() {
-        }
-
-        ~NetworkData() {
-            try{
-                std::auto_ptr< Iterator<Runnable*> > iter( shutdownTasks.iterator() );
-                while( iter->hasNext() ) {
-                    Runnable* task = iter->next();
-                    try{
-                        task->run();
-                        delete task;
-                    } catch(...) {}
-                }
-            } catch(...) {}
-        }
     };
 
 }}}
@@ -127,11 +104,4 @@ void Network::shutdownNetworking() {
 
     // Destory the Network Runtime.
     delete Network::networkRuntime;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Network::addShutdownTask( decaf::lang::Runnable* task ) {
-    if( task != NULL ) {
-        this->data->shutdownTasks.add( task );
-    }
 }

@@ -17,8 +17,6 @@
 
 #include <decaf/io/DataInputStream.h>
 
-#include <decaf/io/PushbackInputStream.h>
-
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -35,13 +33,13 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::DataInputStream( InputStream* inputStream, bool own )
- : FilterInputStream( inputStream, own ), buffer() {}
+ : FilterInputStream( inputStream, own ) {}
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DataInputStream::readBoolean() {
+bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
 
     try {
         readAllData( buffer, sizeof(char) );
@@ -53,7 +51,7 @@ bool DataInputStream::readBoolean() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readByte() {
+char DataInputStream::readByte() throw ( IOException, EOFException ) {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -65,7 +63,7 @@ char DataInputStream::readByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataInputStream::readUnsignedByte() {
+unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFException ) {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -77,7 +75,7 @@ unsigned char DataInputStream::readUnsignedByte() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readChar() {
+char DataInputStream::readChar() throw ( IOException, EOFException ) {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -89,7 +87,7 @@ char DataInputStream::readChar() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short DataInputStream::readShort() {
+short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 
     try {
         short value = 0;
@@ -103,7 +101,7 @@ short DataInputStream::readShort() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short DataInputStream::readUnsignedShort() {
+unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io::EOFException ) {
 
     try {
         unsigned short value = 0;
@@ -117,7 +115,7 @@ unsigned short DataInputStream::readUnsignedShort() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::readInt() {
+int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 
     try {
         unsigned int value = 0;
@@ -132,7 +130,7 @@ int DataInputStream::readInt() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double DataInputStream::readDouble() {
+double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
 
     try {
         unsigned long long lvalue = this->readLong();
@@ -146,7 +144,7 @@ double DataInputStream::readDouble() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float DataInputStream::readFloat() {
+float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 
     try {
         unsigned int lvalue = this->readInt();
@@ -160,7 +158,8 @@ float DataInputStream::readFloat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DataInputStream::readLong() {
+long long DataInputStream::readLong()
+    throw ( io::IOException, io::EOFException ) {
 
     try {
         unsigned long long value = 0;
@@ -188,7 +187,7 @@ long long DataInputStream::readLong() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readString() {
+std::string DataInputStream::readString() throw ( io::IOException, io::EOFException ) {
 
     try {
 
@@ -230,7 +229,8 @@ std::string DataInputStream::readString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readUTF() {
+std::string DataInputStream::readUTF()
+    throw ( io::IOException, io::EOFException, io::UTFDataFormatException ) {
 
     try {
 
@@ -325,7 +325,10 @@ std::string DataInputStream::readUTF() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, int size ) {
+void DataInputStream::readFully( unsigned char* buffer, int size )
+    throw ( decaf::io::IOException,
+            decaf::io::EOFException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try {
 
@@ -342,72 +345,55 @@ void DataInputStream::readFully( unsigned char* buffer, int size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readLine() {
+std::string DataInputStream::readLine() throw( decaf::io::IOException ) {
     try{
 
-        std::string line;
-        bool foundTerminator = false;
-
-        while( true ) {
-
-            int nextByte = inputStream->read();
-
-            if( nextByte == -1 ) {
-
-                if( line.length() == 0 && !foundTerminator ) {
-                    return "";
-                }
-                return line;
-
-            } else if( nextByte == (unsigned char)'\r' ) {
-
-                PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
-
-                if( foundTerminator ) {
-
-                    if( pbStream == NULL ) {
-                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
-                    }
-
-                    pbStream->unread( (unsigned char)nextByte );
-                    return line;
-                }
-
-                foundTerminator = true;
-
-                // Have to be able to peek ahead one byte to see if its an newline.
-                if( pbStream == NULL ) {
-                    inputStream = new PushbackInputStream( inputStream, own );
-                    own = true;
-                }
-
-            } else if( nextByte == (unsigned char)'\n' ) {
-
-                return line;
-
-            } else {
-
-                if( foundTerminator ) {
-                    PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
-
-                    if( pbStream == NULL ) {
-                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
-                    }
-
-                    pbStream->unread( (unsigned char)nextByte );
-                    return line;
-                }
-
-                line += (char)nextByte;
-            }
-        }
+        throw IOException( __FILE__, __LINE__, "Not Yet Implemented." );
+        // TODO - Once PushBackInputStream is done.
+//        std::string line;
+//        bool foundTerminator = false;
+//
+//        while( true ) {
+//
+//            int nextByte = inputStream->read();
+//            switch( nextByte ) {
+//                case -1:
+//                    if( line.length() == 0 && !foundTerminator ) {
+//                        return "";
+//                    }
+//                    return line;
+//                case (unsigned char)'\r':
+//                    if( foundTerminator ) {
+//                        ( (PushbackInputStream)in ).unread( nextByte );
+//                        return line.toString();
+//                    }
+//                    foundTerminator = true;
+//                    /* Have to be able to peek ahead one byte */
+//                    if(!(in.getClass() == PushbackInputStream.class))  {
+//                        in = new PushbackInputStream( in );
+//                    }
+//                    break;
+//                case (byte)'\n':
+//                    return line.toString();
+//                default:
+//                    if( foundTerminator ) {
+//                        ( (PushbackInputStream)in ).unread( nextByte );
+//                        return line.toString();
+//                    }
+//                    line.append( (char)nextByte );
+//            }
+//        }
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length ) {
+void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::io::EOFException,
+            decaf::lang::exceptions::IndexOutOfBoundsException,
+            decaf::lang::exceptions::NullPointerException ) {
 
     try {
 
@@ -458,7 +444,8 @@ void DataInputStream::readFully( unsigned char* buffer, int size, int offset, in
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DataInputStream::skipBytes( long long num ) {
+long long DataInputStream::skipBytes( long long num )
+    throw( decaf::io::IOException ) {
 
     try {
 
@@ -483,7 +470,8 @@ long long DataInputStream::skipBytes( long long num ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readAllData( unsigned char* buffer, int length ) {
+void DataInputStream::readAllData( unsigned char* buffer, int length )
+    throw ( decaf::io::IOException, decaf::io::EOFException ) {
 
     try{
 

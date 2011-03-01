@@ -39,9 +39,7 @@ namespace core{
 
         /**
          * Dispatches a message to a particular consumer.
-         *
-         * @param message
-         *      The message to be dispatched to a waiting consumer.
+         * @param message - the message to be dispatched.
          */
         virtual void dispatch( const Pointer<MessageDispatch>& message ) = 0;
 

@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId::ConsumerId()
+ConsumerId::ConsumerId() 
     : BaseDataStructure(), parentId(), connectionId(""), sessionId(0), value(0) {
 
 }
@@ -208,7 +208,7 @@ int ConsumerId::compareTo( const ConsumerId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ConsumerId::equals( const ConsumerId& value ) const {
-    return this->equals( (const DataStructure*)&value );
+    return this->equals( &value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

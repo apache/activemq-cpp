@@ -20,7 +20,7 @@
 
 #include <string>
 #include <vector>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlList.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <stdio.h>
@@ -33,7 +33,7 @@ namespace util{
     /**
      * List of primitives.
      */
-    class AMQCPP_API PrimitiveList : public decaf::util::LinkedList<PrimitiveValueNode> {
+    class AMQCPP_API PrimitiveList : public decaf::util::StlList<PrimitiveValueNode> {
     private:
 
         PrimitiveValueConverter converter;
@@ -74,7 +74,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual bool getBool( int index ) const;
+        virtual bool getBool( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -85,7 +87,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setBool( int index, bool value );
+        virtual void setBool( std::size_t index, bool value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Byte value at the specified index.
@@ -95,7 +98,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual unsigned char getByte( int index ) const;
+        virtual unsigned char getByte( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -106,7 +111,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setByte( int index, unsigned char value );
+        virtual void setByte( std::size_t index, unsigned char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Character value at the specified index.
@@ -116,7 +122,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual char getChar( int index ) const;
+        virtual char getChar( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -127,7 +135,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setChar( int index, char value );
+        virtual void setChar( std::size_t index, char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Short value at the specified index.
@@ -137,7 +146,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual short getShort( int index ) const;
+        virtual short getShort( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -148,7 +159,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setShort( int index, short value );
+        virtual void setShort( std::size_t index, short value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Integer value at the specified index.
@@ -158,7 +170,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual int getInt( int index ) const;
+        virtual int getInt( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -169,7 +183,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setInt( int index, int value );
+        virtual void setInt( std::size_t index, int value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Long value at the specified index.
@@ -179,7 +194,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual long long getLong( int index ) const;
+        virtual long long getLong( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -190,7 +207,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setLong( int index, long long value );
+        virtual void setLong( std::size_t index, long long value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Float value at the specified index.
@@ -200,7 +218,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual float getFloat( int index ) const;
+        virtual float getFloat( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -211,7 +231,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setFloat( int index, float value );
+        virtual void setFloat( std::size_t index, float value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Double value at the specified index.
@@ -221,7 +242,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual double getDouble( int index ) const;
+        virtual double getDouble( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -232,7 +255,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setDouble( int index, double value );
+        virtual void setDouble( std::size_t index, double value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the String value at the specified index.
@@ -242,7 +266,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual std::string getString( int index ) const;
+        virtual std::string getString( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -253,7 +279,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setString( int index, const std::string& value );
+        virtual void setString( std::size_t index, const std::string& value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Gets the Byte Array value at the specified index.
@@ -263,7 +290,9 @@ namespace util{
          * @throw UnsupportedOperationException if the type at index is not of the
          * type that this method is to return or can convert to.
          */
-        virtual std::vector<unsigned char> getByteArray( int index ) const;
+        virtual std::vector<unsigned char> getByteArray( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the value at the given index to the new value specified,
@@ -274,7 +303,8 @@ namespace util{
          * @param value - the new value to assign to the element at index
          * @throw IndexOutOfBoundsException if index > size().
          */
-        virtual void setByteArray( int index, const std::vector<unsigned char>& value );
+        virtual void setByteArray( std::size_t index, const std::vector<unsigned char>& value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
     };
 

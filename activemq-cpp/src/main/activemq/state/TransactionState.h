@@ -24,7 +24,7 @@
 #include <activemq/commands/TransactionId.h>
 
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
 
@@ -35,7 +35,7 @@ namespace activemq {
 namespace state {
 
     using decaf::lang::Pointer;
-    using decaf::util::LinkedList;
+    using decaf::util::StlList;
     using decaf::util::concurrent::atomic::AtomicBoolean;
     using decaf::util::concurrent::ConcurrentStlMap;
     using namespace activemq::commands;
@@ -45,7 +45,7 @@ namespace state {
     class AMQCPP_API TransactionState {
     private:
 
-        LinkedList< Pointer<Command> > commands;
+        StlList< Pointer<Command> > commands;
         Pointer<TransactionId> id;
         AtomicBoolean disposed;
         bool prepared;
@@ -69,7 +69,7 @@ namespace state {
             this->disposed.set( true );
         }
 
-        const LinkedList< Pointer<Command> >& getCommands() const {
+        const StlList< Pointer<Command> >& getCommands() const {
             return commands;
         }
 

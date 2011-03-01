@@ -37,7 +37,7 @@ namespace cms{
     class CMS_API ExceptionListener {
     public:
 
-        virtual ~ExceptionListener();
+        virtual ~ExceptionListener() {}
 
         /**
          * Called when an exception occurs.  Once notified of an exception

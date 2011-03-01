@@ -24,7 +24,7 @@ using namespace decaf::io;
 const int BufferedInputStreamBenchmark::bufferSize = 200000;
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedInputStreamBenchmark::BufferedInputStreamBenchmark() : buffer(), source() {
+BufferedInputStreamBenchmark::BufferedInputStreamBenchmark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

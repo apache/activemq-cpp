@@ -51,9 +51,12 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char c );
+        virtual void doWriteByte( unsigned char c ) throw ( decaf::io::IOException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     private:
 

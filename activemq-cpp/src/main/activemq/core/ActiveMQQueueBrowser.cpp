@@ -49,11 +49,6 @@ namespace core{
 
         ActiveMQQueueBrowser* parent;
 
-    private:
-
-        Browser( const Browser& );
-        Browser& operator= ( const Browser& );
-
     public:
 
         Browser( ActiveMQQueueBrowser* parent, ActiveMQSession* session,
@@ -85,6 +80,7 @@ namespace core{
             AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
             AMQ_CATCHALL_THROW( ActiveMQException )
         }
+
     };
 }}
 
@@ -93,19 +89,7 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser( ActiveMQSession* session,
                                             const Pointer<commands::ConsumerId>& consumerId,
                                             const Pointer<commands::ActiveMQDestination>& destination,
                                             const std::string& selector,
-                                            bool dispatchAsync ) : cms::QueueBrowser(),
-                                                                   cms::MessageEnumeration(),
-                                                                   session(NULL),
-                                                                   consumerId(),
-                                                                   destination(),
-                                                                   selector(),
-                                                                   dispatchAsync(false),
-                                                                   queue(NULL),
-                                                                   closed(false),
-                                                                   mutex(),
-                                                                   wait(),
-                                                                   browseDone(),
-                                                                   browser(NULL) {
+                                            bool dispatchAsync ) {
 
     if( session == NULL ) {
         throw ActiveMQException(
@@ -134,7 +118,7 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser( ActiveMQSession* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueueBrowser::~ActiveMQQueueBrowser() throw() {
+ActiveMQQueueBrowser::~ActiveMQQueueBrowser() {
     try{
         this->close();
     }
@@ -142,17 +126,17 @@ ActiveMQQueueBrowser::~ActiveMQQueueBrowser() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const cms::Queue* ActiveMQQueueBrowser::getQueue() const {
+const cms::Queue* ActiveMQQueueBrowser::getQueue() const throw ( cms::CMSException ) {
     return this->queue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQQueueBrowser::getMessageSelector() const {
+std::string ActiveMQQueueBrowser::getMessageSelector() const throw ( cms::CMSException ) {
     return this->selector;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
+cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() throw ( cms::CMSException ) {
 
     try{
         checkClosed();
@@ -165,7 +149,7 @@ cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQQueueBrowser::close() {
+void ActiveMQQueueBrowser::close() throw( cms::CMSException ) {
     try{
 
         if( this->closed ) {
@@ -209,7 +193,7 @@ bool ActiveMQQueueBrowser::hasMoreMessages() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQQueueBrowser::nextMessage() {
+cms::Message* ActiveMQQueueBrowser::nextMessage() throw( cms::CMSException ) {
 
     try{
 

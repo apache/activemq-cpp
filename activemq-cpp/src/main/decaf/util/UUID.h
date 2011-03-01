@@ -84,7 +84,6 @@ namespace util{
          * Static factory to retrieve a type 4 (pseudo randomly generated) UUID.
          * The UUID is generated using a cryptographically strong pseudo random
          * number generator.
-         *
          * @return type 4 UUID
          */
         static UUID randomUUID();
@@ -92,10 +91,7 @@ namespace util{
         /**
          * Static factory to retrieve a type 3 (name based) UUID based on the
          * specified byte array.
-         *
-         * @param name
-         *      A byte array to be used to construct a UUID.
-         *
+         * @param name - a byte array to be used to construct a UUID.
          * @return type 3 UUID
          */
         static UUID nameUUIDFromBytes( const std::vector<char>& name );
@@ -103,12 +99,8 @@ namespace util{
         /**
          * Static factory to retrieve a type 3 (name based) UUID based on the
          * specified byte array.
-         *
-         * @param name
-         *      A byte array to be used to construct a UUID.
-         * @param size
-         *      The size of the byte array, or number of bytes to use.
-         *
+         * @param name - a byte array to be used to construct a UUID.
+         * @param size - the size of the byte array, or number of bytes to use.
          * @return type 3 UUID
          */
         static UUID nameUUIDFromBytes( const char* name, std::size_t size );
@@ -116,15 +108,11 @@ namespace util{
         /**
          * Creates a UUID from the string standard representation as described
          * in the toString() method.
-         *
-         * @param name
-         *      A string to be used to construct a UUID.
-         *
+         * @param name - a string to be used to construct a UUID.
          * @return type 3 UUID
-         *
-         * @throws IllegalArgumentException if the UUID string given is invalid.
          */
-        static UUID fromString( const std::string& name );
+        static UUID fromString( const std::string& name )
+            throw ( lang::exceptions::IllegalArgumentException );
 
     public:
 
@@ -132,7 +120,6 @@ namespace util{
          * Constructs a new UUID using the specified data. mostSigBits is used
          * for the most significant 64 bits of the UUID and leastSigBits becomes
          * the least significant 64 bits of the UUID.
-         *
          * @param mostSigBits
          * @param leastSigBits
          */
@@ -147,11 +134,9 @@ namespace util{
         virtual int compareTo( const UUID& value ) const;
 
         /**
-         * Compares this UUID to the one given, returns true if they are equal.
-         *
-         * @param value
-         *      The UUID to compare to.
-         *
+         * Compares this UUID to the one given, returns true if they are
+         * equal
+         * @param value - the UUID to compare to.
          * @return true if UUIDs are the same.
          */
         virtual bool equals( const UUID& value ) const;
@@ -198,12 +183,11 @@ namespace util{
          * The node value is only meaningful in a time-based UUID, which has
          * version type 1. If this UUID is not a time-based UUID then this method
          * throws UnsupportedOperationException.
-         *
          * @returns the node value of this UUID
-         *
-         * @throws UnsupportedOperationException if this UUID version does not support this operation.
+         * @throws UnsupportedOperationException
          */
-        virtual long long node();
+        virtual long long node()
+            throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
          * The timestamp value associated with this UUID.
@@ -216,9 +200,10 @@ namespace util{
          * version type 1. If this UUID is not a time-based UUID then this method
          * throws UnsupportedOperationException.
          * @returns the timestamp associated with a V1 UUID
-         * @throws UnsupportedOperationException if this UUID version does not support this operation.
+         * @throws UnsupportedOperationException
          */
-        virtual long long timestamp();
+        virtual long long timestamp()
+            throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
          * The clock sequence value associated with this UUID.
@@ -231,9 +216,10 @@ namespace util{
          * has version type 1. If this UUID is not a time-based UUID then this
          * method throws UnsupportedOperationException.
          * @returns the clockSequeunce associated with a V1 UUID
-         * @throws UnsupportedOperationException if this UUID version does not support this operation.
+         * @throws UnsupportedOperationException
          */
-        virtual int clockSequence();
+        virtual int clockSequence()
+            throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
          * The variant number associated with this UUID. The variant number describes
@@ -245,10 +231,10 @@ namespace util{
          *     * 7 Reserved for future definition
          *
          * @returns the variant associated with a V1 UUID
-         *
-         * @throws UnsupportedOperationException if this UUID version does not support this operation.
+         * @throws UnsupportedOperationException
          */
-        virtual int variant();
+        virtual int variant()
+            throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
          * The version number associated with this UUID. The version number describes
@@ -260,10 +246,10 @@ namespace util{
          *     * 4 Randomly generated UUID
          *
          * @returns the version associated with a V1 UUID
-         *
-         * @throws UnsupportedOperationException if this UUID version does not support this operation.
+         * @throws UnsupportedOperationException
          */
-        virtual int version();
+        virtual int version()
+            throw ( lang::exceptions::UnsupportedOperationException );
 
     };
 

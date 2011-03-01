@@ -44,9 +44,7 @@ namespace util{
         TimerTaskHeap heap;
         bool cancelled;
 
-    public:
-
-        TimerImpl() : heap(), cancelled( false ) {}
+        TimerImpl() : cancelled( false ) {}
 
         ~TimerImpl() {
             try{
@@ -218,7 +216,10 @@ std::size_t Timer::purge() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, long long delay ) {
+void Timer::schedule( TimerTask* task, long long delay )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -246,7 +247,10 @@ void Timer::schedule( TimerTask* task, long long delay ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, long long delay ) {
+void Timer::schedule( const Pointer<TimerTask>& task, long long delay )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -258,7 +262,10 @@ void Timer::schedule( const Pointer<TimerTask>& task, long long delay ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, const Date& when ) {
+void Timer::schedule( TimerTask* task, const Date& when )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(
@@ -287,7 +294,10 @@ void Timer::schedule( TimerTask* task, const Date& when ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, const Date& when ) {
+void Timer::schedule( const Pointer<TimerTask>& task, const Date& when )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(
@@ -300,7 +310,10 @@ void Timer::schedule( const Pointer<TimerTask>& task, const Date& when ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, long long delay, long long period ) {
+void Timer::schedule( TimerTask* task, long long delay, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -334,7 +347,10 @@ void Timer::schedule( TimerTask* task, long long delay, long long period ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, long long delay, long long period ) {
+void Timer::schedule( const Pointer<TimerTask>& task, long long delay, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -352,7 +368,10 @@ void Timer::schedule( const Pointer<TimerTask>& task, long long delay, long long
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, const Date& when, long long period ) {
+void Timer::schedule( TimerTask* task, const Date& when, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(
@@ -387,7 +406,10 @@ void Timer::schedule( TimerTask* task, const Date& when, long long period ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, const Date& when, long long period ) {
+void Timer::schedule( const Pointer<TimerTask>& task, const Date& when, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(
@@ -406,7 +428,10 @@ void Timer::schedule( const Pointer<TimerTask>& task, const Date& when, long lon
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( TimerTask* task, long long delay, long long period ) {
+void Timer::scheduleAtFixedRate( TimerTask* task, long long delay, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -440,7 +465,10 @@ void Timer::scheduleAtFixedRate( TimerTask* task, long long delay, long long per
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, long long delay, long long period ) {
+void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, long long delay, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( delay < 0 ) {
         throw IllegalArgumentException(
@@ -458,7 +486,10 @@ void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, long long delay
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( TimerTask* task, const Date& when, long long period ) {
+void Timer::scheduleAtFixedRate( TimerTask* task, const Date& when, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(
@@ -493,7 +524,10 @@ void Timer::scheduleAtFixedRate( TimerTask* task, const Date& when, long long pe
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, const Date& when, long long period ) {
+void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, const Date& when, long long period )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::IllegalStateException ) {
 
     if( when.getTime() < 0 ) {
         throw IllegalArgumentException(

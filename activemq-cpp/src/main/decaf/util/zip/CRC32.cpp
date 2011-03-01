@@ -50,7 +50,8 @@ void CRC32::update( const std::vector<unsigned char>& buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const std::vector<unsigned char>& buffer, int offset, int length ) {
+void CRC32::update( const std::vector<unsigned char>& buffer, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     if( offset + length > (int)buffer.size() ) {
         throw IndexOutOfBoundsException(
@@ -66,7 +67,9 @@ void CRC32::update( int byte ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const unsigned char* buffer, int size, int offset, int length ) {
+void CRC32::update( const unsigned char* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     if( offset + length > size ) {
         throw IndexOutOfBoundsException(

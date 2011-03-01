@@ -33,12 +33,13 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler() : Handler(), stream(NULL), writer(NULL), writerNotInitialized(true) {
+StreamHandler::StreamHandler() : Handler() {
+    this->stream = NULL;
+    this->writerNotInitialized = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) :
-    Handler(), stream(stream), writer(NULL), writerNotInitialized(true) {
+StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) : Handler() {
 
     if( stream == NULL ) {
         throw NullPointerException(
@@ -49,6 +50,9 @@ StreamHandler::StreamHandler( OutputStream* stream, Formatter* formatter ) :
         throw NullPointerException(
             __FILE__, __LINE__, "Formatter cannot be NULL." );
     }
+
+    this->stream = stream;
+    this->writerNotInitialized = true;
 
     setFormatter( formatter );
 }
@@ -64,7 +68,7 @@ StreamHandler::~StreamHandler() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StreamHandler::close() {
+void StreamHandler::close() throw ( decaf::io::IOException ) {
     this->close( true );
 }
 
@@ -123,7 +127,8 @@ bool StreamHandler::isLoggable( const LogRecord& record ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StreamHandler::setOuputStream( decaf::io::OutputStream* stream ) {
+void StreamHandler::setOuputStream( decaf::io::OutputStream* stream )
+    throw( decaf::lang::exceptions::NullPointerException ) {
 
     if( stream == NULL ) {
         throw NullPointerException(

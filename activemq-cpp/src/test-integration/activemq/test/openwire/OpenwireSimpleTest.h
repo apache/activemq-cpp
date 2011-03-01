@@ -44,7 +44,6 @@ namespace openwire{
         CPPUNIT_TEST( testMapMessageSendToTopic );
         CPPUNIT_TEST( testDestroyDestination );
         CPPUNIT_TEST( tesstStreamMessage );
-        CPPUNIT_TEST( testLibraryInitShutdownInit );
         CPPUNIT_TEST_SUITE_END();
 
     public:

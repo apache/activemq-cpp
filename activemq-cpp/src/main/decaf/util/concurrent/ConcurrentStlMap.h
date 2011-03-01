@@ -20,7 +20,7 @@
 
 #include <map>
 #include <vector>
-#include <decaf/util/NoSuchElementException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/ConcurrentMap.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -54,16 +54,14 @@ namespace concurrent{
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {}
+        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const ConcurrentStlMap& source ) :
-            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
-
+        ConcurrentStlMap( const ConcurrentStlMap& source ) : ConcurrentMap<K,V,COMPARATOR>() {
             copy( source );
         }
 
@@ -72,9 +70,7 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) :
-            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
-
+        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) : ConcurrentMap<K,V,COMPARATOR>() {
             copy( source );
         }
 
@@ -187,9 +183,9 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual int size() const {
+        virtual std::size_t size() const {
             synchronized( &mutex ) {
-                return (int)valueMap.size();
+                return valueMap.size();
             }
 
             return 0;
@@ -198,7 +194,8 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V& get( const K& key ) {
+        virtual V& get( const K& key )
+            throw( lang::exceptions::NoSuchElementException ) {
 
             typename std::map<K,V,COMPARATOR>::iterator iter;
 
@@ -209,14 +206,15 @@ namespace concurrent{
                 }
             }
 
-            throw NoSuchElementException(
+            throw lang::exceptions::NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual const V& get( const K& key ) const {
+        virtual const V& get( const K& key ) const
+            throw( lang::exceptions::NoSuchElementException ) {
 
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
 
@@ -227,14 +225,15 @@ namespace concurrent{
                 }
             }
 
-            throw NoSuchElementException(
+            throw lang::exceptions::NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void put( const K& key, const V& value ) {
+        virtual void put( const K& key, const V& value )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
 
             synchronized( &mutex ) {
                 valueMap[key] = value;
@@ -244,7 +243,8 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
 
             synchronized( &mutex ) {
                 this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
@@ -254,7 +254,8 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const Map<K,V,COMPARATOR>& other )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
 
             synchronized( &mutex ) {
                 std::vector<K> keys = other.keySet();
@@ -269,14 +270,16 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V remove( const K& key ) {
+        virtual V remove( const K& key )
+            throw ( decaf::lang::exceptions::NoSuchElementException,
+                    decaf::lang::exceptions::UnsupportedOperationException ) {
 
             V result;
 
             synchronized( &mutex ) {
                 typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
                 if( iter == valueMap.end() ) {
-                    throw NoSuchElementException(
+                    throw decaf::lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__, "Key is not present in this Map." );
                 }
 
@@ -346,7 +349,8 @@ namespace concurrent{
          * @throw UnsupportedOperationException
          *        if the put operation is not supported by this map
          */
-        bool putIfAbsent( const K& key, const V& value ) {
+        bool putIfAbsent( const K& key, const V& value )
+            throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
             synchronized( &mutex ) {
                 if( !this->containsKey( key ) ) {
@@ -437,7 +441,8 @@ namespace concurrent{
          *
          * @throws NoSuchElementException if there was no previous mapping.
          */
-        V replace( const K& key, const V& value ) {
+        V replace( const K& key, const V& value )
+            throw( decaf::lang::exceptions::NoSuchElementException ) {
 
             synchronized( &mutex ) {
                 if( this->containsKey( key ) ) {
@@ -447,41 +452,57 @@ namespace concurrent{
                 }
             }
 
-            throw NoSuchElementException(
+            throw decaf::lang::exceptions::NoSuchElementException(
                 __FILE__, __LINE__, "Value to Replace was not in the Map." );
         }
 
     public:
 
-        virtual void lock() {
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.lock();
         }
 
-        virtual bool tryLock() {
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
             return mutex.tryLock();
         }
 
-        virtual void unlock() {
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.unlock();
         }
 
-        virtual void wait() {
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() {
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notify();
         }
 
-        virtual void notifyAll() {
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notifyAll();
         }
 

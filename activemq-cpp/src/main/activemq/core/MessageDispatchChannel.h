@@ -23,6 +23,7 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
@@ -32,38 +33,56 @@ namespace core {
     using activemq::commands::MessageDispatch;
 
     class AMQCPP_API MessageDispatchChannel : public decaf::util::concurrent::Synchronizable {
+    private:
+
+        bool closed;
+        bool running;
+
+        mutable decaf::util::StlQueue< Pointer<MessageDispatch> > channel;
+
+    private:
+
+        MessageDispatchChannel( const MessageDispatchChannel& );
+        MessageDispatchChannel& operator= ( const MessageDispatchChannel& );
+
     public:
 
-        virtual ~MessageDispatchChannel() {}
+        MessageDispatchChannel();
+
+        virtual ~MessageDispatchChannel();
 
         /**
          * Add a Message to the Channel behind all pending message.
          *
          * @param message - The message to add to the Channel.
          */
-        virtual void enqueue( const Pointer<MessageDispatch>& message ) = 0;
+        void enqueue( const Pointer<MessageDispatch>& message );
 
         /**
          * Add a message to the front of the Channel.
          *
          * @param message - The Message to add to the front of the Channel.
          */
-        virtual void enqueueFirst( const Pointer<MessageDispatch>& message ) = 0;
+        void enqueueFirst( const Pointer<MessageDispatch>& message );
 
         /**
          * @return true if there are no messages in the Channel.
          */
-        virtual bool isEmpty() const = 0;
+        bool isEmpty() const;
 
         /**
          * @return has the Queue been closed.
          */
-        virtual bool isClosed() const = 0;
+        bool isClosed() const {
+            return this->closed;
+        }
 
         /**
          * @return true if the Channel currently running and will dequeue message.
          */
-        virtual bool isRunning() const = 0;
+        bool isRunning() const {
+            return this->running;
+        }
 
         /**
          * Used to get an enqueued message. The amount of time this method blocks is
@@ -76,7 +95,8 @@ namespace core {
          * @return null if we timeout or if the consumer is closed.
          * @throws ActiveMQException
          */
-        virtual Pointer<MessageDispatch> dequeue( long long timeout ) = 0;
+        Pointer<MessageDispatch> dequeue( long long timeout )
+            throw( exceptions::ActiveMQException );
 
         /**
          * Used to get an enqueued message if there is one queued right now.  If there is
@@ -84,7 +104,7 @@ namespace core {
          *
          * @return a message if there is one in the queue.
          */
-        virtual Pointer<MessageDispatch> dequeueNoWait() = 0;
+        Pointer<MessageDispatch> dequeueNoWait();
 
         /**
          * Peek in the Queue and return the first message in the Channel without removing
@@ -92,32 +112,32 @@ namespace core {
          *
          * @return a message if there is one in the queue.
          */
-        virtual Pointer<MessageDispatch> peek() const = 0;
+        Pointer<MessageDispatch> peek() const;
 
         /**
          * Starts dispatch of messages from the Channel.
          */
-        virtual void start() = 0;
+        void start();
 
         /**
          * Stops dispatch of message from the Channel.
          */
-        virtual void stop() = 0;
+        void stop();
 
         /**
          * Close this channel no messages will be dispatched after this method is called.
          */
-        virtual void close() = 0;
+        void close();
 
         /**
          * Clear the Channel, all pending messages are removed.
          */
-        virtual void clear() = 0;
+        void clear();
 
         /**
          * @return the number of Messages currently in the Channel.
          */
-        virtual int size() const = 0;
+        int size() const;
 
         /**
          * Remove all messages that are currently in the Channel and return them as
@@ -125,7 +145,57 @@ namespace core {
          *
          * @return a list of Messages that was previously in the Channel.
          */
-        virtual std::vector< Pointer<MessageDispatch> > removeAll() = 0;
+        std::vector< Pointer<MessageDispatch> > removeAll();
+
+    public:
+
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+            channel.lock();
+        }
+
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+            return channel.tryLock();
+        }
+
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+            channel.unlock();
+        }
+
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
+            channel.wait();
+        }
+
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
+            channel.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
+            channel.wait( millisecs, nanos );
+        }
+
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
+            channel.notify();
+        }
+
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
+            channel.notifyAll();
+        }
 
     };
 

@@ -21,12 +21,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
 using namespace decaf;
-using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatRegistry::WireFormatRegistry() : registry() {
+WireFormatRegistry::WireFormatRegistry() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +43,8 @@ WireFormatRegistry::~WireFormatRegistry() {
  }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const {
+WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const
+    throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,7 +55,9 @@ WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory ) {
+void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory )
+    throw( decaf::lang::exceptions::IllegalArgumentException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,

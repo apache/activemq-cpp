@@ -61,7 +61,8 @@ namespace nio{
         *
          * @throws IllegalArguementException if capacity is negative.
         */
-        FloatBuffer( int capacity );
+        FloatBuffer( int capacity )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
     public:
 
@@ -86,7 +87,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual float* array() = 0;
+        virtual float* array()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element of
@@ -100,7 +103,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int arrayOffset() = 0;
+        virtual int arrayOffset()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new, read-only float buffer that shares this buffer's content.
@@ -139,7 +144,7 @@ namespace nio{
          *
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        virtual FloatBuffer& compact() = 0;
+        virtual FloatBuffer& compact() throw( ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new float buffer that shares this buffer's content.
@@ -164,7 +169,7 @@ namespace nio{
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
-        virtual float get() = 0;
+        virtual float get() throw ( BufferUnderflowException ) = 0;
 
         /**
          * Absolute get method. Reads the value at the given index.
@@ -177,7 +182,8 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit
          */
-        virtual float get( int index ) const = 0;
+        virtual float get( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Relative bulk get method.
@@ -193,7 +199,8 @@ namespace nio{
          * @throws BufferUnderflowException if there are fewer than length floats
          *         remaining in this buffer
          */
-        FloatBuffer& get( std::vector<float> buffer );
+        FloatBuffer& get( std::vector<float> buffer )
+            throw ( BufferUnderflowException );
 
         /**
          * Relative bulk get method.
@@ -224,7 +231,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        FloatBuffer& get( float* buffer, int size, int offset, int length );
+        FloatBuffer& get( float* buffer, int size, int offset, int length )
+            throw( BufferUnderflowException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Tells whether or not this buffer is backed by an accessible float array.
@@ -257,7 +267,9 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        FloatBuffer& put( FloatBuffer& src );
+        FloatBuffer& put( FloatBuffer& src )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * This method transfers floats into this buffer from the given source array.
@@ -286,7 +298,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        FloatBuffer& put( const float* buffer, int size, int offset, int length );
+        FloatBuffer& put( const float* buffer, int size, int offset, int length )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * This method transfers the entire content of the given source floats array into
@@ -300,7 +315,8 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        FloatBuffer& put( std::vector<float>& buffer );
+        FloatBuffer& put( std::vector<float>& buffer )
+            throw( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Writes the given floats into this buffer at the current position, and then
@@ -315,7 +331,8 @@ namespace nio{
          *         smaller than its limit
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        virtual FloatBuffer& put( float value ) = 0;
+        virtual FloatBuffer& put( float value )
+            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
 
         /**
          * Writes the given floats into this buffer at the given index.
@@ -331,7 +348,9 @@ namespace nio{
          *         minus the size of the type being written, or index is negative.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual FloatBuffer& put( int index, float value ) = 0;
+        virtual FloatBuffer& put( int index, float value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new FloatBuffer whose content is a shared subsequence of this
@@ -384,7 +403,8 @@ namespace nio{
          *
          * @returns the FloatBuffer that was allocated, caller owns.
          */
-        static FloatBuffer* allocate( int capacity );
+        static FloatBuffer* allocate( int capacity )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Wraps the passed buffer with a new FloatBuffer.
@@ -410,7 +430,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        static FloatBuffer* wrap( float* array, int size, int offset, int length );
+        static FloatBuffer* wrap( float* array, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL float Vector in a FloatBuffer.

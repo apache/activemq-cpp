@@ -86,20 +86,9 @@ namespace openssl {
         void* openSSLContext;
 #endif
 
-    private:
-
-        ContextData( const ContextData& );
-        ContextData& operator= ( const ContextData& );
-
     public:
 
-        ContextData( int size ) : monitor(),
-                                  clientSocketFactory(),
-                                  serverSocketFactory(),
-                                  random(),
-                                  password(),
-                                  openSSLContext(NULL) {
-
+        ContextData( int size ) {
             ContextData::locks = new Mutex[size];
         }
 

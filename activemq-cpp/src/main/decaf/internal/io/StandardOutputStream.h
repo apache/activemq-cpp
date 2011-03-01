@@ -32,15 +32,18 @@ namespace io {
 
         virtual ~StandardOutputStream();
 
-        virtual void flush();
+        virtual void flush() throw ( decaf::io::IOException );
 
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte( unsigned char value ) throw ( decaf::io::IOException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     };
 

@@ -25,7 +25,6 @@
 
 #include <activemq/commands/TransactionId.h>
 #include <activemq/util/Config.h>
-#include <cms/Xid.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/Pointer.h>
 #include <string>
@@ -45,7 +44,7 @@ namespace commands{
      *         in the activemq-cpp-openwire-generator module
      *
      */
-    class AMQCPP_API XATransactionId : public TransactionId, public cms::Xid, public decaf::lang::Comparable<XATransactionId> {
+    class AMQCPP_API XATransactionId : public TransactionId, public decaf::lang::Comparable<XATransactionId> {
     protected:
 
         int formatId;
@@ -64,33 +63,43 @@ namespace commands{
 
         XATransactionId( const XATransactionId& other );
 
-        XATransactionId( const cms::Xid* xid );
-
         virtual ~XATransactionId();
 
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaler share.
+         * @returns new DataStructure type copy.
+         */
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
         virtual XATransactionId* cloneDataStructure() const;
 
+        /**
+         * Copy the contents of the passed object into this object's
+         * members, overwriting any existing data.
+         * @param src - Source Object
+         */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
         virtual std::string toString() const;
 
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
         virtual bool equals( const DataStructure* value ) const;
-
-        virtual bool isXATransactionId() const {
-            return true;
-        }
-
-    public:  // Xid interface implementation.
-
-        virtual Xid* clone() const;
-
-        virtual bool equals( const Xid* other ) const;
-
-        virtual int getBranchQualifier( unsigned char* buffer, int size ) const;
-
-        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const;
 
         virtual int getFormatId() const;
         virtual void setFormatId( int formatId );

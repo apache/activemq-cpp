@@ -78,7 +78,8 @@ namespace nio{
          *
          * @throws IllegalArguementException if capacity is negative.
          */
-        CharBuffer( int capacity );
+        CharBuffer( int capacity )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
     public:
 
@@ -100,7 +101,8 @@ namespace nio{
          * @throws BufferOverflowException if there is no more space
          * @throws ReadOnlyBufferException if this Buffer is read only.
          */
-        CharBuffer& append( char value );
+        CharBuffer& append( char value )
+            throw ( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Appends the specified character sequence to this buffer.
@@ -114,7 +116,8 @@ namespace nio{
          * @throws BufferOverflowException if there is no more space
          * @throws ReadOnlyBufferException if this Buffer is read only.
          */
-        CharBuffer& append( const lang::CharSequence* value );
+        CharBuffer& append( const lang::CharSequence* value )
+            throw ( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Appends a subsequence of the specified character sequence to this buffer
@@ -133,7 +136,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws IndexOutOfBoundsException if start > end, or > length of sequence.
          */
-        CharBuffer& append( const lang::CharSequence* value, int start, int end );
+        CharBuffer& append( const lang::CharSequence* value, int start, int end )
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException,
+                    BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Returns the character array that backs this buffer  (optional operation).
@@ -149,7 +154,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual char* array() = 0;
+        virtual char* array()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element of
@@ -163,7 +170,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int arrayOffset() = 0;
+        virtual int arrayOffset()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new, read-only char buffer that shares this buffer's content.
@@ -194,7 +203,8 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the index + the current position exceeds the
          *         size of the buffer or the index is negative.
          */
-        char charAt( int index ) const;
+        char charAt( int index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Compacts this buffer
@@ -214,7 +224,7 @@ namespace nio{
          *
          * @throws ReadOnlyBufferException - If this buffer is read-only
          */
-        virtual CharBuffer& compact() = 0;
+        virtual CharBuffer& compact() throw( ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new char buffer that shares this buffer's content.
@@ -239,7 +249,7 @@ namespace nio{
          *
          * @throws BufferUnderflowException if there no more data to return
          */
-        virtual char get() = 0;
+        virtual char get() throw ( BufferUnderflowException ) = 0;
 
         /**
          * Absolute get method. Reads the char at the given index.
@@ -252,7 +262,8 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit or is negative.
          */
-        virtual char get( int index ) const = 0;
+        virtual char get( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Relative bulk get method.
@@ -268,7 +279,8 @@ namespace nio{
          * @throws BufferUnderflowException if there are fewer than length chars
          *         remaining in this buffer.
          */
-        CharBuffer& get( std::vector<char> buffer );
+        CharBuffer& get( std::vector<char> buffer )
+            throw ( BufferUnderflowException );
 
         /**
          * Relative bulk get method.
@@ -299,7 +311,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        CharBuffer& get( char* buffer, int size, int offset, int length );
+        CharBuffer& get( char* buffer, int size, int offset, int length )
+            throw( BufferUnderflowException,
+                   decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Tells whether or not this buffer is backed by an accessible char array.
@@ -340,7 +355,9 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        CharBuffer& put( CharBuffer& src );
+        CharBuffer& put( CharBuffer& src )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * This method transfers chars into this buffer from the given source array.
@@ -369,7 +386,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        CharBuffer& put( const char* buffer, int size, int offset, int length );
+        CharBuffer& put( const char* buffer, int size, int offset, int length )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * This method transfers the entire content of the given source char array into
@@ -383,7 +403,8 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        CharBuffer& put( std::vector<char>& buffer );
+        CharBuffer& put( std::vector<char>& buffer )
+            throw( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Writes the given char into this buffer at the current position, and then
@@ -398,7 +419,8 @@ namespace nio{
          *         smaller than its limit
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual CharBuffer& put( char value ) = 0;
+        virtual CharBuffer& put( char value )
+            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
 
         /**
          * Writes the given char into this buffer at the given index.
@@ -414,7 +436,9 @@ namespace nio{
          *         minus the size of the type being written, or index is negative.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual CharBuffer& put( int index, char value ) = 0;
+        virtual CharBuffer& put( int index, char value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Relative bulk put method  (optional operation).
@@ -443,7 +467,9 @@ namespace nio{
          *         minus the size of the type being written.
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        CharBuffer& put( std::string& src, int start, int end );
+        CharBuffer& put( std::string& src, int start, int end )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Relative bulk put method  (optional operation).
@@ -460,7 +486,8 @@ namespace nio{
          * @throws BufferOverflowException if this buffer's current position is not.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        CharBuffer& put( const std::string& src );
+        CharBuffer& put( const std::string& src )
+            throw( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Attempts to read characters into the specified character buffer. The buffer is
@@ -477,7 +504,10 @@ namespace nio{
          * @throws IllegalArgumentException if target is this CharBuffer.
          * @throws ReadOnlyBufferException if this buffer is in read-only mode.
          */
-        virtual int read( CharBuffer* target );
+        virtual int read( CharBuffer* target )
+            throw ( decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IllegalArgumentException,
+                    ReadOnlyBufferException );
 
         /**
          * Creates a new character buffer that represents the specified subsequence of
@@ -501,7 +531,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if the preconditions on start and end fail.
          */
-        virtual lang::CharSequence* subSequence( int start, int end ) const = 0;
+        virtual lang::CharSequence* subSequence( int start, int end ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Creates a new CharBuffer whose content is a shared subsequence of this
@@ -556,7 +587,8 @@ namespace nio{
          *
          * @throws IndexOutOfBoundsException if capacity is negative.
          */
-        static CharBuffer* allocate( int capacity );
+        static CharBuffer* allocate( int capacity )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed buffer with a new CharBuffer.
@@ -581,7 +613,9 @@ namespace nio{
          * @throws NullPointerException if the array pointer is Null.
          * @throws IndexOutOfBoundsException if capacity is negative.
          */
-        static CharBuffer* wrap( char* array, int size, int offset, int length );
+        static CharBuffer* wrap( char* array, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL char Vector in a CharBuffer.
@@ -622,7 +656,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions on start and end fail
          */
 // TODO
-//        static CharBuffer* wrap( lang::CharSequence* csq, int start, int end );
+//        static CharBuffer* wrap( lang::CharSequence* csq, int start, int end )
+//            throw( decaf::lang::exceptions::NullPointerException,
+//                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps a full CharSequence into a buffer.
@@ -640,7 +676,8 @@ namespace nio{
          * @throws NullPointerException if csq is null.
          */
 // TODO
-//        static CharBuffer* wrap( lang::CharSequence* csq );
+//        static CharBuffer* wrap( lang::CharSequence* csq )
+//            throw ( decaf::lang::exceptions::NullPointerException );
 
     };
 

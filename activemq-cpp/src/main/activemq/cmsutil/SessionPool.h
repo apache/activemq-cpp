@@ -51,10 +51,10 @@ namespace cmsutil {
 
         cms::Session::AcknowledgeMode acknowledgeMode;
 
-    private:
+    protected:
 
-        SessionPool( const SessionPool& );
-        SessionPool& operator= ( const SessionPool& );
+        SessionPool( const SessionPool& ) {}
+        SessionPool& operator= ( const SessionPool& ) { return *this; }
 
     public:
 
@@ -83,9 +83,9 @@ namespace cmsutil {
          *
          * @return the pooled session object
          *
-         * @throws CMSException if an error occurred
+         * @throws cms::CMSException if an error occurred
          */
-        virtual PooledSession* takeSession();
+        virtual PooledSession* takeSession() throw ( cms::CMSException );
 
         /**
          * Returns a session to the pool.

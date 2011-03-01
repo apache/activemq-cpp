@@ -40,15 +40,14 @@ const char* Chat::DEFAULT_BROKER_URI = "tcp://127.0.0.1:61616";
 const char* Chat::DEFAULT_TOPIC_NAME = "cms.sample.chat";
 
 ////////////////////////////////////////////////////////////////////////////////
-Chat::Chat() : connection(), session(),  consumer(), producer(), topic(),
-               brokerURI(), username(), password(), topicName() {
+Chat::Chat() {
 
     this->setBrokerURI( DEFAULT_BROKER_URI );
     this->setTopicName( DEFAULT_TOPIC_NAME );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Chat::~Chat() throw() {
+Chat::~Chat() {
 
     try {
 
@@ -119,7 +118,7 @@ void Chat::run() {
 #ifdef AIX
             if( fgets( s, 120, stdin ) == NULL ) {
                 break;
-            } else if ( feof( stdin ) || ( *s == '\0' ) || ( s[0] == L'\n' ) ) {
+            } else if ( feof( stdin ) || ( strlen(s) == 0 ) || ( s[0] == L'\n' ) ) {
                 break;
             }
 #else
@@ -128,28 +127,15 @@ void Chat::run() {
 
             // If there was an error reading input, or
             // the line was empty, exit the program.
-            if( std::cin.fail() || (*s == '\0') ) {
+            if( std::cin.fail() || (strlen(s) == 0) ) {
                 break;
             }
 
 #endif
-            else if( *s != '\0' ) {
+            else if( strlen(s) > 0 ) {
 
                 int cch = (int)( this->username.length() + strlen(s) + strlen(": ") + 1 );
                 char *text = new char[cch];
-
-                class finalizer {
-                private:
-                    finalizer( const finalizer& );
-                    finalizer& operator= ( const finalizer& );
-                private:
-                    char* text;
-                public:
-                    finalizer( char* p ) : text( p ) {}
-                    ~finalizer() { delete [] text; }
-                };
-
-                finalizer fin( text );
 
                 if( text != NULL ) {
 
@@ -162,9 +148,12 @@ void Chat::run() {
                         this->producer->send( message.get() );
 
                     } catch( cms::CMSException& ex ) {
+                        delete [] text;
                         onException( ex );
                         exit(1);
                     }
+
+                    delete [] text;
                 }
             }
         }
@@ -175,7 +164,7 @@ void Chat::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Chat::onMessage( const cms::Message* message ) throw() {
+void Chat::onMessage( const cms::Message* message ) {
 
     // Cast the message as a TextMessage if possible.
     try {

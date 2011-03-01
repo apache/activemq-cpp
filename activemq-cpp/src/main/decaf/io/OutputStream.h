@@ -61,14 +61,14 @@ namespace io{
          *
          * The default implementation of this method does nothing.
          */
-        virtual void close();
+        virtual void close() throw( decaf::io::IOException );
 
         /**
          * {@inheritDoc}
          *
          * The default implementation of this method does nothing.
          */
-        virtual void flush();
+        virtual void flush() throw( decaf::io::IOException );
 
         /**
          * Writes a single byte to the output stream.
@@ -81,7 +81,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void write( unsigned char c );
+        virtual void write( unsigned char c ) throw ( decaf::io::IOException );
 
         /**
          * Writes an array of bytes to the output stream.  The entire contents of
@@ -101,7 +101,10 @@ namespace io{
          * @throws NullPointerException thrown if buffer is Null.
          * @throws IndexOutOfBoundsException if size value is negative.
          */
-        virtual void write( const unsigned char* buffer, int size );
+        virtual void write( const unsigned char* buffer, int size )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Writes an array of bytes to the output stream in order starting at buffer[offset]
@@ -127,7 +130,10 @@ namespace io{
          * @throws IndexOutOfBoundsException if the offset + length > size. or one of the
          *         parameters is negative.
          */
-        virtual void write( const unsigned char* buffer, int size, int offset, int length );
+        virtual void write( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Output a String representation of this object.
@@ -140,43 +146,66 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char value ) = 0;
+        virtual void doWriteByte( unsigned char value )
+            throw( decaf::io::IOException ) = 0;
 
-        virtual void doWriteArray( const unsigned char* buffer, int size );
+        virtual void doWriteArray( const unsigned char* buffer, int size )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException,
+                    decaf::lang::exceptions::IndexOutOfBoundsException );
 
     public:  // Synchronizable
 
-        virtual void lock() {
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.lock();
         }
 
-        virtual bool tryLock() {
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
             return mutex.tryLock();
         }
 
-        virtual void unlock() {
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
             mutex.unlock();
         }
 
-        virtual void wait() {
+        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
+                                   decaf::lang::exceptions::IllegalMonitorStateException,
+                                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
+        virtual void wait( long long millisecs )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
+        virtual void wait( long long millisecs, int nanos )
+            throw( decaf::lang::exceptions::RuntimeException,
+                   decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::IllegalMonitorStateException,
+                   decaf::lang::exceptions::InterruptedException ) {
+
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() {
+        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notify();
         }
 
-        virtual void notifyAll() {
+        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
+                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+
             mutex.notifyAll();
         }
 

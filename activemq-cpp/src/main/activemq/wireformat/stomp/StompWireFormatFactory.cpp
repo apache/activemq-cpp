@@ -27,7 +27,8 @@ using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<WireFormat> StompWireFormatFactory::createWireFormat(
-    const decaf::util::Properties& properties AMQCPP_UNUSED ) {
+    const decaf::util::Properties& properties AMQCPP_UNUSED )
+        throw ( decaf::lang::exceptions::IllegalStateException ) {
 
     try{
         return Pointer<WireFormat>( new StompWireFormat() );

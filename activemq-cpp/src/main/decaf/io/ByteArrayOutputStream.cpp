@@ -33,7 +33,8 @@ ByteArrayOutputStream::ByteArrayOutputStream() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayOutputStream::ByteArrayOutputStream( int bufferSize ) :
+ByteArrayOutputStream::ByteArrayOutputStream( int bufferSize )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) :
         OutputStream(), buffer( NULL ), bufferSize( bufferSize ), count( 0 ) {
 
     if( bufferSize <= 0 ) {
@@ -74,12 +75,13 @@ long long ByteArrayOutputStream::size() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::reset() {
+void ByteArrayOutputStream::reset() throw ( IOException ) {
     this->count = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::doWriteByte( unsigned char c ) {
+void ByteArrayOutputStream::doWriteByte( unsigned char c )
+    throw ( IOException ) {
 
     try{
 
@@ -94,7 +96,10 @@ void ByteArrayOutputStream::doWriteByte( unsigned char c ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
+void ByteArrayOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length )
+    throw ( decaf::io::IOException,
+            decaf::lang::exceptions::NullPointerException,
+            decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     if( length == 0 ) {
         return;
@@ -144,7 +149,8 @@ std::string ByteArrayOutputStream::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::writeTo( OutputStream* out ) const {
+void ByteArrayOutputStream::writeTo( OutputStream* out ) const
+    throw ( IOException, lang::exceptions::NullPointerException ) {
 
     try{
 

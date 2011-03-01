@@ -57,6 +57,28 @@ namespace commands{
      *
      */
     class AMQCPP_API Message : public BaseCommand {
+    private:
+
+        // Used to allow a client to call Message::acknowledge when in the Client
+        // Ack mode.
+        Pointer<core::ActiveMQAckHandler> ackHandler;
+
+        // Message properties, these are Marshaled and Unmarshaled from the Message
+        // Command's marshaledProperties vector.
+        activemq::util::PrimitiveMap properties;
+
+        // Indicates if the Message Properties are Read Only
+        bool readOnlyProperties;
+
+        // Indicates if the Message Body are Read Only
+        bool readOnlyBody;
+
+    protected:
+
+        core::ActiveMQConnection* connection;
+
+        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
+
     protected:
 
         Pointer<ProducerId> producerId;
@@ -95,28 +117,6 @@ namespace commands{
 
     private:
 
-        // Used to allow a client to call Message::acknowledge when in the Client
-        // Ack mode.
-        Pointer<core::ActiveMQAckHandler> ackHandler;
-
-        // Message properties, these are Marshaled and Unmarshaled from the Message
-        // Command's marshaledProperties vector.
-        activemq::util::PrimitiveMap properties;
-
-        // Indicates if the Message Properties are Read Only
-        bool readOnlyProperties;
-
-        // Indicates if the Message Body are Read Only
-        bool readOnlyBody;
-
-    protected:
-
-        core::ActiveMQConnection* connection;
-
-        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
-
-    private:
-
         Message( const Message& );
         Message& operator= ( const Message& );
 
@@ -126,14 +126,40 @@ namespace commands{
 
         virtual ~Message();
 
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaler share.
+         * @returns new DataStructure type copy.
+         */
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
         virtual Message* cloneDataStructure() const;
 
+        /**
+         * Copy the contents of the passed object into this object's
+         * members, overwriting any existing data.
+         * @param src - Source Object
+         */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
         virtual std::string toString() const;
 
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
         virtual bool equals( const DataStructure* value ) const;
 
         /**
@@ -142,14 +168,16 @@ namespace commands{
          * wire
          * @param wireFormat - the wireformat controller
          */
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( decaf::io::IOException );
 
         /**
          * Called after unmarshaling is started to cleanup the object being
          * unmarshaled.
          * @param wireFormat - the wireformat object to control unmarshaling
          */
-        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( decaf::io::IOException );
 
         /**
          * Indicates that this command is aware of Marshaling, and needs
@@ -370,7 +398,15 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

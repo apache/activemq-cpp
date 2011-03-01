@@ -42,7 +42,6 @@ namespace test{
         virtual void testReceiveAlreadyInQueue();
         virtual void testQuickCreateAndDestroy();
         virtual void testBytesMessageSendRecv();
-        virtual void testLibraryInitShutdownInit();
 
     };
 

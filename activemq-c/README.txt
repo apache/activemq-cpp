@@ -18,13 +18,13 @@ Visual Studio product.
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.61
+autoconf    >= 2.60
 automake    >= 1.10
 libtool     >= 1.5.24
 APR         >= 1.3*
-APR-Util    >= 1.3* or higher
-CPPUnit     >= 1.10.2* ( 1.12.1 is recommended )
-OpenSSL     >= 0.9.8m* ( 1.0.0 or higher is recommended, this is an optional dependency)
+APR-Util    >= 1.3*
+CPPUnit     >= 1.10.2*
+libuuid     >= ?*
 
 * Requires that the Development package also be installed.
 

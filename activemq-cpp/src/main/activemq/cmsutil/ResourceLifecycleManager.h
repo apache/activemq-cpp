@@ -24,7 +24,7 @@
 #include <cms/MessageProducer.h>
 #include <cms/MessageConsumer.h>
 #include <activemq/util/Config.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlList.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -37,11 +37,11 @@ namespace cmsutil {
     class AMQCPP_API ResourceLifecycleManager {
     private:
 
-        typedef decaf::util::LinkedList< cms::Connection* > ConnectionList;
-        typedef decaf::util::LinkedList< cms::Session* > SessionList;
-        typedef decaf::util::LinkedList< cms::Destination* > DestinationList;
-        typedef decaf::util::LinkedList< cms::MessageProducer* > ProducerList;
-        typedef decaf::util::LinkedList< cms::MessageConsumer* > ConsumerList;
+        typedef decaf::util::StlList< cms::Connection* > ConnectionList;
+        typedef decaf::util::StlList< cms::Session* > SessionList;
+        typedef decaf::util::StlList< cms::Destination* > DestinationList;
+        typedef decaf::util::StlList< cms::MessageProducer* > ProducerList;
+        typedef decaf::util::StlList< cms::MessageConsumer* > ConsumerList;
 
         ConnectionList connections;
         SessionList sessions;
@@ -51,8 +51,8 @@ namespace cmsutil {
 
     protected:
 
-        ResourceLifecycleManager( const ResourceLifecycleManager& );
-        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& );
+        ResourceLifecycleManager( const ResourceLifecycleManager& ) {}
+        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& ) { return *this; }
 
     public:
 
@@ -69,10 +69,9 @@ namespace cmsutil {
          *
          * @param connection
          *         the object to be managed
-         *
-         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addConnection( cms::Connection* connection );
+        void addConnection( cms::Connection* connection )
+            throw ( cms::CMSException );
 
         /**
          * Adds a session so that its life will be managed by
@@ -80,10 +79,9 @@ namespace cmsutil {
          *
          * @param session
          *         the object to be managed
-         *
-         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addSession( cms::Session* session );
+        void addSession( cms::Session* session )
+            throw ( cms::CMSException );
 
         /**
          * Adds a destination so that its life will be managed by
@@ -91,10 +89,9 @@ namespace cmsutil {
          *
          * @param dest
          *         the object to be managed
-         *
-         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addDestination( cms::Destination* dest );
+        void addDestination( cms::Destination* dest )
+            throw ( cms::CMSException );
 
         /**
          * Adds a message producer so that its life will be managed by
@@ -102,10 +99,9 @@ namespace cmsutil {
          *
          * @param producer
          *         the object to be managed
-         *
-         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageProducer( cms::MessageProducer* producer );
+        void addMessageProducer( cms::MessageProducer* producer )
+            throw ( cms::CMSException );
 
         /**
          * Adds a message consumer so that its life will be managed by
@@ -113,17 +109,15 @@ namespace cmsutil {
          *
          * @param consumer
          *         the object to be managed
-         *
-         * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageConsumer( cms::MessageConsumer* consumer );
+        void addMessageConsumer( cms::MessageConsumer* consumer )
+            throw ( cms::CMSException );
 
         /**
          * Closes and destroys the contained CMS resources.
-         *
          * @throws cms::CMSException thrown if an error occurs.
          */
-        void destroy();
+        void destroy() throw ( cms::CMSException );
 
         /**
          * Releases all of the contained resources so that this

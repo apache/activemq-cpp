@@ -55,29 +55,67 @@ namespace commands{
     public:
 
         ActiveMQMapMessage();
-
-        virtual ~ActiveMQMapMessage() throw();
+        virtual ~ActiveMQMapMessage();
 
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Determine if this object is aware of marshaling and should have
+         * its before and after marshaling methods called.  Defaults to false.
+         * @returns true if aware of marshaling
+         */
         virtual bool isMarshalAware() const {
             return true;
         }
 
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
         virtual ActiveMQMapMessage* cloneDataStructure() const;
 
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat );
+        /**
+         * Perform any processing needed before an marshal
+         * @param wireFormat - the OpenWireFormat object in use.
+         */
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat )
+            throw ( decaf::io::IOException );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
         virtual std::string toString() const;
-
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
         virtual bool equals( const DataStructure* value ) const;
 
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
         virtual void clearBody() throw( cms::CMSException );
 
     public:   // CMS Message
 
+        /**
+         * Clone this message exactly, returns a new instance that the
+         * caller is required to delete.
+         * @return new copy of this message
+         */
         virtual cms::MapMessage* clone() const {
             return dynamic_cast<cms::MapMessage*>( this->cloneDataStructure() );
         }
@@ -85,139 +123,303 @@ namespace commands{
     public:   // CMS MapMessage
 
         /**
-         * {@inheritDoc}
+         * Returns an Enumeration of all the names in the MapMessage
+         * object.
+         *
+         * @return STL Vector of String values, each of which is the
+         *         name of an item in the MapMessage
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
          */
-        virtual bool isEmpty() const;
+        virtual std::vector< std::string > getMapNames() const throw( cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Indicates whether an item exists in this MapMessage object.
+         *
+         * @param name
+         *      String name of the Object in question
+         * @return boolean value indicating if the name is in the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
          */
-        virtual std::vector< std::string > getMapNames() const;
+        virtual bool itemExists( const std::string& name ) const throw( cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Boolean value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatExceptio - if this type conversion is invalid.
          */
-        virtual bool itemExists( const std::string& name ) const;
+        virtual bool getBoolean( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a boolean value with the specified name into the Map.
+         *
+         * @param name
+         *      the name of the boolean
+         * @param value
+         *      the boolean value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual bool getBoolean( const std::string& name ) const;
+        virtual void setBoolean( const std::string& name, bool value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Byte value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setBoolean( const std::string& name, bool value );
+        virtual unsigned char getByte( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Byte value with the specified name into the Map.
+         *
+         * @param name
+         *      the name of the Byte
+         * @param value
+         *      the Byte value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual unsigned char getByte( const std::string& name ) const;
+        virtual void setByte( const std::string& name, unsigned char value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Bytes value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setByte( const std::string& name, unsigned char value );
+        virtual std::vector<unsigned char> getBytes( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Bytes value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Bytes
+         * @param value
+         *      The Bytes value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual std::vector<unsigned char> getBytes( const std::string& name ) const;
+        virtual void setBytes( const std::string& name,
+                               const std::vector<unsigned char>& value )
+                                    throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Char value of the Specified name
+         *
+         * @param name
+         *      name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setBytes( const std::string& name, const std::vector<unsigned char>& value );
+        virtual char getChar( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Char value with the specified name into the Map.
+         *
+         * @param name
+         *      the name of the Char
+         * @param value
+         *      the Char value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual char getChar( const std::string& name ) const;
+        virtual void setChar( const std::string& name, char value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Double value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setChar( const std::string& name, char value );
+        virtual double getDouble( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Double value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Double
+         * @param value
+         *      The Double value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual double getDouble( const std::string& name ) const;
+        virtual void setDouble( const std::string& name, double value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Float value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setDouble( const std::string& name, double value );
+        virtual float getFloat( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Float value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Float
+         * @param value
+         *      The Float value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual float getFloat( const std::string& name ) const;
+        virtual void setFloat( const std::string& name, float value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Int value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setFloat( const std::string& name, float value );
+        virtual int getInt( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Int value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Int
+         * @param value
+         *      The Int value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual int getInt( const std::string& name ) const;
+        virtual void setInt( const std::string& name, int value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Long value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setInt( const std::string& name, int value );
+        virtual long long getLong( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Long value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Long
+         * @param value
+         *      The Long value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual long long getLong( const std::string& name ) const;
+        virtual void setLong( const std::string& name, long long value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the Short value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setLong( const std::string& name, long long value );
+        virtual short getShort( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a Short value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the Short
+         * @param value
+         *      The Short value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual short getShort( const std::string& name ) const;
+        virtual void setShort( const std::string& name, short value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Returns the String value of the Specified name
+         *
+         * @param name
+         *      Name of the value to fetch from the map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual void setShort( const std::string& name, short value );
+        virtual std::string getString( const std::string& name ) const
+            throw( cms::MessageFormatException, cms::CMSException );
 
         /**
-         * {@inheritDoc}
+         * Sets a String value with the specified name into the Map.
+         *
+         * @param name
+         *      The name of the String
+         * @param value
+         *      The String value to set in the Map
+         *
+         * @throws CMSException - if the operation fails due to an internal error.
+         * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual std::string getString( const std::string& name ) const;
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setString( const std::string& name, const std::string& value );
+        virtual void setString( const std::string& name, const std::string& value )
+            throw( cms::MessageNotWriteableException, cms::CMSException );
 
     protected:
 
         /**
          * Fetches a reference to this objects PrimitiveMap, if one needs
          * to be created or unmarshaled, this will perform the correct steps.
-         *
-         * @returns reference to a PrimtiveMap;
-         *
-         * @throws NullPointerException if the internal Map is Null.
+         * @returns reference to a PrimtiveMap.
          */
-        util::PrimitiveMap& getMap();
-        const util::PrimitiveMap& getMap() const;
+        util::PrimitiveMap& getMap() throw ( decaf::lang::exceptions::NullPointerException );
+        const util::PrimitiveMap& getMap() const throw ( decaf::lang::exceptions::NullPointerException );
 
         /**
          * Performs the unmarshal on the Map if needed, otherwise just returns
-         *
-         * @throws NullPointerException if the internal Map is Null.
          */
-        virtual void checkMapIsUnmarshalled() const;
+        virtual void checkMapIsUnmarshalled() const
+            throw ( decaf::lang::exceptions::NullPointerException );
 
     };
 

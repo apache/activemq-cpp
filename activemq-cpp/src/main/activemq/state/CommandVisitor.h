@@ -72,121 +72,121 @@ namespace state {
         virtual ~CommandVisitor() {}
 
         virtual decaf::lang::Pointer<commands::Command> processTransactionInfo(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveInfo(
-            commands::RemoveInfo* info ) = 0;
+            commands::RemoveInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionInfo(
-            commands::ConnectionInfo* info ) = 0;
+            commands::ConnectionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processSessionInfo(
-            commands::SessionInfo* info ) = 0;
+            commands::SessionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processProducerInfo(
-            commands::ProducerInfo* info ) = 0;
+            commands::ProducerInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processConsumerInfo(
-            commands::ConsumerInfo* info ) = 0;
+            commands::ConsumerInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveConnection(
-            commands::ConnectionId* id ) = 0;
+            commands::ConnectionId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveSession(
-            commands::SessionId* id ) = 0;
+            commands::SessionId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveProducer(
-            commands::ProducerId* id ) = 0;
+            commands::ProducerId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveConsumer(
-            commands::ConsumerId* id ) = 0;
+            commands::ConsumerId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processDestinationInfo(
-            commands::DestinationInfo* info ) = 0;
+            commands::DestinationInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveDestination(
-            commands::DestinationInfo* info ) = 0;
+            commands::DestinationInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRemoveSubscriptionInfo(
-            commands::RemoveSubscriptionInfo* info ) = 0;
+            commands::RemoveSubscriptionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processMessage(
-            commands::Message* send ) = 0;
+            commands::Message* send ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processMessageAck(
-            commands::MessageAck* ack ) = 0;
+            commands::MessageAck* ack ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processMessagePull(
-            commands::MessagePull* pull ) = 0;
+            commands::MessagePull* pull ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processBeginTransaction(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processPrepareTransaction(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processCommitTransactionOnePhase(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processCommitTransactionTwoPhase(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRollbackTransaction(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processWireFormat(
-            commands::WireFormatInfo* info ) = 0;
+            commands::WireFormatInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processKeepAliveInfo(
-            commands::KeepAliveInfo* info ) = 0;
+            commands::KeepAliveInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processShutdownInfo(
-            commands::ShutdownInfo* info ) = 0;
+            commands::ShutdownInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processFlushCommand(
-            commands::FlushCommand* command ) = 0;
+            commands::FlushCommand* command ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processBrokerInfo(
-            commands::BrokerInfo* info) = 0;
+            commands::BrokerInfo* info) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processRecoverTransactions(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processForgetTransaction(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processEndTransaction(
-            commands::TransactionInfo* info ) = 0;
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processMessageDispatchNotification(
-            commands::MessageDispatchNotification* notification ) = 0;
+            commands::MessageDispatchNotification* notification ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processProducerAck(
-            commands::ProducerAck* ack ) = 0;
+            commands::ProducerAck* ack ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processMessageDispatch(
-            commands::MessageDispatch* dispatch ) = 0;
+            commands::MessageDispatch* dispatch ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processControlCommand(
-            commands::ControlCommand* command ) = 0;
+            commands::ControlCommand* command ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionError(
-            commands::ConnectionError* error ) = 0;
+            commands::ConnectionError* error ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processConnectionControl(
-            commands::ConnectionControl* control ) = 0;
+            commands::ConnectionControl* control ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processConsumerControl(
-            commands::ConsumerControl* control ) = 0;
+            commands::ConsumerControl* control ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processBrokerError(
-            commands::BrokerError* error ) = 0;
+            commands::BrokerError* error ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processReplayCommand(
-            commands::ReplayCommand* replay ) = 0;
+            commands::ReplayCommand* replay ) throw ( exceptions::ActiveMQException ) = 0;
 
         virtual decaf::lang::Pointer<commands::Command> processResponse(
-            commands::Response* response ) = 0;
+            commands::Response* response ) throw ( exceptions::ActiveMQException ) = 0;
 
     };
 

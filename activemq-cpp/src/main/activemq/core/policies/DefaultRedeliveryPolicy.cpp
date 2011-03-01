@@ -28,13 +28,14 @@ using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() : backOffMultiplier(5.0),
-                                                     collisionAvoidanceFactor(0.15),
-                                                     initialRedeliveryDelay(1000LL),
-                                                     maximumRedeliveries(6),
-                                                     useCollisionAvoidance(false),
-                                                     useExponentialBackOff(false),
-                                                     redeliveryDelay(initialRedeliveryDelay) {
+DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() {
+
+    this->collisionAvoidanceFactor = 0.15;
+    this->maximumRedeliveries = 6;
+    this->initialRedeliveryDelay = 1000LL;
+    this->useCollisionAvoidance = false;
+    this->useExponentialBackOff = false;
+    this->backOffMultiplier = 5.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,18 +53,18 @@ void DefaultRedeliveryPolicy::setCollisionAvoidancePercent( short value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DefaultRedeliveryPolicy::getNextRedeliveryDelay( long long previousDelay ) {
+long long DefaultRedeliveryPolicy::getRedeliveryDelay( long long previousDelay ) {
 
     static Random randomNumberGenerator;
 
-    long long nextDelay;
+    long long redeliveryDelay;
 
     if( previousDelay == 0 ) {
-        nextDelay = redeliveryDelay;
+        redeliveryDelay = initialRedeliveryDelay;
     } else if( useExponentialBackOff && (int)backOffMultiplier > 1 ) {
-        nextDelay = (long long)( (double)previousDelay * backOffMultiplier );
+        redeliveryDelay = (long long)( (double)previousDelay * backOffMultiplier );
     } else {
-        nextDelay = previousDelay;
+        redeliveryDelay = previousDelay;
     }
 
     if( useCollisionAvoidance ) {
@@ -73,10 +74,10 @@ long long DefaultRedeliveryPolicy::getNextRedeliveryDelay( long long previousDel
          */
         double variance = ( randomNumberGenerator.nextBoolean() ?
             collisionAvoidanceFactor : -collisionAvoidanceFactor ) * randomNumberGenerator.nextDouble( );
-        nextDelay += (long long)( (double)nextDelay * variance );
+        redeliveryDelay += (long long)( (double)redeliveryDelay * variance );
     }
 
-    return nextDelay;
+    return redeliveryDelay;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +91,6 @@ RedeliveryPolicy* DefaultRedeliveryPolicy::clone() const {
     copy->useCollisionAvoidance = this->useCollisionAvoidance;
     copy->useExponentialBackOff = this->useExponentialBackOff;
     copy->backOffMultiplier = this->backOffMultiplier;
-    copy->redeliveryDelay = this->redeliveryDelay;
 
     return copy;
 }

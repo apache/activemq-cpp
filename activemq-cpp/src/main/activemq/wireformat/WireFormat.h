@@ -58,28 +58,26 @@ namespace wireformat{
          * @param out
          *      The output stream to write the command to.
          *
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException
          */
         virtual void marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out ) = 0;
+                              decaf::io::DataOutputStream* out )
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Stream based unmarshaling, blocks on reads on the input stream until a complete
          * command has been read and unmarshaled into the correct form.  Returns a Pointer
          * to the newly unmarshaled Command.
          *
-         * @param transport
-         *      Pointer to the transport that is making this request.
-         * @param in
-         *      The input stream to read the command from.
-         *
+         * @param transport - Pointer to the transport that is making this request.
+         * @param in - the input stream to read the command from.
          * @returns the newly marshaled Command, caller owns the pointer
-         *
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException
          */
         virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in ) = 0;
+                                                      decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Set the Version
@@ -91,7 +89,6 @@ namespace wireformat{
 
         /**
          * Get the Version
-         *
          * @return the version of the wire format
          */
         virtual int getVersion() const = 0;
@@ -118,15 +115,13 @@ namespace wireformat{
          * If the Transport Provides a Negotiator this method will create and return
          * a new instance of the Negotiator.
          *
-         * @param transport
-         *      The Transport to Wrap the Negotiator around.
-         *
+         * @param transport - the Transport to Wrap the Negotiator around.
          * @returns new instance of a WireFormatNegotiator as a Pointer<Transport>.
-         *
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport ) = 0;
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
     };
 

@@ -29,12 +29,14 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer::DoubleBuffer( int capacity ) : Buffer( capacity ) {
+DoubleBuffer::DoubleBuffer( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* DoubleBuffer::allocate( int capacity ) {
+DoubleBuffer* DoubleBuffer::allocate( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
         return BufferFactory::createDoubleBuffer( capacity );
@@ -44,7 +46,9 @@ DoubleBuffer* DoubleBuffer::allocate( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* DoubleBuffer::wrap( double* buffer, int size, int offset, int length ) {
+DoubleBuffer* DoubleBuffer::wrap( double* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
 
@@ -94,7 +98,8 @@ std::string DoubleBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer ) {
+DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer )
+    throw ( BufferUnderflowException ) {
 
     try{
 
@@ -109,7 +114,10 @@ DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::get( double* buffer, int size, int offset, int length ) {
+DoubleBuffer& DoubleBuffer::get( double* buffer, int size, int offset, int length )
+    throw( BufferUnderflowException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -148,7 +156,9 @@ DoubleBuffer& DoubleBuffer::get( double* buffer, int size, int offset, int lengt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src ) {
+DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
 
@@ -184,7 +194,10 @@ DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( const double* buffer, int size, int offset, int length ) {
+DoubleBuffer& DoubleBuffer::put( const double* buffer, int size, int offset, int length )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -231,7 +244,8 @@ DoubleBuffer& DoubleBuffer::put( const double* buffer, int size, int offset, int
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( std::vector<double>& buffer ) {
+DoubleBuffer& DoubleBuffer::put( std::vector<double>& buffer )
+    throw( BufferOverflowException, ReadOnlyBufferException ) {
 
     try{
 

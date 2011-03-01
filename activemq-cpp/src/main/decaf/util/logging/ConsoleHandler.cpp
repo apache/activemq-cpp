@@ -25,14 +25,14 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ), stream(), formatter() {
+ConsoleHandler::ConsoleHandler() : StreamHandler( &stream, &formatter ) {
 
     // Defaults level to Info
     setLevel( Level::INFO );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsoleHandler::close() {
+void ConsoleHandler::close() throw ( decaf::io::IOException ) {
     StreamHandler::close( true );
 }
 

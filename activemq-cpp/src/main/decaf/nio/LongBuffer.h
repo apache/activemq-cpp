@@ -61,7 +61,8 @@ namespace nio{
          *
          * @throws IllegalArguementException if capacity is negative.
          */
-        LongBuffer( int capacity );
+        LongBuffer( int capacity )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
     public:
 
@@ -86,7 +87,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual long long* array() = 0;
+        virtual long long* array()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element of
@@ -100,7 +103,9 @@ namespace nio{
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
          */
-        virtual int arrayOffset() = 0;
+        virtual int arrayOffset()
+            throw( decaf::lang::exceptions::UnsupportedOperationException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new, read-only long long buffer that shares this buffer's content.
@@ -139,7 +144,7 @@ namespace nio{
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual LongBuffer& compact() = 0;
+        virtual LongBuffer& compact() throw( ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new long long buffer that shares this buffer's content.
@@ -164,7 +169,7 @@ namespace nio{
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
-        virtual long long get() = 0;
+        virtual long long get() throw ( BufferUnderflowException ) = 0;
 
         /**
          * Absolute get method. Reads the value at the given index.
@@ -177,7 +182,8 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
          */
-        virtual long long get( int index ) const = 0;
+        virtual long long get( int index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) = 0;
 
         /**
          * Relative bulk get method.
@@ -193,7 +199,8 @@ namespace nio{
          * @throws BufferUnderflowException if there are fewer than length long longs
          *         remaining in this buffer.
          */
-        LongBuffer& get( std::vector<long long> buffer );
+        LongBuffer& get( std::vector<long long> buffer )
+            throw ( BufferUnderflowException );
 
         /**
          * Relative bulk get method.
@@ -224,7 +231,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        LongBuffer& get( long long* buffer, int size, int offset, int length );
+        LongBuffer& get( long long* buffer, int size, int offset, int length )
+            throw( BufferUnderflowException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * Tells whether or not this buffer is backed by an accessible long long array.
@@ -257,7 +267,9 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        LongBuffer& put( LongBuffer& src );
+        LongBuffer& put( LongBuffer& src )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   lang::exceptions::IllegalArgumentException );
 
         /**
          * This method transfers long longs long longo this buffer from the given source array.
@@ -286,7 +298,10 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        LongBuffer& put( const long long* buffer, int size, int offset, int length );
+        LongBuffer& put( const long long* buffer, int size, int offset, int length )
+            throw( BufferOverflowException, ReadOnlyBufferException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NullPointerException );
 
         /**
          * This method transfers the entire content of the given source long longs array long longo
@@ -300,7 +315,8 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        LongBuffer& put( std::vector<long long>& buffer );
+        LongBuffer& put( std::vector<long long>& buffer )
+            throw( BufferOverflowException, ReadOnlyBufferException );
 
         /**
          * Writes the given long longs long longo this buffer at the current position, and then
@@ -315,7 +331,8 @@ namespace nio{
          *         smaller than its limit
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        virtual LongBuffer& put( long long value ) = 0;
+        virtual LongBuffer& put( long long value )
+            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
 
         /**
          * Writes the given long longs long longo this buffer at the given index.
@@ -331,7 +348,9 @@ namespace nio{
          *         minus the size of the type being written.
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        virtual LongBuffer& put( int index, long long value ) = 0;
+        virtual LongBuffer& put( int index, long long value )
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   ReadOnlyBufferException ) = 0;
 
         /**
          * Creates a new LongBuffer whose content is a shared subsequence of this
@@ -384,7 +403,8 @@ namespace nio{
          *
          * @returns the LongBuffer that was allocated, caller owns.
          */
-        static LongBuffer* allocate( int capacity );
+        static LongBuffer* allocate( int capacity )
+            throw( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Wraps the passed buffer with a new LongBuffer.
@@ -410,7 +430,9 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        static LongBuffer* wrap( long long* array, int size, int offset, int length );
+        static LongBuffer* wrap( long long* array, int size, int offset, int length )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IndexOutOfBoundsException );
 
         /**
          * Wraps the passed STL long long Vector in a LongBuffer.

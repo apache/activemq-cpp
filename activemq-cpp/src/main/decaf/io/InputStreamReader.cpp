@@ -26,13 +26,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStreamReader::InputStreamReader( InputStream* stream, bool own ) :
-    Reader(), stream(stream), own(own), closed(false) {
+InputStreamReader::InputStreamReader( InputStream* stream, bool own ) : Reader(), own( own ) {
 
     if( stream == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__, "The passed InputStream cannot be NULL." );
     }
+
+    this->stream = stream;
+    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ InputStreamReader::~InputStreamReader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStreamReader::close() {
+void InputStreamReader::close() throw( decaf::io::IOException ) {
 
     try{
 
@@ -67,7 +69,7 @@ void InputStreamReader::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool InputStreamReader::ready() const {
+bool InputStreamReader::ready() const throw( decaf::io::IOException ) {
 
     try{
         checkClosed();
@@ -82,7 +84,10 @@ bool InputStreamReader::ready() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, int length ) {
+int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, int length )
+        throw( decaf::io::IOException,
+               decaf::lang::exceptions::NullPointerException,
+               decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
     try{
         checkClosed();
@@ -100,7 +105,7 @@ int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputStreamReader::checkClosed() const {
+void InputStreamReader::checkClosed() const throw( decaf::io::IOException ) {
     if( closed ) {
         throw IOException( __FILE__, __LINE__, "This Reader is Closed" );
     }

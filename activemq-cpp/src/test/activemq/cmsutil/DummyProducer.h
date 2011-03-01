@@ -45,7 +45,7 @@ namespace cmsutil {
             this->dest = dest;
             this->messageContext = messageContext;
         }
-        virtual ~DummyProducer() throw() {}
+        virtual ~DummyProducer() {}
 
         virtual void close() throw( cms::CMSException ){}
 

@@ -82,11 +82,6 @@ namespace locks {
 
         decaf::lang::Pointer<LockHandle> handle;
 
-    private:
-
-        ReentrantLock( const ReentrantLock& );
-        ReentrantLock& operator= ( const ReentrantLock& );
-
     public:
 
         ReentrantLock();
@@ -108,7 +103,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void lock();
+        virtual void lock() throw( decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the lock unless the current thread is interrupted.
@@ -142,7 +137,8 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported).
          */
-        virtual void lockInterruptibly();
+        virtual void lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
+                                                 decaf::lang::exceptions::InterruptedException );
 
         /**
          * Acquires the lock only if it is not held by another thread at the time of invocation.
@@ -165,7 +161,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual bool tryLock();
+        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the lock if it is not held by another thread within the given waiting time and the
@@ -218,7 +214,9 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported)
          */
-        virtual bool tryLock( long long time, const TimeUnit& unit );
+        virtual bool tryLock( long long time, const TimeUnit& unit )
+            throw ( decaf::lang::exceptions::RuntimeException,
+                    decaf::lang::exceptions::InterruptedException );
 
         /**
          * Attempts to release this lock.
@@ -229,7 +227,8 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void unlock();
+        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException,
+                                     decaf::lang::exceptions::IllegalMonitorStateException );
 
         /**
          * Returns a Condition instance for use with this Lock instance.
@@ -253,7 +252,9 @@ namespace locks {
          * @throws UnsupportedOperationException
          *         if this Lock implementation does not support conditions
          */
-        virtual Condition* newCondition();
+        virtual Condition* newCondition()
+            throw ( decaf::lang::exceptions::RuntimeException,
+                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Queries the number of holds on this lock by the current thread.

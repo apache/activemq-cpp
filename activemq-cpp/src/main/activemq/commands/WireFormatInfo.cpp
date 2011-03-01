@@ -248,7 +248,7 @@ void WireFormatInfo::setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
 bool WireFormatInfo::isCacheEnabled() const {
 
     try {
-        return false;
+        return properties.getBool( "CacheEnabled" );
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -257,11 +257,10 @@ bool WireFormatInfo::isCacheEnabled() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setCacheEnabled( bool cacheEnabled AMQCPP_UNUSED ) {
+void WireFormatInfo::setCacheEnabled( bool cacheEnabled ) {
 
     try {
-        // Turning this on is not supported as it causes the client to not work.
-        properties.setBool( "CacheEnabled", false );
+        properties.setBool( "CacheEnabled", cacheEnabled );
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -312,7 +311,8 @@ void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
+void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -328,7 +328,8 @@ void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
+void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED )
+    throw ( decaf::io::IOException ) {
 
     try{
 

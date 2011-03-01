@@ -42,27 +42,43 @@ namespace logging{
 
         virtual ~LoggingTransport() {}
 
-    public:  // TransportFilter methods.
-
+        /**
+         * Event handler for the receipt of a command.
+         * @param command - the received command object.
+         */
         virtual void onCommand( const Pointer<Command>& command );
 
-    public:  // TransportFilter methods.
-
-        virtual void oneway( const Pointer<Command>& command );
+        /**
+         * Sends a one-way command.  Does not wait for any response from the
+         * broker.
+         * @param command the command to be sent.
+         * @throws IOException if an exception occurs during writing of
+         * the command.
+         * @throws UnsupportedOperationException if this method is not implemented
+         * by this transport.
+         */
+        virtual void oneway( const Pointer<Command>& command )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * {@inheritDoc}
-         *
          * Not supported by this class - throws an exception.
+         * @param command the command that is sent as a request
+         * @throws UnsupportedOperationException.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command );
+        virtual Pointer<Response> request( const Pointer<Command>& command )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * {@inheritDoc}
-         *
          * Not supported by this class - throws an exception.
+         * @param command the command that is sent as a request
+         * @param timeout the time to wait for a response.
+         * @throws UnsupportedOperationException.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
     };
 

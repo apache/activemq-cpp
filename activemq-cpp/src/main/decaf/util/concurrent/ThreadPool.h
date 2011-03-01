@@ -22,7 +22,7 @@
 #include <decaf/util/concurrent/PooledThreadListener.h>
 #include <decaf/util/concurrent/TaskListener.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/util/Config.h>
 
@@ -60,16 +60,11 @@ namespace concurrent{
 
     private:
 
-        ThreadPool( const ThreadPool& );
-        ThreadPool& operator= ( const ThreadPool& );
-
-    private:
-
         // Vector of threads that this object has created for its pool.
         std::vector< PooledThread* > pool;
 
         // Queue of Task that are in need of completion
-        util::LinkedList<Task> queue;
+        util::StlQueue<Task> queue;
 
         // Max number of Threads this Pool can contain
         std::size_t maxThreads;
@@ -102,7 +97,8 @@ namespace concurrent{
          * @param task object that derives from Runnable
          * @throws ActiveMQException
          */
-        virtual void queueTask( Task task );
+        virtual void queueTask( Task task )
+            throw ( lang::Exception );
 
         /**
          * DeQueue a task to be completed by one of the Pooled Threads.
@@ -114,7 +110,8 @@ namespace concurrent{
          * @return object that derives from Runnable
          * @throws ActiveMQException
          */
-        virtual Task deQueueTask();
+        virtual Task deQueueTask()
+            throw ( lang::Exception );
 
         /**
          * Returns the current number of Threads in the Pool, this is

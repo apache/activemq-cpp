@@ -49,11 +49,6 @@ namespace concurrent{
         // Logger Init
         LOGDECAF_DECLARE(logger)
 
-    private:
-
-        PooledThread( const PooledThread& );
-        PooledThread& operator= ( const PooledThread& );
-
      public:
 
         /**
@@ -76,7 +71,7 @@ namespace concurrent{
          * running one, and then die.  Does not block.
          * @throws Exception
          */
-        virtual void stop();
+        virtual void stop() throw ( lang::Exception );
 
         /**
          * Checks to see if the thread is busy, if busy it means
@@ -91,7 +86,8 @@ namespace concurrent{
          * notified when this thread starts and completes a task.
          * @param listener the listener to send notifications to.
          */
-        virtual void setPooledThreadListener( PooledThreadListener* listener ) {
+        virtual void setPooledThreadListener( PooledThreadListener* listener )
+        {
             this->listener = listener;
         }
 
@@ -100,7 +96,8 @@ namespace concurrent{
          * notified when this thread starts and completes a task.
          * @return a pointer to this thread's listener or NULL
          */
-        virtual PooledThreadListener* getPooledThreadListener() {
+        virtual PooledThreadListener* getPooledThreadListener()
+        {
             return this->listener;
         }
     };

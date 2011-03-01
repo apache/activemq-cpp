@@ -20,29 +20,24 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSSecurityException::CMSSecurityException() : CMSException() {
+CMSSecurityException::CMSSecurityException() throw() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSSecurityException::CMSSecurityException( const CMSSecurityException& ex )
-    : CMSException( ex ) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-CMSSecurityException::CMSSecurityException( const std::string& message )
-    : CMSException( message, NULL ) {
+    throw() : CMSException( ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSSecurityException::CMSSecurityException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+    throw() : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSSecurityException::CMSSecurityException( const std::string& message,
                                             const std::exception* cause,
                                             const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+    throw() : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

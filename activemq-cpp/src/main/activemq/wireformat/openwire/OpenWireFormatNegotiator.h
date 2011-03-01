@@ -40,7 +40,7 @@ namespace openwire{
         /**
          * Time to wait before we declare that the negotiation has timed out.
          */
-        static const int negotiationTimeout;
+        static const int negotiationTimeout = 15000;
 
         /**
          * Have we started already?
@@ -62,11 +62,6 @@ namespace openwire{
          * Indicates Transport has shut down
          */
         bool closed;
-
-    private:
-
-        OpenWireFormatNegotiator( const OpenWireFormatNegotiator& );
-        OpenWireFormatNegotiator& operator= ( const OpenWireFormatNegotiator& );
 
     public:
 

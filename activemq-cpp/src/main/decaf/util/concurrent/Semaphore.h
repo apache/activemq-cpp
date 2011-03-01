@@ -195,7 +195,8 @@ namespace concurrent {
          * @throw InterruptedException - if the current thread is interrupted.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        void acquire();
+        void acquire() throw( decaf::lang::exceptions::InterruptedException,
+                              decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires a permit from this semaphore, blocking until one is available.
@@ -214,7 +215,7 @@ namespace concurrent {
          *
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        void acquireUninterruptibly();
+        void acquireUninterruptibly() throw ( decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires a permit from this semaphore, only if one is available at the time of invocation.
@@ -234,7 +235,7 @@ namespace concurrent {
          *
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        bool tryAcquire();
+        bool tryAcquire() throw ( decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires a permit from this semaphore, if one becomes available within the given waiting
@@ -272,7 +273,9 @@ namespace concurrent {
          * @throw InterruptedException if the current thread is interrupted.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        bool tryAcquire( long long timeout, const TimeUnit& unit );
+        bool tryAcquire( long long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::InterruptedException,
+                   decaf::lang::exceptions::RuntimeException );
 
         /**
          * Releases a permit, returning it to the semaphore.
@@ -287,7 +290,7 @@ namespace concurrent {
          *
          * @throw RuntimeException if an unexpected error occurs while releasing the Semaphore.
          */
-        void release();
+        void release() throw ( decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the given number of permits from this semaphore, blocking until all are available,
@@ -319,7 +322,9 @@ namespace concurrent {
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        void acquire( int permits );
+        void acquire( int permits ) throw( decaf::lang::exceptions::InterruptedException,
+                                           decaf::lang::exceptions::IllegalArgumentException,
+                                           decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the given number of permits from this semaphore, blocking until all are available.
@@ -341,7 +346,9 @@ namespace concurrent {
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        void acquireUninterruptibly( int permits );
+        void acquireUninterruptibly( int permits )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the given number of permits from this semaphore, only if all are available at the
@@ -367,7 +374,9 @@ namespace concurrent {
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        bool tryAcquire( int permits );
+        bool tryAcquire( int permits )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::RuntimeException );
 
         /**
          * Acquires the given number of permits from this semaphore, if all become available within
@@ -411,7 +420,9 @@ namespace concurrent {
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
-        bool tryAcquire( int permits, long long timeout, const TimeUnit& unit );
+        bool tryAcquire( int permits, long long timeout, const TimeUnit& unit )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::RuntimeException );
 
         /**
          * Releases the given number of permits, returning them to the semaphore.
@@ -429,7 +440,9 @@ namespace concurrent {
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while releasing the Semaphore.
          */
-        void release( int permits );
+        void release( int permits )
+            throw( decaf::lang::exceptions::IllegalArgumentException,
+                   decaf::lang::exceptions::RuntimeException );
 
         /**
          * Returns the current number of permits available in this semaphore.
@@ -447,7 +460,7 @@ namespace concurrent {
          *
          * @throw RuntimeException if an unexpected error occurs while draining the Semaphore.
          */
-        int drainPermits();
+        int drainPermits() throw( decaf::lang::exceptions::RuntimeException );
 
         /**
          * @returns true if this semaphore has fairness set true

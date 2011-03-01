@@ -50,7 +50,6 @@ namespace failover {
         CPPUNIT_TEST( testSendOnewayMessageFail );
         CPPUNIT_TEST( testSendRequestMessageFail );
         CPPUNIT_TEST( testWithOpewireCommands );
-        CPPUNIT_TEST( testTransportHandlesConnectionControl );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -92,9 +91,6 @@ namespace failover {
         // simulates creation of a Connection, Session, Topics, Producers and Consumers
         // and then removing them all as a normal shutdown would.
         void testWithOpewireCommands();
-
-        // Tests that the Transport correctly handles the ConnectionControl command.
-        void testTransportHandlesConnectionControl();
 
     private:
 

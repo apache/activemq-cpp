@@ -66,14 +66,40 @@ namespace commands{
 
         virtual ~ConnectionError();
 
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaler share.
+         * @returns new DataStructure type copy.
+         */
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
         virtual ConnectionError* cloneDataStructure() const;
 
+        /**
+         * Copy the contents of the passed object into this object's
+         * members, overwriting any existing data.
+         * @param src - Source Object
+         */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
         virtual std::string toString() const;
 
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
         virtual bool equals( const DataStructure* value ) const;
 
         virtual const Pointer<BrokerError>& getException() const;
@@ -84,7 +110,15 @@ namespace commands{
         virtual Pointer<ConnectionId>& getConnectionId();
         virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

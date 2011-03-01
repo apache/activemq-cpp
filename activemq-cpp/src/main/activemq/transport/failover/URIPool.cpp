@@ -44,7 +44,7 @@ URIPool::~URIPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI URIPool::getURI() {
+URI URIPool::getURI() throw ( decaf::lang::exceptions::NoSuchElementException ) {
 
     synchronized( &uriPool ) {
         if( !uriPool.isEmpty() ) {
@@ -58,7 +58,7 @@ URI URIPool::getURI() {
                 index = rand.nextInt( (int)uriPool.size() );
             }
 
-            return uriPool.removeAt( index );
+            return uriPool.remove( index );
         }
     }
 
@@ -77,7 +77,7 @@ void URIPool::addURI( const URI& uri ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURIs( const LinkedList<URI>& uris ) {
+void URIPool::addURIs( const StlList<URI>& uris ) {
 
     synchronized( &uriPool ) {
 

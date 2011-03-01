@@ -29,12 +29,14 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer::FloatBuffer( int capacity ) : Buffer( capacity ) {
+FloatBuffer::FloatBuffer( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) :  Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer* FloatBuffer::allocate( int capacity ) {
+FloatBuffer* FloatBuffer::allocate( int capacity )
+    throw( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try{
         return BufferFactory::createFloatBuffer( capacity );
@@ -44,7 +46,9 @@ FloatBuffer* FloatBuffer::allocate( int capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer* FloatBuffer::wrap( float* buffer, int size, int offset, int length ) {
+FloatBuffer* FloatBuffer::wrap( float* buffer, int size, int offset, int length )
+    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -93,7 +97,8 @@ std::string FloatBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatBuffer::get( std::vector<float> buffer ) {
+FloatBuffer& FloatBuffer::get( std::vector<float> buffer )
+    throw ( BufferUnderflowException ) {
 
     try{
 
@@ -108,7 +113,10 @@ FloatBuffer& FloatBuffer::get( std::vector<float> buffer ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatBuffer::get( float* buffer, int size, int offset, int length ) {
+FloatBuffer& FloatBuffer::get( float* buffer, int size, int offset, int length )
+    throw( BufferUnderflowException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -147,7 +155,9 @@ FloatBuffer& FloatBuffer::get( float* buffer, int size, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatBuffer::put( FloatBuffer& src ) {
+FloatBuffer& FloatBuffer::put( FloatBuffer& src )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           lang::exceptions::IllegalArgumentException ) {
 
     try{
 
@@ -183,7 +193,10 @@ FloatBuffer& FloatBuffer::put( FloatBuffer& src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatBuffer::put( const float* buffer, int size, int offset, int length ) {
+FloatBuffer& FloatBuffer::put( const float* buffer, int size, int offset, int length )
+    throw( BufferOverflowException, ReadOnlyBufferException,
+           decaf::lang::exceptions::IndexOutOfBoundsException,
+           decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -230,7 +243,8 @@ FloatBuffer& FloatBuffer::put( const float* buffer, int size, int offset, int le
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FloatBuffer& FloatBuffer::put( std::vector<float>& buffer ) {
+FloatBuffer& FloatBuffer::put( std::vector<float>& buffer )
+    throw( BufferOverflowException, ReadOnlyBufferException ) {
 
     try{
 
