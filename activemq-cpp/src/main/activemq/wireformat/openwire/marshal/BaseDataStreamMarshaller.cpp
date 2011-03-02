@@ -815,13 +815,17 @@ std::string BaseDataStreamMarshaller::readAsciiString(
 
     try{
 
-        int size = dataIn->readShort();
-        std::vector<char> data( size );
-        dataIn->readFully( (unsigned char*)&data[0], size );
-
-        // Now build a string and copy data into it.
         std::string text;
-        text.insert( text.begin(), data.begin(), data.end() );
+        int size = dataIn->readShort();
+
+        if( size > 0 ) {
+
+            std::vector<char> data( size );
+            dataIn->readFully( (unsigned char*)&data[0], size );
+
+            // Now build a string and copy data into it.
+            text.insert( text.begin(), data.begin(), data.end() );
+        }
 
         return text;
     }
