@@ -82,17 +82,32 @@ namespace core {
         virtual ~TransactionSynhcronization() {}
 
         virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
-            consumer->acknowledge();
+            try {
+                consumer->acknowledge();
+            } catch( cms::CMSException& ex ) {
+                throw ActiveMQException( __FILE__, __LINE__, ex.getMessage().c_str() );
+            }
+
             consumer->setSynchronizationRegistered( false );
         }
 
         virtual void afterCommit() throw( exceptions::ActiveMQException ) {
-            consumer->commit();
+            try {
+                consumer->commit();
+            } catch( cms::CMSException& ex ) {
+                throw ActiveMQException( __FILE__, __LINE__, ex.getMessage().c_str() );
+            }
+
             consumer->setSynchronizationRegistered( false );
         }
 
         virtual void afterRollback() throw( exceptions::ActiveMQException ) {
-            consumer->rollback();
+            try {
+                consumer->rollback();
+            } catch( cms::CMSException& ex ) {
+                throw ActiveMQException( __FILE__, __LINE__, ex.getMessage().c_str() );
+            }
+
             consumer->setSynchronizationRegistered( false );
         }
 
