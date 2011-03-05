@@ -525,7 +525,7 @@ cms_status readBytesFromBytesMessage(CMS_Message* message, unsigned char* value,
 
             int readCount = bytesMessage->readBytes(value, size);
 
-            if( readCount != -1 ) {
+            if( readCount == -1 ) {
                 result = CMS_INCOMPLETE_READ;
             }
 
