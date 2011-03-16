@@ -50,6 +50,7 @@
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Runnable.h>
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
@@ -69,6 +70,39 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
+
+    /**
+     * Class used to clear a Consumer's dispatch queue asynchronously from the
+     * connection class's Scheduler instance.
+     */
+    class ClearConsumerTask : public Runnable {
+    private:
+
+        ActiveMQConsumer* consumer;
+
+    private:
+
+        ClearConsumerTask( const ClearConsumerTask& );
+        ClearConsumerTask& operator= ( const ClearConsumerTask& );
+
+    public:
+
+        ClearConsumerTask( ActiveMQConsumer* consumer ) : Runnable(), consumer(NULL) {
+
+            if( consumer == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
+            }
+
+            this->consumer = consumer;
+        }
+
+        virtual ~ClearConsumerTask() {}
+
+        virtual void run() {
+            this->consumer->clearMessagesInProgress();
+        }
+    };
 
     /**
      * Class used to Hook a session that has been closed into the Transaction
@@ -397,8 +431,9 @@ void ActiveMQSession::clearMessagesInProgress() {
         std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
         for( ; iter != consumers.end(); ++iter ) {
             (*iter)->inProgressClearRequired();
-            // Todo - This should occur asynchronously.
-            (*iter)->clearMessagesInProgress();
+
+            this->connection->getScheduler().executeAfterDelay(
+                new ClearConsumerTask(*iter), 0LL);
         }
     }
 }

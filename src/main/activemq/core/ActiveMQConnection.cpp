@@ -67,6 +67,7 @@ using namespace activemq::core;
 using namespace activemq::core::policies;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
+using namespace activemq::threads;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
 using namespace decaf;
@@ -103,6 +104,7 @@ namespace core{
         Pointer<decaf::util::Properties> properties;
         Pointer<transport::Transport> transport;
         Pointer<util::IdGenerator> clientIdGenerator;
+        Pointer<Scheduler> scheduler;
 
         util::LongSequenceGenerator sessionIds;
         util::LongSequenceGenerator tempDestinationIds;
@@ -149,6 +151,7 @@ namespace core{
         ConnectionConfig() : properties(),
                              transport(),
                              clientIdGenerator(),
+                             scheduler(),
                              sessionIds(),
                              tempDestinationIds(),
                              localTransactionIds(),
@@ -188,9 +191,12 @@ namespace core{
             this->brokerInfoReceived.reset( new CountDownLatch(1) );
 
             // Generate a connectionId
+            std::string uniqueId = CONNECTION_ID_GENERATOR.generateId();
             decaf::lang::Pointer<ConnectionId> connectionId( new ConnectionId() );
-            connectionId->setValue( CONNECTION_ID_GENERATOR.generateId() );
+            connectionId->setValue(uniqueId);
             this->connectionInfo->setConnectionId( connectionId );
+            this->scheduler.reset(new Scheduler(std::string("ActiveMQConnection[")+uniqueId+"] Scheduler"));
+            this->scheduler->start();
         }
 
         void waitForBrokerInfo() {
@@ -408,6 +414,13 @@ void ActiveMQConnection::close() {
         // Indicates we are on the way out to suppress any exceptions getting
         // passed on from the transport as it goes down.
         this->closing.set( true );
+
+        if(this->config->scheduler != NULL) {
+            try {
+                this->config->scheduler->stop();
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+        }
 
         // Get the complete list of active sessions.
         std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
@@ -1177,6 +1190,11 @@ long long ActiveMQConnection::getNextLocalTransactionId() {
 ////////////////////////////////////////////////////////////////////////////////
 transport::Transport& ActiveMQConnection::getTransport() const {
     return *( this->config->transport );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+threads::Scheduler& ActiveMQConnection::getScheduler() const {
+    return *( this->config->scheduler );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

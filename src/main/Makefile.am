@@ -116,6 +116,8 @@ cc_sources = \
     activemq/state/TransactionState.cpp \
     activemq/threads/CompositeTaskRunner.cpp \
     activemq/threads/DedicatedTaskRunner.cpp \
+    activemq/threads/Scheduler.cpp \
+    activemq/threads/SchedulerTimerTask.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
     activemq/transport/TransportFilter.cpp \
@@ -150,6 +152,10 @@ cc_sources = \
     activemq/util/PrimitiveMap.cpp \
     activemq/util/PrimitiveValueConverter.cpp \
     activemq/util/PrimitiveValueNode.cpp \
+    activemq/util/Service.cpp \
+    activemq/util/ServiceListener.cpp \
+    activemq/util/ServiceStopper.cpp \
+    activemq/util/ServiceSupport.cpp \
     activemq/util/URISupport.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     activemq/wireformat/openwire/OpenWireFormat.cpp \
@@ -603,6 +609,8 @@ h_sources = \
     activemq/threads/CompositeTask.h \
     activemq/threads/CompositeTaskRunner.h \
     activemq/threads/DedicatedTaskRunner.h \
+    activemq/threads/Scheduler.h \
+    activemq/threads/SchedulerTimerTask.h \
     activemq/threads/Task.h \
     activemq/threads/TaskRunner.h \
     activemq/transport/AbstractTransportFactory.h \
@@ -647,6 +655,10 @@ h_sources = \
     activemq/util/PrimitiveMap.h \
     activemq/util/PrimitiveValueConverter.h \
     activemq/util/PrimitiveValueNode.h \
+    activemq/util/Service.h \
+    activemq/util/ServiceListener.h \
+    activemq/util/ServiceStopper.h \
+    activemq/util/ServiceSupport.h \
     activemq/util/URISupport.h \
     activemq/util/Usage.h \
     activemq/wireformat/MarshalAware.h \
