@@ -1714,6 +1714,38 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\Service.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\Service.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceListener.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceStopper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceStopper.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceSupport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ServiceSupport.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\URISupport.cpp"
 					>
 				</File>
@@ -3547,6 +3579,22 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\threads\DedicatedTaskRunner.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\Scheduler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\Scheduler.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\SchedulerTimerTask.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\SchedulerTimerTask.h"
 					>
 				</File>
 				<File
