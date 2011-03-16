@@ -67,6 +67,14 @@ namespace util {
 
         Timer();
 
+        /**
+         * Create a new Timer whose associated thread is assigned the name given.
+         *
+         * @param name
+         *      The name to assign to this Timer's Thread.
+         */
+        Timer(const std::string& name);
+
         virtual ~Timer();
 
         /**

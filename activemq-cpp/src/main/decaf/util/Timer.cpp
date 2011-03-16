@@ -46,7 +46,9 @@ namespace util{
 
     public:
 
-        TimerImpl() : heap(), cancelled( false ) {}
+        TimerImpl() : Thread(), heap(), cancelled( false ) {}
+
+        TimerImpl(const std::string& name) : Thread(name), heap(), cancelled( false ) {}
 
         ~TimerImpl() {
             try{
@@ -195,6 +197,11 @@ namespace util{
 
 ////////////////////////////////////////////////////////////////////////////////
 Timer::Timer() : internal( new TimerImpl() ) {
+    this->internal->start();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Timer::Timer(const std::string& name) : internal( new TimerImpl(name) ) {
     this->internal->start();
 }
 

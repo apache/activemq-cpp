@@ -48,6 +48,7 @@ cc_sources = \
     activemq/state/TransactionStateTest.cpp \
     activemq/threads/CompositeTaskRunnerTest.cpp \
     activemq/threads/DedicatedTaskRunnerTest.cpp \
+    activemq/threads/SchedulerTest.cpp \
     activemq/transport/IOTransportTest.cpp \
     activemq/transport/TransportRegistryTest.cpp \
     activemq/transport/correlator/ResponseCorrelatorTest.cpp \
@@ -268,6 +269,7 @@ h_sources = \
     activemq/state/TransactionStateTest.h \
     activemq/threads/CompositeTaskRunnerTest.h \
     activemq/threads/DedicatedTaskRunnerTest.h \
+    activemq/threads/SchedulerTest.h \
     activemq/transport/IOTransportTest.h \
     activemq/transport/TransportRegistryTest.h \
     activemq/transport/correlator/ResponseCorrelatorTest.h \

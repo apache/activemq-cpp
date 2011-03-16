@@ -29,6 +29,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
+#include <activemq/threads/Scheduler.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
@@ -588,6 +589,13 @@ namespace core{
          * @return a reference to the Transport that is in use by this Connection.
          */
         transport::Transport& getTransport() const;
+
+        /**
+         * Gets a reference to the Connection objects built in Scheduler instance.
+         *
+         * @return a reference to a Scheduler instance owned by this Connection.
+         */
+        threads::Scheduler& getScheduler() const;
 
         /**
          * Returns the Id of the Resource Manager that this client will use should

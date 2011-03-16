@@ -134,6 +134,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MemoryUsageTest );
 #include <activemq/util/MarshallingSupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MarshallingSupportTest );
 
+#include <activemq/threads/SchedulerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::threads::SchedulerTest );
 #include <activemq/threads/DedicatedTaskRunnerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::threads::DedicatedTaskRunnerTest );
 #include <activemq/threads/CompositeTaskRunnerTest.h>
