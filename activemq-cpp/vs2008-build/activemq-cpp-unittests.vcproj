@@ -1686,6 +1686,14 @@
 					RelativePath="..\src\test\activemq\threads\DedicatedTaskRunnerTest.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\test\activemq\threads\SchedulerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\threads\SchedulerTest.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
