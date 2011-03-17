@@ -34,6 +34,7 @@
 #include <activemq/core/Dispatcher.h>
 #include <activemq/core/MessageDispatchChannel.h>
 #include <activemq/util/LongSequenceGenerator.h>
+#include <activemq/threads/Scheduler.h>
 
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlMap.h>
@@ -306,6 +307,11 @@ namespace core{
         ActiveMQConnection* getConnection() const {
             return this->connection;
         }
+
+        /**
+         * Gets a Pointer to this Session's Scheduler instance
+         */
+        Pointer<threads::Scheduler> getScheduler() const;
 
         /**
          * Gets the currently set Last Delivered Sequence Id

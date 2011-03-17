@@ -1193,8 +1193,8 @@ transport::Transport& ActiveMQConnection::getTransport() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-threads::Scheduler& ActiveMQConnection::getScheduler() const {
-    return *( this->config->scheduler );
+Pointer<Scheduler> ActiveMQConnection::getScheduler() const {
+    return this->config->scheduler;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,7 @@
 #include <activemq/core/FifoMessageDispatchChannel.h>
 #include <activemq/core/SimplePriorityMessageDispatchChannel.h>
 #include <activemq/core/RedeliveryPolicy.h>
+#include <activemq/threads/Scheduler.h>
 #include <cms/ExceptionListener.h>
 #include <memory>
 
@@ -51,6 +52,7 @@ using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
+using namespace activemq::threads;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
@@ -84,6 +86,7 @@ namespace core {
         long long redeliveryDelay;
         Pointer<RedeliveryPolicy> redeliveryPolicy;
         Pointer<Exception> failureError;
+        Pointer<Scheduler> scheduler;
 
         ActiveMQConsumerMembers() : listener(NULL),
                                     listenerMutex(),
@@ -100,7 +103,8 @@ namespace core {
                                     inProgressClearRequiredFlag(false),
                                     redeliveryDelay(0),
                                     redeliveryPolicy(),
-                                    failureError() {
+                                    failureError(),
+                                    scheduler() {
         }
 
     };
@@ -258,6 +262,45 @@ namespace core {
         }
     };
 
+    /**
+     * Class used to Start a Consumer's dispatch queue asynchronously from the
+     * configured Scheduler.
+     */
+    class StartConsumerTask : public Runnable {
+    private:
+
+        ActiveMQConsumer* consumer;
+
+    private:
+
+        StartConsumerTask( const StartConsumerTask& );
+        StartConsumerTask& operator= ( const StartConsumerTask& );
+
+    public:
+
+        StartConsumerTask( ActiveMQConsumer* consumer ) : Runnable(), consumer(NULL) {
+
+            if( consumer == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
+            }
+
+            this->consumer = consumer;
+        }
+
+        virtual ~StartConsumerTask() {}
+
+        virtual void run() {
+            try{
+                if(!this->consumer->isClosed()) {
+                    this->consumer->start();
+                }
+            } catch(cms::CMSException& ex) {
+                // TODO - Need Connection onAsyncException method.
+            }
+        }
+    };
+
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -317,6 +360,7 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     this->internal->listener = NULL;
     this->internal->redeliveryDelay = 0;
     this->internal->redeliveryPolicy.reset( this->session->getConnection()->getRedeliveryPolicy()->clone() );
+    this->internal->scheduler = this->session->getScheduler();
 
     if( this->session->getConnection()->isMessagePrioritySupported() ) {
         this->internal->unconsumedMessages.reset( new SimplePriorityMessageDispatchChannel() );
@@ -1049,19 +1093,10 @@ void ActiveMQConsumer::rollback() {
                 }
 
                 if( internal->redeliveryDelay > 0 && !this->internal->unconsumedMessages->isClosed() ) {
-                    // TODO
+                    // TODO - Can't do this until we can control object lifetime.
                     // Start up the delivery again a little later.
-                    //scheduler.executeAfterDelay(new Runnable() {
-                    //    public void run() {
-                    //        try {
-                    //            if( !started.get() ) {
-                    //                start();
-                    //            }
-                    //        } catch( CMSException& e ) {
-                    //            session.connection.onAsyncException(e);
-                    //        }
-                    //    }
-                    //}, redeliveryDelay);
+                    // this->internal->scheduler->executeAfterDelay(
+                    //    new StartConsumerTask(this), internal->redeliveryDelay);
                     start();
                 } else {
                     start();

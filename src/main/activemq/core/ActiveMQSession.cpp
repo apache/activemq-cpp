@@ -63,6 +63,7 @@ using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
+using namespace activemq::threads;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::lang;
@@ -165,19 +166,16 @@ namespace core{
 
     public:
 
-        /**
-         * Bool to indicate if the Session has added a Syncronization to a TransactionContext.
-         */
         bool synchronizationRegistered;
-
-        /**
-         * Map of producers.
-         */
         decaf::util::concurrent::CopyOnWriteArrayList<ActiveMQProducer*> producers;
+        Pointer<Scheduler> scheduler;
 
     public:
 
-        SessionConfig() : synchronizationRegistered( false ), producers() {}
+        SessionConfig() : synchronizationRegistered( false ),
+                          producers(),
+                          scheduler()
+        {}
 
         ~SessionConfig() {}
     };
@@ -225,6 +223,9 @@ ActiveMQSession::ActiveMQSession( ActiveMQConnection* connection,
     this->executor.reset( new ActiveMQSessionExecutor( this ) );
 
     this->connection->addSession( this );
+
+    // Use the Connection's Scheduler.
+    this->config->scheduler = this->connection->getScheduler();
 
     // If the connection is already started, start the session.
     if( this->connection->isStarted() ) {
@@ -432,7 +433,7 @@ void ActiveMQSession::clearMessagesInProgress() {
         for( ; iter != consumers.end(); ++iter ) {
             (*iter)->inProgressClearRequired();
 
-            this->connection->getScheduler().executeAfterDelay(
+            this->connection->getScheduler()->executeAfterDelay(
                 new ClearConsumerTask(*iter), 0LL);
         }
     }
@@ -920,6 +921,11 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener() {
     }
 
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Scheduler> ActiveMQSession::getScheduler() const {
+    return this->config->scheduler;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
