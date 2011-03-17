@@ -595,7 +595,7 @@ namespace core{
          *
          * @return a reference to a Scheduler instance owned by this Connection.
          */
-        threads::Scheduler& getScheduler() const;
+        Pointer<threads::Scheduler> getScheduler() const;
 
         /**
          * Returns the Id of the Resource Manager that this client will use should
