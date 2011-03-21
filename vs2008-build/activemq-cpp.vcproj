@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
@@ -165,8 +165,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(ProjectName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -300,8 +300,8 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -460,8 +460,8 @@
 		</Configuration>
 		<Configuration
 			Name="DebugDLL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
@@ -628,8 +628,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug-SSL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
@@ -773,8 +773,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release-SSL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -908,8 +908,8 @@
 		</Configuration>
 		<Configuration
 			Name="DebugDLL-SSL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
@@ -1076,8 +1076,8 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL-SSL|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -1385,6 +1385,141 @@
 						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\main\cms\Message.h"
@@ -1465,6 +1600,166 @@
 			<File
 				RelativePath="..\src\main\cms\Queue.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugDLL-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL-SSL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseDLL-SSL|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						GenerateXMLDocumentationFiles="false"
+						XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\main\cms\Queue.h"
@@ -3916,8 +4211,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3925,8 +4229,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3934,8 +4247,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3943,8 +4265,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3952,8 +4283,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3961,8 +4301,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3970,8 +4319,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -3979,8 +4337,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 					</File>
@@ -5688,8 +6055,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5697,8 +6073,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5706,8 +6091,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5715,8 +6109,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5724,8 +6127,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5733,8 +6145,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5742,8 +6163,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5751,8 +6181,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 					</File>
@@ -5788,8 +6227,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5797,8 +6245,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5806,8 +6263,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5815,8 +6281,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5824,8 +6299,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5833,8 +6317,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5842,8 +6335,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 						<FileConfiguration
@@ -5851,8 +6353,17 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
 							/>
 						</FileConfiguration>
 					</File>
