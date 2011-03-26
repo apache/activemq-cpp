@@ -64,7 +64,7 @@ namespace util {
                 return true;
             }
 
-            throw decaf::lang::exceptions::IllegalArgumentException(
+            throw decaf::lang::exceptions::IllegalStateException(
                 __FILE__, __LINE__, "Unable to add specified element to the Queue." );
         }
 
