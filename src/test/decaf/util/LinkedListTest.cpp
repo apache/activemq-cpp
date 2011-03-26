@@ -1233,23 +1233,27 @@ void LinkedListTest::testRemoveFirstOccurrence() {
 ////////////////////////////////////////////////////////////////////////////////
 void LinkedListTest::testRemoveLastOccurrence() {
 
-//    CPPUNIT_ASSERT(list.offerLast(testObjOne));
-//    CPPUNIT_ASSERT(list.offerLast(testObjTwo));
-//    CPPUNIT_ASSERT(list.offerLast(testObjOne));
-//    CPPUNIT_ASSERT(list.offerLast(testObjThree));
-//    CPPUNIT_ASSERT(list.offerLast(testObjOne));
-//    CPPUNIT_ASSERT_EQUAL(5, list.size());
-//    CPPUNIT_ASSERT(list.removeLastOccurrence(testObjOne));
-//    assertFalse(list.removeLastOccurrence(testObjFour));
-//    CPPUNIT_ASSERT_EQUAL(testObjOne, list.peekFirst());
-//    CPPUNIT_ASSERT_EQUAL(testObjThree, list.peekLast());
-//    CPPUNIT_ASSERT_EQUAL(4, list.size());
-//    CPPUNIT_ASSERT(list.removeLastOccurrence(testObjOne));
-//    CPPUNIT_ASSERT_EQUAL(3, list.size());
-//    CPPUNIT_ASSERT_EQUAL(testObjOne, list.peekFirst());
-//    CPPUNIT_ASSERT_EQUAL(testObjThree, list.peekLast());
-//    CPPUNIT_ASSERT(list.removeLastOccurrence(testObjOne));
-//    CPPUNIT_ASSERT_EQUAL(2, list.size());
-//    CPPUNIT_ASSERT_EQUAL(testObjThree, list.peekLast());
-//    assertFalse(list.removeLastOccurrence(testObjOne));
+    LinkedList<int> list;
+    std::auto_ptr< Iterator<int> > iter( list.descendingIterator() );
+
+    CPPUNIT_ASSERT( list.offerLast(1) );
+    CPPUNIT_ASSERT( list.offerLast(2) );
+    CPPUNIT_ASSERT( list.offerLast(1) );
+    CPPUNIT_ASSERT( list.offerLast(3) );
+    CPPUNIT_ASSERT( list.offerLast(1) );
+
+    CPPUNIT_ASSERT_EQUAL( 5, list.size() );
+
+    CPPUNIT_ASSERT( list.removeLastOccurrence(1) );
+    CPPUNIT_ASSERT( !list.removeLastOccurrence(4) );
+    CPPUNIT_ASSERT_EQUAL( 1, list.getFirst() );
+    CPPUNIT_ASSERT_EQUAL( 3, list.getLast() );
+    CPPUNIT_ASSERT_EQUAL( 4, list.size() );
+    CPPUNIT_ASSERT( list.removeLastOccurrence(1) );
+    CPPUNIT_ASSERT_EQUAL( 3, list.size() );
+    CPPUNIT_ASSERT_EQUAL( 3, list.getLast() );
+    CPPUNIT_ASSERT( list.removeLastOccurrence(1) );
+    CPPUNIT_ASSERT_EQUAL( 2, list.size() );
+    CPPUNIT_ASSERT_EQUAL( 3, list.getLast() );
+    CPPUNIT_ASSERT( !list.removeLastOccurrence(1) );
 }
