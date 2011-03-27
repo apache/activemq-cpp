@@ -207,9 +207,10 @@ cc_sources = \
     decaf/util/concurrent/CopyOnWriteArrayListTest.cpp \
     decaf/util/concurrent/CopyOnWriteArraySetTest.cpp \
     decaf/util/concurrent/CountDownLatchTest.cpp \
+    decaf/util/concurrent/LinkedBlockingQueueTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
     decaf/util/concurrent/SynchronousQueueTest.cpp \
-    decaf/util/concurrent/ThreadPoolTest.cpp \
+    decaf/util/concurrent/ThreadPoolExecutorTest.cpp \
     decaf/util/concurrent/TimeUnitTest.cpp \
     decaf/util/concurrent/atomic/AtomicBooleanTest.cpp \
     decaf/util/concurrent/atomic/AtomicIntegerTest.cpp \
@@ -428,9 +429,10 @@ h_sources = \
     decaf/util/concurrent/CopyOnWriteArrayListTest.h \
     decaf/util/concurrent/CopyOnWriteArraySetTest.h \
     decaf/util/concurrent/CountDownLatchTest.h \
+    decaf/util/concurrent/LinkedBlockingQueueTest.h \
     decaf/util/concurrent/MutexTest.h \
     decaf/util/concurrent/SynchronousQueueTest.h \
-    decaf/util/concurrent/ThreadPoolTest.h \
+    decaf/util/concurrent/ThreadPoolExecutorTest.h \
     decaf/util/concurrent/TimeUnitTest.h \
     decaf/util/concurrent/atomic/AtomicBooleanTest.h \
     decaf/util/concurrent/atomic/AtomicIntegerTest.h \

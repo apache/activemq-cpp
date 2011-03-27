@@ -179,6 +179,8 @@ namespace concurrent {
          */
         virtual void put( const E& value ) = 0;
 
+        using Queue<E>::offer;
+
         /**
          * Inserts the specified element into this queue, waiting up to the specified wait
          * time if necessary for space to become available.
