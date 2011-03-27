@@ -15,15 +15,4 @@
  * limitations under the License.
  */
 
-#include "TaskListener.h"
-
-using namespace std;
-using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::util;
-using namespace decaf::util::concurrent;
-
-////////////////////////////////////////////////////////////////////////////////
-TaskListener::~TaskListener() {
-
-}
+#include "LinkedBlockingQueue.h"

@@ -444,14 +444,13 @@ cc_sources = \
     decaf/util/concurrent/Executor.cpp \
     decaf/util/concurrent/ExecutorService.cpp \
     decaf/util/concurrent/Future.cpp \
+    decaf/util/concurrent/LinkedBlockingQueue.cpp \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
-    decaf/util/concurrent/PooledThread.cpp \
     decaf/util/concurrent/Semaphore.cpp \
     decaf/util/concurrent/SynchronousQueue.cpp \
-    decaf/util/concurrent/TaskListener.cpp \
     decaf/util/concurrent/ThreadFactory.cpp \
-    decaf/util/concurrent/ThreadPool.cpp \
+    decaf/util/concurrent/ThreadPoolExecutor.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
@@ -1035,18 +1034,16 @@ h_sources = \
     decaf/util/concurrent/Executor.h \
     decaf/util/concurrent/ExecutorService.h \
     decaf/util/concurrent/Future.h \
+    decaf/util/concurrent/LinkedBlockingQueue.h \
     decaf/util/concurrent/Lock.h \
     decaf/util/concurrent/Mutex.h \
-    decaf/util/concurrent/PooledThread.h \
-    decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/RejectedExecutionException.h \
     decaf/util/concurrent/RejectedExecutionHandler.h \
     decaf/util/concurrent/Semaphore.h \
     decaf/util/concurrent/Synchronizable.h \
     decaf/util/concurrent/SynchronousQueue.h \
-    decaf/util/concurrent/TaskListener.h \
     decaf/util/concurrent/ThreadFactory.h \
-    decaf/util/concurrent/ThreadPool.h \
+    decaf/util/concurrent/ThreadPoolExecutor.h \
     decaf/util/concurrent/TimeUnit.h \
     decaf/util/concurrent/TimeoutException.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
