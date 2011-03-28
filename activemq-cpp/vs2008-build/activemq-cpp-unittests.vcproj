@@ -2386,6 +2386,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\decaf\util\concurrent\MutexTest.cpp"
 						>
 					</File>
@@ -2394,11 +2402,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolTest.cpp"
+						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolExecutorTest.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolTest.h"
+						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolExecutorTest.h"
 						>
 					</File>
 					<File
