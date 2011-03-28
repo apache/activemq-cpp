@@ -1094,6 +1094,7 @@ h_sources = \
 lib_LTLIBRARIES= libactivemq-cpp.la
 libactivemq_cpp_la_SOURCES= $(h_sources) $(cc_sources)
 libactivemq_cpp_la_CXXFLAGS= $(AMQ_CXXFLAGS)
+libactivemq_cpp_la_CFLAGS= $(AMQ_CFLAGS)
 libactivemq_cpp_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION)
 libactivemq_cpp_la_LIBADD= $(AMQ_LIBS)
 
