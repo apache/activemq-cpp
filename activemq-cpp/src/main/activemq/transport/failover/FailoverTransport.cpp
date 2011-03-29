@@ -489,7 +489,21 @@ bool FailoverTransport::isPending() const {
 
     synchronized( &reconnectMutex ) {
         if( this->connectedTransport == NULL && !closed && started ) {
-            result = true;
+
+            int reconnectAttempts = 0;
+            if( firstConnection ) {
+                if( startupMaxReconnectAttempts != 0 ) {
+                    reconnectAttempts = startupMaxReconnectAttempts;
+                }
+            }
+
+            if( reconnectAttempts == 0 ) {
+                reconnectAttempts = maxReconnectAttempts;
+            }
+
+            if( reconnectAttempts > 0 && connectFailures < reconnectAttempts ) {
+                result = true;
+            }
         }
     }
 
@@ -566,9 +580,6 @@ bool FailoverTransport::iterate() {
 
                 try {
 
-                    //std::cout << "Failover: Attempting to connect to: "
-                    //          << uri.toString() << std::endl;
-
                     transport = createTransport( uri );
                     transport->setTransportListener( myTransportListener.get() );
                     transport->start();
@@ -579,8 +590,6 @@ bool FailoverTransport::iterate() {
 
                 } catch( Exception& e ) {
                     e.setMark( __FILE__, __LINE__ );
-                    //std::cout << "Failover: Failed while attempting to connect to: "
-                    //          << uri.toString() << std::endl;
 
                     if( transport != NULL ) {
                         if( this->disposedListener != NULL ) {
@@ -633,9 +642,6 @@ bool FailoverTransport::iterate() {
                     firstConnection = false;
                 }
 
-                //std::cout << "Failover: Successfully connected to Broker at: "
-                //          << connectedTransportURI->toString() << std::endl;
-
                 return false;
             }
         }
@@ -684,8 +690,6 @@ bool FailoverTransport::iterate() {
     if( !closed ) {
 
         synchronized( &sleepMutex ) {
-            //std::cout << "Failover: Trying again in "
-            //          << reconnectDelay << "Milliseconds." << std::endl;
             sleepMutex.wait( (unsigned int)reconnectDelay );
         }
 
