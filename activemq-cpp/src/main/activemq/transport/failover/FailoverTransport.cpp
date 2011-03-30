@@ -501,7 +501,9 @@ bool FailoverTransport::isPending() const {
                 reconnectAttempts = maxReconnectAttempts;
             }
 
-            if( reconnectAttempts > 0 && connectFailures < reconnectAttempts ) {
+            if( reconnectAttempts > 0 && connectFailures >= reconnectAttempts ) {
+                result = false;
+            } else {
                 result = true;
             }
         }
