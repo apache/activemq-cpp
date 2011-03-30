@@ -155,33 +155,15 @@ namespace failover {
             return true;
         }
 
-        virtual bool isConnected() const {
-            return this->connected;
-        }
+        virtual bool isConnected() const;
 
-        virtual bool isClosed() const {
-            return this->closed;
-        }
+        virtual bool isClosed() const;
 
-        bool isInitialized() const {
-            return this->initialized;
-        }
+        bool isInitialized() const;
 
-        void setInitialized( bool value ) {
-            this->initialized = value;
-        }
+        void setInitialized( bool value );
 
-        virtual Transport* narrow( const std::type_info& typeId ) {
-            if( typeid( *this ) == typeId ) {
-                return this;
-            }
-
-            if( this->connectedTransport != NULL ) {
-                return this->connectedTransport->narrow( typeId );
-            }
-
-            return NULL;
-        }
+        virtual Transport* narrow( const std::type_info& typeId );
 
         virtual std::string getRemoteAddress() const;
 
@@ -208,133 +190,69 @@ namespace failover {
 
     public: // FailoverTransport Property Getters / Setters
 
-        long long getTimeout() const {
-            return this->timeout;
-        }
+        long long getTimeout() const;
 
-        void setTimeout( long long value ) {
-            this->timeout = value;
-        }
+        void setTimeout( long long value );
 
-        long long getInitialReconnectDelay() const {
-            return this->initialReconnectDelay;
-        }
+        long long getInitialReconnectDelay() const;
 
-        void setInitialReconnectDelay( long long value ) {
-            this->initialReconnectDelay = value;
-        }
+        void setInitialReconnectDelay( long long value );
 
-        long long getMaxReconnectDelay() const {
-            return this->maxReconnectDelay;
-        }
+        long long getMaxReconnectDelay() const;
 
-        void setMaxReconnectDelay( long long value ) {
-            this->maxReconnectDelay = value;
-        }
+        void setMaxReconnectDelay( long long value );
 
-        long long getBackOffMultiplier() const {
-            return this->backOffMultiplier;
-        }
+        long long getBackOffMultiplier() const;
 
-        void setBackOffMultiplier( long long value ) {
-            this->backOffMultiplier = value;
-        }
+        void setBackOffMultiplier( long long value );
 
-        bool isUseExponentialBackOff() const {
-            return this->useExponentialBackOff;
-        }
+        bool isUseExponentialBackOff() const;
 
-        void setUseExponentialBackOff( bool value ) {
-            this->useExponentialBackOff = value;
-        }
+        void setUseExponentialBackOff( bool value );
 
-        bool isRandomize() const {
-            return this->uris->isRandomize();
-        }
+        bool isRandomize() const;
 
-        void setRandomize( bool value ) {
-            this->uris->setRandomize( value );
-        }
+        void setRandomize( bool value );
 
-        int getMaxReconnectAttempts() const {
-            return this->maxReconnectAttempts;
-        }
+        int getMaxReconnectAttempts() const;
 
-        void setMaxReconnectAttempts( int value ) {
-            this->maxReconnectAttempts = value;
-        }
+        void setMaxReconnectAttempts( int value );
 
-        int getStartupMaxReconnectAttempts() const {
-            return this->startupMaxReconnectAttempts;
-        }
+        int getStartupMaxReconnectAttempts() const;
 
-        void setStartupMaxReconnectAttempts( int value ) {
-            this->startupMaxReconnectAttempts = value;
-        }
+        void setStartupMaxReconnectAttempts( int value );
 
-        long long getReconnectDelay() const {
-            return this->reconnectDelay;
-        }
+        long long getReconnectDelay() const;
 
-        void setReconnectDelay( long long value ) {
-            this->reconnectDelay = value;
-        }
+        void setReconnectDelay( long long value );
 
-        bool isBackup() const {
-            return this->backups->isEnabled();
-        }
+        bool isBackup() const;
 
-        void setBackup( bool value ) {
-            this->backups->setEnabled( value );
-        }
+        void setBackup( bool value );
 
-        int getBackupPoolSize() const {
-            return this->backups->getBackupPoolSize();
-        }
+        int getBackupPoolSize() const;
 
-        void setBackupPoolSize( int value ) {
-            this->backups->setBackupPoolSize( value );
-        }
+        void setBackupPoolSize( int value );
 
-        bool isTrackMessages() const {
-            return this->trackMessages;
-        }
+        bool isTrackMessages() const;
 
-        void setTrackMessages( bool value ) {
-            this->trackMessages = value;
-        }
+        void setTrackMessages( bool value );
 
-        bool isTrackTransactionProducers() const {
-            return this->trackTransactionProducers;
-        }
+        bool isTrackTransactionProducers() const;
 
-        void setTrackTransactionProducers( bool value ) {
-            this->trackTransactionProducers = value;
-        }
+        void setTrackTransactionProducers( bool value );
 
-        int getMaxCacheSize() const {
-            return this->maxCacheSize;
-        }
+        int getMaxCacheSize() const;
 
-        void setMaxCacheSize( int value ) {
-            this->maxCacheSize = value;
-        }
+        void setMaxCacheSize( int value );
 
-        bool isReconnectSupported() const {
-            return this->reconnectSupported;
-        }
+        bool isReconnectSupported() const;
 
-        void setReconnectSupported( bool value ) {
-            this->reconnectSupported = value;
-        }
+        void setReconnectSupported( bool value );
 
-        bool isUpdateURIsSupported() const {
-            return this->updateURIsSupported;
-        }
+        bool isUpdateURIsSupported() const;
 
-        void setUpdateURIsSupported( bool value ) {
-            this->updateURIsSupported = value;
-        }
+        void setUpdateURIsSupported( bool value );
 
         void setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId );
 
@@ -381,6 +299,8 @@ namespace failover {
         Pointer<Transport> createTransport( const URI& location ) const;
 
         void processNewTransports( bool rebalance, std::string newTransports );
+
+        void processResponse(const Pointer<Response>& response);
 
     };
 
