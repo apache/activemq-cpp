@@ -551,7 +551,6 @@ void FailoverTransport::processNewTransports( bool rebalance, std::string newTra
                     URI uri( str );
                     list.add( uri );
                 } catch( Exception e ) {
-                    //LOG.error( "Failed to parse broker address: " + str, e );
                 }
             }
 
@@ -559,7 +558,6 @@ void FailoverTransport::processNewTransports( bool rebalance, std::string newTra
                 try {
                     updateURIs( rebalance, list );
                 } catch( IOException e ) {
-                    //LOG.error( "Failed to update transport URI's from: " + newTransports, e );
                 }
             }
         }
@@ -615,7 +613,22 @@ bool FailoverTransport::isPending() const {
 
     synchronized( &reconnectMutex ) {
         if( this->connectedTransport == NULL && !closed && started ) {
-            result = true;
+
+            int reconnectAttempts = 0;
+            if( firstConnection ) {
+                if( startupMaxReconnectAttempts != 0 ) {
+                    reconnectAttempts = startupMaxReconnectAttempts;
+                }
+            }
+            if( reconnectAttempts == 0 ) {
+                reconnectAttempts = maxReconnectAttempts;
+            }
+
+            if( reconnectAttempts > 0 && connectFailures >= reconnectAttempts ) {
+                result = false;
+            } else {
+                result = true;
+            }
         }
     }
 
@@ -802,8 +815,6 @@ bool FailoverTransport::iterate() {
     if( !closed ) {
 
         synchronized( &sleepMutex ) {
-            //std::cout << "Failover: Trying again in "
-            //          << reconnectDelay << "Milliseconds." << std::endl;
             sleepMutex.wait( (unsigned int)reconnectDelay );
         }
 
@@ -847,4 +858,220 @@ void FailoverTransport::setConnectionInterruptProcessingComplete( const Pointer<
     synchronized( &reconnectMutex ) {
         stateTracker.connectionInterruptProcessingComplete( this, connectionId );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isConnected() const {
+    return this->connected;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isClosed() const {
+    return this->closed;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isInitialized() const {
+    return this->initialized;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setInitialized( bool value ) {
+    this->initialized = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Transport* FailoverTransport::narrow( const std::type_info& typeId ) {
+
+    if( typeid( *this ) == typeId ) {
+        return this;
+    }
+
+    if( this->connectedTransport != NULL ) {
+        return this->connectedTransport->narrow( typeId );
+    }
+
+    return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::processResponse(const Pointer<Response>& response) {
+
+    Pointer<Command> object;
+
+    synchronized( &( this->requestMap ) ) {
+        try{
+            object = this->requestMap.remove( response->getCorrelationId() );
+        } catch( NoSuchElementException& ex ) {
+            // Not tracking this request in our map, not an error.
+        }
+    }
+
+    if( object != NULL ) {
+        try{
+            Pointer<Tracked> tracked = object.dynamicCast<Tracked>();
+            tracked->onResponse();
+        }
+        AMQ_CATCH_NOTHROW( ClassCastException )
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long FailoverTransport::getTimeout() const {
+    return this->timeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setTimeout( long long value ) {
+    this->timeout = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long FailoverTransport::getInitialReconnectDelay() const {
+    return this->initialReconnectDelay;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setInitialReconnectDelay( long long value ) {
+    this->initialReconnectDelay = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long FailoverTransport::getMaxReconnectDelay() const {
+    return this->maxReconnectDelay;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setMaxReconnectDelay( long long value ) {
+    this->maxReconnectDelay = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long FailoverTransport::getBackOffMultiplier() const {
+    return this->backOffMultiplier;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setBackOffMultiplier( long long value ) {
+    this->backOffMultiplier = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isUseExponentialBackOff() const {
+    return this->useExponentialBackOff;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setUseExponentialBackOff( bool value ) {
+    this->useExponentialBackOff = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isRandomize() const {
+    return this->uris->isRandomize();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setRandomize( bool value ) {
+    this->uris->setRandomize( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FailoverTransport::getMaxReconnectAttempts() const {
+    return this->maxReconnectAttempts;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setMaxReconnectAttempts( int value ) {
+    this->maxReconnectAttempts = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FailoverTransport::getStartupMaxReconnectAttempts() const {
+    return this->startupMaxReconnectAttempts;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setStartupMaxReconnectAttempts( int value ) {
+    this->startupMaxReconnectAttempts = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long FailoverTransport::getReconnectDelay() const {
+    return this->reconnectDelay;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setReconnectDelay( long long value ) {
+    this->reconnectDelay = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isBackup() const {
+    return this->backups->isEnabled();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setBackup( bool value ) {
+    this->backups->setEnabled( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FailoverTransport::getBackupPoolSize() const {
+    return this->backups->getBackupPoolSize();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setBackupPoolSize( int value ) {
+    this->backups->setBackupPoolSize( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isTrackMessages() const {
+    return this->trackMessages;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setTrackMessages( bool value ) {
+    this->trackMessages = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isTrackTransactionProducers() const {
+    return this->trackTransactionProducers;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setTrackTransactionProducers( bool value ) {
+    this->trackTransactionProducers = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FailoverTransport::getMaxCacheSize() const {
+    return this->maxCacheSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setMaxCacheSize( int value ) {
+    this->maxCacheSize = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isReconnectSupported() const {
+    return this->reconnectSupported;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setReconnectSupported( bool value ) {
+    this->reconnectSupported = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isUpdateURIsSupported() const {
+    return this->updateURIsSupported;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setUpdateURIsSupported( bool value ) {
+    this->updateURIsSupported = value;
 }

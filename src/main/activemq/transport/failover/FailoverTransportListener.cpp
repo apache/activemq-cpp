@@ -53,26 +53,8 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
     }
 
     if( command->isResponse() ) {
-
-        Pointer<Response> response =
-            command.dynamicCast<Response>();
-        Pointer<Command> object;
-
-        synchronized( &( parent->requestMap ) ) {
-            try{
-                object = parent->requestMap.remove( response->getCorrelationId() );
-            } catch( NoSuchElementException& ex ) {
-                // Not tracking this request in our map, not an error.
-            }
-        }
-
-        if( object != NULL ) {
-            try{
-                Pointer<Tracked> tracked = object.dynamicCast<Tracked>();
-                tracked->onResponse();
-            }
-            AMQ_CATCH_NOTHROW( ClassCastException )
-        }
+        Pointer<Response> response = command.dynamicCast<Response>();
+        parent->processResponse(response);
     }
 
     if( !parent->isInitialized() ) {
@@ -83,8 +65,8 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
         parent->handleConnectionControl( command );
     }
 
-    if( parent->transportListener != NULL ) {
-        parent->transportListener->onCommand( command );
+    if( parent->getTransportListener() != NULL ) {
+        parent->getTransportListener()->onCommand( command );
     }
 }
 
@@ -93,22 +75,22 @@ void FailoverTransportListener::onException( const decaf::lang::Exception& ex ) 
     try {
         parent->handleTransportFailure( ex );
     } catch( Exception& e ) {
-        if( parent->transportListener != NULL ) {
-            parent->transportListener->onException( e );
+        if( parent->getTransportListener() != NULL ) {
+            parent->getTransportListener()->onException( e );
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportListener::transportInterrupted() {
-    if( parent->transportListener != NULL ) {
-        parent->transportListener->transportInterrupted();
+    if( parent->getTransportListener() != NULL ) {
+        parent->getTransportListener()->transportInterrupted();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportListener::transportResumed() {
-    if( parent->transportListener != NULL ) {
-        parent->transportListener->transportResumed();
+    if( parent->getTransportListener() != NULL ) {
+        parent->getTransportListener()->transportResumed();
     }
 }
