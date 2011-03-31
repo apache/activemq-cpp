@@ -212,6 +212,12 @@ void ActiveMQBytesMessageTest::testReadBytesbyteArray() {
         for( int i = 0; i < 50; i++ ) {
             CPPUNIT_ASSERT( test[i] == i );
         }
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should have thrown a CMSException",
+            msg.readBytes( test, -1 ),
+            CMSException);
+
     } catch( CMSException& ex ) {
         ex.printStackTrace();
         CPPUNIT_ASSERT( false );
