@@ -33,6 +33,7 @@ using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::zip;
 
@@ -289,6 +290,10 @@ int ActiveMQBytesMessage::readBytes( unsigned char* buffer, int length ) const {
 
     initializeReading();
     try{
+
+        if( length < 0 ) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "Array length given was negative");
+        }
 
         int n = 0;
 
