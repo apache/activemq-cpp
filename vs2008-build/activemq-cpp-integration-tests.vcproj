@@ -852,6 +852,14 @@
 						Name="openwire"
 						>
 						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.cpp"
 							>
 						</File>
