@@ -31,6 +31,7 @@ cc_sources = \
     activemq/test/SlowListenerTest.cpp \
     activemq/test/TransactionTest.cpp \
     activemq/test/VirtualTopicTest.cpp \
+    activemq/test/openwire/OpenwireAdvisorysTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireClientAckTest.cpp \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
@@ -81,6 +82,7 @@ h_sources = \
     activemq/test/SlowListenerTest.h \
     activemq/test/TransactionTest.h \
     activemq/test/VirtualTopicTest.h \
+    activemq/test/openwire/OpenwireAdvisorysTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireClientAckTest.h \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
