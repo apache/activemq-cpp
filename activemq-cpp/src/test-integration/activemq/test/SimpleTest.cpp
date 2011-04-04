@@ -444,7 +444,7 @@ void SimpleTest::testBytesMessageSendRecv() {
 void SimpleTest::testLibraryInitShutdownInit() {
 
     {
-        cmsProvider.release();
+        this->tearDown();
 
         // Shutdown the ActiveMQ library
         CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::shutdownLibrary() );
