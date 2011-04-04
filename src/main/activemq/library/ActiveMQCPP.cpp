@@ -67,6 +67,16 @@ void ActiveMQCPP::shutdownLibrary() {
     // Shutdown the IdGenerator Kernel
     IdGenerator::shutdown();
 
+    // Clear out all registered WireFormat Factories.
+    WireFormatRegistry::getInstance().unregisterFactory("openwire");
+    WireFormatRegistry::getInstance().unregisterFactory("stomp");
+
+    // Clear out all regsitered Transport factories
+    TransportRegistry::getInstance().unregisterFactory("tcp");
+    TransportRegistry::getInstance().unregisterFactory("ssl");
+    TransportRegistry::getInstance().unregisterFactory("mock");
+    TransportRegistry::getInstance().unregisterFactory("failover");
+
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
 }
