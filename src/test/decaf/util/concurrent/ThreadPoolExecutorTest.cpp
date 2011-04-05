@@ -36,15 +36,15 @@ namespace {
     public:
 
         CountDownLatch* latch;
-        int value;
+        int* value;
 
-        MyTask(CountDownLatch* latch, int x) : Runnable(), latch(latch), value(x) {
+        MyTask(CountDownLatch* latch, int* x) : Runnable(), latch(latch), value(x) {
         }
 
         virtual ~MyTask() {}
 
         virtual void run() {
-            value += 100;
+            *value += 100;
             Thread::sleep(10);
             latch->countDown();
         }
@@ -99,23 +99,27 @@ void ThreadPoolExecutorTest::testSimpleTasks()
 {
     CountDownLatch myLatch( 3 );
 
-    MyTask task1(&myLatch, 1);
-    MyTask task2(&myLatch, 2);
-    MyTask task3(&myLatch, 3);
+    int taskValue1 = 1;
+    int taskValue2 = 2;
+    int taskValue3 = 3;
+
+    MyTask* task1 = new MyTask(&myLatch, &taskValue1);
+    MyTask* task2 = new MyTask(&myLatch, &taskValue2);
+    MyTask* task3 = new MyTask(&myLatch, &taskValue3);
 
     ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
 
-    pool.execute(&task1);
-    pool.execute(&task2);
-    pool.execute(&task3);
+    pool.execute(task1);
+    pool.execute(task2);
+    pool.execute(task3);
 
     // Wait for them to finish, if we can't do this in 30 seconds then
     // there's probably something really wrong.
     CPPUNIT_ASSERT( myLatch.await( 30000 ) );
 
-    CPPUNIT_ASSERT( task1.value == 101 );
-    CPPUNIT_ASSERT( task2.value == 102 );
-    CPPUNIT_ASSERT( task3.value == 103 );
+    CPPUNIT_ASSERT( taskValue1 == 101 );
+    CPPUNIT_ASSERT( taskValue2 == 102 );
+    CPPUNIT_ASSERT( taskValue3 == 103 );
 
     CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3 );
 
@@ -123,25 +127,64 @@ void ThreadPoolExecutorTest::testSimpleTasks()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testAwaitTermination()
+{
+    CountDownLatch myLatch( 3 );
+
+    int taskValue1 = 1;
+    int taskValue2 = 2;
+    int taskValue3 = 3;
+
+    MyTask* task1 = new MyTask(&myLatch, &taskValue1);
+    MyTask* task2 = new MyTask(&myLatch, &taskValue2);
+    MyTask* task3 = new MyTask(&myLatch, &taskValue3);
+
+    ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    pool.execute(task1);
+    pool.execute(task2);
+    pool.execute(task3);
+
+    // Wait for them to finish, if we can't do this in 30 seconds then
+    // there's probably something really wrong.
+    CPPUNIT_ASSERT( myLatch.await( 30000 ) );
+
+    CPPUNIT_ASSERT( taskValue1 == 101 );
+    CPPUNIT_ASSERT( taskValue2 == 102 );
+    CPPUNIT_ASSERT( taskValue3 == 103 );
+
+    CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3 );
+
+    CPPUNIT_ASSERT_EQUAL(false, pool.isShutdown());
+    CPPUNIT_ASSERT_EQUAL(false, pool.isTerminated());
+
+    pool.shutdown();
+    CPPUNIT_ASSERT_EQUAL(true, pool.isShutdown());
+    CPPUNIT_ASSERT(pool.awaitTermination(30, TimeUnit::SECONDS));
+
+    CPPUNIT_ASSERT_EQUAL(true, pool.isShutdown());
+    CPPUNIT_ASSERT_EQUAL(true, pool.isTerminated());
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void ThreadPoolExecutorTest::testMoreTasksThanMaxPoolSize() {
 
     ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
-    Mutex myMutex;
 
     CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3);
 
     CountDownLatch startedLatch1(3);  // First three should go right away
     CountDownLatch startedLatch2(1);  // The fourth one goes after others finish
 
-    MyWaitingTask task1( &myMutex, &startedLatch1 );
-    MyWaitingTask task2( &myMutex, &startedLatch1 );
-    MyWaitingTask task3( &myMutex, &startedLatch1 );
-    MyWaitingTask task4( &myMutex, &startedLatch2 );
+    MyWaitingTask* task1 = new MyWaitingTask( &myMutex, &startedLatch1 );
+    MyWaitingTask* task2 = new MyWaitingTask( &myMutex, &startedLatch1 );
+    MyWaitingTask* task3 = new MyWaitingTask( &myMutex, &startedLatch1 );
+    MyWaitingTask* task4 = new MyWaitingTask( &myMutex, &startedLatch2 );
 
-    pool.execute( &task1 );
-    pool.execute( &task2 );
-    pool.execute( &task3 );
-    pool.execute( &task4 );
+    pool.execute(task1);
+    pool.execute(task2);
+    pool.execute(task3);
+    pool.execute(task4);
 
     // Wait 30 seconds, then we let it fail because something is
     // probably very wrong.
@@ -175,30 +218,34 @@ void ThreadPoolExecutorTest::testTasksThatThrow()
 {
     CountDownLatch myLatch( 3 );
 
-    MyTask task1(&myLatch, 1);
-    MyTask task2(&myLatch, 2);
-    MyTask task3(&myLatch, 3);
+    int taskValue1 = 1;
+    int taskValue2 = 2;
+    int taskValue3 = 3;
 
-    MyExceptionTask exTask1;
-    MyExceptionTask exTask2;
-    MyExceptionTask exTask3;
+    MyTask* task1 = new MyTask(&myLatch, &taskValue1);
+    MyTask* task2 = new MyTask(&myLatch, &taskValue2);
+    MyTask* task3 = new MyTask(&myLatch, &taskValue3);
+
+    MyExceptionTask* exTask1 = new MyExceptionTask;
+    MyExceptionTask* exTask2 = new MyExceptionTask;
+    MyExceptionTask* exTask3 = new MyExceptionTask;
 
     ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
 
-    pool.execute(&exTask1);
-    pool.execute(&task2);
-    pool.execute(&exTask2);
-    pool.execute(&task1);
-    pool.execute(&exTask3);
-    pool.execute(&task3);
+    pool.execute(exTask1);
+    pool.execute(task2);
+    pool.execute(exTask2);
+    pool.execute(task1);
+    pool.execute(exTask3);
+    pool.execute(task3);
 
     // Wait for them to finish, if we can't do this in 30 seconds then
     // there's probably something really wrong.
     CPPUNIT_ASSERT( myLatch.await( 30000 ) );
 
-    CPPUNIT_ASSERT( task1.value == 101 );
-    CPPUNIT_ASSERT( task2.value == 102 );
-    CPPUNIT_ASSERT( task3.value == 103 );
+    CPPUNIT_ASSERT( taskValue1 == 101 );
+    CPPUNIT_ASSERT( taskValue2 == 102 );
+    CPPUNIT_ASSERT( taskValue3 == 103 );
 
     CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3 );
 
