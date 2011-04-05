@@ -15,7 +15,12 @@
  * limitations under the License.
  */
 #include <decaf/util/concurrent/ThreadPoolExecutor.h>
-#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/Timer.h>
+#include <decaf/util/TimerTask.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/RejectedExecutionException.h>
@@ -32,6 +37,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::atomic;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace decaf{
@@ -44,15 +50,20 @@ namespace concurrent{
     public:
 
         LinkedList<Worker*> workers;
+        LinkedList<Worker*> deadWorkers;
+        Timer cleanupTimer;
+
         AtomicBoolean stopping;
         AtomicBoolean stopped;
-        std::size_t freeThreads;
+        AtomicBoolean terminated;
+        AtomicInteger freeThreads;
 
         int maxPoolSize;
         int corePoolSize;
         long long keepAliveTime;
         Pointer< BlockingQueue<decaf::lang::Runnable*> > workQueue;
         Mutex mainLock;
+        CountDownLatch termination;
 
     public:
 
@@ -76,6 +87,10 @@ namespace concurrent{
         bool isStoppedOrStopping();
 
         void shutdown();
+
+        bool awaitTermination(long long timeout, const TimeUnit& unit);
+
+        void handleWorkerExit(Worker* worker);
 
     };
 
@@ -124,9 +139,13 @@ namespace concurrent{
 
                     this->busy = true;
                     this->kernel->onTaskStarted(this);
+
                     try{
                         task->run();
                     } catch(...) {}
+
+                    delete task;
+
                     this->kernel->onTaskCompleted(this);
                     this->busy = false;
                 }
@@ -143,6 +162,8 @@ namespace concurrent{
                 this->busy = false;
                 this->kernel->onTaskException(this, ex);
             }
+
+            this->kernel->handleWorkerExit(this);
         }
 
         void stop() {
@@ -151,6 +172,32 @@ namespace concurrent{
 
         bool isBusy() {
             return this->busy;
+        }
+
+    };
+
+    class WorkerKiller : public TimerTask {
+    private:
+
+        ExecutorKernel* kernel;
+
+    public:
+
+        WorkerKiller(ExecutorKernel* kernel) : kernel(kernel) {
+        }
+
+        virtual ~WorkerKiller() {}
+
+        virtual void run() {
+            try{
+                synchronized(&kernel->mainLock) {
+                    Pointer< Iterator<Worker*> > iter( kernel->deadWorkers.iterator() );
+                    while(iter->hasNext()) {
+                        delete iter->next();
+                        iter->remove();
+                    }
+                }
+            } catch(...) {}
         }
 
     };
@@ -202,6 +249,16 @@ void ThreadPoolExecutor::shutdown() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::awaitTermination(long long timeout, const TimeUnit& unit) {
+
+    try{
+        return this->kernel->awaitTermination(timeout, unit);
+    }
+    DECAF_CATCH_RETHROW( lang::Exception )
+    DECAF_CATCHALL_THROW( lang::Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int ThreadPoolExecutor::getPoolSize() const {
     return (int)this->kernel->workers.size();
 }
@@ -222,17 +279,35 @@ long long ThreadPoolExecutor::getTaskCount() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::isShutdown() const {
+    return this->kernel->stopped.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::isTerminated() const {
+    return this->kernel->terminated.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::terminated() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ExecutorKernel::ExecutorKernel(int corePoolSize, int maxPoolSize, long long keepAliveTime,
                                BlockingQueue<decaf::lang::Runnable*>* workQueue) :
     workers(),
+    deadWorkers(),
+    cleanupTimer(),
     stopping(false),
     stopped(false),
+    terminated(false),
     freeThreads(0),
     maxPoolSize(maxPoolSize),
     corePoolSize(corePoolSize),
     keepAliveTime(keepAliveTime),
     workQueue(workQueue),
-    mainLock() {
+    mainLock(),
+    termination(1) {
 
     if(corePoolSize < 0 || maxPoolSize <= 0 ||
        maxPoolSize < corePoolSize || keepAliveTime < 0) {
@@ -243,12 +318,28 @@ ExecutorKernel::ExecutorKernel(int corePoolSize, int maxPoolSize, long long keep
     if(workQueue == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "BlockingQueue pointer was null");
     }
+
+    this->cleanupTimer.scheduleAtFixedRate(
+        new WorkerKiller(this), TimeUnit::SECONDS.toMillis(10), TimeUnit::SECONDS.toMillis(10));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ExecutorKernel::~ExecutorKernel() {
     try{
         this->shutdown();
+
+        this->termination.await();
+
+        this->cleanupTimer.cancel();
+
+        // Ensure dead Worker Threads are destroyed, the Timer might not have
+        // run recently.
+        Pointer< Iterator<Worker*> > iter(this->deadWorkers.iterator());
+        while(iter->hasNext()) {
+            Worker* worker = iter->next();
+            worker->join();
+            delete worker;
+        }
     }
     DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
@@ -261,7 +352,7 @@ void ExecutorKernel::onTaskStarted(Worker* thread DECAF_UNUSED) {
 
         synchronized( &mainLock ) {
 
-            freeThreads--;
+            freeThreads.decrementAndGet();
 
             // Now that this callback has decremented the free threads counter
             // lets check if there is any outstanding work to be done and no
@@ -270,7 +361,7 @@ void ExecutorKernel::onTaskStarted(Worker* thread DECAF_UNUSED) {
             // having a chance to wake up and service the queue.  This would
             // cause the number of Task to exceed the number of free threads
             // once the Threads got a chance to wake up and service the queue
-            if( freeThreads == 0 && !workQueue->isEmpty() ) {
+            if( freeThreads.get() == 0 && !workQueue->isEmpty() ) {
                 AllocateThread();
             }
         }
@@ -283,8 +374,8 @@ void ExecutorKernel::onTaskStarted(Worker* thread DECAF_UNUSED) {
 void ExecutorKernel::onTaskCompleted(Worker* thread DECAF_UNUSED) {
 
     try {
-        synchronized( &mainLock ) {
-            freeThreads++;
+        synchronized(&mainLock) {
+            freeThreads.incrementAndGet();
         }
     }
     DECAF_CATCH_RETHROW( lang::Exception )
@@ -292,16 +383,30 @@ void ExecutorKernel::onTaskCompleted(Worker* thread DECAF_UNUSED) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ExecutorKernel::onTaskException(Worker* thread, lang::Exception& ex DECAF_UNUSED) {
+void ExecutorKernel::onTaskException(Worker* thread DECAF_UNUSED, lang::Exception& ex DECAF_UNUSED) {
 
     try{
-
-        synchronized( &mainLock ) {
-
-        }
     }
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::handleWorkerExit(Worker* worker) {
+
+    synchronized( &this->mainLock ) {
+
+        this->workers.remove(worker);
+        this->deadWorkers.add(worker);
+
+        if(this->workers.isEmpty()) {
+
+            // TODO - Notify ThreadPoolExecutor to call terminated()
+
+            this->terminated = true;
+            this->termination.countDown();
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -313,7 +418,7 @@ void ExecutorKernel::enQueueTask(Runnable* task) {
 
             // If there's nobody open to do work, then create some more
             // threads to handle the work.
-            if( this->freeThreads == 0 ) {
+            if( this->freeThreads.get() == 0 ) {
                 AllocateThread();
             }
         }
@@ -378,7 +483,7 @@ void ExecutorKernel::AllocateThread() {
         synchronized( &mainLock ) {
             Worker* newWorker = new Worker(this);
             this->workers.add(newWorker);
-            freeThreads++;
+            freeThreads.incrementAndGet();
             newWorker->start();
         }
     }
@@ -417,16 +522,18 @@ void ExecutorKernel::shutdown() {
             //    // Signal the Queue so that all waiters are notified
             //    workQueue->notifyAll();
             //}
-
-            iter.reset(this->workers.iterator());
-            while(iter->hasNext()) {
-                Worker* worker = iter->next();
-                worker->join();
-                delete worker;
-            }
-
-            this->workers.clear();
-            this->stopped.set(true);
         }
+
+        this->stopped.set(true);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ExecutorKernel::awaitTermination(long long timeout, const TimeUnit& unit) {
+
+    if (this->terminated.get() == true) {
+        return true;
+    }
+
+    return this->termination.await(timeout, unit);
 }

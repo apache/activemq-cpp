@@ -18,10 +18,9 @@
 #define _DECAF_UTIL_CONCURRENT_THREADPOOLEXECUTOR_H_
 
 #include <decaf/lang/Runnable.h>
-#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ThreadFactory.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/BlockingQueue.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/util/LinkedList.h>
 #include <decaf/util/Config.h>
 
@@ -32,7 +31,6 @@ namespace util{
 namespace concurrent{
 
     using decaf::lang::Pointer;
-    using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ExecutorKernel;
 
@@ -120,6 +118,23 @@ namespace concurrent{
         virtual void shutdown();
 
         /**
+         * The caller will block until the executor has completed termination meaning all tasks
+         * that where scheduled before shutdown have now completed and the executor is ready for
+         * deletion.  If the timeout period elapses before the executor reaches the terminated
+         * state then this method return false to indicate it has not terminated.
+         *
+         * @param timeout
+         *      The amount of time to wait before abandoning the wait for termination.
+         * @param unit
+         *      The unit of time that the timeout value represents.
+         *
+         * @return true if the executor terminated or false if the timeout expired.
+         *
+         * @throws InterruptedException if this call is interrupted while awaiting termination.
+         */
+        virtual bool awaitTermination(long long timeout, const decaf::util::concurrent::TimeUnit& unit);
+
+        /**
          * Returns the number of threads that currently exists for this Executor.
          *
          * @return the configured number of Threads in the Pool.
@@ -148,6 +163,29 @@ namespace concurrent{
          * @return number of outstanding tasks, approximate.
          */
         virtual long long getTaskCount() const;
+
+        /**
+         * Returns whether this executor has been shutdown or not.
+         *
+         * @return true if this executor has been shutdown.
+         */
+        virtual bool isShutdown() const;
+
+        /**
+         * Returns whether all tasks have completed after this executor was shut down.
+         *
+         * @return true if all tasks have completed after a request to shut down was made.
+         */
+        virtual bool isTerminated() const;
+
+    protected:
+
+        /**
+         * Method invoked when the Executor has terminated, by default this method does
+         * nothing.  When overridden the subclass should call superclass::terminated to
+         * ensure that all subclasses have their terminated method invoked.
+         */
+        virtual void terminated();
 
     };
 

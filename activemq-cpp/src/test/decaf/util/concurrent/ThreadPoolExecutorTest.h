@@ -33,12 +33,18 @@ namespace util{
 namespace concurrent{
 
     class ThreadPoolExecutorTest : public CppUnit::TestFixture {
+    private:
 
         CPPUNIT_TEST_SUITE( ThreadPoolExecutorTest );
         CPPUNIT_TEST( testSimpleTasks );
         CPPUNIT_TEST( testMoreTasksThanMaxPoolSize );
         CPPUNIT_TEST( testTasksThatThrow );
+        CPPUNIT_TEST( testAwaitTermination );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        decaf::util::concurrent::Mutex myMutex;
 
     public:
 
@@ -48,6 +54,7 @@ namespace concurrent{
         void testSimpleTasks();
         void testMoreTasksThanMaxPoolSize();
         void testTasksThatThrow();
+        void testAwaitTermination();
 
     };
 
