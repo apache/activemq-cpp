@@ -177,7 +177,7 @@ namespace util{
             }
         }
 
-        std::size_t purge() {
+        int purge() {
 
             std::size_t result = 0;
             synchronized( this ) {
@@ -189,7 +189,7 @@ namespace util{
                 result = heap.deleteIfCancelled();
             }
 
-            return result;
+            return (int)result;
         }
 
     };
@@ -220,7 +220,7 @@ void Timer::cancel() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t Timer::purge() {
+int Timer::purge() {
     return this->internal->purge();
 }
 

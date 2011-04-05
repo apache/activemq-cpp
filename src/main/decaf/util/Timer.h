@@ -105,13 +105,13 @@ namespace util {
          *
          * @returns the number of tasks removed from the queue.
          */
-        std::size_t purge();
+        int purge();
 
         /**
          * Schedules the specified task for execution after the specified delay.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -122,7 +122,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, or timer was cancelled.
+         * @throw IllegalStateException - if task was already scheduled or canceled, or timer was canceled.
          */
         void schedule( TimerTask* task, long long delay );
 
@@ -134,7 +134,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, or timer was cancelled.
+         * @throw IllegalStateException - if task was already scheduled or canceled, or timer was canceled.
          */
         void schedule( const decaf::lang::Pointer<TimerTask>& task, long long delay );
 
@@ -143,7 +143,7 @@ namespace util {
          * task is scheduled for immediate execution.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -154,7 +154,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( TimerTask* task, const Date& time );
@@ -168,7 +168,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( const decaf::lang::Pointer<TimerTask>& task, const Date& time );
@@ -178,7 +178,7 @@ namespace util {
          * Subsequent executions take place at approximately regular intervals separated by the specified period.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -202,7 +202,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( TimerTask* task, long long delay, long long period );
@@ -229,7 +229,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period );
@@ -239,7 +239,7 @@ namespace util {
          * Subsequent executions take place at approximately regular intervals separated by the specified period.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -263,7 +263,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( TimerTask* task, const Date& firstTime, long long period );
@@ -290,7 +290,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void schedule( const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period );
@@ -300,7 +300,7 @@ namespace util {
          * Subsequent executions take place at approximately regular intervals, separated by the specified period.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -315,7 +315,7 @@ namespace util {
          * Fixed-rate execution is appropriate for recurring activities that are sensitive to absolute time, such
          * as ringing a chime every hour on the hour, or running scheduled maintenance every day at a particular
          * time. It is also appropriate for recurring activities where the total time to perform a fixed number
-         * of executions is important, such as a countdown timer that ticks once every second for ten seconds.
+         * of executions is important, such as a count down timer that ticks once every second for ten seconds.
          * Finally, fixed-rate execution is appropriate for scheduling multiple repeating timer tasks that must
          * remain synchronized with respect to one another.
          *
@@ -325,7 +325,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void scheduleAtFixedRate( TimerTask* task, long long delay, long long period );
@@ -353,7 +353,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void scheduleAtFixedRate( const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period );
@@ -363,7 +363,7 @@ namespace util {
          * Subsequent executions take place at approximately regular intervals, separated by the specified period.
          *
          * The TimerTask pointer is considered to be owned by the Timer class once it has been scheduled, the
-         * Timer will destroy its TimerTask's once they have been cancelled or the Timer itself is cancelled.
+         * Timer will destroy its TimerTask's once they have been canceled or the Timer itself is canceled.
          * A TimerTask is considered scheduled only when this method return without throwing an exception, until
          * that time ownership is not considered to have been transferred to the Timer and the caller should
          * ensure that the TimerTask gets deleted if an exception is thrown and no further attempts to schedule
@@ -388,7 +388,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void scheduleAtFixedRate( TimerTask* task, const Date& firstTime, long long period );
@@ -416,7 +416,7 @@ namespace util {
          *
          * @throw NullPointerException - if the TimerTask value is Null.
          * @throw IllegalArgumentException - if time.getTime() is negative.
-         * @throw IllegalStateException - if task was already scheduled or cancelled, timer was cancelled, or
+         * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
         void scheduleAtFixedRate( const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period );
