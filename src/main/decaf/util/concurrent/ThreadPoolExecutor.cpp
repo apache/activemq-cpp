@@ -49,6 +49,8 @@ namespace concurrent{
     class ExecutorKernel {
     public:
 
+        ThreadPoolExecutor* parent;
+
         LinkedList<Worker*> workers;
         LinkedList<Worker*> deadWorkers;
         Timer cleanupTimer;
@@ -65,9 +67,13 @@ namespace concurrent{
         Mutex mainLock;
         CountDownLatch termination;
 
+        long long completedTasks;
+        int largestPoolSize;
+
     public:
 
-        ExecutorKernel(int corePoolSize, int maxPoolSize, long long keepAliveTime,
+        ExecutorKernel(ThreadPoolExecutor* parent,
+                       int corePoolSize, int maxPoolSize, long long keepAliveTime,
                        BlockingQueue<decaf::lang::Runnable*>* workQueue);
 
         ~ExecutorKernel();
@@ -91,6 +97,8 @@ namespace concurrent{
         bool awaitTermination(long long timeout, const TimeUnit& unit);
 
         void handleWorkerExit(Worker* worker);
+
+        void tryTerminate();
 
     };
 
@@ -208,7 +216,7 @@ namespace concurrent{
 ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
                                        long long keepAliveTime, const TimeUnit& unit,
                                        BlockingQueue<decaf::lang::Runnable*>* workQueue) :
-    kernel(new ExecutorKernel(corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue)) {
+    kernel(new ExecutorKernel(this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,7 +268,12 @@ bool ThreadPoolExecutor::awaitTermination(long long timeout, const TimeUnit& uni
 
 ////////////////////////////////////////////////////////////////////////////////
 int ThreadPoolExecutor::getPoolSize() const {
-    return (int)this->kernel->workers.size();
+    int result = 0;
+    synchronized(&this->kernel->mainLock) {
+        result = this->kernel->workers.size();
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -279,6 +292,39 @@ long long ThreadPoolExecutor::getTaskCount() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int ThreadPoolExecutor::getActiveCount() const {
+
+    int result = 0;
+    synchronized(&this->kernel->mainLock) {
+        if(!this->kernel->terminated.get()) {
+            result = this->kernel->workers.size() - this->kernel->freeThreads.get();
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ThreadPoolExecutor::getCompletedTaskCount() const {
+    long long result = 0;
+    synchronized(&this->kernel->mainLock) {
+        result = this->kernel->completedTasks;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ThreadPoolExecutor::getLargestPoolSize() const {
+    int result = 0;
+    synchronized(&this->kernel->mainLock) {
+        result = this->kernel->largestPoolSize;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ThreadPoolExecutor::isShutdown() const {
     return this->kernel->stopped.get();
 }
@@ -293,8 +339,10 @@ void ThreadPoolExecutor::terminated() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ExecutorKernel::ExecutorKernel(int corePoolSize, int maxPoolSize, long long keepAliveTime,
+ExecutorKernel::ExecutorKernel(ThreadPoolExecutor* parent, int corePoolSize,
+                               int maxPoolSize, long long keepAliveTime,
                                BlockingQueue<decaf::lang::Runnable*>* workQueue) :
+    parent(parent),
     workers(),
     deadWorkers(),
     cleanupTimer(),
@@ -307,7 +355,9 @@ ExecutorKernel::ExecutorKernel(int corePoolSize, int maxPoolSize, long long keep
     keepAliveTime(keepAliveTime),
     workQueue(workQueue),
     mainLock(),
-    termination(1) {
+    termination(1),
+    completedTasks(0),
+    largestPoolSize(0) {
 
     if(corePoolSize < 0 || maxPoolSize <= 0 ||
        maxPoolSize < corePoolSize || keepAliveTime < 0) {
@@ -326,7 +376,9 @@ ExecutorKernel::ExecutorKernel(int corePoolSize, int maxPoolSize, long long keep
 ////////////////////////////////////////////////////////////////////////////////
 ExecutorKernel::~ExecutorKernel() {
     try{
+
         this->shutdown();
+        this->tryTerminate();
 
         this->termination.await();
 
@@ -376,6 +428,7 @@ void ExecutorKernel::onTaskCompleted(Worker* thread DECAF_UNUSED) {
     try {
         synchronized(&mainLock) {
             freeThreads.incrementAndGet();
+            completedTasks++;
         }
     }
     DECAF_CATCH_RETHROW( lang::Exception )
@@ -400,9 +453,7 @@ void ExecutorKernel::handleWorkerExit(Worker* worker) {
         this->deadWorkers.add(worker);
 
         if(this->workers.isEmpty()) {
-
-            // TODO - Notify ThreadPoolExecutor to call terminated()
-
+            this->parent->terminated();
             this->terminated = true;
             this->termination.countDown();
         }
@@ -485,6 +536,7 @@ void ExecutorKernel::AllocateThread() {
             this->workers.add(newWorker);
             freeThreads.incrementAndGet();
             newWorker->start();
+            this->largestPoolSize++;
         }
     }
     DECAF_CATCH_RETHROW( lang::Exception )
@@ -536,4 +588,26 @@ bool ExecutorKernel::awaitTermination(long long timeout, const TimeUnit& unit) {
     }
 
     return this->termination.await(timeout, unit);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::tryTerminate() {
+
+    if (!this->isStoppedOrStopping() || (this->isStoppedOrStopping() && !this->workQueue->isEmpty())) {
+        return;
+    }
+
+    if (this->workers.size() > 0) {
+        // TODO - Once they are interruptible wake a worker.
+        return;
+    }
+
+    synchronized(&this->mainLock) {
+        try {
+            this->parent->terminated();
+        } catch(...) {}
+
+        this->terminated.set(true);
+        this->termination.countDown();
+    }
 }

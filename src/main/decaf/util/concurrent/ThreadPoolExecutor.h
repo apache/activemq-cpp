@@ -58,6 +58,7 @@ namespace concurrent{
 
     private:
 
+        friend class ExecutorKernel;
         ExecutorKernel* kernel;
 
     public:
@@ -163,6 +164,30 @@ namespace concurrent{
          * @return number of outstanding tasks, approximate.
          */
         virtual long long getTaskCount() const;
+
+        /**
+         * Returns an approximation of the number of threads that are currently running
+         * tasks for this executor.  This value can change rapidly.
+         *
+         * @return the number of currently active threads.
+         */
+        virtual int getActiveCount() const;
+
+        /**
+         * Returns the approximate number of Tasks that have been completed by this
+         * Executor, this value never decreases.
+         *
+         * @return the number of completed tasks since creation of the Executor.
+         */
+        virtual long long getCompletedTaskCount() const;
+
+        /**
+         * Returns the most Threads that have ever been active at one time within this
+         * Executors Thread pool.
+         *
+         * @return the largest number of threads ever to coexist in this executor.
+         */
+        virtual int getLargestPoolSize() const;
 
         /**
          * Returns whether this executor has been shutdown or not.
