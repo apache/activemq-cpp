@@ -36,6 +36,7 @@ namespace concurrent{
     private:
 
         CPPUNIT_TEST_SUITE( ThreadPoolExecutorTest );
+        CPPUNIT_TEST( testConstructor1 );
         CPPUNIT_TEST( testSimpleTasks );
         CPPUNIT_TEST( testMoreTasksThanMaxPoolSize );
         CPPUNIT_TEST( testTasksThatThrow );
@@ -51,6 +52,7 @@ namespace concurrent{
         ThreadPoolExecutorTest() {}
         virtual ~ThreadPoolExecutorTest() {}
 
+        void testConstructor1();
         void testSimpleTasks();
         void testMoreTasksThanMaxPoolSize();
         void testTasksThatThrow();

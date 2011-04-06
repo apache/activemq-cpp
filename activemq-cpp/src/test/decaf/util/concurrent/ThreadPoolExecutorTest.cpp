@@ -95,6 +95,17 @@ namespace {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testConstructor1() {
+
+    ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    CPPUNIT_ASSERT_EQUAL(1, pool.getCorePoolSize());
+    CPPUNIT_ASSERT_EQUAL(3, pool.getMaximumPoolSize());
+    CPPUNIT_ASSERT_EQUAL(false, pool.isShutdown());
+    CPPUNIT_ASSERT_EQUAL(false, pool.isTerminated());
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void ThreadPoolExecutorTest::testSimpleTasks()
 {
     CountDownLatch myLatch( 3 );
