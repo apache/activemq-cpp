@@ -99,6 +99,11 @@ namespace transport {
         void unregisterFactory( const std::string& name );
 
         /**
+         * Removes all Factories and deletes the instances of the Factory objects.
+         */
+        void unregisterAllFactories();
+
+        /**
          * Retrieves a list of the names of all the Registered Transport's in this
          * Registry.
          *
