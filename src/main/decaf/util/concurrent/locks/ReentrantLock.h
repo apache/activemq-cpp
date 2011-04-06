@@ -21,7 +21,6 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/concurrent/locks/Lock.h>
-#include <decaf/lang/Pointer.h>
 
 namespace decaf {
 namespace util {
@@ -80,7 +79,7 @@ namespace locks {
     class DECAF_API ReentrantLock : public Lock {
     private:
 
-        decaf::lang::Pointer<LockHandle> handle;
+        LockHandle* handle;
 
     private:
 
@@ -296,7 +295,7 @@ namespace locks {
          *
          *  class X {
          *  private:
-         *      ReentrantLock lock = new ReentrantLock();
+         *      ReentrantLock lock;
          *      // ...
          *
          *  public:
@@ -311,7 +310,7 @@ namespace locks {
          *
          *   class X {
          *   private:
-         *      ReentrantLock lock = new ReentrantLock();
+         *      ReentrantLock lock;
          *      // ...
          *
          *   public:

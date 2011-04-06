@@ -209,7 +209,7 @@ ReentrantLock::ReentrantLock() : handle(new LockHandle) {
 ////////////////////////////////////////////////////////////////////////////////
 ReentrantLock::~ReentrantLock() {
     try{
-        this->handle.reset( NULL );
+        delete this->handle;
     }
     DECAF_CATCHALL_NOTHROW()
 }
@@ -345,7 +345,7 @@ void ReentrantLock::unlock() {
 ////////////////////////////////////////////////////////////////////////////////
 Condition* ReentrantLock::newCondition() {
 
-    return new ConditionObject( this->handle.get() );
+    return new ConditionObject( this->handle );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
