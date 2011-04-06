@@ -67,15 +67,8 @@ void ActiveMQCPP::shutdownLibrary() {
     // Shutdown the IdGenerator Kernel
     IdGenerator::shutdown();
 
-    // Clear out all registered WireFormat Factories.
-    WireFormatRegistry::getInstance().unregisterFactory("openwire");
-    WireFormatRegistry::getInstance().unregisterFactory("stomp");
-
-    // Clear out all regsitered Transport factories
-    TransportRegistry::getInstance().unregisterFactory("tcp");
-    TransportRegistry::getInstance().unregisterFactory("ssl");
-    TransportRegistry::getInstance().unregisterFactory("mock");
-    TransportRegistry::getInstance().unregisterFactory("failover");
+    WireFormatRegistry::getInstance().unregisterAllFactories();
+    TransportRegistry::getInstance().unregisterAllFactories();
 
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
@@ -91,7 +84,6 @@ void ActiveMQCPP::registerWireFormats() {
         "openwire", new wireformat::openwire::OpenWireFormatFactory() );
     WireFormatRegistry::getInstance().registerFactory(
         "stomp", new wireformat::stomp::StompWireFormatFactory() );
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,5 +100,4 @@ void ActiveMQCPP::registerTransports() {
         "mock", new MockTransportFactory() );
     TransportRegistry::getInstance().registerFactory(
         "failover", new FailoverTransportFactory() );
-
 }

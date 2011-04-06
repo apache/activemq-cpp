@@ -32,16 +32,10 @@ TransportRegistry::TransportRegistry() : registry() {
 ////////////////////////////////////////////////////////////////////////////////
 TransportRegistry::~TransportRegistry() {
 
-    std::vector<TransportFactory*> factories = this->registry.values();
-
-    std::vector<TransportFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
-    }
-
-    this->registry.clear();
- }
+    try{
+        this->unregisterAllFactories();
+    } catch(...) {}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactory* TransportRegistry::findFactory( const std::string& name ) const {
@@ -76,6 +70,19 @@ void TransportRegistry::unregisterFactory( const std::string& name ) {
         delete this->registry.get( name );
         this->registry.remove( name );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportRegistry::unregisterAllFactories() {
+
+    std::vector<TransportFactory*> factories = this->registry.values();
+    std::vector<TransportFactory*>::iterator iter = factories.begin();
+
+    for( ; iter != factories.end(); ++iter ) {
+        delete *iter;
+    }
+
+    this->registry.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

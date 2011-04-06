@@ -32,16 +32,10 @@ WireFormatRegistry::WireFormatRegistry() : registry() {
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatRegistry::~WireFormatRegistry() {
 
-    std::vector<WireFormatFactory*> factories = this->registry.values();
-
-    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
-    }
-
-    this->registry.clear();
- }
+    try {
+        this->unregisterAllFactories();
+    } catch(...) {}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const {
@@ -76,6 +70,19 @@ void WireFormatRegistry::unregisterFactory( const std::string& name ) {
         delete this->registry.get( name );
         this->registry.remove( name );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatRegistry::unregisterAllFactories() {
+
+    std::vector<WireFormatFactory*> factories = this->registry.values();
+    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
+
+    for( ; iter != factories.end(); ++iter ) {
+        delete *iter;
+    }
+
+    this->registry.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
