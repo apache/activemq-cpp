@@ -288,7 +288,7 @@ Pointer<Command> StompWireFormat::unmarshalReceipt( const Pointer<StompFrame>& f
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame ) {
+Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame AMQCPP_UNUSED ) {
 
     Pointer<Response> response( new Response() );
 

@@ -62,7 +62,7 @@ void ServiceStopper::throwFirstException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServiceStopper::onException(Service* service, Exception& ex) {
+void ServiceStopper::onException(Service* service AMQCPP_UNUSED, Exception& ex) {
     if(!this->hasException) {
         this->firstException = ex;
         this->hasException = true;

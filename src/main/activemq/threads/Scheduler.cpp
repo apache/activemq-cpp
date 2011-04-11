@@ -132,7 +132,7 @@ void Scheduler::doStart() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::doStop(ServiceStopper* stopper) {
+void Scheduler::doStop(ServiceStopper* stopper AMQCPP_UNUSED) {
     synchronized(&mutex) {
         if(this->timer != NULL) {
             this->timer->cancel();
