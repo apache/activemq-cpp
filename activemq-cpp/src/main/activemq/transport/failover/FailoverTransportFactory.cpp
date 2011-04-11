@@ -75,7 +75,7 @@ Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> FailoverTransportFactory::doCreateComposite(
     const decaf::net::URI& location,
-    const decaf::util::Properties& properties ) {
+    const decaf::util::Properties& properties AMQCPP_UNUSED ) {
 
     try {
 
