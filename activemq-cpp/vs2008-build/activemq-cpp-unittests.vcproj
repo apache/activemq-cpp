@@ -2394,6 +2394,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ExecutorsTestSupport.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ExecutorsTestSupport.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.cpp"
 						>
 					</File>
