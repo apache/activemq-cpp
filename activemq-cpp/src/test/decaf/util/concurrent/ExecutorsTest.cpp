@@ -53,35 +53,6 @@ namespace {
         }
     };
 
-    class NoOpRunnable : public Runnable {
-    public:
-
-        NoOpRunnable() : Runnable() {
-        }
-
-        virtual ~NoOpRunnable() {}
-
-        virtual void run() {
-        }
-    };
-
-    class SimpleThreadFactory : public ThreadFactory{
-    public:
-
-        virtual Thread* newThread(Runnable* task) {
-            return new Thread(task);
-        }
-    };
-
-    void joinPool(Pointer<ExecutorService>& exec) {
-        try {
-            exec->shutdown();
-            CPPUNIT_ASSERT(exec->awaitTermination(5000, TimeUnit::MILLISECONDS));
-        } catch(InterruptedException& ie) {
-            CPPUNIT_FAIL("Unexpected exception");
-        }
-    }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +96,7 @@ void ExecutorsTest::testNewFixedThreadPool1() {
     e->execute(new NoOpRunnable());
     e->execute(new NoOpRunnable());
 
-    joinPool(e);
+    joinPool(e.get());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +108,7 @@ void ExecutorsTest::testNewFixedThreadPool2() {
     e->execute(new NoOpRunnable());
     e->execute(new NoOpRunnable());
 
-    joinPool(e);
+    joinPool(e.get());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
