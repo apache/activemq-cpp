@@ -5644,6 +5644,14 @@
 					Name="concurrent"
 					>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\AbstractExecutorService.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\AbstractExecutorService.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\BlockingQueue.cpp"
 						>
 					</File>
@@ -5736,6 +5744,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Executors.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Executors.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\ExecutorService.cpp"
 						>
 					</File>
@@ -5777,6 +5793,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionHandler.cpp"
 						>
 					</File>
 					<File
@@ -5870,6 +5890,14 @@
 					<Filter
 						Name="locks"
 						>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\AbstractOwnableSynchronizer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\AbstractOwnableSynchronizer.h"
+							>
+						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\Condition.h"
 							>
