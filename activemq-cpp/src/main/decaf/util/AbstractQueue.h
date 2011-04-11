@@ -85,6 +85,8 @@ namespace util {
             return AbstractCollection<E>::addAll( collection );
         }
 
+        using AbstractCollection<E>::remove;
+
         /**
          * {@inheritDoc}
          *

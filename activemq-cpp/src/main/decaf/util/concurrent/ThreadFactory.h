@@ -20,11 +20,10 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+
 namespace decaf {
-namespace lang {
-    class Thread;
-    class Runnable;
-}
 namespace util {
 namespace concurrent {
 

@@ -63,6 +63,43 @@ namespace lang {
          */
         String( const std::string& source );
 
+        /**
+         * Create a new String object that represents the given array of characters.  The method
+         * takes the size of the array as a parameter to allow for strings that are not NULL
+         * terminated, the caller can pass strlen(array) in the case where the array is properly
+         * NULL terminated.
+         *
+         * @param array
+         *      The character buffer to copy into this new String object.
+         * @param size
+         *      The size of the string buffer given, in case the string is not NULL terminated.
+         *
+         * @throws NullPointerException if the character array parameter is NULL.
+         * @throws IndexOutOfBoundsException if the size parameter is negative.
+         */
+        String( const char* array, int size );
+
+        /**
+         * Create a new String object that represents the given array of characters.  The method
+         * takes the size of the array as a parameter to allow for strings that are not NULL
+         * terminated, the caller can pass strlen(array) in the case where the array is properly
+         * NULL terminated.
+         *
+         * @param array
+         *      The character buffer to copy into this new String object.
+         * @param size
+         *      The size of the string buffer given, in case the string is not NULL terminated.
+         * @param offset
+         *      The position to start copying from in the given buffer.
+         * @param length
+         *      The number of bytes to copy from the given buffer starting from the offset.
+         *
+         * @throws NullPointerException if the character array parameter is NULL.
+         * @throws IndexOutOfBoundsException if the size, offset or length parameter is negative
+         *         or if the length to copy is greater than the span of size - offset.
+         */
+        String( const char* array, int size, int offset, int length );
+
         virtual ~String();
 
     public:
@@ -99,6 +136,78 @@ namespace lang {
          * {@inheritDoc}
          */
         virtual std::string toString() const;
+
+    public:  // Static methods.
+
+        /**
+         * Returns a String that represents the value of the given boolean value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns "true" if the boolean is true, "false" otherwise.
+         */
+        static String valueOf(bool value);
+
+        /**
+         * Returns a String that represents the value of the given char value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the single character value given.
+         */
+        static String valueOf(char value);
+
+        /**
+         * Returns a String that represents the value of the given float value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the string representation of the float value given.
+         */
+        static String valueOf(float value);
+
+        /**
+         * Returns a String that represents the value of the given double value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the string representation of the double value given.
+         */
+        static String valueOf(double value);
+
+        /**
+         * Returns a String that represents the value of the given short value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the string representation of the short value given.
+         */
+        static String valueOf(short value);
+
+        /**
+         * Returns a String that represents the value of the given integer value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the string representation of the integer value given.
+         */
+        static String valueOf(int value);
+
+        /**
+         * Returns a String that represents the value of the given 64bit long value.
+         *
+         * @param value
+         *      The value whose string representation is to be returned.
+         *
+         * @returns a String that contains the string representation of the 64 bit long value given.
+         */
+        static String valueOf(long long value);
 
     };
 

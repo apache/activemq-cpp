@@ -167,6 +167,9 @@ namespace concurrent {
         virtual ~BlockingQueue() {
         }
 
+        using Queue<E>::offer;
+        using Queue<E>::poll;
+
         /**
          * Inserts the specified element into this queue, waiting if necessary for space
          * to become available.
@@ -178,8 +181,6 @@ namespace concurrent {
          *         element prevents it from being added to this queue
          */
         virtual void put( const E& value ) = 0;
-
-        using Queue<E>::offer;
 
         /**
          * Inserts the specified element into this queue, waiting up to the specified wait
