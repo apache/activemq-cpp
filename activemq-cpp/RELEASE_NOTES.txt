@@ -2,6 +2,58 @@
 ==  Release Notes for ActiveMQ CPP 3.3.0                               ==
 =========================================================================
 
+Bug
+
+    * [AMQCPP-294] - RemoveInfo Segmentation Fault
+    * [AMQCPP-298] - Example code crashes in 3.2.0 on MacOSX
+    * [AMQCPP-301] - Unmarshal of an empty byte array in a MapMessage
+                     segfaults on Windows
+    * [AMQCPP-302] - Compilation issue with older GCC versions in
+                     MessageCompressionTest.cpp
+    * [AMQCPP-312] - exception when bytearray is 0 length
+    * [AMQCPP-314] - Starting app with Com using cms destroys connection of
+                     other app. New problem with recent lib version
+    * [AMQCPP-315] - Advisory messages do not work with multiple listeners
+    * [AMQCPP-316] - Unable to receive any messages after re-starting message broker
+    * [AMQCPP-317] - activemq-cpp 3.2.2 will not work with activemq 5.4.0 broker using Stomp
+    * [AMQCPP-318] - Missing preprocessor definitions in Release SSL profile can cause the build to fail
+    * [AMQCPP-323] - The OnException method of registered Exception listener is not called
+                     when broker is stopped.
+    * [AMQCPP-328] - crash found in activemqcpp when turning broker offline
+    * [AMQCPP-330] - Unable to reinitialize ActiveMQ CMS library and then open a session
+    * [AMQCPP-331] - Small typo in TcpTransportFactory.cpp
+    * [AMQCPP-335] - redeliveryPolicy: rollback always loops
+    * [AMQCPP-345] - Can't connect via Stomp to Apollo broker
+    * [AMQCPP-347] - SEGFAULT on ssl connections with certificates
+    * [AMQCPP-350] - URI Query params are sometimes missed when creating Connections and Transports.
+    * [AMQCPP-351] - Using incorrect peer list in failover transport
+    * [AMQCPP-352] - FailoverTransportFactory doesn't work correctly with more than two composite uris
+    * [AMQCPP-353] - BaseDataStreamMarshaller::readAsciiString crashes
+    * [AMQCPP-355] - Transactional consumer using MessageListener freezes on commit
+    * [AMQCPP-356] - Auto-Acknowledge consumer using MessageListener freezes on destructor
+    * [AMQCPP-358] - FailoverTransport can peg CPU when connection attempts exceeds max and its
+                     waiting to be closed
+    * [AMQCPP-359] - ActiveMQBytesMessage should throw IndexOutOfBoundsException is array length
+                     is negative for readBytes method
+
+Improvement
+
+    * [AMQCPP-284] - Generate Openwire 6 commands and marshalers to keep pace with the AMQ 5.4 broker.
+    * [AMQCPP-300] - Add new method to CMS MapMessage - "isEmpty"
+    * [AMQCPP-305] - Add option to set the level of Compressiion for Message Body Compression
+    * [AMQCPP-307] - Port Update of Connection URI from AMQ to AMQCPP
+    * [AMQCPP-308] - Update Redelivery policy to better handle initial redelivery delay processing.
+    * [AMQCPP-310] - Add support for Message Priority Dispatching to CMS
+    * [AMQCPP-319] - Add equals method to the CMS Destination interface to allow opaque compare of
+                     Destination instances.
+    * [AMQCPP-329] - Add the ability to participate in XA Transactions
+    * [AMQCPP-348] - Allow unverified SSL peer
+
+Wish
+
+    * [AMQCPP-309] - pkg-config library version mismatch
+    * [AMQCPP-334] - pkg-config output incorrect
+
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.2.4                               ==
 =========================================================================
