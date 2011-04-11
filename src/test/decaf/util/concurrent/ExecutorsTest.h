@@ -18,14 +18,13 @@
 #ifndef _DECAF_UTIL_CONCURRENT_EXECUTORSTEST_H_
 #define _DECAF_UTIL_CONCURRENT_EXECUTORSTEST_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/concurrent/ExecutorsTestSupport.h>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 
-    class ExecutorsTest : public CppUnit::TestFixture {
+    class ExecutorsTest : public ExecutorsTestSupport {
 
         CPPUNIT_TEST_SUITE( ExecutorsTest );
         CPPUNIT_TEST( testDefaultThreadFactory );

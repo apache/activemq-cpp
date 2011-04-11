@@ -92,6 +92,35 @@ namespace {
         }
     };
 
+    class DefaultThreadFactoryRunnable : public Runnable {
+    private:
+
+        CountDownLatch* shutdown;
+
+    public:
+
+        DefaultThreadFactoryRunnable(CountDownLatch* shutdown) : Runnable(), shutdown(shutdown) {
+        }
+
+        virtual ~DefaultThreadFactoryRunnable() {}
+
+        virtual void run() {
+            this->shutdown->await();
+        }
+
+        void signalDone() {
+            this->shutdown->countDown();
+        }
+    };
+
+    class SimpleThreadFactory : public ThreadFactory{
+    public:
+
+        virtual Thread* newThread(Runnable* task) {
+            return new Thread(task);
+        }
+    };
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -261,4 +290,234 @@ void ThreadPoolExecutorTest::testTasksThatThrow()
     CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3 );
 
     pool.shutdown();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testPrestartCoreThread() {
+
+    ThreadPoolExecutor p2(2, 2, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    CPPUNIT_ASSERT_EQUAL(0, p2.getPoolSize());
+    CPPUNIT_ASSERT(p2.prestartCoreThread());
+    CPPUNIT_ASSERT_EQUAL(1, p2.getPoolSize());
+    CPPUNIT_ASSERT(p2.prestartCoreThread());
+    CPPUNIT_ASSERT_EQUAL(2, p2.getPoolSize());
+    CPPUNIT_ASSERT(!p2.prestartCoreThread());
+    CPPUNIT_ASSERT_EQUAL(2, p2.getPoolSize());
+
+    joinPool(&p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testPrestartAllCoreThreads() {
+
+    ThreadPoolExecutor p2(2, 2, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(0, p2.getPoolSize());
+    p2.prestartAllCoreThreads();
+    CPPUNIT_ASSERT_EQUAL(2, p2.getPoolSize());
+    p2.prestartAllCoreThreads();
+    CPPUNIT_ASSERT_EQUAL(2, p2.getPoolSize());
+
+    joinPool(&p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetCompletedTaskCount() {
+
+    ThreadPoolExecutor p2(2, 2, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(0LL, p2.getCompletedTaskCount());
+    p2.execute(new ShortRunnable(this));
+
+    try {
+        Thread::sleep(SMALL_DELAY_MS);
+    } catch(Exception& e){
+        CPPUNIT_FAIL("Caught unknown exception");
+    }
+
+    CPPUNIT_ASSERT_EQUAL(1LL, p2.getCompletedTaskCount());
+    p2.shutdown();
+
+    joinPool(&p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetCorePoolSize() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(1, p1.getCorePoolSize());
+    joinPool(&p1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetKeepAliveTime() {
+
+    ThreadPoolExecutor p2(2, 2, 1000, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(1LL, p2.getKeepAliveTime(TimeUnit::SECONDS));
+    joinPool(&p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetThreadFactory() {
+
+    ThreadFactory* tf = new SimpleThreadFactory();
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>(), tf, new NoOpREHandler());
+    CPPUNIT_ASSERT_EQUAL(tf, p.getThreadFactory());
+    joinPool(&p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testSetThreadFactory() {
+
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    ThreadFactory* tf = new SimpleThreadFactory();
+    p.setThreadFactory(tf);
+    CPPUNIT_ASSERT_EQUAL(tf, p.getThreadFactory());
+    joinPool(&p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testSetThreadFactoryNull() {
+
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    try {
+        p.setThreadFactory(NULL);
+        shouldThrow();
+    } catch(...) {
+    }
+
+    joinPool(&p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetRejectedExecutionHandler() {
+
+    RejectedExecutionHandler* h = new NoOpREHandler();
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>(), h);
+    CPPUNIT_ASSERT_EQUAL(h, p.getRejectedExecutionHandler());
+    joinPool(p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testSetRejectedExecutionHandler() {
+
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    RejectedExecutionHandler* h = new NoOpREHandler();
+    p.setRejectedExecutionHandler(h);
+    CPPUNIT_ASSERT_EQUAL(h, p.getRejectedExecutionHandler());
+    joinPool(p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testSetRejectedExecutionHandlerNull() {
+
+    ThreadPoolExecutor p(1,2,LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        p.setRejectedExecutionHandler(NULL),
+        NullPointerException );
+
+    joinPool(p);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetLargestPoolSize() {
+
+    ThreadPoolExecutor p2(2, 2, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    try {
+        CPPUNIT_ASSERT_EQUAL(0, p2.getLargestPoolSize());
+        p2.execute(new MediumRunnable(this));
+        p2.execute(new MediumRunnable(this));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(2, p2.getLargestPoolSize());
+    } catch(Exception& e){
+        unexpectedException();
+    }
+
+    joinPool(p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetMaximumPoolSize() {
+
+    ThreadPoolExecutor p2(2, 2, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(2, p2.getMaximumPoolSize());
+    joinPool(p2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetPoolSize() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT_EQUAL(0, p1.getPoolSize());
+    p1.execute(new MediumRunnable(this));
+    CPPUNIT_ASSERT_EQUAL(1, p1.getPoolSize());
+    joinPool(p1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testGetTaskCount() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    try {
+        CPPUNIT_ASSERT_EQUAL(0LL, p1.getTaskCount());
+        p1.execute(new MediumRunnable(this));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(1LL, p1.getTaskCount());
+    } catch(Exception& e){
+        unexpectedException();
+    }
+    joinPool(p1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testIsShutdown() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT(!p1.isShutdown());
+    p1.shutdown();
+    CPPUNIT_ASSERT(p1.isShutdown());
+    joinPool(p1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testIsTerminated() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT(!p1.isTerminated());
+    try {
+        p1.execute(new MediumRunnable(this));
+    } catch(...) {
+    }
+
+    p1.shutdown();
+
+    try {
+        CPPUNIT_ASSERT(p1.awaitTermination(LONG_DELAY_MS, TimeUnit::MILLISECONDS));
+        CPPUNIT_ASSERT(p1.isTerminated());
+    } catch(Exception& e){
+        unexpectedException();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testIsTerminating() {
+
+    ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, new LinkedBlockingQueue<Runnable*>());
+    CPPUNIT_ASSERT(!p1.isTerminating());
+    try {
+        p1.execute(new SmallRunnable(this));
+        CPPUNIT_ASSERT(!p1.isTerminating());
+    } catch(...) {
+    }
+
+    p1.shutdown();
+
+    try {
+        CPPUNIT_ASSERT(p1.awaitTermination(LONG_DELAY_MS, TimeUnit::MILLISECONDS));
+        CPPUNIT_ASSERT(p1.isTerminated());
+        CPPUNIT_ASSERT(!p1.isTerminating());
+    } catch(Exception& e){
+        unexpectedException();
+    }
 }

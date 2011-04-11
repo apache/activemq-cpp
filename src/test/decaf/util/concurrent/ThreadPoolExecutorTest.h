@@ -18,9 +18,7 @@
 #ifndef _DECAF_UTIL_CONCURRENT_THREADPOOLEXECUTORTEST_H_
 #define _DECAF_UTIL_CONCURRENT_THREADPOOLEXECUTORTEST_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
+#include <decaf/util/concurrent/ExecutorsTestSupport.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/Thread.h>
@@ -32,7 +30,7 @@ namespace decaf{
 namespace util{
 namespace concurrent{
 
-    class ThreadPoolExecutorTest : public CppUnit::TestFixture {
+    class ThreadPoolExecutorTest : public ExecutorsTestSupport {
     private:
 
         CPPUNIT_TEST_SUITE( ThreadPoolExecutorTest );
@@ -41,6 +39,24 @@ namespace concurrent{
         CPPUNIT_TEST( testMoreTasksThanMaxPoolSize );
         CPPUNIT_TEST( testTasksThatThrow );
         CPPUNIT_TEST( testAwaitTermination );
+        CPPUNIT_TEST( testPrestartCoreThread );
+        CPPUNIT_TEST( testPrestartAllCoreThreads );
+        CPPUNIT_TEST( testGetCompletedTaskCount );
+        CPPUNIT_TEST( testGetCorePoolSize );
+        CPPUNIT_TEST( testGetKeepAliveTime );
+        CPPUNIT_TEST( testGetThreadFactory );
+        CPPUNIT_TEST( testSetThreadFactory );
+        CPPUNIT_TEST( testSetThreadFactoryNull );
+        CPPUNIT_TEST( testGetRejectedExecutionHandler );
+        CPPUNIT_TEST( testSetRejectedExecutionHandler );
+        CPPUNIT_TEST( testSetRejectedExecutionHandlerNull );
+        CPPUNIT_TEST( testGetLargestPoolSize );
+        CPPUNIT_TEST( testGetMaximumPoolSize );
+        CPPUNIT_TEST( testGetPoolSize );
+        //CPPUNIT_TEST( testGetTaskCount );
+        CPPUNIT_TEST( testIsShutdown );
+        CPPUNIT_TEST( testIsTerminated );
+        CPPUNIT_TEST( testIsTerminating );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -57,6 +73,24 @@ namespace concurrent{
         void testMoreTasksThanMaxPoolSize();
         void testTasksThatThrow();
         void testAwaitTermination();
+        void testPrestartCoreThread();
+        void testPrestartAllCoreThreads();
+        void testGetCompletedTaskCount();
+        void testGetCorePoolSize();
+        void testGetKeepAliveTime();
+        void testGetThreadFactory();
+        void testSetThreadFactory();
+        void testSetThreadFactoryNull();
+        void testGetRejectedExecutionHandler();
+        void testSetRejectedExecutionHandler();
+        void testSetRejectedExecutionHandlerNull();
+        void testGetLargestPoolSize();
+        void testGetMaximumPoolSize();
+        void testGetPoolSize();
+        void testGetTaskCount();
+        void testIsShutdown();
+        void testIsTerminated();
+        void testIsTerminating();
 
     };
 
