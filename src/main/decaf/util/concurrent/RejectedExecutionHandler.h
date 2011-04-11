@@ -36,7 +36,8 @@ namespace concurrent {
     class DECAF_API RejectedExecutionHandler {
     public:
 
-        virtual ~RejectedExecutionHandler() {}
+        RejectedExecutionHandler();
+        virtual ~RejectedExecutionHandler();
 
         /**
          * Method that may be invoked by a {@link ThreadPoolExecutor} when
@@ -56,8 +57,7 @@ namespace concurrent {
          *
          * @throws RejectedExecutionException if there is no remedy.
          */
-        virtual void rejectedExecution( Runnable* r, ThreadPoolExecutor* executer )
-            throw( RejectedExecutionException ) = 0;
+        virtual void rejectedExecution( decaf::lang::Runnable* r, ThreadPoolExecutor* executer ) = 0;
 
     };
 

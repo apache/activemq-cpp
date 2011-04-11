@@ -28,8 +28,10 @@
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalThreadStateException.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Executors.h>
 
 #include <vector>
 
@@ -231,10 +233,16 @@ void Thread::initThreading() {
 
     // We mark the thread where Decaf's Init routine is called from as our Main Thread.
     mainThread = Thread::createForeignThreadInstance( "Main Thread" );
+
+    // Initialize the Executors static data for use in ExecutorService classes.
+    Executors::initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::shutdownThreading() {
+
+    // First shutdown the Executors static data to remove dependencies on Threading.
+    Executors::shutdown();
 
     // Clear the Main Thread instance pointer, this indicates we are Shutdown.
     mainThread = NULL;
@@ -576,6 +584,21 @@ void Thread::setPriority( int value ) {
 ////////////////////////////////////////////////////////////////////////////////
 int Thread::getPriority() const {
     return this->properties->priority;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Thread::isDaemon() const {
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Thread::setDaemon(bool value DECAF_UNUSED) {
+
+    if(this->properties->state > Thread::NEW) {
+        throw IllegalThreadStateException(__FILE__, __LINE__, "Thread is already active.");
+    }
+
+    // TODO - Set thread to detached or joinable as indicated by the value arg.
 }
 
 ////////////////////////////////////////////////////////////////////////////////

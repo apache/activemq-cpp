@@ -20,6 +20,12 @@
 #include <decaf/lang/ArrayPointer.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/lang/Short.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
+#include <decaf/lang/Float.h>
+#include <decaf/lang/Double.h>
 
 using namespace std;
 using namespace decaf;
@@ -66,6 +72,60 @@ String::String( const std::string& source ) : contents(new Contents((int)source.
 
     // load the passed string into the contents value.
     System::arraycopy( (unsigned char*)source.c_str(), 0, contents->value.get(), 0, source.length() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String::String(const char* array, int size) : contents(new Contents) {
+
+    if( size < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    }
+
+    if( array == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Buffer pointer passed was NULL." );
+    }
+
+    if(size > 0) {
+
+        this->contents->value = ArrayPointer<unsigned char>(size);
+        this->contents->length = size;
+
+        System::arraycopy( (unsigned char*)array, 0, contents->value.get(), 0, size );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String::String(const char* array, int size, int offset, int length) : contents(new Contents) {
+
+    if( size < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+    }
+
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+    }
+
+    if( array == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Buffer pointer passed was NULL." );
+    }
+
+    if(size > 0) {
+
+        this->contents->value = ArrayPointer<unsigned char>(length);
+        this->contents->length = length;
+
+        System::arraycopy( (unsigned char*)array, offset, contents->value.get(), 0, length );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,4 +192,44 @@ std::string String::toString() const {
     }
 
     return std::string( (const char*)this->contents->value.get(), this->length() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(bool value) {
+
+    if(value) {
+        return String("true");
+    }
+
+    return String("false");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(char value) {
+    return String( &value, 1 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(float value) {
+    return String( Float::toString(value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(double value) {
+    return String( Double::toString(value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(short value) {
+    return String( Short::toString(value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(int value) {
+    return String( Integer::toString(value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::valueOf(long long value) {
+    return String( Long::toString(value) );
 }

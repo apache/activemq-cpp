@@ -432,6 +432,7 @@ cc_sources = \
     decaf/util/Timer.cpp \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
+    decaf/util/concurrent/AbstractExecutorService.cpp \
     decaf/util/concurrent/BlockingQueue.cpp \
     decaf/util/concurrent/BrokenBarrierException.cpp \
     decaf/util/concurrent/Callable.cpp \
@@ -443,10 +444,12 @@ cc_sources = \
     decaf/util/concurrent/Delayed.cpp \
     decaf/util/concurrent/Executor.cpp \
     decaf/util/concurrent/ExecutorService.cpp \
+    decaf/util/concurrent/Executors.cpp \
     decaf/util/concurrent/Future.cpp \
     decaf/util/concurrent/LinkedBlockingQueue.cpp \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
+    decaf/util/concurrent/RejectedExecutionHandler.cpp \
     decaf/util/concurrent/Semaphore.cpp \
     decaf/util/concurrent/SynchronousQueue.cpp \
     decaf/util/concurrent/ThreadFactory.cpp \
@@ -456,6 +459,7 @@ cc_sources = \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
     decaf/util/concurrent/atomic/AtomicRefCounter.cpp \
     decaf/util/concurrent/atomic/AtomicReference.cpp \
+    decaf/util/concurrent/locks/AbstractOwnableSynchronizer.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
@@ -1019,6 +1023,7 @@ h_sources = \
     decaf/util/TimerTask.h \
     decaf/util/UUID.h \
     decaf/util/comparators/Less.h \
+    decaf/util/concurrent/AbstractExecutorService.h \
     decaf/util/concurrent/BlockingQueue.h \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Callable.h \
@@ -1033,6 +1038,7 @@ h_sources = \
     decaf/util/concurrent/ExecutionException.h \
     decaf/util/concurrent/Executor.h \
     decaf/util/concurrent/ExecutorService.h \
+    decaf/util/concurrent/Executors.h \
     decaf/util/concurrent/Future.h \
     decaf/util/concurrent/LinkedBlockingQueue.h \
     decaf/util/concurrent/Lock.h \
@@ -1050,6 +1056,7 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicInteger.h \
     decaf/util/concurrent/atomic/AtomicRefCounter.h \
     decaf/util/concurrent/atomic/AtomicReference.h \
+    decaf/util/concurrent/locks/AbstractOwnableSynchronizer.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \
     decaf/util/concurrent/locks/LockSupport.h \

@@ -275,6 +275,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::MutexTest );
 #include <decaf/util/concurrent/ThreadPoolExecutorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolExecutorTest );
+#include <decaf/util/concurrent/ExecutorsTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ExecutorsTest );
 #include <decaf/util/concurrent/TimeUnitTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::TimeUnitTest );
 #include <decaf/util/concurrent/LinkedBlockingQueueTest.h>

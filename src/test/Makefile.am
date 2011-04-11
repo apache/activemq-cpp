@@ -207,6 +207,7 @@ cc_sources = \
     decaf/util/concurrent/CopyOnWriteArrayListTest.cpp \
     decaf/util/concurrent/CopyOnWriteArraySetTest.cpp \
     decaf/util/concurrent/CountDownLatchTest.cpp \
+    decaf/util/concurrent/ExecutorsTest.cpp \
     decaf/util/concurrent/LinkedBlockingQueueTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
     decaf/util/concurrent/SynchronousQueueTest.cpp \
@@ -429,6 +430,7 @@ h_sources = \
     decaf/util/concurrent/CopyOnWriteArrayListTest.h \
     decaf/util/concurrent/CopyOnWriteArraySetTest.h \
     decaf/util/concurrent/CountDownLatchTest.h \
+    decaf/util/concurrent/ExecutorsTest.h \
     decaf/util/concurrent/LinkedBlockingQueueTest.h \
     decaf/util/concurrent/MutexTest.h \
     decaf/util/concurrent/SynchronousQueueTest.h \

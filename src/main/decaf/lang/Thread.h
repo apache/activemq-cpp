@@ -263,6 +263,25 @@ namespace lang{
         void setPriority( int value );
 
         /**
+         * Sets if the given Thread is a Daemon Thread or not.  Daemon threads cannot be
+         * joined and its resource are automatically reclaimed when it terminates.
+         *
+         * @param value
+         *      Boolean indicating if this thread should be a daemon thread or not.
+         *
+         * @throws IllegalThreadStateException if the thread is already active.
+         */
+        void setDaemon(bool value);
+
+        /**
+         * Returns whether this thread is a daemon thread or not, if true this thread cannot
+         * be joined.
+         *
+         * @return true if the thread is a daemon thread.
+         */
+        bool isDaemon() const;
+
+        /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
          *
          * @returns a pointer to the set UncaughtExceptionHandler.

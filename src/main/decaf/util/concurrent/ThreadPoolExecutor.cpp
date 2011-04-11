@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <decaf/util/concurrent/ThreadPoolExecutor.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/concurrent/CountDownLatch.h>
-#include <decaf/util/Timer.h>
-#include <decaf/util/TimerTask.h>
-#include <decaf/util/concurrent/atomic/AtomicInteger.h>
-#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
-#include <decaf/util/concurrent/RejectedExecutionException.h>
+
+#include "ThreadPoolExecutor.h"
+
 #include <decaf/util/Config.h>
 #include <decaf/util/LinkedList.h>
+#include <decaf/util/Timer.h>
+#include <decaf/util/TimerTask.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/RejectedExecutionException.h>
+#include <decaf/util/concurrent/RejectedExecutionHandler.h>
+#include <decaf/util/concurrent/Executors.h>
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Math.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 #include <algorithm>
 #include <iostream>
@@ -63,6 +68,7 @@ namespace concurrent{
         int maxPoolSize;
         int corePoolSize;
         long long keepAliveTime;
+        bool coreThreadsCanTimeout;
         Pointer< BlockingQueue<decaf::lang::Runnable*> > workQueue;
         Mutex mainLock;
         CountDownLatch termination;
@@ -70,11 +76,15 @@ namespace concurrent{
         long long completedTasks;
         int largestPoolSize;
 
+        Pointer<ThreadFactory> factory;
+        Pointer<RejectedExecutionHandler> rejectionHandler;
+
     public:
 
         ExecutorKernel(ThreadPoolExecutor* parent,
                        int corePoolSize, int maxPoolSize, long long keepAliveTime,
-                       BlockingQueue<decaf::lang::Runnable*>* workQueue);
+                       BlockingQueue<decaf::lang::Runnable*>* workQueue,
+                       ThreadFactory* threadFactory, RejectedExecutionHandler* handler);
 
         ~ExecutorKernel();
 
@@ -88,17 +98,23 @@ namespace concurrent{
 
         Runnable* deQueueTask();
 
-        void AllocateThread();
+        bool addWorker();
+
+        int addAllWorkers();
 
         bool isStoppedOrStopping();
 
         void shutdown();
+
+        void shutdownNow(ArrayList<Runnable*>& unexecutedTasks);
 
         bool awaitTermination(long long timeout, const TimeUnit& unit);
 
         void handleWorkerExit(Worker* worker);
 
         void tryTerminate();
+
+        void drainQueue(ArrayList<Runnable*>& unexecutedTasks);
 
     };
 
@@ -137,6 +153,11 @@ namespace concurrent{
                     Runnable* task = this->kernel->deQueueTask();
 
                     if(this->done) {
+
+                        if(task != NULL) {
+                            delete task;
+                        }
+
                         break;
                     }
 
@@ -216,7 +237,122 @@ namespace concurrent{
 ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
                                        long long keepAliveTime, const TimeUnit& unit,
                                        BlockingQueue<decaf::lang::Runnable*>* workQueue) :
-    kernel(new ExecutorKernel(this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue)) {
+    AbstractExecutorService(),
+    kernel(NULL) {
+
+    try{
+
+        if(workQueue == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The BlockingQueue pointer cannot be NULL.");
+        }
+
+        Pointer<RejectedExecutionHandler> handler(new ThreadPoolExecutor::AbortPolicy());
+        Pointer<ThreadFactory> threadFactory(Executors::getDefaultThreadFactory());
+
+        this->kernel = new ExecutorKernel(
+            this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue,
+            threadFactory.get(), handler.get());
+
+        handler.release();
+        threadFactory.release();
+    }
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
+                                       long long keepAliveTime, const TimeUnit& unit,
+                                       BlockingQueue<decaf::lang::Runnable*>* workQueue,
+                                       RejectedExecutionHandler* handler) :
+    AbstractExecutorService(),
+    kernel(NULL) {
+
+    try{
+
+        if(workQueue == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The BlockingQueue pointer cannot be NULL.");
+        }
+
+        if(handler == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The RejectedExecutionHandler pointer cannot be NULL.");
+        }
+
+        Pointer<ThreadFactory> threadFactory(Executors::getDefaultThreadFactory());
+
+        this->kernel = new ExecutorKernel(
+            this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue,
+            threadFactory.get(), handler);
+
+        threadFactory.release();
+    }
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
+                                       long long keepAliveTime, const TimeUnit& unit,
+                                       BlockingQueue<decaf::lang::Runnable*>* workQueue,
+                                       ThreadFactory* threadFactory) :
+    AbstractExecutorService(),
+    kernel(NULL) {
+
+    try{
+
+        if(workQueue == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The BlockingQueue pointer cannot be NULL.");
+        }
+
+        if(threadFactory == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The ThreadFactory pointer cannot be NULL.");
+        }
+
+        Pointer<RejectedExecutionHandler> handler(new ThreadPoolExecutor::AbortPolicy());
+
+        this->kernel = new ExecutorKernel(
+            this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue,
+            threadFactory, handler.get());
+
+        handler.release();
+    }
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
+                                       long long keepAliveTime, const TimeUnit& unit,
+                                       BlockingQueue<decaf::lang::Runnable*>* workQueue,
+                                       ThreadFactory* threadFactory, RejectedExecutionHandler* handler) :
+    AbstractExecutorService(),
+    kernel(NULL) {
+
+    try{
+
+        if(workQueue == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The BlockingQueue pointer cannot be NULL.");
+        }
+
+        if(handler == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The RejectedExecutionHandler pointer cannot be NULL.");
+        }
+
+        if(threadFactory == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "The ThreadFactory pointer cannot be NULL.");
+        }
+
+        this->kernel = new ExecutorKernel(
+            this, corePoolSize, maxPoolSize, unit.toMillis(keepAliveTime), workQueue,
+            threadFactory, handler);
+    }
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +361,7 @@ ThreadPoolExecutor::~ThreadPoolExecutor() {
     try{
         delete kernel;
     }
-    DECAF_CATCH_NOTHROW( lang::Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 
@@ -257,6 +393,19 @@ void ThreadPoolExecutor::shutdown() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ArrayList<Runnable*> ThreadPoolExecutor::shutdownNow() {
+
+    ArrayList<Runnable*> result;
+
+    try{
+        this->kernel->shutdownNow(result);
+        return result;
+    }
+    DECAF_CATCH_RETHROW( lang::Exception )
+    DECAF_CATCHALL_THROW( lang::Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ThreadPoolExecutor::awaitTermination(long long timeout, const TimeUnit& unit) {
 
     try{
@@ -282,8 +431,50 @@ int ThreadPoolExecutor::getCorePoolSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::setCorePoolSize(int poolSize) {
+
+    if (poolSize < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Pool size given was negative.");
+    }
+
+    synchronized(&this->kernel->mainLock) {
+
+        //int delta = poolSize - this->kernel->corePoolSize;
+        this->kernel->corePoolSize = poolSize;
+
+        if (this->kernel->workers.size() > poolSize) {
+            // TODO - Once Threads are interruptible wake them up so some can terminate.
+        } else {
+
+            // TODO - Create new threads up to the new pool size, unless we are out
+            //        of work or run out while creating.
+//            int target = Math::min(delta, this->kernel->workQueue->size());
+//            while (target-- > 0 && addWorker(NULL, true)) {
+//                if (this->kernel->workQueue->isEmpty()) {
+//                    break;
+//                }
+//            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int ThreadPoolExecutor::getMaximumPoolSize() const {
     return this->kernel->maxPoolSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::setMaximumPoolSize(int maxSize) {
+
+    if (maxSize < 0 || maxSize < this->kernel->corePoolSize) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Size given was invalid.");
+    }
+
+    this->kernel->maxPoolSize = maxSize;
+
+    if (this->kernel->workers.size() > maxSize) {
+        // TODO - Wake idle worker threads when able to.
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,6 +516,47 @@ int ThreadPoolExecutor::getLargestPoolSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::setThreadFactory(ThreadFactory* factory) {
+
+    if (factory == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Cannot assign a NULL ThreadFactory.");
+    }
+
+    if (factory != this->kernel->factory) {
+        Pointer<ThreadFactory> temp(factory);
+        this->kernel->factory.swap(temp);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ThreadFactory* ThreadPoolExecutor::getThreadFactory() const {
+    return this->kernel->factory.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+RejectedExecutionHandler* ThreadPoolExecutor::getRejectedExecutionHandler() const {
+    return this->kernel->rejectionHandler.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::setRejectedExecutionHandler(RejectedExecutionHandler* handler) {
+
+    if (handler == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Cannot assign a NULL ThreadFactory.");
+    }
+
+    if (handler != this->kernel->rejectionHandler) {
+        Pointer<RejectedExecutionHandler> temp(handler);
+        this->kernel->rejectionHandler.swap(temp);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+BlockingQueue<Runnable*>* ThreadPoolExecutor::getQueue() {
+    return this->kernel->workQueue.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ThreadPoolExecutor::isShutdown() const {
     return this->kernel->stopped.get();
 }
@@ -335,13 +567,94 @@ bool ThreadPoolExecutor::isTerminated() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::isTerminating() const {
+    return this->kernel->isStoppedOrStopping() && !this->kernel->terminated.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::allowCoreThreadTimeout(bool value) {
+
+    if (value == true && this->kernel->keepAliveTime == 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__,
+            "Keep Alive Time must be set to a non-zero value to enable this option.");
+    }
+
+    if (value != this->kernel->coreThreadsCanTimeout) {
+        this->kernel->coreThreadsCanTimeout = value;
+        if (value == true) {
+            // TODO - When Threads are interruptible wake works so they can check timeout.
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ThreadPoolExecutor::getKeepAliveTime(const TimeUnit& unit) const {
+    return unit.convert(this->kernel->keepAliveTime, TimeUnit::MILLISECONDS);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::setKeepAliveTime(long long timeout, const TimeUnit& unit) {
+
+    if (timeout < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Timeout value cannot be negative.");
+    }
+
+    if (this->kernel->coreThreadsCanTimeout == true && unit.toMillis(timeout) == 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__,
+            "Keep Alive Time must be set to a non-zero value when allowCoreThreadsTimeout is enabled.");
+    }
+
+    long keepAliveTime = unit.toMillis(timeout);
+    long delta = keepAliveTime - this->kernel->keepAliveTime;
+    this->kernel->keepAliveTime = keepAliveTime;
+    if (delta < 0) {
+        // TODO - When Threads are interruptible wake works so they can check timeout.
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::allowsCoreThreadTimeout() const {
+    return this->kernel->coreThreadsCanTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::prestartCoreThread() {
+    return this->kernel->addWorker();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ThreadPoolExecutor::prestartAllCoreThreads() {
+    return this->kernel->addAllWorkers();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ThreadPoolExecutor::remove(decaf::lang::Runnable* task) {
+    bool removed = this->kernel->workQueue->remove(task);
+    this->kernel->tryTerminate();
+    return removed;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::purge() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::beforeExecute(Thread* thread DECAF_UNUSED, Runnable* task DECAF_UNUSED) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutor::afterExecute(Runnable* task DECAF_UNUSED, decaf::lang::Throwable* error DECAF_UNUSED) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ThreadPoolExecutor::terminated() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ExecutorKernel::ExecutorKernel(ThreadPoolExecutor* parent, int corePoolSize,
                                int maxPoolSize, long long keepAliveTime,
-                               BlockingQueue<decaf::lang::Runnable*>* workQueue) :
+                               BlockingQueue<decaf::lang::Runnable*>* workQueue,
+                               ThreadFactory* threadFactory, RejectedExecutionHandler* handler) :
     parent(parent),
     workers(),
     deadWorkers(),
@@ -353,11 +666,14 @@ ExecutorKernel::ExecutorKernel(ThreadPoolExecutor* parent, int corePoolSize,
     maxPoolSize(maxPoolSize),
     corePoolSize(corePoolSize),
     keepAliveTime(keepAliveTime),
-    workQueue(workQueue),
+    coreThreadsCanTimeout(false),
+    workQueue(),
     mainLock(),
     termination(1),
     completedTasks(0),
-    largestPoolSize(0) {
+    largestPoolSize(0),
+    factory(),
+    rejectionHandler() {
 
     if(corePoolSize < 0 || maxPoolSize <= 0 ||
        maxPoolSize < corePoolSize || keepAliveTime < 0) {
@@ -365,12 +681,16 @@ ExecutorKernel::ExecutorKernel(ThreadPoolExecutor* parent, int corePoolSize,
         throw IllegalArgumentException(__FILE__, __LINE__, "Argument out of range.");
     }
 
-    if(workQueue == NULL) {
-        throw NullPointerException(__FILE__, __LINE__, "BlockingQueue pointer was null");
+    if(workQueue == NULL || threadFactory == NULL || handler == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Required parameter was NULL");
     }
 
     this->cleanupTimer.scheduleAtFixedRate(
         new WorkerKiller(this), TimeUnit::SECONDS.toMillis(10), TimeUnit::SECONDS.toMillis(10));
+
+    this->workQueue.reset(workQueue);
+    this->factory.reset(threadFactory);
+    this->rejectionHandler.reset(handler);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -414,7 +734,7 @@ void ExecutorKernel::onTaskStarted(Worker* thread DECAF_UNUSED) {
             // cause the number of Task to exceed the number of free threads
             // once the Threads got a chance to wake up and service the queue
             if( freeThreads.get() == 0 && !workQueue->isEmpty() ) {
-                AllocateThread();
+                addWorker();
             }
         }
     }
@@ -470,13 +790,13 @@ void ExecutorKernel::enQueueTask(Runnable* task) {
             // If there's nobody open to do work, then create some more
             // threads to handle the work.
             if( this->freeThreads.get() == 0 ) {
-                AllocateThread();
+                addWorker();
             }
-        }
 
-        // queue the new work.
-        if(!this->workQueue->offer(task)) {
-            throw RejectedExecutionException(__FILE__, __LINE__, "Task Rejected by work Q");
+            // queue the new work.
+            if(isStoppedOrStopping() || !this->workQueue->offer(task)) {
+                this->rejectionHandler->rejectedExecution(task, this->parent);
+            }
         }
     }
     DECAF_CATCH_RETHROW( Exception )
@@ -490,24 +810,19 @@ Runnable* ExecutorKernel::deQueueTask() {
 
         Runnable* task = NULL;
 
-        // Wait for work, wait in a while loop since another thread could
-        // be waiting for a lock and get the work before we get woken up
-        // from our wait.
-        while( !isStoppedOrStopping() ) {
+        while(true) {
 
-            // TODO - Threads aren't interruptible yet.
+            // TODO - Threads aren't interruptible yet, so spin wait.
             if(workQueue->poll(task, 10, TimeUnit::MILLISECONDS)) {
+                break;
+            }
+
+            if(isStoppedOrStopping() && workQueue->isEmpty()) {
                 break;
             }
         }
 
-        // Don't give more work if we are closing down
-        if(isStoppedOrStopping()) {
-
-            if(task != NULL) {
-                delete task;
-            }
-
+        if(isStoppedOrStopping() && task == NULL) {
             return NULL;
         }
 
@@ -523,12 +838,12 @@ Runnable* ExecutorKernel::deQueueTask() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ExecutorKernel::AllocateThread() {
+bool ExecutorKernel::addWorker() {
 
     try{
 
         if( this->workers.size() >= this->maxPoolSize ) {
-            return;
+            return false;
         }
 
         synchronized( &mainLock ) {
@@ -538,6 +853,38 @@ void ExecutorKernel::AllocateThread() {
             newWorker->start();
             this->largestPoolSize++;
         }
+
+        return true;
+    }
+    DECAF_CATCH_RETHROW( lang::Exception )
+    DECAF_CATCHALL_THROW( lang::Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ExecutorKernel::addAllWorkers() {
+
+    try{
+
+        if( this->workers.size() >= this->maxPoolSize ) {
+            return 0;
+        }
+
+        int delta = 0;
+
+        synchronized( &mainLock ) {
+
+            delta = this->maxPoolSize - this->workers.size();
+
+            for(int i = 0; i < delta; ++i) {
+                Worker* newWorker = new Worker(this);
+                this->workers.add(newWorker);
+                freeThreads.incrementAndGet();
+                newWorker->start();
+                this->largestPoolSize++;
+            }
+        }
+
+        return delta;
     }
     DECAF_CATCH_RETHROW( lang::Exception )
     DECAF_CATCHALL_THROW( lang::Exception )
@@ -563,6 +910,29 @@ void ExecutorKernel::shutdown() {
 
         synchronized(&mainLock) {
 
+            // TODO - When threads are interruptible, we need to interrupt the Queue.
+            //synchronized( workQueue.get() ) {
+            //    // Signal the Queue so that all waiters are notified
+            //    workQueue->notifyAll();
+            //}
+        }
+
+        this->tryTerminate();
+        this->stopped.set(true);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::shutdownNow(ArrayList<Runnable*>& unexecutedTasks) {
+
+    if(isStoppedOrStopping()) {
+        return;
+    }
+
+    if(this->stopping.compareAndSet(false, true)) {
+
+        synchronized(&mainLock) {
+
             Pointer< Iterator<Worker*> > iter(this->workers.iterator());
 
             while(iter->hasNext()) {
@@ -574,9 +944,34 @@ void ExecutorKernel::shutdown() {
             //    // Signal the Queue so that all waiters are notified
             //    workQueue->notifyAll();
             //}
+
+            this->drainQueue(unexecutedTasks);
         }
 
+        this->tryTerminate();
         this->stopped.set(true);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::drainQueue(ArrayList<Runnable*>& unexecutedTasks) {
+
+    // Some Queue implementations can fail in poll and drainTo so we check
+    // after attempting to drain the Queue and if its not empty we remove
+    // the tasks one by one.
+
+    this->workQueue->drainTo(unexecutedTasks);
+    if (!this->workQueue->isEmpty()) {
+
+        std::vector<Runnable*> tasks = this->workQueue->toArray();
+        std::vector<Runnable*>::iterator iter = tasks.begin();
+
+        for (; iter != tasks.end(); ++iter) {
+
+            if (this->workQueue->remove(*iter)) {
+                unexecutedTasks.add(*iter);
+            }
+        }
     }
 }
 
