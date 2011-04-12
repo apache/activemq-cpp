@@ -122,7 +122,7 @@ run_Clean() {
 run_Make() {
     check_Configure
     pushd $AMQCPP_BUILD_DIR
-    make
+    make -j 4
     popd
     exit
 }
