@@ -108,7 +108,7 @@ namespace io{
          * @return a new exception that is a copy of this one.
          */
         virtual InterruptedIOException* clone() const {
-            return new IOException( *this );
+            return new InterruptedIOException( *this );
         }
 
         virtual ~InterruptedIOException() throw() {}

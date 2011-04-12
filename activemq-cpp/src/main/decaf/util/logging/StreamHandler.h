@@ -19,86 +19,87 @@
 
 #include <decaf/util/logging/LoggerCommon.h>
 #include <decaf/util/logging/Handler.h>
-#include <decaf/util/logging/Formatter.h>
-#include <decaf/util/logging/Filter.h>
-#include <decaf/io/OutputStream.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/Config.h>
 
 namespace decaf{
+namespace io{
+    class OutputStream;
+    class Writer;
+}
 namespace util{
 namespace logging{
 
+    /**
+     * Stream based logging Handler.
+     *
+     * This is primarily intended as a base class or support class to be used in implementing
+     * other logging Handlers.
+     *
+     * LogRecords are published to a given <code>decaf::io::OutputStream</code>.
+     *
+     * Configuration: By default each StreamHandler is initialized using the following LogManager
+     * configuration properties. If properties are not defined (or have invalid values) then the
+     * specified default values are used.
+     *
+     *   * decaf.util.logging.StreamHandler.level specifies the default level for the Handler
+     *     (defaults to Level.INFO).
+     *   * decaf.util.logging.StreamHandler.filter specifies the name of a Filter class to use
+     *     (defaults to no Filter).
+     *   * decaf.util.logging.StreamHandler.formatter specifies the name of a Formatter class
+     *     to use (defaults to decaf.util.logging.SimpleFormatter).
+     *
+     * @since 1.0
+     */
     class DECAF_API StreamHandler : public Handler {
     private:
 
         // OutputStream to write to
-        io::OutputStream* stream;
+        decaf::io::OutputStream* stream;
 
-        // Formats this Handlers output
-        Formatter* formatter;
+        // A Writer to wrap the OutputStream
+        decaf::io::Writer* writer;
 
-        // Filter object for Log Filtering
-        Filter* filter;
+        // Indicates if the writer has been initialized already
+        bool writerNotInitialized;
+
+    private:
+
+        StreamHandler( const StreamHandler& );
+        StreamHandler& operator= ( const StreamHandler& );
 
     public:
 
         /**
          * Create a StreamHandler, with no current output stream.
          */
-        StreamHandler() {
-            this->stream = NULL;
-            this->formatter = NULL;
-            this->filter = NULL;
-
-            this->level = Level::FATAL;  // We take everything by default
-        }
+        StreamHandler();
 
         /**
          * Create a StreamHandler, with no current output stream.
          */
-        StreamHandler( io::OutputStream* stream, Formatter* formatter ) {
-            this->stream = stream;
-            this->formatter = formatter;
-            this->filter = NULL;
+        StreamHandler( decaf::io::OutputStream* stream, Formatter* formatter );
 
-            this->level = Level::Fatal;  // We take everything by default
-        }
-
-        virtual ~StreamHandler() {
-            try {
-                this->close();
-            }
-            DECAF_CATCH_NOTHROW( lang::Exception)
-            DECAF_CATCHALL_NOTHROW()
-        }
+        virtual ~StreamHandler();
 
         /**
          * Close the current output stream.
-         * <p>
+         *
          * The close method will perform a flush and then close the Handler.
          * After close has been called this Handler  should no longer be used.
          * Method calls may either be silently ignored or may throw runtime
          * exceptions.
-         * @throw IOException
+         *
+         * @throw IOException if an I/O error occurs.
          */
-        virtual void close() throw ( decaf::io::IOException ) {
-            if( stream ) {
-                stream.flush();
-                stream.close();
-            }
-        }
+        virtual void close();
 
         /**
          * Flush the Handler's output, clears any buffers.
          */
-        virtual void flush() {
-            if(stream) {
-                stream->flush();
-            }
-        }
+        virtual void flush();
 
         /**
          * Publish the Log Record to this Handler
@@ -106,113 +107,51 @@ namespace logging{
          * @param record
          *      The <code>LogRecord</code> to Publish
          */
-        virtual void publish( const LogRecord& record ) {
-
-            try {
-
-                if( !stream ) {
-                    throw lang::exceptions::NullPointerException(
-                        __FILE__, __LINE__,
-                        "StreamHandler::publish - Stream not set.");
-                }
-
-                // Check if we should log this record
-                if(isLoggable( record) ) {
-
-                    std::string log = formatter->format(record);
-
-                    synchronized(stream) {
-                        // Write the data to the stream
-                        stream->write(log.c_str(), log.length());
-                    }
-                }
-            }
-            DECAF_CATCH_RETHROW( lang::Exception )
-            DECAF_CATCHALL_THROW( lang::Exception )
-        }
+        virtual void publish( const LogRecord& record );
 
         /**
          * Check if this Handler would actually log a given LogRecord.
          * <p>
          * @param record
          *      <code>LogRecord</code> to check
-         */
-        virtual void isLoggable( const LogRecord& record ) {
-
-            if( filter ) {
-                // Allow for some filtering to occur
-                return filter->isLoggable( record );
-            }
-
-            // By default we want everything that is greater than or
-            // equal to the set level of this Handler.
-            return record.level >= level;
-        }
-
-        /**
-         * Sets the Filter that this Handler uses to filter Log Records
-         * @param filter
-         *      <code>Filter</code> derived instance
-         */
-        virtual void setFilter( const Filter* filter ){
-            this->filter = filter;
-        }
-
-        /**
-         * Gets the Filter that this Handler uses to filter Log Records
-         * @return <code>Filter</code> derived instance
-         */
-        virtual const Filter* getFilter(){
-            return filter;
-        }
-
-        /**
-         * Set the log level specifying which message levels will be logged
-         * by this Handler.
-         * <p>
-         * The intention is to allow developers to turn on verbose logging,
-         * but to limit the messages that are sent to certain Handlers.
          *
-         * @param level
-         *      Level enumeration value
+         * @return true if the record can be logged with current settings.
          */
-        virtual void setLevel( Level level ){
-            this->level = level;
-        }
+        virtual bool isLoggable( const LogRecord& record ) const;
+
+    protected:
 
         /**
-         * Get the log level specifying which message levels will be logged
-         * by this Handler.
-         * @return Currently set Level enumeration value
+         * Change the output stream.
+         *
+         * If there is a current output stream then the Formatter's tail string is written and
+         * the stream is flushed and closed. Then the output stream is replaced with the new
+         * output stream.
+         *
+         * @param stream
+         *      The new output stream. May not be NULL.
+         *
+         * @throws NullPointerException if the passed stream is NULL.
          */
-        virtual Level getLevel(){
-            return level;
-        }
+        virtual void setOuputStream( decaf::io::OutputStream* stream );
 
         /**
-         * Sets the <code>Formatter</code> used by this Handler
-         * @param formatter
-         *      <code>Formatter</code> derived instance
+         * Closes this handler, but the underlying output stream is only closed if
+         * closeStream is true.
+         *
+         * @param closeStream
+         *      whether to close the underlying output stream.
          */
-        virtual void setFormatter( const Formatter* formatter ){
-            this->formatter = formatter;
-        }
+        void close( bool closeStream );
 
-        /**
-         * Gets the <code>Formatter</code> used by this Handler
-         * @return currently configured <code>Formatter</code> derived instance
-         */
-        virtual const Formatter* getFormatter(){
-            return formatter;
-        }
+    private:
 
-        /**
-         * Gets the output Stream that this Handler is using
-         * @return OuputStream pointer used by this handler.
-         */
-        virtual io::OutputStream* getOutputStream() const{
-            return stream;
-        }
+        // Safely writes the string to the output stream, calling the ErrorManager
+        // if any exceptions are thrown while writing.
+        void write( const std::string& value );
+
+        // Initialize the Writer if its not already been initialized.
+        void initializeWritter();
 
     };
 

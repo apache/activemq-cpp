@@ -43,7 +43,6 @@ MutexHandle* MutexImpl::create() {
     std::auto_ptr<MutexHandle> handle( new MutexHandle );
 
     if( pthread_mutex_init( &( handle->mutex ), NULL ) != 0 ) {
-
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to create Mutex object." );
     }
@@ -56,6 +55,13 @@ MutexHandle* MutexImpl::create() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void MutexImpl::destroy( decaf::util::concurrent::MutexHandle* handle ) {
+
+    if( handle == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Handle to Mutex was NULL." );
+    }
+
+    pthread_mutex_destroy( &handle->mutex );
     delete handle;
 }
 

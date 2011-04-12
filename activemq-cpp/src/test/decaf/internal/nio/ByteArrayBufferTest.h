@@ -82,9 +82,9 @@ namespace nio{
         decaf::nio::ByteBuffer* testBuffer1;
         unsigned char* testData1;
 
-        static const std::size_t testData1Size = 100;
-        static const std::size_t SMALL_TEST_LENGTH = 5;
-        static const std::size_t BUFFER_LENGTH = 250;
+        static const int testData1Size;
+        static const int SMALL_TEST_LENGTH;
+        static const int BUFFER_LENGTH;
 
     public:
 
@@ -95,7 +95,7 @@ namespace nio{
            testBuffer1 = decaf::nio::ByteBuffer::allocate( testData1Size );
 
             testData1 = new unsigned char[testData1Size];
-            for( std::size_t i = 0; i < testData1Size; ++i ){
+            for( int i = 0; i < testData1Size; ++i ){
                 testData1[i] = (unsigned char)i;
             }
         }

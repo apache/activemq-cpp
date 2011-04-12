@@ -33,17 +33,15 @@ const float Float::POSITIVE_INFINITY = std::numeric_limits<float>::infinity();
 const float Float::NEGATIVE_INFINITY = -std::numeric_limits<float>::infinity();
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( float value ) {
-    this->value = value;
+Float::Float( float value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( double value ) {
-    this->value = (float)value;
+Float::Float( double value ) : value((float)value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Float::Float( const std::string& value ) : value(0) {
     this->value = Float::parseFloat( value );
 }
 
@@ -145,8 +143,7 @@ bool Float::isNaN( float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float Float::parseFloat( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+float Float::parseFloat( const std::string& value ) {
 
     // TODO - This is not going to parse the formats we say we do.
     float result = 0.0;
@@ -210,7 +207,7 @@ std::string Float::toHexString( float value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            unsigned int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }
@@ -233,7 +230,7 @@ std::string Float::toHexString( float value ) {
 
         // if there are digits left, then insert some '0' chars first
         if( significand != 0 && fractionDigits > hexSignificand.length() ) {
-            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            unsigned int digitDiff = fractionDigits - (int)hexSignificand.length();
             while( digitDiff-- != 0 ) {
                 hexString.append( "0" );
             }
@@ -262,8 +259,7 @@ Float Float::valueOf( float value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Float Float::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Float Float::valueOf( const std::string& value ) {
 
     return valueOf( parseFloat( value ) );
 }

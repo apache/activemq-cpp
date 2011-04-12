@@ -33,6 +33,8 @@ namespace test{
         virtual void testAutoAck();
         virtual void testClientAck();
         virtual void testProducerWithNullDestination();
+        virtual void testProducerSendWithNullDestination();
+        virtual void testProducerSendToNonDefaultDestination();
         virtual void testSyncReceive();
         virtual void testSyncReceiveClientAck();
         virtual void testMultipleConnections();
@@ -40,6 +42,7 @@ namespace test{
         virtual void testReceiveAlreadyInQueue();
         virtual void testQuickCreateAndDestroy();
         virtual void testBytesMessageSendRecv();
+        virtual void testLibraryInitShutdownInit();
 
     };
 

@@ -22,6 +22,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::io;
 using namespace decaf::util;
 
@@ -43,7 +44,7 @@ void FilterOutputStreamTest::testClose() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, 500 );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -59,7 +60,7 @@ void FilterOutputStreamTest::testFlush() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, 500 );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 500 );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
                                 500 == baos.size() );
@@ -75,13 +76,15 @@ void FilterOutputStreamTest::testWrite1() {
     try {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
-        os.write( (unsigned char*)&testString[0], 0, testString.size() );
-        ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+        os.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.size() );
+
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Bytes not written after flush",
-                                bais.available() == testString.length() );
+                                bais.available() == (int)testString.length() );
         unsigned char* wbytes = new unsigned char[ testString.length() ];
-        bais.read( wbytes, 0, testString.length() );
+        bais.read( wbytes, (int)testString.length(), 0, (int)testString.length() );
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             testString == string( (const char*)wbytes, testString.length() ) );
 
@@ -98,13 +101,50 @@ void FilterOutputStreamTest::testWrite2() {
         ByteArrayOutputStream baos;
         FilterOutputStream os( &baos );
         os.write('t');
-        ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+        std::pair<const unsigned char*, int> array = baos.toByteArray();
+        ByteArrayInputStream bais( array.first, array.second, true );
         os.flush();
         CPPUNIT_ASSERT_MESSAGE( "Byte not written after flush", 1 == bais.available() );
         unsigned char wbytes[1];
-        bais.read( wbytes, 0, 1 );
+        bais.read( wbytes, 1, 0, 1 );
         CPPUNIT_ASSERT_MESSAGE("Incorrect byte written", 't' == wbytes[0] );
     } catch( IOException& e ) {
         CPPUNIT_FAIL("Write test failed : " + e.getMessage());
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FilterOutputStreamTest::testWriteBIIIExceptions() {
+
+    ByteArrayOutputStream baos;
+    FilterOutputStream os( &baos );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        os.write( NULL, 1000, 0, 1001 ),
+        NullPointerException );
+
+    unsigned char buffer[1000];
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 0, 1001 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 1001, 0 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        os.write( buffer, 1000, 500, 501 ),
+        IndexOutOfBoundsException );
+
+    os.close();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IOException",
+        os.write( buffer, 1000, 0, 100 ),
+        IOException );
 }

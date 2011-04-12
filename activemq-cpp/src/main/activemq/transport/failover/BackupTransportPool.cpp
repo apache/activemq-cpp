@@ -41,7 +41,13 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 BackupTransportPool::BackupTransportPool( const Pointer<CompositeTaskRunner>& taskRunner,
                                           const Pointer<CloseTransportsTask>& closeTask,
-                                          const Pointer<URIPool>& uriPool ) {
+                                          const Pointer<URIPool>& uriPool ) : backups(),
+                                                                              taskRunner(taskRunner),
+                                                                              closeTask(closeTask),
+                                                                              uriPool(uriPool),
+                                                                              backupPoolSize(1),
+                                                                              enabled(false),
+                                                                              pending(false) {
 
     if( taskRunner == NULL ) {
         throw NullPointerException(
@@ -57,13 +63,6 @@ BackupTransportPool::BackupTransportPool( const Pointer<CompositeTaskRunner>& ta
         throw NullPointerException(
             __FILE__, __LINE__, "Close Transport Task passed is NULL" );
     }
-
-    this->pending = false;
-    this->enabled = false;
-    this->backupPoolSize = 1;
-    this->uriPool = uriPool;
-    this->taskRunner = taskRunner;
-    this->closeTask = closeTask;
 
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
@@ -74,7 +73,13 @@ BackupTransportPool::BackupTransportPool( const Pointer<CompositeTaskRunner>& ta
 BackupTransportPool::BackupTransportPool( int backupPoolSize,
                                           const Pointer<CompositeTaskRunner>& taskRunner,
                                           const Pointer<CloseTransportsTask>& closeTask,
-                                          const Pointer<URIPool>& uriPool ) {
+                                          const Pointer<URIPool>& uriPool ) : backups(),
+                                                                              taskRunner(taskRunner),
+                                                                              closeTask(closeTask),
+                                                                              uriPool(uriPool),
+                                                                              backupPoolSize(backupPoolSize),
+                                                                              enabled(false),
+                                                                              pending(false) {
 
     if( taskRunner == NULL ) {
         throw NullPointerException(
@@ -90,13 +95,6 @@ BackupTransportPool::BackupTransportPool( int backupPoolSize,
         throw NullPointerException(
             __FILE__, __LINE__, "Close Transport Task passed is NULL" );
     }
-
-    this->pending = false;
-    this->enabled = false;
-    this->backupPoolSize = backupPoolSize;
-    this->uriPool = uriPool;
-    this->taskRunner = taskRunner;
-    this->closeTask = closeTask;
 
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
@@ -133,7 +131,7 @@ Pointer<BackupTransport> BackupTransportPool::getBackup() {
 
     synchronized( &backups ) {
         if( !backups.isEmpty() ) {
-            result = backups.remove( 0 );
+            result = backups.removeAt( 0 );
         }
     }
 
@@ -157,7 +155,7 @@ bool BackupTransportPool::isPending() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool BackupTransportPool::iterate() {
 
-    StlList<URI> failures;
+    LinkedList<URI> failures;
 
     synchronized( &backups ) {
 
@@ -219,8 +217,7 @@ void BackupTransportPool::onBackupTransportFailure( BackupTransport* failedTrans
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> BackupTransportPool::createTransport( const URI& location ) const
-    throw ( decaf::io::IOException ) {
+Pointer<Transport> BackupTransportPool::createTransport( const URI& location ) const {
 
     try{
 

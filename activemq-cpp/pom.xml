@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.3.x-SNAPSHOT</version>
   </parent>
 
   <artifactId>activemq-cpp-library</artifactId>
@@ -105,7 +105,6 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
-                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.cpp</exclude>
                 </excludes>
               </sources>
               <headers>
@@ -115,7 +114,6 @@
                 </includes>
                 <excludes>
                   <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
-                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.h</exclude>
                 </excludes>
               </headers>
             </configuration>
@@ -133,10 +131,9 @@
                 <directory>${basedir}/src/main/</directory>
                 <includes>
                   <includes>**\*.cpp</includes>
+                  <includes>**\*.c</includes>
                 </includes>
                 <excludes>
-                  <exclude>**/decaf/security/**\*.cpp</exclude>
-                  <exclude>**/decaf/security_provider/**\*.cpp</exclude>
                   <exclude>**/decaf/internal/**/windows/**\*.cpp</exclude>
                 </excludes>
               </sources>
@@ -145,10 +142,6 @@
                 <includes>
                   <includes>**\*.h</includes>
                 </includes>
-                <excludes>
-                  <exclude>**/decaf/security/**\*.h</exclude>
-                  <exclude>**/decaf/security_provider/**\*.h</exclude>
-                </excludes>
               </headers>
             </configuration>
             <phase>generate-resources</phase>
@@ -202,7 +195,7 @@
                   <tasks>
                     <echo>Running OpenWire Generator</echo>
                     <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask" classpathref="maven.compile.classpath" />
-                    <generate maxVersion="5" source="${activemq-core-dir}" target="${basedir}" />
+                    <generate maxVersion="6" source="${activemq-core-dir}" target="${basedir}" />
                   </tasks>
                 </configuration>
                 <goals>
@@ -227,7 +220,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <executions>
               <execution>
                 <id>Configure</id>
@@ -298,7 +291,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <executions>
               <execution>
                 <phase>compile</phase>

@@ -43,8 +43,7 @@ namespace stomp {
          * properties from which it can obtain any optional settings
          * @param properties - the Properties for this WireFormat
          */
-        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties )
-            throw ( decaf::lang::exceptions::IllegalStateException );
+        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties );
 
     };
 

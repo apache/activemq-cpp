@@ -34,29 +34,31 @@ namespace cms{
         std::auto_ptr<const std::exception> cause;
         std::vector< std::pair< std::string, int> > stackTrace;
 
+        CMSExceptionData() : message(), cause(), stackTrace() {}
     };
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException::CMSException() throw() : std::exception() {
-    this->data = new CMSExceptionData();
+CMSException::CMSException() : std::exception(), data(new CMSExceptionData()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException::CMSException( const CMSException& ex ) throw() : std::exception() {
-
-    this->data = new CMSExceptionData();
+CMSException::CMSException( const CMSException& ex ) : std::exception(), data(new CMSExceptionData()) {
     this->data->cause.reset( ex.data->cause.release() );
     this->data->message = ex.data->message;
     this->data->stackTrace = ex.data->stackTrace;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException::CMSException( const std::string& message,
-                            const std::exception* cause ) throw() : std::exception() {
+CMSException::CMSException( const std::string& message ) : std::exception(), data(new CMSExceptionData()) {
+    this->data->message = message;
+}
 
-    this->data = new CMSExceptionData();
+////////////////////////////////////////////////////////////////////////////////
+CMSException::CMSException( const std::string& message,
+                            const std::exception* cause ) : std::exception(), data(new CMSExceptionData()) {
+
     this->data->cause.reset( cause );
     this->data->message = message;
 }
@@ -65,9 +67,8 @@ CMSException::CMSException( const std::string& message,
 CMSException::CMSException( const std::string& message,
                             const std::exception* cause,
                             const std::vector< std::pair< std::string, int> >& stackTrace )
-                                throw() : std::exception() {
+                                : std::exception(), data(new CMSExceptionData()) {
 
-    this->data = new CMSExceptionData();
     this->data->cause.reset( cause );
     this->data->message = message;
     this->data->stackTrace = stackTrace;

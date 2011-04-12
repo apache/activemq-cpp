@@ -23,7 +23,7 @@
 #include <activemq/util/Config.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/StlMap.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveValueConverter.h>
 
@@ -82,9 +82,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual bool getBool( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual bool getBool( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -105,9 +103,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual unsigned char getByte( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual unsigned char getByte( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -128,9 +124,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual char getChar( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual char getChar( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -151,9 +145,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual short getShort( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual short getShort( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -174,9 +166,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual int getInt( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual int getInt( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -197,9 +187,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual long long getLong( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual long long getLong( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -220,9 +208,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual float getFloat( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual float getFloat( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -243,9 +229,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual double getDouble( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual double getDouble( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -266,9 +250,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual std::string getString( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual std::string getString( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -289,9 +271,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual std::vector<unsigned char> getByteArray( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual std::vector<unsigned char> getByteArray( const std::string& key ) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data

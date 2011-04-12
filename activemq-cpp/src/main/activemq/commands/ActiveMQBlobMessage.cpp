@@ -26,9 +26,15 @@ using namespace activemq::commands;
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQBlobMessage::BINARY_MIME_TYPE = "application/octet-stream";
 
+std::string remoteBlobUrl;
+std::string mimeType;
+std::string name;
+bool deletedByBroker;
+
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBlobMessage::ActiveMQBlobMessage() :
-    mimeType( ActiveMQBlobMessage::BINARY_MIME_TYPE ), deletedByBroker( false ) {
+ActiveMQBlobMessage::ActiveMQBlobMessage() : ActiveMQMessageTemplate<cms::Message>(),
+                                             remoteBlobUrl(), mimeType( ActiveMQBlobMessage::BINARY_MIME_TYPE ),
+                                             name(), deletedByBroker( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,13 +56,7 @@ void ActiveMQBlobMessage::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQBlobMessage::toString() const{
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQBlobMessage" << std::endl;
-    stream << ActiveMQMessageTemplate<cms::Message>::toString();
-    stream << "End Class = ActiveMQBlobMessage" << std::endl;
-
-    return stream.str();
+    return ActiveMQMessageTemplate<cms::Message>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

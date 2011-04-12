@@ -23,7 +23,6 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Runnable.h>
-#include <decaf/lang/Pointer.h>
 #include <decaf/util/Config.h>
 
 namespace decaf{
@@ -39,24 +38,24 @@ namespace lang{
     class ThreadProperties;
 
     /**
-     * A {@code Thread} is a concurrent unit of execution. It has its own call stack for
+     * A Thread is a concurrent unit of execution. It has its own call stack for
      * methods being invoked, their arguments and local variables. Each process has at
-     * least one main {@code Thread} running when it is started; typically, there are
+     * least one main Thread running when it is started; typically, there are
      * several others for housekeeping. The application might decide to launch additional
-     * {@code Thread}s for specific purposes.
+     * Threads for specific purposes.
      *
-     * {@code Thread}s in the same process interact and synchronize by the use of shared
+     * Threads in the same process interact and synchronize by the use of shared
      * objects and monitors associated with these objects.
      *
-     * There are basically two main ways of having a {@code Thread} execute application
-     * code. One is providing a new class that extends {@code Thread} and overriding
-     * its {@link #run()} method. The other is providing a new {@code Thread} instance
+     * There are basically two main ways of having a Thread execute application
+     * code. One is providing a new class that extends Thread and overriding
+     * its {@link #run()} method. The other is providing a new Thread instance
      * with a {@link Runnable} object during its creation. In both cases, the
-     * {@link #start()} method must be called to actually execute the new {@code Thread}.
+     * {@link #start()} method must be called to actually execute the new Thread.
      *
-     * Each {@code Thread} has an integer priority that basically determines the amount
-     * of CPU time the {@code Thread} gets. It can be set using the {@link #setPriority(int)}
-     * method. A {@code Thread} can also be made a daemon, which makes it run in the
+     * Each Thread has an integer priority that basically determines the amount
+     * of CPU time the Thread gets. It can be set using the {@link #setPriority(int)}
+     * method. A Thread can also be made a daemon, which makes it run in the
      * background. The latter also affects VM termination behavior: the VM does not
      * terminate automatically as long as there are non-daemon threads running.
      *
@@ -70,7 +69,7 @@ namespace lang{
         /**
          * The internal data necessary to manage a Thread instance.
          */
-        decaf::lang::Pointer<ThreadProperties> properties;
+        ThreadProperties* properties;
 
     public:
 
@@ -121,6 +120,8 @@ namespace lang{
         class UncaughtExceptionHandler {
         public:
 
+            virtual ~UncaughtExceptionHandler() {}
+
             /**
              * Method invoked when the given thread terminates due to the given uncaught exception.
              *
@@ -130,6 +131,11 @@ namespace lang{
             virtual void uncaughtException( const Thread* thread, const Throwable& error ) throw() = 0;
 
         };
+
+    private:
+
+        Thread( const Thread& );
+        Thread& operator= ( const Thread& );
 
     public:
 
@@ -184,8 +190,7 @@ namespace lang{
          * @throws IllegalThreadStateException if the thread has already been started.
          * @throws RuntimeException if the Thread cannot be created for some reason.
          */
-        virtual void start() throw ( decaf::lang::exceptions::IllegalThreadStateException,
-                                     decaf::lang::exceptions::RuntimeException );
+        virtual void start();
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -194,7 +199,7 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join() throw ( decaf::lang::exceptions::InterruptedException );
+        virtual void join();
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -206,9 +211,7 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs )
-            throw ( decaf::lang::exceptions::IllegalArgumentException,
-                    decaf::lang::exceptions::InterruptedException );
+        virtual void join( long long millisecs );
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -222,9 +225,7 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs, unsigned int nanos )
-            throw ( decaf::lang::exceptions::IllegalArgumentException,
-                    decaf::lang::exceptions::InterruptedException );
+        virtual void join( long long millisecs, unsigned int nanos );
 
         /**
          * Default implementation of the run method - does nothing.
@@ -259,7 +260,26 @@ namespace lang{
          *
          * @throws IllegalArgumentException if the value is out of range.
          */
-        void setPriority( int value ) throw( decaf::lang::exceptions::IllegalArgumentException );
+        void setPriority( int value );
+
+        /**
+         * Sets if the given Thread is a Daemon Thread or not.  Daemon threads cannot be
+         * joined and its resource are automatically reclaimed when it terminates.
+         *
+         * @param value
+         *      Boolean indicating if this thread should be a daemon thread or not.
+         *
+         * @throws IllegalThreadStateException if the thread is already active.
+         */
+        void setDaemon(bool value);
+
+        /**
+         * Returns whether this thread is a daemon thread or not, if true this thread cannot
+         * be joined.
+         *
+         * @return true if the thread is a daemon thread.
+         */
+        bool isDaemon() const;
 
         /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
@@ -312,9 +332,7 @@ namespace lang{
          * @throws IllegalArgumentException if the milliseconds parameter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs )
-            throw( lang::exceptions::InterruptedException,
-                   lang::exceptions::IllegalArgumentException );
+        static void sleep( long long millisecs );
 
         /**
          * Causes the currently executing thread to halt execution for the specified number of
@@ -331,9 +349,7 @@ namespace lang{
          *         or the milliseconds paramter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs, unsigned int nanos )
-            throw( lang::exceptions::InterruptedException,
-                   lang::exceptions::IllegalArgumentException );
+        static void sleep( long long millisecs, unsigned int nanos );
 
         /**
          * Causes the currently executing thread object to temporarily pause

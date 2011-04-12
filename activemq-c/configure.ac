@@ -22,13 +22,17 @@ AC_PREREQ(2.61)
 ## -----------------------------------------------------------------------------
 AC_INIT(activemq-c, 1, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_SRCDIR(src/main/c/ActiveMQConnection.c)
+AC_CONFIG_SRCDIR(src/main/c/cms.cpp)
+AC_CONFIG_MACRO_DIR([m4])
 
 ## -----------------------------------------------------------------------------
 ## Define the Version variables
 ## -----------------------------------------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-c
-ACTIVEMQ_VERSION=1.0
+ACTIVEMQ_MAJOR_VERSION=3
+ACTIVEMQ_MINOR_VERSION=3
+ACTIVEMQ_PATCH_VERSION=0
+ACTIVEMQ_VERSION=${ACTIVEMQ_MAJOR_VERSION}.${ACTIVEMQ_MINOR_VERSION}.${ACTIVEMQ_PATCH_VERSION}
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
 ##
@@ -48,6 +52,9 @@ ACTIVEMQ_LIBRARY_VERSION=1:0:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
+AC_SUBST(ACTIVEMQ_MAJOR_VERSION)
+AC_SUBST(ACTIVEMQ_MINOR_VERSION)
+AC_SUBST(ACTIVEMQ_PATCH_VERSION)
 AC_SUBST(ACTIVEMQ_LIBRARY_VERSION)
 AC_SUBST(ACTIVEMQ_API_VERSION)
 
@@ -59,6 +66,11 @@ AM_CONFIG_HEADER(config.h)
 
 # Gives us access to the host_os environment variable
 AC_CANONICAL_HOST
+
+echo "Configuring ActiveMQ-C library"
+echo "   Platform: $host_os"
+echo "   CPU: $host_cpu"
+echo "   Vendor: $host_vendor"
 
 ## -----------------------------------------------------------------------------
 ## Checks for programs.
@@ -90,19 +102,12 @@ AC_CHECK_SIZEOF(long long, 8)
 AC_CHECK_SIZEOF(float, 4)
 AC_CHECK_SIZEOF(double, 8)
 
-AC_CHECK_HEADERS([uuid.h uuid/uuid.h], [AC_DEFINE([HAVE_UUID_T], [1], [Define if uuid_t exists.])])
-AC_CHECK_HEADERS([objbase.h])
-AC_CHECK_HEADERS([repcdce.h])
-AC_CHECK_HEADERS([sys/filio.h])
-AC_CHECK_HEADERS([sys/ioctl.h])
-AC_CHECK_HEADERS([sys/select.h])
+AC_CHECK_HEADERS([string.h])
 AC_CHECK_HEADERS([sys/time.h])
-AC_CHECK_HEADERS([sys/timeb.h])
-AC_CHECK_HEADERS([pthread.h])
 
-AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
-
-AMQ_FIND_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
+AMQ_FIND_CPPUNIT( 1.10.2, cppunit=yes, cppunit=no;
+    AC_MSG_RESULT([no. Unit and Integration tests disabled])
+)
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 # Absolute source/build directory
@@ -126,37 +131,49 @@ PLAT_LIBS=
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    PLAT_CXXFLAGS="-ansi -pedantic"
-    ;;
 
-  *cygwin* ) ## Cygwin configuration
-    PLAT_CXXFLAGS="-Wno-uninitialized"
-    PLAT_LIBS="-lm -lpthread -luuid -lrpcrt4"
     ;;
 
   *solaris* ) ## Solaris configuration
-    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
-                AC_MSG_ERROR([libpthread not found!]))
 
-    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
+    PLAT_LIBS="-lm -luuid -lsocket -lrt"
 
-    if test "$GCC" = "yes"; then
-       PLAT_CXXFLAGS="-ansi -pedantic"
-    else
+    if ! test "$GCC" = "yes"; then
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
        PLAT_CXXFLAGS="-mt -w -O5 -library=stlport4"
     fi
     ;;
 
-  *) ## Unix configuration
+  *hpux10* )
 
-    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
-                 AC_MSG_ERROR([libpthread not found!]))
+    if ! test "$GCC" = "yes"; then
+       # Assuming aCC Compiler unknown yet if any additional settings are needed.
+       PLAT_CXXFLAGS=""
+    fi
+    ;;
 
-    PLAT_CXXFLAGS="-ansi -pedantic"
-    PLAT_LIBS="-lm -lpthread -luuid"
+  *hpux11* )
+
+    if ! test "$GCC" = "yes"; then
+       # Assuming aCC Compiler unknown yet if any additional settings are needed.
+       PLAT_CXXFLAGS="-Wc,-ansi_for_scope,on"
+    fi
+    ;;
+
+  *linux*) ## Unix configuration
+
+    ;;
+
 esac
+
+if test "$GCC" = "yes"; then
+   PLAT_CXXFLAGS="-ansi -pedantic"
+fi
+
+## Find and configure the cflags and libs needed to build against the
+## ActiveMQ-CPP library.
+AMQ_CONFIGURE_ACTIVEMQCPP
 
 ## find and configure the Apache Decaf Library
 ## DECAF_CONFIGURE_DECAF - Future use for decaf as a standalone lib
@@ -173,25 +190,27 @@ AC_SUBST([DECAF_LIBS])
 DECAF_TEST_CXXFLAGS="$DECAF_CXXFLAGS $APR_CPPFLAGS $APR_INCLUDES $APU_INCLUDES"
 AC_SUBST([DECAF_TEST_CXXFLAGS])
 
-## Flags for building the activemq-cpp library
+## Flags for building the activemq-c library
 AC_SUBST([AMQ_CXXFLAGS])
+AC_SUBST([AMQ_CFLAGS])
 AC_SUBST([AMQ_LIBS])
 
 if test "$GCC" = "yes"; then
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -W -Wall -Wextra -Wconversion -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 else
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -PIC"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -PIC"
 fi
 
-AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
+AMQ_LIBS="$PLAT_LIBS $AMQCPP_LIBS $DECAF_LIBS"
 
 if test "$GCC" = "yes"; then
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 else
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
 fi
 
-AMQ_TEST_LIBS="../main/libactivemq-c.la $DECAF_LIBS"
+AMQ_TEST_CFLAGS="$AMQ_CXXFLAGS $AMQCPP_INCLUDES $AMQCPP_CPPFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
+AMQ_TEST_LIBS="../main/c/libactivemq-c.la $AMQCPP_LIBS $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
@@ -221,19 +240,17 @@ DX_INIT_DOXYGEN(activemq-c, doxygen.cfg, doc)
 ## Generates Makefile's, configuration files and scripts
 ## -----------------------------------------------------------------------------
 
-AC_OUTPUT_COMMANDS([chmod +x activemqc-1-config],[])
+AC_OUTPUT_COMMANDS([chmod +x activemqc-config],[])
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(activemq-c.pc)
-AC_CONFIG_FILES(src/main/Makefile)
+AC_CONFIG_FILES(src/main/c/Makefile)
 AC_CONFIG_FILES(src/examples/Makefile)
-AC_CONFIG_FILES(activemqc-1-config)
+AC_CONFIG_FILES(activemqc-config)
 
 if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/c/Makefile)
-  AC_CONFIG_FILES(src/test-integration/c/Makefile)
-  AC_CONFIG_FILES(src/test-benchmarks/c/Makefile)
 fi
 
 AC_OUTPUT

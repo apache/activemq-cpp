@@ -38,11 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTopicAck::JournalTopicAck() : BaseDataStructure() {
+JournalTopicAck::JournalTopicAck() 
+    : BaseDataStructure(), destination(NULL), messageId(NULL), messageSequenceId(0), subscritionName(""), clientId(""), transactionId(NULL) {
 
-    this->messageSequenceId = 0;
-    this->subscritionName = "";
-    this->clientId = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,31 +94,34 @@ std::string JournalTopicAck::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = JournalTopicAck" << std::endl;
-    stream << " Value of JournalTopicAck::ID_JOURNALTOPICACK = 50" << std::endl;
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << "JournalTopicAck { ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of MessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "MessageId = ";
     if( this->getMessageId() != NULL ) {
-        stream << this->getMessageId()->toString() << std::endl;
+        stream << this->getMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of MessageSequenceId = " << this->getMessageSequenceId() << std::endl;
-    stream << " Value of SubscritionName = " << this->getSubscritionName() << std::endl;
-    stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    stream << " Value of TransactionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "MessageSequenceId = " << this->getMessageSequenceId();
+    stream << ", ";
+    stream << "SubscritionName = " << this->getSubscritionName();
+    stream << ", ";
+    stream << "ClientId = " << this->getClientId();
+    stream << ", ";
+    stream << "TransactionId = ";
     if( this->getTransactionId() != NULL ) {
-        stream << this->getTransactionId()->toString() << std::endl;
+        stream << this->getTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseDataStructure::toString();
-    stream << "End Class = JournalTopicAck" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

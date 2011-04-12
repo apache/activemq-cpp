@@ -29,6 +29,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int LongArrayBufferTest::testData1Size = 100;
+const int LongArrayBufferTest::SMALL_TEST_LENGTH = 5;
+const int LongArrayBufferTest::BUFFER_LENGTH = 250;
+
+////////////////////////////////////////////////////////////////////////////////
 void LongArrayBufferTest::test() {
 
     // Check that we have setup the array and our initial assumptions on state
@@ -128,7 +133,7 @@ void LongArrayBufferTest::testAsReadOnlyBuffer() {
     CPPUNIT_ASSERT( testBuffer1->position() == readOnly->position() );
     CPPUNIT_ASSERT( testBuffer1->limit() == readOnly->limit() );
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); ++i ) {
+    for( int i = 0; i < testBuffer1->capacity(); ++i ) {
         CPPUNIT_ASSERT( testBuffer1->get( i ) == readOnly->get( i ) );
     }
 
@@ -297,7 +302,7 @@ void LongArrayBufferTest::testEquals() {
 void LongArrayBufferTest::testGet() {
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -314,7 +319,7 @@ void LongArrayBufferTest::testGetLongArray() {
     std::vector<long long> array(1);
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         LongBuffer& ret = testBuffer1->get( array );
         CPPUNIT_ASSERT( array[0] == testBuffer1->get(i) );
@@ -331,41 +336,78 @@ void LongArrayBufferTest::testGetLongArray() {
 void LongArrayBufferTest::testGetLongArray2() {
 
     testBuffer1->clear();
-    long long* array = new long long[testBuffer1->capacity()];
+    long long* array1 = new long long[testBuffer1->capacity()];
+    long long* array2 = new long long[testBuffer1->capacity() + 1];
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferUnderflowException",
-        testBuffer1->get( array, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->get( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferUnderflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->get( array, 10, 0 );
+    testBuffer1->get( array1, testBuffer1->capacity(), 10, 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should throw BufferUnderflowException",
-        testBuffer1->get( array, 1, Integer::MAX_VALUE ),
-        BufferUnderflowException );
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), -1, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 2, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 2, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array1, testBuffer1->capacity(), Integer::MAX_VALUE, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw NullPointerException",
+        testBuffer1->get( NULL, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     testBuffer1->clear();
-    LongBuffer& ret = testBuffer1->get( array, 0, testBuffer1->capacity() );
+    LongBuffer& ret = testBuffer1->get( array1, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    assertContentEquals( testBuffer1, array, 0, testBuffer1->capacity() );
+    assertContentEquals( testBuffer1, array1, 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( &ret == testBuffer1 );
 
-    delete [] array;
+    delete [] array1;
+    delete [] array2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LongArrayBufferTest::testGet2() {
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( -1 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw IndexOutOfBoundsException",
@@ -383,7 +425,7 @@ void LongArrayBufferTest::testPutLong() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         LongBuffer& ret = testBuffer1->put( (long long)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (long long)i );
@@ -402,17 +444,17 @@ void LongArrayBufferTest::testPutLongArray() {
     long long* array = new long long[1];
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         array[0] = (long long) i;
-        LongBuffer& ret = testBuffer1->put( array, 0, 1 );
+        LongBuffer& ret = testBuffer1->put( array, 1, 0, 1 );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (long long)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferOverflowException",
-        testBuffer1->put( array, 0, 1 ),
+        testBuffer1->put( array, 1, 0, 1 ),
         BufferOverflowException );
 
     delete [] array;
@@ -427,18 +469,53 @@ void LongArrayBufferTest::testPutLongArray2() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw BufferOverflowException",
-        testBuffer1->put( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->put( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferOverflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->put( array1, testBuffer1->capacity() + 1, 0 );
+    testBuffer1->put( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 0 );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), -1, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), testBuffer1->capacity() + 1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 2, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 2, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( array1, testBuffer1->capacity(), Integer::MAX_VALUE, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw NullPointerException",
+        testBuffer1->put( NULL, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     loadTestData2( array1, 0, testBuffer1->capacity() );
-    LongBuffer& ret = testBuffer1->put( array1, 0, testBuffer1->capacity() );
+    LongBuffer& ret = testBuffer1->put( array1, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
     assertContentEquals( testBuffer1, array1, 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -482,12 +559,17 @@ void LongArrayBufferTest::testGetWithIndex() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         LongBuffer& ret = testBuffer1->put( i, (long long)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (long long)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->put( -1, 0 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw IndexOutOfBoundsException",
@@ -508,12 +590,17 @@ void LongArrayBufferTest::testPutIndexed() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         LongBuffer& ret = testBuffer1->put(i, i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (long long)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a IndexOutOfBoundsException",
+        testBuffer1->put( -1, 0 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",

@@ -21,30 +21,114 @@
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
-#include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Short.h>
 
+#include <memory>
+
+using namespace std;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
-using namespace activemq::wireformat::openwire::utils;
 using namespace activemq::wireformat::openwire::marshal;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveMap* map,
-                                      std::vector<unsigned char>& dest )
-                                        throw ( decaf::lang::Exception ) {
+void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<unsigned char>& buffer ) {
 
     try {
 
-        ByteArrayOutputStream bytesOut( dest );
+        ByteArrayOutputStream bytesOut;
         DataOutputStream dataOut( &bytesOut );
+
+        if( map == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            PrimitiveTypesMarshaller::marshalPrimitiveMap( dataOut, *map );
+        }
+
+        if( bytesOut.size() > 0 ) {
+            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            buffer.insert( buffer.begin(), array.first, array.first + array.second );
+            delete [] array.first;
+        }
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveMap* map, const std::vector<unsigned char>& buffer ) {
+
+    try {
+
+        if( map == NULL || buffer.empty() ) {
+            return;
+        }
+
+        // Clear old data
+        map->clear();
+
+        ByteArrayInputStream bytesIn( buffer );
+        DataInputStream dataIn( &bytesIn );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *map );
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<unsigned char>& buffer ) {
+
+    try {
+
+        ByteArrayOutputStream bytesOut;
+        DataOutputStream dataOut( &bytesOut );
+
+        if( list == NULL ) {
+            dataOut.writeInt( -1 );
+        } else {
+            PrimitiveTypesMarshaller::marshalPrimitiveList( dataOut, *list );
+        }
+
+        if( bytesOut.size() > 0 ) {
+            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            buffer.insert( buffer.begin(), array.first, array.first + array.second );
+            delete [] array.first;
+        }
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::unmarshal( PrimitiveList* list, const std::vector<unsigned char>& buffer ) {
+
+    try {
+
+        if( list == NULL || buffer.empty() ) {
+            return;
+        }
+
+        // Clear old data
+        list->clear();
+
+        ByteArrayInputStream bytesIn( buffer );
+        DataInputStream dataIn( &bytesIn );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *list );
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveTypesMarshaller::marshalMap( const PrimitiveMap* map, DataOutputStream& dataOut ) {
+
+    try {
 
         if( map == NULL ) {
             dataOut.writeInt( -1 );
@@ -57,35 +141,22 @@ void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveMap* map,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal(
-    activemq::util::PrimitiveMap* map,
-    const std::vector<unsigned char>& src ) throw ( decaf::lang::Exception ) {
+PrimitiveMap* PrimitiveTypesMarshaller::unmarshalMap( DataInputStream& dataIn ) {
 
     try {
 
-        if( map == NULL || src.empty() ) {
-            return;
-        }
-
-        // Clear old data
-        map->clear();
-
-        ByteArrayInputStream bytesIn( src );
-        DataInputStream dataIn( &bytesIn );
-        PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *map );
+        std::auto_ptr<PrimitiveMap> map( new PrimitiveMap() );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveMap( dataIn, *( map.get() ) );
+        return map.release();
     }
     AMQ_CATCH_RETHROW( decaf::lang::Exception )
     AMQ_CATCHALL_THROW( decaf::lang::Exception )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveList* list,
-                                        std::vector<unsigned char>& dest )
-                                            throw ( decaf::lang::Exception ) {
-    try {
+void PrimitiveTypesMarshaller::marshalList( const PrimitiveList* list, DataOutputStream& dataOut ) {
 
-        ByteArrayOutputStream bytesOut( dest );
-        DataOutputStream dataOut( &bytesOut );
+    try {
 
         if( list == NULL ) {
             dataOut.writeInt( -1 );
@@ -98,22 +169,13 @@ void PrimitiveTypesMarshaller::marshal( const activemq::util::PrimitiveList* lis
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveTypesMarshaller::unmarshal( activemq::util::PrimitiveList* list,
-                                          const std::vector<unsigned char>& src )
-                                                throw ( decaf::lang::Exception ) {
+PrimitiveList* PrimitiveTypesMarshaller::unmarshalList( DataInputStream& dataIn ) {
 
     try {
 
-        if( list == NULL || src.empty() ) {
-            return;
-        }
-
-        // Clear old data
-        list->clear();
-
-        ByteArrayInputStream bytesIn( src );
-        DataInputStream dataIn( &bytesIn );
-        PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *list );
+        std::auto_ptr<PrimitiveList> list( new PrimitiveList() );
+        PrimitiveTypesMarshaller::unmarshalPrimitiveList( dataIn, *( list.get() ) );
+        return list.release();
     }
     AMQ_CATCH_RETHROW( decaf::lang::Exception )
     AMQ_CATCHALL_THROW( decaf::lang::Exception )
@@ -122,8 +184,7 @@ void PrimitiveTypesMarshaller::unmarshal( activemq::util::PrimitiveList* list,
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitiveMap(
     decaf::io::DataOutputStream& dataOut,
-    const decaf::util::Map<std::string, PrimitiveValueNode>& map )
-        throw ( decaf::io::IOException ) {
+    const decaf::util::Map<std::string, PrimitiveValueNode>& map ) {
 
     try{
 
@@ -147,13 +208,12 @@ void PrimitiveTypesMarshaller::marshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitiveList(
     decaf::io::DataOutputStream& dataOut,
-    const decaf::util::List<PrimitiveValueNode>& list )
-        throw ( decaf::io::IOException ) {
+    const decaf::util::List<PrimitiveValueNode>& list ) {
 
     try{
         dataOut.writeInt( (int)list.size() );
 
-        for( std::size_t ix = 0; ix < list.size(); ++ix ) {
+        for( int ix = 0; ix < list.size(); ++ix ) {
             marshalPrimitive( dataOut, list.get( ix ) );
         }
     }
@@ -164,8 +224,7 @@ void PrimitiveTypesMarshaller::marshalPrimitiveList(
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
-                                               const activemq::util::PrimitiveValueNode& value )
-                                                    throw ( decaf::io::IOException ) {
+                                               const activemq::util::PrimitiveValueNode& value ) {
 
     try {
 
@@ -216,19 +275,27 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             std::vector<unsigned char> data = value.getByteArray();
 
             dataOut.writeInt( (int)data.size() );
-            dataOut.write( data );
+            if( !data.empty() ) {
+                dataOut.write( &data[0], (int)data.size() );
+            }
 
         } else if( value.getType() == PrimitiveValueNode::STRING_TYPE ) {
 
             std::string data = value.getString();
+            int size = (int)data.size();
 
             // is the string big??
-            if( data.size() > Short::MAX_VALUE / 4 ) {
+            if( size == 0 ) {
+                dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
+                dataOut.writeShort( (short)size );
+            } else if( data.size() > Short::MAX_VALUE / 4 ) {
                 dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
-                OpenwireStringSupport::writeString( dataOut, &data );
+                dataOut.writeInt( size );
+                dataOut.write( (unsigned char*)data.c_str(), size, 0, size );
             } else {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
-                dataOut.writeUTF( data );
+                dataOut.writeShort( (short)size );
+                dataOut.write( (unsigned char*)data.c_str(), size, 0, size );
             }
 
         } else if( value.getType() == PrimitiveValueNode::LIST_TYPE ) {
@@ -255,8 +322,7 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
-    decaf::io::DataInputStream& dataIn, PrimitiveMap& map )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream& dataIn, PrimitiveMap& map ) {
 
     try{
 
@@ -277,8 +343,7 @@ void PrimitiveTypesMarshaller::unmarshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
-    decaf::util::StlList<PrimitiveValueNode>& list )
-        throw ( decaf::io::IOException ) {
+    decaf::util::LinkedList<PrimitiveValueNode>& list ) {
 
     try{
 
@@ -293,8 +358,7 @@ void PrimitiveTypesMarshaller::unmarshalPrimitiveList(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
-    io::DataInputStream& dataIn ) throw ( decaf::io::IOException ) {
+PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn ) {
 
     try {
 
@@ -335,17 +399,35 @@ PrimitiveValueNode PrimitiveTypesMarshaller::unmarshalPrimitive(
             {
                 int size = dataIn.readInt();
                 std::vector<unsigned char> data;
-                data.resize( size );
-                dataIn.readFully( data );
+                if( size > 0 ) {
+                    data.resize( size );
+                    dataIn.readFully( &data[0], size );
+                }
                 value.setByteArray( data );
                 break;
             }
             case PrimitiveValueNode::STRING_TYPE:
-                value.setString( dataIn.readUTF() );
+            {
+                int utfLength = dataIn.readShort();
+                if( utfLength > 0 ) {
+
+                    std::vector<unsigned char> buffer( utfLength );
+                    dataIn.readFully( &buffer[0], utfLength );
+                    value.setString( std::string( (char*)( &buffer[0] ), utfLength ) );
+                }
                 break;
+            }
             case PrimitiveValueNode::BIG_STRING_TYPE:
-                value.setString( OpenwireStringSupport::readString( dataIn ) );
+            {
+                int utfLength = dataIn.readInt();
+                if( utfLength > 0 ) {
+
+                    std::vector<unsigned char> buffer( utfLength );
+                    dataIn.readFully( &buffer[0], utfLength );
+                    value.setString( std::string( (char*)( &buffer[0] ), utfLength ) );
+                }
                 break;
+            }
             case PrimitiveValueNode::LIST_TYPE:
             {
                 PrimitiveList list;

@@ -461,7 +461,6 @@ void PointerTest::testDynamicCast() {
         "Should Throw a ClassCastException",
         ptrTestClassA2 = nullPointer.dynamicCast<TestClassA>(),
         ClassCastException );
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

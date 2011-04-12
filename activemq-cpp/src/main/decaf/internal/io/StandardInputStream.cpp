@@ -19,10 +19,6 @@
 
 #include <iostream>
 
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
@@ -39,12 +35,12 @@ StandardInputStream::~StandardInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::available() const throw ( decaf::io::IOException ) {
-    return 0;
+int StandardInputStream::available() const {
+    return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::read() throw ( decaf::io::IOException ) {
+int StandardInputStream::doReadByte() {
 
     if( !std::cin.good() ) {
         throw decaf::io::IOException(
@@ -53,35 +49,4 @@ int StandardInputStream::read() throw ( decaf::io::IOException ) {
     }
 
     return std::cin.get();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int StandardInputStream::read( unsigned char* buffer,
-                               std::size_t offset DECAF_UNUSED,
-                               std::size_t bufferSize DECAF_UNUSED )
-    throw ( decaf::io::IOException, decaf::lang::exceptions::NullPointerException ) {
-
-    if( buffer == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::read - Buffer passed is Null" );
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::size_t StandardInputStream::skip( std::size_t num DECAF_UNUSED )
-    throw ( decaf::io::IOException,
-            decaf::lang::exceptions::UnsupportedOperationException ) {
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void StandardInputStream::reset() throw ( decaf::io::IOException ) {
-
-    throw decaf::io::IOException(
-        __FILE__, __LINE__,
-        "Mark and Rest not Supported by this class." );
 }

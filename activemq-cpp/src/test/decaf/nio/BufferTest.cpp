@@ -23,6 +23,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int BufferTest::DEFAULT_BUFFER_SIZE = 512;
+
+////////////////////////////////////////////////////////////////////////////////
 void BufferTest::test() {
 
     // Check that we have setup the array and our initial assumptions on state
@@ -61,7 +64,7 @@ void BufferTest::testClear() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferTest::testFlip() {
 
-    std::size_t oldPosition = buffer->position();
+    int oldPosition = buffer->position();
 
     Buffer& ret = buffer->flip();
     CPPUNIT_ASSERT( &ret == buffer );
@@ -99,7 +102,7 @@ void BufferTest::testLimit() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferTest::testLimitInt() {
 
-    std::size_t oldPosition = buffer->position();
+    int oldPosition = buffer->position();
     Buffer& ret = buffer->limit(buffer->limit());
     CPPUNIT_ASSERT( &ret == buffer );
 
@@ -133,7 +136,7 @@ void BufferTest::testLimitInt() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferTest::testMark() {
 
-    std::size_t oldPosition = buffer->position();
+    int oldPosition = buffer->position();
     Buffer& ret = buffer->mark();
     CPPUNIT_ASSERT( &ret == buffer );
 
@@ -159,7 +162,7 @@ void BufferTest::testPosition() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferTest::testPositionInt() {
 
-    std::size_t oldPosition = buffer->position();
+    int oldPosition = buffer->position();
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw IllegalArgumentException",
@@ -202,7 +205,7 @@ void BufferTest::testRemaining() {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferTest::testReset() {
 
-    std::size_t oldPosition = buffer->position();
+    int oldPosition = buffer->position();
 
     buffer->mark();
     buffer->position(buffer->limit());

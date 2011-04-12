@@ -53,7 +53,7 @@ void StringTokenizerTest::test()
        tokenizer3.nextToken();
        CPPUNIT_ASSERT( false );
     }
-    catch(lang::exceptions::NoSuchElementException ex)
+    catch(decaf::util::NoSuchElementException ex)
     {
        CPPUNIT_ASSERT( true );
     }

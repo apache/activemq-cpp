@@ -28,12 +28,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( int value ) {
-    this->value = value;
+Integer::Integer( int value ) :value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Integer::Integer( const std::string& value ) : value() {
     this->value = parseInt( value );
 }
 
@@ -260,15 +259,12 @@ std::string Integer::toHexString( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parseInt( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
-
+int Integer::parseInt( const std::string& value ) {
     return Integer::parseInt( value, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parseInt( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
+int Integer::parseInt( const std::string& value, int radix ) {
 
     if( radix < Character::MIN_RADIX ||
         radix > Character::MAX_RADIX ) {
@@ -295,22 +291,19 @@ int Integer::parseInt( const std::string& value, int radix )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Integer Integer::valueOf( const std::string& value ) {
 
     return Integer( Integer::parseInt( value ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::valueOf( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
+Integer Integer::valueOf( const std::string& value, int radix ) {
 
     return Integer( Integer::parseInt( value, radix ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::decode( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Integer Integer::decode( const std::string& value ) {
 
     int length = (int)value.length(), i = 0;
     if( length == 0 ) {
@@ -363,9 +356,7 @@ Integer Integer::decode( const std::string& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parse( const std::string& value, int offset,
-                    int radix, bool negative )
-    throw ( exceptions::NumberFormatException ) {
+int Integer::parse( const std::string& value, int offset, int radix, bool negative ) {
 
     int max = Integer::MIN_VALUE / radix;
     int result = 0, length = (int)value.size();

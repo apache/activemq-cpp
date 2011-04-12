@@ -47,10 +47,15 @@ namespace advisories {
          std::auto_ptr<cms::MessageConsumer> consumer;
          std::auto_ptr<cms::MessageConsumer> advisoryConsumer;
 
+     private:
+
+         AdvisoryConsumer( const AdvisoryConsumer& );
+         AdvisoryConsumer& operator= ( const AdvisoryConsumer& );
+
     public:
 
         AdvisoryConsumer( cms::Session* session );
-        virtual ~AdvisoryConsumer();
+        virtual ~AdvisoryConsumer() throw();
 
         /**
          * Close down Consumer resources.
@@ -60,7 +65,7 @@ namespace advisories {
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message );
+        virtual void onMessage( const cms::Message* message ) throw();
 
     };
 

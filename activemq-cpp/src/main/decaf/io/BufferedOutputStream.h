@@ -28,8 +28,7 @@ namespace io{
      * Wrapper around another output stream that buffers
      * output before writing to the target output stream.
      */
-    class DECAF_API BufferedOutputStream : public FilterOutputStream
-    {
+    class DECAF_API BufferedOutputStream : public FilterOutputStream {
     private:
 
         /**
@@ -40,17 +39,22 @@ namespace io{
         /**
          * The size of the internal buffer.
          */
-        std::size_t bufferSize;
+        int bufferSize;
 
         /**
          * The current head of the buffer.
          */
-        std::size_t head;
+        int head;
 
         /**
          * The current tail of the buffer.
          */
-        std::size_t tail;
+        int tail;
+
+    private:
+
+        BufferedOutputStream( const BufferedOutputStream& );
+        BufferedOutputStream& operator= ( const BufferedOutputStream& );
 
     public:
 
@@ -73,67 +77,40 @@ namespace io{
          *      The size for the internal buffer.
          * @param own
          *      Indicates if this class owns the stream pointer.
+         *
+         * @throws IllegalArgumentException if the bufferSize given is negative.
          */
-        BufferedOutputStream( OutputStream* stream,
-                              std::size_t bufferSize,
-                              bool own = false )
-            throw ( lang::exceptions::IllegalArgumentException );
+        BufferedOutputStream( OutputStream* stream, int bufferSize, bool own = false );
 
         virtual ~BufferedOutputStream();
 
         /**
-         * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
+         * @{inheritDoc}
          */
-        virtual void write( unsigned char c ) throw ( IOException );
+        virtual void flush();
 
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException );
+    protected:
 
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param offset the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException thrown if buffer is Null.
-         */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset,
-                            std::size_t len )
-            throw ( IOException, lang::exceptions::NullPointerException );
+        virtual void doWriteByte( unsigned char c );
 
-        /**
-         * Invokes flush on the target output stream.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void flush() throw ( IOException );
+        virtual void doWriteArray( const unsigned char* buffer, int size );
 
-        /**
-         * Invokes close on the target output stream.
-         * @throws IOException thrown if an error occurs.
-         */
-        void close() throw( io::IOException );
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
-   private:
+    private:
 
         /**
          * Initializes the internal structures.
+         *
          * @param bufferSize
          *      How large to make the initial buffer when creating it.
          */
-        void init( std::size_t bufferSize );
+        void init( int bufferSize );
 
         /**
          * Writes the contents of the buffer to the output stream.
          */
-        void emptyBuffer() throw ( IOException );
+        void emptyBuffer();
 
    };
 

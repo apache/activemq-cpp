@@ -36,6 +36,7 @@ namespace io{
         CPPUNIT_TEST( testRead2 );
         CPPUNIT_TEST( testRead3 );
         CPPUNIT_TEST( testSkip );
+        CPPUNIT_TEST( testReadBIIIExceptions );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -49,6 +50,7 @@ namespace io{
         void testRead2();
         void testRead3();
         void testSkip();
+        void testReadBIIIExceptions();
 
     };
 

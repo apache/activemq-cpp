@@ -26,13 +26,11 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID::UUID( long long mostSigBits, long long leastSigBits ) {
+UUID::UUID( long long mostSigBits, long long leastSigBits ) :
+    apr_uuid(), mostSigBits(mostSigBits), leastSigBits(leastSigBits), uuidVersion(0) {
 
     memcpy( &apr_uuid.data[0], &mostSigBits, sizeof( long long ) );
     memcpy( &apr_uuid.data[sizeof(long long)], &leastSigBits, sizeof(long long ) );
-
-    this->mostSigBits = mostSigBits;
-    this->leastSigBits = leastSigBits;
 
     // Version indicator, set when a UUID is generated
     this->uuidVersion = (int)( mostSigBits & 0x000000000000F000LL ) >> 12;
@@ -83,7 +81,7 @@ long long UUID::getMostSignificantBits() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException ) {
+long long UUID::node() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -95,7 +93,7 @@ long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationException ) {
+long long UUID::timestamp() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -112,7 +110,7 @@ long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::clockSequence() {
 
     if( this->version() != 1 ) {
         throw exceptions::UnsupportedOperationException(
@@ -124,7 +122,7 @@ int UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::variant() {
 
     // determine variant field
     if( ( this->leastSigBits & 0x8000000000000000ULL ) == 0 ) {
@@ -140,7 +138,7 @@ int UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int UUID::version() throw ( lang::exceptions::UnsupportedOperationException ) {
+int UUID::version() {
     return this->uuidVersion;
 }
 
@@ -220,8 +218,7 @@ UUID UUID::nameUUIDFromBytes( const char* name, std::size_t size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID UUID::fromString( const std::string& name )
-    throw ( lang::exceptions::IllegalArgumentException ){
+UUID UUID::fromString( const std::string& name ) {
 
     apr_uuid_t temp;
 

@@ -32,6 +32,11 @@ TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+TransportFilter::~TransportFilter() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void TransportFilter::onCommand( const Pointer<Command>& command ){
     fire( command );
 }
@@ -42,7 +47,7 @@ void TransportFilter::onException( const decaf::lang::Exception& ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::fire( const decaf::lang::Exception& ex ){
+void TransportFilter::fire( const decaf::lang::Exception& ex ) {
 
     if( listener != NULL ){
         try{
@@ -52,7 +57,7 @@ void TransportFilter::fire( const decaf::lang::Exception& ex ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::fire( const Pointer<Command>& command ){
+void TransportFilter::fire( const Pointer<Command>& command ) {
     try{
         if( listener != NULL ){
             listener->onCommand( command );
@@ -79,7 +84,7 @@ void TransportFilter::transportResumed() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::start() throw( decaf::io::IOException ) {
+void TransportFilter::start() {
 
     if( listener == NULL ){
         throw decaf::io::IOException( __FILE__, __LINE__, "exceptionListener is invalid" );
@@ -90,12 +95,12 @@ void TransportFilter::start() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::stop() throw( decaf::io::IOException ) {
+void TransportFilter::stop() {
     next->stop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::close() throw( decaf::io::IOException ) {
+void TransportFilter::close() {
 
     if( next != NULL ) {
         next->close();
@@ -115,8 +120,7 @@ Transport* TransportFilter::narrow( const std::type_info& typeId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::reconnect( const decaf::net::URI& uri )
-    throw( decaf::io::IOException ) {
+void TransportFilter::reconnect( const decaf::net::URI& uri ) {
 
     try{
         next->reconnect( uri );

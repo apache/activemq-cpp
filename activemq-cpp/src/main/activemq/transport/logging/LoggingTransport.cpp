@@ -27,9 +27,6 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-LOGDECAF_INITIALIZE( logger, LoggingTransport, "activemq.transport.logging.LoggingTransport")
-
-////////////////////////////////////////////////////////////////////////////////
 LoggingTransport::LoggingTransport( const Pointer<Transport>& next )
  :  TransportFilter( next )
 {}
@@ -37,29 +34,18 @@ LoggingTransport::LoggingTransport( const Pointer<Transport>& next )
 ////////////////////////////////////////////////////////////////////////////////
 void LoggingTransport::onCommand( const Pointer<Command>& command ) {
 
-    ostringstream ostream;
-    ostream << "*** BEGIN RECEIVED ASYNCHRONOUS COMMAND ***" << endl;
-    ostream << command->toString() << endl;
-    ostream << "*** END RECEIVED ASYNCHRONOUS COMMAND ***";
-
-    LOGDECAF_INFO( logger, ostream.str() );
+    std::cout << "RECV: " << command->toString() << std::endl;
 
     // Delegate to the base class.
     TransportFilter::onCommand( command );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::oneway( const Pointer<Command>& command )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+void LoggingTransport::oneway( const Pointer<Command>& command ) {
 
     try {
 
-        ostringstream ostream;
-        ostream << "*** BEGIN SENDING ONEWAY COMMAND ***" << endl;
-        ostream << command->toString() << endl;
-        ostream << "*** END SENDING ONEWAY COMMAND ***";
-
-        LOGDECAF_INFO( logger, ostream.str() );
+        std::cout << "SEND: " << command->toString() << std::endl;
 
         // Delegate to the base class.
         TransportFilter::oneway( command );
@@ -71,21 +57,14 @@ void LoggingTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+Pointer<Response> LoggingTransport::request( const Pointer<Command>& command ) {
 
     try {
 
+        std::cout << "SEND: " << command->toString() << std::endl;
+
         // Delegate to the base class.
         Pointer<Response> response = TransportFilter::request( command );
-
-        ostringstream ostream;
-        ostream << "*** SENDING REQUEST COMMAND ***" << endl;
-        ostream << command->toString() << endl;
-        ostream << "*** RECEIVED RESPONSE COMMAND ***" << endl;
-        ostream << ( response == NULL? "NULL" : response->toString() );
-
-        LOGDECAF_INFO( logger, ostream.str() );
 
         return response;
     }
@@ -96,21 +75,14 @@ Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout )
-    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
+Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout ) {
 
     try {
 
+        std::cout << "SEND: " << command->toString() << std::endl;
+
         // Delegate to the base class.
         Pointer<Response> response = TransportFilter::request( command, timeout );
-
-        ostringstream ostream;
-        ostream << "*** SENDING REQUEST COMMAND: Timeout = " << timeout << " ***" << endl;
-        ostream << command->toString() << endl;
-        ostream << "*** RECEIVED RESPONSE COMMAND ***" << endl;
-        ostream << ( response == NULL? "NULL" : response->toString() );
-
-        LOGDECAF_INFO( logger, ostream.str() );
 
         return response;
     }

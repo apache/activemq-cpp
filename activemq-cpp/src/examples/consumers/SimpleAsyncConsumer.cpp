@@ -56,28 +56,32 @@ private:
     Destination* destination;
     MessageConsumer* consumer;
     bool useTopic;
-    bool clientAck;
     std::string brokerURI;
     std::string destURI;
+    bool clientAck;
+
+private:
+
+    SimpleAsyncConsumer( const SimpleAsyncConsumer& );
+    SimpleAsyncConsumer& operator= ( const SimpleAsyncConsumer& );
 
 public:
 
     SimpleAsyncConsumer( const std::string& brokerURI,
                          const std::string& destURI,
                          bool useTopic = false,
-                         bool clientAck = false ) {
-
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->consumer = NULL;
-        this->useTopic = useTopic;
-        this->brokerURI = brokerURI;
-        this->destURI = destURI;
-        this->clientAck = clientAck;
+                         bool clientAck = false ) :
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        consumer(NULL),
+        useTopic(useTopic),
+        brokerURI(brokerURI),
+        destURI(destURI),
+        clientAck(clientAck) {
     }
 
-    virtual ~SimpleAsyncConsumer(){
+    virtual ~SimpleAsyncConsumer() throw() {
         this->cleanup();
     }
 
@@ -130,7 +134,7 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ){
+    virtual void onMessage( const Message* message ) throw() {
 
         static int count = 0;
 

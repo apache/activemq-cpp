@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidClientIdException::InvalidClientIdException() throw() : CMSException() {
+InvalidClientIdException::InvalidClientIdException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidClientIdException::InvalidClientIdException( const InvalidClientIdException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+InvalidClientIdException::InvalidClientIdException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidClientIdException::InvalidClientIdException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InvalidClientIdException::InvalidClientIdException( const std::string& message,
                                                     const std::exception* cause,
                                                     const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -66,15 +66,9 @@ namespace state {
             return this->info;
         }
 
-        void addProducer( const Pointer<ProducerInfo>& info ) {
-            checkShutdown();
-            producers.put( info->getProducerId(),
-                Pointer<ProducerState>( new ProducerState( info ) ) );
-        }
+        void addProducer( const Pointer<ProducerInfo>& info );
 
-        Pointer<ProducerState> removeProducer( const Pointer<ProducerId>& id) {
-            return producers.remove( id );
-        }
+        Pointer<ProducerState> removeProducer( const Pointer<ProducerId>& id );
 
         void addConsumer( const Pointer<ConsumerInfo>& info ) {
             checkShutdown();

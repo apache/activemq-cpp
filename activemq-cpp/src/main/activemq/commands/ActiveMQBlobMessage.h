@@ -47,49 +47,28 @@ namespace commands {
         static const unsigned char ID_ACTIVEMQBLOBMESSAGE = 29;
         static const std::string BINARY_MIME_TYPE;
 
+    private:
+
+        ActiveMQBlobMessage( const ActiveMQBlobMessage& );
+        ActiveMQBlobMessage& operator= ( const ActiveMQBlobMessage& );
+
     public:
 
         ActiveMQBlobMessage();
-        virtual ~ActiveMQBlobMessage() {}
+        virtual ~ActiveMQBlobMessage() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual ActiveMQBlobMessage* cloneDataStructure() const;
 
-        /**
-         * Copy the contents of the passed object into this objects
-         * members, overwriting any existing data.
-         * @return src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src );
 
-        /**
-         * Returns a string containing the information for this DataStructure
-         * such as its type and value of its elements.
-         * @return formatted string useful for debugging.
-         */
         virtual std::string toString() const;
 
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
         virtual bool equals( const DataStructure* value ) const;
 
     public:  // cms::Message
 
-        /**
-         * Clone this message exactly, returns a new instance that the
-         * caller is required to delete.
-         * @return new copy of this message
-         */
         virtual cms::Message* clone() const {
             return dynamic_cast<cms::Message*>( this->cloneDataStructure() );
         }

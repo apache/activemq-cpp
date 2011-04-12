@@ -17,11 +17,9 @@
 
 #include "StandardOutputStream.h"
 
-#include <apr.h>
-#include <apr_general.h>
-#include <apr_pools.h>
-
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
 using namespace decaf::internal::io;
 
@@ -34,47 +32,51 @@ StandardOutputStream::~StandardOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( unsigned char c )
-    throw ( decaf::io::IOException ) {
+void StandardOutputStream::doWriteByte( unsigned char c ) {
 
     std::cout << c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( decaf::io::IOException ) {
+void StandardOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                                int offset, int length ) {
 
-    if( buffer.empty() ){
+    if( length == 0 ) {
         return;
     }
-
-    this->write( &buffer[0], 0, buffer.size() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::write( const unsigned char* buffer,
-                                       std::size_t offset,
-                                       std::size_t len )
-    throw ( decaf::io::IOException, lang::exceptions::NullPointerException ) {
 
     if( buffer == NULL ) {
         throw lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "StandardOutputStream::write - Passed buffer is null." );
+            "StandardErrorOutputStream::write - Passed buffer is null." );
     }
 
-    if( offset > len ) {
-        throw decaf::io::IOException(
-            __FILE__, __LINE__,
-            "StandardOutputStream::write - offset passed is greater than length" );
+    if( size < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
     }
 
-	for( std::size_t i = 0; i < len; ++i ) {
+    if( offset > size || offset < 0 ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+    }
+
+    if( length < 0 || length > size - offset ) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+    }
+
+    for( int i = 0; i < length; ++i ) {
         std::cout << buffer[i+offset];
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StandardOutputStream::flush() throw ( decaf::io::IOException ){
+void StandardOutputStream::flush() {
+    std::cout.flush();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StandardOutputStream::close() {
     std::cout.flush();
 }

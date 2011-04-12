@@ -39,13 +39,15 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId::BrokerId() : BaseDataStructure() {
+BrokerId::BrokerId() 
+    : BaseDataStructure(), value("") {
 
-    this->value = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId::BrokerId( const BrokerId& other ) : BaseDataStructure() {
+BrokerId::BrokerId( const BrokerId& other )
+    : BaseDataStructure(), value("") {
+
     this->copyDataStructure( &other );
 }
 
@@ -93,15 +95,7 @@ unsigned char BrokerId::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string BrokerId::toString() const {
 
-    ostringstream stream;
-
-    stream << "Begin Class = BrokerId" << std::endl;
-    stream << " Value of BrokerId::ID_BROKERID = 124" << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = BrokerId" << std::endl;
-
-    return stream.str();
+    return this->value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +152,7 @@ int BrokerId::compareTo( const BrokerId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool BrokerId::equals( const BrokerId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

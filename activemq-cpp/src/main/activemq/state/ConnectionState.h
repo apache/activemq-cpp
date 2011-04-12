@@ -25,14 +25,16 @@
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
+#include <activemq/commands/LocalTransactionId.h>
 #include <activemq/state/ConsumerState.h>
 #include <activemq/state/ProducerState.h>
 #include <activemq/state/SessionState.h>
 #include <activemq/state/TransactionState.h>
 
+#include <decaf/util/StlMap.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/Pointer.h>
 
 #include <string>
@@ -49,14 +51,19 @@ namespace state {
     private:
 
         Pointer< ConnectionInfo > info;
-        ConcurrentStlMap< Pointer<TransactionId>,
+        ConcurrentStlMap< Pointer<LocalTransactionId>,
                           Pointer<TransactionState>,
-                          TransactionId::COMPARATOR > transactions;
+                          LocalTransactionId::COMPARATOR > transactions;
         ConcurrentStlMap< Pointer<SessionId>,
                           Pointer<SessionState>,
                           SessionId::COMPARATOR > sessions;
-        StlList< Pointer<DestinationInfo> > tempDestinations;
+        LinkedList< Pointer<DestinationInfo> > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
+
+        bool connectionInterruptProcessingComplete;
+        StlMap< Pointer<ConsumerId>,
+                Pointer<ConsumerInfo>,
+                ConsumerId::COMPARATOR > recoveringPullConsumers;
 
     public:
 
@@ -96,11 +103,12 @@ namespace state {
 
         void addTransactionState( const Pointer<TransactionId>& id ) {
             checkShutdown();
-            transactions.put( id, Pointer<TransactionState>( new TransactionState( id ) ) );
+            transactions.put( id.dynamicCast<LocalTransactionId>(),
+                              Pointer<TransactionState>( new TransactionState( id ) ) );
         }
 
         const Pointer<TransactionState>& getTransactionState( const Pointer<TransactionId>& id ) const {
-            return transactions.get( id );
+            return transactions.get( id.dynamicCast<LocalTransactionId>() );
         }
 
         std::vector< Pointer<TransactionState> > getTransactionStates() const {
@@ -108,7 +116,7 @@ namespace state {
         }
 
         Pointer<TransactionState> removeTransactionState( const Pointer<TransactionId>& id ) {
-            return transactions.remove( id );
+            return transactions.remove( id.dynamicCast<LocalTransactionId>() );
         }
 
         void addSession( const Pointer<SessionInfo>& info ) {
@@ -125,12 +133,24 @@ namespace state {
             return sessions.get( id );
         }
 
-        const StlList< Pointer<DestinationInfo> >& getTempDesinations() const {
+        const LinkedList< Pointer<DestinationInfo> >& getTempDesinations() const {
             return tempDestinations;
         }
 
         std::vector< Pointer<SessionState> > getSessionStates() const {
             return sessions.values();
+        }
+
+        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR > getRecoveringPullConsumers() {
+            return recoveringPullConsumers;
+        }
+
+        void setConnectionInterruptProcessingComplete( bool connectionInterruptProcessingComplete ) {
+            this->connectionInterruptProcessingComplete = connectionInterruptProcessingComplete;
+        }
+
+        bool isConnectionInterruptProcessingComplete() {
+            return this->connectionInterruptProcessingComplete;
         }
 
     };

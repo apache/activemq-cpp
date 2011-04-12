@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException::MessageFormatException() throw() : CMSException() {
+MessageFormatException::MessageFormatException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageFormatException::MessageFormatException( const MessageFormatException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageFormatException::MessageFormatException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageFormatException::MessageFormatException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageFormatException::MessageFormatException( const std::string& message,
                                                 const std::exception* cause,
                                                 const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

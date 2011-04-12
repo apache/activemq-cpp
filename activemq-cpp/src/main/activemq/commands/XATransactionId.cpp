@@ -19,6 +19,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
+#include <cms/XAException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -39,14 +40,45 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId() : TransactionId() {
+XATransactionId::XATransactionId()
+    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
-    this->formatId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId( const XATransactionId& other ) : TransactionId() {
+XATransactionId::XATransactionId( const XATransactionId& other )
+    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
+
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+XATransactionId::XATransactionId( const cms::Xid* xid )
+    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
+
+    if( xid == NULL ) {
+        return;
+    }
+
+    this->formatId = xid->getFormatId();
+    this->branchQualifier.resize( cms::Xid::MAXBQUALSIZE );
+    this->globalTransactionId.resize( cms::Xid::MAXGTRIDSIZE );
+
+    int result = xid->getBranchQualifier( &this->branchQualifier[0], cms::Xid::MAXBQUALSIZE );
+
+    if( result == -1 ) {
+        throw cms::XAException("Invalid Xid Branch Qualifier is larger than MAXBQUALSIZE" );
+    } else {
+        this->branchQualifier.resize( result );
+    }
+
+    result = xid->getGlobalTransactionId( &this->globalTransactionId[0], cms::Xid::MAXGTRIDSIZE );
+
+    if( result == -1 ) {
+        throw cms::XAException("Invalid Xid Global Transaction Id is larger than MAXGTRIDSIZE" );
+    } else {
+        this->globalTransactionId.resize( result );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,17 +129,31 @@ std::string XATransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = XATransactionId" << std::endl;
-    stream << " Value of XATransactionId::ID_XATRANSACTIONID = 112" << std::endl;
-    stream << " Value of FormatId = " << this->getFormatId() << std::endl;
-    for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
-        stream << " Value of GlobalTransactionId[" << iglobalTransactionId << "] = " << this->getGlobalTransactionId()[iglobalTransactionId] << std::endl;
+    stream << "XATransactionId { ";
+    stream << "FormatId = " << this->getFormatId();
+    stream << ", ";
+    stream << "GlobalTransactionId = ";
+    if( this->getGlobalTransactionId().size() > 0 ) {
+        stream << "[";
+        for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
+            stream << this->getGlobalTransactionId()[iglobalTransactionId] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
-        stream << " Value of BranchQualifier[" << ibranchQualifier << "] = " << this->getBranchQualifier()[ibranchQualifier] << std::endl;
+    stream << ", ";
+    stream << "BranchQualifier = ";
+    if( this->getBranchQualifier().size() > 0 ) {
+        stream << "[";
+        for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
+            stream << this->getBranchQualifier()[ibranchQualifier] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << TransactionId::toString();
-    stream << "End Class = XATransactionId" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -214,7 +260,7 @@ int XATransactionId::compareTo( const XATransactionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool XATransactionId::equals( const XATransactionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -231,5 +277,99 @@ bool XATransactionId::operator<( const XATransactionId& value ) const {
 XATransactionId& XATransactionId::operator= ( const XATransactionId& other ) {
     this->copyDataStructure( &other );
     return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Xid* XATransactionId::clone() const {
+
+    XATransactionId* theClone = new XATransactionId();
+
+    theClone->formatId = this->formatId;
+    theClone->globalTransactionId = this->globalTransactionId;
+    theClone->branchQualifier = this->branchQualifier;
+
+    return theClone;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool XATransactionId::equals( const cms::Xid* other ) const {
+
+    if( (void*)this == other ) {
+        return true;
+    }
+
+    if( other == NULL ) {
+        return false;
+    }
+
+    if( this->formatId != other->getFormatId() ) {
+        return false;
+    }
+
+    std::vector<unsigned char> otherBQual( Xid::MAXBQUALSIZE );
+
+    other->getBranchQualifier( &otherBQual[0], Xid::MAXBQUALSIZE );
+
+    if( this->branchQualifier != otherBQual ) {
+        return false;
+    }
+
+    std::vector<unsigned char> otherGTXID( Xid::MAXBQUALSIZE );
+
+    other->getGlobalTransactionId( &otherGTXID[0], Xid::MAXGTRIDSIZE );
+
+    if( this->globalTransactionId != otherGTXID ) {
+        return false;
+    }
+
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int XATransactionId::getBranchQualifier( unsigned char* buffer, int size ) const {
+
+    if( size < 0 ) {
+        throw cms::XAException("Error: Negative size value passed to getBranchQualifier()");
+    }
+
+    if( buffer == NULL ) {
+        throw cms::XAException("Error: NULL buffer pointer passed to getBranchQualifier()");
+    }
+
+    if( size < (int)this->branchQualifier.size() ) {
+        return -1;
+    }
+
+    if( this->branchQualifier.size() == 0 ) {
+        return 0;
+    }
+
+    std::copy( this->branchQualifier.begin(), this->branchQualifier.end(), buffer );
+
+    return (int)this->branchQualifier.size();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int XATransactionId::getGlobalTransactionId( unsigned char* buffer, int size ) const {
+
+    if( size < 0 ) {
+        throw cms::XAException("Error: Negative size value passed to getGlobalTransactionId()");
+    }
+
+    if( buffer == NULL ) {
+        throw cms::XAException("Error: NULL buffer pointer passed to getGlobalTransactionId()");
+    }
+
+    if( size < (int)this->globalTransactionId.size() ) {
+        return -1;
+    }
+
+    if( this->globalTransactionId.size() == 0 ) {
+        return 0;
+    }
+
+    std::copy( this->globalTransactionId.begin(), this->globalTransactionId.end(), buffer );
+
+    return (int)this->globalTransactionId.size();
 }
 

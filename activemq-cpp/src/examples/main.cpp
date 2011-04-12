@@ -22,6 +22,7 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/System.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Config.h>
@@ -56,20 +57,25 @@ private:
     bool sessionTransacted;
     std::string brokerURI;
 
+private:
+
+    HelloWorldProducer( const HelloWorldProducer& );
+    HelloWorldProducer& operator= ( const HelloWorldProducer& );
+
 public:
 
     HelloWorldProducer( const std::string& brokerURI,
                         int numMessages,
                         bool useTopic = false,
-                        bool sessionTransacted = false ){
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->producer = NULL;
-        this->numMessages = numMessages;
-        this->useTopic = useTopic;
-        this->sessionTransacted = sessionTransacted;
-        this->brokerURI = brokerURI;
+                        bool sessionTransacted = false ) :
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        producer(NULL),
+        numMessages(numMessages),
+        useTopic(useTopic),
+        sessionTransacted(sessionTransacted),
+        brokerURI(brokerURI) {
     }
 
     virtual ~HelloWorldProducer(){
@@ -110,7 +116,7 @@ public:
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
             // Create the Thread Id String
-            string threadIdStr = Integer::toString( Thread::getId() );
+            string threadIdStr = Long::toString( Thread::getId() );
 
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
@@ -182,24 +188,31 @@ private:
     bool sessionTransacted;
     std::string brokerURI;
 
+private:
+
+    HelloWorldConsumer( const HelloWorldConsumer& );
+    HelloWorldConsumer& operator= ( const HelloWorldConsumer& );
+
 public:
 
     HelloWorldConsumer( const std::string& brokerURI,
-                        long numMessages,
+                        int numMessages,
                         bool useTopic = false,
                         bool sessionTransacted = false,
-                        long waitMillis = 30000 )
-                         : latch(1), doneLatch(numMessages){
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->consumer = NULL;
-        this->waitMillis = waitMillis;
-        this->useTopic = useTopic;
-        this->sessionTransacted = sessionTransacted;
-        this->brokerURI = brokerURI;
+                        int waitMillis = 30000 ) :
+        latch(1),
+        doneLatch(numMessages),
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        consumer(NULL),
+        waitMillis(waitMillis),
+        useTopic(useTopic),
+        sessionTransacted(sessionTransacted),
+        brokerURI(brokerURI) {
     }
-    virtual ~HelloWorldConsumer(){
+
+    virtual ~HelloWorldConsumer() throw() {
         cleanup();
     }
 
@@ -262,7 +275,7 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ){
+    virtual void onMessage( const Message* message ) throw() {
 
         static int count = 0;
 
@@ -349,6 +362,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
 
+
     // Set the URI to point to the IP Address of your broker.
     // add any optional params to the url to enable things like
     // tightMarshalling or tcp logging etc.  See the CMS web site for
@@ -357,7 +371,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //  http://activemq.apache.org/cms/
     //
     // Wire Format Options:
-    // =====================
+    // =========================
     // Use either stomp or openwire, the default ports are different for each
     //
     // Examples:
@@ -365,13 +379,29 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61616?wireFormat=openwire  same as above
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
+    // SSL:
+    // =========================
+    // To use SSL you need to specify the location of the trusted Root CA or the
+    // certificate for the broker you want to connect to.  Using the Root CA allows
+    // you to use failover with multiple servers all using certificates signed by
+    // the trusted root.  If using client authentication you also need to specify
+    // the location of the client Certificate.
+    //
+    //     System::setProperty( "decaf.net.ssl.keyStore", "<path>/client.pem" );
+    //     System::setProperty( "decaf.net.ssl.keyStorePassword", "password" );
+    //     System::setProperty( "decaf.net.ssl.trustStore", "<path>/rootCA.pem" );
+    //
+    // The you just specify the ssl transport in the URI, for example:
+    //
+    //     ssl://localhost:61617
+    //
     std::string brokerURI =
-        "failover:(tcp://127.0.0.1:61616"
+        "failover:(tcp://localhost:61616"
 //        "?wireFormat=openwire"
 //        "&transport.useInactivityMonitor=false"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
-//        "&transport.commandTracingEnabled=true"
+//        "?transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
         ")";
@@ -406,7 +436,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     consumerThread.join();
 
     long long endTime = System::currentTimeMillis();
-    double totalTime = (endTime - startTime) / 1000.0;
+    double totalTime = (double)(endTime - startTime) / 1000.0;
 
     consumer.close();
     producer.close();

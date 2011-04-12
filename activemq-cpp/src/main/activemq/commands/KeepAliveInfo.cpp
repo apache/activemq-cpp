@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-KeepAliveInfo::KeepAliveInfo() : BaseCommand() {
+KeepAliveInfo::KeepAliveInfo() 
+    : BaseCommand() {
 
 }
 
@@ -87,10 +88,10 @@ std::string KeepAliveInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = KeepAliveInfo" << std::endl;
-    stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = KeepAliveInfo" << std::endl;
+    stream << "KeepAliveInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }
@@ -115,8 +116,7 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processKeepAliveInfo( this );
 }

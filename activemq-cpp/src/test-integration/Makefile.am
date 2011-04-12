@@ -22,11 +22,16 @@ cc_sources = \
     activemq/test/DurableTest.cpp \
     activemq/test/ExpirationTest.cpp \
     activemq/test/JmsMessageGroupsTest.cpp \
+    activemq/test/MapMessageTest.cpp \
+    activemq/test/MessageCompressionTest.cpp \
+    activemq/test/MessagePriorityTest.cpp \
+    activemq/test/QueueBrowserTest.cpp \
     activemq/test/SimpleRollbackTest.cpp \
     activemq/test/SimpleTest.cpp \
     activemq/test/SlowListenerTest.cpp \
     activemq/test/TransactionTest.cpp \
     activemq/test/VirtualTopicTest.cpp \
+    activemq/test/openwire/OpenwireAdvisorysTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireClientAckTest.cpp \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
@@ -34,12 +39,17 @@ cc_sources = \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
     activemq/test/openwire/OpenwireIndividualAckTest.cpp \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
+    activemq/test/openwire/OpenwireMapMessageTest.cpp \
+    activemq/test/openwire/OpenwireMessageCompressionTest.cpp \
+    activemq/test/openwire/OpenwireMessagePriorityTest.cpp \
+    activemq/test/openwire/OpenwireQueueBrowserTest.cpp \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
     activemq/test/openwire/OpenwireSimpleTest.cpp \
     activemq/test/openwire/OpenwireSlowListenerTest.cpp \
     activemq/test/openwire/OpenwireTempDestinationTest.cpp \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
+    activemq/test/openwire/OpenwireXATransactionsTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
     activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
@@ -63,11 +73,16 @@ h_sources = \
     activemq/test/DurableTest.h \
     activemq/test/ExpirationTest.h \
     activemq/test/JmsMessageGroupsTest.h \
+    activemq/test/MapMessageTest.h \
+    activemq/test/MessageCompressionTest.h \
+    activemq/test/MessagePriorityTest.h \
+    activemq/test/QueueBrowserTest.h \
     activemq/test/SimpleRollbackTest.h \
     activemq/test/SimpleTest.h \
     activemq/test/SlowListenerTest.h \
     activemq/test/TransactionTest.h \
     activemq/test/VirtualTopicTest.h \
+    activemq/test/openwire/OpenwireAdvisorysTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireClientAckTest.h \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
@@ -75,12 +90,17 @@ h_sources = \
     activemq/test/openwire/OpenwireExpirationTest.h \
     activemq/test/openwire/OpenwireIndividualAckTest.h \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
+    activemq/test/openwire/OpenwireMapMessageTest.h \
+    activemq/test/openwire/OpenwireMessageCompressionTest.h \
+    activemq/test/openwire/OpenwireMessagePriorityTest.h \
+    activemq/test/openwire/OpenwireQueueBrowserTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
     activemq/test/openwire/OpenwireSimpleTest.h \
     activemq/test/openwire/OpenwireSlowListenerTest.h \
     activemq/test/openwire/OpenwireTempDestinationTest.h \
     activemq/test/openwire/OpenwireTransactionTest.h \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
+    activemq/test/openwire/OpenwireXATransactionsTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
     activemq/test/stomp/StompCmsTemplateTest.h \
     activemq/test/stomp/StompDurableTest.h \

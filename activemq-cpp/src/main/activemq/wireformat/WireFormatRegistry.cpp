@@ -21,30 +21,24 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatRegistry::WireFormatRegistry() {
+WireFormatRegistry::WireFormatRegistry() : registry() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatRegistry::~WireFormatRegistry() {
 
-    std::vector<WireFormatFactory*> factories = this->registry.values();
-
-    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
-    }
-
-    this->registry.clear();
- }
+    try {
+        this->unregisterAllFactories();
+    } catch(...) {}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,9 +49,7 @@ WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,
@@ -78,6 +70,19 @@ void WireFormatRegistry::unregisterFactory( const std::string& name ) {
         delete this->registry.get( name );
         this->registry.remove( name );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatRegistry::unregisterAllFactories() {
+
+    std::vector<WireFormatFactory*> factories = this->registry.values();
+    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
+
+    for( ; iter != factories.end(); ++iter ) {
+        delete *iter;
+    }
+
+    this->registry.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

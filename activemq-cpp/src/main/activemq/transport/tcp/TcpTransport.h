@@ -48,6 +48,11 @@ namespace tcp{
     private:
 
         /**
+         * Stores the URI configured Socket connect timeout.
+         */
+        int connectTimeout;
+
+        /**
          * has close been called.
          */
         bool closed;
@@ -67,49 +72,44 @@ namespace tcp{
          */
         std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
 
+    private:
+
+        TcpTransport( const TcpTransport& );
+        TcpTransport& operator= ( const TcpTransport& );
+
     public:
 
         /**
-         * Constructor
-         * @param properties the configuration properties for this transport
-         * @param next the next transport in the chain
+         * Creates a new instance of a TcpTransport, the transport is left unconnected
+         * and is in a unusable state until the connect method is called.
+         *
+         * @param next
+         *      The next transport in the chain
          */
-        TcpTransport( const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
-
-        /**
-         * Constructor
-         * @param uri - The URI containing the host to connect to.
-         * @param properties the configuration properties for this transport
-         * @param next the next transport in the chain
-         */
-        TcpTransport( const decaf::net::URI& uri,
-                      const decaf::util::Properties& properties,
-                      const Pointer<Transport>& next );
+        TcpTransport( const Pointer<Transport>& next );
 
         virtual ~TcpTransport();
 
         /**
-         * Delegates to the superclass and then closes the socket.
-         * @throws IOException if errors occur.
-         */
-        virtual void close() throw( decaf::io::IOException );
-
-        /**
-         * Is this Transport fault tolerant, meaning that it will reconnect to
-         * a broker on disconnect.
+         * Creates a Socket and configures it before attempting to connect to the location specified
+         * by the URI passed in.  The Socket is configured using parameters in the properties that
+         * are passed to this method.
          *
-         * @returns true if the Transport is fault tolerant.
+         * @param uri
+         *      The URI that the Transport is to connect to once initialized.
+         * @param properties
+         *      The Properties that have been parsed from the URI or from configuration files.
          */
+        void connect( const decaf::net::URI& uri, const decaf::util::Properties& properties );
+
+    public:  // Transport Methods
+
+        virtual void close();
+
         virtual bool isFaultTolerant() const {
             return false;
         }
 
-        /**
-         * Is the Transport Connected to its Broker.
-         *
-         * @returns true if a connection has been made.
-         */
         virtual bool isConnected() const {
             if( this->socket.get() != NULL ) {
                 return this->socket->isConnected();
@@ -118,19 +118,37 @@ namespace tcp{
             return false;
         }
 
-        /**
-         * Has the Transport been shutdown and no longer usable.
-         *
-         * @returns true if the Transport
-         */
         virtual bool isClosed() const {
             return this->closed;
         }
 
-    private:
+    protected:
 
-        void initialize( const decaf::net::URI& uri,
-                         const decaf::util::Properties& properties );
+        /**
+         * Create an unconnected Socket instance to be used by the transport to communicate
+         * with the broker.
+         *
+         * @return a newly created unconnected Socket instance.
+         *
+         * @throw IOException if there is an error while creating the unconnected Socket.
+         */
+        virtual decaf::net::Socket* createSocket();
+
+        /**
+         * Using options from configuration URI, configure the socket options before the
+         * Socket instance is connected to the Server.  Subclasses can override this option
+         * to set more configuration options, they should called the base class version to
+         * allow the default set of Socket options to also be configured.
+         *
+         * @param socket
+         *      The Socket instance to configure using options from the given Properties.
+         *
+         * @throw NullPointerException if the Socket instance is null.
+         * @throw IllegalArgumentException if the socket instance is not handled by the class.
+         * @throw SocketException if there is an error while setting one of the Socket options.
+         */
+        virtual void configureSocket( decaf::net::Socket* socket,
+                                      const decaf::util::Properties& properties );
 
     };
 

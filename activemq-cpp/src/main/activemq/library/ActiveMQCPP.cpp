@@ -21,15 +21,19 @@
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
 
+#include <activemq/util/IdGenerator.h>
+
 #include <activemq/wireformat/stomp/StompWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/tcp/TcpTransportFactory.h>
+#include <activemq/transport/tcp/SslTransportFactory.h>
 #include <activemq/transport/failover/FailoverTransportFactory.h>
 
 using namespace activemq;
 using namespace activemq::library;
+using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::mock;
@@ -47,6 +51,9 @@ void ActiveMQCPP::initializeLibrary( int argc, char** argv ) {
 
     // Register all Transports
     ActiveMQCPP::registerTransports();
+
+    // Start the IdGenerator Kernel
+    IdGenerator::initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +63,14 @@ void ActiveMQCPP::initializeLibrary() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQCPP::shutdownLibrary() {
+
+    // Shutdown the IdGenerator Kernel
+    IdGenerator::shutdown();
+
+    WireFormatRegistry::getInstance().unregisterAllFactories();
+    TransportRegistry::getInstance().unregisterAllFactories();
+
+    // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
 }
 
@@ -69,7 +84,6 @@ void ActiveMQCPP::registerWireFormats() {
         "openwire", new wireformat::openwire::OpenWireFormatFactory() );
     WireFormatRegistry::getInstance().registerFactory(
         "stomp", new wireformat::stomp::StompWireFormatFactory() );
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,8 +95,9 @@ void ActiveMQCPP::registerTransports() {
     TransportRegistry::getInstance().registerFactory(
         "tcp", new TcpTransportFactory() );
     TransportRegistry::getInstance().registerFactory(
+        "ssl", new SslTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
         "mock", new MockTransportFactory() );
     TransportRegistry::getInstance().registerFactory(
         "failover", new FailoverTransportFactory() );
-
 }

@@ -67,6 +67,11 @@ namespace transport{
          */
         void fire( const Pointer<Command>& command );
 
+    private:
+
+        TransportFilter( const TransportFilter& );
+        TransportFilter& operator= ( const TransportFilter& );
+
     public:
 
         /**
@@ -75,7 +80,9 @@ namespace transport{
          */
         TransportFilter( const Pointer<Transport>& next );
 
-        virtual ~TransportFilter() {}
+        virtual ~TransportFilter();
+
+    public:  // TransportListener methods
 
         /**
          * Event handler for the receipt of a command.
@@ -100,151 +107,69 @@ namespace transport{
          */
         virtual void transportResumed();
 
-        /**
-         * Sends a one-way command.  Does not wait for any response from the
-         * broker.
-         * @param command the command to be sent.
-         * @throws IOException if an exception occurs during writing of
-         * the command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
+    public:  // Transport Methods.
 
+        virtual void oneway( const Pointer<Command>& command ) {
             next->oneway( command );
         }
 
-        /**
-         * Not supported by this class - throws an exception.
-         * @param command the command that is sent as a request
-         * @throws IOException
-         * @throws UnsupportedOperationException.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
-
+        virtual Pointer<Response> request( const Pointer<Command>& command ) {
             return next->request( command );
         }
 
-        /**
-         * Not supported by this class - throws an exception.
-         * @param command - The command that is sent as a request
-         * @param timeout - The the time to wait for a response.
-         * @throws IOException
-         * @throws UnsupportedOperationException.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
-
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout ) {
             return next->request( command, timeout );
         }
 
-        /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport events.
-         */
-        virtual void setTransportListener( TransportListener* listener ){
+        virtual void setTransportListener( TransportListener* listener ) {
             this->listener = listener;
         }
 
-        /**
-         * Gets the observer of asynchronous exceptions from this transport.
-         * @return The listener of transport events.
-         */
         virtual TransportListener* getTransportListener() const {
             return this->listener;
         }
 
-        /**
-         * Sets the WireFormat instance to use.
-         * @param wireFormat
-         *      The WireFormat the object used to encode / decode commands.
-         */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
             next->setWireFormat( wireFormat );
         }
 
-        /**
-         * Starts this transport object and creates the thread for
-         * polling on the input stream for commands.  If this object
-         * has been closed, throws an exception.  Before calling start,
-         * the caller must set the IO streams and the reader and writer
-         * objects.
-         * @throws IOException if an error occurs or if this transport
-         * has already been closed.
-         */
-        virtual void start() throw( decaf::io::IOException );
+        virtual void start();
 
-        /**
-         * Stops the Transport.
-         *
-         * @throws IOException if an error occurs while stopping the Transport.
-         */
-        virtual void stop() throw( decaf::io::IOException );
+        virtual void stop();
 
-        /**
-         * Stops the polling thread and closes the streams.  This can
-         * be called explicitly, but is also called in the destructor. Once
-         * this object has been closed, it cannot be restarted.
-         *
-         * @throws IOException if an error occurs while closing the Transport.
-         */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
-        /**
-         * Narrows down a Chain of Transports to a specific Transport to allow a
-         * higher level transport to skip intermediate Transports in certain
-         * circumstances.
-         *
-         * @param typeId - The type_info of the Object we are searching for.
-         *
-         * @return the requested Object. or NULL if its not in this chain.
-         */
         virtual Transport* narrow( const std::type_info& typeId );
 
-        /**
-         * Is this Transport fault tolerant, meaning that it will reconnect to
-         * a broker on disconnect.
-         *
-         * @returns true if the Transport is fault tolerant.
-         */
         virtual bool isFaultTolerant() const {
             return next->isFaultTolerant();
         }
 
-        /**
-         * Is the Transport Connected to its Broker.
-         *
-         * @returns true if a connection has been made.
-         */
         virtual bool isConnected() const {
             return next->isConnected();
         }
 
-        /**
-         * Has the Transport been shutdown and no longer usable.
-         *
-         * @returns true if the Transport
-         */
+        virtual bool isReconnectSupported() const {
+            return next->isReconnectSupported();
+        }
+
+        virtual bool isUpdateURIsSupported() const {
+            return next->isUpdateURIsSupported();
+        }
+
         virtual bool isClosed() const {
             return next->isClosed();
         }
 
-        /**
-         * @return the remote address for this connection
-         */
         virtual std::string getRemoteAddress() const {
             return next->getRemoteAddress();
         }
 
-        /**
-         * reconnect to another location
-         * @param uri
-         * @throws IOException on failure of if not supported
-         */
-        virtual void reconnect( const decaf::net::URI& uri )
-            throw( decaf::io::IOException );
+        virtual void reconnect( const decaf::net::URI& uri );
+
+        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris ) {
+            next->updateURIs( rebalance, uris );
+        }
 
     };
 

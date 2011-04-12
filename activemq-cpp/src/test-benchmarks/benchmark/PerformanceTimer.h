@@ -63,7 +63,7 @@ namespace benchmark{
          * Gets the number of runs made so far
          * @returns unsigned int that counts the number of runs
          */
-        unsigned int getNumberOfRuns() const {
+        unsigned long long getNumberOfRuns() const {
             return numberOfRuns;
         }
 

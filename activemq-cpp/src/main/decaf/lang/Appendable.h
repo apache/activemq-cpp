@@ -26,6 +26,24 @@ namespace lang{
 
     class CharSequence;
 
+    /**
+     * An object to which char sequences and values can be appended. The Appendable interface
+     * must be implemented by any class whose instances are intended to receive formatted
+     * output from a Formatter.
+     *
+     * TODO
+     * The characters to be appended should be valid Unicode characters as described in Unicode
+     * Character Representation. Note that supplementary characters may be composed of multiple
+     * 16-bit char values.
+     *
+     * Appendables are not necessarily safe for multithreaded access. Thread safety is the
+     * responsibility of classes that extend and implement this interface.
+     *
+     * Since this interface may be implemented by existing classes with different styles of error
+     * handling there is no guarantee that errors will be propagated to the invoker.
+     *
+     * @since 1.0
+     */
     class DECAF_API Appendable {
     public:
 
@@ -33,38 +51,48 @@ namespace lang{
 
         /**
          * Appends the specified character to this Appendable.
-         * @param value - The character to append
+         *
+         * @param value
+         *      The character to append.
+         *
          * @returns a Reference to this Appendable
+         *
          * @throws Exception if an error occurs.
          */
-        virtual Appendable& append( char value ) throw( decaf::lang::Exception ) = 0;
+        virtual Appendable& append( char value ) = 0;
 
         /**
          * Appends the specified character sequence to this Appendable.
-         * @param csq - The character sequence from which a subsequence will be appended.
-         * If csq is NULL, then characters will be appended as if csq contained the
-         * string "null".
-         * @returns a Reference to this Appendable
+         *
+         * @param csq
+         *      The character sequence from which a subsequence will be appended.
+         *      If csq is NULL, then characters will be appended as if csq contained the
+         *      string "null".
+         *
+         * @returns a Reference to this Appendable.
+         *
          * @throws Exception if an error occurs.
          */
-        virtual Appendable& append( const CharSequence* csq )
-            throw ( decaf::lang::Exception ) = 0;
+        virtual Appendable& append( const CharSequence* csq ) = 0;
 
         /**
          * Appends a subsequence of the specified character sequence to this Appendable.
          * @param csq - The character sequence from which a subsequence will be appended.
          * If csq is NULL, then characters will be appended as if csq contained the
          * string "null".
-         * @param start - The index of the first character in the subsequence
-         * @param end - The index of the character following the last character in the subsequence
+         *
+         * @param start
+         *      The index of the first character in the subsequence.
+         * @param end
+         *      The index of the character following the last character in the subsequence.
+         *
          * @returns a Reference to this Appendable
+         *
          * @throws Exception if an error occurs.
          * @throws IndexOutOfBoundsException start is greater than end, or end is
-         * greater than csq.length()
+         *         greater than csq.length()
          */
-        virtual Appendable& append( const CharSequence* csq,
-                                    std::size_t start, std::size_t end )
-            throw( decaf::lang::Exception ) = 0;
+        virtual Appendable& append( const CharSequence* csq, int start, int end ) = 0;
 
     };
 

@@ -73,13 +73,14 @@ namespace commands{
          * @return a Response to the visitor being called or NULL if no response.
          */
         virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException ) = 0;
+            activemq::state::CommandVisitor* visitor ) = 0;
 
         /*
          * This section contains a set of short-cut methods for determining if a
          * Command is of a certain type.  These are the most commonly used Commands
          * and we save several casts and some ugly code by just adding these here.
          */
+        virtual bool isConnectionControl() const = 0;
         virtual bool isConnectionInfo() const = 0;
         virtual bool isConsumerInfo() const = 0;
         virtual bool isBrokerInfo() const = 0;

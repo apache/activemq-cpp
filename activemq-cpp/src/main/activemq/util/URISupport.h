@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/util/CompositeData.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
@@ -38,8 +38,7 @@ namespace util{
          * @throws IllegalArgumentException if the passed URI is invalid
          */
         static void parseURL( const std::string& URI,
-                              decaf::util::Properties& properties )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
+                              decaf::util::Properties& properties );
 
         /**
          * Parses a Composite URI into a Composite Data instance, the Composite URI
@@ -51,8 +50,7 @@ namespace util{
          *
          * @throw URISyntaxException if the URI is not well formed.
          */
-        static CompositeData parseComposite( const URI& uri )
-            throw( decaf::net::URISyntaxException );
+        static CompositeData parseComposite( const URI& uri );
 
         /**
          * Parse the Query portion of a URI String and return a Simple
@@ -66,8 +64,7 @@ namespace util{
          *
          * @throw IllegalArgumentException if the Query string is not well formed.
          */
-        static decaf::util::Properties parseQuery( std::string query )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
+        static decaf::util::Properties parseQuery( std::string query );
 
         /**
          * Parse the Query portion of a URI String and return a Simple
@@ -79,8 +76,7 @@ namespace util{
          * @throw IllegalArgumentException if the Query string is not well formed.
          */
         static void parseQuery( std::string query,
-                                decaf::util::Properties* properties )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
+                                decaf::util::Properties* properties );
 
         /**
          * Given a properties object create a string that can be appended to a URI
@@ -94,8 +90,7 @@ namespace util{
          * @throw URISyntaxException if the string in the Properties object
          *        can't be encoded into a valid URI Query string.
          */
-        static std::string createQueryString( const Properties& options )
-            throw( decaf::net::URISyntaxException );
+        static std::string createQueryString( const Properties& options );
 
     private:
 
@@ -109,8 +104,7 @@ namespace util{
          *
          * @throw URISyntaxException if the URI is not well formed.
          */
-        static void parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp )
-            throw( decaf::net::URISyntaxException );
+        static void parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp );
 
         /**
          * Splits all the Component URIs in a Composite URI into individual strings which
@@ -118,7 +112,7 @@ namespace util{
          *
          * @param str - the set of Composite URIs
          */
-        static decaf::util::StlList<std::string> splitComponents( const std::string& str );
+        static decaf::util::LinkedList<std::string> splitComponents( const std::string& str );
 
         /**
          * Given a string value and a prefix value, return a new string that has the prefix
@@ -150,8 +144,7 @@ namespace util{
          * @returns the env var if value points to an env var else returns value
          * @throws IllegalArgumentException if the var is not set or has bad syntax
          */
-        static std::string replaceEnvValues( const std::string& value )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
+        static std::string replaceEnvValues( const std::string& value );
 
     };
 

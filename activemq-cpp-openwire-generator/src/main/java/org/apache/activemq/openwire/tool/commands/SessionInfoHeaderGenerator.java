@@ -17,18 +17,27 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
 
+    protected void populateIncludeFilesSet() {
+
+        Set<String> includes = getIncludeFiles();
+        includes.add("<activemq/commands/RemoveInfo.h>");
+
+        super.populateIncludeFilesSet();
+    }
+
     protected void generateProperties( PrintWriter out ) {
+
+        super.generateProperties(out);
 
         out.println("    private:");
         out.println("");
         out.println("        // The ACK mode that the Session was created with" );
         out.println("        unsigned int ackMode;");
         out.println("");
-
-        super.generateProperties(out);
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
@@ -39,6 +48,8 @@ public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
         out.println("        void setAckMode( unsigned int mode ) {");
         out.println("            this->ackMode = mode;");
         out.println("        }");
+        out.println("");
+        out.println("        Pointer<RemoveInfo> createRemoveCommand() const;");
         out.println("");
 
         super.generateAdditonalMembers( out );

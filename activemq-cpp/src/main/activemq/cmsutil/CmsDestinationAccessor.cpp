@@ -17,17 +17,18 @@
 
 #include "CmsDestinationAccessor.h"
 
+#include <cms/IllegalStateException.h>
+
+using namespace cms;
 using namespace activemq::cmsutil;
-using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsDestinationAccessor::CmsDestinationAccessor() {
+CmsDestinationAccessor::CmsDestinationAccessor() : CmsAccessor(),
+                                                   defaultDestinationResolver(),
+                                                   destinationResolver( &defaultDestinationResolver ),
+                                                   pubSubDomain( false ) {
 
-    // Default to using queues.
-    pubSubDomain = false;
-
-    // Start with the default destinationResolver.
-    destinationResolver = &defaultDestinationResolver;
+    // Default to using queues, and start with the default destinationResolver.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,8 +36,7 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::init()
-    throw ( cms::CMSException, IllegalStateException ) {
+void CmsDestinationAccessor::init() {
 
     CmsAccessor::init();
 
@@ -48,8 +48,7 @@ void CmsDestinationAccessor::init()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::destroy()
-    throw ( cms::CMSException, IllegalStateException ) {
+void CmsDestinationAccessor::destroy() {
 
     if( destinationResolver != NULL ) {
         destinationResolver->destroy();
@@ -59,10 +58,8 @@ void CmsDestinationAccessor::destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsDestinationAccessor::resolveDestinationName(
-    cms::Session* session,
-    const std::string& destName )
-        throw ( cms::CMSException, IllegalStateException ) {
+cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* session,
+                                                                  const std::string& destName ) {
 
     checkDestinationResolver();
 
@@ -71,12 +68,9 @@ cms::Destination* CmsDestinationAccessor::resolveDestinationName(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::checkDestinationResolver()
-    throw ( IllegalStateException ) {
+void CmsDestinationAccessor::checkDestinationResolver() {
 
     if( getDestinationResolver() == NULL ) {
-        throw IllegalStateException(
-                __FILE__, __LINE__,
-                "Property 'destinationResolver' is required" );
+        throw IllegalStateException( "Property 'destinationResolver' is required", NULL );
     }
 }

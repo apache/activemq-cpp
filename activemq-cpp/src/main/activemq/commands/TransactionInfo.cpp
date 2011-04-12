@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionInfo::TransactionInfo() : BaseCommand() {
+TransactionInfo::TransactionInfo() 
+    : BaseCommand(), connectionId(NULL), transactionId(NULL), type(0) {
 
-    this->type = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,23 +91,26 @@ std::string TransactionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = TransactionInfo" << std::endl;
-    stream << " Value of TransactionInfo::ID_TRANSACTIONINFO = 7" << std::endl;
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << "TransactionInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of TransactionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "TransactionId = ";
     if( this->getTransactionId() != NULL ) {
-        stream << this->getTransactionId()->toString() << std::endl;
+        stream << this->getTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Type = " << (int)this->getType() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = TransactionInfo" << std::endl;
+    stream << ", ";
+    stream << "Type = " << (int)this->getType();
+    stream << " }";
 
     return stream.str();
 }
@@ -189,8 +192,7 @@ void TransactionInfo::setType( unsigned char type ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> TransactionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> TransactionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processTransactionInfo( this );
 }

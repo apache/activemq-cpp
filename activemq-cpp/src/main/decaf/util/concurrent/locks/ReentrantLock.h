@@ -21,7 +21,6 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/concurrent/locks/Lock.h>
-#include <decaf/lang/Pointer.h>
 
 namespace decaf {
 namespace util {
@@ -80,7 +79,12 @@ namespace locks {
     class DECAF_API ReentrantLock : public Lock {
     private:
 
-        decaf::lang::Pointer<LockHandle> handle;
+        LockHandle* handle;
+
+    private:
+
+        ReentrantLock( const ReentrantLock& );
+        ReentrantLock& operator= ( const ReentrantLock& );
 
     public:
 
@@ -103,7 +107,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException );
+        virtual void lock();
 
         /**
          * Acquires the lock unless the current thread is interrupted.
@@ -137,8 +141,7 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported).
          */
-        virtual void lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
-                                                 decaf::lang::exceptions::InterruptedException );
+        virtual void lockInterruptibly();
 
         /**
          * Acquires the lock only if it is not held by another thread at the time of invocation.
@@ -161,7 +164,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException );
+        virtual bool tryLock();
 
         /**
          * Acquires the lock if it is not held by another thread within the given waiting time and the
@@ -214,9 +217,7 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported)
          */
-        virtual bool tryLock( long long time, const TimeUnit& unit )
-            throw ( decaf::lang::exceptions::RuntimeException,
-                    decaf::lang::exceptions::InterruptedException );
+        virtual bool tryLock( long long time, const TimeUnit& unit );
 
         /**
          * Attempts to release this lock.
@@ -227,8 +228,7 @@ namespace locks {
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void unlock();
 
         /**
          * Returns a Condition instance for use with this Lock instance.
@@ -252,9 +252,7 @@ namespace locks {
          * @throws UnsupportedOperationException
          *         if this Lock implementation does not support conditions
          */
-        virtual Condition* newCondition()
-            throw ( decaf::lang::exceptions::RuntimeException,
-                    decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Condition* newCondition();
 
         /**
          * Queries the number of holds on this lock by the current thread.
@@ -297,7 +295,7 @@ namespace locks {
          *
          *  class X {
          *  private:
-         *      ReentrantLock lock = new ReentrantLock();
+         *      ReentrantLock lock;
          *      // ...
          *
          *  public:
@@ -312,7 +310,7 @@ namespace locks {
          *
          *   class X {
          *   private:
-         *      ReentrantLock lock = new ReentrantLock();
+         *      ReentrantLock lock;
          *      // ...
          *
          *   public:

@@ -35,8 +35,7 @@ URIEncoderDecoder::URIEncoderDecoder() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIEncoderDecoder::validate( const std::string& s, const std::string& legal)
-    throw ( URISyntaxException ) {
+void URIEncoderDecoder::validate( const std::string& s, const std::string& legal ) {
 
     std::string::const_iterator itr = s.begin();
 
@@ -79,9 +78,7 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIEncoderDecoder::validateSimple( const std::string& s,
-                                        const std::string& legal )
-    throw ( URISyntaxException ) {
+void URIEncoderDecoder::validateSimple( const std::string& s, const std::string& legal ) {
 
     std::string::const_iterator itr = s.begin();
 
@@ -100,8 +97,7 @@ void URIEncoderDecoder::validateSimple( const std::string& s,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
-                                             const std::string& legal ) {
+std::string URIEncoderDecoder::quoteIllegal( const std::string& s, const std::string& legal ) {
 
     std::string buf = "";
     std::string::const_iterator iter = s.begin();
@@ -129,6 +125,7 @@ std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string URIEncoderDecoder::encodeOthers( const std::string& s ) {
+
     std::string buf = "";
     for( std::size_t i = 0; i < s.length(); i++ ) {
         char ch = s.at(i);

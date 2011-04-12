@@ -32,45 +32,47 @@ namespace cmsutil {
 
         cms::MessageConsumer* consumer;
 
+    private:
+
+        CachedConsumer( const CachedConsumer& );
+        CachedConsumer& operator= ( const CachedConsumer& );
+
     public:
 
-        CachedConsumer( cms::MessageConsumer* consumer ) {
-            this->consumer = consumer;
+        CachedConsumer( cms::MessageConsumer* consumer ) : consumer( consumer ) {
         }
 
-        virtual ~CachedConsumer() {}
+        virtual ~CachedConsumer() throw() {}
 
         /**
          * Does nothing - the real producer resource will be closed
          * by the lifecycle manager.
          */
-        virtual void close() throw( cms::CMSException ){
+        virtual void close() {
             // Do nothing.
         }
 
-        virtual cms::Message* receive() throw ( cms::CMSException ) {
+        virtual cms::Message* receive() {
             return consumer->receive();
         }
 
-        virtual cms::Message* receive( int millisecs ) throw ( cms::CMSException ) {
+        virtual cms::Message* receive( int millisecs ) {
             return consumer->receive(millisecs);
         }
 
-        virtual cms::Message* receiveNoWait() throw ( cms::CMSException ) {
+        virtual cms::Message* receiveNoWait() {
             return consumer->receiveNoWait();
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
+        virtual void setMessageListener( cms::MessageListener* listener ) {
             consumer->setMessageListener( listener );
         }
 
-        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
+        virtual cms::MessageListener* getMessageListener() const {
             return consumer->getMessageListener();
         }
 
-        virtual std::string getMessageSelector() const
-            throw ( cms::CMSException ) {
-
+        virtual std::string getMessageSelector() const {
             return consumer->getMessageSelector();
         }
 

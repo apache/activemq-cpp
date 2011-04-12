@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Response::Response() : BaseCommand() {
+Response::Response() 
+    : BaseCommand(), correlationId(0) {
 
-    this->correlationId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +89,12 @@ std::string Response::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = Response" << std::endl;
-    stream << " Value of Response::ID_RESPONSE = 30" << std::endl;
-    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = Response" << std::endl;
+    stream << "Response { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "CorrelationId = " << this->getCorrelationId();
+    stream << " }";
 
     return stream.str();
 }
@@ -131,8 +132,7 @@ void Response::setCorrelationId( int correlationId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processResponse( this );
 }

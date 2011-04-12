@@ -17,7 +17,10 @@
 #ifndef _DECAF_UTIL_LOGGING_SIMPLEFORMATTER_H_
 #define _DECAF_UTIL_LOGGING_SIMPLEFORMATTER_H_
 
-#include <decaf/util/logging/formatter.h>
+#include <decaf/util/Config.h>
+#include <decaf/util/logging/Formatter.h>
+
+#include <string>
 
 namespace decaf{
 namespace util{
@@ -26,48 +29,23 @@ namespace logging{
     /**
      * Print a brief summary of the LogRecord in a human readable format.
      * The summary will typically be 1 or 2 lines.
+     *
+     * @since 1.0
      */
     class DECAF_API SimpleFormatter : public Formatter {
     public:
 
-        SimpleFormatter() {}
-        virtual ~SimpleFormatter() {}
+        SimpleFormatter();
+
+        virtual ~SimpleFormatter();
 
         /**
          * Format the given log record and return the formatted string.
-         * @param record The Log Record to Format
+         *
+         * @param record
+         *      The Log Record to Format.
          */
-        virtual std::string format( const LogRecord& record ) const {
-            return "";
-        }
-
-        /**
-         * Format the message string from a log record.
-         * @param record The Log Record to Format
-         */
-         virtual std::string formatMessage( const LogRecord& record ) const{
-            return record.getMessage();
-        }
-
-        /**
-         * Return the header string for a set of formatted records.  In the
-         * default implementation this method should return empty string
-         * @param handler the target handler, can be null
-         * @return empty string
-         */
-        virtual std::string getHead( const Handler* handler ) {
-            return "";
-        }
-
-        /**
-         * Return the tail string for a set of formatted records.  In the
-         * default implementation this method should return empty string
-         * @param handler the target handler, can be null
-         * @return empty string
-         */
-        virtual std::string getTail( const Handler* handler ) {
-            return "";
-        }
+        virtual std::string format( const LogRecord& record ) const;
 
     };
 

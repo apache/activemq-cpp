@@ -29,6 +29,67 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int CharArrayBufferTest::testData1Size = 100;
+const int CharArrayBufferTest::SMALL_TEST_LENGTH = 5;
+const int CharArrayBufferTest::BUFFER_LENGTH = 250;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace{
+
+    class MyCharSequence : public lang::CharSequence {
+    private:
+
+        std::string value;
+
+    public:
+
+        MyCharSequence( std::string value ) {
+            this->value = value;
+        }
+
+        virtual ~MyCharSequence() {}
+
+        virtual int length() const {
+            return (int)this->value.length();
+        }
+
+        virtual char charAt( int index ) const
+            throw( lang::exceptions::IndexOutOfBoundsException ) {
+
+            if( index > (int)this->value.length() ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__,
+                    "MyCharSequence::charAt - index is to big: %d", index );
+            }
+
+            return this->value.at( index );
+        }
+
+        virtual CharSequence* subSequence( int start, int end ) const
+            throw( lang::exceptions::IndexOutOfBoundsException ) {
+
+            if( start > end ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__,
+                    "CharArrayBuffer::subSequence - start > end" );
+            }
+
+            if( start > this->length() || end > this->length() ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__,
+                    "CharArrayBuffer::subSequence - Sequence exceed limit" );
+            }
+
+            return new MyCharSequence( this->value.substr( start, end - start ) );
+        }
+
+        virtual std::string toString() const {
+            return this->value;
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::test() {
 
     // Check that we have setup the array and our initial assumptions on state
@@ -48,12 +109,12 @@ void CharArrayBufferTest::test() {
 ////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::testArray() {
 
-    testBuffer1->put( testData1, 0, testData1Size );
+    testBuffer1->put( testData1, testData1Size, 0, testData1Size );
     testBuffer1->position( 0 );
 
     testBuffer1->mark();
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {
         CPPUNIT_ASSERT( testBuffer1->get() == testData1[ix] );
     }
 
@@ -62,7 +123,7 @@ void CharArrayBufferTest::testArray() {
     char* array = testBuffer1->array();
     CPPUNIT_ASSERT( array != NULL );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {
         CPPUNIT_ASSERT( array[ix] == testData1[ix] );
     }
 }
@@ -70,7 +131,7 @@ void CharArrayBufferTest::testArray() {
 ////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::testArrayOffset() {
 
-    testBuffer1->put( testData1, 0, testData1Size );
+    testBuffer1->put( testData1, testData1Size, 0, testData1Size );
     CPPUNIT_ASSERT( testBuffer1->arrayOffset() == 0 );
     testBuffer1->rewind();
     CPPUNIT_ASSERT( testBuffer1->arrayOffset() == 0 );
@@ -146,7 +207,7 @@ void CharArrayBufferTest::testCompact() {
     testBuffer1->clear();
     testBuffer1->mark();
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
@@ -156,7 +217,7 @@ void CharArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix] );
     }
 
@@ -176,7 +237,7 @@ void CharArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix] );
     }
 
@@ -194,7 +255,7 @@ void CharArrayBufferTest::testCompact() {
     CPPUNIT_ASSERT( testBuffer1->position() == SMALL_TEST_LENGTH - 1  );
     CPPUNIT_ASSERT( testBuffer1->limit() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < SMALL_TEST_LENGTH - 1; ix++ ) {
+    for( int ix = 0; ix < SMALL_TEST_LENGTH - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == testData1[ix + 1] );
     }
 
@@ -214,11 +275,11 @@ void CharArrayBufferTest::testCompareTo() {
     testBuffer1->clear();
     CharBuffer* other = CharBuffer::allocate( testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         other->put( ix, testData1[ix] );
     }
 
@@ -238,7 +299,7 @@ void CharArrayBufferTest::testCompareTo() {
     char* data = new char[21];
     memset( data, 0, 21 );
     CharBuffer* empty = CharBuffer::allocate(21);
-    CharBuffer* wrapped = CharBuffer::wrap( data, (std::size_t)0, (std::size_t)21 );
+    CharBuffer* wrapped = CharBuffer::wrap( data, 21, 0, 21 );
 
     CPPUNIT_ASSERT( wrapped->compareTo( *empty ) == 0 );
 
@@ -255,7 +316,7 @@ void CharArrayBufferTest::testDuplicate() {
     testBuffer1->mark();
     testBuffer1->position( testBuffer1->limit() );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
@@ -266,7 +327,7 @@ void CharArrayBufferTest::testDuplicate() {
     CPPUNIT_ASSERT( testBuffer1->limit() == duplicate->limit() );
     CPPUNIT_ASSERT( testBuffer1->isReadOnly() == duplicate->isReadOnly() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == duplicate->get( ix ) );
     }
 
@@ -310,7 +371,7 @@ void CharArrayBufferTest::testGet() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
@@ -328,7 +389,7 @@ void CharArrayBufferTest::testGetbyteArray() {
     array.resize( 1 );
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
 
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CharBuffer& ret = testBuffer1->get( array );
@@ -351,26 +412,61 @@ void CharArrayBufferTest::testGetbyteArray2() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a BufferUnderflowException",
-        testBuffer1->get( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->get( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferUnderflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    testBuffer1->get( array, testBuffer1->capacity(), 0 );
+    testBuffer1->get( array, testBuffer1->capacity(), testBuffer1->capacity(), 0 );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), -1, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), testBuffer1->capacity() + 1, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), 2, -1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), 2, testBuffer1->capacity() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw IndexOutOfBoundsException",
+        testBuffer1->get( array, testBuffer1->capacity(), Integer::MAX_VALUE, 1 ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw NullPointerException",
+        testBuffer1->get( NULL, testBuffer1->capacity(), 1, Integer::MAX_VALUE ),
+        NullPointerException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->get( NULL, 0, 1 ),
+        testBuffer1->get( NULL, 0, 0, 1 ),
         NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     testBuffer1->clear();
-    CharBuffer& ret = testBuffer1->get( array, 0, testBuffer1->capacity() );
+    CharBuffer& ret = testBuffer1->get( array, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == array[ix] );
     }
 
@@ -385,10 +481,15 @@ void CharArrayBufferTest::testGetWithIndex() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CPPUNIT_ASSERT( testBuffer1->get() == testBuffer1->get(i) );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a IndexOutOfBoundsException",
+        testBuffer1->get( -1 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
@@ -411,7 +512,7 @@ void CharArrayBufferTest::testPutbyte() {
     delete readOnly;
 
     testBuffer1->clear();
-    for( size_t i = 0; i < testBuffer1->capacity(); i++) {
+    for( int i = 0; i < testBuffer1->capacity(); i++) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         CharBuffer& ret = testBuffer1->put( (char)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (char)i );
@@ -439,7 +540,7 @@ void CharArrayBufferTest::testPutbyteArray() {
     delete readOnly;
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         array[0] = (char)i;
         CharBuffer& ret = testBuffer1->put( array );
@@ -460,10 +561,10 @@ void CharArrayBufferTest::testPutbyteArray2() {
     char* array = new char[testBuffer1->capacity()];
     char* array2 = new char[testBuffer1->capacity() + 1];
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ){
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ){
         array[ix] = 0;
     }
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() + 1; ++ix ){
+    for( int ix = 0; ix < testBuffer1->capacity() + 1; ++ix ){
         array2[ix] = 0;
     }
 
@@ -471,33 +572,33 @@ void CharArrayBufferTest::testPutbyteArray2() {
     readOnly->clear();
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a ReadOnlyBufferException",
-        readOnly->put( array, 0, testBuffer1->capacity() ),
+        readOnly->put( array, testBuffer1->capacity(), 0, testBuffer1->capacity() ),
         ReadOnlyBufferException );
     delete readOnly;
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a BufferOverflowException",
-        testBuffer1->put( array2, 0, testBuffer1->capacity() + 1 ),
+        testBuffer1->put( array2, testBuffer1->capacity() + 1, 0, testBuffer1->capacity() + 1 ),
         BufferOverflowException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
-    testBuffer1->put( array, testBuffer1->capacity(), 0 );
+    testBuffer1->put( array, testBuffer1->capacity(), testBuffer1->capacity(), 0 );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->put( NULL, 2, Integer::MAX_VALUE ),
+        testBuffer1->put( NULL, 0, 2, Integer::MAX_VALUE ),
         NullPointerException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         testBuffer1->put( ix, testData1[ix] );
     }
 
-    CharBuffer& ret = testBuffer1->put( array, 0, testBuffer1->capacity() );
+    CharBuffer& ret = testBuffer1->put( array, testBuffer1->capacity(), 0, testBuffer1->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == array[ix] );
     }
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -532,7 +633,7 @@ void CharArrayBufferTest::testPutCharBuffer() {
         BufferOverflowException );
     delete toBig;
 
-    for( std::size_t ix = 0; ix < testData1Size; ++ix ){
+    for( int ix = 0; ix < testData1Size; ++ix ){
         other->put( ix, testData1[ix] );
     }
     other->clear();
@@ -541,7 +642,7 @@ void CharArrayBufferTest::testPutCharBuffer() {
     CharBuffer& ret = testBuffer1->put( *other );
     CPPUNIT_ASSERT( other->position() == other->capacity() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
-    for( std::size_t ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
+    for( int ix = 0; ix < testBuffer1->capacity() - 1; ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == other->get( ix ) );
     }
     CPPUNIT_ASSERT( &ret == testBuffer1 );
@@ -562,12 +663,17 @@ void CharArrayBufferTest::testPutIndexed() {
 
     testBuffer1->clear();
 
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
         CharBuffer& ret = testBuffer1->put( i, (char)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (char)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a IndexOutOfBoundsException",
+        testBuffer1->put( -1, 0 ),
+        IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
@@ -594,11 +700,11 @@ void CharArrayBufferTest::testSlice() {
         InvalidMarkException );
 
     // slice share the same content with buf
-    for( std::size_t ix = 0; ix < slice->capacity(); ++ix ){
+    for( int ix = 0; ix < slice->capacity(); ++ix ){
         slice->put( ix, testData1[ix] );
     }
 
-    for( std::size_t ix = 0; ix < slice->capacity(); ix++ ) {
+    for( int ix = 0; ix < slice->capacity(); ix++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix + 1 ) == slice->get( ix ) );
     }
     testBuffer1->put( 2, 100 );
@@ -611,7 +717,7 @@ void CharArrayBufferTest::testSlice() {
 void CharArrayBufferTest::testToString() {
 
     string expected = "";
-    for( std::size_t i = testBuffer1->position(); i < testBuffer1->limit(); i++ ) {
+    for( int i = testBuffer1->position(); i < testBuffer1->limit(); i++ ) {
         expected += testBuffer1->get(i);
     }
     string str = testBuffer1->toString();
@@ -623,14 +729,14 @@ void CharArrayBufferTest::testWrapNullArray() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        testBuffer1->wrap( (char*)NULL, 0, 3 ),
+        testBuffer1->wrap( (char*)NULL, 0, 0, 3 ),
         NullPointerException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::testCharAt() {
 
-    for( std::size_t i = 0; i < testBuffer1->remaining(); i++ ) {
+    for( int i = 0; i < testBuffer1->remaining(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->get( testBuffer1->position() + i ) ==
                         testBuffer1->charAt(i) );
     }
@@ -638,6 +744,11 @@ void CharArrayBufferTest::testCharAt() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
         testBuffer1->charAt( testBuffer1->remaining() ),
+        IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a IndexOutOfBoundsException",
+        testBuffer1->charAt( -1 ),
         IndexOutOfBoundsException );
 }
 
@@ -678,7 +789,7 @@ void CharArrayBufferTest::testSubSequence() {
 void CharArrayBufferTest::testPutString() {
 
     testBuffer1->clear();
-    for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
+    for( int i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == i );
         string testString = " ";
         testString[0] = (char)i;
@@ -715,10 +826,10 @@ void CharArrayBufferTest::testPutStringWithArgs() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
-        testBuffer1->put( str, str.length() + 1, str.length() + 2 ),
+        testBuffer1->put( str, (int)str.length() + 1, (int)str.length() + 2 ),
         IndexOutOfBoundsException );
 
-    testBuffer1->put( str, str.length(), str.length() );
+    testBuffer1->put( str, (int)str.length(), (int)str.length() );
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -728,17 +839,17 @@ void CharArrayBufferTest::testPutStringWithArgs() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IndexOutOfBoundsException",
-        testBuffer1->put( str, 2, str.length() + 1 ),
+        testBuffer1->put( str, 2, (int)str.length() + 1 ),
         IndexOutOfBoundsException );
 
     CPPUNIT_ASSERT( testBuffer1->position() == 0 );
 
     str.resize( testBuffer1->capacity() );
 
-    CharBuffer& ret = testBuffer1->put( str, 0, str.length() );
+    CharBuffer& ret = testBuffer1->put( str, 0, (int)str.length() );
     CPPUNIT_ASSERT( testBuffer1->position() == testBuffer1->capacity() );
 
-    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1->capacity(); ++ix ) {
         CPPUNIT_ASSERT( testBuffer1->get( ix ) == str.at( ix ) );
     }
 
@@ -919,7 +1030,7 @@ void CharArrayBufferTest::testReadCharBuffer() {
     CPPUNIT_ASSERT( "String" == target->toString() );
 
     // return -1 when nothing to read
-    CPPUNIT_ASSERT( string::npos == source->read( target ) );
+    CPPUNIT_ASSERT( -1 == source->read( target ) );
 
     // NullPointerException
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -934,7 +1045,7 @@ void CharArrayBufferTest::testReadCharBuffer() {
 ////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::testReadReadOnly() {
 
-    CharBuffer* source = CharBuffer::wrap( testData1, 0, testData1Size );
+    CharBuffer* source = CharBuffer::wrap( testData1, testData1Size, 0, testData1Size );
     CharBuffer* target = testBuffer1->asReadOnlyBuffer();
 
     // NullPointerException
@@ -971,7 +1082,7 @@ void CharArrayBufferTest::testReadOverflow() {
 ////////////////////////////////////////////////////////////////////////////////
 void CharArrayBufferTest::testReadSelf() {
 
-    CharBuffer* source = CharBuffer::wrap( testData1, 0, testData1Size );
+    CharBuffer* source = CharBuffer::wrap( testData1, testData1Size, 0, testData1Size );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a IllegalArgumentException",

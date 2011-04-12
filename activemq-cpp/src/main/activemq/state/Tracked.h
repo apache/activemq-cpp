@@ -35,7 +35,7 @@ namespace state {
 
     public:
 
-        Tracked() {}
+        Tracked();
         Tracked( const Pointer<decaf::lang::Runnable>& runnable );
 
         virtual ~Tracked() {}

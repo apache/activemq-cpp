@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-FlushCommand::FlushCommand() : BaseCommand() {
+FlushCommand::FlushCommand() 
+    : BaseCommand() {
 
 }
 
@@ -87,10 +88,10 @@ std::string FlushCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = FlushCommand" << std::endl;
-    stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = FlushCommand" << std::endl;
+    stream << "FlushCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }
@@ -115,8 +116,7 @@ bool FlushCommand::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> FlushCommand::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> FlushCommand::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processFlushCommand( this );
 }

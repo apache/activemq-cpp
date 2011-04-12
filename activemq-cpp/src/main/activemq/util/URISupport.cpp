@@ -36,8 +36,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 void URISupport::parseURL( const std::string& URI,
-                           decaf::util::Properties& properties )
-    throw ( decaf::lang::exceptions::IllegalArgumentException ) {
+                           decaf::util::Properties& properties ) {
 
     try{
 
@@ -91,8 +90,7 @@ void URISupport::parseURL( const std::string& URI,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties URISupport::parseQuery( std::string query )
-    throw ( IllegalArgumentException ) {
+Properties URISupport::parseQuery( std::string query ) {
 
     try {
 
@@ -106,8 +104,7 @@ Properties URISupport::parseQuery( std::string query )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseQuery( std::string query, Properties* properties )
-    throw ( IllegalArgumentException ) {
+void URISupport::parseQuery( std::string query, Properties* properties ) {
 
     try {
 
@@ -165,8 +162,7 @@ void URISupport::parseQuery( std::string query, Properties* properties )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URISupport::replaceEnvValues( const std::string& value )
-    throw ( decaf::lang::exceptions::IllegalArgumentException ) {
+std::string URISupport::replaceEnvValues( const std::string& value ) {
 
     try {
 
@@ -203,8 +199,7 @@ std::string URISupport::replaceEnvValues( const std::string& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URISupport::createQueryString( const Properties& options )
-    throw( URISyntaxException ) {
+std::string URISupport::createQueryString( const Properties& options ) {
 
     try {
 
@@ -262,8 +257,7 @@ bool URISupport::checkParenthesis( const std::string& str ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CompositeData URISupport::parseComposite( const URI& uri )
-    throw( decaf::net::URISyntaxException ) {
+CompositeData URISupport::parseComposite( const URI& uri ) {
 
     CompositeData result;
     result.setScheme( uri.getScheme() );
@@ -274,8 +268,7 @@ CompositeData URISupport::parseComposite( const URI& uri )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp )
-    throw( decaf::net::URISyntaxException ) {
+void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp ) {
 
     std::string componentString;
     std::string params;
@@ -306,7 +299,7 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
         params = "";
     }
 
-    StlList<std::string> components = splitComponents( componentString );
+    LinkedList<std::string> components = splitComponents( componentString );
     std::auto_ptr< Iterator<std::string> > iter( components.iterator() );
     while( iter->hasNext() ) {
         rc.getComponents().add( URI( iter->next() ) );
@@ -327,9 +320,9 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StlList<std::string> URISupport::splitComponents( const std::string& str ) {
+LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
 
-    StlList<std::string> components;
+    LinkedList<std::string> components;
 
     std::size_t last = 0;
     int depth = 0;
@@ -347,7 +340,7 @@ StlList<std::string> URISupport::splitComponents( const std::string& str ) {
             break;
         case ',':
             if( depth == 0 ) {
-                std::string s = str.substr( last, i );
+                std::string s = str.substr( last, i - last );
                 components.add( s );
                 last = i + 1;
             }

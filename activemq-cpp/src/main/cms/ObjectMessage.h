@@ -34,7 +34,7 @@ namespace cms{
     class CMS_API ObjectMessage : public Message {
     public:
 
-        virtual ~ObjectMessage() {}
+        virtual ~ObjectMessage() throw();
 
     };
 

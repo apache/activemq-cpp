@@ -20,56 +20,267 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/util/Map.h>
+#include <decaf/util/Properties.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/internal/AprPool.h>
 #include <string>
 
 namespace decaf{
 namespace lang{
 
+    class Runtime;
+    class SystemData;
+
+    /**
+     * The System class provides static methods for accessing system level resources and performing
+     * some system dependent tasks such as looking up environment values and copying memory and arrays.
+     *
+     * @since 1.0
+     */
     class DECAF_API System {
-    public:
+    private:
+
+        static SystemData* sys;
+
+    protected:
 
         System();
+
+    public:
+
         virtual ~System() {}
 
     public:  // Static Methods
 
         /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const char* src, std::size_t srcPos,
+                               char* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const unsigned char* src, std::size_t srcPos,
+                               unsigned char* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const short* src, std::size_t srcPos,
+                               short* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const int* src, std::size_t srcPos,
+                               int* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const long long* src, std::size_t srcPos,
+                               long long* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const float* src, std::size_t srcPos,
+                               float* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        static void arraycopy( const double* src, std::size_t srcPos,
+                               double* dest, std::size_t destPos, std::size_t length );
+
+        /**
+         * Copies the number of elements specified by length from the source array starting at
+         * the given source offset specified by srcPos to the dest array starting at the given
+         * destination offset given by destPos.
+         *
+         * @param src
+         *      The source array to copy from.
+         * @param srcPos
+         *      The position in the array to start copying from.
+         * @param dest
+         *      The destination array to copy to.
+         * @param destPos
+         *      The position in the destination array to start writing at.
+         * @param length
+         *      The number of elements to copy from src to dest.
+         *
+         * @throws NullPointerException if src or dest are NULL.
+         */
+        template< typename E >
+        static void arraycopy( const E* src, std::size_t srcPos,
+                               E* dest, std::size_t destPos, std::size_t length ) {
+
+            if( src == NULL ) {
+                throw decaf::lang::exceptions::NullPointerException(
+                    __FILE__, __LINE__, "Given Source Pointer was null." );
+            }
+
+            if( src == NULL ) {
+                throw decaf::lang::exceptions::NullPointerException(
+                    __FILE__, __LINE__, "Given Source Pointer was null." );
+            }
+
+            for( std::size_t i = 0; i < length; ++i ) {
+                dest[destPos+i] = src[srcPos+i];
+            }
+        }
+
+        /**
          * Enumerates the system environment and returns a map of env variable
          * names to the string values they hold.
+         *
          * @return A Map of all environment variables.
-         * @throw Exception if an error occurs
+         *
+         * @throw Exception if an error occurs while getting the Environment Map.
          */
-        static const util::Map<std::string, std::string>& getenv()
-            throw ( lang::Exception );
+        static const util::Map<std::string, std::string>& getenv();
 
         /**
          * Reads an environment value from the system and returns it as a
          * string object
-         * @param name - the env var to read
-         * @return a string with the value from the var or ""
+         *
+         * @param name
+         *      The environment variable to read.
+         *
+         * @return a string with the value from the variables or ""
+         *
          * @throws an Exception if an error occurs while reading the Env.
          */
-        static std::string getenv( const std::string& name )
-            throw ( lang::Exception );
+        static std::string getenv( const std::string& name );
 
         /**
-         * Clears a set env value if one is set.
-         * @param name - the env var to clear
-         * @throws an Exception if an error occurs while reading the Env.
+         * Clears a set environment value if one is set.
+         *
+         * @param name
+         *      The environment variables to clear.
+         *
+         * @throws an Exception if an error occurs while reading the environment.
          */
-        static void unsetenv( const std::string& name )
-            throw ( lang::Exception );
+        static void unsetenv( const std::string& name );
 
         /**
-         * Sets the specified system property to the value given
-         * @param name - name of the env val to set
-         * @param value - value to assign to name
-         * @throws an Exception if an error occurs
+         * Sets the specified system property to the value given.
+         *
+         * @param name
+         *      The name of the environment variables to set.
+         * @param value
+         *      The value to assign to name.
+         *
+         * @throws an Exception if an error occurs when setting the environment variable.
          */
-        static void setenv( const std::string& name, const std::string& value )
-            throw ( lang::Exception );
+        static void setenv( const std::string& name, const std::string& value );
 
         /**
          * Returns the current time in milliseconds. Note that while the unit of time of
@@ -110,7 +321,7 @@ namespace lang{
         static long long nanoTime();
 
         /**
-         * Returns the number of processors available for exection of Decaf Threads.
+         * Returns the number of processors available for execution of Decaf Threads.
          *
          * This value may change during a particular execution of a Decaf based application. Applications
          * that are sensitive to the number of available processors should therefore occasionally poll
@@ -120,20 +331,101 @@ namespace lang{
          */
         static int availableProcessors();
 
+        /**
+         * Gets the Properties object that holds the Properties accessed from calls to
+         * getProperty and setProperty.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+         *
+         * @returns a reference to the static system Properties object.
+         */
+        static decaf::util::Properties& getProperties();
+
+        /**
+         * Gets the specified System property if set, otherwise returns an empty string.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+
+         * @param key
+         *      The key name of the desired system property to retrieve.
+         *
+         * @returns an empty string if the named property is not set, otherwise returns the value.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string getProperty( const std::string& key );
+
+        /**
+         * Gets the specified System property if set, otherwise returns the specified default value.
+         *
+         * If the Properties has not yet been created or are not yet initialized then they
+         * will be on the first call to a Properties accessor.
+         *
+         * @param key
+         *      The key name of the desired system property to retrieve.
+         * @param defaultValue
+         *      The default value to return if the key is not set in the System properties.
+         *
+         * @returns the value of the named system property or the defaultValue if the property isn't set..
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string getProperty( const std::string& key, const std::string& defaultValue );
+
+        /**
+         * Sets the System Property to the specified value.
+         *
+         * @param key
+         *      The key name of the system property to set to the given value.
+         * @param value
+         *      The value to assign to the key.
+         *
+         * @returns the previous value of the property named by key if there was one, otherwise
+         *          returns an empty string.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string setProperty( const std::string& key, const std::string& value );
+
+        /**
+         * Clear any value associated with the system property specified.
+         *
+         * @param key
+         *      The key name of the system property to clear.
+         *
+         * @returns the previous value of the property named by key if there was one, otherwise
+         *          returns an empty string.
+         *
+         * @throws IllegalArgumentException if key is an empty string.
+         */
+        static std::string clearProperty( const std::string& key );
+
     private:
 
         /**
          * Enumerates the environment and return an array of strings
          * with the values.  Caller owns the array.  The array is terminated
          * by an element that holds the value NULL
-         * @returns a vector of env name=value paris.
+         *
+         * @returns a vector of environment name / value pairs.
          */
         static std::vector< std::string > getEnvArray();
 
         /**
          * Gets the one and only APR Pool instance
+         *
+         * @returns a reference to the global APR Pool.
          */
         static internal::AprPool& getAprPool();
+
+    private:
+
+        friend class decaf::lang::Runtime;
+
+        static void initSystem( int argc, char **argv );
+        static void shutdownSystem();
 
     };
 

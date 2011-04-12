@@ -40,19 +40,13 @@ void ByteArrayInputStreamTest::testConstructor() {
     testBuffer.push_back('s');
     testBuffer.push_back('t');
 
-    ByteArrayInputStream stream_a( &testBuffer[0], testBuffer.size());
+    ByteArrayInputStream stream_a( &testBuffer[0], (int)testBuffer.size() );
     ByteArrayInputStream stream_b( testBuffer );
 
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
-                            stream_a.available() == testBuffer.size() );
+                            stream_a.available() == (int)testBuffer.size() );
     CPPUNIT_ASSERT_MESSAGE( "Unable to create ByteArrayInputStream",
-                            stream_b.available() == testBuffer.size() );
-
-    ByteArrayInputStream nullStream;
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should have thrown an IO Exception",
-        nullStream.read(),
-        IOException );
+                            stream_b.available() == (int)testBuffer.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +83,7 @@ void ByteArrayInputStreamTest::testAvailable() {
 
     // Test for method int ByteArrayInputStream.available()
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect number of available bytes",
-                            bis.available() == ( testBuffer.size() - 10 ) );
+                            bis.available() == ( (int)testBuffer.size() - 10 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,7 +150,7 @@ void ByteArrayInputStreamTest::testRead2() {
 
     unsigned char buf1[20];
     is.skip(50);
-    is.read( buf1, 0, 20 );
+    is.read( buf1, 20, 0, 20 );
     CPPUNIT_ASSERT_MESSAGE(
         "Failed to read correct data",
         string( (const char*)buf1, 20 ) == string( (const char*)&testBuffer[50], 20) );
@@ -171,7 +165,7 @@ void ByteArrayInputStreamTest::testRead3() {
 
     unsigned char buf[10];
     memset( buf, 'b', 10 );
-    is.read( buf, 5, 5 );
+    is.read( buf, 10, 5, 5 );
 
     CPPUNIT_ASSERT_MESSAGE(
         "Failed to read correct data",
@@ -179,7 +173,7 @@ void ByteArrayInputStreamTest::testRead3() {
 
     // Try for an EOF
     is.skip( 5 );
-    CPPUNIT_ASSERT( is.read( buf, 5, 5 ) == -1 );
+    CPPUNIT_ASSERT( is.read( buf, 10, 5, 5 ) == -1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +188,7 @@ void ByteArrayInputStreamTest::testSkip() {
 
     unsigned char buf1[10];
     is.skip(100);
-    is.read( buf1, 0, 10 );
+    is.read( buf1, 10, 0, 10 );
 
     CPPUNIT_ASSERT_MESSAGE(
         "Failed to skip to correct position",
@@ -211,21 +205,21 @@ void ByteArrayInputStreamTest::testStream()
     testBuffer.push_back('s');
     testBuffer.push_back('t');
 
-    ByteArrayInputStream stream_a(&testBuffer[0], testBuffer.size());
+    ByteArrayInputStream stream_a(&testBuffer[0], (int)testBuffer.size());
 
     CPPUNIT_ASSERT( stream_a.available() == 4 );
 
-    char a = stream_a.read();
-    char b = stream_a.read();
-    char c = stream_a.read();
-    char d = stream_a.read();
+    char a = (char)stream_a.read();
+    char b = (char)stream_a.read();
+    char c = (char)stream_a.read();
+    char d = (char)stream_a.read();
 
     CPPUNIT_ASSERT( a == 't' && b == 'e' && c == 's' && d == 't' );
     CPPUNIT_ASSERT( stream_a.available() == 0 );
 
     testBuffer.push_back('e');
 
-    stream_a.setByteArray(&testBuffer[0], testBuffer.size());
+    stream_a.setByteArray(&testBuffer[0], (int)testBuffer.size());
 
     CPPUNIT_ASSERT( stream_a.available() == 5 );
 
@@ -233,16 +227,16 @@ void ByteArrayInputStreamTest::testStream()
 
     buffer[5] = '\0';
 
-    CPPUNIT_ASSERT( stream_a.read(buffer, 0, 5) == 5 );
+    CPPUNIT_ASSERT( stream_a.read(buffer, 6, 0, 5) == 5 );
     CPPUNIT_ASSERT( std::string((const char*)buffer) == std::string("teste") );
     CPPUNIT_ASSERT( stream_a.available() == 0 );
 
-    stream_a.setByteArray(&testBuffer[0], testBuffer.size());
+    stream_a.setByteArray(&testBuffer[0], (int)testBuffer.size());
 
     memset(buffer, 0, 6);
 
-    CPPUNIT_ASSERT( stream_a.read(buffer, 0, 3) == 3 );
-    CPPUNIT_ASSERT( stream_a.read(&buffer[3], 0, 2) == 2 );
+    CPPUNIT_ASSERT( stream_a.read(buffer, 6, 0, 3) == 3 );
+    CPPUNIT_ASSERT( stream_a.read(&buffer[3], 3, 0, 2) == 2 );
     CPPUNIT_ASSERT( std::string((const char*)buffer) == std::string("teste") );
 
     stream_a.close();

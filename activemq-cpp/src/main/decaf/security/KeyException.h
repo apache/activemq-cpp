@@ -40,8 +40,8 @@ namespace security{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        KeyException(const Exception& ex) throw()
-        : Exception()
+        KeyException( const decaf::lang::Exception& ex ) throw()
+        : GeneralSecurityException()
         {
             *(Exception*)this = ex;
         }
@@ -51,8 +51,8 @@ namespace security{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        KeyException(const KeyException& ex) throw()
-        : Exception()
+        KeyException( const KeyException& ex ) throw()
+        : GeneralSecurityException()
         {
             *(Exception*)this = ex;
         }
@@ -69,7 +69,7 @@ namespace security{
          */
         KeyException( const char* file, const int lineNumber,
                       const std::exception* cause,
-                      const char* msg, ... ) throw() : Exception( cause )
+                      const char* msg, ... ) throw() : GeneralSecurityException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -84,7 +84,7 @@ namespace security{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        KeyException( const std::exception* cause ) throw() : Exception( cause ) {}
+        KeyException( const std::exception* cause ) throw() : GeneralSecurityException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -100,17 +100,15 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        KeyException( const char* file,
-                      const int lineNumber,
-                      const char* msg, ...) throw()
-        : Exception()
+        KeyException( const char* file, const int lineNumber, const char* msg, ...) throw()
+        : GeneralSecurityException()
         {
             va_list vargs;
             va_start(vargs, msg);
-            buildMessage(msg, vargs);
+            buildMessage( msg, vargs );
 
             // Set the first mark for this exception.
-            setMark(file, lineNumber);
+            setMark( file, lineNumber );
         }
 
         /**

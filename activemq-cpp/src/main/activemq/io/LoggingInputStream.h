@@ -44,36 +44,18 @@ namespace io{
 
         virtual ~LoggingInputStream();
 
-        /**
-         * Reads a single byte from the buffer.  Blocks until
-         * data is available.
-         * @return The next byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read() throw ( decaf::io::IOException );
+    protected:
 
-        /**
-         * Reads an array of bytes from the buffer.  Blocks until
-         * the requested number of bytes are available.
-         * @param buffer (out) the target buffer.
-         * @param offset the position in the buffer to start at
-         * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read or -1 if EOF is detected
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException if buffer is null
-         */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual int doReadByte();
+
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     private:
 
         /**
          * Logs the data in the buffer.
          */
-        void log( const unsigned char* buffer, std::size_t len );
+        void log( const unsigned char* buffer, int len );
 
     };
 

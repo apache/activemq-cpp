@@ -16,9 +16,12 @@
  */
 
 #include "ActiveMQSessionExecutor.h"
-#include "ActiveMQSession.h"
-#include "ActiveMQConsumer.h"
 
+#include <activemq/core/ActiveMQConnection.h>
+#include <activemq/core/ActiveMQConsumer.h>
+#include <activemq/core/ActiveMQSession.h>
+#include <activemq/core/FifoMessageDispatchChannel.h>
+#include <activemq/core/SimplePriorityMessageDispatchChannel.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/threads/DedicatedTaskRunner.h>
 
@@ -32,9 +35,14 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
+ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) :
+            session( session ), messageQueue(), taskRunner() {
 
-    this->session = session;
+    if( this->session->getConnection()->isMessagePrioritySupported() ) {
+        this->messageQueue.reset( new SimplePriorityMessageDispatchChannel() );
+    } else {
+        this->messageQueue.reset( new FifoMessageDispatchChannel() );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +66,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch ) {
 
     // Add the data to the queue.
-    this->messageQueue.enqueue( dispatch );
+    this->messageQueue->enqueue( dispatch );
     this->wakeup();
 }
 
@@ -66,7 +74,7 @@ void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch 
 void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& dispatch ) {
 
     // Add the data to the queue.
-    this->messageQueue.enqueueFirst( dispatch );
+    this->messageQueue->enqueueFirst( dispatch );
     this->wakeup();
 }
 
@@ -74,7 +82,7 @@ void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& disp
 void ActiveMQSessionExecutor::wakeup() {
 
     Pointer<TaskRunner> taskRunner = this->taskRunner;
-    synchronized( &messageQueue ) {
+    synchronized( messageQueue.get() ) {
         if( this->taskRunner == NULL ) {
             this->taskRunner.reset( new DedicatedTaskRunner( this ) );
         }
@@ -88,9 +96,9 @@ void ActiveMQSessionExecutor::wakeup() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::start() {
 
-    if( !messageQueue.isRunning() ) {
+    if( !messageQueue->isRunning() ) {
 
-        messageQueue.start();
+        messageQueue->start();
         if( hasUncomsumedMessages() ) {
             this->wakeup();
         }
@@ -100,8 +108,8 @@ void ActiveMQSessionExecutor::start() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::stop() {
 
-    if( messageQueue.isRunning() ) {
-        messageQueue.stop();
+    if( messageQueue->isRunning() ) {
+        messageQueue->stop();
         Pointer<TaskRunner> taskRunner = this->taskRunner;
         if( taskRunner != NULL ) {
             this->taskRunner.reset( NULL );
@@ -121,12 +129,12 @@ void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch
             if( this->session->consumers.containsKey( dispatch->getConsumerId() ) ) {
                 consumer = this->session->consumers.get( dispatch->getConsumerId() );
             }
+        }
 
-            // If the consumer is not available, just ignore the message.
-            // Otherwise, dispatch the message to the consumer.
-            if( consumer != NULL ) {
-                consumer->dispatch( dispatch );
-            }
+        // If the consumer is not available, just ignore the message.
+        // Otherwise, dispatch the message to the consumer.
+        if( consumer != NULL ) {
+            consumer->dispatch( dispatch );
         }
 
     } catch( decaf::lang::Exception& ex ) {
@@ -161,10 +169,10 @@ bool ActiveMQSessionExecutor::iterate() {
 
         // No messages left queued on the listeners.. so now dispatch messages
         // queued on the session
-        Pointer<MessageDispatch> message = messageQueue.dequeueNoWait();
+        Pointer<MessageDispatch> message = messageQueue->dequeueNoWait();
         if( message != NULL ) {
             dispatch( message );
-            return !messageQueue.isEmpty();
+            return !messageQueue->isEmpty();
         }
 
         return false;

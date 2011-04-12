@@ -62,7 +62,7 @@ Pointer<Response> OpenWireResponseBuilder::buildResponse(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireResponseBuilder::buildIncomingCommands(
-    const Pointer<Command>& command, decaf::util::StlQueue< Pointer<Command> >& queue ){
+    const Pointer<Command>& command, decaf::util::LinkedList< Pointer<Command> >& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {

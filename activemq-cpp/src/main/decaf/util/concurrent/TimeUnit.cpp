@@ -58,9 +58,7 @@ const long long TimeUnit::multipliers[] = {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-TimeUnit::TimeUnit( int index, const std::string& name ) {
-    this->index = index;
-    this->name = name;
+TimeUnit::TimeUnit( int index, const std::string& name ) : index(index), name(name) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,8 +96,7 @@ int TimeUnit::excessNanos( long long time, long long ms ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimeUnit::sleep( long long timeout ) const
-    throw( decaf::lang::exceptions::InterruptedException ) {
+void TimeUnit::sleep( long long timeout ) const {
 
     if( timeout > 0 ) {
         long long ms = toMillis( timeout );
@@ -109,9 +106,7 @@ void TimeUnit::sleep( long long timeout ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const
-    throw( decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::NullPointerException ) {
+void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const {
 
     if( obj == NULL ) {
         throw NullPointerException(
@@ -126,9 +121,7 @@ void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimeUnit::timedJoin( Thread* thread, long long timeout )
-    throw( decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::NullPointerException ) {
+void TimeUnit::timedJoin( Thread* thread, long long timeout ) {
 
     if( thread == NULL ) {
         throw NullPointerException(
@@ -179,8 +172,7 @@ long long TimeUnit::scale( long long duration, long long multiplier, long long o
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const TimeUnit& TimeUnit::valueOf( const std::string& name )
-    throw ( decaf::lang::exceptions::IllegalArgumentException ) {
+const TimeUnit& TimeUnit::valueOf( const std::string& name ) {
 
     for( int i = 0; i < 7; ++i ) {
         if( values[i]->name == name ) {

@@ -26,15 +26,22 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         Set<String> includes = getIncludeFiles();
         includes.add("<activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>");
         includes.add("<activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h>");
+        includes.add("<activemq/core/ActiveMQAckHandler.h>");
+        includes.add("<activemq/core/ActiveMQConnection.h>");
         includes.add("<decaf/lang/System.h>");
     }
 
-    protected void generateDefaultConstructorBody( PrintWriter out ) {
+    protected String generateInitializerList() {
+        StringBuilder result = new StringBuilder();
 
-        out.println("    this->readOnlyBody = false;");
-        out.println("    this->readOnlyProperties = false;");
+        result.append(super.generateInitializerList());
+        result.append(", ackHandler(NULL)");
+        result.append(", properties()");
+        result.append(", readOnlyProperties(false)");
+        result.append(", readOnlyBody(false)");
+        result.append(", connection(NULL)");
 
-        super.generateDefaultConstructorBody(out);
+        return result.toString();
     }
 
     protected void generateCopyDataStructureBody( PrintWriter out ) {
@@ -44,15 +51,11 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
         out.println("    this->setReadOnlyBody( srcPtr->isReadOnlyBody() );");
         out.println("    this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );");
+        out.println("    this->setConnection( srcPtr->getConnection() );");
     }
 
     protected void generateToStringBody( PrintWriter out ) {
         super.generateToStringBody(out);
-
-        out.println("    stream << \" Value of ackHandler = \" << ackHandler.get() << std::endl;");
-        out.println("    stream << \" Value of properties = \" << this->properties.toString() << std::endl;");
-        out.println("    stream << \" Value of readOnlyBody = \" << this->readOnlyBody << std::endl;");
-        out.println("    stream << \" Value of readOnlyProperties = \" << this->readOnlyBody << std::endl;");
     }
 
     protected void generateEqualsBody( PrintWriter out ) {
@@ -106,8 +109,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("    throw ( decaf::io::IOException ) {");
+        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
         out.println("");
         out.println("    try{");
         out.println("");
@@ -123,8 +125,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("    throw ( decaf::io::IOException ) {");
+        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
         out.println("");
         out.println("    try{");
         out.println("");

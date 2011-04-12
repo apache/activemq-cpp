@@ -32,11 +32,11 @@ using namespace decaf::lang;
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageTest::testGetBodyLength() {
     ActiveMQBytesMessage msg;
-    std::size_t len = 10;
+    int len = 10;
 
     try {
 
-        for( std::size_t i = 0; i < len; i++ ) {
+        for( int i = 0; i < len; i++ ) {
             msg.writeLong( 5LL );
         }
 
@@ -212,6 +212,12 @@ void ActiveMQBytesMessageTest::testReadBytesbyteArray() {
         for( int i = 0; i < 50; i++ ) {
             CPPUNIT_ASSERT( test[i] == i );
         }
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should have thrown a CMSException",
+            msg.readBytes( test, -1 ),
+            CMSException);
+
     } catch( CMSException& ex ) {
         ex.printStackTrace();
         CPPUNIT_ASSERT( false );

@@ -26,91 +26,72 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-DoubleArrayBuffer::DoubleArrayBuffer( std::size_t capacity, bool readOnly )
-    : DoubleBuffer( capacity ){
+DoubleArrayBuffer::DoubleArrayBuffer( int size, bool readOnly ) :
+    DoubleBuffer(size), _array(), offset(0), length(size), readOnly(readOnly) {
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
-    this->_array = new ByteArrayPerspective( capacity * sizeof(double) );
-    this->offset = 0;
-    this->readOnly = readOnly;
+    this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(double) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-DoubleArrayBuffer::DoubleArrayBuffer( double* array, std::size_t offset,
-                                      std::size_t capacity, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException ) : DoubleBuffer( capacity ) {
+DoubleArrayBuffer::DoubleArrayBuffer( double* array, int size, int offset, int length, bool readOnly ) :
+    DoubleBuffer( length ), _array(), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
-        // Allocate using the ByteArray, not read-only initially.
-        this->_array = new ByteArrayPerspective( array, capacity, false );
-        this->offset = offset;
-        this->readOnly = readOnly;
-    }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
-    DECAF_CATCHALL_THROW( NullPointerException )
-}
-
-///////////////////////////////////////////////////////////////////////////////
-DoubleArrayBuffer::DoubleArrayBuffer( ByteArrayPerspective& array,
-                                      std::size_t offset, std::size_t capacity,
-                                      bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException )
-    : DoubleBuffer( capacity ) {
-
-    try{
-        if( offset > array.getCapacity() ) {
+        if( offset < 0 || offset > size ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "DoubleArrayBuffer::DoubleArrayBuffer - offset %d is greater than capacity %d",
-                offset, array.getCapacity() );
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
 
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = array.takeRef();
-        this->offset = offset;
-        this->readOnly = readOnly;
+        this->_array.reset( new ByteArrayAdapter( array, size, false ) );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-DoubleArrayBuffer::DoubleArrayBuffer( const DoubleArrayBuffer& other )
-    : DoubleBuffer( other ) {
+DoubleArrayBuffer::DoubleArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
+    DoubleBuffer(length), _array(array), offset(offset), length(length), readOnly(readOnly) {
 
-    // get the byte buffer of the caller and take a reference
-    this->_array = other._array->takeRef();
-    this->offset = other.offset;
-    this->readOnly = other.readOnly;
+    try{
+
+        if( offset < 0 || offset > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
+    DECAF_CATCHALL_THROW( NullPointerException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+DoubleArrayBuffer::DoubleArrayBuffer( const DoubleArrayBuffer& other ) :
+    DoubleBuffer(other), _array(other._array), offset(other.offset), length(other.length), readOnly(other.readOnly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DoubleArrayBuffer::~DoubleArrayBuffer() {
-
-    try{
-
-        // Return this object's reference to the buffer.
-        this->_array->returnRef();
-
-        // If there are no other Buffers out there that reference it then we
-        // delete it now, the internal unsigned char* array will be deleted
-        // if we where the owner.
-        if( this->_array->getReferences() == 0 ) {
-            delete this->_array;
-        }
-    }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-double* DoubleArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+double* DoubleArrayBuffer::array() {
 
     try{
 
@@ -135,9 +116,7 @@ double* DoubleArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::size_t DoubleArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int DoubleArrayBuffer::arrayOffset() {
 
     try{
 
@@ -176,7 +155,7 @@ DoubleBuffer* DoubleArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+DoubleBuffer& DoubleArrayBuffer::compact() {
 
     try{
 
@@ -188,7 +167,7 @@ DoubleBuffer& DoubleArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferExce
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+        for( int ix = 0; ix < this->remaining(); ++ix ) {
             this->put( ix, this->get( this->position() + ix ) );
         }
 
@@ -214,7 +193,7 @@ DoubleBuffer* DoubleArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-double DoubleArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+double DoubleArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -225,8 +204,7 @@ double DoubleArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-double DoubleArrayBuffer::get( std::size_t index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+double DoubleArrayBuffer::get( int index ) const {
 
     try{
 
@@ -244,8 +222,7 @@ double DoubleArrayBuffer::get( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleArrayBuffer::put( double value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+DoubleBuffer& DoubleArrayBuffer::put( double value ) {
 
     try{
 
@@ -259,9 +236,7 @@ DoubleBuffer& DoubleArrayBuffer::put( double value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleArrayBuffer::put( std::size_t index, double value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+DoubleBuffer& DoubleArrayBuffer::put( int index, double value ) {
 
     try{
 
@@ -292,10 +267,10 @@ DoubleBuffer* DoubleArrayBuffer::slice() const {
 
     try{
 
-        return new DoubleArrayBuffer( *(this->_array),
-                                       this->offset + this->position(),
-                                       this->remaining(),
-                                       this->isReadOnly() );
+        return new DoubleArrayBuffer( this->_array,
+                                      this->offset + this->position(),
+                                      this->remaining(),
+                                      this->isReadOnly() );
     }
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )

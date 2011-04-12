@@ -29,11 +29,11 @@ namespace util {
 namespace concurrent {
 
     /**
-     * A {@link java.util.Queue} that additionally supports operations that wait for
+     * A decaf::util::Queue that additionally supports operations that wait for
      * the queue to become non-empty when retrieving an element, and wait for space
      * to become available in the queue when storing an element.
      *
-     * <p><tt>BlockingQueue</tt> methods come in four forms, with different ways of
+     * <tt>BlockingQueue</tt> methods come in four forms, with different ways of
      * handling operations that cannot be satisfied immediately, but may be satisfied
      * at some point in the future:
      * one throws an exception, the second returns a special value (either
@@ -42,7 +42,6 @@ namespace concurrent {
      * and the fourth blocks for only a given maximum time limit before giving
      * up.  These methods are summarized in the following table:
      *
-     * <p>
      * <table BORDER CELLPADDING=3 CELLSPACING=1>
      *  <tr>
      *    <td></td>
@@ -74,19 +73,19 @@ namespace concurrent {
      *  </tr>
      * </table>
      *
-     * <p>A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may have
+     * A <tt>BlockingQueue</tt> may be capacity bounded. At any given time it may have
      * a <tt>remainingCapacity</tt> beyond which no additional elements can be <tt>put</tt>
      * without blocking.  A <tt>BlockingQueue</tt> without any intrinsic capacity
      * constraints always reports a remaining capacity of <tt>Integer::MAX_VALUE</tt>.
      *
-     * <p> <tt>BlockingQueue</tt> implementations are designed to be used primarily for
-     * producer-consumer queues, but additionally support {@link decaf.util.Collection}
+     * <tt>BlockingQueue</tt> implementations are designed to be used primarily for
+     * producer-consumer queues, but additionally support {@link decaf::util::Collection}
      * interface.  So, for example, it is possible to remove an arbitrary element from a
      * queue using <tt>remove(x)</tt>. However, such operations are in general <em>not</em>
      * performed very efficiently, and are intended for only occasional use, such as
      * when a queued message is cancelled.
      *
-     * <p> <tt>BlockingQueue</tt> implementations are thread-safe.  All queuing methods
+     * <tt>BlockingQueue</tt> implementations are thread-safe.  All queuing methods
      * achieve their effects atomically using internal locks or other forms of concurrency
      * control. However, the <em>bulk</em> Collection operations <tt>addAll</tt>,
      * <tt>containsAll</tt>, <tt>retainAll</tt> and <tt>removeAll</tt> are <em>not</em>
@@ -94,7 +93,7 @@ namespace concurrent {
      * So it is possible, for example, for <tt>addAll(c)</tt> to fail (throwing an exception)
      * after adding only some of the elements in <tt>c</tt>.
      *
-     * <p>A <tt>BlockingQueue</tt> does <em>not</em> intrinsically support any kind of
+     * A <tt>BlockingQueue</tt> does <em>not</em> intrinsically support any kind of
      * &quot;close&quot; or &quot;shutdown&quot; operation to indicate that no more
      * items will be added.  The needs and usage of such features tend to be
      * implementation-dependent. For example, a common tactic is for producers to
@@ -155,9 +154,9 @@ namespace concurrent {
      * </pre>
      *
      * <p>Memory consistency effects: As with other concurrent collections, actions in a
-     * thread prior to placing an object into a {@code BlockingQueue} <em>happen-before</em><
+     * thread prior to placing an object into a BlockingQueue <em>happen-before</em>
      * actions subsequent to the access or removal of that element from the
-     * {@code BlockingQueue} in another thread.
+     * BlockingQueue in another thread.
      *
      * @since 1.0
      */
@@ -167,6 +166,9 @@ namespace concurrent {
 
         virtual ~BlockingQueue() {
         }
+
+        using Queue<E>::offer;
+        using Queue<E>::poll;
 
         /**
          * Inserts the specified element into this queue, waiting if necessary for space
@@ -178,10 +180,7 @@ namespace concurrent {
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual void put( const E& value )
-            throw( decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual void put( const E& value ) = 0;
 
         /**
          * Inserts the specified element into this queue, waiting up to the specified wait
@@ -192,17 +191,16 @@ namespace concurrent {
          *        <tt>unit</tt>
          * @param unit a <tt>TimeUnit</tt> determining how to interpret the
          *        <tt>timeout</tt> parameter
+         *
          * @return <tt>true</tt> if successful, or <tt>false</tt> if
          *         the specified waiting time elapses before space is available
+         *
          * @throws InterruptedException if interrupted while waiting
          * @throws NullPointerException if the specified element is null
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& e, long timeout, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual bool offer( const E& e, long long timeout, const TimeUnit& unit ) = 0;
 
         /**
          * Retrieves and removes the head of this queue, waiting if necessary until an
@@ -211,7 +209,7 @@ namespace concurrent {
          * @return the head of this queue
          * @throws InterruptedException if interrupted while waiting
          */
-        virtual E take() throw( decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual E take() = 0;
 
         /**
          * Retrieves and removes the head of this queue, waiting up to the specified
@@ -226,8 +224,7 @@ namespace concurrent {
          *         waiting time elapses before an element is available.
          * @throws InterruptedException if interrupted while waiting
          */
-        virtual bool poll( E& result, long long timeout, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual bool poll( E& result, long long timeout, const TimeUnit& unit ) = 0;
 
         /**
          * Returns the number of additional elements that this queue can ideally
@@ -262,9 +259,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual std::size_t drainTo( Collection<E>& c )
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual int drainTo( Collection<E>& c ) = 0;
 
         /**
          * Removes at most the given number of available elements from
@@ -286,9 +281,7 @@ namespace concurrent {
          *         queue, or some property of an element of this queue prevents
          *         it from being added to the specified collection
          */
-        virtual std::size_t drainTo( Collection<E>& c, std::size_t maxElements )
-            throw( decaf::lang::exceptions::UnsupportedOperationException,
-                   decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual int drainTo( Collection<E>& c, int maxElements ) = 0;
 
     };
 

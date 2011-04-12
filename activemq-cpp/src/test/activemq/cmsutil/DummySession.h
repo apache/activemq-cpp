@@ -43,7 +43,7 @@ namespace cmsutil {
             this->messageContext = messageContext;
         }
 
-        virtual ~DummySession() {}
+        virtual ~DummySession() throw() {}
 
         virtual void close() throw( cms::CMSException ){}
 
@@ -114,9 +114,7 @@ namespace cmsutil {
             throw ( cms::CMSException){ return NULL; }
 
         virtual cms::BytesMessage* createBytesMessage(
-            const unsigned char* bytes,
-            std::size_t bytesSize )
-                throw ( cms::CMSException){
+            const unsigned char* bytes, int bytesSize ) throw ( cms::CMSException){
             return NULL;
         }
 

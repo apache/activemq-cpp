@@ -18,7 +18,7 @@
 #ifndef _DECAF_UTIL_ITERATOR_H_
 #define _DECAF_UTIL_ITERATOR_H_
 
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
@@ -30,7 +30,7 @@ namespace util{
      * collection.  The iterator provides a way to access and remove elements
      * with well defined semantics.
      */
-    template< typename T>
+    template< typename E>
     class Iterator {
     public:
 
@@ -40,15 +40,19 @@ namespace util{
          * Returns the next element in the iteration. Calling this method
          * repeatedly until the hasNext() method returns false will return
          * each element in the underlying collection exactly once.
-         * @returns next element in the iteration of elements
-         * @throws NoSuchElementException - iteration has no more elements.
+         *
+         * @returns the next element in the iteration of elements.
+         *
+         * @throws NoSuchElementException if the iteration has no more elements.
          */
-        virtual T next() throw( lang::exceptions::NoSuchElementException ) = 0;
+        virtual E next() = 0;
 
         /**
          * Returns true if the iteration has more elements.  Returns false if
          * the next call to next would result in an NoSuchElementException to
          * be thrown.
+         *
+         * @returns true if there are more elements available for iteration.
          */
         virtual bool hasNext() const = 0;
 
@@ -59,14 +63,14 @@ namespace util{
          * unspecified if the underlying collection is modified while the
          * iteration is in progress in any way other than by calling this
          * method.
-         * @throws UnsupportedOperationException - if the remove  operation
-         *         is not supported by this Iterator.
-         * @throws IllegalStateException - if the next method has not yet been
+         *
+         * @throws UnsupportedOperationException if the remove  operation is
+         *         not supported by this Iterator.
+         * @throws IllegalStateException if the next method has not yet been
          *         called, or the remove method has already been called after
-         *         the last call to the next  method.
+         *         the last call to the next method.
          */
-        virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                      lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void remove() = 0;
 
     };
 

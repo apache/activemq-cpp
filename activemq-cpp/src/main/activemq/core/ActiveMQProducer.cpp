@@ -16,17 +16,21 @@
  */
 #include "ActiveMQProducer.h"
 
+#include <cms/Message.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/util/ActiveMQProperties.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/System.h>
+#include <decaf/lang/Boolean.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -35,32 +39,49 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                                    const Pointer<cms::Destination>& destination,
-                                    ActiveMQSession* session ) {
+ActiveMQProducer::ActiveMQProducer( ActiveMQSession* session,
+                                    const Pointer<commands::ProducerId>& producerId,
+                                    const Pointer<ActiveMQDestination>& destination,
+                                    long long sendTimeout ) : disableTimestamps(false),
+                                                              disableMessageId(false),
+                                                              defaultDeliveryMode(cms::Message::DEFAULT_DELIVERY_MODE),
+                                                              defaultPriority(cms::Message::DEFAULT_MSG_PRIORITY),
+                                                              defaultTimeToLive(cms::Message::DEFAULT_TIME_TO_LIVE),
+                                                              sendTimeout(sendTimeout),
+                                                              session(session),
+                                                              producerInfo(),
+                                                              closed(false),
+                                                              memoryUsage(),
+                                                              destination() {
 
-    if( session == NULL || producerInfo == NULL ) {
+    if( session == NULL || producerId == NULL ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQProducer::ActiveMQProducer - Init with NULL Session" );
     }
 
-    // Init Producer Data
-    this->session = session;
-    this->producerInfo = producerInfo;
-    this->destination = destination;
-    this->closed = false;
+    this->producerInfo.reset( new ProducerInfo() );
 
-    // Default the Delivery options
-    this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
-    this->disableTimestamps = false;
-    this->disableMessageId = false;
-    this->defaultPriority = 4;
-    this->defaultTimeToLive = 0;
+    this->producerInfo->setProducerId( producerId );
+    this->producerInfo->setDestination( destination );
+    this->producerInfo->setWindowSize( session->getConnection()->getProducerWindowSize() );
+
+    // Get any options specified in the destination and apply them to the
+    // ProducerInfo object.
+    if( destination != NULL ) {
+        const ActiveMQProperties& options = destination->getOptions();
+        this->producerInfo->setDispatchAsync( Boolean::parseBoolean(
+            options.getProperty( "producer.dispatchAsync", "false" )) );
+
+        this->destination = destination.dynamicCast<cms::Destination>();
+    }
+
+    // TODO - Check for need of MemoryUsage if there's a producer Windows size
+    //        and the Protocol version is greater than 3.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::~ActiveMQProducer() {
+ActiveMQProducer::~ActiveMQProducer() throw() {
     try {
         close();
     }
@@ -69,14 +90,13 @@ ActiveMQProducer::~ActiveMQProducer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::close() throw ( cms::CMSException ) {
+void ActiveMQProducer::close() {
 
     try{
 
         if( !this->isClosed() ) {
 
-            this->session->disposeOf( this->producerInfo->getProducerId() );
-            this->closed = true;
+            dispose();
 
             // Remove at the Broker Side, if this fails the producer has already
             // been removed from the session and connection objects so its safe
@@ -90,19 +110,20 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message )
-    throw ( cms::CMSException ) {
+void ActiveMQProducer::dispose() {
+
+    if( !this->isClosed() ) {
+        this->session->removeProducer( this );
+        this->closed = true;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::send( cms::Message* message ) {
 
     try {
 
         this->checkClosed();
-
-        if( this->destination.get() == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - "
-                "Producer has no Destination, must call send( dest, msg )" );
-        }
 
         this->send( this->destination.get(), message );
     }
@@ -110,45 +131,32 @@ void ActiveMQProducer::send( cms::Message* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
-                             int priority, long long timeToLive )
-                                throw ( cms::CMSException ) {
-    try {
-
-        this->checkClosed();
-
-        if( this->destination.get() == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - "
-                "Producer has no Destination, must call send( dest, msg )" );
-        }
-
-        this->send( this->destination.get(), message, deliveryMode,
-                    priority, timeToLive );
-    }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( const cms::Destination* destination,
-                             cms::Message* message ) throw ( cms::CMSException ) {
+void ActiveMQProducer::send( cms::Message* message, int deliveryMode, int priority, long long timeToLive ) {
 
     try {
 
         this->checkClosed();
 
-        this->send( destination, message, defaultDeliveryMode,
-                    defaultPriority, defaultTimeToLive );
+        this->send( this->destination.get(), message, deliveryMode, priority, timeToLive );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::send( const cms::Destination* destination,
-                             cms::Message* message, int deliveryMode,
-                             int priority, long long timeToLive )
-    throw ( cms::CMSException ) {
+void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message ) {
+
+    try {
+
+        this->checkClosed();
+
+        this->send( destination, message, defaultDeliveryMode, defaultPriority, defaultTimeToLive );
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::send( const cms::Destination* destination, cms::Message* message,
+                             int deliveryMode, int priority, long long timeToLive ) {
 
     try {
 
@@ -156,19 +164,39 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
         if( destination == NULL ) {
 
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - Attempting to send on NULL destination");
+            if( this->producerInfo->getDestination() == NULL ) {
+                throw cms::UnsupportedOperationException( "A destination must be specified.", NULL );
+            }
+
+            throw cms::InvalidDestinationException( "Don't understand null destinations", NULL );
+        }
+
+        const cms::Destination* dest;
+        if( destination == dynamic_cast<cms::Destination*>( this->producerInfo->getDestination().get() ) ) {
+            dest = destination;
+        } else if( this->producerInfo->getDestination() == NULL ) {
+
+            // TODO - We should apply a Transform so ensure the user hasn't create some
+            //        external cms::Destination implementation.
+            dest = destination;
+        } else {
+            throw cms::UnsupportedOperationException( string( "This producer can only send messages to: " ) +
+                                                              this->producerInfo->getDestination()->getPhysicalName(), NULL );
+        }
+
+        if( dest == NULL ) {
+            throw cms::CMSException( "No destination specified", NULL );
         }
 
         // configure the message
-        message->setCMSDestination( destination );
+        message->setCMSDestination( dest );
         message->setCMSDeliveryMode( deliveryMode );
         message->setCMSPriority( priority );
 
         long long expiration = 0LL;
 
         if( !disableTimestamps ) {
+
             long long timeStamp = System::currentTimeMillis();
             message->setCMSTimestamp( timeStamp );
             if( timeToLive > 0LL ) {
@@ -200,7 +228,7 @@ void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
+void ActiveMQProducer::checkClosed() const {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveSubscriptionInfo::RemoveSubscriptionInfo() : BaseCommand() {
+RemoveSubscriptionInfo::RemoveSubscriptionInfo() 
+    : BaseCommand(), connectionId(NULL), subcriptionName(""), clientId("") {
 
-    this->subcriptionName = "";
-    this->clientId = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,18 +91,21 @@ std::string RemoveSubscriptionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = RemoveSubscriptionInfo" << std::endl;
-    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 9" << std::endl;
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << "RemoveSubscriptionInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
-    stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = RemoveSubscriptionInfo" << std::endl;
+    stream << ", ";
+    stream << "SubcriptionName = " << this->getSubcriptionName();
+    stream << ", ";
+    stream << "ClientId = " << this->getClientId();
+    stream << " }";
 
     return stream.str();
 }
@@ -186,8 +188,7 @@ void RemoveSubscriptionInfo::setClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processRemoveSubscriptionInfo( this );
 }

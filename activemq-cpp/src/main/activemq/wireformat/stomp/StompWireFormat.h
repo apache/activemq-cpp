@@ -33,6 +33,8 @@ namespace stomp {
     using decaf::lang::Pointer;
     using activemq::commands::Command;
 
+    class StompWireformatProperties;
+
     class AMQCPP_API StompWireFormat : public WireFormat {
     private:
 
@@ -48,10 +50,17 @@ namespace stomp {
         // Indicates when we are in the doUnmarshal call
         decaf::util::concurrent::atomic::AtomicBoolean receiving;
 
+        // Internal structure for holding class internal data that can change without
+        // affecting binary compatibility.
+        StompWireformatProperties* properties;
+
     public:
 
         StompWireFormat();
+
         virtual ~StompWireFormat();
+
+    public:
 
         /**
          * Stream based marshaling of a Command, this method blocks until the entire
@@ -68,8 +77,7 @@ namespace stomp {
          */
         virtual void marshal( const Pointer<commands::Command>& command,
                               const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out )
-            throw ( decaf::io::IOException );
+                              decaf::io::DataOutputStream* out );
 
         /**
          * Stream based un-marshaling, blocks on reads on the input stream until a complete
@@ -82,8 +90,7 @@ namespace stomp {
          * @throws IOException
          */
         virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+                                                      decaf::io::DataInputStream* in );
 
         /**
          * Set the Version
@@ -124,8 +131,7 @@ namespace stomp {
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport )
-                throw( decaf::lang::exceptions::UnsupportedOperationException );
+            const Pointer<transport::Transport>& transport );
 
     private:
 

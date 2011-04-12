@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ReplayCommand::ReplayCommand() : BaseCommand() {
+ReplayCommand::ReplayCommand() 
+    : BaseCommand(), firstNakNumber(0), lastNakNumber(0) {
 
-    this->firstNakNumber = 0;
-    this->lastNakNumber = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,12 +90,14 @@ std::string ReplayCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ReplayCommand" << std::endl;
-    stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl;
-    stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
-    stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ReplayCommand" << std::endl;
+    stream << "ReplayCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "FirstNakNumber = " << this->getFirstNakNumber();
+    stream << ", ";
+    stream << "LastNakNumber = " << this->getLastNakNumber();
+    stream << " }";
 
     return stream.str();
 }
@@ -147,8 +148,7 @@ void ReplayCommand::setLastNakNumber( int lastNakNumber ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processReplayCommand( this );
 }

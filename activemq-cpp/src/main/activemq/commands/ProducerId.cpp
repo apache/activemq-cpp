@@ -19,7 +19,9 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
@@ -39,16 +41,40 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId() : BaseDataStructure() {
+ProducerId::ProducerId()
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
 
-    this->connectionId = "";
-    this->value = 0;
-    this->sessionId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId::ProducerId( const ProducerId& other ) : BaseDataStructure() {
+ProducerId::ProducerId( const ProducerId& other )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
+
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ProducerId::ProducerId( const SessionId& sessionId, long long consumerId )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
+
+    this->connectionId = sessionId.getConnectionId();
+    this->sessionId = sessionId.getValue();
+    this->value = consumerId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ProducerId::ProducerId( std::string producerKey )
+    : BaseDataStructure(), parentId(), connectionId(""), value(0), sessionId(0) {
+
+    // Parse off the producerId
+    std::size_t p = producerKey.rfind( ':' );
+
+    if( p != std::string::npos ) {
+        value = Long::parseLong( producerKey.substr( p + 1, std::string::npos ) );
+        producerKey = producerKey.substr( 0, p );
+    }
+
+    setProducerSessionKey( producerKey );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,13 +125,9 @@ std::string ProducerId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ProducerId" << std::endl;
-    stream << " Value of ProducerId::ID_PRODUCERID = 123" << std::endl;
-    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << " Value of SessionId = " << this->getSessionId() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = ProducerId" << std::endl;
+    stream << this->connectionId << ":"
+           << this->sessionId << ":"
+           << this->value;
 
     return stream.str();
 }
@@ -202,7 +224,7 @@ int ProducerId::compareTo( const ProducerId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ProducerId::equals( const ProducerId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -229,3 +251,17 @@ const Pointer<SessionId>& ProducerId::getParentId() const {
     return this->parentId;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ProducerId::setProducerSessionKey( std::string sessionKey ) {
+
+    // Parse off the value
+    std::size_t p = sessionKey.rfind( ':' );
+
+    if( p != std::string::npos ) {
+        this->sessionId = Long::parseLong( sessionKey.substr( p + 1, std::string::npos ) );
+        sessionKey = sessionKey.substr( 0, p );
+    }
+
+    // The rest is the value
+    this->connectionId = sessionKey;
+}

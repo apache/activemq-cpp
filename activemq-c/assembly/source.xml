@@ -46,8 +46,8 @@
         <include>aclocal.m4</include>
         <include>KEYS</include>
         <include>doxygen.cfg</include>
-        <include>activemq-cpp.pc.in</include>
-        <include>activemqcpp-config.in</include>
+        <include>activemq-c.pc.in</include>
+        <include>activemqc-config.in</include>
         <include>*.txt</include>
         <include>*.win</include>
         <include>*.ac</include>
@@ -77,7 +77,7 @@
       <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>vs2005-build</directory>
+      <directory>vs2008-build</directory>
       <lineEnding>keep</lineEnding>
     </fileSet>
   </fileSets>

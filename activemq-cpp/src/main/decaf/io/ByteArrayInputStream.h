@@ -21,67 +21,127 @@
 #include <decaf/io/InputStream.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <vector>
-#include <algorithm>
 
 namespace decaf{
 namespace io{
 
     /**
-     * Simple implementation of InputStream that wraps around an STL Vector
-     * std::vector<unsigned char>.
+     * A ByteArrayInputStream contains an internal buffer that contains bytes that may be read from
+     * the stream. An internal counter keeps track of the next byte to be supplied by the read method.
+     * The ByteArrayInputStream never copies the supplied buffers, only points to them, therefore the
+     * caller must ensure that the supplied buffer remain in scope, or is not deleted before this
+     * ByteArrayInputStream is freed.  If the own argument of one of the constructors that accepts an
+     * array pointer is set to true than the ByteArrayInputStream instance will take ownership of the
+     * supplied pointer and delete it when that instance is destroyed.
      *
-     * Closing a ByteArrayInputStream has no effect. The methods in this class can be
-     * called after the stream has been closed without generating an IOException.
+     * Closing a ByteArrayInputStream has no effect. The methods in this class can be called after
+     * the stream has been closed without generating an IOException.
+     *
+     * @since 1.0
      */
     class DECAF_API ByteArrayInputStream : public InputStream {
     private:
 
         /**
-         * Default buffer to use, if none provided.
+         * An array of bytes that was provided by the creator of the stream. Elements buffer[0]
+         * through buffer[count-1] are the only bytes that can ever be read from the stream; element
+         * buffer[pos] is the next byte to be read.
          */
-        std::vector<unsigned char> defaultBuffer;
+        const unsigned char* buffer;
 
         /**
-         * Reference to the buffer being used by this stream.
+         * The Size of the input buffer.
          */
-        const std::vector<unsigned char>* activeBuffer;
+        int size;
 
         /**
-         * iterator to current position in buffer.
+         * Does this object own the supplied pointer.
          */
-        std::vector<unsigned char>::const_iterator pos;
+        bool own;
 
         /**
-         * Synchronization object.
+         * The index one greater than the last valid character in the input stream buffer. This
+         * value should always be nonnegative and not larger than the length of buffer. It is one
+         * greater than the position of the last byte within buffer that can ever be read from the
+         * input stream buffer.
          */
-        util::concurrent::Mutex mutex;
+        int count;
 
         /**
-         * The currently marked position or begin() of activeBuffer.
+         * The index of the next character to read from the input stream buffer. This value should
+         * always be nonnegative and not larger than the value of count. The next byte to be read
+         * from the input stream buffer will be buffer[pos].
          */
-        std::vector<unsigned char>::const_iterator markpos;
+        int pos;
+
+        /**
+         * The currently marked position in the stream. ByteArrayInputStream objects are marked at
+         * position zero by default when constructed. They may be marked at another position within
+         * the buffer by the mark() method. The current buffer position is set to this point by the
+         * reset() method.
+         *
+         * If no mark has been set, then the value of mark is the offset passed to the constructor
+         * (or 0 if the offset was not supplied).
+         */
+        int markpos;
+
+    private:
+
+        ByteArrayInputStream( const ByteArrayInputStream& );
+        ByteArrayInputStream& operator= ( const ByteArrayInputStream& );
 
     public:
 
         /**
-         * Default Constructor
+         * Creates an ByteArrayInputStream with an empty input buffer, the buffer can be
+         * initialized with a call to setByteArray.
          */
         ByteArrayInputStream();
 
         /**
          * Creates the input stream and calls setBuffer with the
          * specified buffer object.
-         * @param buffer The buffer to be used.
+         *
+         * @param buffer
+         *      The buffer to be used.
          */
         ByteArrayInputStream( const std::vector<unsigned char>& buffer );
 
         /**
-         * Constructor
-         * @param buffer initial byte array to use to read from
-         * @param bufferSize the size of the buffer
+         * Create an instance of the ByteArrayInputStream with the given buffer as
+         * the source of input for all read operations.
+         *
+         * @param buffer
+         *      The initial byte array to use to read from.
+         * @param bufferSize
+         *      The size of the buffer.
+         * @param own
+         *      Indicates if this object should take ownership of the array, default is false.
+         *
+         * @throws NullPointerException if the buffer is Null.
+         * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer,
-                              std::size_t bufferSize );
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own = false );
+
+        /**
+         * Create an instance of the ByteArrayInputStream with the given buffer as
+         * the source of input for all read operations.
+         *
+         * @param buffer
+         *      The initial byte array to use to read from.
+         * @param bufferSize
+         *      The size of the buffer.
+         * @param offset
+         *      The offset into the buffer to begin reading from.
+         * @param length
+         *      The number of bytes to read past the offset.
+         * @param own
+         *      Indicates if this object should take ownership of the array, default is false.
+         *
+         * @throws NullPointerException if the buffer is Null.
+         * @throws IllegalArguementException if the bufferSize is negative.
+         */
+        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false );
 
         virtual ~ByteArrayInputStream();
 
@@ -92,158 +152,74 @@ namespace io{
          * buffer.  This class will not own the given buffer - it is the
          * caller's responsibility to free the memory of the given buffer
          * as appropriate.
-         * @param buffer The buffer to be used.
+         *
+         * @param buffer
+         *      The buffer to be used.
          */
-        virtual void setBuffer( const std::vector<unsigned char>& buffer );
+        virtual void setByteArray( const std::vector<unsigned char>& buffer );
 
         /**
          * Sets the data that this reader uses, replaces any existing
          * data and resets to beginning of the buffer.
-         * @param buffer initial byte array to use to read from
-         * @param bufferSize the size of the buffer
-         */
-        virtual void setByteArray( const unsigned char* buffer,
-                                   std::size_t bufferSize );
-
-        /**
-         * Indcates the number of bytes avaialable.
-         * @return The number of bytes until the end of the internal buffer.
-         */
-        virtual std::size_t available() const throw ( IOException ) {
-            if( activeBuffer == NULL ){
-                throw IOException(
-                    __FILE__, __LINE__,
-                    "buffer has not been initialized");
-            }
-
-            return std::distance( pos, activeBuffer->end() );
-        }
-
-        /**
-         * Reads a single byte from the buffer.
-         * @return The next byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read() throw ( IOException );
-
-        /**
-         * Reads an array of bytes from the buffer.
-         * @param buffer (out) the target buffer.
-         * @param offset the position in the buffer to start reading from.
-         * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t bufferSize )
-            throw ( IOException, lang::exceptions::NullPointerException );
-
-        /**
-         * Closes the target input stream.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void close() throw( io::IOException ){ /* do nothing */ }
-
-        /**
-         * Skips over and discards n bytes of data from this input stream. The
-         * skip method may, for a variety of reasons, end up skipping over some
-         * smaller number of bytes, possibly 0. This may result from any of a
-         * number of conditions; reaching end of file before n bytes have been
-         * skipped is only one possibility. The actual number of bytes skipped
-         * is returned. If n is negative, no bytes are skipped.
-         * <p>
-         * The skip method of InputStream creates a byte array and then
-         * repeatedly reads into it until n bytes have been read or the end
-         * of the stream has been reached. Subclasses are encouraged to
-         * provide a more efficient implementation of this method.
-         * @param num - the number of bytes to skip
-         * @returns total butes skipped
-         * @throws IOException if an error occurs
-         */
-        virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
-
-        /**
-         * Marks the current position in the stream A subsequent call to the
-         * reset method repositions this stream at the last marked position so
-         * that subsequent reads re-read the same bytes.
          *
-         * If a stream instance reports that marks are supported then the stream
-         * will ensure that the same bytes can be read again after the reset method
-         * is called so long the readLimit is not reached.
-         * @param readLimit - max bytes read before marked position is invalid.
+         * @param buffer
+         *      The initial byte array to use to read from.
+         * @param bufferSize
+         *      The size of the buffer.
+         *
+         * @throws NullPointerException if the buffer is Null.
+         * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void mark( int readLimit DECAF_UNUSED ) {
-            // the reset point is now the marked position until a new byte buffer
-            // is set on this stream.
-            this->markpos = pos;
-        }
+        virtual void setByteArray( const unsigned char* buffer, int bufferSize );
 
         /**
-         * Resets the read index to the beginning of the byte array, unless mark
-         * has been called and the markLimit has not been exceeded, in which case
-         * the stream is reset to the marked position.
+         * Sets the data that this reader uses, replaces any existing
+         * data and resets to beginning of the buffer.
+         *
+         * @param buffer
+         *      The initial byte array to use to read from.
+         * @param bufferSize
+         *      The size of the buffer.
+         * @param offset
+         *      The offset into the buffer to begin reading from.
+         * @param length
+         *      The number of bytes to read past the offset.
+         *
+         * @throws NullPointerException if the buffer is Null.
+         * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void reset() throw ( IOException );
+        virtual void setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length );
 
         /**
-         * Determines if this input stream supports the mark and reset methods.
-         * Whether or not mark and reset are supported is an invariant property of
-         * a particular input stream instance.
-         * @returns true if this stream instance supports marks
+         * {@inheritDoc}
+         */
+        virtual int available() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual long long skip( long long num );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void mark( int readLimit );
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void reset();
+
+        /**
+         * {@inheritDoc}
          */
         virtual bool markSupported() const{ return true; }
 
     protected:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
+        virtual int doReadByte();
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
 
     };
 

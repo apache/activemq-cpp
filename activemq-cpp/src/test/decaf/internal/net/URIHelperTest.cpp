@@ -150,3 +150,41 @@ void URIHelperTest::testParseURI() {
             URISyntaxException );
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelperTest::isValidIPv4Address() {
+
+    URIHelper uriHelper;
+
+    std::vector<std::string> validIPs;
+    std::vector<std::string> invalidIPs;
+
+    validIPs.push_back( "127.0.0.1" );
+    validIPs.push_back( "192.168.2.1" );
+    validIPs.push_back( "255.255.255.255" );
+    validIPs.push_back( "0.0.0.0" );
+    validIPs.push_back( "1.12.123.0" );
+
+    invalidIPs.push_back( "256.66.2.1" );
+    invalidIPs.push_back( "172.66.512.1" );
+    invalidIPs.push_back( "172.257.12.1" );
+    invalidIPs.push_back( "172.66.51.1024" );
+    invalidIPs.push_back( "172.66..1" );
+    invalidIPs.push_back( "172...1" );
+    invalidIPs.push_back( "172..." );
+    invalidIPs.push_back( ".0.0.0.0" );
+    invalidIPs.push_back( "0.A.0.0" );
+    invalidIPs.push_back( "0.1.0.0." );
+
+    std::vector<std::string>::const_iterator address = validIPs.begin();
+    for( ; address != validIPs.end(); ++address ) {
+        CPPUNIT_ASSERT_EQUAL_MESSAGE( "Valid address tested as invalid",
+                                      true, uriHelper.isValidIPv4Address( *address ) );
+    }
+
+    address = invalidIPs.begin();
+    for( ; address != invalidIPs.end(); ++address ) {
+        CPPUNIT_ASSERT_EQUAL_MESSAGE( "Invalid address tested as valid",
+                                      false, uriHelper.isValidIPv4Address( *address ) );
+    }
+}

@@ -21,60 +21,15 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/ClassCastException.h>
-#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/atomic/AtomicRefCounter.h>
 #include <decaf/util/Comparator.h>
 #include <memory>
 #include <typeinfo>
 #include <algorithm>
+#include <functional>
 
 namespace decaf {
 namespace lang {
-
-    class AtomicRefCounter {
-    private:
-
-        decaf::util::concurrent::atomic::AtomicInteger* counter;
-
-    private:
-
-        AtomicRefCounter& operator= ( const AtomicRefCounter& );
-
-    public:
-
-        AtomicRefCounter() :
-            counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
-        AtomicRefCounter( const AtomicRefCounter& other ) : counter( other.counter ) {
-            this->counter->incrementAndGet();
-        }
-
-    protected:
-
-        /**
-         * Swaps this instance's reference counter with the one given, this allows
-         * for copy-and-swap semantics of this object.
-         *
-         * @param other
-         *      The value to swap with this one's.
-         */
-        void swap( AtomicRefCounter& other ) {
-            std::swap( this->counter, other.counter );
-        }
-
-        /**
-         * Removes a reference to the counter Atomically and returns if the counter
-         * has reached zero, once the counter hits zero, the internal counter is
-         * destroyed and this instance is now considered to be unreferenced.
-         *
-         * @return true if the count is now zero.
-         */
-        bool release() {
-            if( this->counter->decrementAndGet() == 0 ) {
-                delete this->counter;
-                return true;
-            }
-            return false;
-        }
-    };
 
     // Used internally in Pointer.
     struct STATIC_CAST_TOKEN {};
@@ -94,7 +49,7 @@ namespace lang {
      *
      * @since 1.0
      */
-    template< typename T, typename REFCOUNTER = AtomicRefCounter >
+    template< typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter >
     class Pointer : public REFCOUNTER {
     private:
 
@@ -166,17 +121,18 @@ namespace lang {
          * then this method throws a ClassCastException.
          *
          * @param value - Pointer instance to cast to this type.
+         *
          * @throw ClassCastException if the dynamic cast returns NULL
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& )
-            throw( decaf::lang::exceptions::ClassCastException ) :
+        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& ) :
                 REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
 
             if( this->value == NULL ) {
+
                 // Remove the reference we took in the Reference Counter's ctor since we
-                // didn't actually create one as the dynamic cast failed..
-                this->release();
+                // didn't actually create one as the dynamic cast failed.
+                REFCOUNTER::release();
                 throw decaf::lang::exceptions::ClassCastException(
                     __FILE__, __LINE__,
                     "Failed to cast source pointer of type %s to this type: %s.",
@@ -395,9 +351,11 @@ namespace lang {
      * to be compared based on the comparison of the object itself and not just the value of
      * the pointer.
      */
-    template< typename T, typename R = AtomicRefCounter >
+    template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
     class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
     public:
+
+        virtual ~PointerComparator() {}
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <

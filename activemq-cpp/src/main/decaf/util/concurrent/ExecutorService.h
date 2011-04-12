@@ -20,6 +20,8 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/ArrayList.h>
 #include <decaf/util/concurrent/Executor.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
@@ -55,20 +57,54 @@ namespace concurrent {
         virtual ~ExecutorService() {}
 
         /**
-         * Blocks until all tasks have completed execution after a shutdown request, or the timeout occurs,
-         * or the current thread is interrupted, whichever happens first.
+         * The caller will block until the executor has completed termination meaning all tasks
+         * that where scheduled before shutdown have now completed and the executor is ready for
+         * deletion.  If the timeout period elapses before the executor reaches the terminated
+         * state then this method return false to indicate it has not terminated.
          *
          * @param timeout
-         *      The amount of time to wait before timing out the Wait operation.
+         *      The amount of time to wait before abandoning the wait for termination.
          * @param unit
-         *      The Units that comprise the timeout value.
+         *      The unit of time that the timeout value represents.
          *
-         * @returns true if the executer terminated before the given timeout value elapsed.
+         * @return true if the executor terminated or false if the timeout expired.
          *
-         * @throws InterruptedException - if interrupted while waiting.
+         * @throws InterruptedException if this call is interrupted while awaiting termination.
          */
-        bool awaitTermination( long long timeout, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::InterruptedException ) = 0;
+        virtual bool awaitTermination( long long timeout, const TimeUnit& unit ) = 0;
+
+        /**
+         * Performs an orderly shutdown of this Executor.  Previously queued tasks are allowed
+         * to complete but no new tasks are accepted for execution.  Calling this method more
+         * than once has no affect on this executor.
+         */
+        virtual void shutdown() = 0;
+
+        /**
+         * Attempts to stop all currently executing tasks and returns an ArrayList containing the
+         * Runnables that did not get executed, these object become the property of the caller and
+         * are not deleted by this class, they are removed from the work queue and forgotten about.
+         *
+         * There is no guarantee that this method will halt execution of currently executing tasks.
+         *
+         * @return an ArrayList containing all Runnable instance that were still waiting to be
+         *         executed by this class, call now owns those pointers.
+         */
+        virtual ArrayList<decaf::lang::Runnable*> shutdownNow() = 0;
+
+        /**
+         * Returns whether this executor has been shutdown or not.
+         *
+         * @return true if this executor has been shutdown.
+         */
+        virtual bool isShutdown() const = 0;
+
+        /**
+         * Returns whether all tasks have completed after this executor was shut down.
+         *
+         * @return true if all tasks have completed after a request to shut down was made.
+         */
+        virtual bool isTerminated() const = 0;
 
     };
 

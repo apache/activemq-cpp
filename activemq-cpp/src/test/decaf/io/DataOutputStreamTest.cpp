@@ -49,11 +49,11 @@ void DataOutputStreamTest::testFlush() {
 void DataOutputStreamTest::testSize() {
 
     try {
-        os->write( (unsigned char*)&testData[0], 0, 150 );
+        os->write( (unsigned char*)&testData[0], (int)testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char rbuf[150];
-        is->read( rbuf, 0, 150 );
+        is->read( rbuf, 150, 0, 150 );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect size returned", 150 == os->size());
     } catch( IOException &e ) {
@@ -65,11 +65,11 @@ void DataOutputStreamTest::testSize() {
 void DataOutputStreamTest::testWrite1() {
 
     try {
-        os->write( (unsigned char*)&testData[0], 0, 150 );
+        os->write( (unsigned char*)&testData[0], (int)testData.size(), 0, 150 );
         os->close();
         openDataInputStream();
         unsigned char* rbuf = new unsigned char[150];
-        is->read(rbuf, 0, 150);
+        is->read(rbuf, 150, 0, 150);
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)rbuf, 150 ) == testData.substr( 0, 150 ) );
@@ -131,7 +131,7 @@ void DataOutputStreamTest::testWriteBytes() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( result );
+        is->read( &result[0], (int)testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );
@@ -166,7 +166,7 @@ void DataOutputStreamTest::testWriteChars() {
         os->close();
         openDataInputStream();
         std::vector<unsigned char> result( testData.size() );
-        is->read( result );
+        is->read( &result[0], (int)testData.size() );
         is->close();
         CPPUNIT_ASSERT_MESSAGE("Incorrect bytes written",
             string( (const char*)&result[0], result.size() ) == testData );
@@ -252,7 +252,7 @@ void DataOutputStreamTest::testWriteUTF() {
     os->close();
     openDataInputStream();
     CPPUNIT_ASSERT_MESSAGE("Failed to write string in UTF format",
-        is->available() == testString.length() + 2 );
+        is->available() == (int)testString.length() + 2 );
     CPPUNIT_ASSERT_MESSAGE("Incorrect string returned",
         is->readUTF() == testString );
 }
@@ -287,13 +287,14 @@ void DataOutputStreamTest::testWriteUTFStringLength() {
         UTFDataFormatException );
 
     // Test that a zero length string write the zero size marker.
-    ByteArrayInputStream byteIn;
     ByteArrayOutputStream byteOut;
-    DataInputStream dataIn( &byteIn );
     DataOutputStream dataOut( &byteOut );
     dataOut.writeUTF( "" );
     CPPUNIT_ASSERT( dataOut.size() == 2 );
-    byteIn.setByteArray( byteOut.toByteArray(), byteOut.size() );
+
+    std::pair<const unsigned char*, int> array = byteOut.toByteArray();
+    ByteArrayInputStream byteIn( array.first, array.second, true );
+    DataInputStream dataIn( &byteIn );
     CPPUNIT_ASSERT( dataIn.readUnsignedShort() == 0 );
 }
 
@@ -304,16 +305,18 @@ void DataOutputStreamTest::testHelper( unsigned char* input, int inputLength,
     std::string testStr( (char*)input, inputLength );
     os->writeUTF( testStr );
 
-    const unsigned char* result = baos->toByteArray();
+    std::pair<const unsigned char*, int> array = baos->toByteArray();
 
-    CPPUNIT_ASSERT( result[0] == 0x00 );
-    CPPUNIT_ASSERT( result[1] == (unsigned char)( expectLength ) );
+    CPPUNIT_ASSERT( array.first[0] == 0x00 );
+    CPPUNIT_ASSERT( array.first[1] == (unsigned char)( expectLength ) );
 
-    for( std::size_t i = 2; i < baos->size(); ++i ) {
-        CPPUNIT_ASSERT( result[i] == expect[i-2] );
+    for( int i = 2; i < array.second; ++i ) {
+        CPPUNIT_ASSERT( array.first[i] == expect[i-2] );
     }
 
     baos->reset();
+
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,42 +372,44 @@ void DataOutputStreamTest::test(){
     writer.writeLong( longVal );
     writer.writeFloat( floatVal );
     writer.writeDouble( doubleVal );
-    writer.write( arrayVal, 0, 3 );
+    writer.write( arrayVal, 3, 0, 3 );
 
-    const unsigned char* buffer = myStream.toByteArray();
+    std::pair<const unsigned char*, int> buffer = myStream.toByteArray();
     int ix = 0;
 
-    unsigned char tempByte = buffer[ix];
+    unsigned char tempByte = buffer.first[ix];
     CPPUNIT_ASSERT( tempByte == byteVal );
-    ix += sizeof( tempByte );
+    ix += (int)sizeof( tempByte );
 
     unsigned short tempShort = 0;
-    memcpy( &tempShort, buffer+ix, sizeof( unsigned short ) );
+    memcpy( &tempShort, buffer.first+ix, sizeof( unsigned short ) );
     tempShort = util::Endian::byteSwap( tempShort );
     CPPUNIT_ASSERT( tempShort == shortVal );
-    ix += sizeof( tempShort );
+    ix += (int)sizeof( tempShort );
 
     unsigned int tempInt = 0;
-    memcpy( &tempInt, buffer+ix, sizeof( unsigned int ) );
+    memcpy( &tempInt, buffer.first+ix, sizeof( unsigned int ) );
     tempInt = util::Endian::byteSwap( tempInt );
     CPPUNIT_ASSERT( tempInt == intVal );
-    ix += sizeof( tempInt );
+    ix += (int)sizeof( tempInt );
 
     unsigned long long tempLong = 0;
-    memcpy( &tempLong, buffer+ix, sizeof( unsigned long long ) );
+    memcpy( &tempLong, buffer.first+ix, sizeof( unsigned long long ) );
     tempLong = util::Endian::byteSwap( tempLong );
     CPPUNIT_ASSERT( tempLong == longVal );
-    ix += sizeof( tempLong );
+    ix += (int)sizeof( tempLong );
 
     float tempFloat = 0;
-    memcpy( &tempFloat, buffer+ix, sizeof( float ) );
+    memcpy( &tempFloat, buffer.first+ix, sizeof( float ) );
     tempFloat = util::Endian::byteSwap( tempFloat );
     CPPUNIT_ASSERT( tempFloat == floatVal );
-    ix += sizeof( tempFloat );
+    ix += (int)sizeof( tempFloat );
 
     double tempDouble = 0;
-    memcpy( &tempDouble, buffer+ix, sizeof( double ) );
+    memcpy( &tempDouble, buffer.first+ix, sizeof( double ) );
     tempDouble = util::Endian::byteSwap( tempDouble );
     CPPUNIT_ASSERT( tempDouble == doubleVal );
-    ix += sizeof( tempDouble );
+    ix += (int)sizeof( tempDouble );
+
+    delete [] buffer.first;
 }

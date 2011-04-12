@@ -29,9 +29,20 @@ public class SessionInfoSourceGenerator extends CommandSourceGenerator {
         super.populateIncludeFilesSet();
     }
 
-    protected void generateDefaultConstructorBody( PrintWriter out ) {
+    protected String generateInitializerList() {
+        return super.generateInitializerList() + ", ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE)";
+    }
 
-        out.println( "    this->ackMode = (unsigned int)cms::Session::AUTO_ACKNOWLEDGE;" );
-        super.generateDefaultConstructorBody(out);
+    protected void generateAdditionalMethods( PrintWriter out ) {
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("Pointer<RemoveInfo> SessionInfo::createRemoveCommand() const {");
+        out.println("    Pointer<RemoveInfo> info( new RemoveInfo() );");
+        out.println("    info->setResponseRequired( this->isResponseRequired() );");
+        out.println("    info->setObjectId( this->getSessionId() );");
+        out.println("    return info;");
+        out.println("}");
+        out.println("");
+
+        super.generateAdditionalMethods(out);
     }
 }

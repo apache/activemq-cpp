@@ -50,6 +50,7 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "MessageDispatchNotification" );
         commandsWithShortcuts.add( "ShutdownInfo" );
         commandsWithShortcuts.add( "TransactionInfo" );
+        commandsWithShortcuts.add( "ConnectionControl" );
         commandsWithShortcuts.add( "ConnectionInfo" );
         commandsWithShortcuts.add( "ConsumerInfo" );
         commandsWithShortcuts.add( "RemoveSubscriptionInfo" );
@@ -64,25 +65,11 @@ public class CommandCodeGeneratorsFactory {
      *
      * @return a new Header File code generator.
      */
-    public CommandHeaderGenerator getHeaderGenerator( String className ) {
+    public CommandCodeGenerator getHeaderGenerator( String className ) {
 
-        CommandHeaderGenerator generator = null;
-        if( className.equals("Message") ) {
-            generator = new MessageHeaderGenerator();
-        } else if( className.equals("ConnectionId") ) {
-            generator = new ConnectionIdHeaderGenerator();
-        } else if( className.equals("ConsumerId") ) {
-            generator = new ConsumerIdHeaderGenerator();
-        } else if( className.equals("ProducerId") ) {
-            generator = new ProducerIdHeaderGenerator();
-        } else if( className.equals("SessionId") ) {
-            generator = new SessionIdHeaderGenerator();
-        } else if( className.equals("SessionInfo") ) {
-            generator = new SessionInfoHeaderGenerator();
-        } else {
-            generator = new CommandHeaderGenerator();
-        }
+        CommandCodeGenerator generator = null;
 
+        generator = this.getCodeGenerator( className, "Header" );
         if( className.endsWith("Id") ) {
             generator.setComparable( true );
             generator.setAssignable( true );
@@ -103,25 +90,11 @@ public class CommandCodeGeneratorsFactory {
      *
      * @return a new Source File code generator.
      */
-    public CommandSourceGenerator getSourceGenerator( String className ) {
+    public CommandCodeGenerator getSourceGenerator( String className ) {
 
-        CommandSourceGenerator generator = null;
-        if( className.equals("Message") ) {
-            generator = new MessageSourceGenerator();
-        } else if( className.equals("ConnectionId") ) {
-            generator = new ConnectionIdSourceGenerator();
-        } else if( className.equals("ConsumerId") ) {
-            generator = new ConsumerIdSourceGenerator();
-        } else if( className.equals("ProducerId") ) {
-            generator = new ProducerIdSourceGenerator();
-        } else if( className.equals("SessionId") ) {
-            generator = new SessionIdSourceGenerator();
-        } else if( className.equals("SessionInfo") ) {
-            generator = new SessionInfoSourceGenerator();
-        } else {
-            generator = new CommandSourceGenerator();
-        }
+        CommandCodeGenerator generator = null;
 
+        generator = this.getCodeGenerator( className, "Source" );
         if( className.endsWith("Id") ) {
             generator.setComparable( true );
             generator.setAssignable( true );
@@ -130,4 +103,41 @@ public class CommandCodeGeneratorsFactory {
         return generator;
     }
 
+    /**
+     * Given a class name return an instance of a CSharp Class File Generator
+     * that can generate the file for the Class.
+     *
+     * @param className - name of the class to find the generator for
+     * @param fileType - type identifier for the generator, either "Source" or "Header"
+     *
+     * @return a new Header File code generator.
+     */
+    public CommandCodeGenerator getCodeGenerator( String className, String fileType ) {
+
+        Class<?> generatorClass = null;
+
+        try {
+            generatorClass = Class.forName( "org.apache.activemq.openwire.tool.commands." + className + fileType + "Generator" );
+        } catch( ClassNotFoundException e ) {
+            try {
+                generatorClass = Class.forName( "org.apache.activemq.openwire.tool.commands.Command" + fileType + "Generator" );
+            } catch(ClassNotFoundException e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
+
+        CommandCodeGenerator generator;
+        try {
+            generator = (CommandCodeGenerator) generatorClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return generator;
+    }
 }

@@ -38,13 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionControl::ConnectionControl() : BaseCommand() {
+ConnectionControl::ConnectionControl() 
+    : BaseCommand(), close(false), exit(false), faultTolerant(false), resume(false), suspend(false), connectedBrokers(""), reconnectTo(""), 
+      rebalanceConnection(false) {
 
-    this->close = false;
-    this->exit = false;
-    this->faultTolerant = false;
-    this->resume = false;
-    this->suspend = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +82,9 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
     this->setFaultTolerant( srcPtr->isFaultTolerant() );
     this->setResume( srcPtr->isResume() );
     this->setSuspend( srcPtr->isSuspend() );
+    this->setConnectedBrokers( srcPtr->getConnectedBrokers() );
+    this->setReconnectTo( srcPtr->getReconnectTo() );
+    this->setRebalanceConnection( srcPtr->isRebalanceConnection() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,15 +97,26 @@ std::string ConnectionControl::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConnectionControl" << std::endl;
-    stream << " Value of ConnectionControl::ID_CONNECTIONCONTROL = 18" << std::endl;
-    stream << " Value of Close = " << this->isClose() << std::endl;
-    stream << " Value of Exit = " << this->isExit() << std::endl;
-    stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;
-    stream << " Value of Resume = " << this->isResume() << std::endl;
-    stream << " Value of Suspend = " << this->isSuspend() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ConnectionControl" << std::endl;
+    stream << "ConnectionControl { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Close = " << this->isClose();
+    stream << ", ";
+    stream << "Exit = " << this->isExit();
+    stream << ", ";
+    stream << "FaultTolerant = " << this->isFaultTolerant();
+    stream << ", ";
+    stream << "Resume = " << this->isResume();
+    stream << ", ";
+    stream << "Suspend = " << this->isSuspend();
+    stream << ", ";
+    stream << "ConnectedBrokers = " << this->getConnectedBrokers();
+    stream << ", ";
+    stream << "ReconnectTo = " << this->getReconnectTo();
+    stream << ", ";
+    stream << "RebalanceConnection = " << this->isRebalanceConnection();
+    stream << " }";
 
     return stream.str();
 }
@@ -136,6 +147,15 @@ bool ConnectionControl::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->isSuspend() != valuePtr->isSuspend() ) {
+        return false;
+    }
+    if( this->getConnectedBrokers() != valuePtr->getConnectedBrokers() ) {
+        return false;
+    }
+    if( this->getReconnectTo() != valuePtr->getReconnectTo() ) {
+        return false;
+    }
+    if( this->isRebalanceConnection() != valuePtr->isRebalanceConnection() ) {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
@@ -195,8 +215,47 @@ void ConnectionControl::setSuspend( bool suspend ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+const std::string& ConnectionControl::getConnectedBrokers() const {
+    return connectedBrokers;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& ConnectionControl::getConnectedBrokers() {
+    return connectedBrokers;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionControl::setConnectedBrokers( const std::string& connectedBrokers ) {
+    this->connectedBrokers = connectedBrokers;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ConnectionControl::getReconnectTo() const {
+    return reconnectTo;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& ConnectionControl::getReconnectTo() {
+    return reconnectTo;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionControl::setReconnectTo( const std::string& reconnectTo ) {
+    this->reconnectTo = reconnectTo;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionControl::isRebalanceConnection() const {
+    return rebalanceConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionControl::setRebalanceConnection( bool rebalanceConnection ) {
+    this->rebalanceConnection = rebalanceConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processConnectionControl( this );
 }

@@ -46,6 +46,11 @@ namespace threads {
 
         Task* task;
 
+    private:
+
+        DedicatedTaskRunner( const DedicatedTaskRunner& );
+        DedicatedTaskRunner& operator= ( const DedicatedTaskRunner& );
+
     public:
 
         DedicatedTaskRunner( Task* task );

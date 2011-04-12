@@ -32,16 +32,16 @@ void ByteArrayAdapterTest::testArray() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    testBuffer1.write( testData1, 0, testData1Size );
+    testBuffer1.write( testData1, testData1Size, 0, testData1Size );
 
-    for( std::size_t ix = 0; ix < testBuffer1.getCapacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1.getCapacity(); ++ix ) {
         CPPUNIT_ASSERT( testBuffer1.get( ix ) == testData1[ix] );
     }
 
     unsigned char* array = testBuffer1.getByteArray();
     CPPUNIT_ASSERT( array != NULL );
 
-    for( std::size_t ix = 0; ix < testBuffer1.getCapacity(); ++ix ) {
+    for( int ix = 0; ix < testBuffer1.getCapacity(); ++ix ) {
         CPPUNIT_ASSERT( array[ix] == testData1[ix] );
     }
 }
@@ -51,7 +51,7 @@ void ByteArrayAdapterTest::testRead(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256 );
@@ -59,7 +59,7 @@ void ByteArrayAdapterTest::testRead(){
     CPPUNIT_ASSERT( array.getCapacity() == 256 );
 
     unsigned char* result = new unsigned char[256];
-    array.read( result, 0, 256 );
+    array.read( result, 256, 0, 256 );
 
     for( int i = 0; i < 256; ++i ){
         CPPUNIT_ASSERT( data[i] == result[i] );
@@ -74,16 +74,16 @@ void ByteArrayAdapterTest::testWrite(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
-    ByteArrayAdapter array( (std::size_t)256 );
+    ByteArrayAdapter array( (int)256 );
 
     CPPUNIT_ASSERT( array.getCapacity() == 256 );
 
-    array.write( data, 0, 256 );
+    array.write( data, 256, 0, 256 );
     unsigned char* result = new unsigned char[256];
-    array.read( result, 0, 256 );
+    array.read( result, 256, 0, 256 );
 
     for( int i = 0; i < 256; ++i ){
         CPPUNIT_ASSERT( data[i] == result[i] );
@@ -96,13 +96,13 @@ void ByteArrayAdapterTest::testWrite(){
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayAdapterTest::testCtor1(){
 
-    ByteArrayAdapter array1( (std::size_t)256 );
+    ByteArrayAdapter array1( 256 );
     CPPUNIT_ASSERT( array1.getCapacity() == 256 );
-    ByteArrayAdapter array2( (std::size_t)54 );
+    ByteArrayAdapter array2( 54 );
     CPPUNIT_ASSERT( array2.getCapacity() == 54 );
-    ByteArrayAdapter array3( (std::size_t)5555 );
+    ByteArrayAdapter array3( 5555 );
     CPPUNIT_ASSERT( array3.getCapacity() == 5555 );
-    ByteArrayAdapter array4( (std::size_t)0 );
+    ByteArrayAdapter array4( 0 );
     CPPUNIT_ASSERT( array4.getCapacity() == 0 );
 }
 
@@ -130,23 +130,23 @@ void ByteArrayAdapterTest::testClear(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
-    ByteArrayAdapter array( (std::size_t)256 );
+    ByteArrayAdapter array( (int)256 );
 
     CPPUNIT_ASSERT( array.getCapacity() == 256 );
 
-    array.write( data, 0, 256 );
+    array.write( data, 256, 0, 256 );
     unsigned char* result = new unsigned char[256];
-    array.read( result, 0, 256 );
+    array.read( result, 256, 0, 256 );
 
     for( int i = 0; i < 256; ++i ){
         CPPUNIT_ASSERT( data[i] == result[i] );
     }
 
     array.clear();
-    array.read( result, 0, 256 );
+    array.read( result, 256, 0, 256 );
 
     for( int i = 0; i < 256; ++i ){
         CPPUNIT_ASSERT( result[i] == 0 );
@@ -161,16 +161,16 @@ void ByteArrayAdapterTest::testReszie(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
-    ByteArrayAdapter array( (std::size_t)256 );
+    ByteArrayAdapter array( (int)256 );
 
     CPPUNIT_ASSERT( array.getCapacity() == 256 );
 
-    array.write( data, 0, 256 );
+    array.write( data, 256, 0, 256 );
     unsigned char* result = new unsigned char[256];
-    array.read( result, 0, 256 );
+    array.read( result, 256, 0, 256 );
 
     for( int i = 0; i < 256; ++i ){
         CPPUNIT_ASSERT( data[i] == result[i] );
@@ -179,7 +179,7 @@ void ByteArrayAdapterTest::testReszie(){
     array.resize( 128 );
     CPPUNIT_ASSERT( array.getCapacity() == 128 );
     unsigned char* result2 = new unsigned char[128];
-    array.read( result2, 0, 128 );
+    array.read( result2, 128, 0, 128 );
 
     for( int i = 0; i < 128; ++i ){
         CPPUNIT_ASSERT( result[i] == data[i] );
@@ -195,7 +195,7 @@ void ByteArrayAdapterTest::testOperators(){
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256 );
@@ -214,14 +214,14 @@ void ByteArrayAdapterTest::testReadExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw NullPointerException",
-        array.read( NULL, 0, 500 ),
+        array.read( NULL, 1, 0, 500 ),
         NullPointerException );
 
     unsigned char result[5000];
@@ -229,7 +229,7 @@ void ByteArrayAdapterTest::testReadExceptions() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw BufferUnderflowException",
-        array.read( result, 0, 500 ),
+        array.read( result, 5000, 0, 500 ),
         BufferUnderflowException );
 
 
@@ -240,13 +240,13 @@ void ByteArrayAdapterTest::testWriteExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw NullPointerException",
-        array.write( NULL, 0, 500 ),
+        array.write( NULL, 1, 0, 500 ),
         NullPointerException );
 
     unsigned char result[5000];
@@ -254,7 +254,7 @@ void ByteArrayAdapterTest::testWriteExceptions() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw BufferOverflowException",
-        array.write( result, 0, 500 ),
+        array.write( result, 5000, 0, 500 ),
         BufferOverflowException );
 }
 
@@ -263,7 +263,7 @@ void ByteArrayAdapterTest::testOperatorsExceptions() {
 
     unsigned char* data = new unsigned char[256];
     for( int i = 0; i < 256; ++i ) {
-        data[i] = i;
+        data[i] = (unsigned char)i;
     }
 
     ByteArrayAdapter array( data, 256, true );
@@ -278,8 +278,8 @@ void ByteArrayAdapterTest::testPut() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
-    for( ; ( testBuffer1.getCapacity() - i ) >= sizeof(unsigned char); i+=sizeof(unsigned char) ) {
+    int i = 0;
+    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(unsigned char); i += (int)sizeof(unsigned char) ) {
         testBuffer1.put( i, (unsigned char)(i + 99) );
         CPPUNIT_ASSERT( testBuffer1.get( i ) == (unsigned char)(i + 99) );
     }
@@ -295,8 +295,8 @@ void ByteArrayAdapterTest::testPutChar() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
-    for( ; ( testBuffer1.getCapacity() - i ) >= sizeof(char); i+=sizeof(char) ) {
+    int i = 0;
+    for( ; ( testBuffer1.getCapacity() - i ) >= (int)sizeof(char); i += (int)sizeof(char) ) {
         testBuffer1.putChar( i, (char)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getChar( i ) == (char)(i + 99) );
     }
@@ -312,7 +312,7 @@ void ByteArrayAdapterTest::testPutLong() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1.getLongCapacity(); ++i  ) {
         testBuffer1.putLong( i, i + 99 );
         CPPUNIT_ASSERT( testBuffer1.getLong( i ) == (long long)(i + 99) );
@@ -329,7 +329,7 @@ void ByteArrayAdapterTest::testPutInt() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1.getIntCapacity(); ++i  ) {
         testBuffer1.putInt( i, (int)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getInt( i ) == (int)(i + 99) );
@@ -346,7 +346,7 @@ void ByteArrayAdapterTest::testPutShort() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1.getShortCapacity(); ++i  ) {
         testBuffer1.putShort( i, (short)( i + 99 ) );
         CPPUNIT_ASSERT( testBuffer1.getShort( i ) == (short)(i + 99) );
@@ -363,7 +363,7 @@ void ByteArrayAdapterTest::testPutDouble() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1.getDoubleCapacity(); ++i  ) {
         testBuffer1.putDouble( i, i + 99.025 );
         CPPUNIT_ASSERT( Double::doubleToLongBits( testBuffer1.getDouble( i ) ) ==
@@ -381,9 +381,9 @@ void ByteArrayAdapterTest::testPutFloat() {
 
     ByteArrayAdapter testBuffer1( testData1Size );
 
-    std::size_t i = 0;
+    int i = 0;
     for( ; i < testBuffer1.getFloatCapacity(); ++i  ) {
-        testBuffer1.putFloat( i, i + 99.025f );
+        testBuffer1.putFloat( i, (float)i + 99.025f );
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1.getFloat( i ) ) ==
                         Float::floatToIntBits( (float)(i + 99.025) ) );
     }
@@ -400,13 +400,13 @@ void ByteArrayAdapterTest::testGet() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<unsigned char> values;
-    for( std::size_t i = 0; i < testBuffer1.getCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getCapacity(); ++i ) {
         testBuffer1.put( i, (unsigned char)i );
         values.push_back( (unsigned char)i );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( testBuffer1.get( i ) == values[j] );
@@ -424,13 +424,13 @@ void ByteArrayAdapterTest::testGetChar() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<char> values;
-    for( std::size_t i = 0; i < testBuffer1.getCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getCapacity(); ++i ) {
         testBuffer1.putChar( i, (char)i );
         values.push_back( (char)i );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( testBuffer1.getChar( i ) == values[j] );
@@ -448,13 +448,13 @@ void ByteArrayAdapterTest::testGetShort() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<short> values;
-    for( std::size_t i = 0; i < testBuffer1.getShortCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getShortCapacity(); ++i ) {
         testBuffer1.putShort( i, (short)i );
         values.push_back( (short)i );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getShortCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( testBuffer1.getShort( i ) == values[j] );
@@ -472,13 +472,13 @@ void ByteArrayAdapterTest::testGetInt() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<int> values;
-    for( std::size_t i = 0; i < testBuffer1.getIntCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getIntCapacity(); ++i ) {
         testBuffer1.putInt( i, (int)i );
         values.push_back( (int)i );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getIntCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( testBuffer1.getInt( i ) == values[j] );
@@ -496,13 +496,13 @@ void ByteArrayAdapterTest::testGetLong() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<long long> values;
-    for( std::size_t i = 0; i < testBuffer1.getLongCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getLongCapacity(); ++i ) {
         testBuffer1.putLong( i, (long long)i );
         values.push_back( (long long)i );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getLongCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( testBuffer1.getLong( i ) == values[j] );
@@ -520,13 +520,13 @@ void ByteArrayAdapterTest::testGetFloat() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<float> values;
-    for( std::size_t i = 0; i < testBuffer1.getFloatCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getFloatCapacity(); ++i ) {
         testBuffer1.putFloat( i, (float)i + 0.025f );
         values.push_back( (float)i + 0.025f );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getFloatCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( Float::floatToIntBits( testBuffer1.getFloat( i ) ) ==
@@ -545,13 +545,13 @@ void ByteArrayAdapterTest::testGetDouble() {
     ByteArrayAdapter testBuffer1( testData1Size );
 
     std::vector<double> values;
-    for( std::size_t i = 0; i < testBuffer1.getDoubleCapacity(); ++i ) {
+    for( int i = 0; i < testBuffer1.getDoubleCapacity(); ++i ) {
         testBuffer1.putDouble( i, (double)i + 0.025 );
         values.push_back( (double)i + 0.025 );
     }
 
-    std::size_t i = 0;
-    std::size_t j = 0;
+    int i = 0;
+    int j = 0;
 
     for( ; i < testBuffer1.getDoubleCapacity(); ++i, ++j ) {
         CPPUNIT_ASSERT( Double::doubleToLongBits( testBuffer1.getDouble( i ) ) ==

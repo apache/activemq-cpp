@@ -36,10 +36,10 @@ LoggingInputStream::LoggingInputStream( decaf::io::InputStream* inputStream, boo
 LoggingInputStream::~LoggingInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::read() throw ( IOException ) {
+int LoggingInputStream::doReadByte() {
     try {
 
-        unsigned char c = FilterInputStream::read();
+        unsigned char c = (unsigned char)FilterInputStream::doReadByte();
         log( &c, 1 );
         return c;
     }
@@ -48,12 +48,14 @@ int LoggingInputStream::read() throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::read( unsigned char* buffer,
-                              std::size_t offset,
-                              std::size_t bufferSize )
-    throw ( IOException, NullPointerException )
-{
+int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                            int offset, int length ) {
+
     try {
+
+        if( length == 0 ) {
+            return 0;
+        }
 
         if( buffer == NULL ) {
             throw NullPointerException(
@@ -61,27 +63,35 @@ int LoggingInputStream::read( unsigned char* buffer,
                 "LoggingInputStream::read - Passed Buffer is Null" );
         }
 
-        std::size_t numRead = FilterInputStream::read( buffer, offset, bufferSize );
+        if( length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        }
+
+        int numRead = FilterInputStream::doReadArrayBounded( buffer, size, offset, length );
 
         log( buffer, numRead );
 
         return (int)numRead;
     }
     AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
+    AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingInputStream::log( const unsigned char* buffer, size_t len ) {
+void LoggingInputStream::log( const unsigned char* buffer, int len ) {
 
     ostringstream ostream;
 
     ostream << "TCP Trace: Reading: " << endl << "[";
 
-    for( size_t ix=0; ix<len; ++ix ){
-        ostream << setw(2) << setfill('0') << std::hex << (int)buffer[ix];
+    for( int ix = 0; ix < len; ++ix ) {
+        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
 
-        if( ((ix+1) % 2) == 0 ){
+        if( ( ( ix + 1 ) % 2 ) == 0 ) {
             ostream << ' ';
         }
     }

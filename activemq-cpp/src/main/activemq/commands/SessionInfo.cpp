@@ -39,9 +39,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionInfo::SessionInfo() : BaseCommand() {
+SessionInfo::SessionInfo() 
+    : BaseCommand(), sessionId(NULL), ackMode((unsigned int)cms::Session::AUTO_ACKNOWLEDGE) {
 
-    this->ackMode = (unsigned int)cms::Session::AUTO_ACKNOWLEDGE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,16 +90,17 @@ std::string SessionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = SessionInfo" << std::endl;
-    stream << " Value of SessionInfo::ID_SESSIONINFO = 4" << std::endl;
-    stream << " Value of SessionId is Below:" << std::endl;
+    stream << "SessionInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "SessionId = ";
     if( this->getSessionId() != NULL ) {
-        stream << this->getSessionId()->toString() << std::endl;
+        stream << this->getSessionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = SessionInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -146,8 +147,15 @@ void SessionInfo::setSessionId( const decaf::lang::Pointer<SessionId>& sessionId
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processSessionInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> SessionInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getSessionId() );
+    return info;
+}
+

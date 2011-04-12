@@ -25,7 +25,7 @@ using namespace activemq;
 using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveMapBenchmark::PrimitiveMapBenchmark() {}
+PrimitiveMapBenchmark::PrimitiveMapBenchmark() : map(), testString(), byteBuffer() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMapBenchmark::~PrimitiveMapBenchmark() {}

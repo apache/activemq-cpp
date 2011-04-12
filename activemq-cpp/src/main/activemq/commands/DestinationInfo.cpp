@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DestinationInfo::DestinationInfo() : BaseCommand() {
+DestinationInfo::DestinationInfo() 
+    : BaseCommand(), connectionId(NULL), destination(NULL), operationType(0), timeout(0), brokerPath() {
 
-    this->operationType = 0;
-    this->timeout = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,32 +93,43 @@ std::string DestinationInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = DestinationInfo" << std::endl;
-    stream << " Value of DestinationInfo::ID_DESTINATIONINFO = 8" << std::endl;
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << "DestinationInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of OperationType = " << (int)this->getOperationType() << std::endl;
-    stream << " Value of Timeout = " << this->getTimeout() << std::endl;
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "OperationType = " << (int)this->getOperationType();
+    stream << ", ";
+    stream << "Timeout = " << this->getTimeout();
+    stream << ", ";
+    stream << "BrokerPath = ";
+    if( this->getBrokerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+                stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = DestinationInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -238,8 +248,7 @@ void DestinationInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<Bro
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processDestinationInfo( this );
 }

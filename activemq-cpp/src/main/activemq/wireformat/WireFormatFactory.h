@@ -44,11 +44,14 @@ namespace wireformat{
          * Creates a new WireFormat Object passing it a set of
          * properties from which it can obtain any optional settings
          *
-         * @param properties - the Properties for this WireFormat
+         * @param properties
+         *      The Properties for this WireFormat.
+         *
          * @return Pointer to a new instance of a WireFormat object.
+         *
+         * @throws IllegalStateException if the factory has not been initialized.
          */
-        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties )
-            throw ( decaf::lang::exceptions::IllegalStateException ) = 0;
+        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties ) = 0;
 
     };
 

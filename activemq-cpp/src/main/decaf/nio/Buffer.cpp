@@ -25,29 +25,25 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer::Buffer( std::size_t capacity ) {
-    this->_capacity = capacity;
-    this->_limit = capacity;
-    this->_position = 0;
-    this->_mark = 0;
-    this->_markSet = false;
+Buffer::Buffer( int capacity ) : _position(0),
+                                 _capacity(capacity),
+                                 _limit(capacity),
+                                 _mark(0),
+                                 _markSet(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer::Buffer( const Buffer& other ) {
-
-    this->_capacity = other._capacity;
-    this->_limit = other._limit;
-    this->_position = other._position;
-    this->_mark = other._mark;
-    this->_markSet = other._markSet;
+Buffer::Buffer( const Buffer& other ) : _position(other._position),
+                                        _capacity(other._capacity),
+                                        _limit(other._limit),
+                                        _mark(other._mark),
+                                        _markSet(other._markSet) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::position( std::size_t newPosition )
-    throw( lang::exceptions::IllegalArgumentException ) {
+Buffer& Buffer::position( int newPosition ) {
 
-    if( newPosition > this->_limit ) {
+    if( newPosition < 0 || newPosition > this->_limit ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Buffer::position - New Position is greater than set limit" );
@@ -63,9 +59,9 @@ Buffer& Buffer::position( std::size_t newPosition )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::limit( std::size_t newLimit ) throw( IllegalArgumentException ) {
+Buffer& Buffer::limit( int newLimit ) {
 
-    if( newLimit > this->capacity() ) {
+    if( newLimit < 0 || newLimit > this->capacity() ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Buffer::limit - new limit is larger than the capacity." );
@@ -94,7 +90,7 @@ Buffer& Buffer::mark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Buffer& Buffer::reset() throw ( InvalidMarkException ) {
+Buffer& Buffer::reset() {
 
     if( !this->_markSet ) {
         throw InvalidMarkException(

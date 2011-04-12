@@ -17,6 +17,7 @@
 
 #include "SimpleTest.h"
 
+#include <activemq/library/ActiveMQCPP.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -135,6 +136,53 @@ void SimpleTest::testProducerWithNullDestination() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testProducerSendWithNullDestination() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+
+    CMSListener listener( session );
+
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an InvalidDestinationException",
+        producer->send( NULL, txtMessage.get() ),
+        cms::InvalidDestinationException );
+
+    producer = cmsProvider->getNoDestProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an UnsupportedOperationException",
+        producer->send( NULL, txtMessage.get() ),
+        cms::UnsupportedOperationException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testProducerSendToNonDefaultDestination() {
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+
+    CMSListener listener( session );
+
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+    auto_ptr<cms::Destination> destination( session->createTemporaryTopic() );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an UnsupportedOperationException",
+        producer->send( destination.get(), txtMessage.get() ),
+        cms::UnsupportedOperationException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -390,4 +438,22 @@ void SimpleTest::testBytesMessageSendRecv() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testLibraryInitShutdownInit() {
+
+    {
+        this->tearDown();
+
+        // Shutdown the ActiveMQ library
+        CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::shutdownLibrary() );
+    }
+
+    {
+        // Initialize the ActiveMQ library
+        CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::initializeLibrary() );
+
+        cmsProvider.reset( new util::CMSProvider( getBrokerURL() ) );
+    }
 }

@@ -16,14 +16,10 @@
  */
 
 #include "BufferedInputStream.h"
-#include <algorithm>
 
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
+#include <decaf/lang/System.h>
+
+#include <algorithm>
 
 using namespace std;
 using namespace decaf;
@@ -32,252 +28,344 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedInputStream::BufferedInputStream( InputStream* stream, bool own )
-: FilterInputStream( stream, own ) {
-    // Default to a 1k buffer.
-    init( 1024 );
+BufferedInputStream::BufferedInputStream( InputStream* stream, bool own ) :
+    FilterInputStream( stream, own ),
+    pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(8192),
+    buff( new unsigned char[bufferSize] ), proxyBuffer( buff ) {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedInputStream::BufferedInputStream( InputStream* stream,
-                                          std::size_t bufferSize,
-                                          bool own )
-    throw ( lang::exceptions::IllegalArgumentException )
+BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, bool own ) :
+        FilterInputStream( stream, own ),
+        pos(0), count(0), markLimit(-1), markPos(-1), bufferSize(bufferSize), buff(NULL), proxyBuffer(NULL) {
 
-: FilterInputStream( stream, own ) {
-
-    try {
-        this->init( bufferSize );
+    if( bufferSize < 0 ) {
+        throw new IllegalArgumentException(
+            __FILE__, __LINE__, "Size must be greater than zero");
     }
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCHALL_THROW( IllegalArgumentException )
+
+    this->buff = new unsigned char[bufferSize];
+    this->proxyBuffer = this->buff;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedInputStream::~BufferedInputStream() {
     try{
         this->close();
-
-        // Destroy the buffer.
-        if( buffer != NULL ){
-            delete [] buffer;
-            buffer = NULL;
-        }
+        delete [] this->buff;
     }
     DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStream::init( std::size_t bufferSize ){
-
-    if( bufferSize <= 0 ) {
-        throw new IllegalArgumentException(
-            __FILE__, __LINE__,
-            "BufferedInputStream::init - Size must be greater than zero");
-    }
-
-    this->bufferSize = bufferSize;
-
-    // Create the buffer and initialize the head and tail positions.
-    this->buffer = new unsigned char[bufferSize];
-    this->head = 0;
-    this->tail = 0;
-    this->markLimit = 0;
-    this->markpos = -1;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStream::close() throw( IOException ) {
+void BufferedInputStream::close() {
 
     // let parent close the inputStream
     FilterInputStream::close();
+
+    // Clear the proxy to the buffer, but don't actually delete the buffer yet since
+    // other methods holding onto the buffer while blocked.
+    this->proxyBuffer = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::read() throw ( IOException ){
+int BufferedInputStream::available() const {
+
+    if( this->proxyBuffer == NULL || this->isClosed() ) {
+        throw IOException(
+            __FILE__, __LINE__,
+            "BufferedInputStream::available - Buffer was closed");
+    }
+
+    return ( this->count - this->pos ) + inputStream->available();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BufferedInputStream::mark( int readLimit ) {
+
+    if( this->proxyBuffer != NULL ) {
+        this->markLimit = readLimit;
+        this->markPos = this->pos;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BufferedInputStream::reset() {
+
+    if( this->proxyBuffer == NULL ) {
+        throw IOException(
+            __FILE__, __LINE__,
+            "BufferedInputStream::reset - This stream has been closed." );
+    }
+
+    if( this->markPos == -1 ) {
+        throw IOException(
+            __FILE__, __LINE__,
+            "BufferedInputStream::reset - The mark position was invalidated." );
+    }
+
+    this->pos = this->markPos;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int BufferedInputStream::doReadByte() {
 
     try{
 
-        if( isClosed() ){
+        // Use a local reference in case of unsynchronized close.
+        InputStream* inputStream = this->inputStream;
+        unsigned char* buffer = this->proxyBuffer;
+
+        if( isClosed() || buffer == NULL ){
             throw IOException(
                 __FILE__, __LINE__,
-                "BufferedInputStream::bufferData - Stream is clsoed" );
+                "BufferedInputStream::bufferData - Stream is closed" );
         }
 
-        // If there's no data left, reset to pointers to the beginning of the
-        // buffer.
-        normalizeBuffer();
-
-        // If we don't have any data buffered yet - read as much as
-        // we can.
-        if( isEmpty() ){
-
-            // If we hit EOF without getting any Data, then throw IOException
-            if( bufferData() == -1 ) {
-                return -1;
-            }
+        // Are there buffered bytes available?  Or can we read more?
+        if( this->pos >= this->count && bufferData( inputStream, buffer ) == -1 ) {
+            return -1;
         }
 
-        // Get the next character.
-        char returnValue = buffer[head++];
+        // Stream might have closed while we were buffering.
+        if( isClosed() ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "BufferedInputStream::bufferData - Stream is closed" );
+        }
 
-        return returnValue;
+        if( this->pos != this->count ) {
+            return buffer[this->pos++];;
+        }
+
+        return -1;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::read( unsigned char* targetBuffer,
-                               std::size_t offset,
-                               std::size_t targetBufferSize )
-    throw ( IOException, NullPointerException ){
+int BufferedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
 
     try{
 
-        if( isClosed() ){
+        // Use a local reference in case of unsynchronized close.
+        unsigned char* lbuffer = this->proxyBuffer;
+
+        if( lbuffer == NULL ){
             throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::bufferData - Stream is clsoed" );
+                __FILE__, __LINE__, "Stream is closed" );
+        }
+
+        if( buffer == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Buffer passed was NULL." );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
         }
 
         // For zero, do nothing
-        if( targetBufferSize == 0 ) {
+        if( length == 0 ) {
             return 0;
         }
 
-        if( targetBuffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::read - Passed NULL for target Buffer");
+        // Use a local reference in case of unsynchronized close.
+        InputStream* inputStream = this->inputStream;
+
+        if( inputStream == NULL ){
+            throw IOException(
+                __FILE__, __LINE__, "Stream is closed" );
         }
 
-        // If there's no data left, reset to pointers to the beginning of the
-        // buffer.
-        normalizeBuffer();
+        int required = 0;
 
-        // If we still haven't filled the output buffer AND there is data
-        // on the input stream to be read, read a buffer's worth from the stream.
-        std::size_t totalRead = 0;
-        while( totalRead < targetBufferSize ){
+        // There are bytes available in the buffer so use them up first and
+        // then we check to see if any are available on the stream, if not
+        // then just return what we had.
+        if( this->pos < this->count  ) {
 
-            // Get the remaining bytes to copy.
-            std::size_t bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
+            int available = this->count - this->pos;
+            int copylength = available >= length ? length : available;
 
-            // Copy the data to the output buffer.
-            memcpy( targetBuffer+totalRead+offset, this->buffer+head, bytesToCopy );
+            System::arraycopy( lbuffer, this->pos, buffer, offset, copylength );
+            this->pos += copylength;
 
-            // Increment the total bytes read.
-            totalRead += bytesToCopy;
-
-            // Increment the head position.
-            head += bytesToCopy;
-
-            // If the buffer is now empty, reset the positions to the
-            // head of the buffer.
-            normalizeBuffer();
-
-            // If we still haven't satisified the request,
-            // read more data.
-            if( totalRead < targetBufferSize ){
-
-                // Buffer as much data as we can, return EOF if we hit it.
-                if( bufferData() == -1 ) {
-                    return -1;
-                }
+            if( copylength == length || inputStream->available() == 0 ) {
+                return (int)copylength;
             }
+
+            offset += copylength;
+            required = length - copylength;
+        } else {
+            required = length;
         }
 
-        // Return the total number of bytes read.
-        return (int)totalRead;
+        while( true ) {
+
+            int read = 0;
+
+            // If we're not marked and the required size is greater than the
+            // buffer, simply read the bytes directly bypassing the buffer.
+            if( this->markPos == -1 && required >= this->bufferSize ) {
+
+                read = inputStream->read( buffer, size, offset, required );
+                if( read == -1 ) {
+                    return required == length ? -1 : (int)( length - required );
+                }
+
+            } else {
+
+                if( bufferData( inputStream, lbuffer ) == -1 ) {
+                    return required == length ? -1 : (int)( length - required );
+                }
+
+                // Stream might have closed while we were buffering.
+                if( isClosed() || this->proxyBuffer == NULL ){
+                    throw IOException(
+                        __FILE__, __LINE__,
+                        "BufferedInputStream::bufferData - Stream is closed" );
+                }
+
+                int available = this->count - this->pos;
+                read = available >= required ? required : available;
+                System::arraycopy( lbuffer, this->pos, buffer, offset, read );
+                this->pos += read;
+            }
+
+            required -= read;
+
+            if( required == 0 ) {
+                return length;
+            }
+
+            if( inputStream->available() == 0 ) {
+                return length - required;
+            }
+
+            offset += read;
+        }
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BufferedInputStream::skip( std::size_t num )
-    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
+long long BufferedInputStream::skip( long long amount ) {
 
     try{
 
-        if( isClosed() ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::skip - Stream is clsoed" );
+        if( amount == 0 ) {
+            return 0;
         }
 
-        // If there's no data left, reset to pointers to the beginning of the
-        // buffer.
-        normalizeBuffer();
+        // Use a local reference in case of unsynchronized close.
+        InputStream* inputStream = this->inputStream;
+        unsigned char* lbuffer = this->proxyBuffer;
 
-        // loop until we've skipped the desired number of bytes
-        std::size_t totalSkipped = 0;
-        while( totalSkipped < num ){
+        if( isClosed() || lbuffer == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "BufferedInputStream::skip - Stream is closed" );
+        }
 
-            // Get the remaining bytes to copy.
-            std::size_t bytesToSkip = min( tail-head, num-totalSkipped );
+        if( ( this->count - this->pos ) >= amount ) {
+            this->pos += (int)amount;
+            return amount;
+        }
 
-            // Increment the head position.
-            head += bytesToSkip;
-            totalSkipped += bytesToSkip;
+        long long read = this->count - this->pos;
 
-            // If the buffer is now empty, reset the positions to the
-            // head of the buffer.
-            normalizeBuffer();
+        this->pos = this->count;
 
-            // If we still haven't satisified the request,
-            // read more data.
-            if( totalSkipped < num ){
+        if( this->markPos != -1 ) {
 
-                // Buffer as much data as we can.
-                bufferData();
+            if( amount <= this->markLimit ) {
+
+                if( bufferData( inputStream, lbuffer ) == -1 ) {
+                    return read;
+                }
+
+                if( ( this->count - this->pos ) >= ( amount - read ) ) {
+                    this->pos += (int)( amount - read );
+                    return amount;
+                }
+
+                // Couldn't get all the bytes, skip what we read
+                read += this->count - this->pos;
+                this->pos = this->count;
+
+                return read;
             }
         }
 
-        // Return the total number of bytes read.
-        return totalSkipped;
+        return read + inputStream->skip( amount - read );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::bufferData() throw ( IOException ){
+int BufferedInputStream::bufferData( InputStream* inputStream, unsigned char*& buffer ) {
 
     try{
-        if( getUnusedBytes() == 0 ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::bufferData - buffer full" );
+
+        if( this->markPos == -1 || pos - markPos >= markLimit ) {
+            // Mark position not set or exceeded readlimit
+            int result = inputStream->read( buffer, this->bufferSize );
+            if( result > 0 ) {
+                this->markLimit = 0;
+                this->markPos = -1;
+                this->pos = this->count = 0;
+                this->count = result == -1 ? 0 : result;
+            }
+
+            return result;
         }
 
-        // Get the number of bytes currently available on the input stream
-        // that could be read without blocking.
-        std::size_t available = inputStream->available();
+        if( this->markPos == 0 && this->markLimit > this->bufferSize ) {
 
-        // Calculate the number of bytes that we can read.  Always >= 1 byte!
-        std::size_t bytesToRead = max( (std::size_t)1, min( available, getUnusedBytes() ) );
+            // Increase buffer size to accommodate the readlimit.
+            int newLength = this->bufferSize * 2;
+            if( newLength > markLimit ) {
+                newLength = markLimit;
+            }
 
-        // Read the bytes from the input stream.
-        int bytesRead = inputStream->read( getTail(), 0, bytesToRead );
-        if( bytesRead == 0 ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedInputStream::read() - failed reading bytes from stream");
+            unsigned char* temp = new unsigned char[newLength];
+            System::arraycopy( temp, 0, buffer, 0, count );
+            std::swap( temp, buffer );
+            delete [] temp;
+            this->bufferSize = newLength;
+
+            if( this->proxyBuffer != NULL ) {
+                this->buff = buffer;
+                this->proxyBuffer = this->buff;
+            }
+
+        } else if( this->markPos > 0 ) {
+            System::arraycopy( buffer, markPos, buffer, 0, this->bufferSize - markPos );
         }
 
-        // Dont add -1 to tail if we hit EOF
-        if( bytesRead == -1 ) {
-            return bytesRead;
-        }
+        // Set the new position and mark position
+        this->pos -= this->markPos;
+        this->count = this->markPos = 0;
 
-        // Increment the tail to the new end position.
-        tail += bytesRead;
+        int bytesread = inputStream->read( buffer, this->bufferSize, this->pos, this->bufferSize - this->pos );
 
-        return bytesRead;
+        this->count = bytesread <= 0 ? this->pos : this->pos + bytesread;
+
+        return bytesread;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )

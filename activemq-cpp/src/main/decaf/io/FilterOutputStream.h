@@ -20,8 +20,8 @@
 
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/IOException.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf{
 namespace io{
@@ -52,14 +52,16 @@ namespace io{
         // The output Stream to wrap
         OutputStream* outputStream;
 
-        // Synchronization object.
-        util::concurrent::Mutex mutex;
-
         // Indicates if we own the wrapped stream
         bool own;
 
         // Indicates that this stream was closed
         volatile bool closed;
+
+    private:
+
+        FilterOutputStream( const FilterOutputStream& );
+        FilterOutputStream& operator= ( const FilterOutputStream& );
 
     public:
 
@@ -69,205 +71,48 @@ namespace io{
          * @param own If true, this object will control the lifetime of the
          * output stream that it encapsulates.
          */
-        FilterOutputStream( OutputStream* outputStream, bool own = false ){
-            this->outputStream = outputStream;
-            this->own = own;
-            this->closed = false;
-        }
+        FilterOutputStream( OutputStream* outputStream, bool own = false );
 
-        virtual ~FilterOutputStream() {
-            try {
-                this->close();
-
-                if( own ) {
-                    delete outputStream;
-                }
-                outputStream = NULL;
-            }
-            DECAF_CATCH_NOTHROW( IOException )
-            DECAF_CATCHALL_NOTHROW( )
-        }
+        virtual ~FilterOutputStream();
 
         /**
-         * Writes a single byte to the output stream.  The write method of
-         * FilterOutputStream calls the write method of its underlying output
-         * stream, that is, it performs out.write(b).
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
+         * {@inheritDoc}
+         *
+         * The flush method of FilterOutputStream calls the flush method of its
+         * underlying output stream.
          */
-        virtual void write( unsigned char c ) throw ( IOException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterOutputStream::write - Stream is closed" );
-                }
-
-                outputStream->write( c );
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual void flush();
 
         /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The bytes to write.
-         * @throws IOException thrown if an error occurs.
+         * {@inheritDoc}
+         *
+         * The close method of FilterOutputStream calls its flush method, and then
+         * calls the close method of its underlying output stream.
          */
-        virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException ) {
-
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterOutputStream::write - Stream is closed" );
-                }
-
-                for( std::size_t ix = 0; ix < buffer.size(); ++ix ) {
-                    outputStream->write( buffer[ix] );
-                }
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual void close();
 
         /**
-         * Writes an array of bytes to the output stream.  The write method of
-         * FilterOutputStream calls the write method of one argument on each
-         * byte to output.
-         * @param buffer The array of bytes to write.
-         * @param offset, the position to start writing in buffer.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException thrown if buffer is Null.
+         * {@inheritDoc}
+         *
+         * The toString method of FilterOutputStream calls the toString method of its
+         * underlying output stream.
          */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset DECAF_UNUSED,
-                            std::size_t len )
-            throw ( IOException,
-                    lang::exceptions::NullPointerException ) {
-            try {
+        virtual std::string toString() const;
 
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterOutputStream::write - Stream is closed" );
-                }
+    protected:
 
-                if( buffer == NULL ) {
-                    throw lang::exceptions::NullPointerException(
-                        __FILE__, __LINE__,
-                        "FilterOutputStream::write - Buffer passed is Null.");
-                }
+        virtual void doWriteByte( unsigned char value );
 
-                for( std::size_t ix = 0; ix < len; ++ix ) {
-                    outputStream->write( buffer[ix] );
-                }
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
+        virtual void doWriteArray( const unsigned char* buffer, int size );
 
-        /**
-         * Flushes any pending writes in this output stream.
-         * The flush method of FilterOutputStream calls the flush method
-         * of its underlying output stream
-         * @throws IOException
-         */
-        virtual void flush() throw ( IOException ) {
-            try {
-
-                if( isClosed() ) {
-                    throw IOException(
-                        __FILE__, __LINE__,
-                        "FilterOutputStream::flush - Stream is closed" );
-                }
-
-                outputStream->flush();
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
-
-        /**
-         * Close the Stream.  The close method of FilterOutputStream calls its
-         * flush method, and then calls the close method of its underlying output
-         * stream, it then destroys the output stream if it is the owner.
-         * @throws Exception
-         */
-        virtual void close() throw ( io::IOException ) {
-            try {
-                if( !closed && outputStream != NULL ) {
-                    outputStream->flush();
-                    outputStream->close();
-                }
-                this->closed = true;
-            }
-            DECAF_CATCH_RETHROW( IOException )
-            DECAF_CATCHALL_THROW( IOException )
-        }
-
-    public:  // Synchronizable
-
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.lock();
-        }
-
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-            return mutex.tryLock();
-        }
-
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait();
-        }
-
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
-        }
-
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
-        }
-
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
-            mutex.notifyAll();
-        }
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     protected:
 
         /**
          * @returns true if this stream has been closed.
          */
-        virtual bool isClosed() const {
-            return this->closed || this->outputStream == NULL;
-        }
+        virtual bool isClosed() const;
 
     };
 

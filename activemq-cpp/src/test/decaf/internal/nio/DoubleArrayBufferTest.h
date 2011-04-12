@@ -57,9 +57,9 @@ namespace nio{
         decaf::nio::DoubleBuffer* testBuffer1;
         double* testData1;
 
-        static const std::size_t testData1Size = 100;
-        static const std::size_t SMALL_TEST_LENGTH = 5;
-        static const std::size_t BUFFER_LENGTH = 250;
+        static const int testData1Size;
+        static const int SMALL_TEST_LENGTH;
+        static const int BUFFER_LENGTH;
 
     public:
 
@@ -70,7 +70,7 @@ namespace nio{
             testBuffer1 = decaf::nio::DoubleBuffer::allocate( testData1Size );
 
             testData1 = new double[testData1Size];
-            for( std::size_t i = 0; i < testData1Size; ++i ){
+            for( int i = 0; i < testData1Size; ++i ){
                 testData1[i] = (double)i;
             }
         }
@@ -105,36 +105,36 @@ namespace nio{
 
     protected:
 
-        void loadTestData1( double* array, std::size_t offset, std::size_t length ) {
-            for( std::size_t i = 0; i < length; i++ ) {
+        void loadTestData1( double* array, int offset, int length ) {
+            for( int i = 0; i < length; i++ ) {
                 array[offset + i] = (double)i;
             }
         }
 
-        void loadTestData2( double* array, std::size_t offset, std::size_t length ) {
-            for( std::size_t i = 0; i < length; i++ ) {
+        void loadTestData2( double* array, int offset, int length ) {
+            for( int i = 0; i < length; i++ ) {
                 array[offset + i] = (double)length - i;
             }
         }
 
         void loadTestData1( decaf::nio::DoubleBuffer* buf ) {
             buf->clear();
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 buf->put( i, (double)i );
             }
         }
 
         void loadTestData2( decaf::nio::DoubleBuffer* buf ) {
             buf->clear();
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 buf->put(i, (double) buf->capacity() - i);
             }
         }
 
         void assertContentEquals( decaf::nio::DoubleBuffer* buf, double* array,
-                                  std::size_t offset, std::size_t length) {
+                                  int offset, int length) {
 
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get(i) == array[offset + i] );
             }
         }
@@ -142,17 +142,17 @@ namespace nio{
         void assertContentEquals( decaf::nio::DoubleBuffer* buf,
                                   decaf::nio::DoubleBuffer* other ) {
             CPPUNIT_ASSERT( buf->capacity() == other->capacity() );
-            for( std::size_t i = 0; i < buf->capacity(); i++ ) {
+            for( int i = 0; i < buf->capacity(); i++ ) {
                 CPPUNIT_ASSERT(buf->get(i) == other->get(i) );
             }
         }
 
         void assertContentLikeTestData1(
-            decaf::nio::DoubleBuffer* buf, std::size_t startIndex,
-            double startValue, std::size_t length ) {
+            decaf::nio::DoubleBuffer* buf, int startIndex,
+            double startValue, int length ) {
 
             double value = startValue;
-            for( std::size_t i = 0; i < length; i++ ) {
+            for( int i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get( startIndex + i ) == value );
                 value = value + 1.0;
             }

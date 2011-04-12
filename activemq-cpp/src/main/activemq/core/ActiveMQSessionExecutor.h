@@ -46,10 +46,15 @@ namespace core{
         ActiveMQSession* session;
 
         /** The Channel that holds the waiting Messages for Dispatching. */
-        MessageDispatchChannel messageQueue;
+        Pointer<MessageDispatchChannel> messageQueue;
 
         /** The Dispatcher TaskRunner */
         Pointer<activemq::threads::TaskRunner> taskRunner;
+
+    private:
+
+        ActiveMQSessionExecutor( const ActiveMQSessionExecutor& );
+        ActiveMQSessionExecutor& operator= ( const ActiveMQSessionExecutor& );
 
     public:
 
@@ -81,14 +86,14 @@ namespace core{
          * Removes all messages in the Dispatch Channel so that non are delivered.
          */
         virtual void clearMessagesInProgress() {
-            this->messageQueue.clear();
+            this->messageQueue->clear();
         }
 
         /**
          * @return true if there are any pending messages in the dispatch channel.
          */
         virtual bool hasUncomsumedMessages() const {
-            return !messageQueue.isClosed() && messageQueue.isRunning() && !messageQueue.isEmpty();
+            return !messageQueue->isClosed() && messageQueue->isRunning() && !messageQueue->isEmpty();
         }
 
         /**
@@ -111,28 +116,28 @@ namespace core{
          * usable.
          */
         virtual void close() {
-            this->messageQueue.close();
+            this->messageQueue->close();
         }
 
         /**
          * @return true indicates if the executor is started
          */
         virtual bool isRunning() const {
-            return this->messageQueue.isRunning();
+            return this->messageQueue->isRunning();
         }
 
         /**
          * @return true if there are no messages in the Dispatch Channel.
          */
         virtual bool isEmpty() {
-            return messageQueue.isEmpty();
+            return messageQueue->isEmpty();
         }
 
         /**
          * Removes all queued messages and destroys them.
          */
         virtual void clear() {
-            this->messageQueue.clear();
+            this->messageQueue->clear();
         }
 
         /**
@@ -148,7 +153,7 @@ namespace core{
          *          Message Dispatch Channel when called.
          */
         std::vector< Pointer<MessageDispatch> > getUnconsumedMessages() {
-            return messageQueue.removeAll();
+            return messageQueue->removeAll();
         }
 
     private:

@@ -30,18 +30,18 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::BooleanStream() {
-
-    this->arrayLimit = 0;
-    this->arrayPos = 0;
-    this->bytePos = 0;
+BooleanStream::BooleanStream() : data(), arrayLimit(0), arrayPos(0), bytePos(0) {
 
     // Reserve 1K
     this->data.resize( 1000, 0 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-bool BooleanStream::readBoolean() throw ( IOException ) {
+BooleanStream::~BooleanStream() throw() {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+bool BooleanStream::readBoolean() {
 
     try {
 
@@ -60,7 +60,7 @@ bool BooleanStream::readBoolean() throw ( IOException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
+void BooleanStream::writeBoolean( bool value ) {
 
     try{
 
@@ -74,7 +74,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
         }
 
         if( value ) {
-            data[arrayPos] |= ( 0x01 << bytePos );
+            data[arrayPos] |= (unsigned char)( 0x01 << bytePos );
         }
 
         bytePos++;
@@ -91,7 +91,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
+void BooleanStream::marshal( DataOutputStream* dataOut ) {
 
     try {
 
@@ -106,7 +106,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
         }
 
         // Dump the payload
-        dataOut->write( &data[0], 0, arrayLimit );
+        dataOut->write( &data[0], (int)data.size(), 0, arrayLimit );
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -126,13 +126,12 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
             dataOut.push_back( ( unsigned char ) arrayLimit );
         } else {
             dataOut.push_back( ( unsigned char ) 0x80 );
-            dataOut.push_back( arrayLimit >> 8 );   // High Byte
-            dataOut.push_back( arrayLimit & 0xFF ); // Low Byte
+            dataOut.push_back( ( unsigned char )( arrayLimit >> 8 ) );   // High Byte
+            dataOut.push_back( ( unsigned char )( arrayLimit & 0xFF ) ); // Low Byte
         }
 
         // Insert all data from data into the passed buffer
-        std::back_insert_iterator< std::vector<unsigned char> > iter( dataOut );
-        std::copy( &data[0], &data[arrayLimit-1], iter );
+        dataOut.insert( dataOut.end(), &data[0], &data[arrayLimit-1] );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
@@ -140,7 +139,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
+void BooleanStream::unmarshal( DataInputStream* dataIn ) {
 
     try{
 
@@ -156,7 +155,7 @@ void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
         data.resize( arrayLimit );
 
         // Make sure we get all the data we are expecting
-        dataIn->readFully( &data[0], 0, arrayLimit );
+        dataIn->readFully( &data[0], (int)data.size(), 0, arrayLimit );
 
         clear();
     }

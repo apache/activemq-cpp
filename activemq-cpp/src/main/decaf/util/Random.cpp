@@ -19,20 +19,28 @@
 
 #include <decaf/lang/System.h>
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 unsigned long long Random::multiplier = 0x5deece66dLL;
 
 ////////////////////////////////////////////////////////////////////////////////
-Random::Random() {
+Random::Random() : haveNextNextGaussian(false), seed(0), nextNextGaussian(0) {
     setSeed( System::currentTimeMillis() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Random::Random( unsigned long long seed ) {
+Random::Random( unsigned long long seed ) : haveNextNextGaussian(false), seed(0), nextNextGaussian(0) {
     setSeed( seed );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Random::~Random() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,9 +50,34 @@ bool Random::nextBoolean() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Random::nextBytes( std::vector<unsigned char>& buf ) {
+
+    try{
+
+        if( buf.empty() ) {
+            return;
+        }
+
+        this->nextBytes( &buf[0], (int)buf.size() );
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Random::nextBytes( unsigned char* buf, int size ) {
+
+    if( buf == NULL ) {
+        throw NullPointerException( __FILE__, __LINE__, "Buffer passed cannot be NULL." );
+    }
+
+    if( size < 0 ) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Specified buffer size was negative." );
+    }
+
     int rand = 0;
-    std::size_t count = 0, loop = 0;
-    while( count < buf.size() ) {
+    int count = 0, loop = 0;
+    while( count < size ) {
         if( loop == 0 ) {
             rand = nextInt();
             loop = 3;
@@ -61,7 +94,7 @@ double Random::nextDouble() {
     long long divisor = 1LL;
     divisor <<= 31;
     divisor <<= 22;
-    return ((((long long) next(26) << 27) + next(27)) / (double) divisor);
+    return ( (double)( ( (long long) next(26) << 27) + next(27)) / (double) divisor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +132,7 @@ int Random::nextInt() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Random::nextInt( int n ) throw( exceptions::IllegalArgumentException ) {
+int Random::nextInt( int n ) {
 
     if( n > 0 ) {
 

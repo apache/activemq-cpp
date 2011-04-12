@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.1.x-SNAPSHOT</version>
+    <version>3.3.x-SNAPSHOT</version>
   </parent>
 
   <artifactId>maven-cpptools-plugin</artifactId>
@@ -35,17 +35,17 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>2.0</version>
+      <version>3.0-alpha-2</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.mojo.natives</groupId>
       <artifactId>maven-native-api</artifactId>
-      <version>1.0-alpha-2</version>
+      <version>1.0-alpha-5</version>
     </dependency>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

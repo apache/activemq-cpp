@@ -61,18 +61,44 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompWireFormat::StompWireFormat() {
+namespace activemq {
+namespace wireformat {
+namespace stomp {
+
+    class StompWireformatProperties {
+    public:
+
+        int connectResponseId;
+
+    public:
+
+        StompWireformatProperties() : connectResponseId(-1) {
+
+        }
+
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+StompWireFormat::StompWireFormat() : helper(), clientId(), receiving(), properties(NULL) {
+
+    this->properties = new StompWireformatProperties();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 StompWireFormat::~StompWireFormat() {
+
+    try{
+        delete this->properties;
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompWireFormat::marshal( const Pointer<Command>& command,
                                const activemq::transport::Transport* transport,
-                               decaf::io::DataOutputStream* out )
-    throw ( decaf::io::IOException ) {
+                               decaf::io::DataOutputStream* out ) {
 
     try{
 
@@ -130,8 +156,7 @@ void StompWireFormat::marshal( const Pointer<Command>& command,
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transport* transport,
-                                             decaf::io::DataInputStream* in )
-    throw ( decaf::io::IOException ) {
+                                             decaf::io::DataInputStream* in ) {
 
     if( transport == NULL ) {
         throw decaf::io::IOException(
@@ -157,6 +182,11 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
         const std::string commandId = frame->getCommand();
 
         class Finally {
+        private:
+
+            Finally( const Finally& );
+            Finally& operator= ( const Finally& );
+
         private:
 
             decaf::util::concurrent::atomic::AtomicBoolean* state;
@@ -194,8 +224,7 @@ Pointer<Command> StompWireFormat::unmarshal( const activemq::transport::Transpor
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<transport::Transport> StompWireFormat::createNegotiator(
-    const Pointer<transport::Transport>& transport AMQCPP_UNUSED )
-        throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+    const Pointer<transport::Transport>& transport AMQCPP_UNUSED ) {
 
     throw UnsupportedOperationException( __FILE__, __LINE__,
         "No Negotiator is required to use this WireFormat." );
@@ -259,12 +288,12 @@ Pointer<Command> StompWireFormat::unmarshalReceipt( const Pointer<StompFrame>& f
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame ) {
+Pointer<Command> StompWireFormat::unmarshalConnected( const Pointer<StompFrame>& frame AMQCPP_UNUSED ) {
 
     Pointer<Response> response( new Response() );
-    if( frame->hasProperty( StompCommandConstants::HEADER_RESPONSEID ) ) {
-        response->setCorrelationId( Integer::parseInt(
-            frame->getProperty( StompCommandConstants::HEADER_RESPONSEID ) ) );
+
+    if( this->properties->connectResponseId != -1 ) {
+        response->setCorrelationId(this->properties->connectResponseId);
     } else {
         throw IOException(
             __FILE__, __LINE__, "Error, Connected Command has no Response ID." );
@@ -377,8 +406,8 @@ Pointer<StompFrame> StompWireFormat::marshalConnectionInfo( const Pointer<Comman
     frame->setProperty( StompCommandConstants::HEADER_CLIENT_ID, info->getClientId() );
     frame->setProperty( StompCommandConstants::HEADER_LOGIN, info->getUserName() );
     frame->setProperty( StompCommandConstants::HEADER_PASSWORD, info->getPassword() );
-    frame->setProperty( StompCommandConstants::HEADER_REQUESTID,
-                        Integer::toString( info->getCommandId() ) );
+
+    this->properties->connectResponseId = info->getCommandId();
 
     // Store this for later.
     this->clientId = info->getClientId();

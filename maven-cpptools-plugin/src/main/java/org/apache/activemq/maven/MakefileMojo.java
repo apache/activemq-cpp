@@ -107,6 +107,7 @@ public class MakefileMojo extends AbstractToolingMojo {
         this.template = template;
     }
 
+    @SuppressWarnings("unchecked")
     private String replaceMarker( String marker, String line, NativeSources sources ) {
 
         List<File> files = sources.getFiles();

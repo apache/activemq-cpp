@@ -17,10 +17,33 @@
 
 #include "ResourceLifecycleManager.h"
 
+#include <cms/CMSException.h>
+
+using namespace cms;
 using namespace activemq::cmsutil;
 
 ////////////////////////////////////////////////////////////////////////////////
-ResourceLifecycleManager::ResourceLifecycleManager() {
+#define CMSTEMPLATE_CATCHALL() \
+    catch( cms::CMSException& ex ){ \
+        throw ex; \
+    } catch( std::exception& ex ) { \
+        throw CMSException( ex.what(), NULL ); \
+    } catch( ... ){ \
+        throw CMSException( "caught unknown exception", NULL ); \
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+#define CMSTEMPLATE_CATCHALL_NOTHROW( ) \
+    catch( ... ){ \
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+ResourceLifecycleManager::ResourceLifecycleManager() : connections(),
+                                                       sessions(),
+                                                       destinations(),
+                                                       producers(),
+                                                       consumers() {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,8 +53,8 @@ ResourceLifecycleManager::~ResourceLifecycleManager() {
 
         // Destroy all the resources
         destroy();
-
-    } catch( cms::CMSException& e ) { /* Absorb*/ }
+    }
+    CMSTEMPLATE_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,50 +68,136 @@ void ResourceLifecycleManager::releaseAll() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
+void ResourceLifecycleManager::destroy() {
 
-    // Close all the connections.
-    for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        try {
-            connections[ix]->close();
-        } catch(...){}
+    try{
+        // Close all the connections.
+        std::auto_ptr< decaf::util::Iterator< cms::Connection* > > connIter(
+            connections.iterator() );
+
+        while( connIter->hasNext() ) {
+            cms::Connection* conn = connIter->next();
+            try {
+                conn->close();
+            } catch(...){}
+        }
+
+        // Destroy the producers.
+        std::auto_ptr< decaf::util::Iterator< cms::MessageProducer* > > prodIter(
+            producers.iterator() );
+
+        while( prodIter->hasNext() ) {
+            cms::MessageProducer* producer = prodIter->next();
+            try {
+                delete producer;
+            } catch( ... ) {}
+        }
+
+        // Destroy the consumers.
+        std::auto_ptr< decaf::util::Iterator< cms::MessageConsumer* > > consIter(
+            consumers.iterator() );
+
+        while( consIter->hasNext() ) {
+            cms::MessageConsumer* consumer = consIter->next();
+            try {
+                delete consumer;
+            } catch( ... ) {}
+        }
+
+        // Destroy the destinations.
+        std::auto_ptr< decaf::util::Iterator< cms::Destination* > > destIter(
+            destinations.iterator() );
+
+        while( destIter->hasNext() ) {
+            cms::Destination* dest = destIter->next();
+            try {
+                delete dest;
+            } catch( ... ) {}
+        }
+
+        // Destroy the sessions.
+        std::auto_ptr< decaf::util::Iterator< cms::Session* > > sessIter(
+            sessions.iterator() );
+
+        while( sessIter->hasNext() ) {
+            cms::Session* session = sessIter->next();
+            try {
+                delete session;
+            } catch( ... ) {}
+        }
+
+        // Destroy the connections,
+        connIter.reset( connections.iterator() );
+
+        while( connIter->hasNext() ) {
+            cms::Connection* conn = connIter->next();
+            try {
+                delete conn;
+            } catch( ... ) {}
+        }
+
+        // Empty all the lists.
+        releaseAll();
     }
+    CMSTEMPLATE_CATCHALL()
+}
 
-    // Destroy the producers.
-    for (std::size_t ix=0; ix<producers.size(); ++ix) {
-        try {
-            delete producers[ix];
-        } catch( ... ) {}
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addConnection( cms::Connection* connection ) {
+
+    try{
+        // Add the connection to the list.
+        synchronized( &connections ) {
+            connections.add( connection );
+        }
     }
+    CMSTEMPLATE_CATCHALL()
+}
 
-    // Destroy the consumers.
-    for (std::size_t ix=0; ix<consumers.size(); ++ix) {
-        try {
-            delete consumers[ix];
-        } catch( ... ) {}
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addSession( cms::Session* session ) {
+
+    try{
+        // Add the session to the list.
+        synchronized( &sessions ) {
+            sessions.add( session );
+        }
     }
+    CMSTEMPLATE_CATCHALL()
+}
 
-    // Destroy the destinations.
-    for (std::size_t ix=0; ix<destinations.size(); ++ix) {
-        try {
-            delete destinations[ix];
-        } catch( ... ) {}
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addDestination( cms::Destination* dest ) {
+
+    try{
+        // Add the destination to the list.
+        synchronized( &destinations ) {
+            destinations.add( dest );
+        }
     }
+    CMSTEMPLATE_CATCHALL()
+}
 
-    // Destroy the sessions.
-    for (std::size_t ix=0; ix<sessions.size(); ++ix) {
-        try {
-            delete sessions[ix];
-        } catch( ... ) {}
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer ) {
+
+    try{
+        // Add the producer to the list.
+        synchronized( &producers ) {
+            producers.add( producer );
+        }
     }
+    CMSTEMPLATE_CATCHALL()
+}
 
-    // Destroy the connections,
-    for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        try {
-            delete connections[ix];
-        } catch( ... ) {}
+////////////////////////////////////////////////////////////////////////////////
+void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer ) {
+
+    try{
+        // Add the consumer to the list.
+        synchronized( &consumers ) {
+            consumers.add( consumer );
+        }
     }
-
-    // Empty all the vectors.
-    releaseAll();
+    CMSTEMPLATE_CATCHALL()
 }

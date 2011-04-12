@@ -22,8 +22,8 @@
 #include <decaf/util/Map.h>
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/util/NoSuchElementException.h>
 
 namespace decaf {
 namespace util {
@@ -64,8 +64,7 @@ namespace concurrent {
          * @throw UnsupportedOperationException
          *        if the put operation is not supported by this map
          */
-        virtual bool putIfAbsent( const K& key, const V& value )
-            throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual bool putIfAbsent( const K& key, const V& value ) = 0;
 
         /**
          * Remove entry for key only if currently mapped to given value.
@@ -128,8 +127,7 @@ namespace concurrent {
          *
          * @throws NoSuchElementException if there was no previous mapping.
          */
-        virtual V replace( const K& key, const V& value )
-            throw( decaf::lang::exceptions::NoSuchElementException ) = 0;
+        virtual V replace( const K& key, const V& value ) = 0;
 
     };
 

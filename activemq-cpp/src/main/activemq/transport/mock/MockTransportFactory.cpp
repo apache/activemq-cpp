@@ -42,8 +42,7 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location ) {
 
     try{
 
@@ -72,8 +71,7 @@ Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> MockTransportFactory::createComposite( const decaf::net::URI& location )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Transport> MockTransportFactory::createComposite( const decaf::net::URI& location ) {
 
     try{
 
@@ -94,8 +92,7 @@ Pointer<Transport> MockTransportFactory::createComposite( const decaf::net::URI&
 Pointer<Transport> MockTransportFactory::doCreateComposite(
     const decaf::net::URI& location AMQCPP_UNUSED,
     const Pointer<wireformat::WireFormat>& wireFormat,
-    const decaf::util::Properties& properties )
-        throw ( activemq::exceptions::ActiveMQException ) {
+    const decaf::util::Properties& properties ) {
 
     try {
 
@@ -131,6 +128,7 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
             Boolean::parseBoolean( properties.getProperty( "failOnKeepAliveSends", "false" ) ) );
         transport->setNumSentKeepAlivesBeforeFail(
             Integer::parseInt( properties.getProperty( "numSentKeepAlivesBeforeFail", "0" ) ) );
+        transport->setName( properties.getProperty( "name", "" ) );
 
         return transport;
     }

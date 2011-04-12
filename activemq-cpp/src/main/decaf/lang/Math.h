@@ -369,7 +369,7 @@ namespace lang{
          * @param b - another argument.
          * @return the smaller of <code>a</code> and <code>b</code>.
          */
-        static int min( unsigned int a, unsigned int b ) {
+        static unsigned int min( unsigned int a, unsigned int b ) {
             return ( a <= b ? a : b );
         }
 

@@ -53,10 +53,10 @@ namespace commands{
 
         const static unsigned char ID_PARTIALCOMMAND = 60;
 
-    protected:
+    private:
 
-        PartialCommand( const PartialCommand& ) : BaseDataStructure() {};
-        PartialCommand& operator= ( const PartialCommand& ) { return *this; };
+        PartialCommand( const PartialCommand& );
+        PartialCommand& operator= ( const PartialCommand& );
 
     public:
 
@@ -64,40 +64,14 @@ namespace commands{
 
         virtual ~PartialCommand();
 
-        /**
-         * Get the unique identifier that this object and its own
-         * Marshaler share.
-         * @returns new DataStructure type copy.
-         */
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual PartialCommand* cloneDataStructure() const;
 
-        /**
-         * Copy the contents of the passed object into this object's
-         * members, overwriting any existing data.
-         * @param src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src );
 
-        /**
-         * Returns a string containing the information for this DataStructure
-         * such as its type and value of its elements.
-         * @return formatted string useful for debugging.
-         */
         virtual std::string toString() const;
 
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
         virtual bool equals( const DataStructure* value ) const;
 
         virtual int getCommandId() const;

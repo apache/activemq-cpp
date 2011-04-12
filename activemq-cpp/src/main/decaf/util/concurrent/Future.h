@@ -18,6 +18,8 @@
 #ifndef _DECAF_UTIL_CONCURRENT_FUTURE_H_
 #define _DECAF_UTIL_CONCURRENT_FUTURE_H_
 
+#include <decaf/util/concurrent/TimeUnit.h>
+
 namespace decaf {
 namespace util {
 namespace concurrent {
@@ -59,13 +61,13 @@ namespace concurrent {
          * @returns false if the task could not be canceled, typically because it has
          * already completed normally; true otherwise
          */
-        bool cancel( bool mayInterruptIfRunning ) = 0;
+        virtual bool cancel( bool mayInterruptIfRunning ) = 0;
 
         /**
          * Returns true if this task was canceled before it completed normally.
          * @returns true if this task was canceled before it completed
          */
-        bool isCancelled() const = 0;
+        virtual bool isCancelled() const = 0;
 
         /**
          * Returns true if this task completed. Completion may be due to normal termination,
@@ -73,7 +75,7 @@ namespace concurrent {
          * true.
          * @returns true if this task completed
          */
-        bool isDone() const = 0;
+        virtual bool isDone() const = 0;
 
         /**
          * Waits if necessary for the computation to complete, and then retrieves its result.
@@ -82,7 +84,7 @@ namespace concurrent {
          * @throws ExecutionException - if the computation threw an exception
          * @throws InterruptedException - if the current thread was interrupted while waiting
          */
-        V get() throw( CancellationException, InterruptedException, ExecutionException ) = 0;
+        virtual V get() = 0;
 
         /**
          * Waits if necessary for at most the given time for the computation to complete, and
@@ -95,8 +97,7 @@ namespace concurrent {
          * @throws InterruptedException - if the current thread was interrupted while waiting
          * @throws TimeoutException - if the wait timed out
          */
-        V get( long long timeout, TimeUnit unit)
-            throw( InterruptedException, ExecutionException, TimeoutException ) = 0;
+        virtual V get( long long timeout, const TimeUnit& unit ) = 0;
 
     };
 

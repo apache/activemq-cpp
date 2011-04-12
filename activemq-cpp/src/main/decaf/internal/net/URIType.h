@@ -48,20 +48,36 @@ namespace net {
 
     public:
 
-        URIType( const std::string& source ) : source( source ) {
-            this->port = -1;
-            this->opaque = false;
-            this->absolute = false;
-            this->serverAuthority = false;
-            this->valid = false;
+        URIType( const std::string& source ) : source( source ),
+                                               scheme(),
+                                               schemeSpecificPart(),
+                                               authority(),
+                                               userinfo(),
+                                               host(),
+                                               port( -1 ),
+                                               path(),
+                                               query(),
+                                               fragment(),
+                                               opaque( false ),
+                                               absolute( false ),
+                                               serverAuthority( false ),
+                                               valid( false ) {
         }
 
-        URIType() {
-            this->port = -1;
-            this->opaque = false;
-            this->absolute = false;
-            this->serverAuthority = false;
-            this->valid = false;
+        URIType() : source(),
+                    scheme(),
+                    schemeSpecificPart(),
+                    authority(),
+                    userinfo(),
+                    host(),
+                    port( -1 ),
+                    path(),
+                    query(),
+                    fragment(),
+                    opaque( false ),
+                    absolute( false ),
+                    serverAuthority( false ),
+                    valid( false ) {
         }
 
         virtual ~URIType() {}

@@ -29,7 +29,7 @@ namespace security{
      * that provides type safety for all the security-related exception classes
      * that extend from it.
      */
-    class DECAF_API GeneralSecurityException : public Exception {
+    class DECAF_API GeneralSecurityException : public decaf::lang::Exception {
     public:
 
         /**
@@ -42,10 +42,10 @@ namespace security{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        GeneralSecurityException(const Exception& ex) throw()
-        : Exception()
+        GeneralSecurityException( const decaf::lang::Exception& ex ) throw()
+        : decaf::lang::Exception()
         {
-            *(Exception*)this = ex;
+            *(decaf::lang::Exception*)this = ex;
         }
 
         /**
@@ -54,9 +54,9 @@ namespace security{
          *      An exception that should become this type of Exception
          */
         GeneralSecurityException(const GeneralSecurityException& ex) throw()
-        : Exception()
+        : decaf::lang::Exception()
         {
-            *(Exception*)this = ex;
+            *(decaf::lang::Exception*)this = ex;
         }
 
         /**
@@ -71,7 +71,7 @@ namespace security{
          */
         GeneralSecurityException( const char* file, const int lineNumber,
                                   const std::exception* cause,
-                                  const char* msg, ... ) throw() : Exception( cause )
+                                  const char* msg, ... ) throw() : decaf::lang::Exception( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -86,7 +86,7 @@ namespace security{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        GeneralSecurityException( const std::exception* cause ) throw() : Exception( cause ) {}
+        GeneralSecurityException( const std::exception* cause ) throw() : decaf::lang::Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -105,14 +105,14 @@ namespace security{
         GeneralSecurityException( const char* file,
                                   const int lineNumber,
                                   const char* msg, ...) throw()
-        : Exception()
+        : decaf::lang::Exception()
         {
             va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
+            va_start( vargs, msg );
+            buildMessage( msg, vargs );
 
             // Set the first mark for this exception.
-            setMark(file, lineNumber);
+            setMark( file, lineNumber );
         }
 
         /**
@@ -123,7 +123,7 @@ namespace security{
          * @return A deep copy of this exception.
          */
         virtual GeneralSecurityException* clone() const{
-            return new GeneralSecurityException(*this);
+            return new GeneralSecurityException( *this );
         }
 
         virtual ~GeneralSecurityException() throw() {}

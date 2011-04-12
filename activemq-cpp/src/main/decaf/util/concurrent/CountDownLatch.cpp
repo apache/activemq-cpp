@@ -17,20 +17,20 @@
 
 #include "CountDownLatch.h"
 
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::CountDownLatch( int count )
-{
-    this->count = count;
+CountDownLatch::CountDownLatch( int count ) : count(count), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::~CountDownLatch()
-{
+CountDownLatch::~CountDownLatch() {
     try {
 
         synchronized( &mutex ) {
@@ -41,7 +41,7 @@ CountDownLatch::~CountDownLatch()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CountDownLatch::await() throw ( lang::Exception ) {
+void CountDownLatch::await() {
 
     try {
 
@@ -53,13 +53,20 @@ void CountDownLatch::await() throw ( lang::Exception ) {
             mutex.wait();
         }
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
+    DECAF_CATCH_RETHROW( decaf::lang::Exception )
+    DECAF_CATCHALL_THROW( decaf::lang::Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool CountDownLatch::await( unsigned long timeOut ) throw ( lang::Exception ) {
+bool CountDownLatch::await( long long timeOut ) {
+
     try {
+
+        if( timeOut < 0 ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__, "Timeout value cannot be less than zero." );
+        }
 
         synchronized( &mutex ) {
             if( count == 0 ){
@@ -73,8 +80,20 @@ bool CountDownLatch::await( unsigned long timeOut ) throw ( lang::Exception ) {
 
         return true;
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
+    DECAF_CATCH_RETHROW( decaf::lang::Exception )
+    DECAF_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool CountDownLatch::await( long long timeout, const TimeUnit& unit ) {
+
+    try{
+        return this->await( unit.toMillis( timeout ) );
+    }
+    DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
+    DECAF_CATCH_RETHROW( decaf::lang::Exception )
+    DECAF_CATCHALL_THROW( decaf::lang::Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

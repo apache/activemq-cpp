@@ -21,7 +21,7 @@
 #include <functional>
 #include <vector>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 
@@ -84,7 +84,7 @@ namespace util{
          * Removes all keys and values from this map.
          * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void clear() = 0;
 
         /**
          * Indicates whether or this map contains a value for the
@@ -111,7 +111,7 @@ namespace util{
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual std::size_t size() const = 0;
+        virtual int size() const = 0;
 
         /**
          * Gets the value mapped to the specified key in the Map.  If there is no
@@ -123,8 +123,7 @@ namespace util{
          *
          * @throws NoSuchElementException if the key requests doesn't exist in the Map.
          */
-        virtual V& get( const K& key )
-            throw( lang::exceptions::NoSuchElementException ) = 0;
+        virtual V& get( const K& key ) = 0;
 
         /**
          * Gets the value mapped to the specified key in the Map.  If there is no
@@ -136,8 +135,7 @@ namespace util{
          *
          * @throws NoSuchElementException if the key requests doesn't exist in the Map.
          */
-        virtual const V& get( const K& key ) const
-            throw( lang::exceptions::NoSuchElementException ) = 0;
+        virtual const V& get( const K& key ) const = 0;
 
         /**
          * Sets the value for the specified key.
@@ -146,8 +144,7 @@ namespace util{
          *
          * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual void put( const K& key, const V& value )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void put( const K& key, const V& value ) = 0;
 
         /**
          * Stores a copy of the Mappings contained in the other Map in this one.
@@ -158,8 +155,7 @@ namespace util{
          * @throws UnsupportedOperationException
          *      If the implementing class does not support the putAll operation.
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual void putAll( const Map<K,V,COMPARATOR>& other ) = 0;
 
         /**
          * Removes the value (key/value pair) for the specified key from
@@ -171,9 +167,7 @@ namespace util{
          * @throw NoSuchElementException if this key is not in the Map.
          * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual V remove( const K& key )
-            throw ( decaf::lang::exceptions::NoSuchElementException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual V remove( const K& key ) = 0;
 
         /**
          * Returns a Set view of the mappings contained in this map. The set is backed by the

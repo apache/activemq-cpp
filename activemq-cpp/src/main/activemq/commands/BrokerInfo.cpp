@@ -38,18 +38,11 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerInfo::BrokerInfo() : BaseCommand() {
+BrokerInfo::BrokerInfo() 
+    : BaseCommand(), brokerId(NULL), brokerURL(""), peerBrokerInfos(), brokerName(""), slaveBroker(false), masterBroker(false), 
+      faultTolerantConfiguration(false), duplexConnection(false), networkConnection(false), connectionId(0), brokerUploadUrl(""), 
+      networkProperties("") {
 
-    this->brokerURL = "";
-    this->brokerName = "";
-    this->slaveBroker = false;
-    this->masterBroker = false;
-    this->faultTolerantConfiguration = false;
-    this->duplexConnection = false;
-    this->networkConnection = false;
-    this->connectionId = 0;
-    this->brokerUploadUrl = "";
-    this->networkProperties = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,34 +102,52 @@ std::string BrokerInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = BrokerInfo" << std::endl;
-    stream << " Value of BrokerInfo::ID_BROKERINFO = 2" << std::endl;
-    stream << " Value of BrokerId is Below:" << std::endl;
+    stream << "BrokerInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "BrokerId = ";
     if( this->getBrokerId() != NULL ) {
-        stream << this->getBrokerId()->toString() << std::endl;
+        stream << this->getBrokerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of BrokerURL = " << this->getBrokerURL() << std::endl;
-    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
-        stream << " Value of PeerBrokerInfos[" << ipeerBrokerInfos << "] is Below:" << std::endl;
-        if( this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
-            stream << this->getPeerBrokerInfos()[ipeerBrokerInfos]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "BrokerURL = " << this->getBrokerURL();
+    stream << ", ";
+    stream << "PeerBrokerInfos = ";
+    if( this->getPeerBrokerInfos().size() > 0 ) {
+        stream << "[";
+        for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
+            if( this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
+                stream << this->getPeerBrokerInfos()[ipeerBrokerInfos]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
-    stream << " Value of SlaveBroker = " << this->isSlaveBroker() << std::endl;
-    stream << " Value of MasterBroker = " << this->isMasterBroker() << std::endl;
-    stream << " Value of FaultTolerantConfiguration = " << this->isFaultTolerantConfiguration() << std::endl;
-    stream << " Value of DuplexConnection = " << this->isDuplexConnection() << std::endl;
-    stream << " Value of NetworkConnection = " << this->isNetworkConnection() << std::endl;
-    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    stream << " Value of BrokerUploadUrl = " << this->getBrokerUploadUrl() << std::endl;
-    stream << " Value of NetworkProperties = " << this->getNetworkProperties() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = BrokerInfo" << std::endl;
+    stream << ", ";
+    stream << "BrokerName = " << this->getBrokerName();
+    stream << ", ";
+    stream << "SlaveBroker = " << this->isSlaveBroker();
+    stream << ", ";
+    stream << "MasterBroker = " << this->isMasterBroker();
+    stream << ", ";
+    stream << "FaultTolerantConfiguration = " << this->isFaultTolerantConfiguration();
+    stream << ", ";
+    stream << "DuplexConnection = " << this->isDuplexConnection();
+    stream << ", ";
+    stream << "NetworkConnection = " << this->isNetworkConnection();
+    stream << ", ";
+    stream << "ConnectionId = " << this->getConnectionId();
+    stream << ", ";
+    stream << "BrokerUploadUrl = " << this->getBrokerUploadUrl();
+    stream << ", ";
+    stream << "NetworkProperties = " << this->getNetworkProperties();
+    stream << " }";
 
     return stream.str();
 }
@@ -357,8 +368,7 @@ void BrokerInfo::setNetworkProperties( const std::string& networkProperties ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processBrokerInfo( this );
 }

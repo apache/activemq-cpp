@@ -38,11 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SubscriptionInfo::SubscriptionInfo() : BaseDataStructure() {
+SubscriptionInfo::SubscriptionInfo() 
+    : BaseDataStructure(), clientId(""), destination(NULL), selector(""), subcriptionName(""), subscribedDestination(NULL) {
 
-    this->clientId = "";
-    this->selector = "";
-    this->subcriptionName = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,25 +93,27 @@ std::string SubscriptionInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = SubscriptionInfo" << std::endl;
-    stream << " Value of SubscriptionInfo::ID_SUBSCRIPTIONINFO = 55" << std::endl;
-    stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << "SubscriptionInfo { ";
+    stream << "ClientId = " << this->getClientId();
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Selector = " << this->getSelector() << std::endl;
-    stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
-    stream << " Value of SubscribedDestination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Selector = " << this->getSelector();
+    stream << ", ";
+    stream << "SubcriptionName = " << this->getSubcriptionName();
+    stream << ", ";
+    stream << "SubscribedDestination = ";
     if( this->getSubscribedDestination() != NULL ) {
-        stream << this->getSubscribedDestination()->toString() << std::endl;
+        stream << this->getSubscribedDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseDataStructure::toString();
-    stream << "End Class = SubscriptionInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

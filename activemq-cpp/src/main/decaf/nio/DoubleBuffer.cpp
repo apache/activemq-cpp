@@ -29,25 +29,22 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer::DoubleBuffer( std::size_t capacity )
- :  Buffer( capacity ) {
+DoubleBuffer::DoubleBuffer( int capacity ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* DoubleBuffer::allocate( std::size_t capacity ) {
+DoubleBuffer* DoubleBuffer::allocate( int capacity ) {
 
     try{
-
         return BufferFactory::createDoubleBuffer( capacity );
     }
-    DECAF_CATCH_RETHROW( Exception )
-    DECAF_CATCHALL_THROW( Exception )
+    DECAF_CATCH_RETHROW( IllegalArgumentException )
+    DECAF_CATCHALL_THROW( IllegalArgumentException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer* DoubleBuffer::wrap( double* buffer, std::size_t offset, std::size_t length )
-    throw( lang::exceptions::NullPointerException ) {
+DoubleBuffer* DoubleBuffer::wrap( double* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -57,9 +54,10 @@ DoubleBuffer* DoubleBuffer::wrap( double* buffer, std::size_t offset, std::size_
                 "DoubleBuffer::wrap - Passed Buffer is Null.");
         }
 
-        return BufferFactory::createDoubleBuffer( buffer, offset, length );
+        return BufferFactory::createDoubleBuffer( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
@@ -75,7 +73,7 @@ DoubleBuffer* DoubleBuffer::wrap( std::vector<double>& buffer ) {
                 "DoubleBuffer::wrap - Passed Buffer is Empty.");
         }
 
-        return BufferFactory::createDoubleBuffer( &buffer[0], 0, buffer.size() );
+        return BufferFactory::createDoubleBuffer( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -96,13 +94,12 @@ std::string DoubleBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer )
-    throw ( BufferUnderflowException ) {
+DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer ) {
 
     try{
 
         if( !buffer.empty() ) {
-            this->get( &buffer[0], 0, buffer.size() );
+            this->get( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
         return *this;
     }
@@ -112,9 +109,7 @@ DoubleBuffer& DoubleBuffer::get( std::vector<double> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::get( double* buffer, std::size_t offset, std::size_t length )
-    throw( BufferUnderflowException,
-           lang::exceptions::NullPointerException ) {
+DoubleBuffer& DoubleBuffer::get( double* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -128,27 +123,32 @@ DoubleBuffer& DoubleBuffer::get( double* buffer, std::size_t offset, std::size_t
                 "DoubleBuffer::get - Passed Buffer is Null" );
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > remaining() ) {
             throw BufferUnderflowException(
                 __FILE__, __LINE__,
                 "DoubleBuffer::get - Not enough data to fill length = %d", length );
         }
 
-        for( std::size_t ix = 0; ix < length; ++ix ){
+        for( int ix = 0; ix < length; ++ix ){
             buffer[offset + ix] = this->get();
         }
 
         return *this;
     }
     DECAF_CATCH_RETHROW( BufferUnderflowException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferUnderflowException )
     DECAF_CATCHALL_THROW( BufferUnderflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::IllegalArgumentException ) {
+DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src ) {
 
     try{
 
@@ -184,9 +184,7 @@ DoubleBuffer& DoubleBuffer::put( DoubleBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( const double* buffer, std::size_t offset, std::size_t length )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::NullPointerException ) {
+DoubleBuffer& DoubleBuffer::put( const double* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -206,6 +204,11 @@ DoubleBuffer& DoubleBuffer::put( const double* buffer, std::size_t offset, std::
                 "DoubleBuffer::put - Passed Buffer is Null.");
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > this->remaining() ) {
             throw BufferOverflowException(
                 __FILE__, __LINE__,
@@ -213,7 +216,7 @@ DoubleBuffer& DoubleBuffer::put( const double* buffer, std::size_t offset, std::
         }
 
         // read length bytes starting from the offset
-        for( std::size_t ix = 0; ix < length; ++ix ) {
+        for( int ix = 0; ix < length; ++ix ) {
             this->put( buffer[ix + offset] );
         }
 
@@ -222,18 +225,18 @@ DoubleBuffer& DoubleBuffer::put( const double* buffer, std::size_t offset, std::
     DECAF_CATCH_RETHROW( BufferOverflowException )
     DECAF_CATCH_RETHROW( ReadOnlyBufferException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferOverflowException )
     DECAF_CATCHALL_THROW( BufferOverflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DoubleBuffer& DoubleBuffer::put( std::vector<double>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+DoubleBuffer& DoubleBuffer::put( std::vector<double>& buffer ) {
 
     try{
 
         if( !buffer.empty() ) {
-            this->put( &buffer[0], 0, buffer.size() );
+            this->put( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
 
         return *this;
@@ -249,8 +252,8 @@ int DoubleBuffer::compareTo( const DoubleBuffer& value ) const {
 
     int compareRemaining = Math::min( (int)remaining(), (int)value.remaining() );
 
-    std::size_t thisPos = this->position();
-    std::size_t otherPos = value.position();
+    int thisPos = this->position();
+    int otherPos = value.position();
     double thisByte, otherByte;
 
     while( compareRemaining > 0 ) {
@@ -281,8 +284,8 @@ bool DoubleBuffer::equals( const DoubleBuffer& value ) const {
         return false;
     }
 
-    std::size_t myPosition = this->position();
-    std::size_t otherPosition = value.position();
+    int myPosition = this->position();
+    int otherPosition = value.position();
     bool equalSoFar = true;
 
     while( equalSoFar && ( myPosition < this->limit() ) ) {

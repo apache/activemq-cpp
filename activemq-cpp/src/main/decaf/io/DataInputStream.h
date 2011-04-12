@@ -50,6 +50,11 @@ namespace io{
         // higher order C++ primitives.
         unsigned char buffer[8];
 
+    private:
+
+        DataInputStream( const DataInputStream& );
+        DataInputStream& operator= ( const DataInputStream& );
+
     public:
 
         /**
@@ -63,166 +68,93 @@ namespace io{
 
         virtual ~DataInputStream();
 
-        virtual int read() throw ( IOException ) {
-            return FilterInputStream::read();
-        }
+    public:  // DataInput
 
         /**
-         * Reads some number of bytes from the contained input stream and
-         * stores them into the buffer array b. The number of bytes actually
-         * read is returned as an integer. This method blocks until input
-         * data is available, end of file is detected, or an exception is
-         * thrown.
-         * <p>
-         * If the length of buffer is zero, then no bytes are read and 0 is
-         * returned; otherwise, there is an attempt to read at least one
-         * byte. If no byte is available because the stream is at end of
-         * file, the value -1 is returned; otherwise, at least one byte is
-         * read and stored into buffer.
-         * <p>
-         * The first byte read is stored into element buffer[0], the next one
-         * into buffer[1], and so on. The number of bytes read is, at most,
-         * equal to the length of buffer. Let k be the number of bytes actually
-         * read; these bytes will be stored in elements b[0] through b[k-1],
-         * leaving elements buffer[k] through buffer[buffer.length-1]
-         * unaffected.
-         * <p>
-         * If the first byte cannot be read for any reason other than end
-         * of file, then an IOException is thrown. In particular, an
-         * IOException is thrown if the input stream has been closed.
-         * <p>
-         * The read( buffer ) method has the same effect as:
-         *      read( buffer, 0, b.length )
-         * @param buffer - byte array to insert read data into
-         * @returns the total number of bytes read, or -1 if there is no
-         *          more data because the stream is EOF.
-         * @throws IOException
+         * Reads in one byte and returns true if that byte is nonzero, false if that
+         * byte is zero.
+         *
+         * @returns the boolean value of the read in byte (0=false, 1=true).
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual int read( std::vector< unsigned char >& buffer )
-            throw ( io::IOException );
-
-        /**
-         * Reads up to len bytes of data from the contained input stream
-         * into an array of bytes. An attempt is made to read as many as
-         * len bytes, but a smaller number may be read, possibly zero. The
-         * number of bytes actually read is returned as an integer.
-         * <p>
-         * This method blocks until input data is available, end of file is
-         * detected, or an exception is thrown.
-         * <p>
-         * If buffer is null, a NullPointerException is thrown.
-         * <p>
-         * If off is negative, or len is negative then an
-         * IndexOutOfBoundsException is thrown, if off + len is greater that
-         * the allocated length of the array, an IOException will result
-         * depending on the platform and compiler settings.
-         * <p>
-         * If len is zero, then no bytes are read and 0 is returned;
-         * otherwise, there is an attempt to read at least one byte. If no
-         * byte is available because the stream is at end of file, the
-         * value -1 is returned; otherwise, at least one byte is read and
-         * stored into buffer.
-         * <p>
-         * The first byte read is stored into element b[off], the next one
-         * into buffer[off+1], and so on. The number of bytes read is, at most,
-         * equal to len. Let k be the number of bytes actually read; these
-         * bytes will be stored in elements buffer[off] through buffer[off+k-1],
-         * leaving elements buffer[off+k] through buffer[off+len-1] unaffected.
-         * <p>
-         * In every case, elements buffer[0] through buffer[off] and elements
-         * buffer[off+len] through buffer[buffer.length-1] are unaffected.
-         * <p>
-         * If the first byte cannot be read for any reason other than end of
-         * file, then an IOException is thrown. In particular, an IOException
-         * is thrown if the input stream has been closed.
-         * @param buffer - byte array to insert read data into
-         * @param offset - location in buffer to start writing
-         * @param length - number of bytes to read
-         * @returns the total number of bytes read, or -1 if there is no
-         *          more data because the stream is EOF.
-         * @throws IOException
-         * @throws NullPointerException if the buffer is null
-         */
-        virtual int read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t length )
-            throw ( io::IOException,
-                    lang::exceptions::NullPointerException );
-
-        /**
-         * Reads one input byte and returns true if that byte is nonzero,
-         * false if that byte is zero.
-         * @returns the boolean value read.
-         * @throws IOException
-         * @throws EOFException
-         */
-        virtual bool readBoolean()
-            throw( io::IOException, io::EOFException );
+        virtual bool readBoolean();
 
         /**
          * Reads and returns one input byte. The byte is treated as a
          * signed value in the range -128 through 127, inclusive.
+         *
          * @returns the 8-bit value read.
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual char readByte()
-            throw ( io::IOException, io::EOFException );
+        virtual char readByte();
 
         /**
          * Reads one input byte, zero-extends it to type int, and returns
          * the result, which is therefore in the range 0  through 255.
-         * @returns the 8 bit unsigned value read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the 8 bit unsigned value read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual unsigned char readUnsignedByte()
-            throw ( io::IOException, io::EOFException );
+        virtual unsigned char readUnsignedByte();
 
         /**
          * Reads an input char and returns the char value. A ascii char
          * is made up of one bytes.  This returns the same result as
          * <code>readByte</code>
-         * @returns the 8 bit char read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the 8 bit char read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual char readChar() throw ( io::IOException, io::EOFException );
+        virtual char readChar();
 
         /**
          * Reads eight input bytes and returns a double value. It does this
          * by first constructing a long long  value in exactly the manner of
          * the readlong  method, then converting this long  value to a double
-         * in exactly the manner of the method Double.longBitsToDouble.
-         * @returns the double value read
-         * @throws IOException
-         * @throws EOFException
+         * in exactly the manner of the method Double::longBitsToDouble.
+         *
+         * @returns the double value read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual double readDouble()
-            throw ( io::IOException, io::EOFException );
+        virtual double readDouble();
 
         /**
          * Reads four input bytes and returns a float value. It does this
          * by first constructing an int  value in exactly the manner of the
          * readInt  method, then converting this int  value to a float in
-         * exactly the manner of the method Float.intBitsToFloat.
-         * @returns the float value read
-         * @throws IOException
-         * @throws EOFException
+         * exactly the manner of the method Float::intBitsToFloat.
+         *
+         * @returns the float value read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual float readFloat() throw ( io::IOException, io::EOFException );
+        virtual float readFloat();
 
         /**
          * Reads four input bytes and returns an int value. Let a  be the
          * first byte read, b be the second byte, c be the third byte, and
-         * d be the fourth byte. The value returned is: <p>
+         * d be the fourth byte. The value returned is:
+         *
          *  (((a & 0xff) << 24) | ((b & 0xff) << 16) |
          *   ((c & 0xff) << 8) | (d & 0xff))
-         * @returns the int value read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the int value read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual int readInt() throw ( io::IOException, io::EOFException );
+        virtual int readInt();
 
         /**
          * Reads eight input bytes and returns a long value. Let a  be the
@@ -230,6 +162,7 @@ namespace io{
          * be the fourth byte, e be the fifth byte, f  be the sixth byte,
          * g be the seventh byte, and h be the eighth byte. The value
          * returned is:
+         *
          *  (((long)(a & 0xff) << 56) |
          *   ((long)(b & 0xff) << 48) |
          *   ((long)(c & 0xff) << 40) |
@@ -238,44 +171,72 @@ namespace io{
          *   ((long)(f & 0xff) << 16) |
          *   ((long)(g & 0xff) <<  8) |
          *   ((long)(h & 0xff)))
-         * @returns the 64 bit long long read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the 64 bit long long read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual long long readLong()
-            throw ( io::IOException, io::EOFException );
+        virtual long long readLong();
 
         /**
          * Reads two input bytes and returns a short value. Let a  be the
          * first byte read and b  be the second byte. The value returned is:
+         *
          *   (short)((a << 8) | (b & 0xff))
-         * @returns the 16 bit short value read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the 16 bit short value read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual short readShort() throw ( io::IOException, io::EOFException );
+        virtual short readShort();
 
         /**
          * Reads two input bytes and returns an int value in the range 0
          * through 65535. Let a  be the first byte read and b  be the
          * second byte. The value returned is:
+         *
          *   (((a & 0xff) << 8) | (b & 0xff))
-         * @returns the 16 bit unsigned short read
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @returns the 16 bit unsigned short read.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual unsigned short readUnsignedShort()
-            throw ( io::IOException, io::EOFException );
+        virtual unsigned short readUnsignedShort();
 
         /**
-         * Reads an null terminated ASCII string to the stream and returns the
+         * Reads an NULL terminated ASCII string to the stream and returns the
          * string to the caller.
+         *
          * @returns string object containing the string read.
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
          */
-        virtual std::string readString()
-            throw ( io::IOException, io::EOFException );
+        virtual std::string readString();
+
+        /**
+         * Reads the next line of text from the input stream. It reads successive bytes, converting
+         * each byte to an ASCII char separately, until it encounters a line terminator or end of
+         * file; the characters read are then returned as a standard String. Note that because this
+         * method processes bytes, it does not support input of the full Unicode character set.
+         *
+         * If end of file is encountered before even one byte can be read, then an empty string is
+         * returned. Otherwise, each byte that is read is converted to type char.  If the character
+         * '\n' is encountered, it is discarded and reading ceases. If the character '\r' is
+         * encountered, it is discarded and, if the following byte converts to the character '\n',
+         * then that is discarded also; reading then ceases. If end of file is encountered before
+         * either of the characters '\n' and '\r' is encountered, reading ceases. Once reading has
+         * ceased, a String is returned that contains all the characters read and not discarded,
+         * taken in order.
+         *
+         * @return the next line of text read from the input stream or empty string if at EOF.
+         *
+         * @throws IOException if an I/O Error occurs.
+         */
+        virtual std::string readLine();
 
         /**
          * Reads a modified UTF-8 encoded string in ASCII format and returns it,
@@ -288,40 +249,45 @@ namespace io{
          *
          * @returns The decoded string read from stream.
          *
-         * @throws IOException
-         * @throws EOFException
-         * @throws UTFDataFormatException
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
+         * @throws UTFDataFormatException if the bytes are not valid modified UTF-8 values.
          */
-        virtual std::string readUTF()
-            throw ( io::IOException, io::EOFException, io::UTFDataFormatException );
+        virtual std::string readUTF();
 
         /**
          * Reads some bytes from an input stream and stores them into the
          * buffer array buffer. The number of bytes read is equal to the length
-         * of buffer.<p>
+         * of buffer.
+         *
          * This method blocks until one of the following conditions occurs:
-         *    * buffer.size() bytes of input data are available, in which case
+         *    * buffer's size bytes of input data are available, in which case
          *      a normal return is made.
          *    * End of file is detected, in which case an EOFException is
          *      thrown.
          *    * An I/O error occurs, in which case an IOException other than
          *      EOFException is thrown.
-         * <p>
-         * If buffer.size() is zero, then no bytes are read. Otherwise, the
+         *
+         * If buffer size is zero, then no bytes are read. Otherwise, the
          * first byte read is stored into element b[0], the next one into
          * buffer[1], and so on. If an exception is thrown from this method,
          * then it may be that some but not all bytes of buffer have been
          * updated with data from the input stream.
-         * @param buffer - vector of char that is read to its size()
-         * @throws IOException
-         * @throws EOFException
+         *
+         * @param buffer
+         *      The byte array to insert read data into.
+         * @param size
+         *      The size in bytes of the given byte buffer.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
+         * @throws IndexOutOfBoundsException if the size value is negative.
          */
-        virtual void readFully( std::vector< unsigned char >& buffer )
-            throw ( io::IOException, io::EOFException );
+        virtual void readFully( unsigned char* buffer, int size );
 
         /**
          * Reads length bytes from an input stream.
-         * <p>
+         *
          * This method blocks until one of the following conditions occurs:
          *    * length bytes of input data are available, in which case a
          *      normal return is made.
@@ -329,62 +295,50 @@ namespace io{
          *      thrown.
          *    * An I/O error occurs, in which case an IOException other
          *      than EOFException is thrown.
-         * <p>
-         * If buffer is null, a NullPointerException is thrown. If offset is
-         * negative, or len is negative, or offset+length is greater than the
-         * length of the array buffer, then an IndexOutOfBoundsException is
-         * thrown. If len is zero, then no bytes are read. Otherwise, the
-         * first byte read is stored into element buffer[off], the next one into
-         * buffer[offset+1], and so on. The number of bytes read is, at most,
-         * equal to len.
-         * @param buffer - byte array to insert read data into
-         * @param offset - location in buffer to start writing
-         * @param length - number of bytes to read
-         * @throws IOException
-         * @throws EOFException
-         * @throws NullPointerException if the buffer is null
+         *
+         * If buffer is NULL, a NullPointerException is thrown. If offset+length
+         * is greater than the length of the array buffer, then an IndexOutOfBoundsException
+         * is thrown. If length is zero, then no bytes are read. Otherwise, the first
+         * byte read is stored into element buffer[off], the next one into buffer[offset+1],
+         * and so on. The number of bytes read is, at most, equal to length.
+         *
+         * @param buffer
+         *      The byte array to insert read data into.
+         * @param size
+         *      The size in bytes of the given byte buffer.
+         * @param offset
+         *      The location in buffer to start writing.
+         * @param length
+         *      The number of bytes to read from the buffer.
+         *
+         * @throws IOException if an I/O Error occurs.
+         * @throws EOFException if the end of input is reached.
+         * @throws NullPointerException if the buffer is NULL.
+         * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void readFully( unsigned char* buffer,
-                                std::size_t offset,
-                                std::size_t length )
-            throw ( io::IOException,
-                    io::EOFException,
-                    lang::exceptions::NullPointerException );
+        virtual void readFully( unsigned char* buffer, int size, int offset, int length );
 
         /**
-         * Makes an attempt to skip over n bytes of data from the input
-         * stream, discarding the skipped bytes. However, it may skip over
-         * some smaller number of bytes, possibly zero. This may result from
-         * any of a number of conditions; reaching end of file before n
-         * bytes have been skipped is only one possibility. This method
-         * never throws an EOFException. The actual number of bytes skipped
-         * is returned.
-         * @param num - number of bytes to skip
-         * @return the total number of bytes skipped
+         * Makes an attempt to skip over n bytes of data from the input stream,
+         * discarding the skipped bytes. However, it may skip over some smaller
+         * number of bytes, possibly zero. This may result from any of a number
+         * of conditions; reaching end of file before n bytes have been skipped
+         * is only one possibility. This method never throws an EOFException.
+         * The actual number of bytes skipped is returned.
+         *
+         * @param num
+         *      The number of bytes to skip over.
+         *
+         * @return the total number of bytes skipped.
+         *
+         * @throws IOException if an I/O Error occurs.
          */
-        virtual std::size_t skip( std::size_t num )
-            throw( io::IOException,
-                   lang::exceptions::UnsupportedOperationException );
+        virtual long long skipBytes( long long num );
 
     private:
 
-        // Used internally to reliable get data from the underlying stream
-        inline void readAllData( unsigned char* buffer,
-                                 std::size_t length )
-            throw ( io::IOException,
-                    io::EOFException ) {
-
-            std::size_t n = 0;
-            do{
-                int count = inputStream->read( &buffer[n], 0, length - n );
-                if( count == -1 ) {
-                    throw EOFException(
-                        __FILE__, __LINE__,
-                        "DataInputStream::readLong - Reached EOF" );
-                }
-                n += count;
-            } while( n < length );
-        }
+        // Used internally to reliably get data from the underlying stream
+        void readAllData( unsigned char* buffer, int length );
 
     };
 

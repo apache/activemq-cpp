@@ -39,12 +39,15 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId::TransactionId() : BaseDataStructure() {
+TransactionId::TransactionId() 
+    : BaseDataStructure() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId::TransactionId( const TransactionId& other ) : BaseDataStructure() {
+TransactionId::TransactionId( const TransactionId& other )
+    : BaseDataStructure() {
+
     this->copyDataStructure( &other );
 }
 
@@ -93,10 +96,8 @@ std::string TransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = TransactionId" << std::endl;
-    stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = TransactionId" << std::endl;
+    stream << "TransactionId { ";
+    stream << " }";
 
     return stream.str();
 }
@@ -132,7 +133,7 @@ int TransactionId::compareTo( const TransactionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool TransactionId::equals( const TransactionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

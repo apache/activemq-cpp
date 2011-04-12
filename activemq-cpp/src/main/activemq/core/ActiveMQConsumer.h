@@ -27,24 +27,22 @@
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/MessageAck.h>
 #include <activemq/commands/MessageDispatch.h>
-#include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
+#include <activemq/core/RedeliveryPolicy.h>
 #include <activemq/core/MessageDispatchChannel.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <memory>
 
 namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicBoolean;
-    using activemq::core::MessageDispatchChannel;
 
     class ActiveMQSession;
+    class ActiveMQConsumerMembers;
 
     class AMQCPP_API ActiveMQConsumer : public cms::MessageConsumer,
                                         public Dispatcher
@@ -52,249 +50,135 @@ namespace core{
     private:
 
         /**
-         * The session that owns this Consumer
+         * Internal Class that holds Members of this class, allows for changes without API breakage.
+         */
+        ActiveMQConsumerMembers* internal;
+
+        /**
+         * The ActiveMQSession that owns this class instance.
          */
         ActiveMQSession* session;
 
         /**
-         * The Transaction Context, null if not in a Transacted Session.
-         */
-        Pointer<ActiveMQTransactionContext> transaction;
-
-        /**
-         * The Consumer info for this Consumer
+         * The ConsumerInfo object for this class instance.
          */
         Pointer<commands::ConsumerInfo> consumerInfo;
 
-        /**
-         * The Message Listener for this Consumer
-         */
-        cms::MessageListener* listener;
+    private:
 
-        /**
-         * Mutex to Protect access to the listener during delivery.
-         */
-        decaf::util::concurrent::Mutex listenerMutex;
-
-        /**
-         * Is the consumer currently delivering acks.
-         */
-        AtomicBoolean deliveringAcks;
-
-        /**
-         * Has this Consumer been started yet.
-         */
-        AtomicBoolean started;
-
-        /**
-         * Queue of unconsumed messages.
-         */
-        MessageDispatchChannel unconsumedMessages;
-
-        /**
-         * Queue of consumed messages.
-         */
-        decaf::util::StlQueue< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
-
-        /**
-         * The last delivered message's BrokerSequenceId.
-         */
-        long long lastDeliveredSequenceId;
-
-        /**
-         * Next Ack to go out.
-         */
-        Pointer<commands::MessageAck> pendingAck;
-
-        /**
-         * How many message's have been delivered so far since the last Ack was sent.
-         */
-        int deliveredCounter;
-
-        /**
-         * How big to grow the ack window next time.
-         */
-        int additionalWindowSize;
-
-        /**
-         * Time to wait before restarting delivery of rollback messages.
-         */
-        long long redeliveryDelay;
-
-        /**
-         * Has the Synchronization been added for this transaction
-         */
-        volatile bool synchronizationRegistered;
-
-        /**
-         * Boolean indicating if in progress messages should be cleared.
-         */
-        bool clearDispatchList;
+        ActiveMQConsumer( const ActiveMQConsumer& );
+        ActiveMQConsumer& operator= ( const ActiveMQConsumer& );
 
     public:
 
         /**
          * Constructor
          */
-        ActiveMQConsumer( const Pointer<commands::ConsumerInfo>& consumerInfo,
-                          ActiveMQSession* session,
-                          const Pointer<ActiveMQTransactionContext>& transaction );
+        ActiveMQConsumer( ActiveMQSession* session,
+                          const Pointer<commands::ConsumerId>& id,
+                          const Pointer<commands::ActiveMQDestination>& destination,
+                          const std::string& name,
+                          const std::string& selector,
+                          int prefetch,
+                          int maxPendingMessageCount,
+                          bool noLocal,
+                          bool browser,
+                          bool dispatchAsync,
+                          cms::MessageListener* listener );
 
-        virtual ~ActiveMQConsumer();
+        virtual ~ActiveMQConsumer() throw();
 
     public:  // Interface Implementation
 
-        /**
-         * Starts the Consumer if not already started and not closed. A consumer
-         * will no deliver messages until started.
-         */
         virtual void start();
 
-        /**
-         * Stops a Consumer, the Consumer will not deliver any messages that are
-         * dispatched to it until it is started again.  A Closed Consumer is also a
-         * stopped consumer.
-         */
         virtual void stop();
 
-        /**
-         * Closes the Consumer.  This will return all allocated resources
-         * and purge any outstanding messages.  This method will block if
-         * there is a call to receive in progress, or a dispatch to a
-         * MessageListener in place
-         * @throws CMSException
-         */
-        virtual void close() throw ( cms::CMSException );
+        virtual void close();
 
-        /**
-         * Synchronously Receive a Message
-         * @return new message
-         * @throws CMSException
-         */
-        virtual cms::Message* receive() throw ( cms::CMSException );
+        virtual cms::Message* receive();
 
-        /**
-         * Synchronously Receive a Message, time out after defined interval.
-         * Returns null if nothing read.
-         * @param millisecs the time in milliseconds to wait before returning
-         * @return new message or null on timeout
-         * @throws CMSException
-         */
-        virtual cms::Message* receive( int millisecs ) throw ( cms::CMSException );
+        virtual cms::Message* receive( int millisecs );
 
-        /**
-         * Receive a Message, does not wait if there isn't a new message
-         * to read, returns NULL if nothing read.
-         * @return new message
-         * @throws CMSException
-         */
-        virtual cms::Message* receiveNoWait() throw ( cms::CMSException );
+        virtual cms::Message* receiveNoWait();
 
-        /**
-         * Sets the MessageListener that this class will send notifs on
-         * @param listener MessageListener interface pointer
-         */
-        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException );
+        virtual void setMessageListener( cms::MessageListener* listener );
 
-        /**
-         * Gets the MessageListener that this class will send events to.
-         * @return the currently registered MessageListener interface pointer.
-         */
-        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
-            return this->listener;
-        }
+        virtual cms::MessageListener* getMessageListener() const;
 
-        /**
-         * Gets this message consumer's message selector expression.
-         * @return This Consumer's selector expression or "".
-         * @throws cms::CMSException
-         */
-        virtual std::string getMessageSelector() const
-            throw ( cms::CMSException );
+        virtual std::string getMessageSelector() const;
 
-        /**
-         * Method called to acknowledge the message passed, called from a message
-         * when the mode is client ack.
-         * @param message the Message to Acknowledge
-         * @throw CMSException
-         */
-        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch )
-            throw ( cms::CMSException );
+        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch );
 
     public:  // Dispatcher Methods
 
-        /**
-         * Called asynchronously by the session to dispatch a message.
-         * @param message dispatch object pointer
-         */
         virtual void dispatch( const Pointer<MessageDispatch>& message );
 
     public:  // ActiveMQConsumer Methods
 
         /**
          * Method called to acknowledge all messages that have been received so far.
-         * @throw CMSException
+         *
+         * @throw CMSException if an error occurs while ack'ing the message.
          */
-        void acknowledge() throw ( cms::CMSException );
+        void acknowledge();
 
         /**
          * Called to Commit the current set of messages in this Transaction
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void commit() throw ( exceptions::ActiveMQException );
+        void commit();
 
         /**
          * Called to Roll back the current set of messages in this Transaction
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void rollback() throw ( exceptions::ActiveMQException );
+        void rollback();
 
         /**
          * Performs the actual close operation on this consumer
-         * @throw ActiveMQException
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void doClose() throw ( exceptions::ActiveMQException );
+        void doClose();
+
+        /**
+         * Cleans up this objects internal resources.
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
+         */
+        void dispose();
 
         /**
          * Get the Consumer information for this consumer
          * @return Reference to a Consumer Info Object
          */
-        const commands::ConsumerInfo& getConsumerInfo() const {
-            this->checkClosed();
-            return *( this->consumerInfo );
-        }
+        const Pointer<commands::ConsumerInfo>& getConsumerInfo() const;
 
         /**
          * Get the Consumer Id for this consumer
          * @return Reference to a Consumer Id Object
          */
-        const commands::ConsumerId& getConsumerId() const {
-            this->checkClosed();
-            return *( this->consumerInfo->getConsumerId() );
-        }
+        const Pointer<commands::ConsumerId>& getConsumerId() const;
 
         /**
          * @returns if this Consumer has been closed.
          */
-        bool isClosed() const {
-            return this->unconsumedMessages.isClosed();
-        }
+        bool isClosed() const;
 
         /**
          * Has this Consumer Transaction Synchronization been added to the transaction
          * @return true if the synchronization has been added.
          */
-        bool isSynchronizationRegistered() const {
-            return this->synchronizationRegistered;
-        }
+        bool isSynchronizationRegistered() const ;
 
         /**
          * Sets the Synchronization Registered state of this consumer.
          * @param value - true if registered false otherwise.
          */
-        void setSynchronizationRegistered( bool value ) {
-            this->synchronizationRegistered = value;
-        }
+        void setSynchronizationRegistered( bool value );
 
         /**
          * Deliver any pending messages to the registered MessageListener if there
@@ -305,8 +189,10 @@ namespace core{
 
         /**
          * Forces this consumer to send all pending acks to the broker.
+         *
+         * @throw ActiveMQException if an error occurs while performing the operation.
          */
-        void deliverAcks() throw ( exceptions::ActiveMQException );
+        void deliverAcks();
 
         /**
          * Called on a Failover to clear any pending messages.
@@ -314,13 +200,17 @@ namespace core{
         void clearMessagesInProgress();
 
         /**
+         * Signals that a Failure occurred and that anything in-progress in the
+         * consumer should be cleared.
+         */
+        void inProgressClearRequired();
+
+        /**
          * Gets the currently set Last Delivered Sequence Id
          *
          * @returns long long containing the sequence id of the last delivered Message.
          */
-        long long getLastDeliveredSequenceId() const {
-            return this->lastDeliveredSequenceId;
-        }
+        long long getLastDeliveredSequenceId() const;
 
         /**
          * Sets the value of the Last Delivered Sequence Id
@@ -328,9 +218,47 @@ namespace core{
          * @param value
          *      The new value to assign to the Last Delivered Sequence Id property.
          */
-        void setLastDeliveredSequenceId( long long value ) {
-            this->lastDeliveredSequenceId = value;
-        }
+        void setLastDeliveredSequenceId( long long value );
+
+        /**
+         * @returns the number of Message's this consumer is waiting to Dispatch.
+         */
+        int getMessageAvailableCount() const;
+
+        /**
+         * Sets the RedeliveryPolicy this Consumer should use when a rollback is
+         * performed on a transacted Consumer.  The Consumer takes ownership of the
+         * passed pointer.  The Consumer's redelivery policy can never be null, a
+         * call to this method with a NULL pointer is ignored.
+         *
+         * @param policy
+         *      Pointer to a Redelivery Policy object that his Consumer will use.
+         */
+        void setRedeliveryPolicy( RedeliveryPolicy* policy );
+
+        /**
+         * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
+         * retains ownership of this pointer so the caller should not delete it.
+         *
+         * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
+         */
+        RedeliveryPolicy* getRedeliveryPolicy() const;
+
+        /**
+         * Sets the Exception that has caused this Consumer to be in a failed state.
+         *
+         * @param error
+         *      The error that is to be thrown when a Receive call is made.
+         */
+        void setFailureError( decaf::lang::Exception* error );
+
+        /**
+         * Gets the error that caused this Consumer to be in a Failed state, or NULL if
+         * there is no Error.
+         *
+         * @returns pointer to the error that faulted this Consumer or NULL.
+         */
+        decaf::lang::Exception* getFailureError() const;
 
     protected:
 
@@ -338,17 +266,18 @@ namespace core{
          * Used by synchronous receive methods to wait for messages to come in.
          * @param timeout - The maximum number of milliseconds to wait before
          * returning.
+         *
          * If -1, it will block until a messages is received or this consumer
          * is closed.
          * If 0, will not block at all.  If > 0, will wait at a maximum the
          * specified number of milliseconds before returning.
          * @return the message, if received within the allotted time.
          * Otherwise NULL.
+         *
          * @throws InvalidStateException if this consumer is closed upon
-         * entering this method.
+         *         entering this method.
          */
-        Pointer<MessageDispatch> dequeue( long long timeout )
-            throw ( cms::CMSException );
+        Pointer<MessageDispatch> dequeue( long long timeout );
 
         /**
          * Pre-consume processing
@@ -367,26 +296,25 @@ namespace core{
 
     private:
 
-        /**
-         * If supported sends a message pull request to the service provider asking
-         * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefetch or is only
-         * capable of delivering messages on a pull basis.  No request is made if
-         * there are already messages in the unconsumed queue since there's no need
-         * for a server round-trip in that instance.
-         * @param timeout - the time that the client is willing to wait.
-         */
-        void sendPullRequest( long long timeout )
-            throw ( exceptions::ActiveMQException );
+        // Using options from the Destination URI override any settings that are
+        // defined for this consumer.
+        void applyDestinationOptions( const Pointer<commands::ConsumerInfo>& info );
+
+        // If supported sends a message pull request to the service provider asking
+        // for the delivery of a new message.  This is used in the case where the
+        // service provider has been configured with a zero prefetch or is only
+        // capable of delivering messages on a pull basis.  No request is made if
+        // there are already messages in the unconsumed queue since there's no need
+        // for a server round-trip in that instance.
+        void sendPullRequest( long long timeout );
 
         // Checks for the closed state and throws if so.
-        void checkClosed() const throw( exceptions::ActiveMQException );
+        void checkClosed() const;
 
         // Sends an ack as needed in order to keep them coming in if the current
         // ack mode allows the consumer to receive up to the prefetch limit before
         // an real ack is sent.
-        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType )
-            throw ( exceptions::ActiveMQException );
+        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType );
 
         // Create an Ack Message that acks all messages that have been delivered so far.
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );

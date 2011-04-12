@@ -32,8 +32,7 @@ using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testConstructor1() {
-    std::vector<unsigned char> buffer;
-    ByteArrayOutputStream baos( buffer );
+    ByteArrayOutputStream baos( 500 );
     CPPUNIT_ASSERT_MESSAGE("Failed to create stream", 0 == baos.size() );
 }
 
@@ -54,7 +53,7 @@ void ByteArrayOutputStreamTest::testClose() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testReset() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 0, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     baos.reset();
     CPPUNIT_ASSERT_MESSAGE("reset failed", 0 == baos.size() );
 }
@@ -62,7 +61,7 @@ void ByteArrayOutputStreamTest::testReset() {
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testSize() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 0, 100 );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     CPPUNIT_ASSERT_MESSAGE("size test failed", 100 == baos.size());
     baos.reset();
     CPPUNIT_ASSERT_MESSAGE("size test failed", 0 == baos.size());
@@ -70,20 +69,20 @@ void ByteArrayOutputStreamTest::testSize() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testToByteArray() {
-    const unsigned char* bytes = NULL;
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 0, testString.length() );
-    bytes = baos.toByteArray();
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.length() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
     for( std::size_t i = 0; i < testString.length(); i++) {
-        CPPUNIT_ASSERT_MESSAGE("Error in byte array", bytes[i] == testString.at(i) );
+        CPPUNIT_ASSERT_MESSAGE("Error in byte array", array.first[i] == testString.at(i) );
     }
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testToString() {
 
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 0, testString.length() );
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, (int)testString.length() );
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect String",
                             baos.toString() == testString );
 }
@@ -93,34 +92,37 @@ void ByteArrayOutputStreamTest::testWrite1() {
 
     ByteArrayOutputStream baos;
     baos.write('t');
-    const unsigned char* bytes = baos.toByteArray();
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
     CPPUNIT_ASSERT_MESSAGE( "Wrote incorrect bytes",
-                            string("t") == string( (const char*)bytes, baos.size() ) );
+                            string("t") == string( (const char*)array.first, array.second ) );
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testWrite2() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 0, 100 );
-    const unsigned char* bytes = baos.toByteArray();
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
     CPPUNIT_ASSERT_MESSAGE("Wrote incorrect bytes",
-            string((const char*)bytes, baos.size() ) == testString.substr(0, 100) );
+            string((const char*)array.first, array.second ) == testString.substr(0, 100) );
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testWrite3() {
     ByteArrayOutputStream baos;
-    baos.write( (unsigned char*)&testString[0], 50, 100 );
-    const unsigned char* bytes = baos.toByteArray();
+    baos.write( (unsigned char*)&testString[0], (int)testString.size(), 50, 100 );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
     CPPUNIT_ASSERT_MESSAGE("Wrote incorrect bytes",
-            string((const char*)bytes, baos.size() ) == testString.substr(50, 100) );
+            string((const char*)array.first, array.second ) == testString.substr(50, 100) );
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStreamTest::testWriteToDecaf_io_OutputStream() {
     ByteArrayOutputStream baos1;
     ByteArrayOutputStream baos2;
-    baos1.write( (unsigned char*)&testString[0], 0, 100 );
+    baos1.write( (unsigned char*)&testString[0], (int)testString.size(), 0, 100 );
     baos1.writeTo( &baos2 );
     CPPUNIT_ASSERT_MESSAGE( "Returned incorrect String",
                             baos2.toString() == testString.substr(0, 100) );
@@ -141,7 +143,7 @@ void ByteArrayOutputStreamTest::testStream()
 
     CPPUNIT_ASSERT( stream_a.size() == 0 );
 
-    stream_a.write((const unsigned char*)("abc"), 0, 3);
+    stream_a.write((const unsigned char*)("abc"), 3, 0, 3);
 
     CPPUNIT_ASSERT( stream_a.size() == 3 );
 
@@ -149,12 +151,14 @@ void ByteArrayOutputStreamTest::testStream()
 
     CPPUNIT_ASSERT( stream_a.size() == 0 );
 
-    stream_a.write((const unsigned char*)("abc"), 0, 3);
+    stream_a.write((const unsigned char*)("abc"), 3, 0, 3);
 
     unsigned char buffer[4];
 
     memset(buffer, 0, 4);
-    memcpy(buffer, stream_a.toByteArray(), stream_a.size());
+    std::pair<const unsigned char*, int> array = stream_a.toByteArray();
+    memcpy(buffer, array.first, array.second );
+    delete [] array.first;
 
     CPPUNIT_ASSERT( std::string((const char*)buffer) == std::string("abc") );
 }

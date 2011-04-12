@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DataResponse::DataResponse() : Response() {
+DataResponse::DataResponse() 
+    : Response(), data(NULL) {
 
 }
 
@@ -88,16 +89,14 @@ std::string DataResponse::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = DataResponse" << std::endl;
-    stream << " Value of DataResponse::ID_DATARESPONSE = 32" << std::endl;
-    stream << " Value of Data is Below:" << std::endl;
+    stream << "DataResponse { ";
+    stream << "Data = ";
     if( this->getData() != NULL ) {
-        stream << this->getData()->toString() << std::endl;
+        stream << this->getData()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << Response::toString();
-    stream << "End Class = DataResponse" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

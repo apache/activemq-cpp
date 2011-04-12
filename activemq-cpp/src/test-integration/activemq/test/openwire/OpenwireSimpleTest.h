@@ -30,6 +30,8 @@ namespace openwire{
         CPPUNIT_TEST( testAutoAck );
         CPPUNIT_TEST( testClientAck );
         CPPUNIT_TEST( testProducerWithNullDestination );
+        CPPUNIT_TEST( testProducerSendWithNullDestination );
+        CPPUNIT_TEST( testProducerSendToNonDefaultDestination );
         CPPUNIT_TEST( testSyncReceive );
         CPPUNIT_TEST( testSyncReceiveClientAck );
         CPPUNIT_TEST( testMultipleConnections );
@@ -42,6 +44,7 @@ namespace openwire{
         CPPUNIT_TEST( testMapMessageSendToTopic );
         CPPUNIT_TEST( testDestroyDestination );
         CPPUNIT_TEST( tesstStreamMessage );
+        CPPUNIT_TEST( testLibraryInitShutdownInit );
         CPPUNIT_TEST_SUITE_END();
 
     public:

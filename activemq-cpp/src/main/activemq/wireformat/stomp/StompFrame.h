@@ -51,12 +51,12 @@ namespace stomp{
         /**
          * Default constructor.
          */
-        StompFrame(){}
+        StompFrame();
 
         /**
          * Destruction.
          */
-        virtual ~StompFrame() {}
+        virtual ~StompFrame();
 
         /**
          * Clonse this message exactly, returns a new instance that the
@@ -172,8 +172,7 @@ namespace stomp{
          *
          * @throw IOException if an error occurs while reading the Frame.
          */
-        void toStream( decaf::io::DataOutputStream* stream ) const
-            throw ( decaf::io::IOException );
+        void toStream( decaf::io::DataOutputStream* stream ) const;
 
         /**
          * Reads a Stop Frame from a DataInputStream in the Stomp Wire format.
@@ -182,8 +181,7 @@ namespace stomp{
          *
          * @throw IOException if an error occurs while writing the Frame.
          */
-        void fromStream( decaf::io::DataInputStream* stream )
-            throw ( decaf::io::IOException );
+        void fromStream( decaf::io::DataInputStream* stream );
 
     private:
 
@@ -192,16 +190,14 @@ namespace stomp{
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readCommandHeader( decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+        void readCommandHeader( decaf::io::DataInputStream* in );
 
         /**
          * Read all the Stomp Headers for the incoming Frame
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readHeaders( decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+        void readHeaders( decaf::io::DataInputStream* in );
 
         /**
          * Reads a Stomp Header line and stores it in the buffer object
@@ -211,16 +207,14 @@ namespace stomp{
          * @throws IOException
          */
         std::size_t readHeaderLine( std::vector<unsigned char>& buffer,
-                                    decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+                                    decaf::io::DataInputStream* in );
 
         /**
          * Reads the Stomp Body from the Wire and store it in the frame.
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readBody( decaf::io::DataInputStream* in )
-            throw ( decaf::io::IOException );
+        void readBody( decaf::io::DataInputStream* in );
 
     };
 

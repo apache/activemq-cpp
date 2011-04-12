@@ -21,14 +21,28 @@
 using namespace activemq::cmsutil;
 using namespace std;
 
+cms::Connection* connection;
+
+ResourceLifecycleManager* resourceLifecycleManager;
+
+decaf::util::concurrent::Mutex mutex;
+
+std::list<PooledSession*> available;
+
+std::list<PooledSession*> sessions;
+
+cms::Session::AcknowledgeMode acknowledgeMode;
+
 ////////////////////////////////////////////////////////////////////////////////
 SessionPool::SessionPool( cms::Connection* connection,
                           cms::Session::AcknowledgeMode ackMode,
-                          ResourceLifecycleManager* resourceLifecycleManager) {
-
-    this->connection = connection;
-    this->acknowledgeMode = ackMode;
-    this->resourceLifecycleManager = resourceLifecycleManager;
+                          ResourceLifecycleManager* resourceLifecycleManager)
+    : connection( connection ),
+      resourceLifecycleManager( resourceLifecycleManager ),
+      mutex(),
+      available(),
+      sessions(),
+      acknowledgeMode( ackMode ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +58,7 @@ SessionPool::~SessionPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession* SessionPool::takeSession() throw ( cms::CMSException ){
+PooledSession* SessionPool::takeSession() {
 
     synchronized(&mutex) {
 

@@ -53,10 +53,14 @@ namespace lang{
         Byte( unsigned char value );
 
         /**
-         * @param value - the string to convert to an unsigned char
-         * @throws NumberFormatException
+         * Creates a new Byte instance from the given string.
+         *
+         * @param value
+         *      The string to convert to an unsigned char
+         *
+         * @throws NumberFormatException if the string is not a valid byte.
          */
-        Byte( const std::string& value ) throw( exceptions::NumberFormatException );
+        Byte( const std::string& value );
 
         virtual ~Byte() {}
 
@@ -211,8 +215,7 @@ namespace lang{
          * @returns a Byte object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Byte decode( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Byte decode( const std::string& value );
 
         /**
          * Parses the string argument as a signed unsigned char in the radix specified by
@@ -239,8 +242,7 @@ namespace lang{
          * @throws NumberFormatException - If String does not contain a parsable
          *         unsigned char.
          */
-        static unsigned char parseByte( const std::string& s, int radix )
-            throw ( exceptions::NumberFormatException );
+        static unsigned char parseByte( const std::string& s, int radix );
 
         /**
          * Parses the string argument as a signed decimal unsigned char. The
@@ -253,8 +255,7 @@ namespace lang{
          * @returns the converted unsigned char value
          * @throws NumberFormatException if the string is not a unsigned char.
          */
-        static unsigned char parseByte( const std::string& s )
-            throw ( exceptions::NumberFormatException );
+        static unsigned char parseByte( const std::string& s );
 
         /**
          * Returns a Character instance representing the specified char value.
@@ -275,8 +276,7 @@ namespace lang{
          * @return new Byte Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal unsigned char.
          */
-        static Byte valueOf( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Byte valueOf( const std::string& value );
 
         /**
          * Returns a Byte object holding the value extracted from the specified
@@ -291,8 +291,7 @@ namespace lang{
          * @return new Byte Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid unsigned char.
          */
-        static Byte valueOf( const std::string& value, int radix )
-            throw ( exceptions::NumberFormatException );
+        static Byte valueOf( const std::string& value, int radix );
 
     };
 

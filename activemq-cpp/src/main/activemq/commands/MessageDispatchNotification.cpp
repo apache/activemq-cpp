@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatchNotification::MessageDispatchNotification() : BaseCommand() {
+MessageDispatchNotification::MessageDispatchNotification() 
+    : BaseCommand(), consumerId(NULL), destination(NULL), deliverySequenceId(0), messageId(NULL) {
 
-    this->deliverySequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,29 +92,33 @@ std::string MessageDispatchNotification::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = MessageDispatchNotification" << std::endl;
-    stream << " Value of MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION = 90" << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << "MessageDispatchNotification { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of DeliverySequenceId = " << this->getDeliverySequenceId() << std::endl;
-    stream << " Value of MessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "DeliverySequenceId = " << this->getDeliverySequenceId();
+    stream << ", ";
+    stream << "MessageId = ";
     if( this->getMessageId() != NULL ) {
-        stream << this->getMessageId()->toString() << std::endl;
+        stream << this->getMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = MessageDispatchNotification" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -218,8 +222,7 @@ void MessageDispatchNotification::setMessageId( const decaf::lang::Pointer<Messa
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> MessageDispatchNotification::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> MessageDispatchNotification::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processMessageDispatchNotification( this );
 }

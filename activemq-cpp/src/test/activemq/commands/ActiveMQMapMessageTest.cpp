@@ -88,7 +88,7 @@ void ActiveMQMapMessageTest::testBytesConversion() {
 
     bigString.reserve( 1024 * 1024 );
     for( int i = 0; i < 1024 * 1024; i++ ) {
-        bigString += ( (char)'a' + i % 26 );
+        bigString += (char)( (int)'a' + i % 26 );
     }
 
     msg.setString( "bigString", bigString );
@@ -277,6 +277,10 @@ void ActiveMQMapMessageTest::testGetBytes() {
         ex.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
+
+    ActiveMQMapMessage msg3;
+    msg3.setBytes( "empty", std::vector<unsigned char>() );
+    CPPUNIT_ASSERT_NO_THROW( msg3.getBytes( "empty" ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

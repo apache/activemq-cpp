@@ -18,7 +18,7 @@
 #ifndef _DECAF_UTIL_SET_H_
 #define _DECAF_UTIL_SET_H_
 
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
@@ -42,7 +42,7 @@ namespace util{
      * @since 1.0
      */
     template <typename E>
-    class Set : public decaf::util::AbstractCollection<E> {
+    class Set : public virtual decaf::util::Collection<E> {
     public:
 
         virtual ~Set() {}

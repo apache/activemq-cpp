@@ -25,7 +25,6 @@ import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingClassesGen
 import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingHeadersGenerator;
 import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingClassesGenerator;
 import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingHeadersGenerator;
-import org.apache.activemq.openwire.tool.tests.AmqCppTestRegistryGenerator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -94,49 +93,33 @@ public class AmqCppGeneratorTask extends Task {
                 script.setTargetDir(target+"/src/main");
                 script.run();
             }
-
-            for( int i = 1; i <= maxVersion; ++i ) {
-
-                {
-                    AmqCppMarshallingHeadersGenerator script = new AmqCppMarshallingHeadersGenerator();
-                    script.setJam(jam);
-                    script.setTargetDir(target+"/src/main");
-                    script.setOpenwireVersion(i);
-                    script.run();
-                }
-                {
-                    AmqCppMarshallingClassesGenerator script = new AmqCppMarshallingClassesGenerator();
-                    script.setJam(jam);
-                    script.setTargetDir(target+"/src/main");
-                    script.setOpenwireVersion(i);
-                    script.run();
-                }
-                {
-                   AmqCppTestMarshallingHeadersGenerator script = new AmqCppTestMarshallingHeadersGenerator();
-                    script.setJam(jam);
-                    script.setTargetDir(target+"/src/test");
-                    script.setOpenwireVersion(i);
-                    script.run();
-                }
-                {
-                    AmqCppTestMarshallingClassesGenerator script = new AmqCppTestMarshallingClassesGenerator();
-                    script.setJam(jam);
-                    script.setTargetDir(target+"/src/test");
-                    script.setOpenwireVersion(i);
-                    script.run();
-                }
-                {
-                    AmqCppMakefileGenerator script = new AmqCppMakefileGenerator(
-                        "activemq/wireformat/openwire/marshal/v" + i );
-                    script.setTargetDir(target+"/src/main");
-                    script.run();
-                }
-                {
-                    AmqCppMakefileGenerator script = new AmqCppMakefileGenerator(
-                        "activemq/wireformat/openwire/marshal/v" + i );
-                    script.setTargetDir(target+"/src/test");
-                    script.run();
-                }
+            {
+                AmqCppMarshallingHeadersGenerator script = new AmqCppMarshallingHeadersGenerator();
+                script.setJam(jam);
+                script.setTargetDir(target+"/src/main");
+                script.setOpenwireVersion(maxVersion);
+                script.run();
+            }
+            {
+                AmqCppMarshallingClassesGenerator script = new AmqCppMarshallingClassesGenerator();
+                script.setJam(jam);
+                script.setTargetDir(target+"/src/main");
+                script.setOpenwireVersion(maxVersion);
+                script.run();
+            }
+            {
+               AmqCppTestMarshallingHeadersGenerator script = new AmqCppTestMarshallingHeadersGenerator();
+                script.setJam(jam);
+                script.setTargetDir(target+"/src/test");
+                script.setOpenwireVersion(maxVersion);
+                script.run();
+            }
+            {
+                AmqCppTestMarshallingClassesGenerator script = new AmqCppTestMarshallingClassesGenerator();
+                script.setJam(jam);
+                script.setTargetDir(target+"/src/test");
+                script.setOpenwireVersion(maxVersion);
+                script.run();
             }
 
         } catch (Exception e) {

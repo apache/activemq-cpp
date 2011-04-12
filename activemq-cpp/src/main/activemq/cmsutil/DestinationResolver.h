@@ -32,7 +32,7 @@ namespace cmsutil {
     class AMQCPP_API DestinationResolver {
     public:
 
-        virtual ~DestinationResolver() {}
+        virtual ~DestinationResolver() throw() {}
 
         /**
          * Initializes this destination resolver for use.  Ensures that any
@@ -62,14 +62,14 @@ namespace cmsutil {
          * @param pubSubDomain
          *      If true, the name will be resolved to a Topic,
          *      otherwise a Queue.
+         *
          * @return the resolved destination
+         *
          * @throws cms::CMSException if resolution failed.
          */
-        virtual cms::Destination* resolveDestinationName(
-            cms::Session* session,
-            const std::string& destName,
-            bool pubSubDomain )
-                throw ( cms::CMSException ) = 0;
+        virtual cms::Destination* resolveDestinationName( cms::Session* session,
+                                                          const std::string& destName,
+                                                          bool pubSubDomain ) = 0;
 
     };
 

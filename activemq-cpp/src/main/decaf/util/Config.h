@@ -44,6 +44,7 @@
     // of Windows or OS X to do this build
 
     #if defined(_WIN32)
+
         #ifndef HAVE_OBJBASE_H
             #define HAVE_OBJBASE_H
         #endif
@@ -74,6 +75,16 @@
                 #define _CRT_SECURE_NO_DEPRECATE
             #endif
             #pragma warning(disable: 4996)
+            #pragma warning(disable: 4250)
+            #pragma warning(disable: 4351)
+            #pragma warning(disable: 4822)
+        #endif
+
+        #ifndef _SECURE_SCL
+            #define _SECURE_SCL 1
+        #endif
+        #ifndef _SCL_SECURE_NO_WARNINGS
+            #define _SCL_SECURE_NO_WARNINGS 1
         #endif
 
         /* Has windows.h already been included?  If so, our preferences don't matter,

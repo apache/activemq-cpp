@@ -50,6 +50,8 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     uriParams[CONNECTION_PRODUCERWINDOWSIZE] = "connection.producerWindowSize";
     uriParams[CONNECTION_ALWAYSSYNCSEND] = "connection.alwaysSyncSend";
     uriParams[CONNECTION_USEASYNCSEND] = "connection.useAsyncSend";
+    uriParams[CONNECTION_USECOMPRESSION] = "connection.useCompression";
+    uriParams[CONNECTION_DISPATCHASYNC] = "connection.dispatchAsync";
     uriParams[PARAM_USERNAME] = "username";
     uriParams[PARAM_PASSWORD] = "password";
     uriParams[PARAM_CLIENTID] = "client-id";

@@ -67,6 +67,11 @@ namespace locks{
      * the supported platforms.
      */
     class LockHandle {
+    private:
+
+        LockHandle( const LockHandle& );
+        LockHandle& operator= ( const LockHandle& );
+
     public:
 
         // OS specific Lock Object.
@@ -83,11 +88,7 @@ namespace locks{
 
     public:
 
-        LockHandle() {
-
-            lock_count = 0;
-            lock_owner_tid = 0;
-            lock_owner = NULL;
+        LockHandle() : handle(), lock_owner(NULL), lock_owner_tid(0), lock_count(0) {
 
 #ifdef HAVE_PTHREAD_H
 
@@ -127,6 +128,11 @@ namespace locks{
     class ConditionObject : public Condition {
     private:
 
+        ConditionObject( const ConditionObject& );
+        ConditionObject& operator= ( const ConditionObject& );
+
+    private:
+
         LockHandle* lock;
 
 #ifdef HAVE_PTHREAD_H
@@ -141,9 +147,12 @@ namespace locks{
 
     public:
 
-        ConditionObject( LockHandle* lock ) {
-
-            this->lock = lock;
+        ConditionObject( LockHandle* lock ) : lock(lock),
+#ifdef HAVE_PTHREAD_H
+            condition() {
+#else
+            semaphore(), criticalSection(), numWaiting(0), numWake(0), generation(0) {
+#endif
 
 #ifdef HAVE_PTHREAD_H
             if( pthread_cond_init( &condition, NULL ) != 0 ) {
@@ -163,10 +172,6 @@ namespace locks{
                 throw RuntimeException(
                     __FILE__, __LINE__, "Failed to initialize OS Condition object." );
             }
-
-            this->numWaiting = 0;
-            this->numWake = 0;
-            this->generation = 0;
 #endif
         }
 
@@ -179,53 +184,38 @@ namespace locks{
 #endif
         }
 
-        virtual void await()
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void await();
 
-        virtual void awaitUninterruptibly()
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual void awaitUninterruptibly();
 
-        virtual long long awaitNanos( long long nanosTimeout )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual long long awaitNanos( long long nanosTimeout );
 
-        virtual bool await( long long time, const TimeUnit& unit )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual bool await( long long time, const TimeUnit& unit );
 
-        virtual bool awaitUntil( const Date& deadline )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::IllegalMonitorStateException );
+        virtual bool awaitUntil( const Date& deadline );
 
-        virtual void signal() throw ( decaf::lang::exceptions::RuntimeException );
+        virtual void signal();
 
-        virtual void signalAll() throw ( decaf::lang::exceptions::RuntimeException );
+        virtual void signalAll();
 
     };
 
 }}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-ReentrantLock::ReentrantLock() {
-    this->handle.reset( new LockHandle );
+ReentrantLock::ReentrantLock() : handle(new LockHandle) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ReentrantLock::~ReentrantLock() {
     try{
-        this->handle.reset( NULL );
+        delete this->handle;
     }
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::lock() throw( decaf::lang::exceptions::RuntimeException ) {
+void ReentrantLock::lock() {
 
     long long threadId = Thread::getId();
 
@@ -258,14 +248,13 @@ void ReentrantLock::lock() throw( decaf::lang::exceptions::RuntimeException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::lockInterruptibly() throw ( decaf::lang::exceptions::RuntimeException,
-                                                decaf::lang::exceptions::InterruptedException ) {
+void ReentrantLock::lockInterruptibly() {
 
     this->lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+bool ReentrantLock::tryLock() {
 
     long long threadId = Thread::getId();
 
@@ -299,9 +288,7 @@ bool ReentrantLock::tryLock() throw( decaf::lang::exceptions::RuntimeException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock( long long time, const TimeUnit& unit )
-    throw ( decaf::lang::exceptions::RuntimeException,
-            decaf::lang::exceptions::InterruptedException ) {
+bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
 
 //    long long threadId = Thread::getId();
 //
@@ -324,8 +311,7 @@ bool ReentrantLock::tryLock( long long time, const TimeUnit& unit )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReentrantLock::unlock() throw( decaf::lang::exceptions::RuntimeException,
-                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+void ReentrantLock::unlock() {
 
     if( handle->lock_owner_tid == 0 ) {
         return;
@@ -357,11 +343,9 @@ void ReentrantLock::unlock() throw( decaf::lang::exceptions::RuntimeException,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Condition* ReentrantLock::newCondition()
-    throw ( decaf::lang::exceptions::RuntimeException,
-            decaf::lang::exceptions::UnsupportedOperationException ) {
+Condition* ReentrantLock::newCondition() {
 
-    return new ConditionObject( this->handle.get() );
+    return new ConditionObject( this->handle );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -415,10 +399,7 @@ std::string ReentrantLock::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::await()
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+void ConditionObject::await() {
 
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
@@ -448,18 +429,12 @@ void ConditionObject::await()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::awaitUninterruptibly()
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+void ConditionObject::awaitUninterruptibly() {
     this->await();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ConditionObject::awaitNanos( long long nanosTimeout )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+long long ConditionObject::awaitNanos( long long nanosTimeout ) {
 
     // Save the current owner as we are going to unlock and release for
     // someone else to lock on potentially.  When we come back and
@@ -472,6 +447,8 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
     lock->lock_owner = NULL;
     lock->lock_count = 0;
     lock->lock_owner_tid = 0;
+
+#ifdef HAVE_PTHREAD_H
 
     // Get time now as nanoseconds.
     struct timeval tv;
@@ -488,39 +465,37 @@ long long ConditionObject::awaitNanos( long long nanosTimeout )
 
     unsigned int result = pthread_cond_timedwait( &condition, &lock->handle, &abstime );
 
-    // restore the owner
-    lock->lock_owner = lock_owner;
-    lock->lock_count = lock_count;
-    lock->lock_owner_tid = lock_owner_tid;
-
     if( result != 0 && result != ETIMEDOUT ) {
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to wait on OS Condition object." );
     }
 
+#else
+
+#endif
+
+    // restore the owner
+    lock->lock_owner = lock_owner;
+    lock->lock_count = lock_count;
+    lock->lock_owner_tid = lock_owner_tid;
+
     return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::await( long long time, const TimeUnit& unit )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+bool ConditionObject::await( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::awaitUntil( const Date& deadline )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::InterruptedException,
-           decaf::lang::exceptions::IllegalMonitorStateException ) {
+bool ConditionObject::awaitUntil( const Date& deadline DECAF_UNUSED ) {
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signal() throw ( decaf::lang::exceptions::RuntimeException ) {
+void ConditionObject::signal() {
 
 #ifdef HAVE_PTHREAD_H
     if( pthread_cond_signal( &condition ) ) {
@@ -556,7 +531,7 @@ void ConditionObject::signal() throw ( decaf::lang::exceptions::RuntimeException
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signalAll() throw ( decaf::lang::exceptions::RuntimeException ) {
+void ConditionObject::signalAll() {
 
 #ifdef HAVE_PTHREAD_H
     if( pthread_cond_broadcast( &condition ) ) {

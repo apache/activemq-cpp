@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTrace::JournalTrace() : BaseDataStructure() {
+JournalTrace::JournalTrace() 
+    : BaseDataStructure(), message("") {
 
-    this->message = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +89,9 @@ std::string JournalTrace::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = JournalTrace" << std::endl;
-    stream << " Value of JournalTrace::ID_JOURNALTRACE = 53" << std::endl;
-    stream << " Value of Message = " << this->getMessage() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = JournalTrace" << std::endl;
+    stream << "JournalTrace { ";
+    stream << "Message = " << this->getMessage();
+    stream << " }";
 
     return stream.str();
 }

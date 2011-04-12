@@ -23,60 +23,47 @@ using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-SynchronizableImpl::SynchronizableImpl() {}
+SynchronizableImpl::SynchronizableImpl() : mutex() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 SynchronizableImpl::~SynchronizableImpl() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::lock() throw( decaf::lang::exceptions::RuntimeException ) {
+void SynchronizableImpl::lock() {
     mutex.lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool SynchronizableImpl::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+bool SynchronizableImpl::tryLock() {
     return mutex.tryLock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+void SynchronizableImpl::unlock() {
     mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::wait() throw( decaf::lang::exceptions::RuntimeException,
-                                       decaf::lang::exceptions::IllegalMonitorStateException,
-                                       decaf::lang::exceptions::InterruptedException ) {
+void SynchronizableImpl::wait() {
     mutex.wait();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::wait( long long millisecs )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalMonitorStateException,
-           decaf::lang::exceptions::InterruptedException ) {
-
+void SynchronizableImpl::wait( long long millisecs ) {
     mutex.wait( millisecs );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::wait( long long millisecs, int nanos )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::IllegalMonitorStateException,
-           decaf::lang::exceptions::InterruptedException ) {
-
+void SynchronizableImpl::wait( long long millisecs, int nanos ) {
     mutex.wait( millisecs, nanos );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::notify() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
+void SynchronizableImpl::notify() {
     mutex.notify();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SynchronizableImpl::notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                            decaf::lang::exceptions::IllegalMonitorStateException ) {
+void SynchronizableImpl::notifyAll() {
     mutex.notifyAll();
 }

@@ -29,16 +29,14 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::internal::nio;
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer::IntBuffer( std::size_t capacity )
- :  Buffer( capacity ) {
+IntBuffer::IntBuffer( int capacity ) : Buffer( capacity ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* IntBuffer::allocate( std::size_t capacity ) {
+IntBuffer* IntBuffer::allocate( int capacity ) {
 
     try{
-
         return BufferFactory::createIntBuffer( capacity );
     }
     DECAF_CATCH_RETHROW( Exception )
@@ -46,8 +44,7 @@ IntBuffer* IntBuffer::allocate( std::size_t capacity ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer* IntBuffer::wrap( int* buffer, std::size_t offset, std::size_t length )
-    throw( lang::exceptions::NullPointerException ) {
+IntBuffer* IntBuffer::wrap( int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -57,7 +54,7 @@ IntBuffer* IntBuffer::wrap( int* buffer, std::size_t offset, std::size_t length 
                 "IntBuffer::wrap - Passed Buffer is Null.");
         }
 
-        return BufferFactory::createIntBuffer( buffer, offset, length );
+        return BufferFactory::createIntBuffer( buffer, size, offset, length );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -75,7 +72,7 @@ IntBuffer* IntBuffer::wrap( std::vector<int>& buffer ) {
                 "IntBuffer::wrap - Passed Buffer is Empty.");
         }
 
-        return BufferFactory::createIntBuffer( &buffer[0], 0, buffer.size() );
+        return BufferFactory::createIntBuffer( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
@@ -96,13 +93,12 @@ std::string IntBuffer::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::get( std::vector<int> buffer )
-    throw ( BufferUnderflowException ) {
+IntBuffer& IntBuffer::get( std::vector<int> buffer ) {
 
     try{
 
         if( !buffer.empty() ) {
-            this->get( &buffer[0], 0, buffer.size() );
+            this->get( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
         return *this;
     }
@@ -112,9 +108,7 @@ IntBuffer& IntBuffer::get( std::vector<int> buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::get( int* buffer, std::size_t offset, std::size_t length )
-    throw( BufferUnderflowException,
-           lang::exceptions::NullPointerException ) {
+IntBuffer& IntBuffer::get( int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -128,27 +122,32 @@ IntBuffer& IntBuffer::get( int* buffer, std::size_t offset, std::size_t length )
                 "IntBuffer::get - Passed Buffer is Null" );
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > remaining() ) {
             throw BufferUnderflowException(
                 __FILE__, __LINE__,
                 "IntBuffer::get - Not enough data to fill length = %d", length );
         }
 
-        for( std::size_t ix = 0; ix < length; ++ix ){
+        for( int ix = 0; ix < length; ++ix ){
             buffer[offset + ix] = this->get();
         }
 
         return *this;
     }
     DECAF_CATCH_RETHROW( BufferUnderflowException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferUnderflowException )
     DECAF_CATCHALL_THROW( BufferUnderflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( IntBuffer& src )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::IllegalArgumentException ) {
+IntBuffer& IntBuffer::put( IntBuffer& src ) {
 
     try{
 
@@ -184,9 +183,7 @@ IntBuffer& IntBuffer::put( IntBuffer& src )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( const int* buffer, std::size_t offset, std::size_t length )
-    throw( BufferOverflowException, ReadOnlyBufferException,
-           lang::exceptions::NullPointerException ) {
+IntBuffer& IntBuffer::put( const int* buffer, int size, int offset, int length ) {
 
     try{
 
@@ -206,6 +203,11 @@ IntBuffer& IntBuffer::put( const int* buffer, std::size_t offset, std::size_t le
                 "IntBuffer::put - Passed Buffer is Null.");
         }
 
+        if( size < 0 || offset < 0 || length < 0 || (long long)offset + (long long)length > (long long)size ) {
+            throw IndexOutOfBoundsException(
+                 __FILE__, __LINE__, "Arguments violate array bounds." );
+        }
+
         if( length > this->remaining() ) {
             throw BufferOverflowException(
                 __FILE__, __LINE__,
@@ -213,7 +215,7 @@ IntBuffer& IntBuffer::put( const int* buffer, std::size_t offset, std::size_t le
         }
 
         // read length bytes starting from the offset
-        for( std::size_t ix = 0; ix < length; ++ix ) {
+        for( int ix = 0; ix < length; ++ix ) {
             this->put( buffer[ix + offset] );
         }
 
@@ -222,18 +224,18 @@ IntBuffer& IntBuffer::put( const int* buffer, std::size_t offset, std::size_t le
     DECAF_CATCH_RETHROW( BufferOverflowException )
     DECAF_CATCH_RETHROW( ReadOnlyBufferException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, BufferOverflowException )
     DECAF_CATCHALL_THROW( BufferOverflowException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IntBuffer& IntBuffer::put( std::vector<int>& buffer )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+IntBuffer& IntBuffer::put( std::vector<int>& buffer ) {
 
     try{
 
         if( !buffer.empty() ) {
-            this->put( &buffer[0], 0, buffer.size() );
+            this->put( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
         }
 
         return *this;
@@ -249,8 +251,8 @@ int IntBuffer::compareTo( const IntBuffer& value ) const {
 
     int compareRemaining = Math::min( (int)remaining(), (int)value.remaining() );
 
-    std::size_t thisPos = this->position();
-    std::size_t otherPos = value.position();
+    int thisPos = this->position();
+    int otherPos = value.position();
     int thisVal, otherVal;
 
     while( compareRemaining > 0 ) {
@@ -281,8 +283,8 @@ bool IntBuffer::equals( const IntBuffer& value ) const {
         return false;
     }
 
-    std::size_t myPosition = this->position();
-    std::size_t otherPosition = value.position();
+    int myPosition = this->position();
+    int otherPosition = value.position();
     bool equalSoFar = true;
 
     while( equalSoFar && ( myPosition < this->limit() ) ) {

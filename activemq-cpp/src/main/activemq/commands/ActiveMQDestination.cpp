@@ -51,23 +51,20 @@ const std::string ActiveMQDestination::TEMP_QUEUE_QUALIFED_PREFIX = "temp-queue:
 const std::string ActiveMQDestination::TEMP_TOPIC_QUALIFED_PREFIX = "temp-topic://";
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::ActiveMQDestination() {
+ActiveMQDestination::ActiveMQDestination() :
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
 
-    this->physicalName = "";
-    this->orderedTarget = DEFAULT_ORDERED_TARGET;
-    this->exclusive = false;
-    this->ordered = false;
-    this->advisory = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) {
+ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) :
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
 
     this->setPhysicalName( physicalName );
-    this->orderedTarget = DEFAULT_ORDERED_TARGET;
-    this->exclusive = false;
-    this->ordered = false;
-    this->advisory = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination::~ActiveMQDestination() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,23 +109,18 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQDestination::toString() const {
-    std::ostringstream stream;
 
-    stream << "Begin Class = ActiveMQDestination" << std::endl;
+    switch( this->getDestinationType() ) {
 
-    stream << " Value of exclusive = "
-           << std::boolalpha << exclusive << std::endl;
-    stream << " Value of ordered = "
-           << std::boolalpha << ordered << std::endl;
-    stream << " Value of advisory = "
-           << std::boolalpha << advisory << std::endl;
-    stream << " Value of orderedTarget = " << orderedTarget << std::endl;
-    stream << " Value of physicalName = " << physicalName << std::endl;
-    stream << " Value of options = " << this->options.toString() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = ActiveMQDestination" << std::endl;
-
-    return stream.str();
+        case cms::Destination::TOPIC:
+            return std::string( "topic://" ) + this->getPhysicalName();
+        case cms::Destination::TEMPORARY_TOPIC:
+            return std::string( "temp-topic://" ) + this->getPhysicalName();
+        case cms::Destination::TEMPORARY_QUEUE:
+            return std::string( "temp-queue://" ) + this->getPhysicalName();
+        default:
+            return std::string( "queue://" ) + this->getPhysicalName();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

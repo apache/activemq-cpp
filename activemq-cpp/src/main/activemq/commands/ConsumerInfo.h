@@ -28,6 +28,7 @@
 #include <activemq/commands/BooleanExpression.h>
 #include <activemq/commands/BrokerId.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Pointer.h>
 #include <string>
@@ -73,10 +74,10 @@ namespace commands{
 
         const static unsigned char ID_CONSUMERINFO = 5;
 
-    protected:
+    private:
 
-        ConsumerInfo( const ConsumerInfo& ) : BaseCommand() {};
-        ConsumerInfo& operator= ( const ConsumerInfo& ) { return *this; };
+        ConsumerInfo( const ConsumerInfo& );
+        ConsumerInfo& operator= ( const ConsumerInfo& );
 
     public:
 
@@ -84,41 +85,17 @@ namespace commands{
 
         virtual ~ConsumerInfo();
 
-        /**
-         * Get the unique identifier that this object and its own
-         * Marshaler share.
-         * @returns new DataStructure type copy.
-         */
         virtual unsigned char getDataStructureType() const;
 
-        /**
-         * Clone this object and return a new instance that the
-         * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
-         */
         virtual ConsumerInfo* cloneDataStructure() const;
 
-        /**
-         * Copy the contents of the passed object into this object's
-         * members, overwriting any existing data.
-         * @param src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src );
 
-        /**
-         * Returns a string containing the information for this DataStructure
-         * such as its type and value of its elements.
-         * @return formatted string useful for debugging.
-         */
         virtual std::string toString() const;
 
-        /**
-         * Compares the DataStructure passed in to this one, and returns if
-         * they are equivalent.  Equivalent here means that they are of the
-         * same type, and that each element of the objects are the same.
-         * @returns true if DataStructure's are Equal.
-         */
         virtual bool equals( const DataStructure* value ) const;
+
+        Pointer<RemoveInfo> createRemoveCommand() const;
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
@@ -188,15 +165,7 @@ namespace commands{
             return true;
         }
 
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };
 

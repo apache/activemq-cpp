@@ -49,33 +49,18 @@ namespace io{
 
         virtual ~LoggingOutputStream();
 
-        /**
-         * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( unsigned char c ) throw ( decaf::io::IOException );
+    protected:
 
-        /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param offset the position in the buffer to start at
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
-         * @throws NullPointerException if buffer is null.
-         */
-        virtual void write( const unsigned char* buffer,
-                            std::size_t offset,
-                            std::size_t len )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException );
+        virtual void doWriteByte( unsigned char c );
+
+        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
 
     private:
 
         /**
          * Logs the data in the buffer.
          */
-        void log( const unsigned char* buffer, std::size_t len );
+        void log( const unsigned char* buffer, int len );
 
     };
 

@@ -18,19 +18,22 @@
 #ifndef _DECAF_UTIL_PROPERTIES_H_
 #define _DECAF_UTIL_PROPERTIES_H_
 
-#include <memory>
 #include <vector>
 #include <string>
 #include <decaf/util/Config.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
-#include <decaf/io/Reader.h>
-#include <decaf/io/Writer.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/io/IOException.h>
 
 namespace decaf{
+namespace io{
+    class Reader;
+    class Writer;
+}
 namespace util{
 
     class PropertiesInternal;
@@ -50,7 +53,7 @@ namespace util{
     class DECAF_API Properties{
     private:
 
-        std::auto_ptr<PropertiesInternal> internal;
+        PropertiesInternal* internal;
 
     protected:
 
@@ -58,7 +61,7 @@ namespace util{
          * Default list used to answer for any keys not found in the properties list, can
          * be filled in by another implementation of this class.
          */
-        std::auto_ptr<Properties> defaults;
+        decaf::lang::Pointer<Properties> defaults;
 
     public:
 
@@ -79,7 +82,8 @@ namespace util{
         Properties& operator= ( const Properties& src );
 
         /**
-         * Returns true if the properties object is empty
+         * Returns true if the properties object is empty.
+         *
          * @return true if empty
          */
         bool isEmpty() const;
@@ -87,54 +91,80 @@ namespace util{
         /**
          * @return The number of Properties in this Properties Object.
          */
-        std::size_t size() const;
+        int size() const;
 
         /**
          * Looks up the value for the given property.
-         * @param name The name of the property to be looked up.
+         *
+         * @param name
+         *      The name of the property to be looked up.
+         *
          * @return the value of the property with the given name, if it
-         * exists.  If it does not exist, returns NULL.
+         *         exists.  If it does not exist, returns NULL.
          */
         const char* getProperty( const std::string& name ) const;
 
         /**
          * Looks up the value for the given property.
-         * @param name the name of the property to be looked up.
-         * @param defaultValue The value to be returned if the given
-         * property does not exist.
+         *
+         * @param name
+         *      The name of the property to be looked up.
+         * @param defaultValue
+         *      The value to be returned if the given property does not exist.
+         *
          * @return The value of the property specified by <code>name</code>, if it
-         * exists, otherwise the <code>defaultValue</code>.
+         *         exists, otherwise the <code>defaultValue</code>.
          */
-        std::string getProperty( const std::string& name,
-                                 const std::string& defaultValue ) const;
+        std::string getProperty( const std::string& name, const std::string& defaultValue ) const;
 
         /**
          * Sets the value for a given property.  If the property already
          * exists, overwrites the value.
-         * @param name The name of the value to be written.
-         * @param value The value to be written.
+         *
+         * @param name
+         *      The name of the value to be written.
+         * @param value
+         *      The value to be written.
+         *
+         * @returns the old value of the property or empty string if not set.
          */
-        void setProperty( const std::string& name,
-                          const std::string& value );
+        std::string setProperty( const std::string& name, const std::string& value );
 
         /**
-         * Check to see if the Property exists in the set
-         * @param name - property name to check for in this properties set.
+         * Check to see if the Property exists in the set.
+         *
+         * @param name
+         *      The property name to check for in this properties set.
+         *
          * @return true if property exists, false otherwise.
          */
         bool hasProperty( const std::string& name ) const;
 
         /**
          * Removes the property with the given name.
-         * @param name the name of the property to remove.
+         *
+         * @param name
+         *      The name of the property to remove.
+         *
+         * @returns the previous value of the property if set, or empty string.
          */
-        void remove( const std::string& name );
+        std::string remove( const std::string& name );
 
         /**
-         * Method that serializes the contents of the property map to
-         * an array.
+         * Returns an enumeration of all the keys in this property list, including distinct keys
+         * in the default property list if a key of the same name has not already been found from
+         * the main properties list.
+         *
+         * @returns a set of keys in this property list where the key and its corresponding value are
+         *          strings, including the keys in the default property list.
+         */
+        std::vector<std::string> propertyNames() const;
+
+        /**
+         * Method that serializes the contents of the property map to an array.
+         *
          * @return list of pairs where the first is the name and the second
-         * is the value.
+         *         is the value.
          */
         std::vector< std::pair< std::string, std::string > > toArray() const;
 
@@ -174,8 +204,8 @@ namespace util{
         bool equals( const Properties& source ) const;
 
         /**
-         * Formats the contents of the Properties Object into a string
-         * that can be logged, etc.
+         * Formats the contents of the Properties Object into a string that can be logged, etc.
+         *
          * @returns string value of this object.
          */
         std::string toString() const;
@@ -194,10 +224,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::InputStream* stream )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void load( decaf::io::InputStream* stream );
 
         /**
          * Reads a property list (key and element pairs) from the input character stream in a
@@ -298,10 +325,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::Reader* reader )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::NullPointerException );
+        void load( decaf::io::Reader* reader );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the
@@ -331,9 +355,7 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::OutputStream* out, const std::string& comment )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException );
+        void store( decaf::io::OutputStream* out, const std::string& comment );
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the output
@@ -371,9 +393,11 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::Writer* writer, const std::string& comments )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException );
+        void store( decaf::io::Writer* writer, const std::string& comments );
+
+    private:
+
+        void selectProperties( decaf::util::StlMap<std::string, std::string>& selectProperties ) const;
 
     };
 

@@ -32,50 +32,27 @@ namespace commands{
 
     public:
 
-        BaseCommand() {
-            this->commandId = 0;
-            this->responseRequired = false;
+        BaseCommand() : Command(), responseRequired(false), commandId(0) {
         }
 
         virtual ~BaseCommand() {}
 
-        /**
-         * Sets the Command Id of this Message
-         * @param id Command Id
-         */
         virtual void setCommandId( int id ) {
             this->commandId = id;
         }
 
-        /**
-         * Gets the Command Id of this Message
-         * @return Command Id
-         */
         virtual int getCommandId() const {
             return commandId;
         }
 
-        /**
-         * Set if this Message requires a Response
-         * @param required true if response is required
-         */
         virtual void setResponseRequired( const bool required ) {
             this->responseRequired = required;
         }
 
-        /**
-         * Is a Response required for this Command
-         * @return true if a response is required.
-         */
         virtual bool isResponseRequired() const {
             return responseRequired;
         }
 
-        /**
-         * Copy the contents of the passed object into this objects
-         * members, overwriting any existing data.
-         * @return src - Source Object
-         */
         virtual void copyDataStructure( const DataStructure* src ) {
 
             const BaseCommand* command =
@@ -112,6 +89,9 @@ namespace commands{
             return BaseDataStructure::equals( value );
         }
 
+        virtual bool isConnectionControl() const {
+            return false;
+        }
         virtual bool isConnectionInfo() const {
             return false;
         }

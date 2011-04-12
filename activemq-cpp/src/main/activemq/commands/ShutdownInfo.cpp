@@ -38,7 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ShutdownInfo::ShutdownInfo() : BaseCommand() {
+ShutdownInfo::ShutdownInfo() 
+    : BaseCommand() {
 
 }
 
@@ -87,10 +88,10 @@ std::string ShutdownInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ShutdownInfo" << std::endl;
-    stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ShutdownInfo" << std::endl;
+    stream << "ShutdownInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << " }";
 
     return stream.str();
 }
@@ -115,8 +116,7 @@ bool ShutdownInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ShutdownInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ShutdownInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processShutdownInfo( this );
 }

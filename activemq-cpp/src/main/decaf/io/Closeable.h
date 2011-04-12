@@ -38,7 +38,7 @@ namespace io{
          *
          * @throws IOException if an error occurs while closing.
          */
-        virtual void close() throw( io::IOException ) = 0;
+        virtual void close() = 0;
 
     };
 

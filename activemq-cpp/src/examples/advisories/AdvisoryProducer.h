@@ -53,10 +53,15 @@ namespace advisories {
         std::auto_ptr<cms::MessageConsumer> consumer;
         std::auto_ptr<cms::MessageProducer> producer;
 
+    private:
+
+        AdvisoryProducer( const AdvisoryProducer& );
+        AdvisoryProducer& operator= ( const AdvisoryProducer& );
+
     public:
 
         AdvisoryProducer( cms::Session* session );
-        virtual ~AdvisoryProducer();
+        virtual ~AdvisoryProducer() throw();
 
         /**
          * Shut down the processing that occurs in the Run method.
@@ -71,7 +76,7 @@ namespace advisories {
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message );
+        virtual void onMessage( const cms::Message* message ) throw();
 
     };
 

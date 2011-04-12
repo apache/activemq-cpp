@@ -51,15 +51,15 @@ namespace util{
          * element. (This call increases by one the value that would be returned
          * by a call to nextIndex or previousIndex.)
          *
-         * @param e - the element to insert.
-         * @throw UnsupportedOperationException - if the add method is not
-         * supported by this list iterator.
-         * @throw IllegalArgumentException - if some aspect of this element
-         * prevents it from being added to this list.
+         * @param e
+         *      The element to insert into the List.
+         *
+         * @throw UnsupportedOperationException if the add method is not
+         *        supported by this list iterator.
+         * @throw IllegalArgumentException if some aspect of this element
+         *        prevents it from being added to this list.
          */
-        virtual void add( const E& e )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException ) = 0;
+        virtual void add( const E& e ) = 0;
 
         /**
          * Replaces the last element returned by next or previous with the
@@ -67,20 +67,19 @@ namespace util{
          * if neither ListIterator.remove nor ListIterator.add have been
          * called after the last call to next or previous.
          *
-         * @param e - the element with which to replace the last element
-         * returned by next or previous.
-         * @throw UnsupportedOperationException - if the add method is not
-         * supported by this list iterator.
-         * @throw IllegalArgumentException - if some aspect of this element
-         * prevents it from being added to this list.
-         * @throw IllegalStateException - if neither next nor previous have been
-         * called, or remove or add have been called after the last call to next
-         * or previous.
+         * @param e
+         *      The element with which to replace the last element returned
+         *      by next or previous.
+         *
+         * @throw UnsupportedOperationException if the add method is not
+         *        supported by this list iterator.
+         * @throw IllegalArgumentException if some aspect of this element
+         *        prevents it from being added to this list.
+         * @throw IllegalStateException if neither next nor previous have been
+         *        called, or remove or add have been called after the last call to next
+         *        or previous.
          */
-        virtual void set( const E& e )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IllegalArgumentException,
-                    decaf::lang::exceptions::IllegalStateException ) = 0;
+        virtual void set( const E& e ) = 0;
 
         /**
          * Returns true if this list iterator has more elements when traversing the
@@ -99,7 +98,8 @@ namespace util{
          * next and previous will return the same element repeatedly.)
          *
          * @return the previous element in the list.
-         * @throw NoSuchElementException - if the iteration has no previous element.
+         *
+         * @throw NoSuchElementException if the iteration has no previous element.
          */
         virtual E previous() = 0;
 
@@ -109,8 +109,8 @@ namespace util{
          * is at the end of the list.)
          *
          * @return the index of the element that would be returned by a
-         * subsequent call to next, or list size if list iterator is at end
-         * of list.
+         *         subsequent call to next, or list size if list iterator is
+         *         at end of list.
          */
         virtual int nextIndex() const = 0;
 
@@ -120,8 +120,8 @@ namespace util{
          * at the beginning of the list.)
          *
          * @return the index of the element that would be returned by a
-         * subsequent call to previous, or -1 if list iterator is at beginning
-         * of list.
+         *         subsequent call to previous, or -1 if list iterator is
+         *         at beginning of list.
          */
         virtual int previousIndex() const = 0;
 

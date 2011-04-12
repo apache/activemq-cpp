@@ -25,7 +25,7 @@ using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 TimerTask::TimerTask() :
-    fixedRate( false ), cancelled( false ), scheduledTime( 0 ), when( 0 ), period( -1 ) {
+    lock(), fixedRate(false), cancelled(false), scheduledTime(0), when(0), period(-1) {
 
 }
 

@@ -18,7 +18,6 @@
 #ifndef _DECAF_UTIL_CONCURRENT_LOCK_H_
 #define _DECAF_UTIL_CONCURRENT_LOCK_H_
 
-#include <decaf/lang/Exception.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
 
@@ -32,14 +31,14 @@ namespace concurrent{
      *
      * @since 1.0
      */
-    class Lock {
+    class DECAF_API Lock {
     private:
 
         /**
          * Flag to indicate whether or not this object has locked the
          * sync object.
          */
-        bool locked;
+        volatile bool locked;
 
         /**
          * The synchronizable object to lock/unlock.
@@ -56,71 +55,36 @@ namespace concurrent{
         /**
          * Constructor - initializes the object member and locks
          * the object if desired.
-         * @param   object   The sync object to control
-         * @param   intiallyLocked  If true, the object will automatically
-         * be locked.
+         *
+         * @param object
+         *      The sync object to control
+         * @param intiallyLocked
+         *      If true, the object will automatically be locked.
          */
-        Lock( Synchronizable* object, const bool intiallyLocked = true ) {
-
-            try{
-                syncObject = object;
-                locked = false;
-
-                if( intiallyLocked ) {
-                    lock();
-                }
-            }
-            DECAF_CATCH_RETHROW( lang::Exception )
-            DECAF_CATCHALL_THROW( lang::Exception )
-        }
+        Lock( Synchronizable* object, const bool intiallyLocked = true );
 
         /**
          * Destructor - Unlocks the object if it is locked.
          */
-        virtual ~Lock() {
-            try{
-
-                if( locked ) {
-                    syncObject->unlock();
-                }
-            }
-            DECAF_CATCH_RETHROW( lang::Exception )
-            DECAF_CATCHALL_THROW( lang::Exception )
-        }
+        virtual ~Lock();
 
         /**
          * Locks the object.
          */
-        void lock() {
-            try{
-                syncObject->lock();
-                locked = true;
-            }
-            DECAF_CATCH_RETHROW( lang::Exception )
-            DECAF_CATCHALL_THROW( lang::Exception )
-        }
+        void lock();
 
         /**
          * Unlocks the object if it is already locked, otherwise a call to this method has
          * no effect.
          */
-        void unlock() {
-
-            try{
-                 if( locked ) {
-                     syncObject->unlock();
-                     locked = false;
-                 }
-            }
-            DECAF_CATCH_RETHROW( lang::Exception )
-            DECAF_CATCHALL_THROW( lang::Exception )
-        }
+        void unlock();
 
         /**
          * Indicates whether or not the object is locked.
          * @return  true if the object is locked, otherwise false.
          */
         bool isLocked() const{ return locked; }
+
     };
 
 }}}

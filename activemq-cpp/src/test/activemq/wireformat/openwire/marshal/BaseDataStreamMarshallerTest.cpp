@@ -84,7 +84,8 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
     complexMarshaller->looseMarshal( &openWireFormat, dataStructure, &looseOut );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second );
     DataInputStream looseIn( &bais );
 
     unsigned char dataType = looseIn.readByte();
@@ -107,6 +108,8 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->floatValue, ds.cachedChild->floatValue );
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->doubleValue, ds.cachedChild->doubleValue );
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->stringValue, ds.cachedChild->stringValue );
+
+    delete [] array.first;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +138,8 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     complexMarshaller->tightMarshal2( &openWireFormat, dataStructure, &dataOut, &bs );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
+    std::pair<const unsigned char*, int> array = baos.toByteArray();
+    ByteArrayInputStream bais( array.first, array.second );
     DataInputStream dataIn( &bais );
 
     unsigned char dataType = dataIn.readByte();
@@ -160,4 +164,6 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->floatValue, ds.cachedChild->floatValue );
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->doubleValue, ds.cachedChild->doubleValue );
     CPPUNIT_ASSERT_EQUAL( dataStructure->cachedChild->stringValue, ds.cachedChild->stringValue );
+
+    delete [] array.first;
 }

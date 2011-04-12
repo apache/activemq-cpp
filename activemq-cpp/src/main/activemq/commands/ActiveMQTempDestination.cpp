@@ -27,16 +27,16 @@ using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination() :
-    ActiveMQDestination(), connection( NULL ) {
+    ActiveMQDestination(), Closeable(), connection( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
-    ActiveMQDestination( name ), connection( NULL ) {
+    ActiveMQDestination( name ), Closeable(), connection( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempDestination::~ActiveMQTempDestination() {
+ActiveMQTempDestination::~ActiveMQTempDestination() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,17 +46,11 @@ unsigned char ActiveMQTempDestination::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTempDestination::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQTempDestination" << std::endl;
-    stream << ActiveMQDestination::toString();
-    stream << "End Class = ActiveMQTempDestination" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestination::close() throw( cms::CMSException ) {
+void ActiveMQTempDestination::close() {
     try {
         if( this->connection != NULL ) {
             this->connection->destroyDestination( this );

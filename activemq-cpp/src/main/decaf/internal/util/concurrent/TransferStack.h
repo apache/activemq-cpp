@@ -35,17 +35,10 @@ namespace concurrent {
         TransferStack() {}
         virtual ~TransferStack() {}
 
-        virtual void transfer( E* e, bool timed, long long nanos )
-            throw( decaf::util::concurrent::TimeoutException,
-                   decaf::lang::exceptions::InterruptedException )
-        {
-
+        virtual void transfer( E* e, bool timed, long long nanos ) {
         }
 
-        virtual E* transfer( bool timed, long long nanos )
-            throw( decaf::util::concurrent::TimeoutException,
-                   decaf::lang::exceptions::InterruptedException )
-        {
+        virtual E* transfer( bool timed, long long nanos ) {
             return NULL;
         }
 

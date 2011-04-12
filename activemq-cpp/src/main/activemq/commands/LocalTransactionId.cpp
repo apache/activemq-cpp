@@ -39,13 +39,15 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalTransactionId::LocalTransactionId() : TransactionId() {
+LocalTransactionId::LocalTransactionId() 
+    : TransactionId(), value(0), connectionId(NULL) {
 
-    this->value = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalTransactionId::LocalTransactionId( const LocalTransactionId& other ) : TransactionId() {
+LocalTransactionId::LocalTransactionId( const LocalTransactionId& other )
+    : TransactionId(), value(0), connectionId(NULL) {
+
     this->copyDataStructure( &other );
 }
 
@@ -96,17 +98,16 @@ std::string LocalTransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = LocalTransactionId" << std::endl;
-    stream << " Value of LocalTransactionId::ID_LOCALTRANSACTIONID = 111" << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << " Value of ConnectionId is Below:" << std::endl;
+    stream << "LocalTransactionId { ";
+    stream << "Value = " << this->getValue();
+    stream << ", ";
+    stream << "ConnectionId = ";
     if( this->getConnectionId() != NULL ) {
-        stream << this->getConnectionId()->toString() << std::endl;
+        stream << this->getConnectionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << TransactionId::toString();
-    stream << "End Class = LocalTransactionId" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -188,7 +189,7 @@ int LocalTransactionId::compareTo( const LocalTransactionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool LocalTransactionId::equals( const LocalTransactionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

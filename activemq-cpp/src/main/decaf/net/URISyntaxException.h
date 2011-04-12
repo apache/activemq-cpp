@@ -29,41 +29,32 @@ namespace net{
 
         std::string reason;
         std::string input;
-        std::size_t index;
+        int index;
 
     public:
 
         /**
          * Default Constructor
          */
-        URISyntaxException() throw() {
-            this->reason = "";
-            this->input = "";
-            this->index = -1;
+        URISyntaxException() throw() : decaf::lang::Exception(), reason(), input(), index( -1 ) {
         }
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        URISyntaxException( const Exception& ex ) throw() : Exception() {
-
+        URISyntaxException( const Exception& ex ) throw() : Exception(), reason(), input(), index( -1 ) {
             *(Exception*)this = ex;
-            this->reason = "";
-            this->input = "";
-            this->index = -1;
         }
 
         /**
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        URISyntaxException( const URISyntaxException& ex ) throw() : Exception() {
+        URISyntaxException( const URISyntaxException& ex ) throw()
+            : Exception(), reason( ex.getReason() ), input( ex.getInput() ), index( ex.getIndex() ) {
 
             *(Exception*)this = ex;
-            this->reason = ex.getReason();
-            this->input = ex.getInput();
-            this->index = ex.getIndex();
         }
 
         /**
@@ -79,7 +70,7 @@ namespace net{
         URISyntaxException( const char* file, const int lineNumber,
                             const std::exception* cause,
                             const char* msg, ... )
-        throw() : lang::Exception( cause )
+        throw() : lang::Exception( cause ), reason(), input(), index( -1 )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -95,7 +86,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         URISyntaxException( const std::exception* cause )
-            throw() : lang::Exception( cause ) {}
+            throw() : lang::Exception( cause ), reason(), input(), index( -1 ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -108,13 +99,8 @@ namespace net{
          */
         URISyntaxException( const char* file, const int lineNumber,
                             const char* msg DECAF_UNUSED ) throw ()
-        : Exception()
+        : Exception(), reason( "<Unknown Reason>" ), input( "<No Address Given>" ), index( -1 )
         {
-
-            this->reason = "<Unknown Reason>";
-            this->input = "<No Address Given>";
-            this->index = -1;
-
             const char * message = "Input: %s, Reason it failed: %s";
             this->setMessage( message, input.c_str(), reason.c_str() );
 
@@ -134,11 +120,8 @@ namespace net{
          */
         URISyntaxException( const char* file, const int lineNumber,
                             const std::string& input,
-                            const std::string& reason ) throw () : Exception() {
-
-            this->reason = reason;
-            this->input = input;
-            this->index = -1;
+                            const std::string& reason ) throw ()
+        : Exception(), reason( reason ), input( input ), index( -1 ) {
 
             const char * message = "Input: %s, Reason it failed: %s";
             this->setMessage( message, input.c_str(), reason.c_str() );
@@ -161,11 +144,8 @@ namespace net{
         URISyntaxException( const char* file, const int lineNumber,
                             const std::string& input,
                             const std::string& reason,
-                            std::size_t index ) throw () : Exception() {
-
-            this->reason = reason;
-            this->input = input;
-            this->index = index;
+                            int index ) throw ()
+        : Exception(), reason( reason ), input( input ), index( index ) {
 
             const char * message = "Input: %s, Index %d resulted in this error: %s";
             this->setMessage( message, input.c_str(), index, reason.c_str() );
@@ -204,7 +184,7 @@ namespace net{
         /**
          * @returns the index in the input string where the error occured or -1
          */
-        std::size_t getIndex() const {
+        int getIndex() const {
             return index;
         }
 

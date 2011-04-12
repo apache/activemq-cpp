@@ -36,23 +36,25 @@ LoggingOutputStream::LoggingOutputStream( OutputStream* outputStream, bool own )
 LoggingOutputStream::~LoggingOutputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::write( const unsigned char c ) throw ( IOException ) {
+void LoggingOutputStream::doWriteByte( const unsigned char c ) {
     try {
 
         log( &c, 1 );
-        FilterOutputStream::write( c );
+        FilterOutputStream::doWriteByte( c );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::write( const unsigned char* buffer,
-                                 size_t offset,
-                                 size_t len )
-    throw ( IOException, NullPointerException ) {
+void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                               int offset, int length ) {
 
     try {
+
+        if( length == 0 ) {
+            return;
+        }
 
         if( buffer == NULL ) {
             throw NullPointerException(
@@ -60,25 +62,33 @@ void LoggingOutputStream::write( const unsigned char* buffer,
                 "LoggingOutputStream::write - Passed Buffer is Null" );
         }
 
-        log( buffer, len );
+        if( ( offset + length ) > size ) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        }
 
-        FilterOutputStream::write( buffer, offset, len );
+        log( buffer + offset, length );
+
+        FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );
     }
     AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::log( const unsigned char* buffer, size_t len ) {
+void LoggingOutputStream::log( const unsigned char* buffer, int len ) {
 
     // Write the buffer as hex to a string stream.
     ostringstream ostream;
     ostream << "TCP Trace: Writing:" << endl << '[';
 
-    for( size_t ix=0; ix<len; ++ix ){
-        ostream << setw(2) << setfill('0') << std::hex << (int)buffer[ix];
+    for( int ix = 0; ix < len; ++ix ) {
+        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
 
-        if( ((ix+1) % 2) == 0 ){
+        if( ( ( ix + 1 ) % 2 ) == 0 ) {
             ostream << ' ';
         }
     }

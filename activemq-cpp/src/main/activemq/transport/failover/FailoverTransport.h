@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Command.h>
+#include <activemq/commands/ConnectionId.h>
 #include <activemq/threads/TaskRunner.h>
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
@@ -31,7 +32,7 @@
 #include <activemq/transport/failover/URIPool.h>
 #include <activemq/wireformat/WireFormat.h>
 
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -67,10 +68,16 @@ namespace failover {
         bool useExponentialBackOff;
         bool initialized;
         int maxReconnectAttempts;
+        int startupMaxReconnectAttempts;
         int connectFailures;
         long long reconnectDelay;
         bool trackMessages;
+        bool trackTransactionProducers;
         int maxCacheSize;
+        bool connectionInterruptProcessingComplete;
+        bool firstConnection;
+        bool updateURIsSupported;
+        bool reconnectSupported;
 
         mutable decaf::util::concurrent::Mutex reconnectMutex;
         mutable decaf::util::concurrent::Mutex sleepMutex;
@@ -80,6 +87,7 @@ namespace failover {
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
         Pointer<URIPool> uris;
+        decaf::util::LinkedList<URI> updated;
         Pointer<URI> connectedTransportURI;
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
@@ -90,16 +98,25 @@ namespace failover {
         Pointer<TransportListener> myTransportListener;
         TransportListener* transportListener;
 
+    private:
+
+        FailoverTransport( const FailoverTransport& );
+        FailoverTransport& operator= ( const FailoverTransport& );
+
     public:
 
         FailoverTransport();
+
         virtual ~FailoverTransport();
 
         /**
          * Indicates that the Transport needs to reconnect to another URI in its
          * list.
+         *
+         * @param rebalance
+         *      Indicates if the current connection should be broken and reconnected.
          */
-        void reconnect();
+        void reconnect( bool rebalance );
 
         /**
          * Adds a New URI to the List of URIs this transport can Connect to.
@@ -110,182 +127,51 @@ namespace failover {
 
     public: // CompositeTransport methods
 
-        /**
-         * Add a URI to the list of URI's that will represent the set of Transports
-         * that this Transport is a composite of.
-         *
-         * @param uris
-         *        The new URIs to add to the set this composite maintains.
-         */
-        virtual void addURI( const List<URI>& uris );
+        virtual void addURI( bool rebalance, const List<URI>& uris );
 
-        /**
-         * Remove a URI from the set of URI's that represents the set of Transports
-         * that this Transport is composed of, removing a URI for which the composite
-         * has created a connected Transport should result in that Transport being
-         * disposed of.
-         *
-         * @param uris
-         *        The new URIs to remove to the set this composite maintains.
-         */
-        virtual void removeURI( const List<URI>& uris );
+        virtual void removeURI( bool rebalance, const List<URI>& uris );
 
     public: // Transport Members
 
-        /**
-         * Starts this transport object and creates the thread for
-         * polling on the input stream for commands.  If this object
-         * has been closed, throws an exception.  Before calling start,
-         * the caller must set the IO streams and the reader and writer
-         * objects.
-         * @throws IOException if an error occurs or if this transport
-         * has already been closed.
-         */
-        virtual void start() throw( decaf::io::IOException );
+        virtual void start();
 
-        /**
-         * Stop the Transport.
-         *
-         * @throws IOException if an error occurs while stopping the Transport.
-         */
-        virtual void stop() throw( decaf::io::IOException );
+        virtual void stop();
 
-        /**
-         * Stops the polling thread and closes the streams.  This can
-         * be called explicitly, but is also called in the destructor. Once
-         * this object has been closed, it cannot be restarted.
-         * @throws IOException if errors occur.
-         */
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
-        /**
-         * Sends a one-way command.  Does not wait for any response from the
-         * broker.
-         * @param command the command to be sent.
-         * @throws IOException if an exception occurs during writing of
-         * the command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual void oneway( const Pointer<Command>& command );
 
-        /**
-         * Sends the given command to the broker and then waits for the response.
-         * @param command the command to be sent.
-         * @return the response from the broker.
-         * @throws IOException if an exception occurs during the read of the
-         * command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<Response> request( const Pointer<Command>& command );
 
-        /**
-         * Sends the given command to the broker and then waits for the response.
-         * @param command - The command to be sent.
-         * @param timeout - The time to wait for this response.
-         * @return the response from the broker.
-         * @throws IOException if an exception occurs during the read of the
-         * command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
 
-        /**
-         * Sets the WireFormat instance to use.
-         * @param wireFormat
-         *      The WireFormat the object used to encode / decode commands.
-         */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
-        /**
-         * Sets the observer of asynchronous events from this transport.
-         * @param listener the listener of transport events.
-         */
         virtual void setTransportListener( TransportListener* listener );
 
-        /**
-         * Gets the observer of asynchronous exceptions from this transport.
-         * @return The listener of transport events.
-         */
         virtual TransportListener* getTransportListener() const;
 
-        /**
-         * Is this Transport fault tolerant, meaning that it will reconnect to
-         * a broker on disconnect.
-         *
-         * @returns true if the Transport is fault tolerant.
-         */
         virtual bool isFaultTolerant() const {
             return true;
         }
 
-        /**
-         * Is the Transport Connected to its Broker.
-         *
-         * @returns true if a connection has been made.
-         */
-        virtual bool isConnected() const {
-            return this->connected;
-        }
+        virtual bool isConnected() const;
 
-        /**
-         * Has the Transport been shutdown and no longer usable.
-         *
-         * @returns true if the Transport
-         */
-        virtual bool isClosed() const {
-            return this->closed;
-        }
+        virtual bool isClosed() const;
 
-        /**
-         * Returns true if the Transport has been initialized by a BrokerInfo command.
-         * @return true if the Transport has been initialized by a BrokerInfo command.
-         */
-        bool isInitialized() const {
-            return this->initialized;
-        }
+        bool isInitialized() const;
 
-        /**
-         * Sets the initialized state of this Transport to true.
-         * @param value - true if this Transport has been initialized.
-         */
-        void setInitialized( bool value ) {
-            this->initialized = value;
-        }
+        void setInitialized( bool value );
 
-        /**
-         * Narrows down a Chain of Transports to a specific Transport to allow a
-         * higher level transport to skip intermediate Transports in certain
-         * circumstances.
-         *
-         * @param typeId - The type_info of the Object we are searching for.
-         *
-         * @return the requested Object. or NULL if its not in this chain.
-         */
-        virtual Transport* narrow( const std::type_info& typeId ) {
-            if( typeid( *this ) == typeId ) {
-                return this;
-            }
+        virtual Transport* narrow( const std::type_info& typeId );
 
-            if( this->connectedTransport != NULL ) {
-                return this->connectedTransport->narrow( typeId );
-            }
-
-            return NULL;
-        }
-
-        /**
-         * @return the remote address for this connection
-         */
         virtual std::string getRemoteAddress() const;
+
+        virtual void reconnect( const decaf::net::URI& uri );
+
+        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris );
+
+    public:  // CompositeTask Methods.
 
         /**
          * @returns true if there is a need for the iterate method to be called by this
@@ -302,111 +188,73 @@ namespace failover {
          */
         virtual bool iterate();
 
-        /**
-         * reconnect to another location
-         * @param uri
-         * @throws IOException on failure of if not supported
-         */
-        virtual void reconnect( const decaf::net::URI& uri )
-            throw( decaf::io::IOException );
-
     public: // FailoverTransport Property Getters / Setters
 
-        long long getTimeout() const {
-            return this->timeout;
-        }
+        long long getTimeout() const;
 
-        void setTimeout( long long value ) {
-            this->timeout = value;
-        }
+        void setTimeout( long long value );
 
-        long long getInitialReconnectDelay() const {
-            return this->initialReconnectDelay;
-        }
+        long long getInitialReconnectDelay() const;
 
-        void setInitialReconnectDelay( long long value ) {
-            this->initialReconnectDelay = value;
-        }
+        void setInitialReconnectDelay( long long value );
 
-        long long getMaxReconnectDelay() const {
-            return this->maxReconnectDelay;
-        }
+        long long getMaxReconnectDelay() const;
 
-        void setMaxReconnectDelay( long long value ) {
-            this->maxReconnectDelay = value;
-        }
+        void setMaxReconnectDelay( long long value );
 
-        long long getBackOffMultiplier() const {
-            return this->backOffMultiplier;
-        }
+        long long getBackOffMultiplier() const;
 
-        void setBackOffMultiplier( long long value ) {
-            this->backOffMultiplier = value;
-        }
+        void setBackOffMultiplier( long long value );
 
-        bool isUseExponentialBackOff() const {
-            return this->useExponentialBackOff;
-        }
+        bool isUseExponentialBackOff() const;
 
-        void setUseExponentialBackOff( bool value ) {
-            this->useExponentialBackOff = value;
-        }
+        void setUseExponentialBackOff( bool value );
 
-        bool isRandomize() const {
-            return this->uris->isRandomize();
-        }
+        bool isRandomize() const;
 
-        void setRandomize( bool value ) {
-            this->uris->setRandomize( value );
-        }
+        void setRandomize( bool value );
 
-        int getMaxReconnectAttempts() const {
-            return this->maxReconnectAttempts;
-        }
+        int getMaxReconnectAttempts() const;
 
-        void setMaxReconnectAttempts( int value ) {
-            this->maxReconnectAttempts = value;
-        }
+        void setMaxReconnectAttempts( int value );
 
-        long long getReconnectDelay() const {
-            return this->reconnectDelay;
-        }
+        int getStartupMaxReconnectAttempts() const;
 
-        void setReconnectDelay( long long value ) {
-            this->reconnectDelay = value;
-        }
+        void setStartupMaxReconnectAttempts( int value );
 
-        bool isBackup() const {
-            return this->backups->isEnabled();
-        }
+        long long getReconnectDelay() const;
 
-        void setBackup( bool value ) {
-            this->backups->setEnabled( value );
-        }
+        void setReconnectDelay( long long value );
 
-        int getBackupPoolSize() const {
-            return this->backups->getBackupPoolSize();
-        }
+        bool isBackup() const;
 
-        void setBackupPoolSize( int value ) {
-            this->backups->setBackupPoolSize( value );
-        }
+        void setBackup( bool value );
 
-        bool isTrackMessages() const {
-            return this->trackMessages;
-        }
+        int getBackupPoolSize() const;
 
-        void setTrackMessages( bool value ) {
-            this->trackMessages = value;
-        }
+        void setBackupPoolSize( int value );
 
-        int getMaxCacheSize() const {
-            return this->maxCacheSize;
-        }
+        bool isTrackMessages() const;
 
-        void setMaxCacheSize( int value ) {
-            this->maxCacheSize = value;
-        }
+        void setTrackMessages( bool value );
+
+        bool isTrackTransactionProducers() const;
+
+        void setTrackTransactionProducers( bool value );
+
+        int getMaxCacheSize() const;
+
+        void setMaxCacheSize( int value );
+
+        bool isReconnectSupported() const;
+
+        void setReconnectSupported( bool value );
+
+        bool isUpdateURIsSupported() const;
+
+        void setUpdateURIsSupported( bool value );
+
+        void setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId );
 
     protected:
 
@@ -419,33 +267,40 @@ namespace failover {
          *
          * @throw IOException if an errors occurs while restoring the old state.
          */
-        void restoreTransport( const Pointer<Transport>& transport )
-            throw( decaf::io::IOException );
+        void restoreTransport( const Pointer<Transport>& transport );
 
         /**
          * Called when this class' TransportListener is notified of a Failure.
          * @param error - The CMS Exception that was thrown.
          * @throw Exception if an error occurs.
          */
-        void handleTransportFailure( const decaf::lang::Exception& error )
-            throw( decaf::lang::Exception );
-
-    private:
+        void handleTransportFailure( const decaf::lang::Exception& error );
 
         /**
-         * @return Returns true if the command is one sent when a connection
-         * is being closed.
+         * Called when the Broker sends a ConnectionControl command which could
+         * signal that this Client needs to reconnect in order to rebalance the
+         * connections on a Broker or the set of Known brokers has changed.
+         *
+         * @param control
+         *      The ConnectionControl command sent from the Broker.
          */
-        bool isShutdownCommand( const Pointer<Command>& command ) const;
+        void handleConnectionControl( const Pointer<Command>& control );
+
+    private:
 
         /**
          * Looks up the correct Factory and create a new Composite version of the
          * Transport requested.
          *
          * @param uri - The URI to connect to
+         *
+         * @throw IOException if an I/O error occurs while creating the new Transport.
          */
-        Pointer<Transport> createTransport( const URI& location ) const
-            throw ( decaf::io::IOException );
+        Pointer<Transport> createTransport( const URI& location ) const;
+
+        void processNewTransports( bool rebalance, std::string newTransports );
+
+        void processResponse(const Pointer<Response>& response);
 
     };
 

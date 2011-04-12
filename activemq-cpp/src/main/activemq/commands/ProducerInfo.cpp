@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerInfo::ProducerInfo() : BaseCommand() {
+ProducerInfo::ProducerInfo() 
+    : BaseCommand(), producerId(NULL), destination(NULL), brokerPath(), dispatchAsync(false), windowSize(0) {
 
-    this->dispatchAsync = false;
-    this->windowSize = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,32 +93,43 @@ std::string ProducerInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ProducerInfo" << std::endl;
-    stream << " Value of ProducerInfo::ID_PRODUCERINFO = 6" << std::endl;
-    stream << " Value of ProducerId is Below:" << std::endl;
+    stream << "ProducerInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ProducerId = ";
     if( this->getProducerId() != NULL ) {
-        stream << this->getProducerId()->toString() << std::endl;
+        stream << this->getProducerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "BrokerPath = ";
+    if( this->getBrokerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+                stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
-    stream << " Value of WindowSize = " << this->getWindowSize() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ProducerInfo" << std::endl;
+    stream << ", ";
+    stream << "DispatchAsync = " << this->isDispatchAsync();
+    stream << ", ";
+    stream << "WindowSize = " << this->getWindowSize();
+    stream << " }";
 
     return stream.str();
 }
@@ -238,8 +248,15 @@ void ProducerInfo::setWindowSize( int windowSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processProducerInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> ProducerInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getProducerId() );
+    return info;
+}
+

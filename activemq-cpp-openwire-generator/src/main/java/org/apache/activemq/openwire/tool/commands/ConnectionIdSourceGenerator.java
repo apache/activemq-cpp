@@ -32,21 +32,31 @@ public class ConnectionIdSourceGenerator extends CommandSourceGenerator {
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const SessionId* sessionId ) {");
+        out.println("ConnectionId::ConnectionId( const SessionId* sessionId )");
+        out.println("    : " + generateInitializerList() + " {");
+        out.println("");
         out.println("    this->value = sessionId->getConnectionId();");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const ProducerId* producerId ) {");
+        out.println("ConnectionId::ConnectionId( const ProducerId* producerId )");
+        out.println("    : " + generateInitializerList() + " {");
+        out.println("");
         out.println("    this->value = producerId->getConnectionId();");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConnectionId::ConnectionId( const ConsumerId* consumerId ) {");
+        out.println("ConnectionId::ConnectionId( const ConsumerId* consumerId )");
+        out.println("    : " + generateInitializerList() + " {");
+        out.println("");
         out.println("    this->value = consumerId->getConnectionId();");
         out.println("}");
         out.println("");
 
         super.generateAdditionalConstructors(out);
+    }
+
+    protected void generateToStringBody( PrintWriter out ) {
+        out.println("    return this->value;");
     }
 }

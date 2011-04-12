@@ -38,10 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DiscoveryEvent::DiscoveryEvent() : BaseDataStructure() {
+DiscoveryEvent::DiscoveryEvent() 
+    : BaseDataStructure(), serviceName(""), brokerName("") {
 
-    this->serviceName = "";
-    this->brokerName = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,12 +90,11 @@ std::string DiscoveryEvent::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = DiscoveryEvent" << std::endl;
-    stream << " Value of DiscoveryEvent::ID_DISCOVERYEVENT = 40" << std::endl;
-    stream << " Value of ServiceName = " << this->getServiceName() << std::endl;
-    stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = DiscoveryEvent" << std::endl;
+    stream << "DiscoveryEvent { ";
+    stream << "ServiceName = " << this->getServiceName();
+    stream << ", ";
+    stream << "BrokerName = " << this->getBrokerName();
+    stream << " }";
 
     return stream.str();
 }

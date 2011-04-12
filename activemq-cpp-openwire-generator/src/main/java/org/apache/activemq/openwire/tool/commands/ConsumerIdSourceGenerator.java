@@ -17,8 +17,28 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
+
+    protected void generateAdditionalConstructors( PrintWriter out ) {
+
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("ConsumerId::ConsumerId( const SessionId& sessionId, long long consumerIdd )");
+        out.println("    : " + generateInitializerList() + " {");
+        out.println("");
+        out.println("    this->connectionId = sessionId.getConnectionId();");
+        out.println("    this->sessionId = sessionId.getValue();");
+        out.println("    this->value = consumerIdd;");
+        out.println("}");
+        out.println("");
+
+        super.generateAdditionalConstructors(out);
+    }
+
+    protected String generateInitializerList(String current) {
+        return super.generateInitializerList() + ", parentId()";
+    }
 
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
@@ -31,6 +51,24 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
         out.println("");
 
         super.generateAdditionalMethods(out);
+    }
+
+    protected void populateIncludeFilesSet() {
+
+        super.populateIncludeFilesSet();
+
+        Set<String> includes = getIncludeFiles();
+        includes.add("<sstream>");
+    }
+
+    protected void generateToStringBody( PrintWriter out ) {
+        out.println("    ostringstream stream;" );
+        out.println("");
+        out.println("    stream << this->connectionId << \":\"");
+        out.println("           << this->sessionId << \":\"");
+        out.println("           << this->value;");
+        out.println("");
+        out.println("    return stream.str();");
     }
 
 }

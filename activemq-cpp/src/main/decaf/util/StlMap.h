@@ -20,7 +20,7 @@
 
 #include <map>
 #include <vector>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Map.h>
@@ -47,14 +47,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlMap() : Map<K,V,COMPARATOR>() {}
+        StlMap() : Map<K,V,COMPARATOR>(), valueMap(), mutex() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
             copy( source );
         }
 
@@ -63,7 +63,7 @@ namespace util{
          * one.
          * @param source The source map.
          */
-        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
             copy( source );
         }
 
@@ -115,7 +115,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             valueMap.clear();
         }
 
@@ -157,20 +157,19 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t size() const {
-            return valueMap.size();
+        virtual int size() const {
+            return (int)valueMap.size();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual V& get( const K& key )
-            throw( lang::exceptions::NoSuchElementException ) {
+        virtual V& get( const K& key ) {
 
             typename std::map<K,V,COMPARATOR>::iterator iter;
             iter = valueMap.find( key );
             if( iter == valueMap.end() ){
-                throw lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key does not exist in map" );
             }
 
@@ -180,13 +179,12 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual const V& get( const K& key ) const
-            throw( lang::exceptions::NoSuchElementException ) {
+        virtual const V& get( const K& key ) const {
 
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
             iter = valueMap.find( key );
             if( iter == valueMap.end() ){
-                throw lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key does not exist in map" );
             }
 
@@ -196,26 +194,21 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void put( const K& key, const V& value )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
-
+        virtual void put( const K& key, const V& value ) {
             valueMap[key] = value;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const StlMap<K,V,COMPARATOR>& other )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
-
+        virtual void putAll( const StlMap<K,V,COMPARATOR>& other ) {
             this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
 
             std::vector<K> keys = other.keySet();
 
@@ -229,13 +222,11 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual V remove( const K& key )
-            throw ( decaf::lang::exceptions::NoSuchElementException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual V remove( const K& key ) {
 
             typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
             if( iter == valueMap.end() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
+                throw NoSuchElementException(
                     __FILE__, __LINE__, "Key is not present in this Map." );
             }
 
@@ -276,51 +267,35 @@ namespace util{
 
     public:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs ) {
             mutex.wait( millisecs );
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait( long long millisecs, int nanos ) {
             mutex.wait( millisecs, nanos );
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 

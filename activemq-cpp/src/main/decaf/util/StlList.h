@@ -22,14 +22,13 @@
 #include <algorithm>
 #include <memory>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
-#include <decaf/util/concurrent/Synchronizable.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/util/ListIterator.h>
 #include <decaf/util/List.h>
+#include <decaf/util/AbstractList.h>
 
 namespace decaf{
 namespace util{
@@ -39,7 +38,7 @@ namespace util{
      * additional methods not provided by the STL type.
      */
     template <typename E>
-    class StlList : public decaf::util::List<E> {
+    class StlList : public decaf::util::AbstractList<E> {
     private:
 
         std::list<E> values;
@@ -53,19 +52,28 @@ namespace util{
             typename std::list<E>::iterator prev;
             typename std::list<E>* list;
 
+        private:
+
+            StlListIterator( const StlListIterator& );
+            StlListIterator operator= ( const StlListIterator& );
+
         public:
 
-            StlListIterator( typename std::list<E>* list, std::size_t index ) {
-                this->current = list->begin();
-                std::advance( this->current, index );
-                this->prev = list->end();
-                this->list = list;
+            StlListIterator( typename std::list<E>* list, int index ) :
+                current( list->begin() ), prev( list->end() ), list( list ) {
+
+                if( index < (int)list->size() ) {
+                    std::advance( this->current, index );
+                } else {
+                    this->current = list->end();
+                }
             }
+
             virtual ~StlListIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == list->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "List::Iterator::next - No more elements to return" );
                 }
@@ -78,8 +86,7 @@ namespace util{
                 return ( this->current != list->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 if( this->prev == list->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -90,27 +97,17 @@ namespace util{
                 this->prev = this->list->end();
             }
 
-            virtual void add( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException ) {
-
-                throw lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__,
-                    "List::ListIterator::add - Not Implemented Yet." );
+            virtual void add( const E& e ) {
+                this->list->insert( this->current, e );
             }
 
-            virtual void set( const E& e )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException,
-                        decaf::lang::exceptions::IllegalStateException )
-            {
-                if( this->current == list->end() ) {
-                    throw lang::exceptions::IllegalStateException(
-                        __FILE__, __LINE__,
-                        "List::Iterator::set - Not a valid state for set" );
-                }
+            virtual void set( const E& e ) {
 
-                *( this->current ) = e;
+                if( this->current == list->end() ) {
+                    this->list->insert( this->current, e );
+                } else {
+                    *( this->current ) = e;
+                }
             }
 
             virtual bool hasPrevious() const {
@@ -119,7 +116,7 @@ namespace util{
 
             virtual E previous() {
                 if( this->current == this->list->begin() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "List::ListIterator::previous - No Previous element." );
                 }
@@ -153,19 +150,28 @@ namespace util{
             typename std::list<E>::const_iterator prev;
             const typename std::list<E>* list;
 
+        private:
+
+            ConstStlListIterator( const ConstStlListIterator& );
+            ConstStlListIterator operator= ( const ConstStlListIterator& );
+
         public:
 
-            ConstStlListIterator( const typename std::list<E>* list, std::size_t index ) {
-                this->current = list->begin();
-                std::advance( this->current, index );
-                this->prev = list->end();
-                this->list = list;
+            ConstStlListIterator( const typename std::list<E>* list, int index ) :
+                ListIterator<E>(), current( list->begin() ), prev( list->end() ), list( list ) {
+
+                if( index < (int)list->size() ) {
+                    std::advance( this->current, index );
+                } else {
+                    this->current = list->end();
+                }
             }
+
             virtual ~ConstStlListIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == list->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "List::Iterator::next - No more elements to return" );
                 }
@@ -178,28 +184,22 @@ namespace util{
                 return ( this->current != list->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::remove - Const Iterator." );
             }
 
-            virtual void add( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException ) {
+            virtual void add( const E& e DECAF_UNUSED ) {
 
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::add - Const Iterator." );
             }
 
-            virtual void set( const E& e DECAF_UNUSED )
-                throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                        decaf::lang::exceptions::IllegalArgumentException,
-                        decaf::lang::exceptions::IllegalStateException )
-            {
+            virtual void set( const E& e DECAF_UNUSED ) {
+
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "List::ListIterator::set - Const Iterator." );
@@ -211,7 +211,7 @@ namespace util{
 
             virtual E previous() {
                 if( this->current == this->list->begin() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "List::ListIterator::previous - No Previous element." );
                 }
@@ -242,14 +242,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlList() {}
+        StlList() : AbstractList<E>(), values() {}
 
         /**
          * Copy constructor - copies the content of the given set into this
          * one.
          * @param source The source set.
          */
-        StlList( const StlList& source ) : List<E>() {
+        StlList( const StlList& source ) : AbstractList<E>(), values() {
             copy( source );
         }
 
@@ -258,17 +258,36 @@ namespace util{
          * one.
          * @param source The source set.
          */
-        StlList( const Collection<E>& source ) : List<E>() {
-            List<E>::copy( source );
+        StlList( const Collection<E>& source ) : AbstractList<E>(), values() {
+            AbstractList<E>::copy( source );
         }
-
-        virtual ~StlList() {}
 
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const StlList& source ) const {
-            return this->values == source.values;
+        virtual bool equals( const Collection<E>& collection ) const {
+
+            const StlList<E>* listptr = dynamic_cast<const StlList<E>*>( &collection );
+            if( listptr == NULL ) {
+                return AbstractList<E>::equals( collection );
+            }
+
+            return this->values == listptr->values;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void copy( const Collection<E>& collection ) {
+
+            const StlList<E>* listptr = dynamic_cast<const StlList<E>*>( &collection );
+            if( listptr == NULL ) {
+                AbstractList<E>::copy( collection );
+                return;
+            }
+
+            this->values.clear();
+            this->values = listptr->values;
         }
 
         /**
@@ -294,24 +313,22 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual ListIterator<E>* listIterator( std::size_t index )
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual ListIterator<E>* listIterator( int index ) {
 
-            if( index >= this->size() ) {
+            if( index < 0 || index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
-                    "List::listIterator - Index greater than size()" );
+                    "List::listIterator - Index greater than size() or negative" );
             }
 
             return new StlListIterator( &values, index );
         }
-        virtual ListIterator<E>* listIterator( std::size_t index ) const
-            throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual ListIterator<E>* listIterator( int index ) const {
 
-            if( index >= this->size() ) {
+            if( index < 0 || index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
-                    "List::listIterator - Index greater than size()" );
+                    "List::listIterator - Index greater than size() or negative" );
             }
 
             return new ConstStlListIterator( &values, index );
@@ -320,62 +337,8 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const StlList& source ) {
-            this->values.clear();
-            this->values = source.values;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             values.clear();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) {
-            typename std::list<E>::const_iterator iter;
-            iter = std::find( values.begin(), values.end(), value );
-            return iter != values.end();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::size_t indexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) {
-
-            typename std::list<E>::iterator iter;
-            iter = std::find( values.begin(), values.end(), value );
-
-            if( iter == values.end() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__,
-                    "List::indexOf - No matching element in list" );
-            }
-
-            return std::distance( values.begin(), iter );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::size_t lastIndexOf( const E& value )
-            throw ( decaf::lang::exceptions::NoSuchElementException ) {
-
-            typename std::list<E>::reverse_iterator iter;
-            iter = std::find( values.rbegin(), values.rend(), value );
-
-            if( iter == values.rend() ) {
-                throw decaf::lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__,
-                    "List::lastIndexOf - No matching element in list" );
-            }
-
-            // Now reverse the result to get the last index
-            return this->size() - std::distance( values.rbegin(), iter ) - 1;
         }
 
         /**
@@ -388,20 +351,19 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual std::size_t size() const {
-            return values.size();
+        virtual int size() const {
+            return (int)values.size();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual E get( std::size_t index ) const
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual E get( int index ) const {
 
-            if( index >= this->size() ) {
+            if( index < 0 || index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
-                    "List::get - Index greater than size()" );
+                    "List::get - Index greater than size() or negative" );
             }
 
             // Advance from begin and return the value at that location.
@@ -413,13 +375,12 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E set( std::size_t index, const E& element )
-            throw ( decaf::lang::exceptions::IndexOutOfBoundsException ){
+        virtual E set( int index, const E& element ) {
 
-            if( index >= this->size() ) {
+            if( index < 0 || index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
-                    "List::get - Index greater than size()" );
+                    "List::get - Index greater than size() or negative" );
             }
 
             // Advance from begin and return the value at that location
@@ -432,27 +393,9 @@ namespace util{
             return oldValue;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
+        virtual void add( int index, const E& element ) {
 
-            values.insert( values.end(), value );
-
-            return true;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual void add( std::size_t index, const E& element )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IndexOutOfBoundsException ) {
-
-            if( index > this->size() ) {
+            if( index < 0 || index > this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
                     "List::add - Index greater than size()" );
@@ -464,35 +407,62 @@ namespace util{
             this->values.insert( iter, element );
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool addAll( std::size_t index, const Collection<E>& source )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual bool add( const E& value ) {
+            values.insert( values.end(), value );
+            return true;
+        }
 
-            if( index != 0 && index > this->size() ) {
-                throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "List::addAll - Index greater than size()" );
+        virtual bool addAll( const Collection<E>& collection ) {
+
+            if( collection.isEmpty() ) {
+                return false;
             }
 
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                this->add( index++, srcIter->next() );
+            std::vector<E> array = collection.toArray();
+            typename std::vector<E>::const_iterator vecIter = array.begin();
+
+            std::auto_ptr< ListIterator<E> > iter( this->listIterator( (int)this->values.size() ) );
+
+            while( vecIter != array.end() ) {
+                iter->add( *( vecIter++) );
             }
 
-            return !source.isEmpty();
+            return true;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+        virtual bool addAll( int index, const Collection<E>& collection ) {
 
-            std::size_t origSize = this->size();
+            if( index < 0 || index > this->size() ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__,
+                    "List::addAll - Index greater than size()" );
+            }
+
+            if( collection.isEmpty() ) {
+                return false;
+            }
+
+            std::vector<E> array = collection.toArray();
+            typename std::vector<E>::const_iterator vecIter = array.begin();
+
+            std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+
+            while( vecIter != array.end() ) {
+                iter->add( *( vecIter++) );
+            }
+
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual bool remove( const E& value ) {
+
+            int origSize = this->size();
             this->values.remove( value );
             return origSize != this->size();
         }
@@ -500,14 +470,12 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual E remove( std::size_t index )
-            throw ( decaf::lang::exceptions::UnsupportedOperationException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+        virtual E removeAt( int index ) {
 
-            if( index > this->size() ) {
+            if( index < 0 || index >= this->size() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__,
-                    "List::add - Index greater than size()" );
+                    "List::removeAt - Index greater than size() or negative" );
             }
 
             // Advance from begin and insert the value at that location
@@ -517,6 +485,37 @@ namespace util{
             this->values.erase( iter );
 
             return oldValue;
+        }
+
+        virtual int indexOf( const E& value ) const {
+
+            typename std::list<E>::const_iterator iter;
+            iter = std::find( values.begin(), values.end(), value );
+
+            if( iter == values.end() ) {
+                return -1;
+            }
+
+            return (int)std::distance( values.begin(), iter );
+        }
+
+        virtual int lastIndexOf( const E& value ) const {
+
+            typename std::list<E>::const_reverse_iterator iter;
+            iter = std::find( values.rbegin(), values.rend(), value );
+
+            if( iter == values.rend() ) {
+                return -1;
+            }
+
+            // Now reverse the result to get the last index
+            return (int)( this->size() - std::distance( values.rbegin(), iter ) - 1 );
+        }
+
+        virtual bool contains( const E& value ) const {
+            typename std::list<E>::const_iterator iter;
+            iter = std::find( values.begin(), values.end(), value );
+            return iter != values.end();
         }
 
     };

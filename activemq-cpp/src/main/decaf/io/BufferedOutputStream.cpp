@@ -16,14 +16,9 @@
  */
 
 #include "BufferedOutputStream.h"
-#include <algorithm>
 
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
+#include <decaf/lang/System.h>
+#include <decaf/lang/Math.h>
 
 using namespace std;
 using namespace decaf;
@@ -33,18 +28,15 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
-: FilterOutputStream( stream, own ) {
+: FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
+
     // Default to 1k buffer.
-    init( 1024 );
+    init( 8192 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream,
-    std::size_t bufSize,
-    bool own )
-        throw ( lang::exceptions::IllegalArgumentException )
-
-: FilterOutputStream( stream, own ) {
+BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own ) :
+    FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
 
     try {
         this->init( bufSize );
@@ -55,6 +47,7 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream,
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::~BufferedOutputStream() {
+
     try{
         this->close();
 
@@ -69,12 +62,11 @@ BufferedOutputStream::~BufferedOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::init( std::size_t bufSize ) {
+void BufferedOutputStream::init( int bufSize ) {
 
-    if( bufSize <= 0 ) {
-        throw new IllegalArgumentException(
-            __FILE__, __LINE__,
-            "BufferedOutputStream::init - Size must be greater than zero");
+    if( bufSize < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Size of Buffer cannot be negative." );
     }
 
     this->bufferSize = bufSize;
@@ -84,29 +76,22 @@ void BufferedOutputStream::init( std::size_t bufSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::close() throw( io::IOException ){
+void BufferedOutputStream::emptyBuffer() {
 
-    // let parent close the inputStream
-    FilterOutputStream::close();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::emptyBuffer() throw ( IOException ){
-
-    if( outputStream == NULL ) {
+    if( this->outputStream == NULL ) {
         throw IOException(
             __FILE__, __LINE__,
             "BufferedOutputStream::emptyBuffer - OutputStream is closed" );
     }
 
-    if( head != tail ){
-        outputStream->write( buffer+head, 0, tail-head );
+    if( this->head != this->tail ){
+        this->outputStream->write( this->buffer + this->head, this->tail -this->head );
     }
-    head = tail = 0;
+    this->head = this->tail = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::flush() throw ( IOException ){
+void BufferedOutputStream::flush() {
 
     try {
 
@@ -127,7 +112,7 @@ void BufferedOutputStream::flush() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::write( const unsigned char c ) throw ( IOException ){
+void BufferedOutputStream::doWriteByte( const unsigned char c ) {
 
     try{
 
@@ -148,12 +133,11 @@ void BufferedOutputStream::write( const unsigned char c ) throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::write( const std::vector<unsigned char>& buffer )
-    throw ( IOException ) {
+void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
 
     try{
 
-        if( buffer.empty() ) {
+        if( size == 0 ) {
             return;
         }
 
@@ -163,21 +147,19 @@ void BufferedOutputStream::write( const std::vector<unsigned char>& buffer )
                 "BufferedOutputStream::write - Stream is clsoed" );
         }
 
-        this->write( &buffer[0], 0, buffer.size() );
+        this->doWriteArrayBounded( buffer, size, 0, size );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::write( const unsigned char* buffer,
-                                  std::size_t offset, std::size_t len )
-    throw ( IOException, lang::exceptions::NullPointerException ) {
+void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
+                                                int offset, int length ) {
 
     try{
 
-        // Fast exit.
-        if( len == 0 ) {
+        if( length == 0 ) {
             return;
         }
 
@@ -193,18 +175,32 @@ void BufferedOutputStream::write( const unsigned char* buffer,
                 "BufferedOutputStream::write - Buffer passed is Null.");
         }
 
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
         // Iterate until all the data is written.
-        for( std::size_t pos=0; pos < len; ){
+        for( int pos = 0; pos < length; ){
 
             if( tail >= bufferSize ){
                 emptyBuffer();
             }
 
             // Get the number of bytes left to write.
-            std::size_t bytesToWrite = min( (int)bufferSize-tail, len-pos );
+            int bytesToWrite = Math::min( bufferSize - tail, length - pos );
 
-            // Copy the data.
-            memcpy( this->buffer+tail, buffer+offset+pos, bytesToWrite );
+            System::arraycopy( buffer, offset + pos, this->buffer, this->tail, bytesToWrite );
 
             // Increase the tail position.
             tail += bytesToWrite;
@@ -215,5 +211,6 @@ void BufferedOutputStream::write( const unsigned char* buffer,
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCHALL_THROW( IOException )
 }

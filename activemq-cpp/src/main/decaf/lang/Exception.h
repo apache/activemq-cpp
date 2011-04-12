@@ -191,7 +191,7 @@ namespace lang{
          * Assignment operator.
          * @param ex const reference to another Exception
          */
-        virtual Exception& operator =( const Exception& ex );
+        Exception& operator =( const Exception& ex );
 
     protected:
 

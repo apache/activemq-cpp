@@ -36,7 +36,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
+AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) : session(session),
+                                                              consumer(),
+                                                              advisoryConsumer() {
 
     if( session == NULL ) {
         throw NullPointerException(
@@ -48,7 +50,6 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
     std::auto_ptr<cms::Topic> advisories( session->createTopic(
         "ActiveMQ.Advisory.Producer.Topic.HEART-BEAT-CHANNEL" ) );
 
-    this->session = session;
     this->consumer.reset( session->createConsumer( destination.get() ) );
     this->advisoryConsumer.reset( session->createConsumer( advisories.get() ) );
     this->consumer->setMessageListener( this );
@@ -56,7 +57,7 @@ AdvisoryConsumer::AdvisoryConsumer( cms::Session* session ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryConsumer::~AdvisoryConsumer() {
+AdvisoryConsumer::~AdvisoryConsumer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +66,7 @@ void AdvisoryConsumer::close() throw( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AdvisoryConsumer::onMessage( const cms::Message* message ) {
+void AdvisoryConsumer::onMessage( const cms::Message* message ) throw() {
 
     if( message->getCMSType() == "Advisory" ) {
 
@@ -77,6 +78,8 @@ void AdvisoryConsumer::onMessage( const cms::Message* message ) {
         if( amqMessage != NULL && amqMessage->getDataStructure() != NULL ) {
             const ProducerInfo* info = dynamic_cast<const ProducerInfo*>(
                 amqMessage->getDataStructure().get() );
+
+            std::cout << "Got ProducerInfo for producer: " << info->getProducerId()->toString() << std::endl;
         }
 
         if( message->propertyExists( "producerCount" ) ) {

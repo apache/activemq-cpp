@@ -28,11 +28,10 @@ namespace concurrent {
     class DECAF_API MutexHandle {
     public:
 
-        MutexHandle() : lock_owner(0), lock_count(0) {
+        MutexHandle() : mutex(), lock_owner(0), lock_count(0) {
         }
 
         ~MutexHandle() {
-            DeleteCriticalSection( &mutex );
         }
 
         // The mutex object.

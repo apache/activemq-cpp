@@ -17,16 +17,15 @@
 
 #include "DynamicDestinationResolver.h"
 #include "ResourceLifecycleManager.h"
-#include <activemq/exceptions/ActiveMQException.h>
+#include <cms/CMSException.h>
 
 using namespace activemq::cmsutil;
-using namespace activemq::exceptions;
 using namespace decaf::util;
+using namespace cms;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
-        const std::string& topicName ) throw ( cms::CMSException ) {
+cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic( const std::string& topicName ) {
 
     cms::Topic* topic = NULL;
     try {
@@ -34,7 +33,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
         // See if we already have a topic with this name.
         topic = topicMap.get( topicName );
 
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
 
         // Create a new topic.
         topic = session->createTopic( topicName );
@@ -49,8 +48,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
-        const std::string& queueName ) throw ( cms::CMSException ) {
+cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue( const std::string& queueName ) {
 
     cms::Queue* queue = NULL;
     try {
@@ -58,7 +56,7 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
         // See if we already have a queue with this name.
         queue = queueMap.get( queueName );
 
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
 
         // Create a new queue.
         queue = session->createQueue( queueName );
@@ -73,8 +71,12 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DynamicDestinationResolver::~DynamicDestinationResolver() {
+DynamicDestinationResolver::DynamicDestinationResolver()
+    : DestinationResolver(), sessionResolverMap(), resourceLifecycleManager( NULL ) {
+}
 
+////////////////////////////////////////////////////////////////////////////////
+DynamicDestinationResolver::~DynamicDestinationResolver() throw() {
     destroy();
 }
 
@@ -91,20 +93,17 @@ void DynamicDestinationResolver::destroy() {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* DynamicDestinationResolver::resolveDestinationName(
-        cms::Session* session, const std::string& destName, bool pubSubDomain)
-        throw (cms::CMSException) {
+        cms::Session* session, const std::string& destName, bool pubSubDomain ) {
 
     if( destName == "" ) {
-        throw ActiveMQException(
-            __FILE__, __LINE__,
-            "destination name is invalid" ).convertToCMSException();
+        throw CMSException( "destination name is invalid", NULL );
     }
 
     // Get the resolver for this session.
     SessionResolver* resolver = NULL;
     try {
         resolver = sessionResolverMap.get( session );
-    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+    } catch ( decaf::util::NoSuchElementException& ex ) {
         resolver = new SessionResolver( session, resourceLifecycleManager );
         sessionResolverMap.put( session, resolver );
     }

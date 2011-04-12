@@ -17,6 +17,8 @@
 
 #include "SessionState.h"
 
+#include <activemq/state/TransactionState.h>
+
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
 using namespace activemq;
@@ -27,7 +29,7 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionState::SessionState( const Pointer<SessionInfo>& info ) :
-    info( info ), disposed( false ) {
+    info(info), producers(), consumers(), disposed(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,4 +53,25 @@ void SessionState::checkShutdown() const {
         throw decaf::lang::exceptions::IllegalStateException(
             __FILE__, __LINE__, "Session already Disposed" );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SessionState::addProducer( const Pointer<ProducerInfo>& info ) {
+    checkShutdown();
+    producers.put( info->getProducerId(),
+        Pointer<ProducerState>( new ProducerState( info ) ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ProducerState> SessionState::removeProducer( const Pointer<ProducerId>& id ) {
+
+    Pointer<ProducerState> producerState = producers.remove( id );
+    if( producerState != NULL ) {
+        if( producerState->getTransactionState() != NULL ) {
+            // allow the transaction to recreate dependent producer on recovery
+            producerState->getTransactionState()->addProducerState( producerState );
+        }
+    }
+
+    return producerState;
 }

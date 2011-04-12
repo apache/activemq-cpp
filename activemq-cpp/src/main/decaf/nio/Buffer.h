@@ -125,15 +125,15 @@ namespace nio{
     class DECAF_API Buffer {
     protected:
 
-        mutable std::size_t _position;
-        std::size_t _capacity;
-        std::size_t _limit;
-        std::size_t _mark;
+        mutable int _position;
+        int _capacity;
+        int _limit;
+        int _mark;
         bool _markSet;
 
     public:
 
-        Buffer( std::size_t capactiy );
+        Buffer( int capactiy );
         Buffer( const Buffer& other );
         virtual ~Buffer() {}
 
@@ -142,31 +142,34 @@ namespace nio{
         /**
          * @returns this buffer's capacity.
          */
-        virtual std::size_t capacity() const {
+        virtual int capacity() const {
             return this->_capacity;
         }
 
         /**
          * @returns the current position in the buffer
          */
-        virtual std::size_t position() const {
+        virtual int position() const {
             return this->_position;
         }
 
         /**
          * Sets this buffer's position. If the mark is defined and larger than the
          * new position then it is discarded.
-         * @param newPosition - the new postion in the buffer to set.
-         * @returns A reference to This buffer
+         *
+         * @param newPosition
+         *      The new postion in the buffer to set.
+         *
+         * @returns a reference to This buffer.
+         *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& position( std::size_t newPosition )
-            throw( lang::exceptions::IllegalArgumentException );
+        virtual Buffer& position( int newPosition );
 
         /**
          * @returns this buffers Limit
          */
-        virtual std::size_t limit() const {
+        virtual int limit() const {
             return this->_limit;
         }
 
@@ -174,31 +177,36 @@ namespace nio{
          * Sets this buffer's limit. If the position is larger than the new limit then
          * it is set to the new limit. If the mark is defined and larger than the new
          * limit then it is discarded.
-         * @param newLimit - The new limit value; must be no larger than this
-         * buffer's capacity
+         *
+         * @param newLimit
+         *      The new limit value; must be no larger than this buffer's capacity.
+         *
          * @returns A reference to This buffer
+         *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& limit( std::size_t newLimit )
-            throw( lang::exceptions::IllegalArgumentException );
+        virtual Buffer& limit( int newLimit );
 
         /**
          * Sets this buffer's mark at its position.
+         *
          * @returns a reference to this buffer.
          */
         virtual Buffer& mark();
 
         /**
          * Resets this buffer's position to the previously-marked position.
+         *
          * @returns a reference to this buffer.
+         *
          * @throws InvalidMarkException - If the mark has not been set
          */
-        virtual Buffer& reset() throw( InvalidMarkException );
+        virtual Buffer& reset();
 
         /**
          * Clears this buffer. The position is set to zero, the limit is set to the
          * capacity, and the mark is discarded.
-         * <p>
+         *
          * Invoke this method before using a sequence of channel-read or put operations
          * to fill this buffer. For example:
          *
@@ -208,6 +216,7 @@ namespace nio{
          * This method does not actually erase the data in the buffer, but it is named
          * as if it did because it will most often be used in situations in which that
          * might as well be the case.
+         *
          * @returns a reference to this buffer.
          */
         virtual Buffer& clear();
@@ -215,7 +224,7 @@ namespace nio{
         /**
          * Flips this buffer. The limit is set to the current position and then the
          * position is set to zero. If the mark is defined then it is discarded.
-         * <p>
+         *
          * After a sequence of channel-read or put operations, invoke this method to
          * prepare for a sequence of channel-write or relative get operations. For
          * example:
@@ -227,13 +236,14 @@ namespace nio{
          *
          * This method is often used in conjunction with the compact method when
          * transferring data from one place to another.
+         *
          * @returns a reference to this buffer.
          */
         virtual Buffer& flip();
 
         /**
          * Rewinds this buffer. The position is set to zero and the mark is discarded.
-         * <p>
+         *
          * Invoke this method before a sequence of channel-write or get operations,
          * assuming that the limit has already been set appropriately. For example:
          *
@@ -247,16 +257,18 @@ namespace nio{
 
         /**
          * Returns the number of elements between the current position and the limit.
+         *
          * @returns The number of elements remaining in this buffer
          */
-        virtual std::size_t remaining() const {
+        virtual int remaining() const {
             return _limit - _position;
         }
 
         /**
          * Tells whether there are any elements between the current position and the limit.
+         *
          * @returns true if, and only if, there is at least one element remaining in
-         * this buffer
+         *          this buffer.
          */
         virtual bool hasRemaining() const {
             return remaining() != 0;
@@ -264,7 +276,8 @@ namespace nio{
 
         /**
          * Tells whether or not this buffer is read-only.
-         * @returns true if, and only if, this buffer is read-only
+         *
+         * @returns true if, and only if, this buffer is read-only.
          */
         virtual bool isReadOnly() const = 0;
 

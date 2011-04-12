@@ -17,6 +17,8 @@
 
 #include "TransactionState.h"
 
+#include <activemq/state/ProducerState.h>
+
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
 using namespace activemq;
@@ -28,12 +30,11 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::TransactionState( const Pointer<TransactionId>& id ) :
-    id( id ), disposed( false ), prepared( false ), preparedResult( 0 ) {
+    commands(), id(id), disposed(false), prepared(false), preparedResult(0), producers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
-
     this->commands.clear();
 }
 
@@ -61,4 +62,17 @@ void TransactionState::checkShutdown() const {
         throw decaf::lang::exceptions::IllegalStateException(
             __FILE__, __LINE__, "Transaction already Disposed" );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionState::addProducerState( const Pointer<ProducerState>& producerState ) {
+
+    if( producerState != NULL ) {
+        producers.put( producerState->getInfo()->getProducerId(), producerState );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector< Pointer<ProducerState> > TransactionState::getProducerStates() {
+    return this->producers.values();
 }

@@ -19,6 +19,7 @@
 
 #include <decaf/internal/util/concurrent/MutexImpl.h>
 #include <decaf/internal/util/concurrent/ConditionImpl.h>
+#include <decaf/lang/Integer.h>
 
 #include <list>
 
@@ -28,6 +29,7 @@ using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,23 +38,47 @@ namespace util{
 namespace concurrent{
 
     class MutexProperties {
+    private:
+
+        MutexProperties( const MutexProperties& );
+        MutexProperties& operator= ( const MutexProperties& );
+
     public:
 
-        MutexProperties() {}
+        MutexProperties( const std::string& name ) : mutex( NULL ), condition( NULL ), name( name ) {
+            if( this->name.empty() ) {
+                this->name = std::string( "Mutex-" ) + Integer::toString( ++id );
+            }
+        }
 
         // The Platform Mutex object and an associated Condition Object
         // for use in the wait / notify pattern.
         MutexHandle* mutex;
         ConditionHandle* condition;
+        std::string name;
+
+        static unsigned int id;
 
     };
+
+    unsigned int MutexProperties::id = 0;
 
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-Mutex::Mutex() {
+Mutex::Mutex() : Synchronizable(), properties( NULL ) {
 
-    this->properties = new MutexProperties();
+    this->properties = new MutexProperties("");
+
+    // Allocate the OS Mutex Implementation.
+    this->properties->mutex = MutexImpl::create();
+    this->properties->condition = ConditionImpl::create( this->properties->mutex );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Mutex::Mutex( const std::string& name ) : Synchronizable(), properties( NULL ) {
+
+    this->properties = new MutexProperties( name );
 
     // Allocate the OS Mutex Implementation.
     this->properties->mutex = MutexImpl::create();
@@ -61,6 +87,7 @@ Mutex::Mutex() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::~Mutex() {
+
     unlock();
 
     ConditionImpl::destroy( this->properties->condition );
@@ -70,46 +97,42 @@ Mutex::~Mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::lock() throw( decaf::lang::exceptions::RuntimeException ) {
+std::string Mutex::getName() const {
+    return this->properties->name;
+}
 
+////////////////////////////////////////////////////////////////////////////////
+std::string Mutex::toString() const {
+    return this->properties->name;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Mutex::lock() {
     MutexImpl::lock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Mutex::tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
-
+bool Mutex::tryLock() {
     return MutexImpl::trylock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::unlock() throw( decaf::lang::exceptions::RuntimeException ) {
-
+void Mutex::unlock() {
     MutexImpl::unlock( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait() throw( decaf::lang::exceptions::RuntimeException,
-                          decaf::lang::exceptions::IllegalMonitorStateException,
-                          decaf::lang::exceptions::InterruptedException ) {
-
+void Mutex::wait() {
     ConditionImpl::wait( this->properties->condition );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( long long millisecs )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalMonitorStateException,
-           decaf::lang::exceptions::InterruptedException ) {
-
+void Mutex::wait( long long millisecs ) {
     wait( millisecs, 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( long long millisecs, int nanos )
-    throw( decaf::lang::exceptions::RuntimeException,
-           decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::IllegalMonitorStateException,
-           decaf::lang::exceptions::InterruptedException ) {
+void Mutex::wait( long long millisecs, int nanos ) {
 
     if( millisecs < 0 ) {
         throw IllegalArgumentException(
@@ -125,15 +148,11 @@ void Mutex::wait( long long millisecs, int nanos )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::notify() throw( decaf::lang::exceptions::RuntimeException,
-                            decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+void Mutex::notify() {
     ConditionImpl::notify( this->properties->condition );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                               decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+void Mutex::notifyAll() {
     ConditionImpl::notifyAll( this->properties->condition );
 }

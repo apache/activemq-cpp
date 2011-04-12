@@ -85,7 +85,7 @@ void ActiveMQStreamMessageTest::testSetAndGet() {
     CPPUNIT_ASSERT( myMessage.readLong() == 0xFFFAAA33345LL );
     CPPUNIT_ASSERT( myMessage.readFloat() == 0.000012f );
     CPPUNIT_ASSERT( myMessage.readDouble() == 64.54654 );
-    CPPUNIT_ASSERT( myMessage.readBytes( readData ) == data.size() );
+    CPPUNIT_ASSERT( myMessage.readBytes( readData ) == (int)data.size() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -72,7 +72,7 @@ namespace openwire{
             this->numReceived = 0;
         }
 
-        virtual ~Requester() {}
+        virtual ~Requester() throw() {}
 
         virtual unsigned int getNumReceived() const {
             return this->numReceived;
@@ -105,7 +105,7 @@ namespace openwire{
             }
         }
 
-        virtual void onMessage( const cms::Message* message ) {
+        virtual void onMessage( const cms::Message* message ) throw() {
 
             try {
 
@@ -145,7 +145,7 @@ namespace openwire{
             this->numReceived = 0;
         }
 
-        virtual ~Responder() {}
+        virtual ~Responder() throw() {}
 
         virtual unsigned int getNumReceived() const {
             return this->numReceived;
@@ -155,7 +155,7 @@ namespace openwire{
             this->requests.await( 2000 * this->messageCount );
         }
 
-        virtual void onMessage( const cms::Message* message ) {
+        virtual void onMessage( const cms::Message* message ) throw() {
 
             try {
 
@@ -208,34 +208,29 @@ void OpenwireTempDestinationTest::testBasics() {
 ///////////////////////////////////////////////////////////////////////////////
 void OpenwireTempDestinationTest::testTwoConnections() {
 
-    try {
+    std::string destination = "REQUEST-TOPIC";
 
-        std::string destination = "REQUEST-TOPIC";
+    auto_ptr<Requester> requester(
+        new Requester( cmsProvider->getBrokerURL(), destination, 10 ) );
+    auto_ptr<Responder> responder(
+        new Responder( cmsProvider->getBrokerURL(), destination, 10 ) );
 
-        auto_ptr<Requester> requester(
-            new Requester( cmsProvider->getBrokerURL(), destination, 10 ) );
-        auto_ptr<Responder> responder(
-            new Responder( cmsProvider->getBrokerURL(), destination, 10 ) );
+    // Launch the Consumers in new Threads.
+    Thread requestorThread( requester.get() );
+    requestorThread.start();
 
-        // Launch the Consumers in new Threads.
-        Thread requestorThread( requester.get() );
-        requestorThread.start();
+    // Responder should get all its requests first
+    responder->awaitAllRequests();
 
-        // Responder should get all its requests first
-        responder->awaitAllRequests();
+    // Now the Requester should get all its responses.
+    requester->awaitAllResponses();
 
-        // Now the Requester should get all its responses.
-        requester->awaitAllResponses();
+    // Check that the responder received all the required requests
+    CPPUNIT_ASSERT( responder->getNumReceived() == 10 );
 
-        // Check that the responder received all the required requests
-        CPPUNIT_ASSERT( responder->getNumReceived() == 10 );
+    // Check that the requester received all the required responses
+    CPPUNIT_ASSERT( requester->getNumReceived() == 10 );
 
-        // Check that the requester received all the required responses
-        CPPUNIT_ASSERT( requester->getNumReceived() == 10 );
-
-        // Shutdown the Requester.
-        requestorThread.join();
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    // Shutdown the Requester.
+    requestorThread.join();
 }

@@ -25,7 +25,6 @@
 #include <decaf/nio/BufferUnderflowException.h>
 #include <decaf/nio/BufferOverflowException.h>
 #include <decaf/nio/ReadOnlyBufferException.h>
-#include <decaf/internal/nio/ByteArrayPerspective.h>
 
 namespace decaf{
 namespace nio{
@@ -103,9 +102,13 @@ namespace nio{
          * Creates a ByteBuffer object that has its backing array allocated internally
          * and is then owned and deleted when this object is deleted.  The array is
          * initially created with all elements initialized to zero.
-         * @param capacity - size of the array, this is the limit we read and write to.
+         *
+         * @param capacity
+         *      The size of the array, this is the limit we read and write to.
+         *
+         * @throws IllegalArgumentException if capacity is negative.
          */
-        ByteBuffer( std::size_t capacity );
+        ByteBuffer( int capacity );
 
     public:
 
@@ -118,290 +121,319 @@ namespace nio{
 
         /**
          * Relative bulk get method.
-         * <p>
+         *
          * This method transfers bytes from this buffer into the given destination
          * vector. An invocation of this method of the form src.get(a) behaves in
          * exactly the same way as the invocation.  The vector must be sized to the
          * amount of data that is to be read, that is to say, the caller should call
          * buffer.resize( N ) before calling this get method.
-         * @returns a reference to this Byte Buffer
-         * @throws BufferUnderflowException - If there are fewer than length bytes
-         * remaining in this buffer
+         *
+         * @returns a reference to this Byte Buffer.
+         *
+         * @throws BufferUnderflowException if there are fewer than length bytes remaining
+         *         in this buffer
          */
-        ByteBuffer& get( std::vector<unsigned char> buffer )
-            throw ( BufferUnderflowException );
+        ByteBuffer& get( std::vector<unsigned char> buffer );
 
         /**
          * Relative bulk get method.
-         * <p>
+         *
          * This method transfers bytes from this buffer into the given destination array.
          * If there are fewer bytes remaining in the buffer than are required to satisfy
          * the request, that is, if length > remaining(), then no bytes are transferred
          * and a BufferUnderflowException is thrown.
-         * <p>
+         *
          * Otherwise, this method copies length bytes from this buffer into the given
          * array, starting at the current position of this buffer and at the given offset
          * in the array. The position of this buffer is then incremented by length.
-         * <p>
-         * @param buffer - pointer to an allocated buffer to fill
-         * @param offset - position in the buffer to start filling
-         * @param length - amount of data to put in the passed buffer
-         * @returns a reference to this Buffer
-         * @throws BufferUnderflowException - If there are fewer than length bytes
-         * remaining in this buffer
+         *
+         * @param buffer
+         *      The pointer to an allocated buffer to fill.
+         * @param size
+         *      The size of the passed in Buffer.
+         * @param offset
+         *      The position in the buffer to start filling.
+         * @param length
+         *      The amount of data to put in the passed buffer.
+         *
+         * @returns a reference to this Buffer.
+         *
+         * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
+         *         are not met.
+         * @throws BufferUnderflowException if there are fewer than length bytes
+         *         remaining in this buffer.
          * @throws NullPointerException if the passed buffer is null.
          */
-        ByteBuffer& get( unsigned char* buffer,
-                         std::size_t offset,
-                         std::size_t length )
-            throw( BufferUnderflowException,
-                   lang::exceptions::NullPointerException );
+        ByteBuffer& get( unsigned char* buffer, int size, int offset, int length );
 
         /**
          * This method transfers the bytes remaining in the given source buffer into
          * this buffer. If there are more bytes remaining in the source buffer than in
          * this buffer, that is, if src.remaining() > remaining(), then no bytes are
          * transferred and a BufferOverflowException is thrown.
-         * <p>
+         *
          * Otherwise, this method copies n = src.remaining() bytes from the given
          * buffer into this buffer, starting at each buffer's current position. The
          * positions of both buffers are then incremented by n.
-         * @param src - the buffer to take bytes from an place in this one.
+         *
+         * @param src
+         *      The buffer to take bytes from an place in this one.
+         *
          * @returns a reference to this buffer
-         * @throws BufferOverflowException - If there is insufficient space in this
-         * buffer for the remaining bytes in the source buffer
-         * @throws IllegalArgumentException - If the source buffer is this buffer
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @throws BufferOverflowException if there is insufficient space in this
+         *         buffer for the remaining bytes in the source buffer
+         * @throws IllegalArgumentException if the source buffer is this buffer
+         * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        ByteBuffer& put( ByteBuffer& src )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   lang::exceptions::IllegalArgumentException );
+        ByteBuffer& put( ByteBuffer& src );
 
         /**
          * This method transfers bytes into this buffer from the given source array.
          * If there are more bytes to be copied from the array than remain in this buffer,
          * that is, if length > remaining(), then no bytes are transferred and a
          * BufferOverflowException is thrown.
-         * <p>
+         *
          * Otherwise, this method copies length bytes from the given array into this
          * buffer, starting at the given offset in the array and at the current position
          * of this buffer. The position of this buffer is then incremented by length.
-         * @param buffer - The array from which bytes are to be read
-         * @param offset - The offset within the array of the first byte to be read;
-         * @param length - The number of bytes to be read from the given array
-         * @returns a reference to this buffer
-         * @throws BufferOverflowException - If there is insufficient space in this buffer
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param buffer
+         *      The array from which bytes are to be read.
+         * @param size
+         *      The size of the given array.
+         * @param offset
+         *      The offset within the array of the first byte to be read.
+         * @param length
+         *      The number of bytes to be read from the given array.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throws BufferOverflowException if there is insufficient space in this buffer.
+         * @throws ReadOnlyBufferException if this buffer is read-only.
          * @throws NullPointerException if the passed buffer is null.
+         * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
+         *         are not met.
          */
-        ByteBuffer& put( const unsigned char* buffer,
-                         std::size_t offset,
-                         std::size_t length )
-            throw( BufferOverflowException, ReadOnlyBufferException,
-                   lang::exceptions::NullPointerException );
+        ByteBuffer& put( const unsigned char* buffer, int size, int offset, int length );
 
         /**
          * This method transfers the entire content of the given source byte array into
-         * this buffer.  This is the same as calling put( &buffer[0], 0, buffer.size()
-         * @param buffer - The buffer whose contents are copied to this ByteBuffer
-         * @returns a reference to this buffer
-         * @throws BufferOverflowException - If there is insufficient space in this buffer
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         * this buffer.  This is the same as calling put( &buffer[0], buffer.size(), 0, buffer.size() )
+         *
+         * @param buffer
+         *      The buffer whose contents are copied to this ByteBuffer.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throws BufferOverflowException if there is insufficient space in this buffer.
+         * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        ByteBuffer& put( std::vector<unsigned char>& buffer )
-            throw( BufferOverflowException, ReadOnlyBufferException );
+        ByteBuffer& put( std::vector<unsigned char>& buffer );
 
     public:   // Abstract Methods
 
         /**
          * Tells whether or not this buffer is read-only.
+         *
          * @returns true if, and only if, this buffer is read-only
          */
         virtual bool isReadOnly() const = 0;
 
         /**
          * Returns the byte array that backs this buffer
-         * <p>
+         *
          * Modifications to this buffer's content will cause the returned array's
          * content to be modified, and vice versa.
-         * <p>
+         *
          * Invoke the hasArray method before invoking this method in order to ensure
          * that this buffer has an accessible backing array.
+         *
          * @returns The array that backs this buffer
-         * @throws ReadOnlyBufferException - If this buffer is backed by an array but
-         * is read-only
-         * @throws UnsupportedOperationException - If this buffer is not backed by an
-         * accessible array
+         *
+         * @throws ReadOnlyBufferException if this buffer is backed by an array but
+         *         is read-only
+         * @throws UnsupportedOperationException if this buffer is not backed by an
+         *         accessible array
          */
-        virtual unsigned char* array()
-            throw( ReadOnlyBufferException,
-                   lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual unsigned char* array() = 0;
 
         /**
          * Returns the offset within this buffer's backing array of the first element
          * of the buffer.
-         * <p>
+         *
          * If this buffer is backed by an array then buffer position p corresponds to
          * array index p + arrayOffset().
-         * <p>
+         *
          * Invoke the hasArray method before invoking this method in order to ensure
          * that this buffer has an accessible backing array.
+         *
          * @returns The offset within this buffer's array of the first element of
-         * the buffer
-         * @throws ReadOnlyBufferException - If this buffer is backed by an array but
-         * is read-only
-         * @throws UnsupportedOperationException - If this buffer is not backed by an
-         * accessible array
+         *          the buffer.
+         *
+         * @throws ReadOnlyBufferException if this buffer is backed by an array but
+         *         is read-only.
+         * @throws UnsupportedOperationException if this buffer is not backed by an
+         *         accessible array.
          */
-        virtual std::size_t arrayOffset() const
-            throw( ReadOnlyBufferException,
-                   lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual int arrayOffset() const = 0;
 
         /**
          * Tells whether or not this buffer is backed by an accessible byte array.
          * If this method returns true then the array and arrayOffset methods may safely
          * be invoked.  Subclasses should override this method if they do not have a
          * backing array as this class always returns true.
+         *
          * @returns true if, and only if, this buffer is backed by an array and is not
-         * read-only
+         *          read-only.
          */
         virtual bool hasArray() const = 0;
 
         /**
          * Creates a view of this byte buffer as a char buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer, and its mark will be undefined.
          * The new buffer will be read-only if, and only if, this buffer is read-only.
+         *
          * @returns the new Char Buffer, which the caller then owns.
          */
         virtual CharBuffer* asCharBuffer() const = 0;
 
         /**
          * Creates a view of this byte buffer as a double buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer divided by eight, and its mark
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
+         *
          * @returns the new double Buffer, which the caller then owns.
          */
         virtual DoubleBuffer* asDoubleBuffer() const = 0;
 
         /**
          * Creates a view of this byte buffer as a float buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer divided by four, and its mark
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
+         *
          * @returns the new float Buffer, which the caller then owns.
          */
         virtual FloatBuffer* asFloatBuffer() const = 0;
 
         /**
          * Creates a view of this byte buffer as a int buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer divided by four, and its mark
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
+         *
          * @returns the new int Buffer, which the caller then owns.
          */
         virtual IntBuffer* asIntBuffer() const = 0;
 
         /**
          * Creates a view of this byte buffer as a long buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer divided by eight, and its mark
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
+         *
          * @returns the new long Buffer, which the caller then owns.
          */
         virtual LongBuffer* asLongBuffer() const = 0;
 
         /**
          * Creates a view of this byte buffer as a short buffer.
-         * <p>
+         *
          * The content of the new buffer will start at this buffer's current position.
          * Changes to this buffer's content will be visible in the new buffer, and vice
          * versa; the two buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be
          * the number of bytes remaining in this buffer divided by two, and its mark
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
+         *
          * @returns the new short Buffer, which the caller then owns.
          */
         virtual ShortBuffer* asShortBuffer() const = 0;
 
         /**
          * Creates a new, read-only byte buffer that shares this buffer's content.
-         * <p>
+         *
          * The content of the new buffer will be that of this buffer. Changes to this
          * buffer's content will be visible in the new buffer; the new buffer itself,
          * however, will be read-only and will not allow the shared content to be
          * modified. The two buffers' position, limit, and mark values will be
          * independent.
-         * <p>
+         *
          * If this buffer is itself read-only then this method behaves in exactly the
          * same way as the duplicate method.
-         * <p>
+         *
          * The new buffer's capacity, limit, position, and mark values will be
          * identical to those of this buffer.
+         *
          * @return The new, read-only byte buffer which the caller then owns.
          */
         virtual ByteBuffer* asReadOnlyBuffer() const = 0;
 
         /**
          * Compacts this buffer
-         * <p>
+         *
          * The bytes between the buffer's current position and its limit, if any, are
          * copied to the beginning of the buffer. That is, the byte at index
          * p = position() is copied to index zero, the byte at index p + 1 is copied
          * to index one, and so forth until the byte at index limit() - 1 is copied
          * to index n = limit() - 1 - p. The buffer's position is then set to n+1 and
          * its limit is set to its capacity. The mark, if defined, is discarded.
-         * <p>
+         *
          * The buffer's position is set to the number of bytes copied, rather than to
          * zero, so that an invocation of this method can be followed immediately by
          * an invocation of another relative put method.
-         * @returns a reference to this ByteBuffer
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @returns a reference to this ByteBuffer.
+         *
+         * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& compact() throw( ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& compact() = 0;
 
         /**
          * Creates a new byte buffer that shares this buffer's content.
-         * <p>
+         *
          * The content of the new buffer will be that of this buffer. Changes to this
          * buffer's content will be visible in the new buffer, and vice versa; the two
          * buffers' position, limit, and mark values will be independent.
-         * <p>
+         *
          * The new buffer's capacity, limit, position, and mark values will be identical
          * to those of this buffer. The new buffer will be read-only if, and only if,
          * this buffer is read-only.
+         *
          * @returns a new Byte Buffer which the caller owns.
          */
         virtual ByteBuffer* duplicate() = 0;
@@ -409,316 +441,390 @@ namespace nio{
         /**
          * Relative get method. Reads the byte at this buffer's current position, and
          * then increments the position.
-         * @returns The byte at the buffer's current position
-         * @throws BufferUnderflowException - If the buffer's current position is not
-         * smaller than its limit
+         *
+         * @returns The byte at the buffer's current position.
+         *
+         * @throws BufferUnderflowException if the buffer's current position is not
+         *         smaller than its limit.
          */
-        virtual unsigned char get() const throw( BufferUnderflowException ) = 0;
+        virtual unsigned char get() const = 0;
 
         /**
          * Absolute get method. Reads the byte at the given index.
-         * @param index - the index in the Buffer where the byte is to be read
-         * @returns the byte that is located at the given index
-         * @throws IndexOutOfBoundsException - If index is not smaller than the
-         * buffer's limit
+         *
+         * @param index
+         *      The index in the Buffer where the byte is to be read.
+         *
+         * @returns the byte that is located at the given index.
+         *
+         * @throws IndexOutOfBoundsException if index is not smaller than the
+         *         buffer's limit, or index is negative.
          */
-        virtual unsigned char get( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual unsigned char get( int index ) const = 0;
 
         /**
          * Reads the next byte at this buffer's current position, and then increments
          * the position by one
-         * @returns the next char in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next char in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual char getChar() throw( BufferUnderflowException ) = 0;
+        virtual char getChar() = 0;
 
         /**
-         * Reads one byte at the given index and returns it
-         * @param index - the index in the Buffer where the byte is to be read
+         * Reads one byte at the given index and returns it.
+         *
+         * @param index
+         *      The index in the Buffer where the byte is to be read.
+         *
          * @returns the char at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If index is not smaller than the
-         * buffer's limit
+         *
+         * @throws IndexOutOfBoundsException if index is not smaller than the
+         *         buffer's limit, or index is negative.
          */
-        virtual char getChar( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual char getChar( int index ) const = 0;
 
         /**
          * Reads the next eight bytes at this buffer's current position, and then
          * increments the position by that amount.
-         * @returns the next double in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next double in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual double getDouble() throw( BufferUnderflowException ) = 0;
+        virtual double getDouble() = 0;
 
         /**
          * Reads eight bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the double at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         *
+         * @param index
+         *      The index in the Buffer where the bytes are to be read.
+         *
+         * @returns the double at the given index in the buffer.
+         *
+         * @throws IndexOutOfBoundsException if index is not smaller than the
+         *         buffer's limit, or index is negative.
          */
-        virtual double getDouble( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual double getDouble( int index ) const = 0;
 
         /**
          * Reads the next four bytes at this buffer's current position, and then
          * increments the position by that amount.
-         * @returns the next float in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next float in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual float getFloat() throw( BufferUnderflowException ) = 0;
+        virtual float getFloat() = 0;
 
         /**
-         * Reads four bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the float at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * Reads four bytes at the given index and returns it.
+         *
+         * @param index
+         *      The index in the Buffer where the bytes are to be read.
+         *
+         * @returns the float at the given index in the buffer.
+         *
+         * @throws IndexOutOfBoundsException if there are not enough bytes
+         *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual float getFloat( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual float getFloat( int index ) const = 0;
 
         /**
          * Reads the next eight bytes at this buffer's current position, and then
          * increments the position by that amount.
-         * @returns the next long long in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next long long in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual long long getLong() throw( BufferUnderflowException ) = 0;
+        virtual long long getLong() = 0;
 
         /**
-         * Reads eight bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the long long at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * Reads eight bytes at the given index and returns it.
+         *
+         * @param index
+         *      The index in the Buffer where the bytes are to be read.
+         *
+         * @returns the long long at the given index in the buffer.
+         *
+         * @throws IndexOutOfBoundsException if there are not enough bytes
+         *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual long long getLong( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual long long getLong( int index ) const = 0;
 
         /**
          * Reads the next four bytes at this buffer's current position, and then
          * increments the position by that amount.
-         * @returns the next int in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next int in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual int getInt() throw( BufferUnderflowException ) = 0;
+        virtual int getInt() = 0;
 
         /**
-         * Reads four bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the int at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * Reads four bytes at the given index and returns it.
+         *
+         * @param index
+         *      The index in the Buffer where the bytes are to be read.
+         *
+         * @returns the int at the given index in the buffer.
+         *
+         * @throws IndexOutOfBoundsException if there are not enough bytes
+         *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual int getInt( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual int getInt( int index ) const = 0;
 
         /**
          * Reads the next two bytes at this buffer's current position, and then
          * increments the position by that amount.
-         * @returns the next short in the buffer..
-         * @throws BufferUnderflowException - If there are no more bytes remaining in
-         * this buffer, meaning we have reached the set limit.
+         *
+         * @returns the next short in the buffer.
+         *
+         * @throws BufferUnderflowException if there are no more bytes remaining in
+         *         this buffer, meaning we have reached the set limit.
          */
-        virtual short getShort() throw( BufferUnderflowException ) = 0;
+        virtual short getShort() = 0;
 
         /**
-         * Reads two bytes at the given index and returns it
-         * @param index - the index in the Buffer where the bytes are to be read
-         * @returns the short at the given index in the buffer
-         * @throws IndexOutOfBoundsException - If there are not enough bytes
-         * remaining to fill the requested Data Type
+         * Reads two bytes at the given index and returns it.
+         *
+         * @param index
+         *      The index in the Buffer where the bytes are to be read.
+         *
+         * @returns the short at the given index in the buffer.
+         *
+         * @throws IndexOutOfBoundsException if there are not enough bytes
+         *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual short getShort( std::size_t index ) const
-            throw ( lang::exceptions::IndexOutOfBoundsException ) = 0;
+        virtual short getShort( int index ) const = 0;
 
         /**
          * Writes the given byte into this buffer at the current position, and then
          * increments the position.
-         * @param value - the byte value to be written
-         * @returns a reference to this buffer
-         * @throws BufferOverflowException - If this buffer's current position is not
-         * smaller than its limit
-         * @throws ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value - the byte value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throws BufferOverflowException if this buffer's current position is not
+         *         smaller than its limit.
+         * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& put( unsigned char value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& put( unsigned char value ) = 0;
 
         /**
          * Writes the given byte into this buffer at the given index.
+         *
          * @param index - position in the Buffer to write the data
          * @param value - the byte to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& put( std::size_t index, unsigned char value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& put( int index, unsigned char value ) = 0;
 
         /**
          * Writes one byte containing the given value, into this buffer at the
          * current position, and then increments the position by one.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written
+         * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putChar( char value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putChar( char value ) = 0;
 
         /**
          * Writes one byte containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param index
+         *      The position in the Buffer to write the data.
+         * @param value
+         *      The value to write.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putChar( std::size_t index, char value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putChar( int index, char value ) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written
+         * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putDouble( double value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putDouble( double value ) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param index
+         *      The position in the Buffer to write the data
+         * @param value
+         *      The value to write.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putDouble( std::size_t index, double value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putDouble( int index, double value ) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putFloat( float value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putFloat( float value ) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param index
+         *      The position in the Buffer to write the data
+         * @param value
+         *      The value to write.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putFloat( std::size_t index, float value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putFloat( int index, float value ) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putLong( long long value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putLong( long long value ) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
-         * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param index
+         *      The position in the Buffer to write the data.
+         * @param value
+         *      The value to write.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putLong( std::size_t index, long long value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putLong( int index, long long value ) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written
+         * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putInt( int value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putInt( int value ) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
+         *
+         * @param index
+         *      The position in the Buffer to write the data.
+         * @param value
+         *      The value to write.
+         *
          * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putInt( std::size_t index, int value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putInt( int index, int value ) = 0;
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
          * current position, and then increments the position by eight.
-         * @param value - The value to be written
-         * @returns a reference to this buffer
-         * @throw BufferOverflowException - If there are fewer than bytes remaining
-         * in this buffer than the size of the data to be written
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @param value
+         *      The value to be written.
+         *
+         * @returns a reference to this buffer.
+         *
+         * @throw BufferOverflowException if there are fewer than bytes remaining
+         *        in this buffer than the size of the data to be written.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putShort( short value )
-            throw( BufferOverflowException, ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putShort( short value ) = 0;
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
          * given index.
-         * @param index - position in the Buffer to write the data
-         * @param value - the value to write.
+         *
+         * @param index
+         *      The position in the Buffer to write the data
+         * @param value
+         *      The value to write.
+         *
          * @returns a reference to this buffer
-         * @throw IndexOutOfBoundsException - If index greater than the buffer's limit
-         * minus the size of the type being written.
-         * @throw ReadOnlyBufferException - If this buffer is read-only
+         *
+         * @throw IndexOutOfBoundsException if index greater than the buffer's limit
+         *        minus the size of the type being written, or index is negative.
+         * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putShort( std::size_t index, short value )
-            throw( lang::exceptions::IndexOutOfBoundsException,
-                   ReadOnlyBufferException ) = 0;
+        virtual ByteBuffer& putShort( int index, short value ) = 0;
 
         /**
          * Creates a new byte buffer whose content is a shared subsequence of this
@@ -726,10 +832,11 @@ namespace nio{
          * current position. Changes to this buffer's content will be visible in the new
          * buffer, and vice versa; the two buffers' position, limit, and mark values will
          * be independent.
-         * <p>
+         *
          * The new buffer's position will be zero, its capacity and its limit will be the
          * number of bytes remaining in this buffer, and its mark will be undefined. The
          * new buffer will be read-only if, and only if, this buffer is read-only.
+         *
          * @returns the newly create ByteBuffer which the caller owns.
          */
         virtual ByteBuffer* slice() const = 0;
@@ -737,32 +844,22 @@ namespace nio{
     public:  // Comparable
 
         /**
-         * Compares this object with the specified object for order. Returns a
-         * negative integer, zero, or a positive integer as this object is less
-         * than, equal to, or greater than the specified object.
-         * @param value - the Object to be compared.
-         * @returns a negative integer, zero, or a positive integer as this
-         * object is less than, equal to, or greater than the specified object.
+         * {@inheritDoc}
          */
         virtual int compareTo( const ByteBuffer& value ) const;
 
         /**
-         * @return true if this value is considered equal to the passed value.
+         * {@inheritDoc}
          */
         virtual bool equals( const ByteBuffer& value ) const;
 
         /**
-         * Compares equality between this object and the one passed.
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
+         * {@inheritDoc}
          */
         virtual bool operator==( const ByteBuffer& value ) const;
 
         /**
-         * Compares this object to another and returns true if this object
-         * is considered to be less than the one passed.  This
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
+         * {@inheritDoc}
          */
         virtual bool operator<( const ByteBuffer& value ) const;
 
@@ -771,37 +868,55 @@ namespace nio{
         /**
          * Allocates a new byte buffer whose position will be zero its limit will
          * be its capacity and its mark is not set.
-         * @param capacity - the internal buffer's capacity.
+         *
+         * @param capacity
+         *      The internal buffer's capacity.
+         *
          * @returns a newly allocated ByteBuffer which the caller owns.
+         *
+         * @throws IllegalArgumentException if capacity is negative.
          */
-        static ByteBuffer* allocate( std::size_t capacity );
+        static ByteBuffer* allocate( int capacity );
 
         /**
          * Wraps the passed buffer with a new ByteBuffer.
-         * <p>
+         *
          * The new buffer will be backed by the given byte array; that is, modifications
          * to the buffer will cause the array to be modified and vice versa. The new
          * buffer's capacity will be array.length, its position will be offset, its limit
          * will be offset + length, and its mark will be undefined. Its backing array
          * will be the given array, and its array offset will be zero.
-         * @param array - The array that will back the new buffer
-         * @param offset - The offset of the subarray to be used
-         * @param length - The length of the subarray to be used
+         *
+         * @param array
+         *      The array that will back the new buffer.
+         * @param size
+         *      The size of the provided array.
+         * @param offset
+         *      The offset of the subarray to be used.
+         * @param length
+         *      The length of the subarray to be used.
+         *
          * @returns a new ByteBuffer that is backed by buffer, caller owns.
+         *
+         * @throws NullPointerException if the array passed in is NULL.
+         * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
+         *         are not met.
          */
-        static ByteBuffer* wrap( unsigned char* array, std::size_t offset, std::size_t length )
-            throw( lang::exceptions::NullPointerException );
+        static ByteBuffer* wrap( unsigned char* array, int size, int offset, int length );
 
         /**
          * Wraps the passed STL Byte Vector in a ByteBuffer.
-         * <p>
+         *
          * The new buffer will be backed by the given byte array; modifications to the
          * buffer will cause the array to be modified and vice versa. The new buffer's
          * capacity and limit will be buffer.size(), its position will be zero, and its
          * mark will be undefined. Its backing array will be the given array, and its
          * array offset will be zero.
-         * @param buffer - The vector that will back the new buffer, the vector must
-         * have been sized to the desired size already by calling vector.resize( N ).
+         *
+         * @param buffer
+         *      The vector that will back the new buffer, the vector must
+         *      have been sized to the desired size already by calling vector.resize( N ).
+         *
          * @returns a new ByteBuffer that is backed by buffer, caller owns.
          */
         static ByteBuffer* wrap( std::vector<unsigned char>& buffer );

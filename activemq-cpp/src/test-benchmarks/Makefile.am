@@ -17,35 +17,41 @@
 
 cc_sources = \
     activemq/util/PrimitiveMapBenchmark.cpp \
-    activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.cpp \
     benchmark/PerformanceTimer.cpp \
+    decaf/io/BufferedInputStreamBenchmark.cpp \
+    decaf/io/ByteArrayInputStreamBenchmark.cpp \
     decaf/io/ByteArrayOutputStreamBenchmark.cpp \
     decaf/io/DataInputStreamBenchmark.cpp \
     decaf/io/DataOutputStreamBenchmark.cpp \
     decaf/lang/BooleanBenchmark.cpp \
     decaf/lang/ThreadBenchmark.cpp \
+    decaf/util/LinkedListBenchmark.cpp \
     decaf/util/MapBenchmark.cpp \
     decaf/util/PropertiesBenchmark.cpp \
     decaf/util/QueueBenchmark.cpp \
     decaf/util/SetBenchmark.cpp \
+    decaf/util/StlListBenchmark.cpp \
     main.cpp \
     testRegistry.cpp
 
 
 h_sources = \
     activemq/util/PrimitiveMapBenchmark.h \
-    activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.h \
     benchmark/BenchmarkBase.h \
     benchmark/PerformanceTimer.h \
+    decaf/io/BufferedInputStreamBenchmark.h \
+    decaf/io/ByteArrayInputStreamBenchmark.h \
     decaf/io/ByteArrayOutputStreamBenchmark.h \
     decaf/io/DataInputStreamBenchmark.h \
     decaf/io/DataOutputStreamBenchmark.h \
     decaf/lang/BooleanBenchmark.h \
     decaf/lang/ThreadBenchmark.h \
+    decaf/util/LinkedListBenchmark.h \
     decaf/util/MapBenchmark.h \
     decaf/util/PropertiesBenchmark.h \
     decaf/util/QueueBenchmark.h \
-    decaf/util/SetBenchmark.h
+    decaf/util/SetBenchmark.h \
+    decaf/util/StlListBenchmark.h
 
 
 ## Compile this as part of make check

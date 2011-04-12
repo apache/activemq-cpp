@@ -21,7 +21,10 @@ using namespace decaf;
 using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayOutputStreamBenchmark::ByteArrayOutputStreamBenchmark() {
+const int ByteArrayOutputStreamBenchmark::bufferSize = 200000;
+
+////////////////////////////////////////////////////////////////////////////////
+ByteArrayOutputStreamBenchmark::ByteArrayOutputStreamBenchmark() : buffer(), stlBuffer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,12 +64,12 @@ void ByteArrayOutputStreamBenchmark::run(){
     bos.reset();
 
     for( int iy = 0; iy < numRuns; ++iy ){
-        bos.write( buffer, 0, bufferSize );
+        bos.write( buffer, bufferSize, 0, bufferSize );
     }
     bos.reset();
 
     for( int iy = 0; iy < numRuns; ++iy ){
-        bos.write( stlBuffer );
+        bos.write( &stlBuffer[0], bufferSize );
     }
     bos.reset();
 }

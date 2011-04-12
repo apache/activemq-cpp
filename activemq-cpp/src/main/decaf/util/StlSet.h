@@ -21,7 +21,7 @@
 #include <set>
 #include <vector>
 #include <memory>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
@@ -50,18 +50,22 @@ namespace util{
             typename std::set<E>::iterator previous;
             typename std::set<E>* set;
 
+        private:
+
+            SetIterator( const SetIterator& );
+            SetIterator operator= ( const SetIterator& );
+
         public:
 
-            SetIterator( typename std::set<E>* set ) {
-                this->current = set->begin();
-                this->previous = set->end();
-                this->set = set;
+            SetIterator( typename std::set<E>* set ) :
+                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
             }
+
             virtual ~SetIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == set->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "Set::Iterator::next - No more elements to return" );
                 }
@@ -74,8 +78,7 @@ namespace util{
                 return ( this->current != set->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 if( this->previous == set->end() ) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
@@ -94,18 +97,22 @@ namespace util{
             typename std::set<E>::const_iterator previous;
             const typename std::set<E>* set;
 
+        private:
+
+            ConstSetIterator( const ConstSetIterator& );
+            ConstSetIterator operator= ( const ConstSetIterator& );
+
         public:
 
-            ConstSetIterator( const typename std::set<E>* set ) {
-                this->current = set->begin();
-                this->previous = set->end();
-                this->set = set;
+            ConstSetIterator( const typename std::set<E>* set ) :
+                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
             }
+
             virtual ~ConstSetIterator() {}
 
-            virtual E next() throw( lang::exceptions::NoSuchElementException ){
+            virtual E next() {
                 if( this->current == set->end() ) {
-                    throw lang::exceptions::NoSuchElementException(
+                    throw NoSuchElementException(
                         __FILE__, __LINE__,
                         "Set::Iterator::next - No more elements to return" );
                 }
@@ -118,8 +125,7 @@ namespace util{
                 return ( this->current != set->end() );
             }
 
-            virtual void remove() throw ( lang::exceptions::IllegalStateException,
-                                          lang::exceptions::UnsupportedOperationException ){
+            virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "Set::Iterator::remove - Not Valid on a Const Iterator" );
@@ -131,14 +137,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlSet() {}
+        StlSet() : AbstractSet<E>(), values() {}
 
         /**
          * Copy constructor - copies the content of the given set into this
          * one.
          * @param source The source set.
          */
-        StlSet( const StlSet& source ){
+        StlSet( const StlSet& source ) : AbstractSet<E>(), values() {
             copy( source );
         }
 
@@ -147,8 +153,8 @@ namespace util{
          * one.
          * @param source The source set.
          */
-        StlSet( const Collection<E>& source ){
-            copy( source );
+        StlSet( const Collection<E>& source ) : AbstractSet<E>(), values() {
+            AbstractSet<E>::copy( source );
         }
 
         virtual ~StlSet() {}
@@ -166,29 +172,42 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const StlSet& source ) const {
-            return this->values == source.values;
+        virtual bool equals( const Collection<E>& collection ) const {
+
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
+            if( setptr == NULL ) {
+                return AbstractSet<E>::equals( collection );
+            }
+
+            return this->values == setptr->values;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const StlSet& source ) {
+        virtual void copy( const Collection<E>& collection ) {
+
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
+            if( setptr == NULL ) {
+                AbstractSet<E>::copy( collection );
+                return;
+            }
+
             this->values.clear();
-            this->values = source.values;
+            this->values = setptr->values;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void clear() throw ( lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             values.clear();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool contains( const E& value ) const throw ( lang::Exception ) {
+        virtual bool contains( const E& value ) const {
             typename std::set<E>::const_iterator iter;
             iter = values.find( value );
             return iter != values.end();
@@ -204,28 +223,21 @@ namespace util{
         /**
          * @return The number of elements in this set.
          */
-        virtual std::size_t size() const {
-            return values.size();
+        virtual int size() const {
+            return (int)values.size();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool add( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException,
-                    lang::exceptions::IllegalStateException ) {
-
+        virtual bool add( const E& value ) {
             return values.insert( value ).second;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool remove( const E& value )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
+        virtual bool remove( const E& value ) {
             return values.erase( value ) != 0;
         }
 

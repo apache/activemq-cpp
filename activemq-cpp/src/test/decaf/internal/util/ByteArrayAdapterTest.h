@@ -59,7 +59,7 @@ namespace util{
         CPPUNIT_TEST_SUITE_END();
 
         unsigned char* testData1;
-        static const std::size_t testData1Size = 100;
+        static const int testData1Size = 100;
 
     public:
 
@@ -68,7 +68,7 @@ namespace util{
 
         void setUp() {
             testData1 = new unsigned char[testData1Size];
-            for( std::size_t i = 0; i < testData1Size; ++i ){
+            for( int i = 0; i < testData1Size; ++i ){
                 testData1[i] = (unsigned char)i;
             }
         }

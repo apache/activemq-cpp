@@ -20,14 +20,14 @@
 
 #include <activemq/util/Config.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/StlList.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/net/URI.h>
 #include <decaf/net/URISyntaxException.h>
 
 namespace activemq {
 namespace util {
 
-    using decaf::util::StlList;
+    using decaf::util::LinkedList;
     using decaf::net::URI;
     using decaf::util::Properties;
 
@@ -42,7 +42,7 @@ namespace util {
         std::string host;
         std::string scheme;
         std::string path;
-        StlList<URI> components;
+        LinkedList<URI> components;
         Properties parameters;
         std::string fragment;
 
@@ -51,14 +51,14 @@ namespace util {
         CompositeData();
         virtual ~CompositeData();
 
-        StlList<URI>& getComponents() {
+        LinkedList<URI>& getComponents() {
             return components;
         }
-        const StlList<URI>& getComponents() const {
+        const LinkedList<URI>& getComponents() const {
             return components;
         }
 
-        void setComponents( const StlList<URI>& components ) {
+        void setComponents( const LinkedList<URI>& components ) {
             this->components = components;
         }
 
@@ -102,7 +102,10 @@ namespace util {
             this->host = host;
         }
 
-        URI toURI() const throw( decaf::net::URISyntaxException );
+        /**
+         * @throws decaf::net::URISyntaxException
+         */
+        URI toURI() const;
 
     };
 

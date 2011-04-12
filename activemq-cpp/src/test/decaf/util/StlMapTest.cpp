@@ -98,7 +98,7 @@ public:
     /**
      * {@inheritDoc}
      */
-    virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+    virtual void clear() {
         valueMap.clear();
     }
 
@@ -140,32 +140,30 @@ public:
     /**
      * {@inheritDoc}
      */
-    virtual std::size_t size() const {
-        return valueMap.size();
+    virtual int size() const {
+        return (int)valueMap.size();
     }
 
     /**
      * {@inheritDoc}
      */
-    virtual V& get( const K& key )
-        throw( lang::exceptions::NoSuchElementException ) {
+    virtual V& get( const K& key ) {
 
         typename std::map<K,V,COMPARATOR>::iterator iter;
         iter = valueMap.find( key );
         if( iter == valueMap.end() ){
-            throw lang::exceptions::NoSuchElementException(
+            throw util::NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
         return iter->second;
     }
-    virtual const V& get( const K& key ) const
-        throw( lang::exceptions::NoSuchElementException ) {
+    virtual const V& get( const K& key ) const {
 
         typename std::map<K,V,COMPARATOR>::const_iterator iter;
         iter = valueMap.find( key );
         if( iter == valueMap.end() ){
-            throw lang::exceptions::NoSuchElementException(
+            throw util::NoSuchElementException(
                 __FILE__, __LINE__, "Key does not exist in map" );
         }
 
@@ -175,8 +173,7 @@ public:
     /**
      * {@inheritDoc}
      */
-    virtual void put( const K& key, const V& value )
-        throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+    virtual void put( const K& key, const V& value ) {
 
         valueMap[key] = value;
     }
@@ -184,13 +181,11 @@ public:
     /**
      * {@inheritDoc}
      */
-    virtual void putAll( const StlTestMap<K,V,COMPARATOR>& other )
-        throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+    virtual void putAll( const StlTestMap<K,V,COMPARATOR>& other ) {
 
         this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
     }
-    virtual void putAll( const Map<K,V,COMPARATOR>& other )
-        throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+    virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
 
         std::vector<K> keys = other.keySet();
 
@@ -204,13 +199,11 @@ public:
     /**
      * {@inheritDoc}
      */
-    virtual V remove( const K& key )
-        throw ( decaf::lang::exceptions::NoSuchElementException,
-                decaf::lang::exceptions::UnsupportedOperationException ) {
+    virtual V remove( const K& key ) {
 
         typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
         if( iter == valueMap.end() ) {
-            throw decaf::lang::exceptions::NoSuchElementException(
+            throw decaf::util::NoSuchElementException(
                 __FILE__, __LINE__, "Key is not present in this Map." );
         }
 
@@ -251,50 +244,39 @@ public:
 
 public:
 
-    virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void lock() {
         mutex.lock();
     }
 
-    virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual bool tryLock() {
         return mutex.tryLock();
     }
 
-    virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void unlock() {
         mutex.unlock();
     }
 
-    virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                               decaf::lang::exceptions::IllegalMonitorStateException,
-                               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait() {
 
         mutex.wait();
     }
 
-    virtual void wait( long long millisecs )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs ) {
 
         mutex.wait( millisecs );
     }
 
-    virtual void wait( long long millisecs, int nanos )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalArgumentException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs, int nanos ) {
 
         mutex.wait( millisecs, nanos );
     }
 
-    virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                 decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notify() {
 
         mutex.notify();
     }
 
-    virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notifyAll() {
 
         mutex.notifyAll();
     }
@@ -311,7 +293,7 @@ void StlMapTest::testConstructor() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should Throw a NoSuchElementException",
         map1.get( "TEST" ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::util::NoSuchElementException );
 
     StlTestMap<string, int> srcMap;
     srcMap.put( "A", 1 );
@@ -439,7 +421,7 @@ void StlMapTest::testGet() {
     try{
         boolMap.get( "mike" );
         CPPUNIT_ASSERT(false);
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){
+    } catch( decaf::util::NoSuchElementException& e ){
     }
 }
 
@@ -496,6 +478,6 @@ void StlMapTest::testRemove() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NoSuchElementException",
         boolMap.remove( "fred" ),
-        decaf::lang::exceptions::NoSuchElementException );
+        decaf::util::NoSuchElementException );
 }
 

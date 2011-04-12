@@ -24,7 +24,7 @@ namespace logging{
     /**
      * Defines an enumeration for logging levels
      */
-    enum Level
+    enum Levels
     {
         Off,
         Null,

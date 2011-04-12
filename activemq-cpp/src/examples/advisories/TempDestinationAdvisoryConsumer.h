@@ -43,15 +43,20 @@ namespace advisories {
         cms::Session* session;
         std::auto_ptr<cms::MessageConsumer> consumer;
 
+    private:
+
+        TempDestinationAdvisoryConsumer( const TempDestinationAdvisoryConsumer& );
+        TempDestinationAdvisoryConsumer& operator= ( const TempDestinationAdvisoryConsumer& );
+
     public:
 
         TempDestinationAdvisoryConsumer( cms::Session* session );
-        virtual ~TempDestinationAdvisoryConsumer();
+        virtual ~TempDestinationAdvisoryConsumer() throw();
 
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message );
+        virtual void onMessage( const cms::Message* message ) throw();
 
     };
 

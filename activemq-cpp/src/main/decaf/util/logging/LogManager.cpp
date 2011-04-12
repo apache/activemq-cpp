@@ -16,31 +16,58 @@
 */
 #include "LogManager.h"
 
+#include <decaf/lang/exceptions/RuntimeException.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/util/logging/PropertiesChangeListener.h>
+#include <decaf/util/logging/Logger.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/Config.h>
+#include <decaf/io/InputStream.h>
 
+#include <string>
 #include <algorithm>
 
 using namespace std;
 using namespace decaf;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-concurrent::Mutex LogManager::mutex;
-LogManager* LogManager::instance = NULL;
-unsigned int LogManager::refCount = 0;
+namespace decaf{
+namespace util{
+namespace logging{
+
+    class LogManagerInternals {
+    public:
+
+        StlMap<string, Logger*> loggers;
+
+        LogManagerInternals() : loggers() {}
+
+    };
+
+}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager::~LogManager()
-{
+namespace {
+
+    LogManager* theManager = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+LogManager::LogManager() : listeners(), properties(), internal(new LogManagerInternals()) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+LogManager::~LogManager() {
     // TODO - Delete all the loggers.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::setProperties( const Properties& properties )
-{
+void LogManager::setProperties( const Properties& properties ) {
     // Copy the properties
     this->properties = properties;
 
@@ -65,6 +92,12 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool LogManager::addLogger( Logger* logger DECAF_UNUSED ) {
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Logger* LogManager::getLogger( const std::string& name DECAF_UNUSED ) {
     return NULL;
 }
@@ -75,47 +108,44 @@ int LogManager::getLoggerNames( const std::vector<std::string>& names  DECAF_UNU
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager* LogManager::getInstance() {
-
-    synchronized( &mutex ) {
-        if( instance == NULL ) {
-            instance = new LogManager();
-        }
-
-        refCount++;
-
-        return instance;
-    }
-
-    return NULL;
+std::string LogManager::getProperty( const std::string& name ) {
+    return properties.getProperty( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::returnInstance() {
+LogManager& LogManager::getLogManager() {
 
-    synchronized( &mutex ) {
-        if( refCount == 0 ) {
-            return ;
-        }
-
-        refCount--;
-
-        if( refCount == 0 ) {
-            delete instance;
-            instance = NULL;
-        }
+    if( theManager == NULL ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "The Logging Subsystem is not initialized." );
     }
+
+    return *theManager;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::destroy()
-{
-    if( instance != NULL ) {
+void LogManager::initialize() {
 
-        synchronized( &mutex ) {
-            delete instance;
-            instance = NULL;
-            refCount = 0;
-        }
-    }
+    // Initialize the global instance.
+    theManager = new LogManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::shutdown() {
+
+    // Destroy the global LogManager
+    delete theManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::readConfiguration() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::readConfiguration( decaf::io::InputStream* stream DECAF_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LogManager::reset() {
+
 }

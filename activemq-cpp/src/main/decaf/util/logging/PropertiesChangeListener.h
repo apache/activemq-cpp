@@ -23,25 +23,38 @@ namespace decaf{
 namespace util{
 namespace logging{
 
-   /**
-    * Defines the interface that classes can use to listen for change
-    * events on Properties.
-    */
-   class DECAF_API PropertiesChangeListener
-   {
-   public:
+    /**
+     * Defines the interface that classes can use to listen for change
+     * events on Properties.
+     *
+     * @since 1.0
+     */
+    class DECAF_API PropertiesChangeListener {
+    public:
 
-      virtual ~PropertiesChangeListener() {}
+        virtual ~PropertiesChangeListener() {}
 
-      /**
-       * Change Event, called when a property is changed
-       * @param name - Name of the Property
-       * @param oldValue - Old Value of the Property
-       * @param newValue - New Value of the Property
-       */
-      virtual void onPropertyChanged( const std::string& name,
-                                      const std::string& oldValue,
-                                      const std::string& newValue ) = 0;
+        /**
+         * Indicates that the Properties have all been reset and should be
+         * considered to be back to their default values.
+         */
+        virtual void onPropertiesReset() = 0;
+
+        /**
+         * Change Event, called when a property is changed, includes the
+         * name of the property that was changed along with it old and
+         * new values.
+         *
+         * @param name
+         *      The name of the Property that changed.
+         * @param oldValue
+         *      The old Value of the Property.
+         * @param newValue
+         *      The new Value of the Property.
+         */
+        virtual void onPropertyChanged( const std::string& name,
+                                        const std::string& oldValue,
+                                        const std::string& newValue ) = 0;
 
    };
 

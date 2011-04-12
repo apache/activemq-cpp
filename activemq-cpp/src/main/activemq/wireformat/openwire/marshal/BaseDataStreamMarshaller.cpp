@@ -49,7 +49,7 @@ utils::HexTable BaseDataStreamMarshaller::hexTable;
 commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalCachedObject(
     OpenWireFormat* wireFormat,
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs ) throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         return wireFormat->tightUnmarshalNestedObject( dataIn, bs );
@@ -63,8 +63,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalCachedObject(
 int BaseDataStreamMarshaller::tightMarshalCachedObject1(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         return wireFormat->tightMarshalNestedObject1( data, bs );
@@ -79,8 +78,7 @@ void BaseDataStreamMarshaller::tightMarshalCachedObject2(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
     decaf::io::DataOutputStream* dataOut,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         wireFormat->tightMarshalNestedObject2( data, dataOut, bs );
@@ -94,8 +92,7 @@ void BaseDataStreamMarshaller::tightMarshalCachedObject2(
 void BaseDataStreamMarshaller::looseMarshalCachedObject(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
-    decaf::io::DataOutputStream* dataOut )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataOutputStream* dataOut ) {
 
     try{
         wireFormat->looseMarshalNestedObject( data, dataOut );
@@ -108,7 +105,7 @@ void BaseDataStreamMarshaller::looseMarshalCachedObject(
 ////////////////////////////////////////////////////////////////////////////////
 commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalCachedObject(
     OpenWireFormat* wireFormat,
-    decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
         return wireFormat->looseUnmarshalNestedObject( dataIn );
@@ -122,8 +119,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalCachedObject(
 int BaseDataStreamMarshaller::tightMarshalNestedObject1(
     OpenWireFormat* wireFormat,
     commands::DataStructure* object,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         return wireFormat->tightMarshalNestedObject1( object, bs );
@@ -138,8 +134,7 @@ void BaseDataStreamMarshaller::tightMarshalNestedObject2(
     OpenWireFormat* wireFormat,
     commands::DataStructure* object,
     decaf::io::DataOutputStream* dataOut,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         wireFormat->tightMarshalNestedObject2( object, dataOut, bs );
@@ -153,8 +148,7 @@ void BaseDataStreamMarshaller::tightMarshalNestedObject2(
 commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalNestedObject(
     OpenWireFormat* wireFormat,
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         return wireFormat->tightUnmarshalNestedObject( dataIn, bs );
@@ -167,8 +161,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalNestedObject(
 ////////////////////////////////////////////////////////////////////////////////
 commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalNestedObject(
     OpenWireFormat* wireFormat,
-    decaf::io::DataInputStream* dataIn )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
         return wireFormat->looseUnmarshalNestedObject( dataIn );
@@ -182,8 +175,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalNestedObject(
 void BaseDataStreamMarshaller::looseMarshalNestedObject(
     OpenWireFormat* wireFormat,
     commands::DataStructure* object,
-    decaf::io::DataOutputStream* dataOut )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataOutputStream* dataOut ) {
 
     try{
         wireFormat->looseMarshalNestedObject( object, dataOut );
@@ -196,7 +188,7 @@ void BaseDataStreamMarshaller::looseMarshalNestedObject(
 ////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::tightUnmarshalString(
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs ) throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -218,8 +210,7 @@ std::string BaseDataStreamMarshaller::tightUnmarshalString(
 
 ////////////////////////////////////////////////////////////////////////////////
 int BaseDataStreamMarshaller::tightMarshalString1( const std::string& value,
-                                                   utils::BooleanStream* bs )
-                                                    throw ( decaf::io::IOException ) {
+                                                   utils::BooleanStream* bs ) {
     try{
 
         bs->writeBoolean( value != "" );
@@ -275,7 +266,7 @@ int BaseDataStreamMarshaller::tightMarshalString1( const std::string& value,
 void BaseDataStreamMarshaller::tightMarshalString2(
     const std::string& value,
     decaf::io::DataOutputStream* dataOut,
-    utils::BooleanStream* bs ) throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -286,7 +277,7 @@ void BaseDataStreamMarshaller::tightMarshalString2(
                 dataOut->writeShort( (short)value.length() );
                 dataOut->writeBytes( value );
             } else {
-                dataOut->writeChars( value );
+                dataOut->writeUTF( value );
             }
         }
     }
@@ -298,7 +289,7 @@ void BaseDataStreamMarshaller::tightMarshalString2(
 ////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshaller::looseMarshalString(
     const std::string value,
-    decaf::io::DataOutputStream* dataOut ) throw ( decaf::io::IOException ) {
+    decaf::io::DataOutputStream* dataOut ) {
 
     try{
 
@@ -314,7 +305,7 @@ void BaseDataStreamMarshaller::looseMarshalString(
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::looseUnmarshalString(
-    decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
         if( dataIn->readBoolean() ) {
@@ -331,8 +322,7 @@ std::string BaseDataStreamMarshaller::looseUnmarshalString(
 ////////////////////////////////////////////////////////////////////////////////
 int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat AMQCPP_UNUSED,
                                                  long long value,
-                                                 utils::BooleanStream* bs )
-                                                    throw ( decaf::io::IOException ) {
+                                                 utils::BooleanStream* bs ) {
 
     try{
 
@@ -369,8 +359,7 @@ int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat AMQC
 void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat AMQCPP_UNUSED,
                                                   long long value,
                                                   decaf::io::DataOutputStream* dataOut,
-                                                  utils::BooleanStream* bs )
-                                                    throw ( decaf::io::IOException ) {
+                                                  utils::BooleanStream* bs ) {
     try{
 
         if( bs->readBoolean() ) {
@@ -397,8 +386,7 @@ void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat AMQ
 long long BaseDataStreamMarshaller::tightUnmarshalLong(
     OpenWireFormat* wireFormat AMQCPP_UNUSED,
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
         if( bs->readBoolean() ) {
@@ -426,8 +414,7 @@ long long BaseDataStreamMarshaller::tightUnmarshalLong(
 ////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat AMQCPP_UNUSED,
                                                  long long value,
-                                                 decaf::io::DataOutputStream* dataOut )
-                                                    throw ( decaf::io::IOException ) {
+                                                 decaf::io::DataOutputStream* dataOut ) {
 
     try{
         dataOut->writeLong( value );
@@ -440,8 +427,7 @@ void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat AMQC
 ////////////////////////////////////////////////////////////////////////////////
 long long BaseDataStreamMarshaller::looseUnmarshalLong(
     OpenWireFormat* wireFormat AMQCPP_UNUSED,
-    decaf::io::DataInputStream* dataIn )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
         return dataIn->readLong();
@@ -455,7 +441,7 @@ long long BaseDataStreamMarshaller::looseUnmarshalLong(
 commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
     OpenWireFormat* wireFormat,
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs ) throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -502,8 +488,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
 int BaseDataStreamMarshaller::tightMarshalBrokerError1(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -550,8 +535,7 @@ void BaseDataStreamMarshaller::tightMarshalBrokerError2(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
     decaf::io::DataOutputStream* dataOut,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -591,8 +575,7 @@ void BaseDataStreamMarshaller::tightMarshalBrokerError2(
 ////////////////////////////////////////////////////////////////////////////////
 commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
     OpenWireFormat* wireFormat,
-    decaf::io::DataInputStream* dataIn )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
 
@@ -640,8 +623,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
 void BaseDataStreamMarshaller::looseMarshalBrokerError(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
-    decaf::io::DataOutputStream* dataOut )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataOutputStream* dataOut ) {
 
     try{
 
@@ -684,8 +666,7 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
     decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs )
-        throw ( decaf::io::IOException ) {
+    utils::BooleanStream* bs ) {
 
     try{
 
@@ -694,7 +675,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
         if( bs->readBoolean() ) {
             int size = dataIn->readInt();
             data.resize( size );
-            dataIn->readFully( data );
+            dataIn->readFully( &data[0], (int)data.size() );
         }
 
         return data;
@@ -706,8 +687,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
-    decaf::io::DataInputStream* dataIn )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
 
@@ -715,7 +695,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
             int size = dataIn->readInt();
             std::vector<unsigned char> data;
             data.resize( size );
-            dataIn->readFully( data );
+            dataIn->readFully( &data[0], (int)data.size() );
             return data;
         }
 
@@ -730,13 +710,12 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
 std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArray(
     decaf::io::DataInputStream* dataIn,
     utils::BooleanStream* bs AMQCPP_UNUSED,
-    int size )
-        throw ( decaf::io::IOException ) {
+    int size ) {
 
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( data );
+        dataIn->readFully( &data[0], (int)data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -746,14 +725,12 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArra
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArray(
-    decaf::io::DataInputStream* dataIn,
-    int size )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn, int size ) {
 
     try{
         std::vector<unsigned char> data;
         data.resize( size );
-        dataIn->readFully( data );
+        dataIn->readFully( &data[0], (int)data.size() );
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -810,21 +787,21 @@ std::string BaseDataStreamMarshaller::toHexFromBytes(
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::readAsciiString(
-    decaf::io::DataInputStream* dataIn )
-        throw ( decaf::io::IOException ) {
+    decaf::io::DataInputStream* dataIn ) {
 
     try{
 
-        int size = dataIn->readShort() + 1; // add space c++ NULL
-        unsigned char* data = new unsigned char[size];
-        dataIn->readFully( data, 0, size-1 );
-        data[size-1] = 0;  // enforce NULL
-
-        // Now build a string and copy data into it.
         std::string text;
-        text.resize( size );
-        text.assign( (char*)data, (int)size-1 );
-        delete [] data;
+        int size = dataIn->readShort();
+
+        if( size > 0 ) {
+
+            std::vector<char> data( size );
+            dataIn->readFully( (unsigned char*)&data[0], size );
+
+            // Now build a string and copy data into it.
+            text.insert( text.begin(), data.begin(), data.end() );
+        }
 
         return text;
     }

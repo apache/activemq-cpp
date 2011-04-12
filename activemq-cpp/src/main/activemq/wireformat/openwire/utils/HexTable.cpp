@@ -30,7 +30,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-HexTable::HexTable(){
+HexTable::HexTable() : table() {
 
     const char values[] =
         { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b',
@@ -47,8 +47,7 @@ HexTable::HexTable(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index )
-    throw ( IndexOutOfBoundsException ) {
+const std::string& HexTable::operator[]( std::size_t index ) {
 
     try{
 
@@ -67,8 +66,7 @@ const std::string& HexTable::operator[]( std::size_t index )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index ) const
-    throw ( IndexOutOfBoundsException ) {
+const std::string& HexTable::operator[]( std::size_t index ) const {
 
     try{
 

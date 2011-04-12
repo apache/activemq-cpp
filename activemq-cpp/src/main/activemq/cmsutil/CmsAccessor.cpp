@@ -16,17 +16,28 @@
  */
 
 #include "CmsAccessor.h"
-#include <activemq/exceptions/ExceptionDefines.h>
-#include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/util/CMSExceptionSupport.h>
 
+#include <cms/IllegalStateException.h>
+
+using namespace cms;
 using namespace activemq::cmsutil;
-using namespace activemq::exceptions;
-using namespace decaf::lang::exceptions;
+
+/**
+ * A catch-all that throws an CMSException.
+ */
+#define CMSTEMPLATE_CATCHALL() \
+    catch( cms::CMSException& ex ){ \
+        throw ex; \
+    } catch( std::exception& ex ) { \
+        throw CMSException( ex.what(), NULL ); \
+    } catch( ... ){ \
+        throw CMSException( "caught unknown exception", NULL ); \
+    }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsAccessor::CmsAccessor() {
-    sessionAcknowledgeMode = cms::Session::AUTO_ACKNOWLEDGE;
+CmsAccessor::CmsAccessor() : resourceLifecycleManager(),
+                             connectionFactory( NULL ),
+                             sessionAcknowledgeMode( cms::Session::AUTO_ACKNOWLEDGE ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,8 +45,11 @@ CmsAccessor::~CmsAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsAccessor::createConnection()
-    throw ( cms::CMSException,IllegalStateException ) {
+void CmsAccessor::init() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* CmsAccessor::createConnection() {
 
     try {
 
@@ -49,20 +63,16 @@ cms::Connection* CmsAccessor::createConnection()
 
         return c;
     }
-    AMQ_CATCH_RETHROW( IllegalStateException )
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* CmsAccessor::createSession( cms::Connection* con )
-    throw ( cms::CMSException,IllegalStateException ) {
+cms::Session* CmsAccessor::createSession( cms::Connection* con ) {
 
     try {
 
         if( con == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "connection object is invalid" );
+            throw CMSException( "connection object is invalid", NULL );
         }
 
         // Create the session.
@@ -73,15 +83,12 @@ cms::Session* CmsAccessor::createSession( cms::Connection* con )
 
         return s;
     }
-    AMQ_CATCH_RETHROW( IllegalStateException )
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+    CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsAccessor::checkConnectionFactory() throw ( IllegalStateException ) {
+void CmsAccessor::checkConnectionFactory() {
     if( getConnectionFactory() == NULL ) {
-        throw IllegalStateException(
-            __FILE__, __LINE__,
-            "Property 'connectionFactory' is required" );
+        throw IllegalStateException( "Property 'connectionFactory' is required", NULL );
     }
 }

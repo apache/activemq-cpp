@@ -78,7 +78,7 @@ public class CommandClassGenerator extends MultiSourceGenerator {
 
         File headerFile = new File(destDir, className + ".h");
 
-        CommandHeaderGenerator hdrGenerator = generatorsFactory.getHeaderGenerator( className );
+        CommandCodeGenerator hdrGenerator = generatorsFactory.getHeaderGenerator( className );
 
         hdrGenerator.setJClass( getJclass() );
         hdrGenerator.setProperties( getProperties() );
@@ -115,7 +115,7 @@ public class CommandClassGenerator extends MultiSourceGenerator {
 
         File sourceFile = new File(destDir, className + ".cpp");
 
-        CommandSourceGenerator srcGenerator = generatorsFactory.getSourceGenerator( className );
+        CommandCodeGenerator srcGenerator = generatorsFactory.getSourceGenerator( className );
 
         srcGenerator.setJClass( getJclass() );
         srcGenerator.setProperties( getProperties() );

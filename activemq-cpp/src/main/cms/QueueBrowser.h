@@ -18,38 +18,49 @@
 #ifndef _CMS_QUEUEBROWSER_H_
 #define _CMS_QUEUEBROWSER_H_
 
-#include <vector>
 #include <string>
 #include <cms/Config.h>
 #include <cms/Closeable.h>
 #include <cms/Queue.h>
 #include <cms/Message.h>
 #include <cms/CMSException.h>
+#include <cms/MessageEnumeration.h>
 
 namespace cms{
 
     /**
      * This class implements in interface for browsing the messages in a Queue
      * without removing them.
-     * <p>
-     * The <code>getEnumeration</code> method of this class returns a static snapshot of
-     * the Queue at the time the method is called.  Since new Message's can be arriving and
-     * old Message's could expire the client should periodically refresh its view by calling
-     * <code>getEnumeration</code> again.
+     *
+     * To browse the contents of the Queue the client calls the <code>getEnumeration</code>
+     * method to retrieve a new instance of a Queue Enumerator.  The client then calls the
+     * hasMoreMessages method of the Enumeration, if it returns true the client can safely
+     * call the nextMessage method of the Enumeration instance.
+     *
+     *      Enumeration* enumeration = queueBrowser->getEnumeration();
+     *
+     *      while( enumeration->hasMoreMessages() ) {
+     *          cms::Message* message = enumeration->nextMessage();
+     *
+     *          // ... Do something with the Message.
+     *
+     *          delete message;
+     *      }
+     *
      *
      * @since 1.1
      */
     class CMS_API QueueBrowser : public Closeable {
     public:
 
-        virtual ~QueueBrowser() {}
+        virtual ~QueueBrowser() throw();
 
         /**
          * @returns the Queue that this browser is listening on.
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual const Queue* getQueue() const throw ( cms::CMSException ) = 0;
+        virtual const Queue* getQueue() const = 0;
 
         /**
          * @returns the MessageSelector that is used on when this browser was
@@ -57,20 +68,19 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual std::string getMessageSelector() const throw ( cms::CMSException ) = 0;
+        virtual std::string getMessageSelector() const = 0;
 
         /**
-         * Gets an enumeration for browsing the current queue messages in the
-         * order they would be received.  The enumeration returned is a static view
-         * of the Queue and is not updated as new Messages arrive, the client should
-         * refresh its enumeration by calling this method again.
+         * Gets a pointer to an Enumeration object for browsing the Messages currently in
+         * the Queue in the order that a client would receive them.  The pointer returned is
+         * owned by the browser and should not be deleted by the client application.
          *
-         * @returns an STL vector for browsing the messages.
+         * @returns a pointer to a Queue Enumeration, this Pointer is owned by the QueueBrowser
+         *          and should not be deleted by the client.
          *
          * @throws CMSException if an internal error occurs.
          */
-        virtual std::vector<const cms::Message*> getEnumeration() const
-            throw ( cms::CMSException ) = 0;
+        virtual cms::MessageEnumeration* getEnumeration() = 0;
 
     };
 

@@ -23,6 +23,7 @@
 #include <activemq/state/CommandVisitor.h>
 #include <apr_strings.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
@@ -42,31 +43,38 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId() : BaseDataStructure() {
+SessionId::SessionId() 
+    : BaseDataStructure(), connectionId(""), value(0), parentId() {
 
-    this->connectionId = "";
-    this->value = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const SessionId& other ) : BaseDataStructure() {
+SessionId::SessionId( const SessionId& other )
+    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ConnectionId* connectionId, long long sessionId ) {
+SessionId::SessionId( const ConnectionId* connectionId, long long sessionId )
+    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+
     this->connectionId = connectionId->getValue();
     this->value = sessionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ProducerId* producerId ) {
+SessionId::SessionId( const ProducerId* producerId )
+    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+
     this->connectionId = producerId->getConnectionId();
     this->value = producerId->getSessionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId::SessionId( const ConsumerId* consumerId ) {
+SessionId::SessionId( const ConsumerId* consumerId )
+    : BaseDataStructure(), connectionId(""), value(0), parentId() {
+
     this->connectionId = consumerId->getConnectionId();
     this->value = consumerId->getSessionId();
 }
@@ -118,12 +126,7 @@ std::string SessionId::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = SessionId" << std::endl;
-    stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl;
-    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = SessionId" << std::endl;
+    stream << this->connectionId << ":" << this->value;
 
     return stream.str();
 }
@@ -201,7 +204,7 @@ int SessionId::compareTo( const SessionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool SessionId::equals( const SessionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

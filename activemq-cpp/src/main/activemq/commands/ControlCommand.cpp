@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ControlCommand::ControlCommand() : BaseCommand() {
+ControlCommand::ControlCommand() 
+    : BaseCommand(), command("") {
 
-    this->command = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +89,12 @@ std::string ControlCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ControlCommand" << std::endl;
-    stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl;
-    stream << " Value of Command = " << this->getCommand() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ControlCommand" << std::endl;
+    stream << "ControlCommand { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Command = " << this->getCommand();
+    stream << " }";
 
     return stream.str();
 }
@@ -136,8 +137,7 @@ void ControlCommand::setCommand( const std::string& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processControlCommand( this );
 }

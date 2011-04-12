@@ -38,10 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck::MessageAck() : BaseCommand() {
+MessageAck::MessageAck() 
+    : BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
+      messageCount(0) {
 
-    this->ackType = 0;
-    this->messageCount = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,42 +96,49 @@ std::string MessageAck::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = MessageAck" << std::endl;
-    stream << " Value of MessageAck::ID_MESSAGEACK = 22" << std::endl;
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << "MessageAck { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of TransactionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "TransactionId = ";
     if( this->getTransactionId() != NULL ) {
-        stream << this->getTransactionId()->toString() << std::endl;
+        stream << this->getTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of AckType = " << (int)this->getAckType() << std::endl;
-    stream << " Value of FirstMessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "AckType = " << (int)this->getAckType();
+    stream << ", ";
+    stream << "FirstMessageId = ";
     if( this->getFirstMessageId() != NULL ) {
-        stream << this->getFirstMessageId()->toString() << std::endl;
+        stream << this->getFirstMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of LastMessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "LastMessageId = ";
     if( this->getLastMessageId() != NULL ) {
-        stream << this->getLastMessageId()->toString() << std::endl;
+        stream << this->getLastMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of MessageCount = " << this->getMessageCount() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = MessageAck" << std::endl;
+    stream << ", ";
+    stream << "MessageCount = " << this->getMessageCount();
+    stream << " }";
 
     return stream.str();
 }
@@ -292,8 +299,7 @@ void MessageAck::setMessageCount( int messageCount ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processMessageAck( this );
 }

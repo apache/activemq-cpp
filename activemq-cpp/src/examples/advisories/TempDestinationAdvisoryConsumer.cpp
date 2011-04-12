@@ -39,7 +39,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TempDestinationAdvisoryConsumer::TempDestinationAdvisoryConsumer( cms::Session* session ) {
+TempDestinationAdvisoryConsumer::TempDestinationAdvisoryConsumer( cms::Session* session )
+    : session( session ), consumer() {
 
     if( session == NULL ) {
         throw NullPointerException(
@@ -49,17 +50,16 @@ TempDestinationAdvisoryConsumer::TempDestinationAdvisoryConsumer( cms::Session* 
     std::auto_ptr<cms::Topic> advisories( session->createTopic(
         "ActiveMQ.Advisory.TempTopic,ActiveMQ.Advisory.TempQueue" ) );
 
-    this->session = session;
     this->consumer.reset( session->createConsumer( advisories.get() ) );
     this->consumer->setMessageListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TempDestinationAdvisoryConsumer::~TempDestinationAdvisoryConsumer() {
+TempDestinationAdvisoryConsumer::~TempDestinationAdvisoryConsumer() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TempDestinationAdvisoryConsumer::onMessage( const cms::Message* message ) {
+void TempDestinationAdvisoryConsumer::onMessage( const cms::Message* message ) throw() {
 
     if( message->getCMSType() == "Advisory" ) {
 

@@ -58,23 +58,24 @@ private:
     std::string brokerURI;
     std::string destURI;
 
+private:
+
+    SimpleProducer( const SimpleProducer& );
+    SimpleProducer& operator= ( const SimpleProducer& );
+
 public:
 
-    SimpleProducer( const std::string& brokerURI,
-                    unsigned int numMessages,
-                    const std::string& destURI,
-                    bool useTopic = false,
-                    bool clientAck = false ){
-
-        this->connection = NULL;
-        this->session = NULL;
-        this->destination = NULL;
-        this->producer = NULL;
-        this->numMessages = numMessages;
-        this->useTopic = useTopic;
-        this->brokerURI = brokerURI;
-        this->destURI = destURI;
-        this->clientAck = clientAck;
+    SimpleProducer( const std::string& brokerURI, unsigned int numMessages,
+                    const std::string& destURI, bool useTopic = false, bool clientAck = false ) :
+        connection(NULL),
+        session(NULL),
+        destination(NULL),
+        producer(NULL),
+        useTopic(useTopic),
+        clientAck(clientAck),
+        numMessages(numMessages),
+        brokerURI(brokerURI),
+        destURI(destURI) {
     }
 
     virtual ~SimpleProducer(){
@@ -201,7 +202,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
     std::string brokerURI =
-        "failover:(tcp://127.0.0.1:61616"
+        "failover://(tcp://127.0.0.1:61616"
 //        "?wireFormat=openwire"
 //        "&connection.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"

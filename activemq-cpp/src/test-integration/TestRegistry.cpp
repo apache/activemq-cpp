@@ -15,12 +15,17 @@
  * limitations under the License.
  */
 
+#include "activemq/test/openwire/OpenwireAdvisorysTest.h"
 #include "activemq/test/openwire/OpenwireAsyncSenderTest.h"
 #include "activemq/test/openwire/OpenwireClientAckTest.h"
 #include "activemq/test/openwire/OpenwireCmsTemplateTest.h"
 #include "activemq/test/openwire/OpenwireDurableTest.h"
 #include "activemq/test/openwire/OpenwireExpirationTest.h"
 #include "activemq/test/openwire/OpenwireIndividualAckTest.h"
+#include "activemq/test/openwire/OpenwireMessageCompressionTest.h"
+#include "activemq/test/openwire/OpenwireMessagePriorityTest.h"
+#include "activemq/test/openwire/OpenwireMapMessageTest.h"
+#include "activemq/test/openwire/OpenwireQueueBrowserTest.h"
 #include "activemq/test/openwire/OpenwireSimpleRollbackTest.h"
 #include "activemq/test/openwire/OpenwireSimpleTest.h"
 #include "activemq/test/openwire/OpenwireTransactionTest.h"
@@ -28,6 +33,7 @@
 #include "activemq/test/openwire/OpenwireSlowListenerTest.h"
 #include "activemq/test/openwire/OpenwireJmsMessageGroupsTest.h"
 #include "activemq/test/openwire/OpenwireVirtualTopicTest.h"
+#include "activemq/test/openwire/OpenwireXATransactionsTest.h"
 
 #include "activemq/test/stomp/StompAsyncSenderTest.h"
 #include "activemq/test/stomp/StompCmsTemplateTest.h"
@@ -40,12 +46,17 @@
 #include "activemq/test/stomp/StompJmsMessageGroupsTest.h"
 
 // Openwire Tests
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAdvisorysTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireClientAckTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireCmsTemplateTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireDurableTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireExpirationTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireIndividualAckTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMessageCompressionTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMessagePriorityTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMapMessageTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireQueueBrowserTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireSimpleRollbackTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireSimpleTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireTransactionTest );
@@ -53,6 +64,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireSlowListenerT
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireTempDestinationTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireJmsMessageGroupsTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireVirtualTopicTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireXATransactionsTest );
 
 // Stomp Tests
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompAsyncSenderTest );

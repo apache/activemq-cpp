@@ -34,6 +34,11 @@ namespace {
     class ResponseFinalizer {
     private:
 
+        ResponseFinalizer( const ResponseFinalizer& );
+        ResponseFinalizer operator= ( const ResponseFinalizer& );
+
+    private:
+
         Mutex* mutex;
         int commandId;
         std::map<unsigned int, Pointer<FutureResponse> >* map;
@@ -53,10 +58,8 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next )
- :  TransportFilter( next ), closed( true ) {
-
-    nextCommandId.set(1);
+ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next ) :
+    TransportFilter( next ), nextCommandId(1), requestMap(), mapMutex(), closed( true ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,8 +70,7 @@ ResponseCorrelator::~ResponseCorrelator(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::oneway( const Pointer<Command>& command )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+void ResponseCorrelator::oneway( const Pointer<Command>& command ) {
 
     try{
         command->setCommandId( nextCommandId.getAndIncrement() );
@@ -89,8 +91,7 @@ void ResponseCorrelator::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command ) {
 
     try{
 
@@ -135,8 +136,7 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, unsigned int timeout )
-    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, unsigned int timeout ) {
 
     try{
         command->setCommandId( nextCommandId.getAndIncrement() );
@@ -217,7 +217,7 @@ void ResponseCorrelator::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::start() throw( decaf::io::IOException ) {
+void ResponseCorrelator::start() {
 
     try{
 
@@ -248,7 +248,7 @@ void ResponseCorrelator::start() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::close() throw( decaf::io::IOException ){
+void ResponseCorrelator::close() {
 
     try{
 

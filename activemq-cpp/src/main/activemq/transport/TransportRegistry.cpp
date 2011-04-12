@@ -21,30 +21,24 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportRegistry::TransportRegistry() {
+TransportRegistry::TransportRegistry() : registry() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportRegistry::~TransportRegistry() {
 
-    std::vector<TransportFactory*> factories = this->registry.values();
-
-    std::vector<TransportFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
-    }
-
-    this->registry.clear();
- }
+    try{
+        this->unregisterAllFactories();
+    } catch(...) {}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory* TransportRegistry::findFactory( const std::string& name ) const
-    throw( decaf::lang::exceptions::NoSuchElementException ) {
+TransportFactory* TransportRegistry::findFactory( const std::string& name ) const {
 
     if( !this->registry.containsKey( name ) ) {
         throw NoSuchElementException( __FILE__, __LINE__,
@@ -55,9 +49,7 @@ TransportFactory* TransportRegistry::findFactory( const std::string& name ) cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory )
-    throw( decaf::lang::exceptions::IllegalArgumentException,
-           decaf::lang::exceptions::NullPointerException ) {
+void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,
@@ -78,6 +70,19 @@ void TransportRegistry::unregisterFactory( const std::string& name ) {
         delete this->registry.get( name );
         this->registry.remove( name );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportRegistry::unregisterAllFactories() {
+
+    std::vector<TransportFactory*> factories = this->registry.values();
+    std::vector<TransportFactory*>::iterator iter = factories.begin();
+
+    for( ; iter != factories.end(); ++iter ) {
+        delete *iter;
+    }
+
+    this->registry.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

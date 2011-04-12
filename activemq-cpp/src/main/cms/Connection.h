@@ -72,16 +72,15 @@ namespace cms{
     {
     public:
 
-        virtual ~Connection() {}
+        virtual ~Connection() throw();
 
         /**
-         * Closes this connection as well as any Sessions
-         * created from it (and those Sessions' consumers and
-         * producers).
+         * Closes this connection as well as any Sessions created from it
+         * (and those Sessions' consumers and producers).
          *
          * @throws CMSException
          */
-        virtual void close() throw( CMSException ) = 0;
+        virtual void close() = 0;
 
         /**
          * Gets the metadata for this connection.
@@ -94,14 +93,14 @@ namespace cms{
          * @see ConnectionMetaData
          * @since 2.0
          */
-        virtual const ConnectionMetaData* getMetaData() const throw( CMSException ) = 0;
+        virtual const ConnectionMetaData* getMetaData() const = 0;
 
         /**
          * Creates an AUTO_ACKNOWLEDGE Session.
          *
          * @throws CMSException
          */
-        virtual Session* createSession() throw ( CMSException ) = 0;
+        virtual Session* createSession() = 0;
 
         /**
          * Creates a new Session to work for this Connection using the
@@ -109,17 +108,40 @@ namespace cms{
          *
          * @param ackMode
          *        the Acknowledgment Mode to use.
+         *
          * @throws CMSException
          */
-        virtual Session* createSession( Session::AcknowledgeMode ackMode )
-            throw ( CMSException ) = 0;
+        virtual Session* createSession( Session::AcknowledgeMode ackMode ) = 0;
 
         /**
-         * Get the Client Id for this session
+         * Get the Client Id for this session, the client Id is provider specific and is either
+         * assigned by the connection factory or set using the setClientID method.
          *
-         * @return Client Id String
+         * @return Client Id String for this Connection.
+         *
+         * @throws CMSException if the provider fails to return the client id or an internal error occurs.
          */
         virtual std::string getClientID() const = 0;
+
+        /**
+         * Sets the client identifier for this connection.
+         *
+         * The preferred way to assign a CMS client's client identifier is for it to be configured in a
+         * client-specific ConnectionFactory object and transparently assigned to the Connection object
+         * it creates.
+         *
+         * If a client sets the client identifier explicitly, it must do so immediately after it creates
+         * the connection and before any other action on the connection is taken. After this point,
+         * setting the client identifier is a programming error that should throw an IllegalStateException.
+         *
+         * @param clientID
+         *      The unique client identifier to assign to the Connection.
+         *
+         * @throws CMSException if the provider fails to set the client id due to some internal error.
+         * @throws InvalidClientIDException if the id given is somehow invalid or is a duplicate.
+         * @throws IllegalStateException if the client tries to set the id after a Connection method has been called.
+         */
+        virtual void setClientID( const std::string& clientID ) = 0;
 
         /**
          * Gets the registered Exception Listener for this connection

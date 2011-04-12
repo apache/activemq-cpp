@@ -39,8 +39,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location )
-    throw ( ActiveMQException ) {
+Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location ) {
 
     try{
 
@@ -55,12 +54,6 @@ Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location 
         // Create the Transport for response correlator
         transport.reset( new ResponseCorrelator( transport ) );
 
-        // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
-            // Create the Transport for response correlator
-            transport.reset( new LoggingTransport( transport ) );
-        }
-
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -69,8 +62,7 @@ Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& location )
-    throw ( ActiveMQException ) {
+Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& location ) {
 
     try{
 
@@ -90,16 +82,26 @@ Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
                                                            const Pointer<wireformat::WireFormat>& wireFormat,
-                                                           const decaf::util::Properties& properties )
-    throw ( ActiveMQException ) {
+                                                           const decaf::util::Properties& properties ) {
 
     try {
 
         Pointer<Transport> transport( new TcpTransport(
-            location, properties, Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+            Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
 
-        if( properties.getProperty( "trnasport.useInactivityMonitor", "true" ) == "true" ) {
+        // Initialize the Transport, creates Sockets and configures defaults.
+        transport.dynamicCast<TcpTransport>()->connect( location, properties );
+
+        if( properties.getProperty( "transport.useInactivityMonitor", "true" ) == "true" ) {
             transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        }
+
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ||
+            properties.getProperty( "transport.trace", "false" ) == "true" ) {
+
+            // Create the Transport for response correlator
+            transport.reset( new LoggingTransport( transport ) );
         }
 
         // If there is a negotiator need then we create and wrap here.

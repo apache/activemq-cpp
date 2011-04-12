@@ -56,10 +56,133 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class AbstractSequentialList : public decaf::util::AbstractList {
+    class AbstractSequentialList : public decaf::util::AbstractList<E> {
+    public:
+
+        using AbstractList<E>::add;
+        using AbstractList<E>::addAll;
+
     public:
 
         virtual ~AbstractSequentialList() {}
+
+        virtual Iterator<E>* iterator() {
+            return this->listIterator( 0 );
+        }
+        virtual Iterator<E>* iterator() const {
+            return this->listIterator( 0 );
+        }
+
+        virtual ListIterator<E>* listIterator() {
+            return this->listIterator( 0 );
+        }
+        virtual ListIterator<E>* listIterator() const {
+            return this->listIterator( 0 );
+        }
+
+        virtual ListIterator<E>* listIterator( int index DECAF_UNUSED ) {
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                __FILE__, __LINE__, "Abstract sequential list does not implement the listIterator." );
+        }
+        virtual ListIterator<E>* listIterator( int index DECAF_UNUSED ) const {
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                __FILE__, __LINE__, "Abstract sequential list does not implement the listIterator." );
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * This implementation first gets a list iterator pointing to the indexed
+         * element (with listIterator(index)). Then, it gets the element using
+         * ListIterator.next and returns it.
+         */
+        virtual E get( int index ) const {
+
+            try {
+                std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+                return iter->next();
+            } catch( decaf::util::NoSuchElementException& ex ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "get called with invalid index." );
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * This implementation first gets a list iterator pointing to the indexed element
+         * (with listIterator(index)). Then, it gets the current element using
+         * ListIterator.next and replaces it with ListIterator.set.
+         */
+        virtual E set( int index, const E& element ) {
+
+            try {
+                std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+                E result = iter->next();
+                iter->set( element );
+                return result;
+            } catch( decaf::util::NoSuchElementException& ex ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "set called with invalid index." );
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * This implementation first gets a list iterator pointing to the indexed element
+         * (with listIterator(index)). Then, it inserts the specified element with
+         * ListIterator.add.
+         */
+        virtual void add( int index, const E& element ) {
+
+            try {
+                std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+                iter->add( element );
+            } catch( decaf::util::NoSuchElementException& ex ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "add called with invalid index." );
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * This implementation gets an iterator over the specified collection and a list
+         * iterator over this list pointing to the indexed element (with listIterator(index)).
+         * Then, it iterates over the specified collection, inserting the elements obtained
+         * from the iterator into this list, one at a time, using ListIterator.add
+         * (to skip over the added element).
+         */
+        virtual bool addAll( int index, const Collection<E>& source ) {
+
+            std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
+            int next = iter->nextIndex();
+            while( srcIter->hasNext() ) {
+                iter->add( srcIter->next() );
+            }
+            return next != iter->nextIndex();
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * This implementation first gets a list iterator pointing to the indexed element
+         * (with listIterator(index)). Then, it removes the element with ListIterator.remove.
+         */
+        virtual E removeAt( int index ) {
+
+            try {
+                std::auto_ptr< ListIterator<E> > iter( this->listIterator( index ) );
+                E result = iter->next();
+                iter->remove();
+                return result;
+            } catch( decaf::util::NoSuchElementException& ex ) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "set called with invalid index." );
+            }
+        }
 
     };
 

@@ -33,10 +33,7 @@ using namespace activemq::wireformat::openwire::marshal;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatInfo::WireFormatInfo()
-{
-    // Init to our preferred version
-    this->version = 2;
+WireFormatInfo::WireFormatInfo() : BaseCommand(), magic(), marshalledProperties(), properties(), version(5) {
 
     // Initialize the MAGIC buffer.
     magic.push_back( 'A' );
@@ -88,35 +85,35 @@ unsigned char WireFormatInfo::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string WireFormatInfo::toString() const {
+
     std::ostringstream stream;
 
-    stream << "Begin Class = WireFormatInfo" << std::endl;
+    stream << "WireFormatInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired() << ", ";
 
     std::vector<unsigned char> magic;
     std::vector<unsigned char> marshalledProperties;
 
+    stream << "Magic = [ ";
     for( size_t imagic = 0; imagic < magic.size(); ++imagic ) {
-        stream << " Value of magic[" << imagic << "] = " << magic[imagic] << std::endl;
+        stream << magic[imagic];
+        if( imagic < magic.size() - 1 ) {
+            stream << ", ";
+        }
     }
 
-    for( size_t imarshalledProperties = 0; imarshalledProperties < marshalledProperties.size(); ++imarshalledProperties ) {
-        stream << " Value of marshalledProperties[" << imarshalledProperties << "] = "
-               << marshalledProperties[imarshalledProperties] << std::endl;
-    }
+    stream << "Version = " << version << ", ";
+    stream << "StackTraceEnabled = " << isStackTraceEnabled() << ", ";
+    stream << "TcpNoDelayEnabled = " << isTcpNoDelayEnabled() << ", ";
+    stream << "CacheEnabled = " << isCacheEnabled() << ", ";
+    stream << "CacheSize = " << getCacheSize() << ", ";
+    stream << "TightEncodingEnabled = " << isTightEncodingEnabled() << ", ";
+    stream << "SizePrefixDisabled = " << isSizePrefixDisabled() << ", ";
+    stream << "MaxInactivityDuration = " << getMaxInactivityDuration() << ", ";
+    stream << "MaxInactivityDuration = " << getMaxInactivityDurationInitalDelay();
 
-    stream << " Value of properties = " << properties.toString() << std::endl;
-    stream << " Value of version = " << version << std::endl;
-    stream << " Value of stackTraceEnabled = " << isStackTraceEnabled() << std::endl;
-    stream << " Value of tcpNoDelayEnabled = " << isTcpNoDelayEnabled() << std::endl;
-    stream << " Value of cacheEnabled = " << isCacheEnabled() << std::endl;
-    stream << " Value of cacheSize = " << getCacheSize() << std::endl;
-    stream << " Value of tightEncodingEnabled = " << isTightEncodingEnabled() << std::endl;
-    stream << " Value of sizePrefixDisabled = " << isSizePrefixDisabled() << std::endl;
-    stream << " Value of maxInactivityDuration = " << getMaxInactivityDuration() << std::endl;
-    stream << " Value of maxInactivityDuration = " << getMaxInactivityDurationInitalDelay() << std::endl;
-
-    stream << BaseCommand::toString();
-    stream << "End Class = WireFormatInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -251,7 +248,7 @@ void WireFormatInfo::setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
 bool WireFormatInfo::isCacheEnabled() const {
 
     try {
-        return properties.getBool( "CacheEnabled" );
+        return false;
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -260,10 +257,11 @@ bool WireFormatInfo::isCacheEnabled() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setCacheEnabled( bool cacheEnabled ) {
+void WireFormatInfo::setCacheEnabled( bool cacheEnabled AMQCPP_UNUSED ) {
 
     try {
-        properties.setBool( "CacheEnabled", cacheEnabled );
+        // Turning this on is not supported as it causes the client to not work.
+        properties.setBool( "CacheEnabled", false );
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -314,8 +312,7 @@ void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 
@@ -331,8 +328,7 @@ void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 

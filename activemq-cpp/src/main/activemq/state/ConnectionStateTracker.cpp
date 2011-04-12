@@ -18,9 +18,15 @@
 #include "ConnectionStateTracker.h"
 
 #include <decaf/lang/Runnable.h>
-#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/NoSuchElementException.h>
+
+#include <activemq/commands/ConsumerControl.h>
+#include <activemq/commands/RemoveInfo.h>
+#include <activemq/core/ActiveMQConstants.h>
+#include <activemq/transport/TransportListener.h>
 
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::state;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -28,8 +34,6 @@ using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::io;
 using namespace decaf::lang::exceptions;
-
-////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace activemq {
@@ -40,6 +44,11 @@ namespace state {
 
         const Pointer<TransactionInfo> info;
         ConnectionStateTracker* stateTracker;
+
+    private:
+
+        RemoveTransactionAction( const RemoveTransactionAction& );
+        RemoveTransactionAction& operator= ( const RemoveTransactionAction& );
 
     public:
 
@@ -59,16 +68,18 @@ namespace state {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ) {
-
-    this->trackTransactions = false;
-    this->restoreSessions = true;
-    this->restoreConsumers = true;
-    this->restoreProducers = true;
-    this->restoreTransaction = true;
-    this->trackMessages = true;
-    this->maxCacheSize = 128 * 1024;
-    this->currentCacheSize = 0;
+ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ),
+                                                   connectionStates(),
+                                                   messageCache(),
+                                                   trackTransactions(false),
+                                                   restoreSessions(true),
+                                                   restoreConsumers(true),
+                                                   restoreProducers(true),
+                                                   restoreTransaction(true),
+                                                   trackMessages(true),
+                                                   trackTransactionProducers(true),
+                                                   maxCacheSize(128 * 1024),
+                                                   currentCacheSize(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +87,7 @@ ConnectionStateTracker::~ConnectionStateTracker() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Tracked> ConnectionStateTracker::track( const Pointer<Command>& command )
-    throw( decaf::io::IOException ) {
+Pointer<Tracked> ConnectionStateTracker::track( const Pointer<Command>& command ) {
 
     try{
 
@@ -111,8 +121,7 @@ void ConnectionStateTracker::trackBack( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::restore( const Pointer<transport::Transport>& transport )
-    throw( decaf::io::IOException ) {
+void ConnectionStateTracker::restore( const Pointer<transport::Transport>& transport ) {
 
     try{
 
@@ -121,7 +130,11 @@ void ConnectionStateTracker::restore( const Pointer<transport::Transport>& trans
 
         for( ; iter != connectionStates.end(); ++iter ) {
             Pointer<ConnectionState> state = *iter;
-            transport->oneway( state->getInfo() );
+
+            Pointer<ConnectionInfo> info = state->getInfo();
+            info->setFailoverReconnect( true );
+            transport->oneway( info );
+
             doRestoreTempDestinations( transport, state );
 
             if( restoreSessions ) {
@@ -148,10 +161,11 @@ void ConnectionStateTracker::restore( const Pointer<transport::Transport>& trans
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Transport>& transport,
-                                                    const Pointer<ConnectionState>& connectionState )
-    throw( decaf::io::IOException ) {
+                                                    const Pointer<ConnectionState>& connectionState ) {
 
     try{
+
+        std::vector< Pointer<Command> > toIgnore;
 
         // Restore the session's transaction state
         std::vector< Pointer<TransactionState> > transactionStates =
@@ -160,14 +174,60 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
         std::vector< Pointer<TransactionState> >::const_iterator iter = transactionStates.begin();
 
         for( ; iter != transactionStates.end(); ++iter ) {
-            Pointer<TransactionState> state = *iter;
+
+            //if( LOG.isDebugEnabled() ) {
+            //    LOG.debug("tx: " + transactionState.getId());
+            //}
+
+            // ignore any empty (ack) transaction
+            if( (*iter)->getCommands().size() == 2 ) {
+                Pointer<Command> lastCommand = (*iter)->getCommands().get(1);
+                if( lastCommand->isTransactionInfo() ) {
+                    Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
+
+                    if( transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE ) {
+                        //if( LOG.isDebugEnabled() ) {
+                        //    LOG.debug("not replaying empty (ack) tx: " + transactionState.getId());
+                        //}
+                        toIgnore.push_back(lastCommand);
+                        continue;
+                    }
+                }
+            }
+
+            // replay short lived producers that may have been involved in the transaction
+            std::vector< Pointer<ProducerState> > producerStates = (*iter)->getProducerStates();
+            std::vector< Pointer<ProducerState> >::const_iterator state = producerStates.begin();
+
+            for( ; state != producerStates.end(); ++state ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("tx replay producer :" + producerState.getInfo());
+                //}
+                transport->oneway( (*state)->getInfo() );
+            }
 
             std::auto_ptr< Iterator< Pointer<Command> > > commands(
-                state->getCommands().iterator() );
+                (*iter)->getCommands().iterator() );
 
             while( commands->hasNext() ) {
                 transport->oneway( commands->next() );
             }
+
+            state = producerStates.begin();
+            for( ; state != producerStates.end(); ++state ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("tx remove replayed producer :" + producerState.getInfo());
+                //}
+                transport->oneway( (*state)->getInfo()->createRemoveCommand() );
+            }
+        }
+
+        std::vector< Pointer<Command> >::const_iterator command = toIgnore.begin();
+        for( ; command != toIgnore.end(); ++command ) {
+            // respond to the outstanding commit
+            Pointer<Response> response( new Response() );
+            response->setCorrelationId( (*command)->getCommandId() );
+            transport->getTransportListener()->onCommand( response );
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -177,8 +237,7 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::doRestoreSessions( const Pointer<transport::Transport>& transport,
-                                                const Pointer<ConnectionState>& connectionState )
-    throw( decaf::io::IOException ) {
+                                                const Pointer<ConnectionState>& connectionState ) {
 
     try{
 
@@ -207,19 +266,31 @@ void ConnectionStateTracker::doRestoreSessions( const Pointer<transport::Transpo
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transport>& transport,
-                                                 const Pointer<SessionState>& sessionState )
-    throw( decaf::io::IOException ) {
+                                                 const Pointer<SessionState>& sessionState ) {
 
     try{
 
-        // Restore the session's consumers
+        // Restore the session's consumers but possibly in pull only (prefetch 0 state) till recovery complete
+        Pointer<ConnectionState> connectionState =
+            connectionStates.get( sessionState->getInfo()->getSessionId()->getParentId() );
+        bool connectionInterruptionProcessingComplete =
+            connectionState->isConnectionInterruptProcessingComplete();
+
         std::vector< Pointer<ConsumerState> > consumerStates = sessionState->getConsumerStates();
+        std::vector< Pointer<ConsumerState> >::const_iterator state = consumerStates.begin();
 
-        std::vector< Pointer<ConsumerState> >::const_iterator iter = consumerStates.begin();
+        for( ; state != consumerStates.end(); ++state ) {
 
-        for( ; iter != consumerStates.end(); ++iter ) {
-            Pointer<ConsumerState> state = *iter;
-            transport->oneway( state->getInfo() );
+            Pointer<ConsumerInfo> infoToSend = (*state)->getInfo();
+
+            if( !connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0) {
+
+                infoToSend.reset( (*state)->getInfo()->cloneDataStructure() );
+                connectionState->getRecoveringPullConsumers().put( infoToSend->getConsumerId(), (*state)->getInfo() );
+                infoToSend->setPrefetchSize(0);
+            }
+
+            transport->oneway( infoToSend );
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -229,8 +300,7 @@ void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transp
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::doRestoreProducers( const Pointer<transport::Transport>& transport,
-                                                 const Pointer<SessionState>& sessionState )
-    throw( decaf::io::IOException ) {
+                                                 const Pointer<SessionState>& sessionState ) {
 
     try{
 
@@ -251,8 +321,7 @@ void ConnectionStateTracker::doRestoreProducers( const Pointer<transport::Transp
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::doRestoreTempDestinations( const Pointer<transport::Transport>& transport,
-                                                        const Pointer<ConnectionState>& connectionState )
-    throw( decaf::io::IOException ) {
+                                                        const Pointer<ConnectionState>& connectionState ) {
 
     try{
 
@@ -269,8 +338,7 @@ void ConnectionStateTracker::doRestoreTempDestinations( const Pointer<transport:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo* info ) {
 
     try{
         if( info != NULL ) {
@@ -287,8 +355,7 @@ Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationInfo* info ) {
 
     try{
         if( info != NULL ) {
@@ -305,8 +372,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationIn
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info ) {
 
     try{
 
@@ -334,8 +400,7 @@ Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id ) {
 
     try{
 
@@ -362,8 +427,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info ) {
 
     try{
 
@@ -391,8 +455,7 @@ Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id ) {
 
     try{
         if( id != NULL ) {
@@ -418,8 +481,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info)
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info ) {
 
     try{
 
@@ -440,8 +502,7 @@ Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id)
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id ) {
 
     try{
 
@@ -462,8 +523,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* info ) {
 
     try{
 
@@ -480,8 +540,7 @@ Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRemoveConnection( ConnectionId* id )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRemoveConnection( ConnectionId* id ) {
 
     try{
 
@@ -497,14 +556,15 @@ Pointer<Command> ConnectionStateTracker::processRemoveConnection( ConnectionId* 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processMessage( Message* message ) {
 
     try{
+
         if( message != NULL ) {
             if( trackTransactions && message->getTransactionId() != NULL ) {
-                Pointer<ConnectionId> connectionId =
-                    message->getProducerId()->getParentId()->getParentId();
+                Pointer<ProducerId> producerId = message->getProducerId();
+                Pointer<ConnectionId> connectionId = producerId->getParentId()->getParentId();
+
                 if( connectionId != NULL ) {
                     Pointer<ConnectionState> cs = connectionStates.get( connectionId );
                     if( cs != NULL ) {
@@ -513,6 +573,13 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
                         if( transactionState != NULL ) {
                             transactionState->addCommand(
                                 Pointer<Command>( message->cloneDataStructure() ) );
+
+                            if( trackTransactionProducers ) {
+                                // Track the producer in case it is closed before a commit
+                                Pointer<SessionState> sessionState = cs->getSessionState( producerId->getParentId() );
+                                Pointer<ProducerState> producerState = sessionState->getProducerState(producerId);
+                                producerState->setTransactionState(transactionState);
+                            }
                         }
                     }
                 }
@@ -530,8 +597,7 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack ) {
 
     try{
 
@@ -559,8 +625,7 @@ Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInfo* info ) {
 
     try{
 
@@ -588,8 +653,7 @@ Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInf
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processPrepareTransaction( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processPrepareTransaction( TransactionInfo* info ) {
 
     try{
 
@@ -618,8 +682,7 @@ Pointer<Command> ConnectionStateTracker::processPrepareTransaction( TransactionI
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( TransactionInfo* info ) {
 
     try{
 
@@ -649,8 +712,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( Trans
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( TransactionInfo* info ) {
 
     try{
 
@@ -680,8 +742,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( Trans
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processRollbackTransaction( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processRollbackTransaction( TransactionInfo* info ) {
 
     try{
 
@@ -711,8 +772,7 @@ Pointer<Command> ConnectionStateTracker::processRollbackTransaction( Transaction
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo* info )
-    throw ( activemq::exceptions::ActiveMQException ) {
+Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo* info ) {
 
     try{
 
@@ -740,3 +800,55 @@ Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo*
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionStateTracker::connectionInterruptProcessingComplete(
+    transport::Transport* transport, const Pointer<ConnectionId>& connectionId ) {
+
+    Pointer<ConnectionState> connectionState = connectionStates.get( connectionId );
+
+    if( connectionState != NULL ) {
+
+        connectionState->setConnectionInterruptProcessingComplete( true );
+
+        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR > stalledConsumers =
+            connectionState->getRecoveringPullConsumers();
+
+        std::vector< Pointer<ConsumerId> > keySet = stalledConsumers.keySet();
+        std::vector< Pointer<ConsumerId> >::const_iterator key = keySet.begin();
+
+        for( ; key != keySet.end(); ++key ) {
+            Pointer<ConsumerControl> control( new ConsumerControl() );
+
+            control->setConsumerId( *key );
+            control->setPrefetch( stalledConsumers.get( *key )->getPrefetchSize() );
+            control->setDestination( stalledConsumers.get( *key )->getDestination() );
+
+            try {
+
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("restored recovering consumer: " + control.getConsumerId() +
+                //              " with: " + control.getPrefetch());
+                //}
+                transport->oneway( control );
+            } catch( Exception& ex ) {
+                //if( LOG.isDebugEnabled() ) {
+                //    LOG.debug("Failed to submit control for consumer: " + control.getConsumerId() +
+                //              " with: " + control.getPrefetch(), ex);
+                //}
+            }
+        }
+
+        stalledConsumers.clear();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionStateTracker::transportInterrupted() {
+
+    std::vector< Pointer<ConnectionState> > connectionStatesVec = this->connectionStates.values();
+    std::vector< Pointer<ConnectionState> >::const_iterator state = connectionStatesVec.begin();
+
+    for( ; state != connectionStatesVec.end(); ++state ) {
+        (*state)->setConnectionInterruptProcessingComplete( false );
+    }
+}

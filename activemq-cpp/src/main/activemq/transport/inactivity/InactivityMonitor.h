@@ -47,12 +47,17 @@ namespace inactivity {
     private:
 
         // Internal Class used to house the data structures for this object
-        Pointer<InactivityMonitorData> members;
+        InactivityMonitorData* members;
 
         friend class ReadChecker;
         friend class AsyncSignalReadErrorkTask;
         friend class WriteChecker;
         friend class AsyncWriteTask;
+
+    private:
+
+        InactivityMonitor( const InactivityMonitor& );
+        InactivityMonitor operator= ( const InactivityMonitor& );
 
     public:
 
@@ -65,14 +70,17 @@ namespace inactivity {
 
         virtual ~InactivityMonitor();
 
-        virtual void close() throw( decaf::io::IOException );
+    public:  // TransportFilter Methods
+
+        virtual void close();
 
         virtual void onException( const decaf::lang::Exception& ex );
 
         virtual void onCommand( const Pointer<Command>& command );
 
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
+        virtual void oneway( const Pointer<Command>& command );
+
+    public:
 
         bool isKeepAliveResponseRequired() const;
 

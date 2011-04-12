@@ -16,7 +16,8 @@
  */
 
 #include "ByteArrayInputStream.h"
-#include <algorithm>
+
+#include <decaf/lang/System.h>
 
 using namespace std;
 using namespace decaf;
@@ -25,95 +26,133 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream(){
-    this->activeBuffer = NULL;
+ByteArrayInputStream::ByteArrayInputStream() :
+    InputStream(), buffer( NULL ), size( 0 ), own( false ), count( 0 ), pos( 0 ), markpos( 0 ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer ){
-    setBuffer(buffer);
+ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer ) :
+    InputStream(), buffer( NULL ), size( 0 ), own( false ), count( 0 ), pos( 0 ), markpos( 0 ) {
+
+    if( buffer.size() > 0 ) {
+        setByteArray( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer,
-                                            std::size_t bufferSize ){
-    setByteArray( buffer, bufferSize );
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own ) :
+    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+
+    setByteArray( buffer, bufferSize, 0, bufferSize );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own ) :
+    InputStream(), buffer( NULL ), size( 0 ), own( own ), count( 0 ), pos( 0 ), markpos( 0 ) {
+
+    setByteArray( buffer, bufferSize, offset, length );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::~ByteArrayInputStream(){
+    try{
+        if( this->own ) {
+            delete [] this->buffer;
+        }
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setBuffer( const vector<unsigned char>& buffer ){
+void ByteArrayInputStream::setByteArray( const vector<unsigned char>& buffer ){
+
+    if( buffer.size() > 0 ) {
+        setByteArray( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize ) {
+
+    setByteArray( buffer, bufferSize, 0, bufferSize );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayInputStream::setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length ) {
+
+    if( buffer == NULL ) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Input Buffer cannot be NULL." );
+    }
+
+    if( bufferSize < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Size given for input buffer was negative." );
+    }
+
+    if( offset < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Offset given was negative: %d.", offset );
+    }
+
+    if( length < 0 ) {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Length given was negative: %d.", offset );
+    }
 
     // We're using the default buffer.
-    this->activeBuffer = &buffer;
-
-    // Start the stream off at the beginning marking begin as the reset point.
-    this->markpos = this->activeBuffer->begin();
-    this->pos = this->markpos;
+    this->buffer = buffer;
+    this->size = bufferSize;
+    this->pos = offset;
+    this->markpos = offset;
+    this->count = offset + length > bufferSize ? bufferSize : offset + length;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer,
-                                         std::size_t bufferSize ) {
+int ByteArrayInputStream::available() const {
 
-    // We're using the default buffer.
-    this->activeBuffer = &this->defaultBuffer;
-
-    // Remove old data
-    this->defaultBuffer.clear();
-    this->defaultBuffer.reserve( bufferSize );
-
-    // Copy data to internal buffer.
-    std::back_insert_iterator< std::vector<unsigned char> > iter( this->defaultBuffer );
-    std::copy( buffer, buffer + bufferSize, iter );
-
-    // Start the stream off at the beginning marking begin as the reset point.
-    this->markpos = this->activeBuffer->begin();
-    this->pos = this->markpos;
+    return this->count - this->pos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::reset() throw ( IOException){
-    if( activeBuffer == NULL ){
-        throw IOException( __FILE__, __LINE__, "Buffer has not been initialized" );
-    }
+void ByteArrayInputStream::mark( int readLimit DECAF_UNUSED ) {
 
-    // Begin at the Beginning if mark hasn't been called otherwise it
-    // starts at the marked pos.
-    pos = this->markpos;
+    // the reset point is now the marked position until a new byte buffer
+    // is set on this stream.
+    this->markpos = this->pos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read() throw ( IOException ){
-
-    if( activeBuffer == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::read - Buffer has not been initialized" );
-    }
-
-    if( pos == activeBuffer->end() ){
-        return -1;
-    }
-
-    return *(pos++);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read( unsigned char* buffer,
-                                std::size_t offset,
-                                std::size_t bufferSize )
-    throw ( IOException, lang::exceptions::NullPointerException ){
+void ByteArrayInputStream::reset() {
 
     try{
 
-        if( activeBuffer == NULL ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "ByteArrayInputStream::read - Buffer has not been initialized" );
+        // Begin at the Beginning if mark hasn't been called otherwise it
+        // starts at the marked pos.
+        this->pos = this->markpos;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ByteArrayInputStream::doReadByte() {
+
+    try{
+        return pos < count ? buffer[pos++] : -1;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ByteArrayInputStream::doReadArrayBounded( unsigned char* buffer, int size,
+                                              int offset, int length ) {
+
+    try{
+
+        if( length == 0 ) {
+            return 0;
         }
 
         if( buffer == NULL ) {
@@ -122,45 +161,49 @@ int ByteArrayInputStream::read( unsigned char* buffer,
                 "ByteArrayInputStream::read - Buffer passed is Null" );
         }
 
-        std::size_t ix = 0;
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
 
-        if( pos == activeBuffer->end() ) {
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        if( this->pos >= this->count ) {
             return -1;
         }
 
-        // How far are we from end
-        std::size_t remaining = (std::size_t)distance( pos, activeBuffer->end() );
-
-        // We only read as much as is left if the amount remaining is less than
-        // the amount of data asked for.
-        bufferSize = remaining < bufferSize ? remaining : bufferSize;
-
-        for( ; ix < bufferSize; ++ix, ++pos) {
-            buffer[ix + offset] = *(pos);
-        }
-
-        return (int)ix;
+        int copylen = this->count - this->pos < length ? this->count - this->pos : length;
+        System::arraycopy( this->buffer, this->pos, buffer, offset, copylen );
+        this->pos += copylen;
+        return copylen;
     }
     DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayInputStream::skip( std::size_t num )
-    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
+long long ByteArrayInputStream::skip( long long num ) {
 
-    if( activeBuffer == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "ByteArrayInputStream::skip - Buffer has not been initialized" );
+    try{
+
+        if( num <= 0 ) {
+            return 0;
+        }
+
+        int temp = this->pos;
+        this->pos = this->count - this->pos < num ? this->count : (int)(this->pos + num);
+        return this->pos - temp;
     }
-
-    std::size_t ix = 0;
-
-    // Increment the position until we've skipped the desired number
-    // or we've hit the end of the buffer.
-    for( ; ix < num && pos != activeBuffer->end(); ++ix, ++pos) {}
-
-    return ix;
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

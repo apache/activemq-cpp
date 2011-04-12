@@ -42,28 +42,36 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId() : BaseDataStructure() {
+ConnectionId::ConnectionId() 
+    : BaseDataStructure(), value("") {
 
-    this->value = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ConnectionId& other ) : BaseDataStructure() {
+ConnectionId::ConnectionId( const ConnectionId& other )
+    : BaseDataStructure(), value("") {
+
     this->copyDataStructure( &other );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const SessionId* sessionId ) {
+ConnectionId::ConnectionId( const SessionId* sessionId )
+    : BaseDataStructure(), value("") {
+
     this->value = sessionId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ProducerId* producerId ) {
+ConnectionId::ConnectionId( const ProducerId* producerId )
+    : BaseDataStructure(), value("") {
+
     this->value = producerId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId::ConnectionId( const ConsumerId* consumerId ) {
+ConnectionId::ConnectionId( const ConsumerId* consumerId )
+    : BaseDataStructure(), value("") {
+
     this->value = consumerId->getConnectionId();
 }
 
@@ -111,15 +119,7 @@ unsigned char ConnectionId::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ConnectionId::toString() const {
 
-    ostringstream stream;
-
-    stream << "Begin Class = ConnectionId" << std::endl;
-    stream << " Value of ConnectionId::ID_CONNECTIONID = 120" << std::endl;
-    stream << " Value of Value = " << this->getValue() << std::endl;
-    stream << BaseDataStructure::toString();
-    stream << "End Class = ConnectionId" << std::endl;
-
-    return stream.str();
+    return this->value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +176,7 @@ int ConnectionId::compareTo( const ConnectionId& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ConnectionId::equals( const ConnectionId& value ) const {
-    return this->equals( &value );
+    return this->equals( (const DataStructure*)&value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

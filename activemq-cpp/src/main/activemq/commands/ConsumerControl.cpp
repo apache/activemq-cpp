@@ -38,13 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerControl::ConsumerControl() : BaseCommand() {
+ConsumerControl::ConsumerControl() 
+    : BaseCommand(), destination(NULL), close(false), consumerId(NULL), prefetch(0), flush(false), start(false), stop(false) {
 
-    this->close = false;
-    this->prefetch = 0;
-    this->flush = false;
-    this->start = false;
-    this->stop = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +76,7 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
     // Copy the data of the base class or classes
     BaseCommand::copyDataStructure( src );
 
+    this->setDestination( srcPtr->getDestination() );
     this->setClose( srcPtr->isClose() );
     this->setConsumerId( srcPtr->getConsumerId() );
     this->setPrefetch( srcPtr->getPrefetch() );
@@ -98,21 +95,34 @@ std::string ConsumerControl::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConsumerControl" << std::endl;
-    stream << " Value of ConsumerControl::ID_CONSUMERCONTROL = 17" << std::endl;
-    stream << " Value of Close = " << this->isClose() << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
-    if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+    stream << "ConsumerControl { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "Destination = ";
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Prefetch = " << this->getPrefetch() << std::endl;
-    stream << " Value of Flush = " << this->isFlush() << std::endl;
-    stream << " Value of Start = " << this->isStart() << std::endl;
-    stream << " Value of Stop = " << this->isStop() << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = ConsumerControl" << std::endl;
+    stream << ", ";
+    stream << "Close = " << this->isClose();
+    stream << ", ";
+    stream << "ConsumerId = ";
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString();
+    } else {
+        stream << "NULL";
+    }
+    stream << ", ";
+    stream << "Prefetch = " << this->getPrefetch();
+    stream << ", ";
+    stream << "Flush = " << this->isFlush();
+    stream << ", ";
+    stream << "Start = " << this->isStart();
+    stream << ", ";
+    stream << "Stop = " << this->isStop();
+    stream << " }";
 
     return stream.str();
 }
@@ -130,6 +140,13 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
         return false;
     }
 
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
     if( this->isClose() != valuePtr->isClose() ) {
         return false;
     }
@@ -156,6 +173,21 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const decaf::lang::Pointer<ActiveMQDestination>& ConsumerControl::getDestination() const {
+    return destination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<ActiveMQDestination>& ConsumerControl::getDestination() {
+    return destination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+    this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,8 +256,7 @@ void ConsumerControl::setStop( bool stop ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processConsumerControl( this );
 }

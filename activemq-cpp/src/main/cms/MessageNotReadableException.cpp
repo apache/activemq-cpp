@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageNotReadableException::MessageNotReadableException() throw() : CMSException() {
+MessageNotReadableException::MessageNotReadableException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotReadableException::MessageNotReadableException( const MessageNotReadableException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageNotReadableException::MessageNotReadableException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotReadableException::MessageNotReadableException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotReadableException::MessageNotReadableException( const std::string& message,
                                                           const std::exception* cause,
                                                           const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

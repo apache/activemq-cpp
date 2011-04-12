@@ -77,7 +77,7 @@ public class AmqCppMarshallingHeadersGenerator extends MultiSourceGenerator {
     public Object run() {
         filePostFix = getFilePostFix();
         if (destDir == null) {
-            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/v"+getOpenwireVersion());
+            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/generated");
         }
         Object answer = super.run();
         processFactory();
@@ -220,8 +220,8 @@ out.println(" */");
         generateLicence(out);
 
 out.println("");
-out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
-out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_GENERATED_"+className.toUpperCase()+"_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_GENERATED_"+className.toUpperCase()+"_H_");
 out.println("");
 out.println("// Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -232,7 +232,7 @@ out.println("");
     if( baseClass.equals("BaseDataStreamMarshaller") ) {
         out.println("#include <activemq/wireformat/openwire/marshal/"+baseClass+".h>");
     } else {
-        out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+baseClass+".h>");
+        out.println("#include <activemq/wireformat/openwire/marshal/generated/"+baseClass+".h>");
     }
 
 out.println("");
@@ -248,7 +248,7 @@ out.println("namespace activemq{");
 out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
-out.println("namespace v"+getOpenwireVersion()+"{");
+out.println("namespace generated{");
 out.println("");
 out.println("    /**");
 out.println("     * Marshaling code for Open Wire Format for "+className);
@@ -266,96 +266,38 @@ out.println("");
 
     if( !isAbstractClass() ) {
 
-out.println("        /**");
-out.println("         * Creates a new instance of this marshalable type.");
-out.println("         *");
-out.println("         * @return new DataStructure object pointer caller owns it.");
-out.println("         */");
 out.println("        virtual commands::DataStructure* createObject() const;");
 out.println("");
-out.println("        /**");
-out.println("         * Get the Data Structure Type that identifies this Marshaler");
-out.println("         *");
-out.println("         * @return byte holding the data structure type value");
-out.println("         */");
 out.println("        virtual unsigned char getDataStructureType() const;");
 out.println("");
     }
-out.println("        /**");
-out.println("         * Un-marshal an object instance from the data input stream.");
-out.println("         *");
-out.println("         * @param wireFormat - describes the wire format of the broker.");
-out.println("         * @param dataStructure - Object to be un-marshaled.");
-out.println("         * @param dataIn - BinaryReader that provides that data.");
-out.println("         * @param bs - BooleanStream stream used to unpack bits from the wire.");
-out.println("         *");
-out.println("         * @throws IOException if an error occurs during the unmarshal.");
-out.println("         */");
 out.println("        virtual void tightUnmarshal( OpenWireFormat* wireFormat,");
 out.println("                                     commands::DataStructure* dataStructure,");
 out.println("                                     decaf::io::DataInputStream* dataIn,");
-out.println("                                     utils::BooleanStream* bs ) throw( decaf::io::IOException );");
+out.println("                                     utils::BooleanStream* bs );");
 out.println("");
-out.println("        /**");
-out.println("         * Write the booleans that this object uses to a BooleanStream");
-out.println("         *");
-out.println("         * @param wireFormat - describes the wire format of the broker");
-out.println("         * @param dataStructure - Object to be marshaled");
-out.println("         * @param bs - BooleanStream stream used to pack bits from the wire.");
-out.println("         * @returns int value indicating the size of the marshaled object.");
-out.println("         *");
-out.println("         * @throws IOException if an error occurs during the marshal.");
-out.println("         */");
 out.println("        virtual int tightMarshal1( OpenWireFormat* wireFormat,");
 out.println("                                   commands::DataStructure* dataStructure,");
-out.println("                                   utils::BooleanStream* bs ) throw( decaf::io::IOException );");
+out.println("                                   utils::BooleanStream* bs );");
 out.println("");
-out.println("        /**");
-out.println("         * Write a object instance to data output stream");
-out.println("         *");
-out.println("         * @param wireFormat - describes the wire format of the broker");
-out.println("         * @param dataStructure - Object to be marshaled");
-out.println("         * @param dataOut - BinaryReader that provides that data sink");
-out.println("         * @param bs - BooleanStream stream used to pack bits from the wire.");
-out.println("         *");
-out.println("         * @throws IOException if an error occurs during the marshal.");
-out.println("         */");
 out.println("        virtual void tightMarshal2( OpenWireFormat* wireFormat,");
 out.println("                                    commands::DataStructure* dataStructure,");
 out.println("                                    decaf::io::DataOutputStream* dataOut,");
-out.println("                                    utils::BooleanStream* bs ) throw( decaf::io::IOException );");
+out.println("                                    utils::BooleanStream* bs );");
 out.println("");
-out.println("        /**");
-out.println("         * Un-marshal an object instance from the data input stream");
-out.println("         *");
-out.println("         * @param wireFormat - describes the wire format of the broker");
-out.println("         * @param dataStructure - Object to be marshaled");
-out.println("         * @param dataIn - BinaryReader that provides that data source");
-out.println("         *");
-out.println("         * @throws IOException if an error occurs during the unmarshal.");
-out.println("         */");
 out.println("        virtual void looseUnmarshal( OpenWireFormat* wireFormat,");
 out.println("                                     commands::DataStructure* dataStructure,");
-out.println("                                     decaf::io::DataInputStream* dataIn ) throw( decaf::io::IOException );");
+out.println("                                     decaf::io::DataInputStream* dataIn );");
 out.println("");
-out.println("        /**");
-out.println("         * Write a object instance to data output stream");
-out.println("         *");
-out.println("         * @param wireFormat - describs the wire format of the broker");
-out.println("         * @param dataStructure - Object to be marshaled");
-out.println("         * @param dataOut - BinaryWriter that provides that data sink");
-out.println("         *");
-out.println("         * @throws IOException if an error occurs during the marshal.");
-out.println("         */");
 out.println("        virtual void looseMarshal( OpenWireFormat* wireFormat,");
 out.println("                                   commands::DataStructure* dataStructure,");
-out.println("                                   decaf::io::DataOutputStream* dataOut ) throw( decaf::io::IOException );");
+out.println("                                   decaf::io::DataOutputStream* dataOut );");
 out.println("");
 out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_GENERATED_"+className.toUpperCase()+"_H_*/");
 out.println("");
         }
 
@@ -378,8 +320,8 @@ out.println("");
 
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
-out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
-out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_GENERATED_MARSHALERFACTORY_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_GENERATED_MARSHALERFACTORY_H_");
 out.println("");
 out.println("//       Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -392,7 +334,7 @@ out.println("namespace activemq{");
 out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
-out.println("namespace v"+getOpenwireVersion()+"{");
+out.println("namespace generated{");
 out.println("");
 out.println("    /**");
 out.println("     * Used to create marshallers for a specific version of the wire");
@@ -413,7 +355,7 @@ out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_GENERATED_MARSHALLERFACTORY_H_*/");
     }
 
     public List<JClass> getConcreteClasses() {

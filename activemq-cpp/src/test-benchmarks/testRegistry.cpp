@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-#include <activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::OpenWireStringSupportBenchmark );
-
 #include <activemq/util/PrimitiveMapBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
 
@@ -34,9 +31,17 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetBenchmark );
 #include <decaf/util/MapBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapBenchmark );
+#include <decaf/util/StlListBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlListBenchmark );
+#include <decaf/util/LinkedListBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::LinkedListBenchmark );
 
 #include <decaf/io/ByteArrayOutputStreamBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamBenchmark );
+#include <decaf/io/ByteArrayInputStreamBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayInputStreamBenchmark );
+#include <decaf/io/BufferedInputStreamBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamBenchmark );
 #include <decaf/io/DataInputStreamBenchmark.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamBenchmark );
 #include <decaf/io/DataOutputStreamBenchmark.h>

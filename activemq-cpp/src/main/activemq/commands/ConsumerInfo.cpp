@@ -38,21 +38,11 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo::ConsumerInfo() : BaseCommand() {
+ConsumerInfo::ConsumerInfo() 
+    : BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false), 
+      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(), 
+      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath() {
 
-    this->browser = false;
-    this->prefetchSize = 0;
-    this->maximumPendingMessageLimit = 0;
-    this->dispatchAsync = false;
-    this->selector = "";
-    this->subscriptionName = "";
-    this->noLocal = false;
-    this->exclusive = false;
-    this->retroactive = false;
-    this->priority = 0;
-    this->networkSubscription = false;
-    this->optimizedAcknowledge = false;
-    this->noRangeAcks = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,57 +108,87 @@ std::string ConsumerInfo::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = ConsumerInfo" << std::endl;
-    stream << " Value of ConsumerInfo::ID_CONSUMERINFO = 5" << std::endl;
-    stream << " Value of ConsumerId is Below:" << std::endl;
+    stream << "ConsumerInfo { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ConsumerId = ";
     if( this->getConsumerId() != NULL ) {
-        stream << this->getConsumerId()->toString() << std::endl;
+        stream << this->getConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Browser = " << this->isBrowser() << std::endl;
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Browser = " << this->isBrowser();
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of PrefetchSize = " << this->getPrefetchSize() << std::endl;
-    stream << " Value of MaximumPendingMessageLimit = " << this->getMaximumPendingMessageLimit() << std::endl;
-    stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
-    stream << " Value of Selector = " << this->getSelector() << std::endl;
-    stream << " Value of SubscriptionName = " << this->getSubscriptionName() << std::endl;
-    stream << " Value of NoLocal = " << this->isNoLocal() << std::endl;
-    stream << " Value of Exclusive = " << this->isExclusive() << std::endl;
-    stream << " Value of Retroactive = " << this->isRetroactive() << std::endl;
-    stream << " Value of Priority = " << (int)this->getPriority() << std::endl;
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "PrefetchSize = " << this->getPrefetchSize();
+    stream << ", ";
+    stream << "MaximumPendingMessageLimit = " << this->getMaximumPendingMessageLimit();
+    stream << ", ";
+    stream << "DispatchAsync = " << this->isDispatchAsync();
+    stream << ", ";
+    stream << "Selector = " << this->getSelector();
+    stream << ", ";
+    stream << "SubscriptionName = " << this->getSubscriptionName();
+    stream << ", ";
+    stream << "NoLocal = " << this->isNoLocal();
+    stream << ", ";
+    stream << "Exclusive = " << this->isExclusive();
+    stream << ", ";
+    stream << "Retroactive = " << this->isRetroactive();
+    stream << ", ";
+    stream << "Priority = " << (int)this->getPriority();
+    stream << ", ";
+    stream << "BrokerPath = ";
+    if( this->getBrokerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+                stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of AdditionalPredicate is Below:" << std::endl;
+    stream << ", ";
+    stream << "AdditionalPredicate = ";
     if( this->getAdditionalPredicate() != NULL ) {
-        stream << this->getAdditionalPredicate()->toString() << std::endl;
+        stream << this->getAdditionalPredicate()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of NetworkSubscription = " << this->isNetworkSubscription() << std::endl;
-    stream << " Value of OptimizedAcknowledge = " << this->isOptimizedAcknowledge() << std::endl;
-    stream << " Value of NoRangeAcks = " << this->isNoRangeAcks() << std::endl;
-    for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
-        stream << " Value of NetworkConsumerPath[" << inetworkConsumerPath << "] is Below:" << std::endl;
-        if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
-            stream << this->getNetworkConsumerPath()[inetworkConsumerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "NetworkSubscription = " << this->isNetworkSubscription();
+    stream << ", ";
+    stream << "OptimizedAcknowledge = " << this->isOptimizedAcknowledge();
+    stream << ", ";
+    stream << "NoRangeAcks = " << this->isNoRangeAcks();
+    stream << ", ";
+    stream << "NetworkConsumerPath = ";
+    if( this->getNetworkConsumerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
+            if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+                stream << this->getNetworkConsumerPath()[inetworkConsumerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << BaseCommand::toString();
-    stream << "End Class = ConsumerInfo" << std::endl;
+    stream << " }";
 
     return stream.str();
 }
@@ -486,8 +506,15 @@ void ConsumerInfo::setNetworkConsumerPath( const std::vector< decaf::lang::Point
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processConsumerInfo( this );
 }
+////////////////////////////////////////////////////////////////////////////////
+Pointer<RemoveInfo> ConsumerInfo::createRemoveCommand() const {
+    Pointer<RemoveInfo> info( new RemoveInfo() );
+    info->setResponseRequired( this->isResponseRequired() );
+    info->setObjectId( this->getConsumerId() );
+    return info;
+}
+

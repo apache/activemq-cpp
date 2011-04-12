@@ -42,8 +42,7 @@ namespace mock{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> create( const decaf::net::URI& location )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Transport> create( const decaf::net::URI& location );
 
         /**
          * Creates a slimed down Transport instance which can be used in composite
@@ -51,8 +50,7 @@ namespace mock{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> createComposite( const decaf::net::URI& location )
-            throw ( exceptions::ActiveMQException );
+        virtual Pointer<Transport> createComposite( const decaf::net::URI& location );
 
     protected:
 
@@ -69,8 +67,7 @@ namespace mock{
          */
         virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
                                                       const Pointer<wireformat::WireFormat>& wireFormat,
-                                                      const decaf::util::Properties& properties )
-            throw ( exceptions::ActiveMQException );
+                                                      const decaf::util::Properties& properties );
 
     };
 

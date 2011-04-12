@@ -17,6 +17,8 @@
 
 #include <decaf/io/DataInputStream.h>
 
+#include <decaf/io/PushbackInputStream.h>
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -33,55 +35,13 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::DataInputStream( InputStream* inputStream, bool own )
- : FilterInputStream( inputStream, own ) {}
+ : FilterInputStream( inputStream, own ), buffer() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( std::vector<unsigned char>& buffer ) throw ( io::IOException ) {
-
-    try {
-        return this->read( &buffer[0], 0, buffer.size() );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( unsigned char* buffer,
-                           std::size_t offset,
-                           std::size_t length )
-    throw ( IOException, NullPointerException ) {
-
-    try {
-
-        if( length == 0 ) {
-            return 0;
-        }
-
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::read - Buffer is null" );
-        }
-
-        if( inputStream == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Base input stream is null" );
-        }
-
-        return inputStream->read( &buffer[offset], 0, length );
-    }
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
+bool DataInputStream::readBoolean() {
 
     try {
         readAllData( buffer, sizeof(char) );
@@ -93,7 +53,7 @@ bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readByte() throw ( IOException, EOFException ) {
+char DataInputStream::readByte() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -105,7 +65,7 @@ char DataInputStream::readByte() throw ( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFException ) {
+unsigned char DataInputStream::readUnsignedByte() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -117,7 +77,7 @@ unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readChar() throw ( IOException, EOFException ) {
+char DataInputStream::readChar() {
 
     try {
         readAllData( buffer, sizeof(unsigned char) );
@@ -129,12 +89,12 @@ char DataInputStream::readChar() throw ( IOException, EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
+short DataInputStream::readShort() {
 
     try {
         short value = 0;
         readAllData( buffer, sizeof(short) );
-        value |= (buffer[0] << 8 | buffer[1] << 0);
+        value |= (short)(buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -143,12 +103,12 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io::EOFException ) {
+unsigned short DataInputStream::readUnsignedShort() {
 
     try {
         unsigned short value = 0;
         readAllData( buffer, sizeof(unsigned short) );
-        value |= (buffer[0] << 8 | buffer[1] << 0);
+        value |= (unsigned short)(buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -157,7 +117,7 @@ unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
+int DataInputStream::readInt() {
 
     try {
         unsigned int value = 0;
@@ -172,7 +132,7 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
+double DataInputStream::readDouble() {
 
     try {
         unsigned long long lvalue = this->readLong();
@@ -186,7 +146,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
+float DataInputStream::readFloat() {
 
     try {
         unsigned int lvalue = this->readInt();
@@ -200,8 +160,7 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DataInputStream::readLong()
-    throw ( io::IOException, io::EOFException ) {
+long long DataInputStream::readLong() {
 
     try {
         unsigned long long value = 0;
@@ -229,7 +188,7 @@ long long DataInputStream::readLong()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readString() throw ( io::IOException, io::EOFException ) {
+std::string DataInputStream::readString() {
 
     try {
 
@@ -239,14 +198,14 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        size_t size = 1024;
+        int size = 1024;
         std::vector<char> buffer;
         buffer.resize( size );
-        size_t pos = 0;
+        int pos = 0;
 
         while( true ) {
 
-            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 0, 1 ) == -1 ) {
+            if( inputStream->read( (unsigned char*)( &buffer[0] ), size, pos, 1 ) == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readString - Reached EOF" );
@@ -258,7 +217,7 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
             }
 
             // Resize to hold more if we exceed current size
-            if( ++pos > size ) {
+            if( ++pos >= size ) {
                 buffer.resize( (size *= 2) );
             }
         }
@@ -271,8 +230,7 @@ std::string DataInputStream::readString() throw ( io::IOException, io::EOFExcept
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readUTF()
-    throw ( io::IOException, io::EOFException, io::UTFDataFormatException ) {
+std::string DataInputStream::readUTF() {
 
     try {
 
@@ -290,7 +248,7 @@ std::string DataInputStream::readUTF()
         std::vector<unsigned char> buffer( utfLength );
         std::vector<unsigned char> result( utfLength );
 
-        this->readFully( &buffer[0], 0, utfLength );
+        this->readFully( &buffer[0], utfLength );
 
         std::size_t count = 0;
         std::size_t index = 0;
@@ -323,7 +281,7 @@ std::string DataInputStream::readUTF()
                         "This method only supports encoded ASCII values of (0-255)." );
                 }
 
-                result[index++] = ( ( a & 0x1F ) << 6 ) | ( b & 0x3F );
+                result[index++] = (unsigned char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
 
             } else if( ( a & 0xF0 ) == 0xE0 ) {
 
@@ -367,28 +325,90 @@ std::string DataInputStream::readUTF()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( std::vector< unsigned char >& buffer )
-    throw ( io::IOException, io::EOFException ) {
+void DataInputStream::readFully( unsigned char* buffer, int size ) {
 
     try {
-        if( buffer.empty() ) {
+
+        if( size == 0 ) {
             return;
         }
-        this->readFully( &buffer[0], 0, buffer.size() );
+
+        this->readFully( buffer, size, 0, size );
     }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer,
-                                 std::size_t offset,
-                                 std::size_t length )
-    throw ( io::IOException,
-            io::EOFException,
-            lang::exceptions::NullPointerException )
-{
+std::string DataInputStream::readLine() {
+    try{
+
+        std::string line;
+        bool foundTerminator = false;
+
+        while( true ) {
+
+            int nextByte = inputStream->read();
+
+            if( nextByte == -1 ) {
+
+                if( line.length() == 0 && !foundTerminator ) {
+                    return "";
+                }
+                return line;
+
+            } else if( nextByte == (unsigned char)'\r' ) {
+
+                PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
+
+                if( foundTerminator ) {
+
+                    if( pbStream == NULL ) {
+                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
+                    }
+
+                    pbStream->unread( (unsigned char)nextByte );
+                    return line;
+                }
+
+                foundTerminator = true;
+
+                // Have to be able to peek ahead one byte to see if its an newline.
+                if( pbStream == NULL ) {
+                    inputStream = new PushbackInputStream( inputStream, own );
+                    own = true;
+                }
+
+            } else if( nextByte == (unsigned char)'\n' ) {
+
+                return line;
+
+            } else {
+
+                if( foundTerminator ) {
+                    PushbackInputStream* pbStream = dynamic_cast<PushbackInputStream*>( inputStream );
+
+                    if( pbStream == NULL ) {
+                        throw IOException( __FILE__, __LINE__, "State is not valid, parse failed." );
+                    }
+
+                    pbStream->unread( (unsigned char)nextByte );
+                    return line;
+                }
+
+                line += (char)nextByte;
+            }
+        }
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStream::readFully( unsigned char* buffer, int size, int offset, int length ) {
+
     try {
 
         if( length == 0 ) {
@@ -397,36 +417,48 @@ void DataInputStream::readFully( unsigned char* buffer,
 
         if( buffer == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Buffer is null" );
+                __FILE__, __LINE__, "Buffer is null" );
         }
 
         if( inputStream == NULL ) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Base input stream is null" );
+                __FILE__, __LINE__, "Base input stream is null" );
         }
 
-        std::size_t n = 0;
+        if( size < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        }
+
+        if( offset > size || offset < 0 ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        }
+
+        if( length < 0 || length > size - offset ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        }
+
+        int n = 0;
         while( n < length ) {
-            int count = inputStream->read( &buffer[offset + n], 0, (length - n) );
+            int count = inputStream->read( buffer, length, offset + n, length - n );
             if( count == -1 ) {
                 throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readFully - Reached EOF" );
+                    __FILE__, __LINE__, "Reached EOF" );
             }
             n += count;
         }
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::skip( std::size_t num )
-    throw( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+long long DataInputStream::skipBytes( long long num ) {
 
     try {
 
@@ -436,8 +468,8 @@ std::size_t DataInputStream::skip( std::size_t num )
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        std::size_t total = 0;
-        std::size_t cur = 0;
+        long long total = 0;
+        long long cur = 0;
 
         while( ( total < num ) &&
                ( ( cur = inputStream->skip( num-total ) ) > 0 ) ) {
@@ -446,7 +478,27 @@ std::size_t DataInputStream::skip( std::size_t num )
 
         return total;
     }
-    DECAF_CATCH_RETHROW( UnsupportedOperationException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStream::readAllData( unsigned char* buffer, int length ) {
+
+    try{
+
+        int n = 0;
+        do{
+            int count = inputStream->read( buffer, length, n, length - n );
+            if( count == -1 ) {
+                throw EOFException(
+                    __FILE__, __LINE__,
+                    "DataInputStream::readLong - Reached EOF" );
+            }
+            n += count;
+        } while( n < length );
+    }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }

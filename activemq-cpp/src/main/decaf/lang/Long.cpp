@@ -23,12 +23,11 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long( long long value ) {
-    this->value = value;
+Long::Long( long long value ) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long( const std::string& value ) throw( exceptions::NumberFormatException ) {
+Long::Long( const std::string& value ) : value(0) {
     this->value = parseLong( value );
 }
 
@@ -62,8 +61,7 @@ int Long::bitCount( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::decode( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Long Long::decode( const std::string& value ) {
 
     int length = (int)value.length(), i = 0;
     if( length == 0 ) {
@@ -173,15 +171,13 @@ int Long::numberOfTrailingZeros( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Long::parseLong( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+long long Long::parseLong( const std::string& value ) {
 
     return Long::parseLong( value, 10 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Long::parseLong( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
+long long Long::parseLong( const std::string& value, int radix ) {
 
     if( radix < Character::MIN_RADIX ||
         radix > Character::MAX_RADIX ) {
@@ -211,8 +207,7 @@ long long Long::parseLong( const std::string& value, int radix )
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Long::parse( const std::string& value, int offset,
-                       int radix, bool negative )
-    throw ( exceptions::NumberFormatException ) {
+                       int radix, bool negative ) {
 
     long long max = Long::MIN_VALUE / radix;
     long long result = 0;
@@ -479,15 +474,13 @@ std::string Long::toHexString( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::valueOf( const std::string& value )
-    throw ( exceptions::NumberFormatException ) {
+Long Long::valueOf( const std::string& value ) {
 
     return Long( Long::parseLong( value ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::valueOf( const std::string& value, int radix )
-    throw ( exceptions::NumberFormatException ) {
+Long Long::valueOf( const std::string& value, int radix ) {
 
     return Long( Long::parseLong( value, radix ) );
 }

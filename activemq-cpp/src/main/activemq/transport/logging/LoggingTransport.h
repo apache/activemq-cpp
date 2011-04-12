@@ -20,7 +20,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
-#include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq{
@@ -33,10 +32,6 @@ namespace logging{
      * A transport filter that logs commands as they are sent/received.
      */
     class AMQCPP_API LoggingTransport : public TransportFilter {
-    private:
-
-        LOGDECAF_DECLARE( logger )
-
     public:
 
         /**
@@ -47,43 +42,27 @@ namespace logging{
 
         virtual ~LoggingTransport() {}
 
-        /**
-         * Event handler for the receipt of a command.
-         * @param command - the received command object.
-         */
+    public:  // TransportFilter methods.
+
         virtual void onCommand( const Pointer<Command>& command );
 
-        /**
-         * Sends a one-way command.  Does not wait for any response from the
-         * broker.
-         * @param command the command to be sent.
-         * @throws IOException if an exception occurs during writing of
-         * the command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
-        virtual void oneway( const Pointer<Command>& command )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+    public:  // TransportFilter methods.
+
+        virtual void oneway( const Pointer<Command>& command );
 
         /**
+         * {@inheritDoc}
+         *
          * Not supported by this class - throws an exception.
-         * @param command the command that is sent as a request
-         * @throws UnsupportedOperationException.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<Response> request( const Pointer<Command>& command );
 
         /**
+         * {@inheritDoc}
+         *
          * Not supported by this class - throws an exception.
-         * @param command the command that is sent as a request
-         * @param timeout the time to wait for a response.
-         * @throws UnsupportedOperationException.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
 
     };
 

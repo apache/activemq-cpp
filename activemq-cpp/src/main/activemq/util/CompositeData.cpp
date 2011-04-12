@@ -29,7 +29,7 @@ using namespace decaf::net;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-CompositeData::CompositeData() {
+CompositeData::CompositeData() : host(), scheme(), path(), components(), parameters(), fragment() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ CompositeData::~CompositeData() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URI CompositeData::toURI() const throw( decaf::net::URISyntaxException ) {
+URI CompositeData::toURI() const {
 
     ostringstream sb;
 

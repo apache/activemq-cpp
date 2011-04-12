@@ -27,41 +27,85 @@ namespace util{
     class ListTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( ListTest );
+        CPPUNIT_TEST( testConstructor1 );
+        CPPUNIT_TEST( testConstructor2 );
+        CPPUNIT_TEST( testConstructor3 );
+        CPPUNIT_TEST( testEquals );
         CPPUNIT_TEST( testContains );
         CPPUNIT_TEST( testIndexOf );
         CPPUNIT_TEST( testLastIndexOf );
         CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testCopy1 );
+        CPPUNIT_TEST( testCopy2 );
         CPPUNIT_TEST( testSize );
         CPPUNIT_TEST( testGet );
         CPPUNIT_TEST( testSet );
         CPPUNIT_TEST( testAdd );
         CPPUNIT_TEST( testAdd2 );
+        CPPUNIT_TEST( testAdd3 );
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testRemove2 );
+        CPPUNIT_TEST( testRemove3 );
+        CPPUNIT_TEST( testRemoveAt );
         CPPUNIT_TEST( testIsEmpty );
         CPPUNIT_TEST( testToArray );
         CPPUNIT_TEST( testIterator );
+        CPPUNIT_TEST( testAddAll1 );
+        CPPUNIT_TEST( testAddAll2 );
+        CPPUNIT_TEST( testAddAll3 );
+        CPPUNIT_TEST( testAddAll4 );
+        CPPUNIT_TEST( testAddAll5 );
+        CPPUNIT_TEST( testAddAll6 );
+        CPPUNIT_TEST( testAddAll7 );
+        CPPUNIT_TEST( testAddAll8 );
+        CPPUNIT_TEST( testAddAll9 );
+        CPPUNIT_TEST( testListIterator1IndexOutOfBoundsException );
+        CPPUNIT_TEST( testListIterator2IndexOutOfBoundsException );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        static const int SIZE;
 
     public:
 
         ListTest();
         virtual ~ListTest() {}
 
+        void testConstructor1();
+        void testConstructor2();
+        void testConstructor3();
+        void testEquals();
         void testContains();
         void testIndexOf();
         void testLastIndexOf();
         void testClear();
+        void testCopy1();
+        void testCopy2();
         void testSize();
         void testGet();
         void testSet();
         void testAdd();
         void testAdd2();
+        void testAdd3();
         void testRemove();
         void testRemove2();
+        void testRemove3();
+        void testRemoveAt();
         void testIsEmpty();
         void testToArray();
         void testIterator();
+        void testAddAll1();
+        void testAddAll2();
+        void testAddAll3();
+        void testAddAll4();
+        void testAddAll5();
+        void testAddAll6();
+        void testAddAll7();
+        void testAddAll8();
+        void testAddAll9();
+        void testListIterator1IndexOutOfBoundsException();
+        void testListIterator2IndexOutOfBoundsException();
 
     };
 

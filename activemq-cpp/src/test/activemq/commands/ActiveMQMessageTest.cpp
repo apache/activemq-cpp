@@ -424,7 +424,7 @@ void ActiveMQMessageTest::testGetAndSetCMSXDeliveryCount() {
     ActiveMQMessage msg;
     msg.setIntProperty( "CMSXDeliveryCount", 1 );
     int count = msg.getIntProperty( "CMSXDeliveryCount" );
-    CPPUNIT_ASSERT_MESSAGE( "expected delivery count = 1 - got: " + count, count == 1 );
+    CPPUNIT_ASSERT_MESSAGE( "expected delivery count = 1", count == 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

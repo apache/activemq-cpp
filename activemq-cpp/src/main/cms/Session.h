@@ -141,7 +141,7 @@ namespace cms{
 
     public:
 
-        virtual ~Session() {}
+        virtual ~Session() throw();
 
         /**
          * Closes this session as well as any active child consumers or
@@ -149,7 +149,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual void close() throw( CMSException ) = 0;
+        virtual void close() = 0;
 
         /**
          * Commits all messages done in this transaction and releases any
@@ -158,7 +158,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws IllegalStateException - if the method is not called by a transacted session.
          */
-        virtual void commit() throw ( CMSException ) = 0;
+        virtual void commit() = 0;
 
         /**
          * Rolls back all messages done in this transaction and releases any
@@ -167,7 +167,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws IllegalStateException - if the method is not called by a transacted session.
          */
-        virtual void rollback() throw ( CMSException ) = 0;
+        virtual void rollback() = 0;
 
         /**
          * Stops message delivery in this session, and restarts message delivery with the
@@ -189,7 +189,7 @@ namespace cms{
          *                        delivery due to some internal error.
          * @throws IllegalStateException - if the method is called by a transacted session.
          */
-        virtual void recover() throw( CMSException ) = 0;
+        virtual void recover() = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination.
@@ -202,8 +202,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageConsumer* createConsumer( const Destination* destination )
-            throw ( CMSException ) = 0;
+        virtual MessageConsumer* createConsumer( const Destination* destination ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination, using a
@@ -220,10 +219,8 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createConsumer(
-            const Destination* destination,
-            const std::string& selector )
-                throw ( CMSException ) = 0;
+        virtual MessageConsumer* createConsumer( const Destination* destination,
+                                                 const std::string& selector ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination, using a
@@ -244,11 +241,9 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createConsumer(
-            const Destination* destination,
-            const std::string& selector,
-            bool noLocal )
-                throw ( CMSException ) = 0;
+        virtual MessageConsumer* createConsumer( const Destination* destination,
+                                                 const std::string& selector,
+                                                 bool noLocal ) = 0;
 
         /**
          * Creates a durable subscriber to the specified topic, using a Message
@@ -273,12 +268,10 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createDurableConsumer(
-            const Topic* destination,
-            const std::string& name,
-            const std::string& selector,
-            bool noLocal = false )
-                throw ( CMSException ) = 0;
+        virtual MessageConsumer* createDurableConsumer( const Topic* destination,
+                                                        const std::string& name,
+                                                        const std::string& selector,
+                                                        bool noLocal = false ) = 0;
 
         /**
          * Creates a MessageProducer to send messages to the specified
@@ -291,8 +284,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageProducer* createProducer( const Destination* destination )
-            throw ( CMSException ) = 0;
+        virtual MessageProducer* createProducer( const Destination* destination = NULL ) = 0;
 
         /**
          * Creates a new QueueBrowser to peek at Messages on the given Queue.
@@ -304,8 +296,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if the destination given is invalid.
          */
-        virtual QueueBrowser* createBrowser( const cms::Queue* queue )
-            throw( CMSException ) = 0;
+        virtual QueueBrowser* createBrowser( const cms::Queue* queue ) = 0;
 
         /**
          * Creates a new QueueBrowser to peek at Messages on the given Queue.
@@ -319,8 +310,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if the destination given is invalid.
          */
-        virtual QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
-            throw( CMSException ) = 0;
+        virtual QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector ) = 0;
 
         /**
          * Creates a queue identity given a Queue name.
@@ -331,8 +321,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Queue* createQueue( const std::string& queueName )
-            throw ( CMSException ) = 0;
+        virtual Queue* createQueue( const std::string& queueName ) = 0;
 
         /**
          * Creates a topic identity given a Queue name.
@@ -343,8 +332,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Topic* createTopic( const std::string& topicName )
-            throw ( CMSException ) = 0;
+        virtual Topic* createTopic( const std::string& topicName ) = 0;
 
         /**
          * Creates a TemporaryQueue object.
@@ -353,32 +341,28 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual TemporaryQueue* createTemporaryQueue()
-            throw ( CMSException ) = 0;
+        virtual TemporaryQueue* createTemporaryQueue() = 0;
 
         /**
          * Creates a TemporaryTopic object.
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual TemporaryTopic* createTemporaryTopic()
-            throw ( CMSException ) = 0;
+        virtual TemporaryTopic* createTemporaryTopic() = 0;
 
         /**
          * Creates a new Message
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Message* createMessage()
-            throw ( CMSException ) = 0;
+        virtual Message* createMessage() = 0;
 
         /**
          * Creates a BytesMessage
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual BytesMessage* createBytesMessage()
-            throw ( CMSException) = 0;
+        virtual BytesMessage* createBytesMessage() = 0;
 
         /**
          * Creates a BytesMessage and sets the payload to the passed value
@@ -390,26 +374,21 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual BytesMessage* createBytesMessage(
-            const unsigned char* bytes,
-            std::size_t bytesSize )
-                throw ( CMSException) = 0;
+        virtual BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize ) = 0;
 
         /**
          * Creates a new StreamMessage
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual StreamMessage* createStreamMessage()
-            throw ( CMSException ) = 0;
+        virtual StreamMessage* createStreamMessage() = 0;
 
         /**
          * Creates a new TextMessage
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual TextMessage* createTextMessage()
-            throw ( CMSException ) = 0;
+        virtual TextMessage* createTextMessage() = 0;
 
         /**
          * Creates a new TextMessage and set the text to the value given
@@ -419,16 +398,14 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual TextMessage* createTextMessage( const std::string& text )
-            throw ( CMSException ) = 0;
+        virtual TextMessage* createTextMessage( const std::string& text ) = 0;
 
         /**
          * Creates a new MapMessage
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual MapMessage* createMapMessage()
-            throw ( CMSException ) = 0;
+        virtual MapMessage* createMapMessage() = 0;
 
         /**
          * Returns the acknowledgment mode of the session.
@@ -437,8 +414,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual AcknowledgeMode getAcknowledgeMode() const
-            throw ( CMSException ) = 0;
+        virtual AcknowledgeMode getAcknowledgeMode() const = 0;
 
         /**
          * Gets if the Sessions is a Transacted Session
@@ -447,7 +423,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual bool isTransacted() const throw ( CMSException ) = 0;
+        virtual bool isTransacted() const = 0;
 
         /**
          * Unsubscribes a durable subscription that has been created by a
@@ -465,8 +441,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual void unsubscribe( const std::string& name )
-            throw ( CMSException ) = 0;
+        virtual void unsubscribe( const std::string& name ) = 0;
 
     };
 

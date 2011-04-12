@@ -32,17 +32,17 @@ namespace cmsutil {
     class AMQCPP_API MessageCreator {
     public:
 
-        virtual ~MessageCreator(){}
+        virtual ~MessageCreator() throw () {}
 
         /**
          * Creates a message from the given session.
          *
          * @param session
          *          the CMS <code>Session</code>
+         *
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Message* createMessage( cms::Session* session )
-            throw ( cms::CMSException ) = 0;
+        virtual cms::Message* createMessage( cms::Session* session ) = 0;
 
     };
 

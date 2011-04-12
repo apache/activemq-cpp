@@ -23,9 +23,14 @@ using namespace activemq;
 using namespace activemq::state;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) : disposed( false ) {
-
-    this->info = info;
+ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) :
+    info(info),
+    transactions(),
+    sessions(),
+    tempDestinations(),
+    disposed(false),
+    connectionInterruptProcessingComplete(true),
+    recoveringPullConsumers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

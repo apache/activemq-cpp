@@ -36,7 +36,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Destination{
+    class CMS_API Destination {
     public:
 
         enum DestinationType {
@@ -48,7 +48,7 @@ namespace cms{
 
     public:
 
-        virtual ~Destination(){}
+        virtual ~Destination() throw();
 
         /**
          * Retrieve the Destination Type for this Destination
@@ -72,6 +72,17 @@ namespace cms{
          *      The source Destination object.
          */
         virtual void copy( const cms::Destination& source ) = 0;
+
+        /**
+         * Compares two Destination instances to determine if they represent the same
+         * logic Destination.
+         *
+         * @param other
+         *      The other destination to compare this one to.
+         *
+         * @return true if the two destinations are the same.
+         */
+        virtual bool equals( const cms::Destination& other ) const = 0;
 
         /**
          * Retrieve any properties that might be part of the destination

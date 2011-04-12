@@ -73,85 +73,51 @@ namespace core{
         // The Destination assigned at creation, NULL if not assigned.
         Pointer<cms::Destination> destination;
 
+    private:
+
+        ActiveMQProducer( const ActiveMQProducer& );
+        ActiveMQProducer& operator= ( const ActiveMQProducer& );
+
     public:
 
         /**
          * Constructor, creates an instance of an ActiveMQProducer
          *
-         * @param producerInfo
-         *        Pointer to a ProducerInfo command which identifies this producer.
+         * @param session
+         *        The Session which is the parent of this Producer.
+         * @param producerId
+         *        Pointer to a ProducerId object which identifies this producer.
          * @param destination
          *        The assigned Destination this Producer sends to, or null if not set.
          *        The Producer does not own the Pointer passed.
-         * @param session
-         *        The Session which is the parent of this Producer.
+         * @param sendTimeout
+         *        The configured send timeout for this Producer.
          */
-        ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                          const Pointer<cms::Destination>& destination,
-                          ActiveMQSession* session );
+        ActiveMQProducer( ActiveMQSession* session,
+                          const Pointer<commands::ProducerId>& producerId,
+                          const Pointer<commands::ActiveMQDestination>& destination,
+                          long long sendTimeout );
 
-        virtual ~ActiveMQProducer();
+        virtual ~ActiveMQProducer() throw();
 
-        /**
-         * Closes the Consumer.  This will return all allocated resources
-         * and purge any outstanding messages.  This method will block if
-         * there is a call to receive in progress, or a dispatch to a
-         * MessageListener in place
-         * @throws CMSException
-         */
-        virtual void close() throw ( cms::CMSException );
+    public:  // cms::MessageProducer methods.
 
-        /**
-         * Sends the message to the default producer destination.
-         * @param message A Message Object Pointer for the Message to send.
-         * @throws CMSException
-         */
-        virtual void send( cms::Message* message ) throw ( cms::CMSException );
+        virtual void close();
 
-        /**
-         * Sends the message to the default producer destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         * @param message A Message Object Pointer
-         * @param deliveryMode The delivery mode to be used.
-         * @param priority The priority for this message.
-         * @param timeToLive The time to live value for this message in
-         * milliseconds.
-         * @throws CMSException
-         */
-        virtual void send( cms::Message* message, int deliveryMode,
-                           int priority, long long timeToLive )
-                               throw ( cms::CMSException );
+        virtual void send( cms::Message* message );
 
-        /**
-         * Sends the message to the designated destination.
-         * @param destination The CMS Destination that defines where the message is sent.
-         * @param message A Message Object Pointer
-         * @throws CMSException
-         */
-        virtual void send( const cms::Destination* destination,
-                           cms::Message* message ) throw ( cms::CMSException );
+        virtual void send( cms::Message* message, int deliveryMode, int priority, long long timeToLive );
 
-        /**
-         * Sends the message to the designated destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         * @param destination - a Message Object Pointer
-         * @param message - a Message Object Pointer
-         * @param deliveryMode The delivery mode to be used.
-         * @param priority The priority for this message.
-         * @param timeToLive The time to live value for this message in
-         * milliseconds.
-         * @throws CMSException
-         */
-        virtual void send( const cms::Destination* destination,
-                           cms::Message* message, int deliveryMode,
-                           int priority, long long timeToLive )
-                                throw ( cms::CMSException );
+        virtual void send( const cms::Destination* destination, cms::Message* message );
+
+        virtual void send( const cms::Destination* destination, cms::Message* message,
+                           int deliveryMode, int priority, long long timeToLive );
 
         /**
          * Sets the delivery mode for this Producer
          * @param mode - The DeliveryMode to use for Message sends.
          */
-        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ){
+        virtual void setDeliveryMode( int mode ) {
             this->defaultDeliveryMode = mode;
         }
 
@@ -159,7 +125,7 @@ namespace core{
          * Gets the delivery mode for this Producer
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
+        virtual int getDeliveryMode() const {
             return this->defaultDeliveryMode;
         }
 
@@ -167,7 +133,7 @@ namespace core{
          * Sets if Message Ids are disabled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
+        virtual void setDisableMessageID( bool value ) {
             this->disableMessageId = value;
         }
 
@@ -175,7 +141,7 @@ namespace core{
          * Gets if Message Ids are disabled for this Producer
          * @return a boolean indicating state enable / disable (true / false) for MessageIds.
          */
-        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
+        virtual bool getDisableMessageID() const {
             return this->disableMessageId;
         }
 
@@ -183,7 +149,7 @@ namespace core{
          * Sets if Message Time Stamps are disabled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
+        virtual void setDisableMessageTimeStamp( bool value ) {
             this->disableTimestamps = value;
         }
 
@@ -191,7 +157,7 @@ namespace core{
          * Gets if Message Time Stamps are disabled for this Producer
          * @returns boolean indicating state of enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
+        virtual bool getDisableMessageTimeStamp() const {
             return this->disableTimestamps;
         }
 
@@ -199,7 +165,7 @@ namespace core{
          * Sets the Priority that this Producers sends messages at
          * @param priority int value for Priority level
          */
-        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
+        virtual void setPriority( int priority ) {
             this->defaultPriority = priority;
         }
 
@@ -207,7 +173,7 @@ namespace core{
          * Gets the Priority level that this producer sends messages at
          * @return int based priority level
          */
-        virtual int getPriority() const throw ( cms::CMSException ) {
+        virtual int getPriority() const {
             return this->defaultPriority;
         }
 
@@ -215,7 +181,7 @@ namespace core{
          * Sets the Time to Live that this Producers sends messages with
          * @param time The new default time to live value in milliseconds.
          */
-        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
+        virtual void setTimeToLive( long long time ) {
             this->defaultTimeToLive = time;
         }
 
@@ -223,7 +189,7 @@ namespace core{
          * Gets the Time to Live that this producer sends messages with
          * @return The default time to live value in milliseconds.
          */
-        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
+        virtual long long getTimeToLive() const {
             return this->defaultTimeToLive;
         }
 
@@ -231,7 +197,7 @@ namespace core{
          * Sets the Send Timeout that this Producers sends messages with
          * @param time The new default send timeout value in milliseconds.
          */
-        virtual void setSendTimeout( long long time ) throw ( cms::CMSException ) {
+        virtual void setSendTimeout( long long time ) {
             this->sendTimeout = time;
         }
 
@@ -239,7 +205,7 @@ namespace core{
          * Gets the Send Timeout that this producer sends messages with
          * @return The default send timeout value in milliseconds.
          */
-        virtual long long getSendTimeout() const throw ( cms::CMSException ) {
+        virtual long long getSendTimeout() const {
             return this->sendTimeout;
         }
 
@@ -256,18 +222,18 @@ namespace core{
          * Retries this object ProducerInfo pointer
          * @return ProducerInfo Reference
          */
-        const commands::ProducerInfo& getProducerInfo() const {
+        const Pointer<commands::ProducerInfo>& getProducerInfo() const {
             this->checkClosed();
-            return *( this->producerInfo );
+            return this->producerInfo;
         }
 
         /**
          * Retries this object ProducerId or NULL if closed.
          * @return ProducerId Reference
          */
-        commands::ProducerId& getProducerId() const {
+        const Pointer<commands::ProducerId>& getProducerId() const {
             this->checkClosed();
-            return *( this->producerInfo->getProducerId() );
+            return this->producerInfo->getProducerId();
         }
 
         /**
@@ -276,10 +242,18 @@ namespace core{
          */
         virtual void onProducerAck( const commands::ProducerAck& ack );
 
+        /**
+         * Performs Producer object cleanup but doesn't attempt to send the Remove command
+         * to the broker.  Called when the parent resource if closed first to avoid the message
+         * send and avoid any exceptions that might be thrown from an attempt to send a remove
+         * command to a failed transport.
+         */
+        void dispose();
+
    private:
 
        // Checks for the closed state and throws if so.
-       void checkClosed() const throw( exceptions::ActiveMQException );
+       void checkClosed() const;
 
    };
 

@@ -55,11 +55,16 @@ namespace lang{
         Integer( int value );
 
         /**
+         * Constructs a new Integer and attempts to convert the given string to an int
+         * value, assigning it to the new object is successful or throwing a
+         * NumberFormatException if the string is not a properly formatted int.
+         *
          * @param value
-         *      The base 10 encoded string to decode to an <code>Integer</code> and wrap.
-         * @throws NumberFormatException
+         *      The string to convert to a primitive type to wrap.
+         *
+         * @throws NumberFormatException if the string is not a a valid integer.
          */
-        Integer( const std::string& value ) throw( exceptions::NumberFormatException );
+        Integer( const std::string& value );
 
         virtual ~Integer() {}
 
@@ -207,8 +212,7 @@ namespace lang{
          * @returns a Integer object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Integer decode( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Integer decode( const std::string& value );
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -249,8 +253,7 @@ namespace lang{
          * @return the int represented by the string argument in the specified radix.
          * @throws NumberFormatException - If String does not contain a parsable int.
          */
-        static int parseInt( const std::string& s, int radix )
-            throw ( exceptions::NumberFormatException );
+        static int parseInt( const std::string& s, int radix );
 
         /**
          * Parses the string argument as a signed decimal int. The characters
@@ -263,8 +266,7 @@ namespace lang{
          * @returns the converted int value
          * @throws NumberFormatException if the string is not a int.
          */
-        static int parseInt( const std::string& s )
-            throw ( exceptions::NumberFormatException );
+        static int parseInt( const std::string& s );
 
         /**
          * Returns a Integer instance representing the specified int value.
@@ -285,8 +287,7 @@ namespace lang{
          * @return new Integer Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal int.
          */
-        static Integer valueOf( const std::string& value )
-            throw ( exceptions::NumberFormatException );
+        static Integer valueOf( const std::string& value );
 
         /**
          * Returns a Integer object holding the value extracted from the specified
@@ -300,8 +301,7 @@ namespace lang{
          * @return new Integer Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid int.
          */
-        static Integer valueOf( const std::string& value, int radix )
-            throw ( exceptions::NumberFormatException );
+        static Integer valueOf( const std::string& value, int radix );
 
         /**
          * Returns the number of one-bits in the two's complement binary
@@ -511,8 +511,7 @@ namespace lang{
     private:
 
         static int parse( const std::string& value, int offset,
-                          int radix, bool negative )
-            throw ( exceptions::NumberFormatException );
+                          int radix, bool negative );
 
     };
 

@@ -32,28 +32,28 @@ MockTransport* MockTransport::instance = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
-                              const Pointer<ResponseBuilder>& responseBuilder ){
+                              const Pointer<ResponseBuilder>& responseBuilder ) :
+    responseBuilder(responseBuilder),
+    wireFormat(wireFormat),
+    outgoingListener(),
+    listener(NULL),
+    nextCommandId(0),
+    internalListener(),
+    name(),
+    failOnSendMessage(false),
+    numSentMessageBeforeFail(0),
+    numSentMessages(0),
+    failOnReceiveMessage(false),
+    numReceivedMessageBeforeFail(0),
+    numReceivedMessages(0),
+    failOnKeepAliveSends(false),
+    numSentKeepAlivesBeforeFail(0),
+    numSentKeepAlives(0),
+    failOnStart(false),
+    failOnStop(false),
+    failOnClose(false) {
 
-    this->wireFormat = wireFormat;
-    this->outgoingListener = NULL;
-    this->listener = NULL;
-    this->responseBuilder = responseBuilder;
-    this->nextCommandId.set( 0 );
     this->instance = this;
-
-    // Script Properties.
-    this->failOnSendMessage = false;
-    this->numSentMessageBeforeFail = 0;
-    this->numSentMessages = 0;
-    this->failOnReceiveMessage = false;
-    this->numReceivedMessageBeforeFail = 0;
-    this->numReceivedMessages = 0;
-    this->failOnKeepAliveSends = false;
-    this->numSentKeepAlivesBeforeFail = 0;
-    this->numSentKeepAlives = 0;
-    this->failOnStart = false;
-    this->failOnStop = false;
-    this->failOnClose = false;
 
     // Configure the Internal Listener this is the Fake Broker.
     this->internalListener.setTransport( this );
@@ -61,9 +61,7 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::oneway( const Pointer<Command>& command )
-        throw( IOException,
-               decaf::lang::exceptions::UnsupportedOperationException) {
+void MockTransport::oneway( const Pointer<Command>& command ) {
 
     try{
 
@@ -102,10 +100,8 @@ void MockTransport::oneway( const Pointer<Command>& command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> MockTransport::request( const Pointer<Command>& command )
-    throw( IOException,
-           decaf::lang::exceptions::UnsupportedOperationException)
-{
+Pointer<Response> MockTransport::request( const Pointer<Command>& command ) {
+
     try{
 
         if( responseBuilder != NULL ){
@@ -142,10 +138,7 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> MockTransport::request( const Pointer<Command>& command,
-                                          unsigned int timeout AMQCPP_UNUSED )
-    throw( IOException,
-           decaf::lang::exceptions::UnsupportedOperationException)
-{
+                                          unsigned int timeout AMQCPP_UNUSED ) {
     try{
         return this->request( command );
     }
@@ -157,7 +150,7 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::start() throw( decaf::io::IOException ) {
+void MockTransport::start() {
 
     if( this->failOnStart ) {
         throw IOException( __FILE__, __LINE__, "Failed to Start MockTransport." );
@@ -165,7 +158,7 @@ void MockTransport::start() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::stop() throw( decaf::io::IOException ) {
+void MockTransport::stop() {
 
     if( this->failOnStop ) {
         throw IOException( __FILE__, __LINE__, "Failed to Stop MockTransport." );
@@ -173,7 +166,7 @@ void MockTransport::stop() throw( decaf::io::IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::close() throw( decaf::io::IOException ) {
+void MockTransport::close() {
 
     if( this->failOnClose ) {
         throw IOException( __FILE__, __LINE__, "Failed to Close MockTransport." );

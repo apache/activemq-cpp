@@ -26,91 +26,72 @@ using namespace decaf::internal::util;
 using namespace decaf::nio;
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( std::size_t capacity, bool readOnly )
-    : ShortBuffer( capacity ){
+ShortArrayBuffer::ShortArrayBuffer( int size, bool readOnly ) :
+    ShortBuffer(size), _array(), offset(0), length(size), readOnly(readOnly) {
 
     // Allocate using the ByteArray, not read-only initially.  Take a reference to it.
     // The capacity is the given capacity times the size of the stored datatype
-    this->_array = new ByteArrayPerspective( capacity * sizeof(short) );
-    this->offset = 0;
-    this->readOnly = readOnly;
+    this->_array.reset( new ByteArrayAdapter( size * (int)sizeof(short) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( short* array, std::size_t offset,
-                                      std::size_t capacity, bool readOnly )
-    throw( decaf::lang::exceptions::NullPointerException ) : ShortBuffer( capacity ) {
+ShortArrayBuffer::ShortArrayBuffer( short* array, int size, int offset, int length, bool readOnly ) :
+    ShortBuffer(length), _array(), offset(offset), length(length), readOnly(readOnly) {
 
     try{
 
-        // Allocate using the ByteArray, not read-only initially.
-        this->_array = new ByteArrayPerspective( array, capacity, false );
-        this->offset = offset;
-        this->readOnly = readOnly;
-    }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
-    DECAF_CATCHALL_THROW( NullPointerException )
-}
-
-///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( ByteArrayPerspective& array,
-                                      std::size_t offset, std::size_t capacity,
-                                      bool readOnly )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException )
-    : ShortBuffer( capacity ) {
-
-    try{
-        if( offset > array.getCapacity() ) {
+        if( offset < 0 || offset > size ) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "ShortArrayBuffer::ShortArrayBuffer - offset %d is greater than capacity %d",
-                offset, array.getCapacity() );
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > size ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
         }
 
         // Allocate using the ByteArray, not read-only initially.
-        this->_array = array.takeRef();
-        this->offset = offset;
-        this->readOnly = readOnly;
+        this->_array.reset( new ByteArrayAdapter( array, length, false ) );
     }
     DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     DECAF_CATCHALL_THROW( NullPointerException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortArrayBuffer::ShortArrayBuffer( const ShortArrayBuffer& other )
-    : ShortBuffer( other ) {
+ShortArrayBuffer::ShortArrayBuffer( const Pointer<ByteArrayAdapter>& array, int offset, int length, bool readOnly ) :
+    ShortBuffer(length), _array(array), offset(offset), length(length), readOnly(readOnly) {
 
-    // get the byte buffer of the caller and take a reference
-    this->_array = other._array->takeRef();
-    this->offset = other.offset;
-    this->readOnly = other.readOnly;
+    try{
+
+        if( offset < 0 || offset > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "Offset parameter if out of bounds, %d", offset );
+        }
+
+        if( length < 0 || offset + length > array->getCapacity() ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__, "length parameter if out of bounds, %d", length );
+        }
+    }
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
+    DECAF_CATCHALL_THROW( NullPointerException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ShortArrayBuffer::ShortArrayBuffer( const ShortArrayBuffer& other ) :
+    ShortBuffer(other), _array(other._array), offset(other.offset), length(other.length), readOnly(other.readOnly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ShortArrayBuffer::~ShortArrayBuffer() {
-
-    try{
-
-        // Return this object's reference to the buffer.
-        this->_array->returnRef();
-
-        // If there are no other Buffers out there that reference it then we
-        // delete it now, the internal unsigned char* array will be deleted
-        // if we where the owner.
-        if( this->_array->getReferences() == 0 ) {
-            delete this->_array;
-        }
-    }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short* ShortArrayBuffer::array()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+short* ShortArrayBuffer::array() {
 
     try{
 
@@ -135,9 +116,7 @@ short* ShortArrayBuffer::array()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::size_t ShortArrayBuffer::arrayOffset()
-    throw( decaf::lang::exceptions::UnsupportedOperationException,
-           decaf::nio::ReadOnlyBufferException ) {
+int ShortArrayBuffer::arrayOffset() {
 
     try{
 
@@ -176,7 +155,7 @@ ShortBuffer* ShortArrayBuffer::asReadOnlyBuffer() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::compact() {
 
     try{
 
@@ -188,7 +167,7 @@ ShortBuffer& ShortArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferExcept
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+        for( int ix = 0; ix < this->remaining(); ++ix ) {
             this->put( ix, this->get( this->position() + ix ) );
         }
 
@@ -214,7 +193,7 @@ ShortBuffer* ShortArrayBuffer::duplicate() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short ShortArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
+short ShortArrayBuffer::get() {
 
     try{
         return this->get( this->_position++ );
@@ -225,8 +204,7 @@ short ShortArrayBuffer::get() throw ( decaf::nio::BufferUnderflowException ) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-short ShortArrayBuffer::get( std::size_t index ) const
-    throw ( lang::exceptions::IndexOutOfBoundsException ) {
+short ShortArrayBuffer::get( int index ) const {
 
     try{
 
@@ -244,8 +222,7 @@ short ShortArrayBuffer::get( std::size_t index ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::put( short value )
-    throw( BufferOverflowException, ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::put( short value ) {
 
     try{
 
@@ -259,9 +236,7 @@ ShortBuffer& ShortArrayBuffer::put( short value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShortBuffer& ShortArrayBuffer::put( std::size_t index, short value )
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException,
-           decaf::nio::ReadOnlyBufferException ) {
+ShortBuffer& ShortArrayBuffer::put( int index, short value ) {
 
     try{
 
@@ -292,7 +267,7 @@ ShortBuffer* ShortArrayBuffer::slice() const {
 
     try{
 
-        return new ShortArrayBuffer( *(this->_array),
+        return new ShortArrayBuffer( this->_array,
                                      this->offset + this->position(),
                                      this->remaining(),
                                      this->isReadOnly() );

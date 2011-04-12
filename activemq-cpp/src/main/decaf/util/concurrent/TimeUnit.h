@@ -65,11 +65,11 @@ namespace concurrent {
         /** This TimeUnit's index */
         int index;
 
-        /** Array of Time Unit multipliers */
-        static const long long multipliers[];
-
         /** Name of the Unit being represented. */
         std::string name;
+
+        /** Array of Time Unit multipliers */
+        static const long long multipliers[];
 
     public:
 
@@ -218,9 +218,7 @@ namespace concurrent {
          *
          * @see Synchronizable#wait( long long, long long )
          */
-        void timedWait( Synchronizable* obj, long long timeout ) const
-            throw( decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::NullPointerException );
+        void timedWait( Synchronizable* obj, long long timeout ) const;
 
         /**
          * Perform a timed <tt>Thread.join</tt> using this time unit.
@@ -235,9 +233,7 @@ namespace concurrent {
          *
          * @see Thread#join( long long, long long )
          */
-        void timedJoin( decaf::lang::Thread* thread, long long timeout )
-            throw( decaf::lang::exceptions::InterruptedException,
-                   decaf::lang::exceptions::NullPointerException );
+        void timedJoin( decaf::lang::Thread* thread, long long timeout );
 
         /**
          * Perform a <tt>Thread.sleep</tt> using this unit.
@@ -246,8 +242,7 @@ namespace concurrent {
          * @param timeout the minimum time to sleep
          * @see Thread#sleep
          */
-        void sleep( long long timeout ) const
-            throw( decaf::lang::exceptions::InterruptedException );
+        void sleep( long long timeout ) const;
 
         /**
          * Converts the TimeUnit type to the Name of the TimeUnit.
@@ -269,59 +264,16 @@ namespace concurrent {
          * @throws IllegalArgumentException
          *          if this enum type has no constant with the specified name
          */
-        static const TimeUnit& valueOf( const std::string& name )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
+        static const TimeUnit& valueOf( const std::string& name );
 
     public:
 
-        /**
-         * Compares this object with the specified object for order. Returns a
-         * negative integer, zero, or a positive integer as this object is less
-         * than, equal to, or greater than the specified object.
-         *
-         * In the foregoing description, the notation sgn(expression) designates
-         * the mathematical signum function, which is defined to return one of
-         * -1, 0, or 1 according to whether the value of expression  is negative,
-         * zero or positive. The implementor must ensure sgn(x.compareTo(y)) ==
-         * -sgn(y.compareTo(x)) for all x and y. (This implies that x.compareTo(y)
-         * must throw an exception iff y.compareTo(x) throws an exception.)
-         *
-         * The implementor must also ensure that the relation is transitive:
-         * (x.compareTo(y)>0 && y.compareTo(z)>0) implies x.compareTo(z)>0.
-         *
-         * Finally, the implementer must ensure that x.compareTo(y)==0 implies
-         * that sgn(x.compareTo(z)) == sgn(y.compareTo(z)), for all z.
-         *
-         * It is strongly recommended, but not strictly required that
-         * (x.compareTo(y)==0) == (x.equals(y)). Generally speaking, any class
-         * that implements the Comparable interface and violates this condition
-         * should clearly indicate this fact. The recommended language is
-         * "Note: this class has a natural ordering that is inconsistent with
-         * equals."
-         * @param value - the Object to be compared.
-         * @returns a negative integer, zero, or a positive integer as this
-         * object is less than, equal to, or greater than the specified object.
-         */
         virtual int compareTo( const TimeUnit& value ) const;
 
-        /**
-         * @return true if this value is considered equal to the passed value.
-         */
         virtual bool equals( const TimeUnit& value ) const;
 
-        /**
-         * Compares equality between this object and the one passed.
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
-         */
         virtual bool operator==( const TimeUnit& value ) const;
 
-        /**
-         * Compares this object to another and returns true if this object
-         * is considered to be less than the one passed.  This
-         * @param value - the value to be compared to this one.
-         * @return true if this object is equal to the one passed.
-         */
         virtual bool operator<( const TimeUnit& value ) const;
 
     private:

@@ -87,14 +87,22 @@ cc_sources = \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQConnectionMetaData.cpp \
-    activemq/core/ActiveMQConnectionSupport.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQProducer.cpp \
+    activemq/core/ActiveMQQueueBrowser.cpp \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/core/ActiveMQTransactionContext.cpp \
-    activemq/core/MessageDispatchChannel.cpp \
+    activemq/core/ActiveMQXAConnection.cpp \
+    activemq/core/ActiveMQXAConnectionFactory.cpp \
+    activemq/core/ActiveMQXASession.cpp \
+    activemq/core/FifoMessageDispatchChannel.cpp \
+    activemq/core/PrefetchPolicy.cpp \
+    activemq/core/RedeliveryPolicy.cpp \
+    activemq/core/SimplePriorityMessageDispatchChannel.cpp \
+    activemq/core/policies/DefaultPrefetchPolicy.cpp \
+    activemq/core/policies/DefaultRedeliveryPolicy.cpp \
     activemq/exceptions/ActiveMQException.cpp \
     activemq/io/LoggingInputStream.cpp \
     activemq/io/LoggingOutputStream.cpp \
@@ -108,6 +116,8 @@ cc_sources = \
     activemq/state/TransactionState.cpp \
     activemq/threads/CompositeTaskRunner.cpp \
     activemq/threads/DedicatedTaskRunner.cpp \
+    activemq/threads/Scheduler.cpp \
+    activemq/threads/SchedulerTimerTask.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
     activemq/transport/TransportFilter.cpp \
@@ -127,17 +137,25 @@ cc_sources = \
     activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
+    activemq/transport/tcp/SslTransport.cpp \
+    activemq/transport/tcp/SslTransportFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
     activemq/util/ActiveMQProperties.cpp \
     activemq/util/CMSExceptionSupport.cpp \
     activemq/util/CompositeData.cpp \
+    activemq/util/IdGenerator.cpp \
     activemq/util/LongSequenceGenerator.cpp \
+    activemq/util/MarshallingSupport.cpp \
     activemq/util/MemoryUsage.cpp \
     activemq/util/PrimitiveList.cpp \
     activemq/util/PrimitiveMap.cpp \
     activemq/util/PrimitiveValueConverter.cpp \
     activemq/util/PrimitiveValueNode.cpp \
+    activemq/util/Service.cpp \
+    activemq/util/ServiceListener.cpp \
+    activemq/util/ServiceStopper.cpp \
+    activemq/util/ServiceSupport.cpp \
     activemq/util/URISupport.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     activemq/wireformat/openwire/OpenWireFormat.cpp \
@@ -146,357 +164,178 @@ cc_sources = \
     activemq/wireformat/openwire/OpenWireResponseBuilder.cpp \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQBlobMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQBytesMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQMapMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQObjectMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQStreamMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTextMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/BaseCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/BrokerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/BrokerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConnectionControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConnectionErrorMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConnectionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConnectionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConsumerControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConsumerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ConsumerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ControlCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/DataArrayResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/DataResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/DestinationInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/DiscoveryEventMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ExceptionResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/FlushCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/IntegerResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/JournalQueueAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/JournalTopicAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/JournalTraceMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/JournalTransactionMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/KeepAliveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/LastPartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/LocalTransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MarshallerFactory.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessageAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessageDispatchMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessageDispatchNotificationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessageIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/MessagePullMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/NetworkBridgeFilterMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/PartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ProducerAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ProducerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ProducerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/RemoveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/RemoveSubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ReplayCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/SessionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/SessionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/ShutdownInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/SubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/TransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/TransactionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/WireFormatInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v1/XATransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQBlobMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQBytesMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQMapMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQObjectMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQStreamMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTextMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/BaseCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/BrokerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/BrokerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConnectionControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConnectionErrorMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConnectionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConnectionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConsumerControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConsumerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ConsumerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ControlCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/DataArrayResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/DataResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/DestinationInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/DiscoveryEventMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ExceptionResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/FlushCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/IntegerResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/JournalQueueAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/JournalTopicAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/JournalTraceMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/JournalTransactionMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/KeepAliveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/LastPartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/LocalTransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MarshallerFactory.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessageAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessageDispatchMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessageDispatchNotificationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessageIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/MessagePullMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/NetworkBridgeFilterMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/PartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ProducerAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ProducerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ProducerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/RemoveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/RemoveSubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ReplayCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/SessionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/SessionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/ShutdownInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/SubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/TransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/TransactionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/WireFormatInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v2/XATransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQBlobMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQBytesMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQMapMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQObjectMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQStreamMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTextMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/BaseCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/BrokerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/BrokerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConnectionControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConnectionErrorMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConnectionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConnectionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConsumerControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConsumerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ConsumerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ControlCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/DataArrayResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/DataResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/DestinationInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/DiscoveryEventMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ExceptionResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/FlushCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/IntegerResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/JournalQueueAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/JournalTopicAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/JournalTraceMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/JournalTransactionMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/KeepAliveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/LastPartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/LocalTransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MarshallerFactory.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessageAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessageDispatchMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessageDispatchNotificationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessageIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/MessagePullMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/NetworkBridgeFilterMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/PartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ProducerAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ProducerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ProducerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/RemoveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/RemoveSubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ReplayCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/SessionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/SessionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/ShutdownInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/SubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/TransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/TransactionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/WireFormatInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v3/XATransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQBlobMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQBytesMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQMapMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQObjectMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQStreamMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTextMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/BaseCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/BrokerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/BrokerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConnectionControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConnectionErrorMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConnectionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConnectionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConsumerControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConsumerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ConsumerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ControlCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/DataArrayResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/DataResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/DestinationInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/DiscoveryEventMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ExceptionResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/FlushCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/IntegerResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/JournalQueueAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/JournalTopicAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/JournalTraceMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/JournalTransactionMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/KeepAliveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/LastPartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/LocalTransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MarshallerFactory.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessageAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessageDispatchMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessageDispatchNotificationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessageIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/MessagePullMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/NetworkBridgeFilterMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/PartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ProducerAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ProducerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ProducerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/RemoveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/RemoveSubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ReplayCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/SessionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/SessionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/ShutdownInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/SubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/TransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/TransactionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/WireFormatInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v4/XATransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQBlobMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQBytesMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQMapMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQObjectMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQStreamMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempDestinationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempQueueMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTextMessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTopicMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/BaseCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/BrokerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/BrokerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConnectionControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConnectionErrorMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConnectionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConnectionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConsumerControlMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConsumerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ConsumerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ControlCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/DataArrayResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/DataResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/DestinationInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/DiscoveryEventMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ExceptionResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/FlushCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/IntegerResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/JournalQueueAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/JournalTopicAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/JournalTraceMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/JournalTransactionMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/KeepAliveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/LastPartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/LocalTransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MarshallerFactory.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessageAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessageDispatchMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessageDispatchNotificationMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessageIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessageMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/MessagePullMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/NetworkBridgeFilterMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/PartialCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ProducerAckMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ProducerIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ProducerInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/RemoveInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/RemoveSubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ReplayCommandMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ResponseMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/SessionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/SessionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/ShutdownInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/SubscriptionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/TransactionIdMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/TransactionInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/WireFormatInfoMarshaller.cpp \
-    activemq/wireformat/openwire/marshal/v5/XATransactionIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQBlobMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQBytesMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQDestinationMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQMapMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQObjectMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQQueueMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQStreamMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempDestinationMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempQueueMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempTopicMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTextMessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTopicMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/BaseCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/BrokerIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/BrokerInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConnectionControlMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConnectionErrorMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConnectionIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConnectionInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConsumerControlMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConsumerIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ConsumerInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ControlCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/DataArrayResponseMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/DataResponseMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/DestinationInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/DiscoveryEventMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ExceptionResponseMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/FlushCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/IntegerResponseMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/JournalQueueAckMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/JournalTopicAckMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/JournalTraceMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/JournalTransactionMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/KeepAliveInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/LastPartialCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/LocalTransactionIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MarshallerFactory.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessageAckMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessageDispatchMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessageDispatchNotificationMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessageIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessageMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/MessagePullMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/NetworkBridgeFilterMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/PartialCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ProducerAckMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ProducerIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ProducerInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/RemoveInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/RemoveSubscriptionInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ReplayCommandMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ResponseMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/SessionIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/SessionInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/ShutdownInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/SubscriptionInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/TransactionIdMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/TransactionInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/WireFormatInfoMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/generated/XATransactionIdMarshaller.cpp \
     activemq/wireformat/openwire/utils/BooleanStream.cpp \
     activemq/wireformat/openwire/utils/HexTable.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.cpp \
-    activemq/wireformat/openwire/utils/OpenwireStringSupport.cpp \
     activemq/wireformat/stomp/StompCommandConstants.cpp \
     activemq/wireformat/stomp/StompFrame.cpp \
     activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
+    cms/BytesMessage.cpp \
     cms/CMSException.cpp \
+    cms/CMSProperties.cpp \
     cms/CMSSecurityException.cpp \
+    cms/Closeable.cpp \
+    cms/Connection.cpp \
+    cms/ConnectionFactory.cpp \
+    cms/ConnectionMetaData.cpp \
+    cms/DeliveryMode.cpp \
+    cms/Destination.cpp \
+    cms/ExceptionListener.cpp \
     cms/IllegalStateException.cpp \
     cms/InvalidClientIdException.cpp \
     cms/InvalidDestinationException.cpp \
     cms/InvalidSelectorException.cpp \
+    cms/MapMessage.cpp \
+    cms/Message.cpp \
+    cms/MessageConsumer.cpp \
     cms/MessageEOFException.cpp \
+    cms/MessageEnumeration.cpp \
     cms/MessageFormatException.cpp \
+    cms/MessageListener.cpp \
     cms/MessageNotReadableException.cpp \
     cms/MessageNotWriteableException.cpp \
+    cms/MessageProducer.cpp \
+    cms/ObjectMessage.cpp \
+    cms/Queue.cpp \
+    cms/QueueBrowser.cpp \
+    cms/Session.cpp \
+    cms/Startable.cpp \
+    cms/Stoppable.cpp \
+    cms/StreamMessage.cpp \
+    cms/TemporaryQueue.cpp \
+    cms/TemporaryTopic.cpp \
+    cms/TextMessage.cpp \
+    cms/Topic.cpp \
+    cms/TransactionInProgressException.cpp \
+    cms/TransactionRolledBackException.cpp \
+    cms/UnsupportedOperationException.cpp \
+    cms/XAConnection.cpp \
+    cms/XAConnectionFactory.cpp \
+    cms/XAException.cpp \
+    cms/XAResource.cpp \
+    cms/XASession.cpp \
+    cms/Xid.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/io/StandardErrorOutputStream.cpp \
     decaf/internal/io/StandardInputStream.cpp \
     decaf/internal/io/StandardOutputStream.cpp \
+    decaf/internal/net/DefaultServerSocketFactory.cpp \
+    decaf/internal/net/DefaultSocketFactory.cpp \
+    decaf/internal/net/Network.cpp \
+    decaf/internal/net/SocketFileDescriptor.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
+    decaf/internal/net/ssl/DefaultSSLContext.cpp \
+    decaf/internal/net/ssl/DefaultSSLServerSocketFactory.cpp \
+    decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLContextSpi.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLParameters.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocket.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocketFactory.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocket.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketException.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.cpp \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.cpp \
+    decaf/internal/net/tcp/TcpSocket.cpp \
+    decaf/internal/net/tcp/TcpSocketInputStream.cpp \
+    decaf/internal/net/tcp/TcpSocketOutputStream.cpp \
     decaf/internal/nio/BufferFactory.cpp \
     decaf/internal/nio/ByteArrayBuffer.cpp \
-    decaf/internal/nio/ByteArrayPerspective.cpp \
     decaf/internal/nio/CharArrayBuffer.cpp \
     decaf/internal/nio/DoubleArrayBuffer.cpp \
     decaf/internal/nio/FloatArrayBuffer.cpp \
     decaf/internal/nio/IntArrayBuffer.cpp \
     decaf/internal/nio/LongArrayBuffer.cpp \
     decaf/internal/nio/ShortArrayBuffer.cpp \
+    decaf/internal/security/unix/SecureRandomImpl.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
+    decaf/internal/util/Resource.cpp \
+    decaf/internal/util/ResourceLifecycleManager.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
     decaf/internal/util/concurrent/unix/MutexImpl.cpp \
+    decaf/internal/util/zip/adler32.c \
+    decaf/internal/util/zip/crc32.c \
+    decaf/internal/util/zip/deflate.c \
+    decaf/internal/util/zip/gzclose.c \
+    decaf/internal/util/zip/gzlib.c \
+    decaf/internal/util/zip/gzread.c \
+    decaf/internal/util/zip/gzwrite.c \
+    decaf/internal/util/zip/infback.c \
+    decaf/internal/util/zip/inffast.c \
+    decaf/internal/util/zip/inflate.c \
+    decaf/internal/util/zip/inftrees.c \
+    decaf/internal/util/zip/trees.c \
+    decaf/internal/util/zip/uncompr.c \
+    decaf/internal/util/zip/zutil.c \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/BufferedInputStream.cpp \
     decaf/io/BufferedOutputStream.cpp \
@@ -504,6 +343,16 @@ cc_sources = \
     decaf/io/ByteArrayOutputStream.cpp \
     decaf/io/DataInputStream.cpp \
     decaf/io/DataOutputStream.cpp \
+    decaf/io/FileDescriptor.cpp \
+    decaf/io/FilterInputStream.cpp \
+    decaf/io/FilterOutputStream.cpp \
+    decaf/io/InputStream.cpp \
+    decaf/io/InputStreamReader.cpp \
+    decaf/io/OutputStream.cpp \
+    decaf/io/OutputStreamWriter.cpp \
+    decaf/io/PushbackInputStream.cpp \
+    decaf/io/Reader.cpp \
+    decaf/io/Writer.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Byte.cpp \
     decaf/lang/Character.cpp \
@@ -514,20 +363,33 @@ cc_sources = \
     decaf/lang/Long.cpp \
     decaf/lang/Math.cpp \
     decaf/lang/Short.cpp \
+    decaf/lang/String.cpp \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
-    decaf/net/BufferedSocket.cpp \
+    decaf/net/DatagramPacket.cpp \
+    decaf/net/Inet4Address.cpp \
+    decaf/net/Inet6Address.cpp \
+    decaf/net/InetAddress.cpp \
+    decaf/net/InetSocketAddress.cpp \
     decaf/net/ServerSocket.cpp \
+    decaf/net/ServerSocketFactory.cpp \
+    decaf/net/Socket.cpp \
     decaf/net/SocketError.cpp \
     decaf/net/SocketFactory.cpp \
-    decaf/net/SocketInputStream.cpp \
-    decaf/net/SocketOutputStream.cpp \
-    decaf/net/TcpSocket.cpp \
+    decaf/net/SocketImpl.cpp \
+    decaf/net/SocketOptions.cpp \
     decaf/net/URI.cpp \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
+    decaf/net/ssl/SSLContext.cpp \
+    decaf/net/ssl/SSLContextSpi.cpp \
+    decaf/net/ssl/SSLParameters.cpp \
+    decaf/net/ssl/SSLServerSocket.cpp \
+    decaf/net/ssl/SSLServerSocketFactory.cpp \
+    decaf/net/ssl/SSLSocket.cpp \
+    decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
     decaf/nio/ByteBuffer.cpp \
     decaf/nio/CharBuffer.cpp \
@@ -536,28 +398,94 @@ cc_sources = \
     decaf/nio/IntBuffer.cpp \
     decaf/nio/LongBuffer.cpp \
     decaf/nio/ShortBuffer.cpp \
+    decaf/security/SecureRandom.cpp \
+    decaf/security/SecureRandomSpi.cpp \
+    decaf/util/AbstractCollection.cpp \
+    decaf/util/AbstractList.cpp \
+    decaf/util/AbstractMap.cpp \
+    decaf/util/AbstractQueue.cpp \
+    decaf/util/AbstractSequentialList.cpp \
+    decaf/util/AbstractSet.cpp \
+    decaf/util/ArrayList.cpp \
+    decaf/util/Arrays.cpp \
+    decaf/util/Collection.cpp \
+    decaf/util/Comparator.cpp \
+    decaf/util/ConcurrentModificationException.cpp \
     decaf/util/Date.cpp \
+    decaf/util/Deque.cpp \
+    decaf/util/Iterator.cpp \
+    decaf/util/LinkedList.cpp \
+    decaf/util/List.cpp \
+    decaf/util/ListIterator.cpp \
+    decaf/util/Map.cpp \
+    decaf/util/NoSuchElementException.cpp \
+    decaf/util/PriorityQueue.cpp \
     decaf/util/Properties.cpp \
+    decaf/util/Queue.cpp \
     decaf/util/Random.cpp \
+    decaf/util/Set.cpp \
+    decaf/util/StlList.cpp \
+    decaf/util/StlMap.cpp \
+    decaf/util/StlQueue.cpp \
+    decaf/util/StlSet.cpp \
     decaf/util/StringTokenizer.cpp \
     decaf/util/Timer.cpp \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
+    decaf/util/concurrent/AbstractExecutorService.cpp \
+    decaf/util/concurrent/BlockingQueue.cpp \
+    decaf/util/concurrent/BrokenBarrierException.cpp \
+    decaf/util/concurrent/Callable.cpp \
+    decaf/util/concurrent/ConcurrentMap.cpp \
+    decaf/util/concurrent/ConcurrentStlMap.cpp \
+    decaf/util/concurrent/CopyOnWriteArrayList.cpp \
+    decaf/util/concurrent/CopyOnWriteArraySet.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
+    decaf/util/concurrent/Delayed.cpp \
+    decaf/util/concurrent/Executor.cpp \
+    decaf/util/concurrent/ExecutorService.cpp \
+    decaf/util/concurrent/Executors.cpp \
+    decaf/util/concurrent/Future.cpp \
+    decaf/util/concurrent/LinkedBlockingQueue.cpp \
+    decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
-    decaf/util/concurrent/PooledThread.cpp \
+    decaf/util/concurrent/RejectedExecutionHandler.cpp \
     decaf/util/concurrent/Semaphore.cpp \
-    decaf/util/concurrent/ThreadPool.cpp \
+    decaf/util/concurrent/SynchronousQueue.cpp \
+    decaf/util/concurrent/ThreadFactory.cpp \
+    decaf/util/concurrent/ThreadPoolExecutor.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
+    decaf/util/concurrent/atomic/AtomicRefCounter.cpp \
+    decaf/util/concurrent/atomic/AtomicReference.cpp \
+    decaf/util/concurrent/locks/AbstractOwnableSynchronizer.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
+    decaf/util/logging/ConsoleHandler.cpp \
+    decaf/util/logging/ErrorManager.cpp \
+    decaf/util/logging/Formatter.cpp \
+    decaf/util/logging/Handler.cpp \
+    decaf/util/logging/Level.cpp \
     decaf/util/logging/LogManager.cpp \
+    decaf/util/logging/LogRecord.cpp \
     decaf/util/logging/LogWriter.cpp \
     decaf/util/logging/Logger.cpp \
     decaf/util/logging/LoggerHierarchy.cpp \
-    decaf/util/logging/SimpleLogger.cpp
+    decaf/util/logging/SimpleFormatter.cpp \
+    decaf/util/logging/SimpleLogger.cpp \
+    decaf/util/logging/StreamHandler.cpp \
+    decaf/util/logging/XMLFormatter.cpp \
+    decaf/util/zip/Adler32.cpp \
+    decaf/util/zip/CRC32.cpp \
+    decaf/util/zip/CheckedInputStream.cpp \
+    decaf/util/zip/CheckedOutputStream.cpp \
+    decaf/util/zip/DataFormatException.cpp \
+    decaf/util/zip/Deflater.cpp \
+    decaf/util/zip/DeflaterOutputStream.cpp \
+    decaf/util/zip/Inflater.cpp \
+    decaf/util/zip/InflaterInputStream.cpp \
+    decaf/util/zip/ZipException.cpp
 
 
 h_sources = \
@@ -645,19 +573,29 @@ h_sources = \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQConnectionFactory.h \
     activemq/core/ActiveMQConnectionMetaData.h \
-    activemq/core/ActiveMQConnectionSupport.h \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQProducer.h \
+    activemq/core/ActiveMQQueueBrowser.h \
     activemq/core/ActiveMQSession.h \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/ActiveMQTransactionContext.h \
+    activemq/core/ActiveMQXAConnection.h \
+    activemq/core/ActiveMQXAConnectionFactory.h \
+    activemq/core/ActiveMQXASession.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
+    activemq/core/FifoMessageDispatchChannel.h \
     activemq/core/MessageDispatchChannel.h \
+    activemq/core/PrefetchPolicy.h \
+    activemq/core/RedeliveryPolicy.h \
+    activemq/core/SimplePriorityMessageDispatchChannel.h \
     activemq/core/Synchronization.h \
+    activemq/core/policies/DefaultPrefetchPolicy.h \
+    activemq/core/policies/DefaultRedeliveryPolicy.h \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
+    activemq/exceptions/ConnectionFailedException.h \
     activemq/exceptions/ExceptionDefines.h \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
@@ -674,6 +612,8 @@ h_sources = \
     activemq/threads/CompositeTask.h \
     activemq/threads/CompositeTaskRunner.h \
     activemq/threads/DedicatedTaskRunner.h \
+    activemq/threads/Scheduler.h \
+    activemq/threads/SchedulerTimerTask.h \
     activemq/threads/Task.h \
     activemq/threads/TaskRunner.h \
     activemq/transport/AbstractTransportFactory.h \
@@ -702,18 +642,26 @@ h_sources = \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/mock/ResponseBuilder.h \
+    activemq/transport/tcp/SslTransport.h \
+    activemq/transport/tcp/SslTransportFactory.h \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/tcp/TcpTransportFactory.h \
     activemq/util/ActiveMQProperties.h \
     activemq/util/CMSExceptionSupport.h \
     activemq/util/CompositeData.h \
     activemq/util/Config.h \
+    activemq/util/IdGenerator.h \
     activemq/util/LongSequenceGenerator.h \
+    activemq/util/MarshallingSupport.h \
     activemq/util/MemoryUsage.h \
     activemq/util/PrimitiveList.h \
     activemq/util/PrimitiveMap.h \
     activemq/util/PrimitiveValueConverter.h \
     activemq/util/PrimitiveValueNode.h \
+    activemq/util/Service.h \
+    activemq/util/ServiceListener.h \
+    activemq/util/ServiceStopper.h \
+    activemq/util/ServiceSupport.h \
     activemq/util/URISupport.h \
     activemq/util/Usage.h \
     activemq/wireformat/MarshalAware.h \
@@ -728,320 +676,71 @@ h_sources = \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/wireformat/openwire/marshal/DataStreamMarshaller.h \
     activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQBlobMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQBytesMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQMapMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQObjectMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQStreamMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTempTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTextMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ActiveMQTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/BaseCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/BrokerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/BrokerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConnectionControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConnectionErrorMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConnectionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConnectionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConsumerControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConsumerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ConsumerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ControlCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/DataArrayResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/DataResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/DestinationInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/DiscoveryEventMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ExceptionResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/FlushCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/IntegerResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/JournalQueueAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/JournalTopicAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/JournalTraceMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/JournalTransactionMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/KeepAliveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/LastPartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/LocalTransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MarshallerFactory.h \
-    activemq/wireformat/openwire/marshal/v1/MessageAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MessageDispatchMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MessageDispatchNotificationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MessageIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/MessagePullMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/NetworkBridgeFilterMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/PartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ProducerAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ProducerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ProducerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/RemoveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/RemoveSubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ReplayCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/SessionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/SessionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/ShutdownInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/SubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/TransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/TransactionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/WireFormatInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v1/XATransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQBlobMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQBytesMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQMapMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQObjectMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQStreamMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTempTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTextMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ActiveMQTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/BaseCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/BrokerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/BrokerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConnectionControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConnectionErrorMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConnectionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConnectionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConsumerControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConsumerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ConsumerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ControlCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/DataArrayResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/DataResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/DestinationInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/DiscoveryEventMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ExceptionResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/FlushCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/IntegerResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/JournalQueueAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/JournalTopicAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/JournalTraceMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/JournalTransactionMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/KeepAliveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/LastPartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/LocalTransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MarshallerFactory.h \
-    activemq/wireformat/openwire/marshal/v2/MessageAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MessageDispatchMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MessageDispatchNotificationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MessageIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/MessagePullMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/NetworkBridgeFilterMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/PartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ProducerAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ProducerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ProducerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/RemoveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/RemoveSubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ReplayCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/SessionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/SessionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/ShutdownInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/SubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/TransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/TransactionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/WireFormatInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v2/XATransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQBlobMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQBytesMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQMapMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQObjectMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQStreamMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTempTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTextMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ActiveMQTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/BaseCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/BrokerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/BrokerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConnectionControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConnectionErrorMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConnectionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConnectionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConsumerControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConsumerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ConsumerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ControlCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/DataArrayResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/DataResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/DestinationInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/DiscoveryEventMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ExceptionResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/FlushCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/IntegerResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/JournalQueueAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/JournalTopicAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/JournalTraceMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/JournalTransactionMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/KeepAliveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/LastPartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/LocalTransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MarshallerFactory.h \
-    activemq/wireformat/openwire/marshal/v3/MessageAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MessageDispatchMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MessageDispatchNotificationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MessageIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/MessagePullMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/NetworkBridgeFilterMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/PartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ProducerAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ProducerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ProducerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/RemoveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/RemoveSubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ReplayCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/SessionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/SessionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/ShutdownInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/SubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/TransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/TransactionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/WireFormatInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v3/XATransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQBlobMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQBytesMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQMapMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQObjectMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQStreamMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTempTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTextMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ActiveMQTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/BaseCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/BrokerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/BrokerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConnectionControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConnectionErrorMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConnectionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConnectionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConsumerControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConsumerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ConsumerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ControlCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/DataArrayResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/DataResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/DestinationInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/DiscoveryEventMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ExceptionResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/FlushCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/IntegerResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/JournalQueueAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/JournalTopicAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/JournalTraceMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/JournalTransactionMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/KeepAliveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/LastPartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/LocalTransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MarshallerFactory.h \
-    activemq/wireformat/openwire/marshal/v4/MessageAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MessageDispatchMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MessageDispatchNotificationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MessageIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/MessagePullMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/NetworkBridgeFilterMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/PartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ProducerAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ProducerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ProducerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/RemoveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/RemoveSubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ReplayCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/SessionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/SessionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/ShutdownInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/SubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/TransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/TransactionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/WireFormatInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v4/XATransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQBlobMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQBytesMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQMapMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQObjectMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQStreamMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempDestinationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempQueueMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTempTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTextMessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ActiveMQTopicMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/BaseCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/BrokerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/BrokerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConnectionControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConnectionErrorMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConnectionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConnectionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConsumerControlMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConsumerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ConsumerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ControlCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/DataArrayResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/DataResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/DestinationInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/DiscoveryEventMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ExceptionResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/FlushCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/IntegerResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/JournalQueueAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/JournalTopicAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/JournalTraceMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/JournalTransactionMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/KeepAliveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/LastPartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/LocalTransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MarshallerFactory.h \
-    activemq/wireformat/openwire/marshal/v5/MessageAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MessageDispatchMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MessageDispatchNotificationMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MessageIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MessageMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/MessagePullMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/NetworkBridgeFilterMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/PartialCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ProducerAckMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ProducerIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ProducerInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/RemoveInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/RemoveSubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ReplayCommandMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ResponseMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/SessionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/SessionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/ShutdownInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/SubscriptionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/TransactionIdMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/TransactionInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/WireFormatInfoMarshaller.h \
-    activemq/wireformat/openwire/marshal/v5/XATransactionIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQBlobMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQBytesMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQDestinationMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQMapMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQObjectMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQQueueMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQStreamMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempDestinationMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempQueueMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTempTopicMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTextMessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ActiveMQTopicMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/BaseCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/BrokerIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/BrokerInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConnectionControlMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConnectionErrorMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConnectionIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConnectionInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConsumerControlMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConsumerIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ConsumerInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ControlCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/DataArrayResponseMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/DataResponseMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/DestinationInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/DiscoveryEventMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ExceptionResponseMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/FlushCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/IntegerResponseMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/JournalQueueAckMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/JournalTopicAckMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/JournalTraceMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/JournalTransactionMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/KeepAliveInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/LastPartialCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/LocalTransactionIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MarshallerFactory.h \
+    activemq/wireformat/openwire/marshal/generated/MessageAckMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MessageDispatchMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MessageDispatchNotificationMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MessageIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MessageMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/MessagePullMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/NetworkBridgeFilterMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/PartialCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ProducerAckMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ProducerIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ProducerInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/RemoveInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/RemoveSubscriptionInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ReplayCommandMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ResponseMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/SessionIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/SessionInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/ShutdownInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/SubscriptionInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/TransactionIdMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/TransactionInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/WireFormatInfoMarshaller.h \
+    activemq/wireformat/openwire/marshal/generated/XATransactionIdMarshaller.h \
     activemq/wireformat/openwire/utils/BooleanStream.h \
     activemq/wireformat/openwire/utils/HexTable.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h \
-    activemq/wireformat/openwire/utils/OpenwireStringSupport.h \
     activemq/wireformat/stomp/StompCommandConstants.h \
     activemq/wireformat/stomp/StompFrame.h \
     activemq/wireformat/stomp/StompHelper.h \
@@ -1067,6 +766,7 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h \
     cms/MessageEOFException.h \
+    cms/MessageEnumeration.h \
     cms/MessageFormatException.h \
     cms/MessageListener.h \
     cms/MessageNotReadableException.h \
@@ -1083,25 +783,57 @@ h_sources = \
     cms/TemporaryTopic.h \
     cms/TextMessage.h \
     cms/Topic.h \
+    cms/TransactionInProgressException.h \
+    cms/TransactionRolledBackException.h \
+    cms/UnsupportedOperationException.h \
+    cms/XAConnection.h \
+    cms/XAConnectionFactory.h \
+    cms/XAException.h \
+    cms/XAResource.h \
+    cms/XASession.h \
+    cms/Xid.h \
     decaf/internal/AprPool.h \
     decaf/internal/DecafRuntime.h \
     decaf/internal/io/StandardErrorOutputStream.h \
     decaf/internal/io/StandardInputStream.h \
     decaf/internal/io/StandardOutputStream.h \
+    decaf/internal/net/DefaultServerSocketFactory.h \
+    decaf/internal/net/DefaultSocketFactory.h \
+    decaf/internal/net/Network.h \
+    decaf/internal/net/SocketFileDescriptor.h \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/ssl/DefaultSSLContext.h \
+    decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h \
+    decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
+    decaf/internal/net/ssl/openssl/OpenSSLContextSpi.h \
+    decaf/internal/net/ssl/openssl/OpenSSLParameters.h \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocket.h \
+    decaf/internal/net/ssl/openssl/OpenSSLServerSocketFactory.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocket.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketException.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketFactory.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketInputStream.h \
+    decaf/internal/net/ssl/openssl/OpenSSLSocketOutputStream.h \
+    decaf/internal/net/tcp/TcpSocket.h \
+    decaf/internal/net/tcp/TcpSocketInputStream.h \
+    decaf/internal/net/tcp/TcpSocketOutputStream.h \
     decaf/internal/nio/BufferFactory.h \
     decaf/internal/nio/ByteArrayBuffer.h \
-    decaf/internal/nio/ByteArrayPerspective.h \
     decaf/internal/nio/CharArrayBuffer.h \
     decaf/internal/nio/DoubleArrayBuffer.h \
     decaf/internal/nio/FloatArrayBuffer.h \
     decaf/internal/nio/IntArrayBuffer.h \
     decaf/internal/nio/LongArrayBuffer.h \
     decaf/internal/nio/ShortArrayBuffer.h \
+    decaf/internal/security/unix/SecureRandomImpl.h \
+    decaf/internal/security/windows/SecureRandomImpl.h \
     decaf/internal/util/ByteArrayAdapter.h \
+    decaf/internal/util/GenericResource.h \
     decaf/internal/util/HexStringParser.h \
+    decaf/internal/util/Resource.h \
+    decaf/internal/util/ResourceLifecycleManager.h \
     decaf/internal/util/TimerTaskHeap.h \
     decaf/internal/util/concurrent/ConditionImpl.h \
     decaf/internal/util/concurrent/MutexImpl.h \
@@ -1113,26 +845,45 @@ h_sources = \
     decaf/internal/util/concurrent/unix/MutexHandle.h \
     decaf/internal/util/concurrent/windows/ConditionHandle.h \
     decaf/internal/util/concurrent/windows/MutexHandle.h \
+    decaf/internal/util/zip/crc32.h \
+    decaf/internal/util/zip/deflate.h \
+    decaf/internal/util/zip/gzguts.h \
+    decaf/internal/util/zip/inffast.h \
+    decaf/internal/util/zip/inffixed.h \
+    decaf/internal/util/zip/inflate.h \
+    decaf/internal/util/zip/inftrees.h \
+    decaf/internal/util/zip/trees.h \
+    decaf/internal/util/zip/zconf.h \
+    decaf/internal/util/zip/zlib.h \
+    decaf/internal/util/zip/zutil.h \
     decaf/io/BlockingByteArrayInputStream.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/BufferedOutputStream.h \
     decaf/io/ByteArrayInputStream.h \
     decaf/io/ByteArrayOutputStream.h \
     decaf/io/Closeable.h \
+    decaf/io/DataInput.h \
     decaf/io/DataInputStream.h \
+    decaf/io/DataOutput.h \
     decaf/io/DataOutputStream.h \
     decaf/io/EOFException.h \
+    decaf/io/FileDescriptor.h \
     decaf/io/FilterInputStream.h \
     decaf/io/FilterOutputStream.h \
+    decaf/io/Flushable.h \
     decaf/io/IOException.h \
     decaf/io/InputStream.h \
+    decaf/io/InputStreamReader.h \
     decaf/io/InterruptedIOException.h \
     decaf/io/OutputStream.h \
+    decaf/io/OutputStreamWriter.h \
+    decaf/io/PushbackInputStream.h \
     decaf/io/Reader.h \
     decaf/io/UTFDataFormatException.h \
     decaf/io/UnsupportedEncodingException.h \
     decaf/io/Writer.h \
     decaf/lang/Appendable.h \
+    decaf/lang/ArrayPointer.h \
     decaf/lang/Boolean.h \
     decaf/lang/Byte.h \
     decaf/lang/CharSequence.h \
@@ -1147,9 +898,11 @@ h_sources = \
     decaf/lang/Math.h \
     decaf/lang/Number.h \
     decaf/lang/Pointer.h \
+    decaf/lang/Readable.h \
     decaf/lang/Runnable.h \
     decaf/lang/Runtime.h \
     decaf/lang/Short.h \
+    decaf/lang/String.h \
     decaf/lang/System.h \
     decaf/lang/Thread.h \
     decaf/lang/ThreadGroup.h \
@@ -1163,28 +916,33 @@ h_sources = \
     decaf/lang/exceptions/IndexOutOfBoundsException.h \
     decaf/lang/exceptions/InterruptedException.h \
     decaf/lang/exceptions/InvalidStateException.h \
-    decaf/lang/exceptions/NoSuchElementException.h \
     decaf/lang/exceptions/NullPointerException.h \
     decaf/lang/exceptions/NumberFormatException.h \
     decaf/lang/exceptions/RuntimeException.h \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
-    decaf/net/BufferedSocket.h \
     decaf/net/ConnectException.h \
+    decaf/net/DatagramPacket.h \
     decaf/net/HttpRetryException.h \
+    decaf/net/Inet4Address.h \
+    decaf/net/Inet6Address.h \
+    decaf/net/InetAddress.h \
+    decaf/net/InetSocketAddress.h \
     decaf/net/MalformedURLException.h \
     decaf/net/NoRouteToHostException.h \
     decaf/net/PortUnreachableException.h \
     decaf/net/ProtocolException.h \
     decaf/net/ServerSocket.h \
+    decaf/net/ServerSocketFactory.h \
     decaf/net/Socket.h \
+    decaf/net/SocketAddress.h \
     decaf/net/SocketError.h \
     decaf/net/SocketException.h \
     decaf/net/SocketFactory.h \
-    decaf/net/SocketInputStream.h \
-    decaf/net/SocketOutputStream.h \
+    decaf/net/SocketImpl.h \
+    decaf/net/SocketImplFactory.h \
+    decaf/net/SocketOptions.h \
     decaf/net/SocketTimeoutException.h \
-    decaf/net/TcpSocket.h \
     decaf/net/URI.h \
     decaf/net/URISyntaxException.h \
     decaf/net/URL.h \
@@ -1192,6 +950,13 @@ h_sources = \
     decaf/net/URLEncoder.h \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
+    decaf/net/ssl/SSLContext.h \
+    decaf/net/ssl/SSLContextSpi.h \
+    decaf/net/ssl/SSLParameters.h \
+    decaf/net/ssl/SSLServerSocket.h \
+    decaf/net/ssl/SSLServerSocketFactory.h \
+    decaf/net/ssl/SSLSocket.h \
+    decaf/net/ssl/SSLSocketFactory.h \
     decaf/nio/Buffer.h \
     decaf/nio/BufferOverflowException.h \
     decaf/nio/BufferUnderflowException.h \
@@ -1204,20 +969,46 @@ h_sources = \
     decaf/nio/LongBuffer.h \
     decaf/nio/ReadOnlyBufferException.h \
     decaf/nio/ShortBuffer.h \
+    decaf/security/GeneralSecurityException.h \
+    decaf/security/InvalidKeyException.h \
+    decaf/security/Key.h \
+    decaf/security/KeyException.h \
+    decaf/security/KeyManagementException.h \
+    decaf/security/NoSuchAlgorithmException.h \
+    decaf/security/NoSuchProviderException.h \
+    decaf/security/Principal.h \
+    decaf/security/PublicKey.h \
+    decaf/security/SecureRandom.h \
+    decaf/security/SecureRandomSpi.h \
+    decaf/security/SignatureException.h \
+    decaf/security/auth/x500/X500Principal.h \
+    decaf/security/cert/Certificate.h \
+    decaf/security/cert/CertificateEncodingException.h \
+    decaf/security/cert/CertificateException.h \
+    decaf/security/cert/CertificateExpiredException.h \
+    decaf/security/cert/CertificateNotYetValidException.h \
+    decaf/security/cert/CertificateParsingException.h \
+    decaf/security/cert/X509Certificate.h \
     decaf/util/AbstractCollection.h \
     decaf/util/AbstractList.h \
     decaf/util/AbstractMap.h \
     decaf/util/AbstractQueue.h \
     decaf/util/AbstractSequentialList.h \
     decaf/util/AbstractSet.h \
+    decaf/util/ArrayList.h \
+    decaf/util/Arrays.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
+    decaf/util/ConcurrentModificationException.h \
     decaf/util/Config.h \
     decaf/util/Date.h \
+    decaf/util/Deque.h \
     decaf/util/Iterator.h \
+    decaf/util/LinkedList.h \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
     decaf/util/Map.h \
+    decaf/util/NoSuchElementException.h \
     decaf/util/PriorityQueue.h \
     decaf/util/Properties.h \
     decaf/util/Queue.h \
@@ -1232,6 +1023,7 @@ h_sources = \
     decaf/util/TimerTask.h \
     decaf/util/UUID.h \
     decaf/util/comparators/Less.h \
+    decaf/util/concurrent/AbstractExecutorService.h \
     decaf/util/concurrent/BlockingQueue.h \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Callable.h \
@@ -1239,38 +1031,43 @@ h_sources = \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/ConcurrentMap.h \
     decaf/util/concurrent/ConcurrentStlMap.h \
+    decaf/util/concurrent/CopyOnWriteArrayList.h \
+    decaf/util/concurrent/CopyOnWriteArraySet.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/ExecutionException.h \
     decaf/util/concurrent/Executor.h \
     decaf/util/concurrent/ExecutorService.h \
+    decaf/util/concurrent/Executors.h \
     decaf/util/concurrent/Future.h \
+    decaf/util/concurrent/LinkedBlockingQueue.h \
     decaf/util/concurrent/Lock.h \
     decaf/util/concurrent/Mutex.h \
-    decaf/util/concurrent/PooledThread.h \
-    decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/RejectedExecutionException.h \
     decaf/util/concurrent/RejectedExecutionHandler.h \
     decaf/util/concurrent/Semaphore.h \
     decaf/util/concurrent/Synchronizable.h \
     decaf/util/concurrent/SynchronousQueue.h \
-    decaf/util/concurrent/TaskListener.h \
     decaf/util/concurrent/ThreadFactory.h \
-    decaf/util/concurrent/ThreadPool.h \
+    decaf/util/concurrent/ThreadPoolExecutor.h \
     decaf/util/concurrent/TimeUnit.h \
     decaf/util/concurrent/TimeoutException.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \
+    decaf/util/concurrent/atomic/AtomicRefCounter.h \
     decaf/util/concurrent/atomic/AtomicReference.h \
+    decaf/util/concurrent/locks/AbstractOwnableSynchronizer.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \
     decaf/util/concurrent/locks/LockSupport.h \
     decaf/util/concurrent/locks/ReadWriteLock.h \
     decaf/util/concurrent/locks/ReentrantLock.h \
     decaf/util/logging/ConsoleHandler.h \
+    decaf/util/logging/ErrorManager.h \
     decaf/util/logging/Filter.h \
     decaf/util/logging/Formatter.h \
     decaf/util/logging/Handler.h \
+    decaf/util/logging/Level.h \
     decaf/util/logging/LogManager.h \
     decaf/util/logging/LogRecord.h \
     decaf/util/logging/LogWriter.h \
@@ -1282,7 +1079,19 @@ h_sources = \
     decaf/util/logging/PropertiesChangeListener.h \
     decaf/util/logging/SimpleFormatter.h \
     decaf/util/logging/SimpleLogger.h \
-    decaf/util/logging/StreamHandler.h
+    decaf/util/logging/StreamHandler.h \
+    decaf/util/logging/XMLFormatter.h \
+    decaf/util/zip/Adler32.h \
+    decaf/util/zip/CRC32.h \
+    decaf/util/zip/CheckedInputStream.h \
+    decaf/util/zip/CheckedOutputStream.h \
+    decaf/util/zip/Checksum.h \
+    decaf/util/zip/DataFormatException.h \
+    decaf/util/zip/Deflater.h \
+    decaf/util/zip/DeflaterOutputStream.h \
+    decaf/util/zip/Inflater.h \
+    decaf/util/zip/InflaterInputStream.h \
+    decaf/util/zip/ZipException.h
 
 
 ##
@@ -1292,6 +1101,7 @@ h_sources = \
 lib_LTLIBRARIES= libactivemq-cpp.la
 libactivemq_cpp_la_SOURCES= $(h_sources) $(cc_sources)
 libactivemq_cpp_la_CXXFLAGS= $(AMQ_CXXFLAGS)
+libactivemq_cpp_la_CFLAGS= $(AMQ_CFLAGS)
 libactivemq_cpp_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION)
 libactivemq_cpp_la_LIBADD= $(AMQ_LIBS)
 

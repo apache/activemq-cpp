@@ -49,12 +49,12 @@ namespace nio{
 
         Buffer* buffer;
 
-        static const std::size_t DEFAULT_BUFFER_SIZE = 512;
+        static const int DEFAULT_BUFFER_SIZE;
 
         class MyBuffer : public Buffer {
         public:
 
-            MyBuffer( std::size_t capacity ) : Buffer( capacity ) {
+            MyBuffer( int capacity ) : Buffer( capacity ) {
             }
 
             virtual ~MyBuffer() {}

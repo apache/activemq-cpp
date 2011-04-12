@@ -34,12 +34,15 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("namespace activemq{");
         out.println("namespace core{");
         out.println("    class ActiveMQAckHandler;");
+        out.println("    class ActiveMQConnection;");
         out.println("}");
         out.println("namespace commands{");
         out.println("");
     }
 
     protected void generateProperties( PrintWriter out ) {
+
+        super.generateProperties( out );
 
         out.println("    private:");
         out.println("");
@@ -59,10 +62,10 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("");
         out.println("    protected:");
         out.println("");
+        out.println("        core::ActiveMQConnection* connection;");
+        out.println("");
         out.println("        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;");
         out.println("");
-
-        super.generateProperties( out );
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
@@ -75,16 +78,14 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * wire");
         out.println("         * @param wireFormat - the wireformat controller");
         out.println("         */");
-        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("            throw ( decaf::io::IOException );");
+        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
         out.println("");
         out.println("        /**");
         out.println("         * Called after unmarshaling is started to cleanup the object being");
         out.println("         * unmarshaled.");
         out.println("         * @param wireFormat - the wireformat object to control unmarshaling");
         out.println("         */");
-        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
-        out.println("            throw ( decaf::io::IOException );");
+        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
         out.println("");
         out.println("        /**");
         out.println("         * Indicates that this command is aware of Marshaling, and needs");
@@ -111,6 +112,24 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         */");
         out.println("        virtual Pointer<core::ActiveMQAckHandler> getAckHandler() const {");
         out.println("            return this->ackHandler;");
+        out.println("        }");
+        out.println("");
+        out.println("        /**");
+        out.println("         * Sets the ActiveMQConnection instance that this Command was created from");
+        out.println("         * when the session create methods are called to create a Message..");
+        out.println("         * @param handler ActiveMQConnection parent for this message");
+        out.println("         */");
+        out.println("        void setConnection( core::ActiveMQConnection* connection ) {");
+        out.println("            this->connection = connection;");
+        out.println("        }");
+        out.println("");
+        out.println("        /**");
+        out.println("         * Gets the ActiveMQConnection instance that this Command was created from");
+        out.println("         * when the session create methods are called to create a Message..");
+        out.println("         * @returns the ActiveMQConnection parent for this Message or NULL if not set.");
+        out.println("         */");
+        out.println("        core::ActiveMQConnection* getConnection() const {");
+        out.println("            return this->connection;");
         out.println("        }");
         out.println("");
         out.println("        /**");

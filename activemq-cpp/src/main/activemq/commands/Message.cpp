@@ -16,6 +16,8 @@
  */
 
 #include <activemq/commands/Message.h>
+#include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
@@ -41,26 +43,12 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Message::Message() : BaseCommand() {
+Message::Message() 
+    : BaseCommand(), producerId(NULL), destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
+      groupID(""), groupSequence(0), correlationId(""), persistent(false), expiration(0), priority(0), replyTo(NULL), timestamp(0), 
+      type(""), content(), marshalledProperties(), dataStructure(NULL), targetConsumerId(NULL), compressed(false), redeliveryCounter(0), 
+      brokerPath(), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(), brokerInTime(0), brokerOutTime(0), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL) {
 
-    this->readOnlyBody = false;
-    this->readOnlyProperties = false;
-    this->groupID = "";
-    this->groupSequence = 0;
-    this->correlationId = "";
-    this->persistent = false;
-    this->expiration = 0;
-    this->priority = 0;
-    this->timestamp = 0;
-    this->type = "";
-    this->compressed = false;
-    this->redeliveryCounter = 0;
-    this->arrival = 0;
-    this->userID = "";
-    this->recievedByDFBridge = false;
-    this->droppable = false;
-    this->brokerInTime = 0;
-    this->brokerOutTime = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +117,7 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setAckHandler( srcPtr->getAckHandler() );
     this->setReadOnlyBody( srcPtr->isReadOnlyBody() );
     this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );
+    this->setConnection( srcPtr->getConnection() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,106 +130,149 @@ std::string Message::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = Message" << std::endl;
-    stream << " Value of Message::ID_MESSAGE = 0" << std::endl;
-    stream << " Value of ProducerId is Below:" << std::endl;
+    stream << "Message { "
+           << "commandId = " << this->getCommandId() << ", "
+           << "responseRequired = " << boolalpha << this->isResponseRequired();
+    stream << ", ";
+    stream << "ProducerId = ";
     if( this->getProducerId() != NULL ) {
-        stream << this->getProducerId()->toString() << std::endl;
+        stream << this->getProducerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Destination is Below:" << std::endl;
+    stream << ", ";
+    stream << "Destination = ";
     if( this->getDestination() != NULL ) {
-        stream << this->getDestination()->toString() << std::endl;
+        stream << this->getDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of TransactionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "TransactionId = ";
     if( this->getTransactionId() != NULL ) {
-        stream << this->getTransactionId()->toString() << std::endl;
+        stream << this->getTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of OriginalDestination is Below:" << std::endl;
+    stream << ", ";
+    stream << "OriginalDestination = ";
     if( this->getOriginalDestination() != NULL ) {
-        stream << this->getOriginalDestination()->toString() << std::endl;
+        stream << this->getOriginalDestination()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of MessageId is Below:" << std::endl;
+    stream << ", ";
+    stream << "MessageId = ";
     if( this->getMessageId() != NULL ) {
-        stream << this->getMessageId()->toString() << std::endl;
+        stream << this->getMessageId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of OriginalTransactionId is Below:" << std::endl;
+    stream << ", ";
+    stream << "OriginalTransactionId = ";
     if( this->getOriginalTransactionId() != NULL ) {
-        stream << this->getOriginalTransactionId()->toString() << std::endl;
+        stream << this->getOriginalTransactionId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of GroupID = " << this->getGroupID() << std::endl;
-    stream << " Value of GroupSequence = " << this->getGroupSequence() << std::endl;
-    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    stream << " Value of Persistent = " << this->isPersistent() << std::endl;
-    stream << " Value of Expiration = " << this->getExpiration() << std::endl;
-    stream << " Value of Priority = " << (int)this->getPriority() << std::endl;
-    stream << " Value of ReplyTo is Below:" << std::endl;
+    stream << ", ";
+    stream << "GroupID = " << this->getGroupID();
+    stream << ", ";
+    stream << "GroupSequence = " << this->getGroupSequence();
+    stream << ", ";
+    stream << "CorrelationId = " << this->getCorrelationId();
+    stream << ", ";
+    stream << "Persistent = " << this->isPersistent();
+    stream << ", ";
+    stream << "Expiration = " << this->getExpiration();
+    stream << ", ";
+    stream << "Priority = " << (int)this->getPriority();
+    stream << ", ";
+    stream << "ReplyTo = ";
     if( this->getReplyTo() != NULL ) {
-        stream << this->getReplyTo()->toString() << std::endl;
+        stream << this->getReplyTo()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Timestamp = " << this->getTimestamp() << std::endl;
-    stream << " Value of Type = " << this->getType() << std::endl;
-    for( size_t icontent = 0; icontent < this->getContent().size(); ++icontent ) {
-        stream << " Value of Content[" << icontent << "] = " << this->getContent()[icontent] << std::endl;
+    stream << ", ";
+    stream << "Timestamp = " << this->getTimestamp();
+    stream << ", ";
+    stream << "Type = " << this->getType();
+    stream << ", ";
+    stream << "Content = ";
+    if( this->getContent().size() > 0 ) {
+        stream << "[size=" << this->getContent().size() << "]";
+    } else {
+        stream << "NULL";
     }
-    for( size_t imarshalledProperties = 0; imarshalledProperties < this->getMarshalledProperties().size(); ++imarshalledProperties ) {
-        stream << " Value of MarshalledProperties[" << imarshalledProperties << "] = " << this->getMarshalledProperties()[imarshalledProperties] << std::endl;
+    stream << ", ";
+    stream << "MarshalledProperties = ";
+    if( this->getMarshalledProperties().size() > 0 ) {
+        stream << "[size=" << this->getMarshalledProperties().size() << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of DataStructure is Below:" << std::endl;
+    stream << ", ";
+    stream << "DataStructure = ";
     if( this->getDataStructure() != NULL ) {
-        stream << this->getDataStructure()->toString() << std::endl;
+        stream << this->getDataStructure()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of TargetConsumerId is Below:" << std::endl;
+    stream << ", ";
+    stream << "TargetConsumerId = ";
     if( this->getTargetConsumerId() != NULL ) {
-        stream << this->getTargetConsumerId()->toString() << std::endl;
+        stream << this->getTargetConsumerId()->toString();
     } else {
-        stream << "   Object is NULL" << std::endl;
+        stream << "NULL";
     }
-    stream << " Value of Compressed = " << this->isCompressed() << std::endl;
-    stream << " Value of RedeliveryCounter = " << this->getRedeliveryCounter() << std::endl;
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "Compressed = " << this->isCompressed();
+    stream << ", ";
+    stream << "RedeliveryCounter = " << this->getRedeliveryCounter();
+    stream << ", ";
+    stream << "BrokerPath = ";
+    if( this->getBrokerPath().size() > 0 ) {
+        stream << "[";
+        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+                stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of Arrival = " << this->getArrival() << std::endl;
-    stream << " Value of UserID = " << this->getUserID() << std::endl;
-    stream << " Value of RecievedByDFBridge = " << this->isRecievedByDFBridge() << std::endl;
-    stream << " Value of Droppable = " << this->isDroppable() << std::endl;
-    for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
-        stream << " Value of Cluster[" << icluster << "] is Below:" << std::endl;
-        if( this->getCluster()[icluster] != NULL ) {
-            stream << this->getCluster()[icluster]->toString() << std::endl;
-        } else {
-            stream << "   Object is NULL" << std::endl;
+    stream << ", ";
+    stream << "Arrival = " << this->getArrival();
+    stream << ", ";
+    stream << "UserID = " << this->getUserID();
+    stream << ", ";
+    stream << "RecievedByDFBridge = " << this->isRecievedByDFBridge();
+    stream << ", ";
+    stream << "Droppable = " << this->isDroppable();
+    stream << ", ";
+    stream << "Cluster = ";
+    if( this->getCluster().size() > 0 ) {
+        stream << "[";
+        for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
+            if( this->getCluster()[icluster] != NULL ) {
+                stream << this->getCluster()[icluster]->toString() << ", ";
+            } else {
+                stream << "NULL" << ", ";
+            }
         }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << " Value of BrokerInTime = " << this->getBrokerInTime() << std::endl;
-    stream << " Value of BrokerOutTime = " << this->getBrokerOutTime() << std::endl;
-    stream << " Value of ackHandler = " << ackHandler.get() << std::endl;
-    stream << " Value of properties = " << this->properties.toString() << std::endl;
-    stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
-    stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
-    stream << BaseCommand::toString();
-    stream << "End Class = Message" << std::endl;
+    stream << ", ";
+    stream << "BrokerInTime = " << this->getBrokerInTime();
+    stream << ", ";
+    stream << "BrokerOutTime = " << this->getBrokerOutTime();
+    stream << " }";
 
     return stream.str();
 }
@@ -795,8 +827,7 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( activemq::exceptions::ActiveMQException ) {
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) {
 
     return visitor->processMessage( this );
 }
@@ -823,8 +854,7 @@ unsigned int Message::getSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 
@@ -840,8 +870,7 @@ void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-    throw ( decaf::io::IOException ) {
+void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{
 

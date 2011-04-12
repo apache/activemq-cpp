@@ -55,16 +55,18 @@ namespace cms{
 
     public:
 
-        CMSException() throw();
+        CMSException();
 
-        CMSException( const CMSException& ex ) throw();
+        CMSException( const CMSException& ex );
+
+        CMSException( const std::string& message );
 
         CMSException( const std::string& message,
-                      const std::exception* cause ) throw();
+                      const std::exception* cause );
 
         CMSException( const std::string& message,
                       const std::exception* cause,
-                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+                      const std::vector< std::pair< std::string, int> >& stackTrace );
 
         virtual ~CMSException() throw();
 
@@ -126,6 +128,19 @@ namespace cms{
          * @return const char pointer to error message
          */
         virtual const char* what() const throw();
+
+    private:
+
+        /**
+         * Overridden assignment operator.  We don't allow CMSExceptions to be assigned to one
+         * another so this method is hidden.
+         *
+         * @param other
+         *      The CMSException to assign to this instance.
+         */
+        CMSException& operator= ( const cms::CMSException& ) {
+            return *this;
+        }
 
     };
 

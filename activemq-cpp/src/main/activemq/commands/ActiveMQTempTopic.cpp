@@ -32,7 +32,7 @@ ActiveMQTempTopic::ActiveMQTempTopic( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempTopic::~ActiveMQTempTopic() {
+ActiveMQTempTopic::~ActiveMQTempTopic() throw() {
     try {
         this->close();
     }
@@ -58,13 +58,7 @@ void ActiveMQTempTopic::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTempTopic::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQTempTopic" << std::endl;
-    stream << ActiveMQTempDestination::toString();
-    stream << "End Class = ActiveMQTempTopic" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +67,13 @@ bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempTopic::destroy() throw ( cms::CMSException ) {
+bool ActiveMQTempTopic::equals( const cms::Destination& value ) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
+    return ActiveMQDestination::equals( dest );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempTopic::destroy() {
     try{
         close();
     }

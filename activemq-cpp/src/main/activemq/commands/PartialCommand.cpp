@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-PartialCommand::PartialCommand() : BaseDataStructure() {
+PartialCommand::PartialCommand() 
+    : BaseDataStructure(), commandId(0), data() {
 
-    this->commandId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,14 +90,20 @@ std::string PartialCommand::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = PartialCommand" << std::endl;
-    stream << " Value of PartialCommand::ID_PARTIALCOMMAND = 60" << std::endl;
-    stream << " Value of CommandId = " << this->getCommandId() << std::endl;
-    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
-        stream << " Value of Data[" << idata << "] = " << this->getData()[idata] << std::endl;
+    stream << "PartialCommand { ";
+    stream << "CommandId = " << this->getCommandId();
+    stream << ", ";
+    stream << "Data = ";
+    if( this->getData().size() > 0 ) {
+        stream << "[";
+        for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
+            stream << this->getData()[idata] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
     }
-    stream << BaseDataStructure::toString();
-    stream << "End Class = PartialCommand" << std::endl;
+    stream << " }";
 
     return stream.str();
 }

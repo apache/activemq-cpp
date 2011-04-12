@@ -38,9 +38,9 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegerResponse::IntegerResponse() : Response() {
+IntegerResponse::IntegerResponse() 
+    : Response(), result(0) {
 
-    this->result = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +89,9 @@ std::string IntegerResponse::toString() const {
 
     ostringstream stream;
 
-    stream << "Begin Class = IntegerResponse" << std::endl;
-    stream << " Value of IntegerResponse::ID_INTEGERRESPONSE = 34" << std::endl;
-    stream << " Value of Result = " << this->getResult() << std::endl;
-    stream << Response::toString();
-    stream << "End Class = IntegerResponse" << std::endl;
+    stream << "IntegerResponse { ";
+    stream << "Result = " << this->getResult();
+    stream << " }";
 
     return stream.str();
 }

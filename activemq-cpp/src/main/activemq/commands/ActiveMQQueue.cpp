@@ -25,9 +25,12 @@ ActiveMQQueue::ActiveMQQueue() : ActiveMQDestination()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
-    ActiveMQDestination( name )
+ActiveMQQueue::ActiveMQQueue( const std::string& name ) : ActiveMQDestination( name )
 {}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQQueue::~ActiveMQQueue() throw() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQQueue::getDataStructureType() const {
@@ -48,16 +51,16 @@ void ActiveMQQueue::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQQueue::toString() const {
-    std::ostringstream stream;
-
-    stream << "Begin Class = ActiveMQQueue" << std::endl;
-    stream << ActiveMQDestination::toString();
-    stream << "End Class = ActiveMQQueue" << std::endl;
-
-    return stream.str();
+    return ActiveMQDestination::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQQueue::equals( const DataStructure* value ) const {
     return ActiveMQDestination::equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQQueue::equals( const cms::Destination& value ) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
+    return ActiveMQDestination::equals( dest );
 }

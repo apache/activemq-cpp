@@ -20,24 +20,29 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-IllegalStateException::IllegalStateException() throw() : CMSException() {
+IllegalStateException::IllegalStateException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 IllegalStateException::IllegalStateException( const IllegalStateException& ex )
-    throw() : CMSException( ex ) {
+    : CMSException( ex ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IllegalStateException::IllegalStateException( const std::string& message )
+    : CMSException( message, NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 IllegalStateException::IllegalStateException( const std::string& message, const std::exception* cause )
-    throw() : CMSException( message, cause ) {
+    : CMSException( message, cause ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 IllegalStateException::IllegalStateException( const std::string& message,
                                               const std::exception* cause,
                                               const std::vector< std::pair< std::string, int> >& stackTrace )
-    throw() : CMSException( message, cause, stackTrace ) {
+    : CMSException( message, cause, stackTrace ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
