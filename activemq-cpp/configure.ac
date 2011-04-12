@@ -20,7 +20,7 @@ AC_PREREQ(2.61)
 ## --------------------------------
 ## Initialization macros.
 ## --------------------------------
-AC_INIT(activemq-cpp, 3.3.0, dev@activemq.apache.org)
+AC_INIT(activemq-cpp, 3.4.0, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 AC_CONFIG_MACRO_DIR([m4])
@@ -30,7 +30,7 @@ AC_CONFIG_MACRO_DIR([m4])
 ## ------------------------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
 ACTIVEMQ_MAJOR_VERSION=3
-ACTIVEMQ_MINOR_VERSION=3
+ACTIVEMQ_MINOR_VERSION=4
 ACTIVEMQ_PATCH_VERSION=0
 ACTIVEMQ_VERSION=${ACTIVEMQ_MAJOR_VERSION}.${ACTIVEMQ_MINOR_VERSION}.${ACTIVEMQ_PATCH_VERSION}
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
@@ -75,7 +75,7 @@ AC_SUBST(CMSAPI_VERSION)
 ##   3. Programs may need to be changed, recompiled, relinked in order to use the new version. Bump
 ##      current, set revision and age to 0.
 ##
-ACTIVEMQ_LIBRARY_VERSION=13:0:0
+ACTIVEMQ_LIBRARY_VERSION=14:0:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
