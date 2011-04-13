@@ -81,7 +81,7 @@ void ExecutorsTestSupport::joinPool(ExecutorService& exec) {
 
     try {
         exec.shutdown();
-        CPPUNIT_ASSERT(exec.awaitTermination(LONG_DELAY_MS, TimeUnit::MILLISECONDS));
+        CPPUNIT_ASSERT(exec.awaitTermination(LONG_DELAY_MS * 2, TimeUnit::MILLISECONDS));
     } catch(InterruptedException& ie) {
         CPPUNIT_FAIL("Unexpected exception");
     }
@@ -94,6 +94,19 @@ void ExecutorsTestSupport::joinPool(ExecutorService* exec) {
         exec->shutdown();
         CPPUNIT_ASSERT(exec->awaitTermination(LONG_DELAY_MS, TimeUnit::MILLISECONDS));
     } catch(InterruptedException& ie) {
+        CPPUNIT_FAIL("Unexpected exception");
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::destroyRemaining(ArrayList<Runnable*> leftovers) {
+
+    try {
+        Pointer< Iterator<Runnable*> > iter( leftovers.iterator() );
+        while(iter->hasNext()) {
+            delete iter->next();
+        }
+    } catch(Exception& e) {
         CPPUNIT_FAIL("Unexpected exception");
     }
 }

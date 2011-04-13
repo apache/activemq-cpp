@@ -68,6 +68,8 @@ namespace concurrent {
         void joinPool(ExecutorService* exec);
         void joinPool(ExecutorService& exec);
 
+        void destroyRemaining(ArrayList<decaf::lang::Runnable*> leftovers);
+
     public:
 
         class NoOpRunnable : public decaf::lang::Runnable {
@@ -145,6 +147,27 @@ namespace concurrent {
             }
         };
 
+        class LongRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            LongRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~LongRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(LONG_DELAY_MS);
+                } catch(decaf::lang::Exception& e) {
+                    parent->threadUnexpectedException(e);
+                }
+            }
+        };
+
         class SimpleThreadFactory : public ThreadFactory {
         public:
 
@@ -167,6 +190,44 @@ namespace concurrent {
             virtual ~NoOpREHandler() {}
 
             virtual void rejectedExecution(Runnable* r, ThreadPoolExecutor* executor) {
+            }
+        };
+
+        class TrackedNoOpRunnable : public Runnable {
+        private:
+
+            bool* done;
+
+        public:
+
+            TrackedNoOpRunnable(bool* done) : decaf::lang::Runnable(), done(done) {
+            }
+
+            virtual ~TrackedNoOpRunnable() {}
+
+            virtual void run() {
+                *done = true;
+            }
+        };
+
+        class TrackedLongRunnable : public decaf::lang::Runnable {
+        private:
+
+            bool* done;
+
+        public:
+
+            TrackedLongRunnable(bool* done) : decaf::lang::Runnable(), done(done) {
+            }
+
+            virtual ~TrackedLongRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(LONG_DELAY_MS);
+                    *done = true;
+                } catch(decaf::lang::Exception& e) {
+                }
             }
         };
 
