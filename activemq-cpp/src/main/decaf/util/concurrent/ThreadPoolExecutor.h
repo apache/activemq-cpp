@@ -542,72 +542,73 @@ namespace concurrent{
 
                 try{
                     task->run();
+                    delete task;
+                } catch(decaf::lang::Exception& ex) {
+                    delete task;
+                    throw ex;
+                }
+            }
+        };
+
+        /**
+         * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
+         * this class always destroys the rejected task and returns quietly.
+         *
+         * @since 1.0
+         */
+        class DiscardPolicy : public RejectedExecutionHandler {
+        public:
+
+            DiscardPolicy() : RejectedExecutionHandler() {
+            }
+
+            virtual ~DiscardPolicy() {
+            }
+
+            virtual void rejectedExecution(decaf::lang::Runnable* task, ThreadPoolExecutor* executer DECAF_UNUSED) {
+                delete task;
+            }
+
+        };
+
+        /**
+         * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
+         * this class always destroys the oldest unexecuted task in the Queue and then attempts
+         * to execute the rejected task using the passed in executor..
+         *
+         * @since 1.0
+         */
+        class DiscardOldestPolicy : public RejectedExecutionHandler {
+        public:
+
+            DiscardOldestPolicy() : RejectedExecutionHandler() {
+            }
+
+            virtual ~DiscardOldestPolicy() {
+            }
+
+            virtual void rejectedExecution( decaf::lang::Runnable* task, ThreadPoolExecutor* executer ) {
+
+                if (executer->isShutdown()) {
+                    delete task;
+                    return;
+                }
+
+                try{
+
+                    decaf::lang::Runnable* oldest = NULL;
+                    executer->getQueue()->poll(oldest);
+                    delete oldest;
+
+                    executer->execute(task);
                 } catch(decaf::lang::Exception& ex) {
                     delete task;
                     throw ex;
                 }
             }
 
-            /**
-             * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
-             * this class always destroys the rejected task and returns quietly.
-             *
-             * @since 1.0
-             */
-            class DiscardPolicy : public RejectedExecutionHandler {
-            public:
-
-                DiscardPolicy() : RejectedExecutionHandler() {
-                }
-
-                virtual ~DiscardPolicy() {
-                }
-
-                virtual void rejectedExecution(decaf::lang::Runnable* task, ThreadPoolExecutor* executer DECAF_UNUSED) {
-                    delete task;
-                }
-
-            };
-
-            /**
-             * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
-             * this class always destroys the oldest unexecuted task in the Queue and then attempts
-             * to execute the rejected task using the passed in executor..
-             *
-             * @since 1.0
-             */
-            class DiscardOldestPolicy : public RejectedExecutionHandler {
-            public:
-
-                DiscardOldestPolicy() : RejectedExecutionHandler() {
-                }
-
-                virtual ~DiscardOldestPolicy() {
-                }
-
-                virtual void rejectedExecution( decaf::lang::Runnable* task, ThreadPoolExecutor* executer ) {
-
-                    if (executer->isShutdown()) {
-                        delete task;
-                        return;
-                    }
-
-                    try{
-
-                        decaf::lang::Runnable* oldest = NULL;
-                        executer->getQueue()->poll(oldest);
-                        delete oldest;
-
-                        executer->execute(task);
-                    } catch(decaf::lang::Exception& ex) {
-                        delete task;
-                        throw ex;
-                    }
-                }
-
-            };
-
         };
+
     };
 
 }}}

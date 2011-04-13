@@ -289,6 +289,7 @@ ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
         threadFactory.release();
     }
     DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
     DECAF_CATCH_RETHROW(Exception)
     DECAF_CATCHALL_THROW(Exception)
 }
@@ -320,6 +321,7 @@ ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
         handler.release();
     }
     DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
     DECAF_CATCH_RETHROW(Exception)
     DECAF_CATCHALL_THROW(Exception)
 }
@@ -351,6 +353,7 @@ ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
             threadFactory, handler);
     }
     DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
     DECAF_CATCH_RETHROW(Exception)
     DECAF_CATCHALL_THROW(Exception)
 }
@@ -378,8 +381,10 @@ void ThreadPoolExecutor::execute(Runnable* task ) {
 
         this->kernel->enQueueTask(task);
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( RejectedExecutionException )
+    DECAF_CATCH_RETHROW( NullPointerException )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -388,8 +393,8 @@ void ThreadPoolExecutor::shutdown() {
     try{
         this->kernel->shutdown();
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -401,8 +406,8 @@ ArrayList<Runnable*> ThreadPoolExecutor::shutdownNow() {
         this->kernel->shutdownNow(result);
         return result;
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -411,8 +416,8 @@ bool ThreadPoolExecutor::awaitTermination(long long timeout, const TimeUnit& uni
     try{
         return this->kernel->awaitTermination(timeout, unit);
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -736,10 +741,13 @@ void ExecutorKernel::onTaskStarted(Worker* thread DECAF_UNUSED) {
             if( freeThreads.get() == 0 && !workQueue->isEmpty() ) {
                 addWorker();
             }
+
+            // TODO - Get actual values for these.
+            this->parent->beforeExecute(thread, NULL);
         }
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -749,10 +757,13 @@ void ExecutorKernel::onTaskCompleted(Worker* thread DECAF_UNUSED) {
         synchronized(&mainLock) {
             freeThreads.incrementAndGet();
             completedTasks++;
+
+            // TODO - Get actual values for these.
+            this->parent->afterExecute(NULL, NULL);
         }
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -799,6 +810,7 @@ void ExecutorKernel::enQueueTask(Runnable* task) {
             }
         }
     }
+    DECAF_CATCH_RETHROW( RejectedExecutionException )
     DECAF_CATCH_RETHROW( Exception )
     DECAF_CATCHALL_THROW( Exception )
 }
@@ -833,14 +845,18 @@ Runnable* ExecutorKernel::deQueueTask() {
 
         return task;
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ExecutorKernel::addWorker() {
 
     try{
+
+        if( this->isStoppedOrStopping() ) {
+            return false;
+        }
 
         if( this->workers.size() >= this->maxPoolSize ) {
             return false;
@@ -856,14 +872,18 @@ bool ExecutorKernel::addWorker() {
 
         return true;
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ExecutorKernel::addAllWorkers() {
 
     try{
+
+        if( this->isStoppedOrStopping() ) {
+            return 0;
+        }
 
         if( this->workers.size() >= this->maxPoolSize ) {
             return 0;
@@ -886,8 +906,8 @@ int ExecutorKernel::addAllWorkers() {
 
         return delta;
     }
-    DECAF_CATCH_RETHROW( lang::Exception )
-    DECAF_CATCHALL_THROW( lang::Exception )
+    DECAF_CATCH_RETHROW( Exception )
+    DECAF_CATCHALL_THROW( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,7 @@ namespace concurrent{
     private:
 
         CPPUNIT_TEST_SUITE( ThreadPoolExecutorTest );
-        CPPUNIT_TEST( testConstructor1 );
+        CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testSimpleTasks );
         CPPUNIT_TEST( testMoreTasksThanMaxPoolSize );
         CPPUNIT_TEST( testTasksThatThrow );
@@ -57,6 +57,52 @@ namespace concurrent{
         CPPUNIT_TEST( testIsShutdown );
         CPPUNIT_TEST( testIsTerminated );
         CPPUNIT_TEST( testIsTerminating );
+        CPPUNIT_TEST( testGetQueue );
+        CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testShutDownNow );
+        CPPUNIT_TEST( testConstructor1 );
+        CPPUNIT_TEST( testConstructor2 );
+        CPPUNIT_TEST( testConstructor3 );
+        CPPUNIT_TEST( testConstructor4 );
+        CPPUNIT_TEST( testConstructor5 );
+        CPPUNIT_TEST( testConstructor6 );
+        CPPUNIT_TEST( testConstructor7 );
+        CPPUNIT_TEST( testConstructor8 );
+        CPPUNIT_TEST( testConstructor9 );
+        CPPUNIT_TEST( testConstructor10 );
+        CPPUNIT_TEST( testConstructor11 );
+        CPPUNIT_TEST( testConstructor12 );
+        CPPUNIT_TEST( testConstructor13 );
+        CPPUNIT_TEST( testConstructor14 );
+        CPPUNIT_TEST( testConstructor15 );
+        CPPUNIT_TEST( testConstructor16 );
+        CPPUNIT_TEST( testConstructor17 );
+        CPPUNIT_TEST( testConstructor18 );
+        CPPUNIT_TEST( testConstructor19 );
+        CPPUNIT_TEST( testConstructor20 );
+        CPPUNIT_TEST( testConstructorNullPointerException1 );
+        CPPUNIT_TEST( testConstructorNullPointerException2 );
+        CPPUNIT_TEST( testConstructorNullPointerException3 );
+        CPPUNIT_TEST( testConstructorNullPointerException4 );
+        CPPUNIT_TEST( testConstructorNullPointerException5 );
+        CPPUNIT_TEST( testConstructorNullPointerException6 );
+        CPPUNIT_TEST( testConstructorNullPointerException7 );
+        CPPUNIT_TEST( testConstructorNullPointerException8 );
+        CPPUNIT_TEST( testSaturatedExecute1 );
+        CPPUNIT_TEST( testSaturatedExecute2 );
+        CPPUNIT_TEST( testSaturatedExecute3 );
+        CPPUNIT_TEST( testSaturatedExecute4 );
+        CPPUNIT_TEST( testRejectedExecutionExceptionOnShutdown );
+        CPPUNIT_TEST( testCallerRunsOnShutdown );
+        CPPUNIT_TEST( testDiscardOnShutdown );
+        CPPUNIT_TEST( testDiscardOldestOnShutdown );
+        CPPUNIT_TEST( testExecuteNull );
+        CPPUNIT_TEST( testCorePoolSizeIllegalArgumentException );
+        CPPUNIT_TEST( testMaximumPoolSizeIllegalArgumentException1 );
+        CPPUNIT_TEST( testMaximumPoolSizeIllegalArgumentException2 );
+        CPPUNIT_TEST( testKeepAliveTimeIllegalArgumentException );
+        CPPUNIT_TEST( testTerminated );
+        CPPUNIT_TEST( testBeforeAfter );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -68,7 +114,7 @@ namespace concurrent{
         ThreadPoolExecutorTest() {}
         virtual ~ThreadPoolExecutorTest() {}
 
-        void testConstructor1();
+        void testConstructor();
         void testSimpleTasks();
         void testMoreTasksThanMaxPoolSize();
         void testTasksThatThrow();
@@ -91,6 +137,52 @@ namespace concurrent{
         void testIsShutdown();
         void testIsTerminated();
         void testIsTerminating();
+        void testGetQueue();
+        void testRemove();
+        void testShutDownNow();
+        void testConstructor1();
+        void testConstructor2();
+        void testConstructor3();
+        void testConstructor4();
+        void testConstructor5();
+        void testConstructor6();
+        void testConstructor7();
+        void testConstructor8();
+        void testConstructor9();
+        void testConstructor10();
+        void testConstructor11();
+        void testConstructor12();
+        void testConstructor13();
+        void testConstructor14();
+        void testConstructor15();
+        void testConstructor16();
+        void testConstructor17();
+        void testConstructor18();
+        void testConstructor19();
+        void testConstructor20();
+        void testConstructorNullPointerException1();
+        void testConstructorNullPointerException2();
+        void testConstructorNullPointerException3();
+        void testConstructorNullPointerException4();
+        void testConstructorNullPointerException5();
+        void testConstructorNullPointerException6();
+        void testConstructorNullPointerException7();
+        void testConstructorNullPointerException8();
+        void testSaturatedExecute1();
+        void testSaturatedExecute2();
+        void testSaturatedExecute3();
+        void testSaturatedExecute4();
+        void testRejectedExecutionExceptionOnShutdown();
+        void testCallerRunsOnShutdown();
+        void testDiscardOnShutdown();
+        void testDiscardOldestOnShutdown();
+        void testExecuteNull();
+        void testCorePoolSizeIllegalArgumentException();
+        void testMaximumPoolSizeIllegalArgumentException1();
+        void testMaximumPoolSizeIllegalArgumentException2();
+        void testKeepAliveTimeIllegalArgumentException();
+        void testTerminated();
+        void testBeforeAfter();
 
     };
 
