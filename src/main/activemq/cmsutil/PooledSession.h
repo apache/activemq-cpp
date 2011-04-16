@@ -85,6 +85,14 @@ namespace cmsutil {
          */
         virtual void close();
 
+        virtual void start() {
+            session->start();
+        }
+
+        virtual void stop() {
+            session->stop();
+        }
+
         virtual void commit() {
             session->commit();
         }

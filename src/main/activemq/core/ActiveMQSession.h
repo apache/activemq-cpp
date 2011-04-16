@@ -151,12 +151,12 @@ namespace core{
         /**
          * Stops asynchronous message delivery.
          */
-        void start();
+        virtual void start();
 
         /**
          * Starts asynchronous message delivery.
          */
-        void stop();
+        virtual void stop();
 
         /**
          * Indicates whether or not the session is currently in the started

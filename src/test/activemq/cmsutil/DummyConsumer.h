@@ -43,7 +43,11 @@ namespace cmsutil {
         }
         virtual ~DummyConsumer() throw() {}
 
-        virtual void close() throw( cms::CMSException ){}
+        virtual void close() {}
+
+        virtual void start() {}
+
+        virtual void stop() {}
 
         virtual cms::Message* receive() throw ( cms::CMSException ) {
             return messageContext->receive(dest, selector, noLocal, 0);

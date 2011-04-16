@@ -45,13 +45,17 @@ namespace cmsutil {
 
         virtual ~DummySession() throw() {}
 
-        virtual void close() throw( cms::CMSException ){}
+        virtual void close() {}
 
-        virtual void commit() throw ( cms::CMSException ) {}
+        virtual void start() {}
 
-        virtual void rollback() throw ( cms::CMSException ) {}
+        virtual void stop() {}
 
-        virtual void recover() throw ( cms::CMSException ) {}
+        virtual void commit() {}
+
+        virtual void rollback() {}
+
+        virtual void recover() {}
 
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination )

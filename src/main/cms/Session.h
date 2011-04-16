@@ -19,6 +19,8 @@
 
 #include <cms/Config.h>
 #include <cms/Closeable.h>
+#include <cms/Startable.h>
+#include <cms/Stoppable.h>
 #include <cms/Message.h>
 #include <cms/TextMessage.h>
 #include <cms/BytesMessage.h>
@@ -92,9 +94,13 @@ namespace cms{
      * being redelivered to the client, the Provider may allow configuration that limits the
      * Maximum number of redeliveries for a Message.
      *
+     * While the Session interface implements the Startable and Stoppable interfaces it is
+     * not required to implement these methods and can throw an UnsupportedOperation
+     * exception if they are not available for the given CMS provider.
+     *
      * @since 1.0
      */
-    class CMS_API Session : public Closeable {
+    class CMS_API Session : public Closeable, public Startable, public Stoppable {
     public:
 
         enum AcknowledgeMode {
