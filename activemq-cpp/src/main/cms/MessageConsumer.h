@@ -22,6 +22,8 @@
 #include <cms/MessageListener.h>
 #include <cms/Message.h>
 #include <cms/Closeable.h>
+#include <cms/Startable.h>
+#include <cms/Stoppable.h>
 
 namespace cms{
 
@@ -47,11 +49,15 @@ namespace cms{
      * operation completes.  A blocked consumer in a <code>receive</code> call will
      * return a Null when the close method is called.
      *
+     * While the MessageConsumer implements the Startable and Stoppable interfaces it is
+     * not required to implement these methods and can throw an UnsupportedOperation
+     * exception if they are not available for the given CMS provider.
+     *
      * @see MessageListener
      *
      * @since 1.0
      */
-    class CMS_API MessageConsumer : public Closeable {
+    class CMS_API MessageConsumer : public Closeable, public Startable, public Stoppable {
     public:
 
         virtual ~MessageConsumer() throw();

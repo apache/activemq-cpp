@@ -52,6 +52,14 @@ namespace cmsutil {
             // Do nothing.
         }
 
+        virtual void start() {
+            consumer->start();
+        }
+
+        virtual void stop() {
+            consumer->stop();
+        }
+
         virtual cms::Message* receive() {
             return consumer->receive();
         }
