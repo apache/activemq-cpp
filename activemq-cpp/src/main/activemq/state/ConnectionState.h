@@ -141,7 +141,7 @@ namespace state {
             return sessions.values();
         }
 
-        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR > getRecoveringPullConsumers() {
+        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR >& getRecoveringPullConsumers() {
             return recoveringPullConsumers;
         }
 

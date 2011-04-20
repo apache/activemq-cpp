@@ -44,7 +44,7 @@ Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(
 
         // Configure the version to use
         info->setVersion( Integer::parseInt(
-                properties.getProperty( "wireFormat.version", "5" ) ) );
+                properties.getProperty( "wireFormat.version", "6" ) ) );
 
         // parse params out of the properties
         info->setStackTraceEnabled( Boolean::parseBoolean(
