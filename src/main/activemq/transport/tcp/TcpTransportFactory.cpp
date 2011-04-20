@@ -97,7 +97,10 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI
         }
 
         // If command tracing was enabled, wrap the transport with a logging transport.
+        // We support the old CMS value, the ActiveMQ trace value and the NMS useLogging
+        // value in order to be more friendly.
         if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ||
+            properties.getProperty( "transport.useLogging", "false" ) == "true"  ||
             properties.getProperty( "transport.trace", "false" ) == "true" ) {
 
             // Create the Transport for response correlator
