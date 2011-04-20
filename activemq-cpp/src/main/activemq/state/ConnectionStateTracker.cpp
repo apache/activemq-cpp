@@ -824,17 +824,8 @@ void ConnectionStateTracker::connectionInterruptProcessingComplete(
             control->setDestination( stalledConsumers.get( *key )->getDestination() );
 
             try {
-
-                //if( LOG.isDebugEnabled() ) {
-                //    LOG.debug("restored recovering consumer: " + control.getConsumerId() +
-                //              " with: " + control.getPrefetch());
-                //}
                 transport->oneway( control );
             } catch( Exception& ex ) {
-                //if( LOG.isDebugEnabled() ) {
-                //    LOG.debug("Failed to submit control for consumer: " + control.getConsumerId() +
-                //              " with: " + control.getPrefetch(), ex);
-                //}
             }
         }
 
