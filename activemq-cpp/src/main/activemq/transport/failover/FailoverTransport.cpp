@@ -917,6 +917,19 @@ void FailoverTransport::processResponse(const Pointer<Response>& response) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Pointer<wireformat::WireFormat> FailoverTransport::getWireFormat() const {
+
+	Pointer<wireformat::WireFormat> result;
+	Pointer<Transport> transport = this->connectedTransport;
+
+    if( transport != NULL ) {
+        result = transport->getWireFormat();
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 long long FailoverTransport::getTimeout() const {
     return this->timeout;
 }

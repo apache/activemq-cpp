@@ -164,6 +164,10 @@ namespace transport{
          */
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
 
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const {
+        	return this->wireFormat;
+        }
+
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ){
             this->wireFormat = wireFormat;
         }
