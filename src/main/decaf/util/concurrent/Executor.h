@@ -84,7 +84,7 @@ namespace concurrent {
      *
      * @since 1.0
      */
-    class Executor {
+    class DECAF_API Executor {
     public:
 
         virtual ~Executor() {}
