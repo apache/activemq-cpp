@@ -33,7 +33,7 @@ namespace util{
     /**
      * List of primitives.
      */
-    class AMQCPP_API PrimitiveList : public decaf::util::LinkedList<PrimitiveValueNode> {
+    class PrimitiveList : public decaf::util::LinkedList<PrimitiveValueNode> {
     private:
 
         PrimitiveValueConverter converter;
