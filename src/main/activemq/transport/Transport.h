@@ -117,6 +117,15 @@ namespace transport{
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout ) = 0;
 
         /**
+         * Gets the WireFormat instance that is in use by this transport.  In the case of
+         * nested transport this method delegates down to the lowest level transport that
+         * actually maintains a WireFormat info instance.
+         *
+         * @returns The WireFormat the object used to encode / decode commands.
+         */
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const = 0;
+
+        /**
          * Sets the WireFormat instance to use.
          * @param wireFormat
          *      The WireFormat the object used to encode / decode commands.

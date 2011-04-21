@@ -145,6 +145,8 @@ namespace failover {
 
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
 
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const;
+
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
         virtual void setTransportListener( TransportListener* listener );

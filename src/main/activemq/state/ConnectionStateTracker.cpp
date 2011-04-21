@@ -24,6 +24,7 @@
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/transport/TransportListener.h>
+#include <activemq/wireformat/WireFormat.h>
 
 using namespace activemq;
 using namespace activemq::core;
@@ -175,10 +176,6 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
         for( ; iter != transactionStates.end(); ++iter ) {
 
-            //if( LOG.isDebugEnabled() ) {
-            //    LOG.debug("tx: " + transactionState.getId());
-            //}
-
             // ignore any empty (ack) transaction
             if( (*iter)->getCommands().size() == 2 ) {
                 Pointer<Command> lastCommand = (*iter)->getCommands().get(1);
@@ -186,9 +183,6 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
                     Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
 
                     if( transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE ) {
-                        //if( LOG.isDebugEnabled() ) {
-                        //    LOG.debug("not replaying empty (ack) tx: " + transactionState.getId());
-                        //}
                         toIgnore.push_back(lastCommand);
                         continue;
                     }
@@ -200,9 +194,6 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
             std::vector< Pointer<ProducerState> >::const_iterator state = producerStates.begin();
 
             for( ; state != producerStates.end(); ++state ) {
-                //if( LOG.isDebugEnabled() ) {
-                //    LOG.debug("tx replay producer :" + producerState.getInfo());
-                //}
                 transport->oneway( (*state)->getInfo() );
             }
 
@@ -215,9 +206,6 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
             state = producerStates.begin();
             for( ; state != producerStates.end(); ++state ) {
-                //if( LOG.isDebugEnabled() ) {
-                //    LOG.debug("tx remove replayed producer :" + producerState.getInfo());
-                //}
                 transport->oneway( (*state)->getInfo()->createRemoveCommand() );
             }
         }
@@ -282,8 +270,9 @@ void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transp
         for( ; state != consumerStates.end(); ++state ) {
 
             Pointer<ConsumerInfo> infoToSend = (*state)->getInfo();
+            Pointer<wireformat::WireFormat> wireFormat = transport->getWireFormat();
 
-            if( !connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0) {
+            if( !connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0 && wireFormat->getVersion() > 5) {
 
                 infoToSend.reset( (*state)->getInfo()->cloneDataStructure() );
                 connectionState->getRecoveringPullConsumers().put( infoToSend->getConsumerId(), (*state)->getInfo() );

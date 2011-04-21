@@ -129,6 +129,10 @@ namespace transport{
             return this->listener;
         }
 
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const {
+        	return next->getWireFormat();
+        }
+
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
             next->setWireFormat( wireFormat );
         }
