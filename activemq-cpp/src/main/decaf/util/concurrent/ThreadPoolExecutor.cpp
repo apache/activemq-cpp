@@ -604,8 +604,8 @@ void ThreadPoolExecutor::setKeepAliveTime(long long timeout, const TimeUnit& uni
             "Keep Alive Time must be set to a non-zero value when allowCoreThreadsTimeout is enabled.");
     }
 
-    long keepAliveTime = unit.toMillis(timeout);
-    long delta = keepAliveTime - this->kernel->keepAliveTime;
+    long long keepAliveTime = unit.toMillis(timeout);
+    long long delta = keepAliveTime - this->kernel->keepAliveTime;
     this->kernel->keepAliveTime = keepAliveTime;
     if (delta < 0) {
         // TODO - When Threads are interruptible wake works so they can check timeout.
