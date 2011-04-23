@@ -35,6 +35,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::core::policies;
 using namespace activemq::exceptions;
@@ -107,13 +108,19 @@ namespace core{
             this->properties->clear();
 
             if( uri.getQuery() != "" ) {
-                // Not a composite URI so this works fine.
-                activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
-            } else {
-                // Composite URI won't indicate it has a query even if it does.
-                activemq::util::CompositeData composite = activemq::util::URISupport::parseComposite( uri );
 
-                *this->properties = composite.getParameters();
+            	// Not a composite URI so this works fine.
+            	try{
+            		URISupport::parseQuery( uri.getQuery(), properties.get() );
+            	} catch(URISyntaxException& ex) {}
+
+            } else {
+
+            	// Composite URI won't indicate it has a query even if it does.
+            	try{
+            		CompositeData composite = URISupport::parseComposite( uri );
+            		*this->properties = composite.getParameters();
+            	} catch(URISyntaxException& ex) {}
             }
 
             // Check the connection options
@@ -174,6 +181,13 @@ namespace core{
             this->defaultRedeliveryPolicy->configure( *properties );
         }
 
+        static URI createURI(const std::string& uriString) {
+        	try{
+        		return URI(uriString);
+        	} catch(URISyntaxException& ex) {
+        		throw cms::CMSException("Invalid Connection Uri detected.");
+        	}
+        }
     };
 
 }}
@@ -193,15 +207,15 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& uri,
                                                       const std::string& username,
                                                       const std::string& password ) : settings( new FactorySettings() ) {
 
-    this->setBrokerURI( URI( uri ) );
+    this->setBrokerURI(FactorySettings::createURI(uri));
 
     // Store login data in the properties
-    if( !username.empty() ) {
+    if (!username.empty()) {
         this->settings->username = username;
     }
-    if( !password.empty() ) {
-        this->settings->password = password;
-    }
+    if (!password.empty()) {
+		this->settings->password = password;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,15 +223,15 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const decaf::net::URI& uri
                                                       const std::string& username,
                                                       const std::string& password ) : settings( new FactorySettings() ) {
 
-    this->setBrokerURI( uri );
+    this->setBrokerURI(uri);
 
-    // Store login data in the properties
-    if( !username.empty() ) {
-        this->settings->username = username;
-    }
-    if( !password.empty() ) {
-        this->settings->password = password;
-    }
+	// Store login data in the properties
+	if (!username.empty()) {
+		this->settings->username = username;
+	}
+	if (!password.empty()) {
+		this->settings->password = password;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -392,14 +406,12 @@ void ActiveMQConnectionFactory::setClientId( const std::string& clientId ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setBrokerURI( const std::string& uri ) {
-    this->setBrokerURI( URI( uri ) );
+    this->setBrokerURI(FactorySettings::createURI(uri));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setBrokerURI( const decaf::net::URI& uri ) {
-
-    // Update configuration with new authentication info if any was provided.
-    this->settings->updateConfiguration( uri );
+    this->settings->updateConfiguration(uri);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
