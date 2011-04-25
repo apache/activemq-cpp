@@ -2,6 +2,16 @@
 ==  Release Notes for ActiveMQ CPP 3.4.0                               ==
 =========================================================================
 
+Bug:
+
+    * [AMQCPP-363] - failover: consumer does not always restart properly after reconnect
+    * [AMQCPP-365] - 3.3.0 - compiler errors in Windows
+    * [AMQCPP-366] - createConnection() fails if given an ip address
+
+Improvement
+
+    * [AMQCPP-362] - Make Session and MessageConsumer both Startable and Stoppable in the CMS API
+    * [AMQCPP-364] - Dont perform two phase consumer recover when openwire version is not six or higher
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.3.0                               ==
