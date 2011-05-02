@@ -28,11 +28,8 @@ using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-const Level Handler::DEFAULT_LEVEL = Level::ALL;
-
-////////////////////////////////////////////////////////////////////////////////
 Handler::Handler() : formatter(NULL), filter(NULL), errorManager(new ErrorManager()),
-                     level(DEFAULT_LEVEL), prefix("Handler") {
+                     level(Level::ALL), prefix("Handler") {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
