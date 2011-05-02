@@ -105,6 +105,10 @@ namespace correlator{
                 __FILE__, __LINE__, "stuff" );
         }
 
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const {
+        	return Pointer<wireformat::WireFormat>();
+        }
+
         virtual void setWireFormat(
             const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
