@@ -790,18 +790,11 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& m
         } else if( isAutoAcknowledgeBatch() ) {
             ackLater( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
         } else if( session->isClientAcknowledge() || session->isIndividualAcknowledge() ) {
-            ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
 
             bool messageUnackedByConsumer = false;
 
             synchronized( &this->internal->dispatchedMessages ) {
-                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( this->internal->dispatchedMessages.iterator() );
-                while( iter->hasNext() ) {
-                    if( iter->next() == message ) {
-                        messageUnackedByConsumer = true;
-                        break;
-                    }
-                }
+                messageUnackedByConsumer = this->internal->dispatchedMessages.contains(message);
             }
 
             if( messageUnackedByConsumer ) {
