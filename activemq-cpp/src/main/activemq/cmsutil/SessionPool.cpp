@@ -21,18 +21,6 @@
 using namespace activemq::cmsutil;
 using namespace std;
 
-cms::Connection* connection;
-
-ResourceLifecycleManager* resourceLifecycleManager;
-
-decaf::util::concurrent::Mutex mutex;
-
-std::list<PooledSession*> available;
-
-std::list<PooledSession*> sessions;
-
-cms::Session::AcknowledgeMode acknowledgeMode;
-
 ////////////////////////////////////////////////////////////////////////////////
 SessionPool::SessionPool( cms::Connection* connection,
                           cms::Session::AcknowledgeMode ackMode,
