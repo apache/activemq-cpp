@@ -32,9 +32,7 @@ using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
-
     std::vector<Level> levels;
-    Mutex levelsLock;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,27 +91,27 @@ Level Level::parse( const std::string& name ) {
         isNameAnInt = false;
     }
 
-    synchronized( &levelsLock ) {
-
-        std::vector<Level>::const_iterator level = levels.begin();
-
-        for( ; level != levels.end(); ++level ) {
-            if( name == level->getName() ) {
-                return *level;
-            }
-        }
-
-        // If the name was an int then we loop again to check the int value
-        // against each level's value.
-        if( isNameAnInt ) {
-
-            for( level = levels.begin(); level != levels.end(); ++ level ) {
-                if( nameAsInt == level->intValue()) {
-                    return *level;
-                }
-            }
-        }
-    }
+//    synchronized( &levelsLock ) {
+//
+//        std::vector<Level>::const_iterator level = levels.begin();
+//
+//        for( ; level != levels.end(); ++level ) {
+//            if( name == level->getName() ) {
+//                return *level;
+//            }
+//        }
+//
+//        // If the name was an int then we loop again to check the int value
+//        // against each level's value.
+//        if( isNameAnInt ) {
+//
+//            for( level = levels.begin(); level != levels.end(); ++ level ) {
+//                if( nameAsInt == level->intValue()) {
+//                    return *level;
+//                }
+//            }
+//        }
+//    }
 
     if( !isNameAnInt ) {
         throw IllegalArgumentException(
