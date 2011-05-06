@@ -75,7 +75,6 @@ void ExecutorsTest::testDefaultThreadFactory() {
     Thread* theThread = defaultFactory->newThread(runner);
 
     CPPUNIT_ASSERT(theThread != NULL);
-    CPPUNIT_ASSERT_EQUAL(false, theThread->isDaemon());
     const int expected = Thread::NORM_PRIORITY;
     CPPUNIT_ASSERT_EQUAL(expected, theThread->getPriority());
 

@@ -34,6 +34,7 @@ namespace lang{
       CPPUNIT_TEST( testConstructor_1 );
       CPPUNIT_TEST( testConstructor_2 );
       CPPUNIT_TEST( testConstructor_3 );
+      CPPUNIT_TEST( testRun );
       CPPUNIT_TEST( testDelegate );
       CPPUNIT_TEST( testDerived );
       CPPUNIT_TEST( testJoin1 );
@@ -48,6 +49,13 @@ namespace lang{
       CPPUNIT_TEST( testSleep2Arg );
       CPPUNIT_TEST( testUncaughtExceptionHandler );
       CPPUNIT_TEST( testCurrentThread );
+      CPPUNIT_TEST( testInterrupt );
+      CPPUNIT_TEST( testInterrupted );
+      CPPUNIT_TEST( testIsInterrupted );
+      CPPUNIT_TEST( testSetName );
+      CPPUNIT_TEST( testInterruptSleep );
+      CPPUNIT_TEST( testInterruptJoin );
+      CPPUNIT_TEST( testInterruptWait );
       CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -61,6 +69,7 @@ namespace lang{
         void testConstructor_1();
         void testConstructor_2();
         void testConstructor_3();
+        void testRun();
         void testDelegate();
         void testDerived();
         void testJoin1();
@@ -75,6 +84,13 @@ namespace lang{
         void testSleep2Arg();
         void testUncaughtExceptionHandler();
         void testCurrentThread();
+        void testInterrupt();
+        void testInterrupted();
+        void testIsInterrupted();
+        void testSetName();
+        void testInterruptSleep();
+        void testInterruptJoin();
+        void testInterruptWait();
 
     };
 

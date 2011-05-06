@@ -73,7 +73,9 @@ bool CountDownLatch::await( long long timeOut ) {
                 return true;
             }
 
-            mutex.wait( timeOut );
+            if (timeOut > 0) {
+                mutex.wait( timeOut );
+            }
 
             return count == 0;
         }

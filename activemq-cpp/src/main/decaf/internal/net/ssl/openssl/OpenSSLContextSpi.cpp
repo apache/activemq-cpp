@@ -139,7 +139,7 @@ namespace openssl {
         }
 
         static unsigned long getThreadId() {
-            return (unsigned long)Thread::getId();
+            return (unsigned long)Thread::currentThread()->getId();
         }
 
     };

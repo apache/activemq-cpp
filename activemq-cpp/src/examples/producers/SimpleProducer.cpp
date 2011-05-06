@@ -121,7 +121,7 @@ public:
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
             // Create the Thread Id String
-            string threadIdStr = Long::toString( Thread::getId() );
+            string threadIdStr = Long::toString( Thread::currentThread()->getId() );
 
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;

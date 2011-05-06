@@ -103,7 +103,7 @@ namespace concurrent {
         static void initialize();
         static void shutdown();
 
-        friend class decaf::lang::Thread;
+        friend class decaf::internal::util::concurrent::Threading;
 
     };
 

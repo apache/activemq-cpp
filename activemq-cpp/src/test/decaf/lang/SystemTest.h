@@ -27,13 +27,13 @@ namespace lang{
     class SystemTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( SystemTest );
-        CPPUNIT_TEST( test_availableProcessors );
-        CPPUNIT_TEST( test_getenv );
+//        CPPUNIT_TEST( test_availableProcessors );
+//        CPPUNIT_TEST( test_getenv );
         CPPUNIT_TEST( test_getenv2 );
-        CPPUNIT_TEST( test_setenv );
-        CPPUNIT_TEST( test_unsetenv );
-        CPPUNIT_TEST( test_currentTimeMillis );
-        CPPUNIT_TEST( test_nanoTime );
+//        CPPUNIT_TEST( test_setenv );
+//        CPPUNIT_TEST( test_unsetenv );
+//        CPPUNIT_TEST( test_currentTimeMillis );
+//        CPPUNIT_TEST( test_nanoTime );
         CPPUNIT_TEST_SUITE_END();
 
     public:

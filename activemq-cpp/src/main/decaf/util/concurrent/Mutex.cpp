@@ -17,8 +17,7 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 
-#include <decaf/internal/util/concurrent/MutexImpl.h>
-#include <decaf/internal/util/concurrent/ConditionImpl.h>
+#include <decaf/internal/util/concurrent/Threading.h>
 #include <decaf/lang/Integer.h>
 
 #include <list>
@@ -45,53 +44,45 @@ namespace concurrent{
 
     public:
 
-        MutexProperties( const std::string& name ) : mutex( NULL ), condition( NULL ), name( name ) {
+        MutexProperties() : monitor(NULL), name() {
+            this->name = DEFAULT_NAME_PREFIX + Integer::toString( ++id );
+        }
+
+        MutexProperties(const std::string& name) : monitor(NULL), name(name) {
             if( this->name.empty() ) {
-                this->name = std::string( "Mutex-" ) + Integer::toString( ++id );
+                this->name = DEFAULT_NAME_PREFIX + Integer::toString( ++id );
             }
         }
 
-        // The Platform Mutex object and an associated Condition Object
-        // for use in the wait / notify pattern.
-        MutexHandle* mutex;
-        ConditionHandle* condition;
+        MonitorHandle* monitor;
         std::string name;
 
         static unsigned int id;
+        static std::string DEFAULT_NAME_PREFIX;
 
     };
 
     unsigned int MutexProperties::id = 0;
+    std::string MutexProperties::DEFAULT_NAME_PREFIX = "Mutex-";
 
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-Mutex::Mutex() : Synchronizable(), properties( NULL ) {
-
-    this->properties = new MutexProperties("");
-
-    // Allocate the OS Mutex Implementation.
-    this->properties->mutex = MutexImpl::create();
-    this->properties->condition = ConditionImpl::create( this->properties->mutex );
+Mutex::Mutex() : Synchronizable(), properties(NULL) {
+    this->properties = new MutexProperties();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Mutex::Mutex( const std::string& name ) : Synchronizable(), properties( NULL ) {
-
+Mutex::Mutex( const std::string& name ) : Synchronizable(), properties(NULL) {
     this->properties = new MutexProperties( name );
-
-    // Allocate the OS Mutex Implementation.
-    this->properties->mutex = MutexImpl::create();
-    this->properties->condition = ConditionImpl::create( this->properties->mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::~Mutex() {
 
-    unlock();
-
-    ConditionImpl::destroy( this->properties->condition );
-    MutexImpl::destroy( this->properties->mutex );
+    if (this->properties->monitor != NULL) {
+        Threading::returnMonitor(this->properties->monitor);
+    }
 
     delete this->properties;
 }
@@ -108,51 +99,96 @@ std::string Mutex::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::lock() {
-    MutexImpl::lock( this->properties->mutex );
+
+    if(this->properties->monitor == NULL) {
+
+        Threading::lockThreadsLib();
+
+        if (this->properties->monitor == NULL) {
+            this->properties->monitor = Threading::takeMonitor(true);
+        }
+
+        Threading::unlockThreadsLib();
+    }
+
+    Threading::enterMonitor(this->properties->monitor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Mutex::tryLock() {
-    return MutexImpl::trylock( this->properties->mutex );
+
+    if(this->properties->monitor == NULL) {
+
+        Threading::lockThreadsLib();
+
+        if (this->properties->monitor == NULL) {
+            this->properties->monitor = Threading::takeMonitor(true);
+        }
+
+        Threading::unlockThreadsLib();
+    }
+
+    return Threading::tryEnterMonitor(this->properties->monitor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::unlock() {
-    MutexImpl::unlock( this->properties->mutex );
+
+    if (this->properties->monitor == NULL) {
+        throw IllegalMonitorStateException(__FILE__, __LINE__,
+            "Call to unlock without prior call to lock or tryLock");
+    }
+
+    Threading::exitMonitor(this->properties->monitor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::wait() {
-    ConditionImpl::wait( this->properties->condition );
+    wait(0, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::wait( long long millisecs ) {
-    wait( millisecs, 0 );
+void Mutex::wait(long long millisecs) {
+    wait(millisecs, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::wait( long long millisecs, int nanos ) {
 
-    if( millisecs < 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__, "Milliseconds value cannot be negative." );
+    if (millisecs < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Milliseconds value cannot be negative.");
     }
 
-    if( nanos < 0 || nanos > 999999 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__, "Nanoseconds value must be in the range [0..999999]." );
+    if (nanos < 0 || nanos > 999999) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Nanoseconds value must be in the range [0..999999].");
     }
 
-    ConditionImpl::wait( this->properties->condition, millisecs, nanos );
+    if (this->properties->monitor == NULL) {
+        throw IllegalMonitorStateException(__FILE__, __LINE__,
+            "Call to wait without prior call to lock or tryLock");
+    }
+
+    Threading::waitOnMonitor(this->properties->monitor, millisecs, nanos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::notify() {
-    ConditionImpl::notify( this->properties->condition );
+
+    if (this->properties->monitor == NULL) {
+        throw IllegalMonitorStateException(__FILE__, __LINE__,
+            "Call to notify without prior call to lock or tryLock");
+    }
+
+    Threading::notifyWaiter(this->properties->monitor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::notifyAll() {
-    ConditionImpl::notifyAll( this->properties->condition );
+
+    if (this->properties->monitor == NULL) {
+        throw IllegalMonitorStateException(__FILE__, __LINE__,
+            "Call to notifyAll without prior call to lock or tryLock");
+    }
+
+    Threading::notifyAllWaiters(this->properties->monitor);
 }

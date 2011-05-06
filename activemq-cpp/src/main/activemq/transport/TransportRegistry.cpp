@@ -26,6 +26,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+    TransportRegistry* theOnlyInstance;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 TransportRegistry::TransportRegistry() : registry() {
 }
 
@@ -92,6 +97,17 @@ std::vector<std::string> TransportRegistry::getTransportNames() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportRegistry& TransportRegistry::getInstance() {
-    static TransportRegistry registry;
-    return registry;
+    return *theOnlyInstance;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportRegistry::initialize() {
+    theOnlyInstance = new TransportRegistry();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportRegistry::shutdown() {
+    theOnlyInstance->unregisterAllFactories();
+    delete theOnlyInstance;
+    theOnlyInstance = NULL;
 }

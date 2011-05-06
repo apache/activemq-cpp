@@ -64,10 +64,6 @@ namespace {
         Thread* newThread(Runnable* task) {
             Thread* thread = new Thread(task, namePrefix + Integer::toString(threadNumber.getAndIncrement()));
 
-            if (thread->isDaemon()) {
-                thread->setDaemon(false);
-            }
-
             if (thread->getPriority() != Thread::NORM_PRIORITY) {
                 thread->setPriority(Thread::NORM_PRIORITY);
             }

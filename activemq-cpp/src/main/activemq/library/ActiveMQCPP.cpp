@@ -67,8 +67,8 @@ void ActiveMQCPP::shutdownLibrary() {
     // Shutdown the IdGenerator Kernel
     IdGenerator::shutdown();
 
-    WireFormatRegistry::getInstance().unregisterAllFactories();
-    TransportRegistry::getInstance().unregisterAllFactories();
+    WireFormatRegistry::shutdown();
+    TransportRegistry::shutdown();
 
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
@@ -79,6 +79,7 @@ void ActiveMQCPP::registerWireFormats() {
 
     // Each of the internally implemented WireFormat's is registered here
     // with the WireFormat Registry
+    WireFormatRegistry::initialize();
 
     WireFormatRegistry::getInstance().registerFactory(
         "openwire", new wireformat::openwire::OpenWireFormatFactory() );
@@ -89,8 +90,9 @@ void ActiveMQCPP::registerWireFormats() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQCPP::registerTransports() {
 
-    // Each of the internally implemented WireFormat's is registered here
-    // with the WireFormat Registry
+    // Each of the internally implemented Transports is registered here
+    // with the Transport Registry
+    TransportRegistry::initialize();
 
     TransportRegistry::getInstance().registerFactory(
         "tcp", new TcpTransportFactory() );

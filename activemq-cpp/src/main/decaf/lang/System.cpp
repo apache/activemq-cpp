@@ -69,6 +69,8 @@ namespace lang {
     class SystemData {
     public:
 
+        StlMap<string, string> cachedEnvValues;
+        AprPool aprPool;
         Properties systemProperties;
 
     public:
@@ -107,8 +109,7 @@ void System::shutdownSystem() {
 
 ////////////////////////////////////////////////////////////////////////////////
 AprPool& System::getAprPool() {
-    static AprPool aprPool;
-    return aprPool;
+    return System::sys->aprPool;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -389,8 +390,7 @@ long long System::nanoTime() {
 ////////////////////////////////////////////////////////////////////////////////
 const Map<string, string>& System::getenv() {
 
-    static StlMap<string, string> values;
-    values.clear();
+    System::sys->cachedEnvValues.clear();
 
     StringTokenizer tokenizer( "" );
     string key = "";
@@ -426,10 +426,10 @@ const Map<string, string>& System::getenv() {
         }
 
         // Store the env var
-        values.put( key, value );
+        System::sys->cachedEnvValues.put( key, value );
     }
 
-    return values;
+    return System::sys->cachedEnvValues;
 }
 
 #if defined(_WIN32)

@@ -17,7 +17,9 @@
 #ifndef _DECAF_UTIL_LOGGING_LOGWRITER_H_
 #define _DECAF_UTIL_LOGGING_LOGWRITER_H_
 
-#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Config.h>
+
+#include <string>
 
 namespace decaf{
 namespace util{
@@ -64,13 +66,6 @@ namespace logging{
          * even if there are outstanding references.
          */
         static void destroy();
-
-    private:
-
-        /**
-         * Gets the one and only mutex for this instance.
-         */
-        concurrent::Mutex& getMutex();
 
     };
 

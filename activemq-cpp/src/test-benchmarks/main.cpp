@@ -25,6 +25,7 @@
 int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED ) {
 
     activemq::library::ActiveMQCPP::initializeLibrary();
+    bool wasSuccessful = false;
 
     try {
         CppUnit::TextUi::TestRunner runner;
@@ -36,21 +37,19 @@ int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED ) {
         std::cout << "Starting the Benchmarks:" << std::endl;
         std::cout << "-----------------------------------------------------\n";
 
-        bool wasSuccessful = runner.run( "", false );
+        wasSuccessful = runner.run( "", false );
 
         std::cout << "-----------------------------------------------------\n";
         std::cout << "Finished with the Benchmarks." << std::endl;
         std::cout << "=====================================================\n";
 
-        activemq::library::ActiveMQCPP::shutdownLibrary();
-
-        return !wasSuccessful;
-
     } catch(...) {
         std::cout << "----------------------------------------" << std::endl;
         std::cout << "- AN ERROR HAS OCCURED:                -" << std::endl;
         std::cout << "----------------------------------------" << std::endl;
-
-        activemq::library::ActiveMQCPP::shutdownLibrary();
     }
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
+
+    return !wasSuccessful;
 }

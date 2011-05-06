@@ -30,6 +30,9 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq {
+namespace library {
+    class ActiveMQCPP;
+}
 namespace transport {
 
     /**
@@ -118,6 +121,13 @@ namespace transport {
          * @return reference to the single instance of this Registry
          */
         static TransportRegistry& getInstance();
+
+    private:
+
+        static void initialize();
+        static void shutdown();
+
+        friend class activemq::library::ActiveMQCPP;
 
     };
 

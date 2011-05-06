@@ -217,7 +217,7 @@ ReentrantLock::~ReentrantLock() {
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantLock::lock() {
 
-    long long threadId = Thread::getId();
+    long long threadId = Thread::currentThread()->getId();
 
     if( threadId == handle->lock_owner_tid ) {
         handle->lock_count++;
@@ -256,7 +256,7 @@ void ReentrantLock::lockInterruptibly() {
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::tryLock() {
 
-    long long threadId = Thread::getId();
+    long long threadId = Thread::currentThread()->getId();
 
     if( threadId == handle->lock_owner_tid ) {
         handle->lock_count++;
@@ -317,7 +317,7 @@ void ReentrantLock::unlock() {
         return;
     }
 
-    if( handle->lock_owner_tid != Thread::getId() ) {
+    if( handle->lock_owner_tid != Thread::currentThread()->getId() ) {
         throw IllegalMonitorStateException(
             __FILE__, __LINE__,
             "Unlock Failed, this thread is not the Lock Owner!" );
@@ -351,7 +351,7 @@ Condition* ReentrantLock::newCondition() {
 ////////////////////////////////////////////////////////////////////////////////
 int ReentrantLock::getHoldCount() const {
 
-    long long threadId = Thread::getId();
+    long long threadId = Thread::currentThread()->getId();
 
     if( threadId == handle->lock_owner_tid ) {
         return (int)handle->lock_count;
@@ -362,7 +362,8 @@ int ReentrantLock::getHoldCount() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::isHeldByCurrentThread() const {
-    long long threadId = Thread::getId();
+
+    long long threadId = Thread::currentThread()->getId();
 
     if( threadId == handle->lock_owner_tid ) {
         return true;
