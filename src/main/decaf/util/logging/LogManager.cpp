@@ -63,6 +63,7 @@ LogManager::LogManager() : listeners(), properties(), internal(new LogManagerInt
 
 ////////////////////////////////////////////////////////////////////////////////
 LogManager::~LogManager() {
+    delete internal;
     // TODO - Delete all the loggers.
 }
 

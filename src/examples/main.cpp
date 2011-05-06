@@ -116,7 +116,7 @@ public:
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
             // Create the Thread Id String
-            string threadIdStr = Long::toString( Thread::getId() );
+            string threadIdStr = Long::toString( Thread::currentThread()->getId() );
 
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
@@ -357,7 +357,7 @@ private:
 int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     activemq::library::ActiveMQCPP::initializeLibrary();
-
+    {
     std::cout << "=====================================================\n";
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
@@ -446,6 +446,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "Finished with the example." << std::endl;
     std::cout << "=====================================================\n";
 
+    }
     activemq::library::ActiveMQCPP::shutdownLibrary();
 }
 

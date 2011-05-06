@@ -26,14 +26,14 @@
 #include <decaf/util/Config.h>
 
 namespace decaf{
+namespace internal{
 namespace util{
 namespace concurrent{
-namespace locks{
-    class LockSupport;
+    class Threading;
+    struct ThreadHandle;
 }}}
-namespace lang{
-
-    class Runtime;
+namespace lang
+{
     class ThreadGroup;
     class ThreadProperties;
 
@@ -55,9 +55,7 @@ namespace lang{
      *
      * Each Thread has an integer priority that basically determines the amount
      * of CPU time the Thread gets. It can be set using the {@link #setPriority(int)}
-     * method. A Thread can also be made a daemon, which makes it run in the
-     * background. The latter also affects VM termination behavior: the VM does not
-     * terminate automatically as long as there are non-daemon threads running.
+     * method.
      *
      * @see decaf.lang.ThreadGroup
      *
@@ -180,6 +178,27 @@ namespace lang{
          */
         Thread( Runnable* task, const std::string& name );
 
+        /**
+         * Constructs a new Thread with the given target Runnable task and name. This constructor
+         * has the same effect as Thread( NULL, task, GIVEN_NAME ), where GIVEN_NAME is a
+         * newly generated name.  When no name is given the name is automatically generated
+         * and are of the form  "Thread-"+n, where n is an integer.
+         *
+         * The stack size option is platform independent and may have no effect on the newly
+         * created thread on some systems.  If the value given is invalid on the system a
+         * RuntimeException is thrown, the stack size can be invalid if it is outside the
+         * allowed range or doesn't match the size of the system page size on some system.
+         *
+         * @param task
+         *      The Runnable that this thread manages, if the task is NULL the Thread's
+         *      run method is used instead.
+         * @param name
+         *      The name to assign to this Thread.
+         * @param stackSize
+         *      The size of the newly allocated thread's stack.
+         */
+        Thread( Runnable* task, const std::string& name, long long stackSize );
+
         virtual ~Thread();
 
         /**
@@ -225,12 +244,20 @@ namespace lang{
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs, unsigned int nanos );
+        virtual void join( long long millisecs, int nanos );
 
         /**
          * Default implementation of the run method - does nothing.
          */
         virtual void run();
+
+        /**
+         * Obtains the Thread Id of the current thread, this value is OS specific but is
+         * guaranteed not to change for the lifetime of this thread.
+         *
+         * @return Thread Id of this Thread instance.
+         */
+        long long getId() const;
 
         /**
          * Returns the Thread's assigned name.
@@ -254,7 +281,7 @@ namespace lang{
 
         /**
          * Sets the current Thread's priority to the newly specified value.  The given value
-         * must be within the rane Thread::MIN_PRIORITY and Thread::MAX_PRIORITY.
+         * must be within the range Thread::MIN_PRIORITY and Thread::MAX_PRIORITY.
          *
          * @param value the new priority value to assign to this Thread.
          *
@@ -263,30 +290,11 @@ namespace lang{
         void setPriority( int value );
 
         /**
-         * Sets if the given Thread is a Daemon Thread or not.  Daemon threads cannot be
-         * joined and its resource are automatically reclaimed when it terminates.
-         *
-         * @param value
-         *      Boolean indicating if this thread should be a daemon thread or not.
-         *
-         * @throws IllegalThreadStateException if the thread is already active.
-         */
-        void setDaemon(bool value);
-
-        /**
-         * Returns whether this thread is a daemon thread or not, if true this thread cannot
-         * be joined.
-         *
-         * @return true if the thread is a daemon thread.
-         */
-        bool isDaemon() const;
-
-        /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
          *
          * @returns a pointer to the set UncaughtExceptionHandler.
          */
-        const UncaughtExceptionHandler* getUncaughtExceptionHandler() const;
+        UncaughtExceptionHandler* getUncaughtExceptionHandler() const;
 
         /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
@@ -317,6 +325,27 @@ namespace lang{
          * @return the Thread's current state.
          */
         Thread::State getState() const;
+
+        /**
+         * Interrupts the Thread if it is blocked and in an interruptible state.
+         *
+         * When the thread is in one of its own join or sleep methods or blocked by a call to
+         * a monitor or mutex wait call it will clear its interrupted flag and and an
+         * InterruptedException will be thrown.
+         *
+         * In other cases the thread's interrupted status will be set and an instance of
+         * an InterruptedException may be thrown.
+         *
+         * If the thread is not alive when this method is called there is no affect.
+         */
+        void interrupt();
+
+        /**
+         * Returns but does not clear the state of this Thread's interrupted flag.
+         *
+         * @returns true if the thread was interrupted, false otherwise.
+         */
+        bool isInterrupted() const;
 
     public:
 
@@ -349,7 +378,7 @@ namespace lang{
          *         or the milliseconds paramter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs, unsigned int nanos );
+        static void sleep( long long millisecs, int nanos );
 
         /**
          * Causes the currently executing thread object to temporarily pause
@@ -358,48 +387,58 @@ namespace lang{
         static void yield();
 
         /**
-         * Obtains the Thread Id of the current thread
-         * @return Thread Id
-         */
-        static long long getId();
-
-        /**
          * Returns a pointer to the currently executing thread object.
          *
          * @return Pointer to the Thread object representing the currently running Thread.
          */
         static Thread* currentThread();
 
+        /**
+         * Returns whether the thread has been interrupted and clears the interrupted state
+         * such that a subsequent call will return false unless an interrupt occurs between
+         * the two calls.
+         *
+         * @returns true if the thread was interrupted, false otherwise.
+         */
+        static bool interrupted();
+
+        /**
+         * Set the default handler invoked when a thread abruptly terminates due to an uncaught
+         * exception, this handler is used only if there is no other handler defined for the
+         * Thread.  This method will return NULL if no handler has ever been set, or the handler
+         * is cleared via a call to the setDefaultUncaughtExceptionHandler method will NULL as
+         * the value of the handler argument.
+         *
+         * @returns a pointer to the default UncaughtExceptionHandler for all Threads.
+         */
+        static UncaughtExceptionHandler* getDefaultUncaughtExceptionHandler();
+
+        /**
+         * Set the default handler invoked when a thread abruptly terminates due to an uncaught
+         * exception,
+         *
+         * @param handler
+         *      The UncaightExceptionHandler to invoke when a Thread terminates due
+         *      to an uncaught exception, passing NULL clears this value.
+         */
+        static void setDefaultUncaughtExceptionHandler( UncaughtExceptionHandler* handler );
+
     private:
 
         // Initialize the Threads internal state
-        void initialize( Runnable* task, const std::string& name );
+        void initializeSelf( Runnable* task, const std::string& name, long long stackSize );
 
-        // Create a Thread Facade for threads not created by the Decaf Library.
-        static Thread* createForeignThreadInstance( const std::string& name );
+        // Creates a Thread instance for a ThreadProperties pointer, used for
+        // wrapping OS threads
+        Thread(decaf::internal::util::concurrent::ThreadHandle* osThread);
 
-        // Called by the Decaf Runtime at startup to allow the Platform Threading
-        // code to initialize any necessary Threading constructs needed to support
-        // the features of this class.
-        static void initThreading();
+    private:
 
-        // Called by the Decf Runtime at Shutdown to allow the Platform Threading
-        // code to return any resources that were allocated at startup for the
-        // Threading library.
-        static void shutdownThreading();
+        // Allows the Threading class to get this thread objects handle.
+        decaf::internal::util::concurrent::ThreadHandle* getHandle() const;
 
-        // Called from LockSupport to Park a Thread (suspend it from execution)
-        static void park( Thread* thread );
-
-        // Called from LockSupport to Park a Thread (suspend it from execution)
-        static void park( Thread* thread, long long mills, long long nanos );
-
-        // Called from LockSupport to UnPark a Thread (resume its execution status).
-        static void unpark( Thread* thread );
-
-        // Allow some Decaf Classes greater access to the Threading model.
-        friend class decaf::util::concurrent::locks::LockSupport;
-        friend class decaf::lang::Runtime;
+        // Allow some Decaf Classes greater access to the Thread class.
+        friend class decaf::internal::util::concurrent::Threading;
 
     };
 

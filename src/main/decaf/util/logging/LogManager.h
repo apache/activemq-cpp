@@ -154,7 +154,7 @@ namespace logging{
         util::Properties properties;
 
         // Data structure for LogManager Internal data.
-        Pointer<LogManagerInternals> internal;
+        LogManagerInternals* internal;
 
     public:
 

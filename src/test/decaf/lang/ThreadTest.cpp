@@ -63,6 +63,70 @@ namespace lang{
                 delay = d;
             }
         }
+
+        virtual ~SimpleThread() {}
+    };
+
+    class ChildThread1 : public Thread {
+    private:
+
+        Thread* parent;
+        bool sync;
+
+    public:
+
+        ChildThread1(Thread* parent, bool sync) : Thread(), parent(parent), sync(sync) {
+        }
+
+        virtual ~ChildThread1() {}
+
+        decaf::util::concurrent::Mutex lock;
+
+        virtual void run() {
+
+            if (sync) {
+                synchronized(&lock) {
+                    lock.notify();
+                    try {
+                        lock.wait();
+                    } catch(InterruptedException& e) {
+                    }
+                }
+            }
+            parent->interrupt();
+        }
+    };
+
+    class SpinThread : public Runnable {
+    public:
+
+        SpinThread() : Runnable(), done(false) {}
+
+        virtual ~SpinThread() {}
+
+        bool done;
+
+        virtual void run() {
+
+            while (!Thread::currentThread()->isInterrupted())
+                ;
+            while (!done)
+                ;
+        }
+    };
+
+    class RunThread : public Runnable {
+    public:
+
+        RunThread() : Runnable(), didThreadRun(false) {}
+
+        virtual ~RunThread() {}
+
+        bool didThreadRun;
+
+        virtual void run() {
+            didThreadRun = true;
+        }
     };
 
     class YieldThread : public Runnable {
@@ -135,7 +199,7 @@ namespace lang{
         virtual void run(){
 
             // Sleep for 2 seconds.
-            Thread::sleep( 2000 );
+            Thread::sleep( 1000 );
         }
 
     };
@@ -172,6 +236,89 @@ namespace lang{
             throw RuntimeException( __FILE__, __LINE__, "Planned" );
         }
 
+    };
+
+    class InterruptibleSleeper : public Runnable {
+    private:
+
+        bool interrupted;
+
+    public:
+
+        InterruptibleSleeper() : Runnable(), interrupted(false) {
+        }
+
+        virtual ~InterruptibleSleeper(){}
+
+        virtual void run() {
+
+            try{
+                Thread::sleep(10000);
+            } catch(InterruptedException& ex) {
+                interrupted = true;
+            }
+        }
+
+        bool wasInterrupted() const {
+            return interrupted;
+        }
+    };
+
+    class InterruptibleJoiner : public Runnable {
+    private:
+
+        bool interrupted;
+        Thread* parent;
+
+    public:
+
+        InterruptibleJoiner(Thread* parent) : Runnable(), interrupted(false), parent(parent) {
+        }
+
+        virtual ~InterruptibleJoiner(){}
+
+        virtual void run() {
+
+            try{
+                parent->join(10000);
+            } catch(InterruptedException& ex) {
+                interrupted = true;
+            }
+        }
+
+        bool wasInterrupted() const {
+            return interrupted;
+        }
+    };
+
+    class InterruptibleWaiter : public Runnable {
+    private:
+
+        bool interrupted;
+
+    public:
+
+        decaf::util::concurrent::Mutex lock;
+
+        InterruptibleWaiter() : Runnable(), interrupted(false), lock() {
+        }
+
+        virtual ~InterruptibleWaiter(){}
+
+        virtual void run() {
+
+            synchronized(&lock) {
+                try {
+                    lock.wait();
+                } catch(InterruptedException& e) {
+                    interrupted = true;
+                }
+            }
+        }
+
+        bool wasInterrupted() const {
+            return interrupted;
+        }
     };
 
     class Handler : public Thread::UncaughtExceptionHandler {
@@ -224,6 +371,27 @@ void ThreadTest::testConstructor_3() {
     CPPUNIT_ASSERT( ct.getName() == "SimpleThread_1" );
     ct.start();
     ct.join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testRun() {
+
+    RunThread rt;
+    Thread t(&rt);
+
+    try {
+        t.start();
+        int count = 0;
+        while (!rt.didThreadRun && count < 20) {
+            Thread::sleep(100);
+            count++;
+        }
+        CPPUNIT_ASSERT_MESSAGE("Thread did not run", rt.didThreadRun);
+        t.join();
+    } catch(InterruptedException& e) {
+        CPPUNIT_FAIL("Joined thread was interrupted");
+    }
+    CPPUNIT_ASSERT_MESSAGE("Joined thread is still alive", !t.isAlive());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -282,7 +450,7 @@ void ThreadTest::testJoin1() {
     CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
 
     // Thread should be able to join itself, use a timeout so we don't freeze
-    Thread::currentThread()->join( 100 );
+    Thread::currentThread()->join( 5 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +476,7 @@ void ThreadTest::testJoin2() {
     CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
 
     // Thread should be able to join itself, use a timeout so we don't freeze
-    Thread::currentThread()->join( 100 );
+    Thread::currentThread()->join( 5 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -329,7 +497,7 @@ void ThreadTest::testJoin3() {
     CPPUNIT_ASSERT_MESSAGE( "Joined Thread is still alive", !test.isAlive() );
 
     // Thread should be able to join itself, use a timeout so we don't freeze
-    Thread::currentThread()->join( 100 );
+    Thread::currentThread()->join( 5 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -348,7 +516,7 @@ void ThreadTest::testJoin4() {
     }
 
     // Thread should be able to join itself, use a timeout so we don't freeze
-    Thread::currentThread()->join( 100 );
+    Thread::currentThread()->join( 5 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -392,7 +560,7 @@ void ThreadTest::testIsAlive() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadTest::testGetId() {
-    CPPUNIT_ASSERT( Thread::getId() > 0 );
+    CPPUNIT_ASSERT( Thread::currentThread()->getId() > 0 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -446,7 +614,7 @@ void ThreadTest::testSleep2Arg() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadTest::testGetState() {
-    std::auto_ptr<SimpleThread> runnable( new SimpleThread( 500 ) );
+    std::auto_ptr<SimpleThread> runnable( new SimpleThread( 1000 ) );
     Thread ct( runnable.get() );
 
     CPPUNIT_ASSERT_MESSAGE( "A thread that wasn't started is alive.", !ct.isAlive() );
@@ -460,7 +628,7 @@ void ThreadTest::testGetState() {
     }
 
     CPPUNIT_ASSERT_MESSAGE( "Started thread returned false", ct.isAlive() );
-    CPPUNIT_ASSERT( ct.getState() == Thread::RUNNABLE );
+    CPPUNIT_ASSERT( ct.getState() == Thread::TIMED_WAITING );
 
     try {
         ct.join();
@@ -499,9 +667,175 @@ void ThreadTest::testUncaughtExceptionHandler() {
 void ThreadTest::testCurrentThread() {
 
     CPPUNIT_ASSERT( Thread::currentThread() != NULL );
-    CPPUNIT_ASSERT( Thread::currentThread()->getName() == "Main Thread" );
+    CPPUNIT_ASSERT( Thread::currentThread()->getName() != "" );
     CPPUNIT_ASSERT( Thread::currentThread()->getPriority() == Thread::NORM_PRIORITY );
     CPPUNIT_ASSERT( Thread::currentThread()->getState() == Thread::RUNNABLE );
 
     CPPUNIT_ASSERT( Thread::currentThread() == Thread::currentThread() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testInterrupt() {
+
+    bool interrupted = false;
+    try {
+        ChildThread1 ct(Thread::currentThread(), false);
+        synchronized(&ct.lock) {
+            ct.start();
+            ct.lock.wait();
+        }
+    } catch(InterruptedException& e) {
+        interrupted = true;
+    } catch(Exception& ex) {
+        ex.printStackTrace();
+        CPPUNIT_FAIL("Caught unexpected message.");
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to Interrupt thread1", interrupted);
+
+    interrupted = false;
+    try {
+        ChildThread1 ct(Thread::currentThread(), true);
+        synchronized(&ct.lock) {
+            ct.start();
+            ct.lock.wait();
+            ct.lock.notify();
+        }
+        Thread::sleep(20000);
+    } catch(InterruptedException& e) {
+        interrupted = true;
+    } catch(Exception& ex) {
+        ex.printStackTrace();
+        CPPUNIT_FAIL("Caught unexpected message.");
+    }
+    CPPUNIT_ASSERT_MESSAGE("Failed to Interrupt thread2", interrupted);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testInterrupted() {
+
+    CPPUNIT_ASSERT_MESSAGE("Interrupted returned true for non-interrupted thread",
+                           !Thread::interrupted());
+    Thread::currentThread()->interrupt();
+    CPPUNIT_ASSERT_MESSAGE("Interrupted returned true for non-interrupted thread", Thread::interrupted());
+    CPPUNIT_ASSERT_MESSAGE("Failed to clear interrupted flag", !Thread::interrupted());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testIsInterrupted() {
+
+    SpinThread spin;
+    Thread spinner(&spin);
+    spinner.start();
+    Thread::yield();
+
+    try {
+        CPPUNIT_ASSERT_MESSAGE("Non-Interrupted thread returned true", !spinner.isInterrupted());
+        spinner.interrupt();
+        CPPUNIT_ASSERT_MESSAGE("Interrupted thread returned false", spinner.isInterrupted());
+        spin.done = true;
+    } catch(...) {
+        spinner.interrupt();
+        spin.done = true;
+    }
+
+    spinner.join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testSetName() {
+
+    JoinTest st;
+    st.setName("Bogus Name");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to set thread name", std::string("Bogus Name"), st.getName());
+    st.setName("Another Bogus Name");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to set thread name", std::string("Another Bogus Name"), st.getName());
+    st.start();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testInterruptSleep() {
+
+    std::auto_ptr<InterruptibleSleeper> runnable(new InterruptibleSleeper());
+    Thread ct( runnable.get() );
+    ct.start();
+
+    for(int i = 0; i < 10; ++i) {
+        if (ct.getState() == Thread::SLEEPING) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(ct.getState() == Thread::SLEEPING);
+
+    ct.interrupt();
+    for(int i = 0; i < 10; ++i) {
+        if (runnable->wasInterrupted()) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(runnable->wasInterrupted());
+
+    ct.join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testInterruptJoin() {
+
+    std::auto_ptr<InterruptibleJoiner> runnable(new InterruptibleJoiner(Thread::currentThread()));
+    Thread ct( runnable.get() );
+    ct.start();
+
+    for(int i = 0; i < 10; ++i) {
+        if (ct.getState() == Thread::SLEEPING) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(ct.getState() == Thread::SLEEPING);
+
+    ct.interrupt();
+    for(int i = 0; i < 10; ++i) {
+        if (runnable->wasInterrupted()) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(runnable->wasInterrupted());
+
+    ct.join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testInterruptWait() {
+
+    std::auto_ptr<InterruptibleWaiter> runnable(new InterruptibleWaiter());
+    Thread ct( runnable.get() );
+    ct.start();
+
+    for(int i = 0; i < 10; ++i) {
+        if (ct.getState() == Thread::WAITING) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(ct.getState() == Thread::WAITING);
+
+    ct.interrupt();
+    for(int i = 0; i < 10; ++i) {
+        if (runnable->wasInterrupted()) {
+            break;
+        } else {
+            Thread::sleep(10);
+        }
+    }
+    CPPUNIT_ASSERT(runnable->wasInterrupted());
+
+    ct.join();
 }

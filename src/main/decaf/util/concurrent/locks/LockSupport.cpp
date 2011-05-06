@@ -21,11 +21,14 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/System.h>
 
+#include <decaf/internal/util/concurrent/Threading.h>
+
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::locks;
+using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 LockSupport::LockSupport() {
@@ -39,7 +42,7 @@ LockSupport::~LockSupport() {
 void LockSupport::unpark( decaf::lang::Thread* thread ) throw() {
 
     try{
-        Thread::unpark( thread );
+        Threading::unpark( thread );
     } DECAF_CATCHALL_NOTHROW()
 }
 
@@ -47,7 +50,7 @@ void LockSupport::unpark( decaf::lang::Thread* thread ) throw() {
 void LockSupport::park() throw() {
 
     try{
-        Thread::park( Thread::currentThread() );
+        Threading::park( Thread::currentThread() );
     } DECAF_CATCHALL_NOTHROW()
 }
 
@@ -63,7 +66,7 @@ void LockSupport::parkNanos( long long nanos ) throw() {
             nanos = nanos % 1000000;
         }
 
-        Thread::park( Thread::currentThread(), mills, nanos );
+        Threading::park(Thread::currentThread(), mills, (int)nanos);
 
     } DECAF_CATCHALL_NOTHROW()
 }
@@ -79,7 +82,7 @@ void LockSupport::parkUntil( long long deadline ) throw() {
             return;
         }
 
-        Thread::park( Thread::currentThread(), ( deadline - now ), 0 );
+        Threading::park(Thread::currentThread(), ( deadline - now ), 0);
 
     } DECAF_CATCHALL_NOTHROW()
 }

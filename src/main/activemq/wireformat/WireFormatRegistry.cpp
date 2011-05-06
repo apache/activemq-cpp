@@ -26,6 +26,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+    WireFormatRegistry* theOnlyInstance;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 WireFormatRegistry::WireFormatRegistry() : registry() {
 }
 
@@ -92,6 +97,17 @@ std::vector<std::string> WireFormatRegistry::getWireFormatNames() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatRegistry& WireFormatRegistry::getInstance() {
-    static WireFormatRegistry registry;
-    return registry;
+    return *theOnlyInstance;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatRegistry::initialize() {
+    theOnlyInstance = new WireFormatRegistry();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatRegistry::shutdown() {
+    theOnlyInstance->unregisterAllFactories();
+    delete theOnlyInstance;
+    theOnlyInstance = NULL;
 }

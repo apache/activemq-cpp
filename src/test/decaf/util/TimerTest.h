@@ -21,10 +21,19 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/Mutex.h>
+
 namespace decaf {
 namespace util {
 
     class TimerTest : public CppUnit::TestFixture {
+    private:
+
+        decaf::util::concurrent::atomic::AtomicInteger timerCounter;
+        decaf::util::concurrent::Mutex gsync;
+
+    private:
 
         CPPUNIT_TEST_SUITE( TimerTest );
         CPPUNIT_TEST( testConstructor );

@@ -24,93 +24,59 @@
 #include <decaf/lang/System.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/internal/net/Network.h>
+#include <decaf/internal/util/concurrent/Threading.h>
 
 using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
+using namespace decaf::internal::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace internal{
-
-    class RuntimeData {
-    public:
-
-        mutable apr_pool_t* aprPool;
-        Mutex* lock;
-
-    public:
-
-        RuntimeData() : aprPool(NULL), lock(NULL) {
-        }
-
-    };
-
-}}
+namespace {
+    apr_pool_t* aprPool;
+    Mutex* globalLock;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-DecafRuntime::DecafRuntime() : runtimeData(new RuntimeData()) {
-
-    // Initializes the APR Runtime from within a library.
-    apr_initialize();
-
-    // Create a Global Pool for Threads to use
-    apr_pool_create_ex( &runtimeData->aprPool, NULL, NULL, NULL );
-
-    // Create the global Lock object now that the memory pool exists.
-    this->runtimeData->lock = new Mutex;
+DecafRuntime::DecafRuntime() : decaf::lang::Runtime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DecafRuntime::~DecafRuntime() {
-
-    try{
-
-        // Destory the Global Lock before we deallocate the memory pool.
-        delete this->runtimeData->lock;
-
-        // Destroy the Global Thread Memory Pool
-        apr_pool_destroy( this->runtimeData->aprPool );
-
-        // Cleans up APR data structures.
-        apr_terminate();
-
-        // Destroy the Runtime Data
-        delete this->runtimeData;
-    }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 apr_pool_t* DecafRuntime::getGlobalPool() const {
-    return this->runtimeData->aprPool;
+    return aprPool;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Mutex* DecafRuntime::getGlobalLock() {
-    return this->runtimeData->lock;
+    return globalLock;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Runtime* Runtime::getRuntime() {
-
     static DecafRuntime runtime;
-
     return &runtime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Runtime::initializeRuntime( int argc, char **argv ) {
 
-    // Do this for now, once we remove APR we can do this in a way that
-    // makes more sense.
+    // Initializes the APR Runtime from within a library.
+    apr_initialize();
+    apr_pool_create_ex( &aprPool, NULL, NULL, NULL );
+
     Runtime::getRuntime();
 
     // Initialize any Platform specific Threading primitives
-    Thread::initThreading();
+    Threading::initialize();
+
+    // Create the global Lock object now that Threading is started.
+    globalLock = new Mutex;
 
     // Initialize the System Class to make things like Properties available.
     System::initSystem( argc, argv );
@@ -135,7 +101,14 @@ void Runtime::shutdownRuntime() {
     // cleaned up.
     System::shutdownSystem();
 
+    // This must go away before Threading is shutdown.
+    delete globalLock;
+
     // Threading is the last to by shutdown since most other parts of the Runtime
     // need to make use of Thread primitives.
-    Thread::shutdownThreading();
+    Threading::shutdown();
+
+    // Cleans up APR data structures.
+    apr_pool_destroy( aprPool );
+    apr_terminate();
 }

@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <decaf/lang/Thread.h>
+#include <decaf/internal/DecafRuntime.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Config.h>
@@ -25,6 +26,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::internal;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::logging;
@@ -43,17 +45,19 @@ void LogWriter::log( const std::string& file DECAF_UNUSED,
                      const std::string& prefix,
                      const std::string& message) {
 
-   synchronized( &getMutex() ) {
+    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>(Runtime::getRuntime());
+    synchronized(runtime->getGlobalLock()) {
       cout << prefix  << " "
-           << message << " - tid: " << Thread::getId() << endl;
+           << message << " - tid: " << Thread::currentThread()->getId() << endl;
    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LogWriter::log(const std::string& message ) {
 
-    synchronized(&getMutex()) {
-      cout << message << " - tid: " << Thread::getId() << endl;
+    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>(Runtime::getRuntime());
+    synchronized(runtime->getGlobalLock()) {
+      cout << message << " - tid: " << Thread::currentThread()->getId() << endl;
    }
 }
 
@@ -64,10 +68,4 @@ LogWriter& LogWriter::getInstance() {
     static LogWriter instance;
 
     return instance;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Mutex& LogWriter::getMutex() {
-    static concurrent::Mutex mutex;
-    return mutex;
 }

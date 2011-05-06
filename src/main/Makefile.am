@@ -320,8 +320,8 @@ cc_sources = \
     decaf/internal/util/ResourceLifecycleManager.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
-    decaf/internal/util/concurrent/unix/ConditionImpl.cpp \
-    decaf/internal/util/concurrent/unix/MutexImpl.cpp \
+    decaf/internal/util/concurrent/Threading.cpp \
+    decaf/internal/util/concurrent/unix/PlatformThread.cpp \
     decaf/internal/util/zip/adler32.c \
     decaf/internal/util/zip/crc32.c \
     decaf/internal/util/zip/deflate.c \
@@ -835,16 +835,15 @@ h_sources = \
     decaf/internal/util/Resource.h \
     decaf/internal/util/ResourceLifecycleManager.h \
     decaf/internal/util/TimerTaskHeap.h \
-    decaf/internal/util/concurrent/ConditionImpl.h \
-    decaf/internal/util/concurrent/MutexImpl.h \
+    decaf/internal/util/concurrent/PlatformThread.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
+    decaf/internal/util/concurrent/Threading.h \
+    decaf/internal/util/concurrent/ThreadingTypes.h \
     decaf/internal/util/concurrent/TransferQueue.h \
     decaf/internal/util/concurrent/TransferStack.h \
     decaf/internal/util/concurrent/Transferer.h \
-    decaf/internal/util/concurrent/unix/ConditionHandle.h \
-    decaf/internal/util/concurrent/unix/MutexHandle.h \
-    decaf/internal/util/concurrent/windows/ConditionHandle.h \
-    decaf/internal/util/concurrent/windows/MutexHandle.h \
+    decaf/internal/util/concurrent/unix/PlatformDefs.h \
+    decaf/internal/util/concurrent/windows/PlatformDefs.h \
     decaf/internal/util/zip/crc32.h \
     decaf/internal/util/zip/deflate.h \
     decaf/internal/util/zip/gzguts.h \

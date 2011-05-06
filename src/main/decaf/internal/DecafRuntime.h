@@ -27,16 +27,10 @@
 namespace decaf {
 namespace internal {
 
-    class RuntimeData;
-
     /**
      * Handles APR initialization and termination.
      */
     class DECAF_API DecafRuntime : public decaf::lang::Runtime {
-    private:
-
-       RuntimeData* runtimeData;
-
     private:
 
        DecafRuntime( const DecafRuntime& );

@@ -491,7 +491,7 @@ public:
         while( closed )
             mutex.wait();
         enter_latch->countDown();
-        if( enter_latch->await( 0 ) ) {
+        if (enter_latch->getCount() == 0) {
             closed = true;
         }
         mutex.unlock();
@@ -536,10 +536,11 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 void PointerTest::testThreadSafety() {
 
-    Pointer<PointerTestThread> thread[10];
+    const int NUM_THREADS = 1;
+    Pointer<PointerTestThread> thread[NUM_THREADS];
     Gate gate;
 
-    for( int i = 0; i < 10; i++ ) {
+    for( int i = 0; i < NUM_THREADS; i++ ) {
         thread[i].reset( new PointerTestThread( &gate ) );
         thread[i]->start();
     }
@@ -549,16 +550,16 @@ void PointerTest::testThreadSafety() {
         // before the threads.
         {
             Pointer<std::string> s( new std::string() );
-            for( int i = 0; i < 10; i++ )
+            for( int i = 0; i < NUM_THREADS; i++ )
                 thread[i]->setString( s );
         }
 
         // Signal the threads to free the string.
-        gate.open( 10 );
+        gate.open( NUM_THREADS );
         gate.close();
     }
 
-    for( int i = 0; i < 10; i++ ) {
+    for( int i = 0; i < NUM_THREADS; i++ ) {
         thread[i]->join();
     }
 }

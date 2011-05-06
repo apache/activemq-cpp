@@ -21,7 +21,7 @@
 
 using namespace std;
 using namespace decaf;
-using namespace decaf::util::concurrent;
+using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////

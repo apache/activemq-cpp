@@ -52,7 +52,7 @@ namespace test{
 
             synchronized( &threadIds ) {
                 count++;
-                threadIds.add( Thread::getId() );
+                threadIds.add( Thread::currentThread()->getId() );
             }
 
             Thread::sleep( 20 );
