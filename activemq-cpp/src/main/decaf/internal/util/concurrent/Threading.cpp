@@ -805,6 +805,8 @@ void Threading::destroyThread(ThreadHandle* thread) {
 
     if (!thread->osThread) {
         Threading::join(thread, 0, 0);
+    } else {
+        PlatformThread::detachOSThread(thread->handle);
     }
     PlatformThread::destroyMutex(thread->mutex);
     PlatformThread::destroyCondition(thread->condition);
