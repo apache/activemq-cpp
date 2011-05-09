@@ -4375,11 +4375,7 @@
 						Name="concurrent"
 						>
 						<File
-							RelativePath="..\src\main\decaf\internal\util\concurrent\ConditionImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\main\decaf\internal\util\concurrent\MutexImpl.h"
+							RelativePath="..\src\main\decaf\internal\util\concurrent\PlatformThread.h"
 							>
 						</File>
 						<File
@@ -4388,6 +4384,18 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\Threading.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\Threading.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ThreadingTypes.h"
 							>
 						</File>
 						<File
@@ -4406,19 +4414,11 @@
 							Name="windows"
 							>
 							<File
-								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\ConditionHandle.h"
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\PlatformDefs.h"
 								>
 							</File>
 							<File
-								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\ConditionImpl.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\MutexHandle.h"
-								>
-							</File>
-							<File
-								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\MutexImpl.cpp"
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\PlatformThread.cpp"
 								>
 							</File>
 						</Filter>
