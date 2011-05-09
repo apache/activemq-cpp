@@ -204,6 +204,11 @@ void PlatformThread::detachThread(decaf_thread_t handle) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::detachOSThread(decaf_thread_t handle) {
+    ::CloseHandle(handle);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::joinThread(decaf_thread_t handle) {
     ::WaitForSingleObject(handle, INFINITE);
 }
@@ -216,6 +221,17 @@ void PlatformThread::exitThread() {
 ////////////////////////////////////////////////////////////////////////////////
 decaf_thread_t PlatformThread::getCurrentThread() {
     return ::GetCurrentThread();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf_thread_t PlatformThread::getSafeOSThreadHandle() {
+
+    decaf_thread_t value;
+
+    ::DuplicateHandle(::GetCurrentProcess(), ::GetCurrentThread(),
+                      ::GetCurrentProcess(), &value, 0, TRUE, DUPLICATE_SAME_ACCESS);
+
+    return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

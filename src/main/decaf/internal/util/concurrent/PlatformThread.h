@@ -99,11 +99,15 @@ namespace concurrent {
 
         static void detachThread(decaf_thread_t handle);
 
+        static void detachOSThread(decaf_thread_t handle);
+
         static void joinThread(decaf_thread_t handle);
 
         static void exitThread();
 
         static decaf_thread_t getCurrentThread();
+
+        static decaf_thread_t getSafeOSThreadHandle();
 
         static long long getCurrentThreadId();
 

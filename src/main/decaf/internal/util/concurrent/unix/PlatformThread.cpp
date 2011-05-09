@@ -299,6 +299,11 @@ void PlatformThread::detachThread(decaf_thread_t handle) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::detachOSThread(decaf_thread_t handle DECAF_UNUSED) {
+    // Nothing to do on Linux.
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::joinThread(decaf_thread_t handle) {
     void* theReturn = 0;
     pthread_join(handle, &theReturn);
@@ -312,6 +317,11 @@ void PlatformThread::exitThread() {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf_thread_t PlatformThread::getCurrentThread() {
+    return pthread_self();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf_thread_t PlatformThread::getSafeOSThreadHandle() {
     return pthread_self();
 }
 
