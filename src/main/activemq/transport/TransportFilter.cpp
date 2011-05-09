@@ -18,6 +18,8 @@
 #include "TransportFilter.h"
 #include <decaf/io/IOException.h>
 
+#include <activemq/wireformat/WireFormat.h>
+
 using namespace activemq;
 using namespace activemq::transport;
 using namespace decaf::lang;
@@ -128,4 +130,14 @@ void TransportFilter::reconnect( const decaf::net::URI& uri ) {
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<wireformat::WireFormat> TransportFilter::getWireFormat() const {
+    return next->getWireFormat();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
+    next->setWireFormat( wireFormat );
 }

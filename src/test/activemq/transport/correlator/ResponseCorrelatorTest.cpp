@@ -19,6 +19,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <activemq/wireformat/WireFormat.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <decaf/lang/Thread.h>
@@ -106,7 +107,7 @@ namespace correlator{
         }
 
         virtual Pointer<wireformat::WireFormat> getWireFormat() const {
-        	return Pointer<wireformat::WireFormat>();
+            return Pointer<wireformat::WireFormat>();
         }
 
         virtual void setWireFormat(
