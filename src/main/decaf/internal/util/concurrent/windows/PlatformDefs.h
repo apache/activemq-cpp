@@ -56,7 +56,7 @@ namespace concurrent{
     typedef HANDLE decaf_thread_t;
     typedef DWORD decaf_tls_key;
     typedef HANDLE decaf_condition_t;
-    typedef CRITICAL_SECTION decaf_mutex_t;
+    typedef LPCRITICAL_SECTION decaf_mutex_t;
 
 }}}}
 

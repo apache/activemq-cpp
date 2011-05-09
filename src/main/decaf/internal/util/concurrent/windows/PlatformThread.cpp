@@ -36,27 +36,29 @@ using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::createMutex(decaf_mutex_t* mutex) {
-    ::InitializeCriticalSection(mutex);
+	*mutex = new CRITICAL_SECTION;
+    ::InitializeCriticalSection(*mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::lockMutex(decaf_mutex_t mutex) {
-    ::EnterCriticalSection(&mutex);
+    ::EnterCriticalSection(mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PlatformThread::tryLockMutex(decaf_mutex_t mutex) {
-    return ::TryEnterCriticalSection(&mutex) > 0 ? true : false;
+    return ::TryEnterCriticalSection(mutex) > 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::unlockMutex(decaf_mutex_t mutex) {
-    ::LeaveCriticalSection(&mutex);
+    ::LeaveCriticalSection(mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::destroyMutex(decaf_mutex_t mutex) {
-    ::DeleteCriticalSection(&mutex);
+    ::DeleteCriticalSection(mutex);
+	delete mutex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +144,7 @@ bool PlatformThread::interruptibleWaitOnCondition(decaf_condition_t condition, d
 
         if (timedOut == WAIT_TIMEOUT) {
 
-            // interruption events take precedence over timeout.
+			// interruption events take precedence over timeout.
             if (complete(true)) {
                break;
             }
@@ -153,7 +155,7 @@ bool PlatformThread::interruptibleWaitOnCondition(decaf_condition_t condition, d
 
         // check if spurious wake or intentional.
         if (complete(false)) {
-           break;
+            break;
         }
 
         timeOut = initialTimeOut - (::GetTickCount() - startTime);
