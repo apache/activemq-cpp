@@ -60,6 +60,12 @@ void ExecutorsTestSupport::threadFail(const std::string& reason) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::threadShouldThrow() {
+   threadFailed = true;
+   CPPUNIT_FAIL("should throw exception");
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void ExecutorsTestSupport::threadUnexpectedException() {
     threadFailed = true;
     CPPUNIT_FAIL("Unexpected exception");
@@ -69,6 +75,30 @@ void ExecutorsTestSupport::threadUnexpectedException() {
 void ExecutorsTestSupport::threadUnexpectedException(Throwable& ex) {
     threadFailed = true;
     CPPUNIT_FAIL(std::string("Unexpected exception: ") + ex.getMessage());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::threadAssertFalse(bool b) {
+    if (b) {
+        threadFailed = true;
+        CPPUNIT_ASSERT(!b);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::threadAssertTrue(bool b) {
+    if (!b) {
+        threadFailed = true;
+        CPPUNIT_ASSERT(b);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::threadAssertEquals(long long x, long long y) {
+    if (x != y) {
+        threadFailed = true;
+        CPPUNIT_ASSERT_EQUAL(x, y);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
