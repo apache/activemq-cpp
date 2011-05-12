@@ -56,11 +56,15 @@ namespace concurrent {
         virtual void setUp();
         virtual void tearDown();
 
-    protected:
+    public:
 
         void threadFail(const std::string& reason);
+        void threadShouldThrow();
         void threadUnexpectedException();
         void threadUnexpectedException(decaf::lang::Throwable& ex);
+        void threadAssertFalse(bool value);
+        void threadAssertTrue(bool value);
+        void threadAssertEquals(long long x, long long y);
 
         void unexpectedException();
         void shouldThrow();
