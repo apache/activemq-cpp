@@ -40,23 +40,32 @@ LockSupportTest::~LockSupportTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-class ParkTestThread : public Thread {
-public:
+namespace {
 
-    virtual void run() {
-        try{
-            LockSupport::park();
-        } catch(...) {
-            CPPUNIT_FAIL("Caught an unexpected exception");
+    class ParkTestThread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+
+    public:
+
+        ParkTestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
+        virtual ~ParkTestThread() {}
+
+        virtual void run() {
+            try{
+                LockSupport::park();
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
         }
-    }
-
-};
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LockSupportTest::testPark() {
+void LockSupportTest::testPark1() {
 
-    ParkTestThread t;
+    ParkTestThread t(this);
 
     try {
 
@@ -71,24 +80,34 @@ void LockSupportTest::testPark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-class ParkTest2Thread : public Thread {
-public:
+namespace {
 
-    virtual void run() {
-        try{
-            Thread::sleep( 1000 );
-            LockSupport::park();
-        } catch(...) {
-            CPPUNIT_FAIL("Caught an unexpected exception");
+    class ParkTest2Thread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+
+    public:
+
+        ParkTest2Thread(LockSupportTest* parent) : Thread(), parent(parent) {}
+        virtual ~ParkTest2Thread() {}
+
+        virtual void run() {
+            try{
+                Thread::sleep( 1000 );
+                LockSupport::park();
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
         }
-    }
 
-};
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupportTest::testPark2() {
 
-    ParkTest2Thread t;
+    ParkTest2Thread t(this);
 
     try {
 
@@ -108,22 +127,116 @@ void LockSupportTest::testPark2() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-class ParkNanosTestThread : public Thread {
-public:
+namespace {
 
-    virtual void run() {
-        try{
-            LockSupport::parkNanos( TimeUnit::SECONDS.toNanos( 2 ) );
-        } catch(...) {
-            CPPUNIT_FAIL("Caught an unexpected exception");
+    class Park3TestThread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+
+    public:
+
+        Park3TestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
+        virtual ~Park3TestThread() {}
+
+        virtual void run() {
+            try{
+                LockSupport::park();
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
         }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LockSupportTest::testPark3() {
+
+    Park3TestThread t(this);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
     }
-};
+    catch(Exception e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class Park4TestThread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+        Mutex* lock;
+
+    public:
+
+        Park4TestThread(LockSupportTest* parent, Mutex* lock) : Thread(), parent(parent), lock(lock) {}
+        virtual ~Park4TestThread() {}
+
+        virtual void run() {
+            try{
+                lock->lock();
+                LockSupport::park();
+                lock->unlock();
+                parent->threadAssertTrue(Thread::currentThread()->isInterrupted());
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LockSupportTest::testPark4() {
+
+    Mutex lock;
+    Park4TestThread t(this, &lock);
+    lock.lock();
+
+    try {
+        t.start();
+        t.interrupt();
+        lock.unlock();
+        t.join();
+    }
+    catch(Exception e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class ParkNanosTestThread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+
+    public:
+
+        ParkNanosTestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
+        virtual ~ParkNanosTestThread() {}
+
+        virtual void run() {
+            try{
+                LockSupport::parkNanos( TimeUnit::SECONDS.toNanos( 2 ) );
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupportTest::testParkNanos() {
 
-    ParkNanosTestThread t;
+    ParkNanosTestThread t(this);
 
     long long before = System::currentTimeMillis();
     t.start();
@@ -135,23 +248,33 @@ void LockSupportTest::testParkNanos() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-class ParkUntilTestThread : public Thread {
-public:
+namespace {
 
-    virtual void run() {
-        try{
-            long long deadline = Date().getTime() + 100;
-            LockSupport::parkUntil( deadline );
-        } catch(...) {
-            CPPUNIT_FAIL("Caught an unexpected exception");
+    class ParkUntilTestThread : public Thread {
+    private:
+
+        LockSupportTest* parent;
+
+    public:
+
+        ParkUntilTestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
+        virtual ~ParkUntilTestThread() {}
+
+        virtual void run() {
+            try{
+                long long deadline = Date().getTime() + 100;
+                LockSupport::parkUntil( deadline );
+            } catch(...) {
+                parent->threadUnexpectedException();
+            }
         }
-    }
-};
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupportTest::testParkUntil() {
 
-    ParkUntilTestThread t;
+    ParkUntilTestThread t(this);
 
     try {
         t.start();

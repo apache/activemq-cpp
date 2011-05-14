@@ -1257,16 +1257,7 @@ bool Threading::park( Thread* thread, long long mills, int nanos) {
     handle->interruptible = false;
     handle->state = Thread::RUNNABLE;
 
-    if (handle->interrupted == true) {
-        interrupted = true;
-        handle->interrupted = false;
-    }
-
     PlatformThread::unlockMutex(handle->mutex);
-
-    if (interrupted) {
-        throw InterruptedException(__FILE__, __LINE__, "Parked Thread interrupted");
-    }
 
     return timedOut;
 }
