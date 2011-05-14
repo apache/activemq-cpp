@@ -116,6 +116,8 @@ namespace concurrent{
 
         void drainQueue(ArrayList<Runnable*>& unexecutedTasks);
 
+        void interruptIdleWorkers();
+        void interruptIdleWorkers(bool onlyOne);
     };
 
     class Worker : public lang::Thread {
@@ -829,6 +831,13 @@ Runnable* ExecutorKernel::deQueueTask() {
                 break;
             }
 
+//            try {
+//                if ((task = workQueue->take()) != NULL) {
+//                    break;
+//                }
+//            } catch(InterruptedException& ex) {
+//            }
+
             if(isStoppedOrStopping() && workQueue->isEmpty()) {
                 break;
             }
@@ -1024,5 +1033,17 @@ void ExecutorKernel::tryTerminate() {
 
         this->terminated.set(true);
         this->termination.countDown();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::interruptIdleWorkers() {
+    this->interruptIdleWorkers(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorKernel::interruptIdleWorkers(bool onlyOne DECAF_UNUSED) {
+
+    synchronized(&this->mainLock) {
     }
 }

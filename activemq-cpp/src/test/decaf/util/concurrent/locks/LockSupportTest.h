@@ -20,17 +20,20 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/concurrent/ExecutorsTestSupport.h>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 namespace locks {
 
-    class LockSupportTest : public CppUnit::TestFixture {
+    class LockSupportTest : public ExecutorsTestSupport {
 
         CPPUNIT_TEST_SUITE( LockSupportTest );
-        CPPUNIT_TEST( testPark );
+        CPPUNIT_TEST( testPark1 );
         CPPUNIT_TEST( testPark2 );
+        CPPUNIT_TEST( testPark3 );
+        CPPUNIT_TEST( testPark4 );
         CPPUNIT_TEST( testParkNanos );
         CPPUNIT_TEST( testParkUntil );
         CPPUNIT_TEST_SUITE_END();
@@ -41,8 +44,10 @@ namespace locks {
 
         virtual ~LockSupportTest();
 
-        void testPark();
+        void testPark1();
         void testPark2();
+        void testPark3();
+        void testPark4();
         void testParkNanos();
         void testParkUntil();
 
