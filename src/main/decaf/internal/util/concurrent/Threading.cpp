@@ -24,6 +24,7 @@
 
 #include <decaf/internal/util/concurrent/ThreadingTypes.h>
 #include <decaf/internal/util/concurrent/PlatformThread.h>
+#include <decaf/internal/util/concurrent/Atomics.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 
 using namespace decaf;
@@ -743,15 +744,17 @@ void Threading::initialize() {
     // We mark the thread where Decaf's Init routine is called from as our Main Thread.
     library->mainThread = PlatformThread::getCurrentThread();
 
-    // Initialize the Executors static data for use in ExecutorService classes.
+    // Initialize the Executors static data for use in ExecutorService classes and Atomics
     Executors::initialize();
+    Atomics::initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Threading::shutdown() {
 
-    // First shutdown the Executors static data to remove dependencies on Threading.
+    // First shutdown the Executors and Atomics static data to remove dependencies on Threading.
     Executors::shutdown();
+    Atomics::shutdown();
 
     // Destroy any Foreign Thread Facades that were created during runtime.
     std::vector<Thread*>::iterator iter = library->osThreads.begin();

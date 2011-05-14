@@ -25,6 +25,8 @@ namespace internal {
 namespace util {
 namespace concurrent {
 
+    class Threading;
+
     class DECAF_API Atomics {
     private:
 
@@ -49,6 +51,12 @@ namespace concurrent {
         static int incrementAndGet(volatile int* target);
         static int decrementAndGet(volatile int* target);
 
+    private:
+
+        static void initialize();
+        static void shutdown();
+
+        friend class Threading;
     };
 
 }}}}
