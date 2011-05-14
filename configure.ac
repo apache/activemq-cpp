@@ -178,6 +178,9 @@ PLAT_LIBS=
 # Detect the presence of pthreads and the correct linker settings.
 DECAF_CHECK_PTHREADS()
 
+# Detect the presence of atomic operations.
+DECAF_CHECK_ATOMICS()
+
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
