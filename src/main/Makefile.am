@@ -321,6 +321,7 @@ cc_sources = \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/internal/util/concurrent/Threading.cpp \
+    decaf/internal/util/concurrent/unix/Atomics.cpp \
     decaf/internal/util/concurrent/unix/PlatformThread.cpp \
     decaf/internal/util/zip/adler32.c \
     decaf/internal/util/zip/crc32.c \
@@ -460,6 +461,7 @@ cc_sources = \
     decaf/util/concurrent/atomic/AtomicRefCounter.cpp \
     decaf/util/concurrent/atomic/AtomicReference.cpp \
     decaf/util/concurrent/locks/AbstractOwnableSynchronizer.cpp \
+    decaf/util/concurrent/locks/AbstractQueuedSynchronizer.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
@@ -835,6 +837,7 @@ h_sources = \
     decaf/internal/util/Resource.h \
     decaf/internal/util/ResourceLifecycleManager.h \
     decaf/internal/util/TimerTaskHeap.h \
+    decaf/internal/util/concurrent/Atomics.h \
     decaf/internal/util/concurrent/PlatformThread.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
     decaf/internal/util/concurrent/Threading.h \
@@ -1056,6 +1059,7 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicRefCounter.h \
     decaf/util/concurrent/atomic/AtomicReference.h \
     decaf/util/concurrent/locks/AbstractOwnableSynchronizer.h \
+    decaf/util/concurrent/locks/AbstractQueuedSynchronizer.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/Lock.h \
     decaf/util/concurrent/locks/LockSupport.h \

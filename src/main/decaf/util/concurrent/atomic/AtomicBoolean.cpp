@@ -18,13 +18,15 @@
 #include "AtomicBoolean.h"
 
 #include <decaf/lang/Boolean.h>
-#include <apr_atomic.h>
+
+#include <decaf/internal/util/concurrent/Atomics.h>
 
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::atomic;
+using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 AtomicBoolean::AtomicBoolean() : value(0) {
@@ -36,14 +38,14 @@ AtomicBoolean::AtomicBoolean( bool initialValue ) : value(initialValue ? 1 : 0) 
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AtomicBoolean::compareAndSet( bool expect, bool update ) {
-    unsigned int upd = update ? 1 : 0;
-    unsigned int exp = expect ? 1 : 0;
-    return apr_atomic_cas32( &this->value, upd, exp ) == exp;
+    int upd = update ? 1 : 0;
+    int exp = expect ? 1 : 0;
+    return Atomics::compareAndSet32(&this->value, exp, upd);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AtomicBoolean::getAndSet( bool newValue ) {
-    return apr_atomic_xchg32( &this->value, newValue ) > 0 ? true : false;
+    return Atomics::getAndSet(&this->value, newValue) > 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
