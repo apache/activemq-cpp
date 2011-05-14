@@ -17,59 +17,237 @@
 
 #include <decaf/internal/util/concurrent/Atomics.h>
 
-#include <apr_atomic.h>
+#ifndef HAVE_ATOMIC_BUILTINS
+#if defined(SOLARIS2) && SOLARIS2 >= 10
+#include <atomic.h>
+#endif
+#endif
 
 using namespace decaf::internal;
 using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
+#ifndef HAVE_ATOMIC_BUILTINS
+
+#include <decaf/internal/util/concurrent/PlatformThread.h>
+
+namespace {
+    decaf_mutex_t atomicMutex;
+}
+
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+void Atomics::initialize() {
+#ifndef HAVE_ATOMIC_BUILTINS
+    PlatformThread::createMutex(&atomicMutex);
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Atomics::shutdown() {
+#ifndef HAVE_ATOMIC_BUILTINS
+    PlatformThread::destroyMutex(atomicMutex);
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Atomics::compareAndSet32(volatile int* target, int expect, int update ) {
-    return apr_atomic_cas32((volatile apr_uint32_t*)target, update, expect) == (unsigned int)expect;
+
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_val_compare_and_swap(target, expect, update)  == (unsigned int)expect;
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_cas_32((volatile unsigned int*)target, expect, update);
+#else
+    bool result = false;
+    PlatformThread::lockMutex(atomicMutex);
+
+    if (*target == expect) {
+        *target = update;
+        result = true;
+    }
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return result;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Atomics::compareAndSet(volatile void** target, void* expect, void* update) {
-    return apr_atomic_casptr( target, (void*)update, (void*)expect ) == (void*)expect;
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_val_compare_and_swap(target, (void*)expect, (void*)update) == (void*)expect;
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_cas_ptr(target, expect, update);
+#else
+    bool result = false;
+    PlatformThread::lockMutex(atomicMutex);
+
+    if (*target == expect) {
+        *target = update;
+        result = true;
+    }
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return result;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndSet(volatile int* target, int newValue) {
-    return apr_atomic_xchg32((volatile apr_uint32_t*)target, newValue);
+#ifdef HAVE_ATOMIC_BUILTINS
+    __sync_synchronize();
+    return __sync_lock_test_and_set(target, newValue);
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_swap_32(target, newValue);
+#else
+    int oldValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    oldValue = *target;
+    *target = newValue;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return oldValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void* Atomics::getAndSet(volatile void** target, void* newValue) {
-    return apr_atomic_xchgptr(target, newValue);
+#ifdef HAVE_ATOMIC_BUILTINS
+    __sync_synchronize();
+    return (void*) __sync_lock_test_and_set(target, newValue);
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_swap_ptr(target, newValue);
+#elif defined(__APPLE__)
+    return atomic_swap_32(target, newValue);
+#else
+    void* oldValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    oldValue = *(void **)target;
+    *target = newValue;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return oldValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndIncrement(volatile int* target) {
-    return apr_atomic_inc32((volatile apr_uint32_t*)target);
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, 1);
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(mem, 1) - 1;
+#else
+    int oldValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    oldValue = *target;
+    (*target)++;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return oldValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndDecrement(volatile int* target) {
-    return apr_atomic_add32((volatile apr_uint32_t*)target, 0xFFFFFFFF);
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, 0xFFFFFFFF);
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(target, 0xFFFFFFFF) + 1;
+#else
+    int oldValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    oldValue = *target;
+    (*target)--;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return oldValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndAdd(volatile int* target, int delta) {
-    return apr_atomic_add32((volatile apr_uint32_t*)target, delta);
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, delta);
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(target, delta) - delta;
+#else
+    int oldValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    oldValue = *target;
+    *target += delta;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return oldValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::addAndGet(volatile int* target, int delta) {
-    return apr_atomic_add32((volatile apr_uint32_t*)target, delta) + delta;
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, delta) + delta;
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(target, delta);
+#else
+    int newValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    *target += delta;
+    newValue = *target;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return newValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::incrementAndGet(volatile int* target) {
-    return apr_atomic_inc32((volatile apr_uint32_t*)target) + 1;
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, 1) + 1;
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(target, 1);
+#else
+    int newValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    (*target)++;
+    newValue = *target;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return newValue;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::decrementAndGet(volatile int* target) {
-    return apr_atomic_add32((volatile apr_uint32_t*)target, 0xFFFFFFFF) - 1;
+#ifdef HAVE_ATOMIC_BUILTINS
+    return __sync_fetch_and_add(target, 0xFFFFFFFF) - 1;
+#elif defined(SOLARIS2) && SOLARIS2 >= 10
+    return atomic_add_32_nv(target, 0xFFFFFFFF);
+#else
+    int newValue;
+    PlatformThread::lockMutex(atomicMutex);
+
+    (*target)--;
+    newValue = *target;
+
+    PlatformThread::unlockMutex(atomicMutex);
+
+    return newValue;
+#endif
 }
 
