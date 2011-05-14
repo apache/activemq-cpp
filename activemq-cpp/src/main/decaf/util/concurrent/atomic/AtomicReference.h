@@ -20,7 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Long.h>
-#include <apr_atomic.h>
+#include <decaf/internal/util/concurrent/Atomics.h>
 
 namespace decaf {
 namespace util {
@@ -57,7 +57,7 @@ namespace atomic {
          *        The new Value of this Reference.
          */
         void set( T* newValue ) {
-            apr_atomic_xchgptr( &this->value, (void*)newValue );
+            internal::util::concurrent::Atomics::getAndSet(&this->value, (void*)newValue);
         }
 
         /**
@@ -71,7 +71,7 @@ namespace atomic {
          *         not equal to the expected value.
          */
         bool compareAndSet( T* expect, T* update ) {
-            return apr_atomic_casptr( &this->value, (void*)update, (void*)expect ) == (void*)expect;
+            return internal::util::concurrent::Atomics::compareAndSet(&this->value, (void*)expect, (void*)update);
         }
 
         /**
@@ -82,7 +82,7 @@ namespace atomic {
          * @return the previous value.
          */
         T* getAndSet( T* newValue ) {
-            return (T*)apr_atomic_xchgptr( &this->value, (void*)newValue );
+            return (T*)internal::util::concurrent::Atomics::getAndSet(&this->value, (void*)newValue);
         }
 
         /**

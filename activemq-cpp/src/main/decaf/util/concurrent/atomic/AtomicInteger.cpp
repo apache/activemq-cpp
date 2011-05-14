@@ -18,65 +18,68 @@
 #include "AtomicInteger.h"
 
 #include <decaf/lang/Integer.h>
-#include <apr_atomic.h>
+#include <decaf/internal/util/concurrent/Atomics.h>
 
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::atomic;
+using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicInteger::AtomicInteger() : value( 0 ) {
+AtomicInteger::AtomicInteger() :
+    value(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicInteger::AtomicInteger( int initialValue ) : value( initialValue ) {
+AtomicInteger::AtomicInteger(int initialValue) :
+    value(initialValue) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int AtomicInteger::getAndSet( int newValue ) {
-    return apr_atomic_xchg32( &this->value, newValue );
+int AtomicInteger::getAndSet(int newValue) {
+    return Atomics::getAndSet(&this->value, newValue);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AtomicInteger::compareAndSet( int expect, int update ) {
-    return apr_atomic_cas32( &this->value, update, expect ) == (unsigned int)expect;
+bool AtomicInteger::compareAndSet(int expect, int update) {
+    return Atomics::compareAndSet32(&this->value, expect, update);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::getAndIncrement() {
-    return apr_atomic_inc32( &this->value );
+    return Atomics::getAndIncrement(&this->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::getAndDecrement() {
-    return apr_atomic_add32( &this->value, 0xFFFFFFFF );
+    return Atomics::getAndDecrement(&this->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int AtomicInteger::getAndAdd( int delta ) {
-    return apr_atomic_add32( &this->value, delta );
+int AtomicInteger::getAndAdd(int delta) {
+    return Atomics::getAndAdd(&this->value, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::incrementAndGet() {
-    return apr_atomic_inc32( &this->value ) + 1;
+    return Atomics::incrementAndGet(&this->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int AtomicInteger::decrementAndGet() {
-    return apr_atomic_add32( &this->value, 0xFFFFFFFF ) - 1;
+    return Atomics::decrementAndGet(&this->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int AtomicInteger::addAndGet( int delta ) {
-    return apr_atomic_add32( &this->value, delta ) + delta;
+int AtomicInteger::addAndGet(int delta) {
+    return Atomics::addAndGet(&this->value, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string AtomicInteger::toString() const {
-    return Integer::toString( this->value );
+    return Integer::toString(this->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,15 +89,15 @@ int AtomicInteger::intValue() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long AtomicInteger::longValue() const {
-    return Integer( value ).longValue();
+    return Integer(value).longValue();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 float AtomicInteger::floatValue() const {
-    return Integer( value ).floatValue();
+    return Integer(value).floatValue();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double AtomicInteger::doubleValue() const {
-    return Integer( value ).doubleValue();
+    return Integer(value).doubleValue();
 }

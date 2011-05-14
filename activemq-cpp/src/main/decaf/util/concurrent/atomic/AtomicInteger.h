@@ -37,7 +37,7 @@ namespace atomic {
     class DECAF_API AtomicInteger : public decaf::lang::Number {
     private:
 
-        volatile unsigned int value;
+        volatile int value;
 
     public:
 
