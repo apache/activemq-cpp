@@ -47,7 +47,14 @@ namespace internal{
 namespace util{
 namespace concurrent{
 
+    struct RWLOCK {
+        HANDLE writeMutex;
+        HANDLE readEvent;
+        LONG readers;
+    };
+
     typedef void* PLATFORM_THREAD_ENTRY_ARG;
+
     #define PLATFORM_THREAD_RETURN() return 0;
     #define PLATFORM_THREAD_CALLBACK_TYPE unsigned
     #define PLATFORM_DEFAULT_STACK_SIZE 0x8000
@@ -57,6 +64,7 @@ namespace concurrent{
     typedef DWORD decaf_tls_key;
     typedef HANDLE decaf_condition_t;
     typedef LPCRITICAL_SECTION decaf_mutex_t;
+    typedef RWLOCK* decaf_rwmutex_t;
 
 }}}}
 

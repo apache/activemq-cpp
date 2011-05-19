@@ -57,7 +57,7 @@ namespace concurrent{
     typedef pthread_key_t decaf_tls_key;
     typedef pthread_cond_t* decaf_condition_t;
     typedef pthread_mutex_t* decaf_mutex_t;
-
+    typedef pthread_rwlock_t* decaf_rwmutex_t;
 
 }}}}
 

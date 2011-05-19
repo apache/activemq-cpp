@@ -99,6 +99,60 @@ void PlatformThread::destroyMutex(decaf_mutex_t mutex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::createRWMutex(decaf_rwmutex_t* mutex) {
+
+    *mutex = new pthread_rwlock_t;
+
+    if( pthread_rwlock_init(*mutex, NULL) != 0 ) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to create OS Mutex object." );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::readerLockMutex(decaf_rwmutex_t mutex) {
+
+    if (pthread_rwlock_rdlock(mutex) != 0) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to Lock OS RW Mutex" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::writerLockMutex(decaf_rwmutex_t mutex) {
+
+    if (pthread_rwlock_wrlock(mutex) != 0) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to Lock OS RW Mutex" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool PlatformThread::tryReaderLockMutex(decaf_rwmutex_t mutex) {
+    return pthread_rwlock_tryrdlock(mutex) == 0 ? true : false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool PlatformThread::tryWriterLockMutex(decaf_rwmutex_t mutex) {
+    return pthread_rwlock_trywrlock(mutex) == 0 ? true : false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
+
+    if (pthread_rwlock_unlock(mutex) != 0) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to Unlock OS RW Mutex" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::destroyRWMutex(decaf_rwmutex_t mutex) {
+    pthread_rwlock_destroy(mutex);
+    delete mutex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::createCondition(decaf_condition_t* condition) {
 
     *condition = new pthread_cond_t;
