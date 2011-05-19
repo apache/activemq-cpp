@@ -36,7 +36,7 @@ using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::createMutex(decaf_mutex_t* mutex) {
-	*mutex = new CRITICAL_SECTION;
+    *mutex = new CRITICAL_SECTION;
     ::InitializeCriticalSection(*mutex);
 }
 
@@ -58,7 +58,168 @@ void PlatformThread::unlockMutex(decaf_mutex_t mutex) {
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::destroyMutex(decaf_mutex_t mutex) {
     ::DeleteCriticalSection(mutex);
-	delete mutex;
+    delete mutex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::createRWMutex(decaf_rwmutex_t* mutex) {
+    *mutex = new RWLOCK;
+
+    (*mutex)->readers = 0;
+
+    if (!((*mutex)->readEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL))) {
+        *mutex = NULL;
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to initialize OS Event object.");
+    }
+
+    if (! ((*mutex)->writeMutex = ::CreateMutex(NULL, FALSE, NULL))) {
+        ::CloseHandle((*mutex)->readEvent);
+        *mutex = NULL;
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to initialize OS Mutex object.");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::readerLockMutex(decaf_rwmutex_t mutex) {
+
+    DWORD code = ::WaitForSingleObject(mutex->writeMutex, INFINITE);
+
+    if (code == WAIT_FAILED || code == WAIT_TIMEOUT) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to wait for lock on RW object.");
+    }
+
+    // The write mutex lock prevents writers from entering while we add a
+    // reader, and protects the read counter from races.
+    ::InterlockedIncrement(&mutex->readers);
+
+    if (! ::ResetEvent(mutex->readEvent)) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to reset RW Event object.");
+    }
+
+    if (! ReleaseMutex(mutex->writeMutex)) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to release RW Mutex object.");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::writerLockMutex(decaf_rwmutex_t mutex) {
+
+    DWORD code = ::WaitForSingleObject(mutex->writMmutex, INFINITE);
+
+    if (code == WAIT_FAILED || code == WAIT_TIMEOUT) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to wait for lock on RW object.");
+    }
+
+    // Once we own the lock we must wait for the readers to all leave.
+    if (mutex->readers) {
+
+        code = ::WaitForSingleObject(mutex->readEvent, INFINITE);
+        if (code == WAIT_FAILED || code == WAIT_TIMEOUT) {
+
+            ::ReleaseMutex(mutex->writeMutex);
+
+            throw RuntimeException(
+                __FILE__, __LINE__, "Failed to wait for lock on RW object.");
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool PlatformThread::tryReaderLockMutex(decaf_rwmutex_t mutex) {
+
+    DWORD code = ::WaitForSingleObject(mutex->writeMutex, 0);
+
+    if (code == WAIT_FAILED) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to wait for lock on RW object.");
+    }
+
+    if (code == WAIT_TIMEOUT) {
+        return false;
+    }
+
+    // The write mutex lock prevents writers from entering while we add a
+    // reader, and protects the read counter from races.
+    ::InterlockedIncrement(&mutex->readers);
+
+    if (! ::ResetEvent(mutex->readEvent)) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to reset RW Event object.");
+    }
+
+    if (! ::ReleaseMutex(mutex->writeMutex)) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to release RW Mutex object.");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool PlatformThread::tryWriterLockMutex(decaf_rwmutex_t mutex) {
+
+    DWORD code = ::WaitForSingleObject(mutex->writMmutex, 0);
+
+    if (code == WAIT_FAILED) {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to wait for lock on RW object.");
+    }
+
+    if (code == WAIT_TIMEOUT) {
+        return false;
+    }
+
+    // Once we own the lock we must check for readers, if there
+    if (mutex->readers > 0) {
+
+        if (! ::ReleaseMutex(mutex->writeMutex)) {
+            throw RuntimeException(
+                __FILE__, __LINE__, "Failed to release RW Mutex object.");
+        }
+        return false;
+    }
+
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
+
+    DWORD result = 0;
+
+    if (! ::ReleaseMutex(rwlock->write_mutex)) {
+        result = ::GetLastError();
+    }
+
+    // If not the owner then we must be a reader holding the lock.
+    if (result == ERROR_NOT_OWNER) {
+
+        // If there are readers and this is the last release, signal the event
+        // so that any waiting writers get nofitied.
+        if (mutex->readers > 0 && ::InterlockedDecrement(mutex->readers) == 0) {
+
+           if (! ::SetEvent(mutex->readEvent)) {
+               throw RuntimeException(
+                   __FILE__, __LINE__, "Failed to signal OS event object.");
+           }
+        }
+    } else {
+        throw RuntimeException(
+            __FILE__, __LINE__, "Failed to signal unlock OS Mutex object.");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PlatformThread::destroyRWMutex(decaf_rwmutex_t mutex) {
+
+    ::CloseHandle(mutex->readEvent);
+    ::CloseHandle(mutex->writeMutex);
+
+    delete mutex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +305,7 @@ bool PlatformThread::interruptibleWaitOnCondition(decaf_condition_t condition, d
 
         if (timedOut == WAIT_TIMEOUT) {
 
-			// interruption events take precedence over timeout.
+            // interruption events take precedence over timeout.
             if (complete(true)) {
                break;
             }

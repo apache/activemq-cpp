@@ -38,8 +38,16 @@ namespace concurrent {
         PlatformThread(const PlatformThread&);
         PlatformThread& operator= (const PlatformThread&);
 
-    public:
+    public:  // Mutex processing methods
 
+        /**
+         * Creates a new Mutex instance at the location given by the mutex pointer
+         * argument.  The mutex must be destroyed by calling the destoryMutex
+         * method when it is no longer needed.
+         *
+         * @param mutex
+         *      Pointer to a memory location where the new Mutex is to be stored.
+         */
         static void createMutex(decaf_mutex_t* mutex);
 
         static void lockMutex(decaf_mutex_t mutex);
@@ -49,6 +57,20 @@ namespace concurrent {
         static void unlockMutex(decaf_mutex_t mutex);
 
         static void destroyMutex(decaf_mutex_t mutex);
+
+    public: // Reader / Writer Mutex processing methods.
+
+        static void createRWMutex(decaf_rwmutex_t* mutex);
+
+        static void readerLockMutex(decaf_rwmutex_t mutex);
+        static void writerLockMutex(decaf_rwmutex_t mutex);
+
+        static bool tryReaderLockMutex(decaf_rwmutex_t mutex);
+        static bool tryWriterLockMutex(decaf_rwmutex_t mutex);
+
+        static void unlockRWMutex(decaf_rwmutex_t mutex);
+
+        static void destroyRWMutex(decaf_rwmutex_t mutex);
 
     public:  // Condition processing methods
 
