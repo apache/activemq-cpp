@@ -78,7 +78,7 @@ void LockSupport::parkUntil( long long deadline ) throw() {
 
         long long now = System::currentTimeMillis();
 
-        if( deadline < now ) {
+        if( deadline <= now ) {
             return;
         }
 
