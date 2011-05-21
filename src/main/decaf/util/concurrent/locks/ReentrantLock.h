@@ -21,13 +21,14 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/concurrent/locks/Lock.h>
+#include <decaf/util/Collection.h>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 namespace locks {
 
-    class LockHandle;
+    class Sync;
 
     /**
      * A reentrant mutual exclusion Lock with extended capabilities.
@@ -79,7 +80,9 @@ namespace locks {
     class DECAF_API ReentrantLock : public Lock {
     private:
 
-        LockHandle* handle;
+        // Instance of an AbstractQueuedSynchronizer specific to this type of Lock.
+        // Will vary depending on whether fair or unfair lock semantics are requested.
+        Sync* sync;
 
     private:
 
@@ -88,7 +91,18 @@ namespace locks {
 
     public:
 
+        /**
+         * Create a new ReentrantLock instance with unfair locking semantics.
+         */
         ReentrantLock();
+
+        /**
+         * Create a new ReentrantLock instance with the specified locking semantics.
+         *
+         * @param fair
+         *      Boolean value indicating if the lock should be fair or not.
+         */
+        ReentrantLock(bool fair);
 
         virtual ~ReentrantLock();
 
@@ -254,6 +268,8 @@ namespace locks {
          */
         virtual Condition* newCondition();
 
+    public:  // Diagnostics methods.
+
         /**
          * Queries the number of holds on this lock by the current thread.
          *
@@ -352,6 +368,90 @@ namespace locks {
          * @returns a string identifying this lock, as well as its lock state
          */
         std::string toString() const;
+
+        /**
+         * Gets an estimated count of the number of threads that are currently waiting to acquire, this
+         * value changes dynamically so the result of this method can be invalid immediately after it
+         * is called.
+         *
+         * @returns an estimate of the number of waiting threads.
+         */
+        int getQueueLength() const;
+
+        /**
+         * Gets an estimated count of the number of threads that are currently waiting on the given
+         * Condition object, this value changes dynamically so the result of this method can be invalid
+         * immediately after it is called.  The Condition object must be associated with this Lock
+         * or an exception will be thrown.
+         *
+         * @returns an estimate of the number of waiting threads.
+         *
+         * @throws NullPointerException if the ConditionObject pointer is NULL.
+         * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
+         * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
+         */
+        int getWaitQueueLength(Condition* condition) const;
+
+        /**
+         * Returns true if there are any threads that are currently waiting on the given Condition object,
+         * the condition must be associated with this Lock instance.
+         *
+         * @returns true if the condition object has waiting threads.
+         *
+         * @throws NullPointerException if the ConditionObject pointer is NULL.
+         * @throws IllegalArgumentException if the ConditionObject is not associated with this Lock.
+         * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
+         */
+        bool hasWaiters(Condition* condition) const;
+
+        /**
+         * @returns true if there are threads that are currently waiting to acquire this Lock.
+         */
+        bool hasQueuedThreads() const;
+
+        /**
+         * @returns true if the given Thread is waiting to acquire this Lock object.  Because of cancellations
+         *          this method can return true but the given Thread is not in the Queue afterwards.
+         *
+         * @throws NullPointerException if the given thread is NULL.
+         */
+        bool hasQueuedThread(decaf::lang::Thread* thread) const;
+
+    protected:
+
+        /**
+         * Creates and returns a new Collection object that contains all the threads that may be waiting
+         * on the given Condition object instance at the time this method is called.
+         *
+         * @returns a Collection pointer that contains waiting threads on given Condition object.
+         *          The caller owns the returned pointer.
+         *
+         * @throws NullPointerException if the ConditionObject pointer is NULL.
+         * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
+         * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
+         */
+        decaf::util::Collection<decaf::lang::Thread*>* getWaitingThreads(Condition* condition) const;
+
+        /**
+         * Returns the thread that currently owns this lock, or NULL if not owned. When this method
+         * is called by a thread that is not the owner, the return value reflects a best-effort
+         * approximation of current lock status. For example, the owner may be momentarily NULL even
+         * if there are threads trying to acquire the lock but have not yet done so. This method is
+         * designed to facilitate construction of subclasses that provide more extensive lock
+         * monitoring facilities.
+         *
+         * @return pointer to the Thread that owns this lock, or NULL if not owned.
+         */
+        decaf::lang::Thread* getOwner() const;
+
+        /**
+         * Creates and returns a new Collection object that contains a best effort snapshot of the
+         * threads that are currently waiting to acquire.
+         *
+         * @returns a Collection pointer that contains waiting threads for lock acquisition.
+         *          The caller owns the returned pointer.
+         */
+        decaf::util::Collection<decaf::lang::Thread*>* getQueuedThreads() const;
 
     };
 
