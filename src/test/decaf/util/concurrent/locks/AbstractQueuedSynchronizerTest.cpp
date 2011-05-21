@@ -98,11 +98,8 @@ namespace {
 
         virtual void run() {
             try {
-                std::cout << "InterruptibleSyncRunnable acquireInterruptibly" << std::endl;
                 mutex->acquireInterruptibly(1);
-                std::cout << "InterruptibleSyncRunnable was not interrupted" << std::endl;
             } catch(InterruptedException& success) {
-                std::cout << "InterruptibleSyncRunnable was interrupted" << std::endl;
             } catch(Exception& ex) {
                 parent->threadUnexpectedException(ex);
             } catch(std::exception& stdex) {
@@ -125,11 +122,9 @@ namespace {
 
         void run() {
             try {
-                std::cout << "InterruptedSyncRunnable acquireInterruptibly" << std::endl;
                 mutex->acquireInterruptibly(1);
                 parent->threadFail("Should have been interrupted.");
             } catch(InterruptedException& success) {
-                std::cout << "InterruptedSyncRunnable was interrupted" << std::endl;
             } catch(Exception& ex) {
                 parent->threadUnexpectedException(ex);
             } catch(std::exception& stdex) {
@@ -224,27 +219,26 @@ void AbstractQueuedSynchronizerTest::testIsQueued() {
     Thread t1(&iSyncRun1);
     Thread t2(&iSyncRun2);
 
-    std::cout << std::endl;
     try {
         CPPUNIT_ASSERT(!mutex.isQueued(&t1));
         CPPUNIT_ASSERT(!mutex.isQueued(&t2));
         mutex.acquire(1);
         t1.start();
         Thread::sleep(SHORT_DELAY_MS);
-//        CPPUNIT_ASSERT(mutex.isQueued(&t1));
+        CPPUNIT_ASSERT(mutex.isQueued(&t1));
         t2.start();
         Thread::sleep(SHORT_DELAY_MS);
-//        CPPUNIT_ASSERT(mutex.isQueued(&t1));
-//        CPPUNIT_ASSERT(mutex.isQueued(&t2));
+        CPPUNIT_ASSERT(mutex.isQueued(&t1));
+        CPPUNIT_ASSERT(mutex.isQueued(&t2));
         t1.interrupt();
-//        Thread::sleep(SHORT_DELAY_MS);
-//        CPPUNIT_ASSERT(!mutex.isQueued(&t1));
-//        CPPUNIT_ASSERT(mutex.isQueued(&t2));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!mutex.isQueued(&t1));
+        CPPUNIT_ASSERT(mutex.isQueued(&t2));
         mutex.release(1);
-//        Thread::sleep(SHORT_DELAY_MS);
-//        CPPUNIT_ASSERT(!mutex.isQueued(&t1));
-//        Thread::sleep(SHORT_DELAY_MS);
-//        CPPUNIT_ASSERT(!mutex.isQueued(&t2));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!mutex.isQueued(&t1));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!mutex.isQueued(&t2));
         t1.join();
         t2.join();
     } catch(Exception& e){
@@ -705,7 +699,7 @@ void AbstractQueuedSynchronizerTest::testAwaitUntilTimeout() {
     try {
         mutex.acquire(1);
         Date d;
-        CPPUNIT_ASSERT(!c->awaitUntil((d.getTime() + 10)));
+        CPPUNIT_ASSERT(!c->awaitUntil((d.getTime() + 15)));
         mutex.release(1);
     } catch(Exception& ex) {
         unexpectedException();
@@ -1521,9 +1515,8 @@ namespace {
             try {
                 parent->threadAssertFalse(latch->isSignalled());
                 latch->acquireSharedInterruptibly(0);
-                parent->threadAssertTrue(latch->isSignalled());
+                parent->threadShouldThrow();
             } catch(InterruptedException& e) {
-                parent->threadUnexpectedException();
             }
         }
     };
@@ -1566,7 +1559,6 @@ namespace {
                 latch->tryAcquireSharedNanos(0, AbstractQueuedSynchronizerTest::SMALL_DELAY_MS* 1000 * 1000);
                 parent->threadShouldThrow();
             } catch(InterruptedException& e) {
-                parent->threadUnexpectedException();
             }
         }
     };
