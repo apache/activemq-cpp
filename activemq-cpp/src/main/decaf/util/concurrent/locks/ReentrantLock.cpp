@@ -18,36 +18,11 @@
 #include <decaf/util/concurrent/locks/ReentrantLock.h>
 
 #include <decaf/lang/Thread.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
+#include <decaf/lang/exceptions/IllegalMonitorStateException.h>
+#include <decaf/util/concurrent/locks/AbstractQueuedSynchronizer.h>
 
 #include <sstream>
-
-#if HAVE_PTHREAD_H
-#include <pthread.h>
-#endif
-#if HAVE_PTHREAD_H
-#include <pthread.h>
-#endif
-#if HAVE_SIGNAL_H
-#include <signal.h>
-#endif
-#if HAVE_STRING_H
-#include <string.h>
-#endif
-#if HAVE_SCHED_H
-#include <sched.h>
-#endif
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_TIME_H
-#include <time.h>
-#endif
-#if HAVE_ERRNO_H
-#include <errno.h>
-#endif
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -63,323 +38,246 @@ namespace concurrent{
 namespace locks{
 
     /**
-     * Lock Handle provides the data needed to keep track of the Lock on
-     * the supported platforms.
+     * Fairness Policy base class that uses the AbstraactQueuedSynchronizer to do
+     * most of the heavy lifting for the ReentrantLock object.
      */
-    class LockHandle {
-    private:
-
-        LockHandle( const LockHandle& );
-        LockHandle& operator= ( const LockHandle& );
-
+    class Sync : public AbstractQueuedSynchronizer {
     public:
 
-        // OS specific Lock Object.
-#ifdef HAVE_PTHREAD_H
-        pthread_mutex_t handle;
-#else
-        CRITICAL_SECTION handle;
-#endif
+        Sync() {}
+        virtual ~Sync() {}
 
-        // Lock Status Members
-        Thread* lock_owner;
-        volatile long long lock_owner_tid;
-        volatile long long lock_count;
+        /**
+         * Performs the actual lock.  The locking policy subclasses can
+         * optimize the locking process based on their fairness.
+         */
+        virtual void lock() = 0;
 
-    public:
+        virtual bool isFair() const = 0;
 
-        LockHandle() : handle(), lock_owner(NULL), lock_owner_tid(0), lock_count(0) {
+        /**
+         * Performs non-fair tryLock.  tryAcquire is implemented by each of the
+         * policy subclasses but both can make use of a non-fair try.
+         */
+        bool nonfairTryAcquire(int acquires) {
 
-#ifdef HAVE_PTHREAD_H
+            Thread* current = Thread::currentThread();
+            int c = this->getState();
 
-            if( pthread_mutex_init( &handle, NULL ) != 0 ) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to create OS Mutex object." );
+            if (c == 0) {
+
+                if (this->compareAndSetState(0, acquires)) {
+                    this->setExclusiveOwnerThread(current);
+                    return true;
+                }
+
+            } else if (current == this->getExclusiveOwnerThread()) {
+
+                int nextc = c + acquires;
+
+                // Check for overflow of the state counter.
+                if (nextc < 0) {
+                    throw new RuntimeException(__FILE__, __LINE__, "Maximum lock count exceeded");
+                }
+
+                this->setState(nextc);
+                return true;
             }
 
-#else
-
-            try{
-                InitializeCriticalSection( &handle );
-            } catch(...) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to create OS Mutex object." );
-            }
-
-#endif
+            return false;
         }
 
-        ~LockHandle() {
-#ifdef HAVE_PTHREAD_H
-            pthread_mutex_destroy( &handle );
-#else
-            DeleteCriticalSection( &handle );
-#endif
+        Condition* getNewCondition() {
+            return AbstractQueuedSynchronizer::createDefaultConditionObject();
+        }
+
+        Thread* getOwner() const {
+            return getState() == 0 ? NULL : getExclusiveOwnerThread();
+        }
+
+        int getHoldCount() const {
+            return isHeldExclusively() ? getState() : 0;
+        }
+
+        bool isLocked() const {
+            return getState() != 0;
+        }
+
+        bool isHeldExclusively() const {
+            return getExclusiveOwnerThread() == Thread::currentThread();
+        }
+
+    protected:
+
+        bool tryRelease(int releases) {
+
+            int c = getState() - releases;
+
+            if (Thread::currentThread() != getExclusiveOwnerThread()) {
+                throw IllegalMonitorStateException();
+            }
+
+            bool free = false;
+
+            if (c == 0) {
+                free = true;
+                setExclusiveOwnerThread(NULL);
+            }
+
+            setState(c);
+
+            return free;
         }
 
     };
 
-    /**
-     * Internally defined Condition Object.
-     *
-     * This Condition Object implements a Condition object that is associated with
-     * a single ReentrantLock object and has access to its internal LockHandle.
-     */
-    class ConditionObject : public Condition {
-    private:
+    class NonFairSync : public Sync {
+    public:
 
-        ConditionObject( const ConditionObject& );
-        ConditionObject& operator= ( const ConditionObject& );
-
-    private:
-
-        LockHandle* lock;
-
-#ifdef HAVE_PTHREAD_H
-        pthread_cond_t condition;
-#else
-        HANDLE semaphore;
-        CRITICAL_SECTION criticalSection;
-        unsigned int numWaiting;
-        unsigned int numWake;
-        unsigned int generation;
-#endif
+        NonFairSync() : Sync() {}
+        virtual ~NonFairSync() {}
 
     public:
 
-        ConditionObject( LockHandle* lock ) : lock(lock),
-#ifdef HAVE_PTHREAD_H
-            condition() {
-#else
-            semaphore(), criticalSection(), numWaiting(0), numWake(0), generation(0) {
-#endif
-
-#ifdef HAVE_PTHREAD_H
-            if( pthread_cond_init( &condition, NULL ) != 0 ) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to initialize OS Condition object." );
-            }
-#else
-            semaphore = CreateSemaphore( NULL, 0, LONG_MAX, NULL );
-            if( semaphore == NULL ) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to initialize OS Condition object." );
-            }
-
-            try{
-                InitializeCriticalSection( &criticalSection );
-            } catch(...) {
-                throw RuntimeException(
-                    __FILE__, __LINE__, "Failed to initialize OS Condition object." );
-            }
-#endif
+        virtual bool isFair() const {
+            return false;
         }
 
-        virtual ~ConditionObject() {
-#ifdef HAVE_PTHREAD_H
-            pthread_cond_destroy( &condition );
-#else
-            CloseHandle( semaphore );
-            ::DeleteCriticalSection( &criticalSection );
-#endif
+        virtual void lock() {
+
+            if (this->compareAndSetState(0, 1)) {
+                this->setExclusiveOwnerThread(Thread::currentThread());
+            } else {
+                acquire(1);
+            }
         }
 
-        virtual void await();
+    protected:
 
-        virtual void awaitUninterruptibly();
+        virtual bool tryAcquire(int acquires) {
+            return this->nonfairTryAcquire(acquires);
+        }
+    };
 
-        virtual long long awaitNanos( long long nanosTimeout );
+    /**
+     * The fair policy only lets a Thread acquire if the lock is not held, the
+     * call amounts to a recursive lock, or the Thread is the first one in line.
+     */
+    class FairSync : public Sync {
+    public:
 
-        virtual bool await( long long time, const TimeUnit& unit );
+        FairSync() : Sync() {}
+        virtual ~FairSync() {}
 
-        virtual bool awaitUntil( const Date& deadline );
+    public:
 
-        virtual void signal();
+        virtual void lock() {
+            this->acquire(1);
+        }
 
-        virtual void signalAll();
+        virtual bool isFair() const {
+            return true;
+        }
 
+    protected:
+
+        virtual bool tryAcquire(int acquires) {
+
+            Thread* current = Thread::currentThread();
+
+            int c = this->getState();
+
+            if (c == 0) {
+
+                if (!hasQueuedPredecessors() && compareAndSetState(0, acquires)) {
+                    this->setExclusiveOwnerThread(current);
+                    return true;
+                }
+
+            } else if (current == this->getExclusiveOwnerThread()) {
+
+                int nextc = c + acquires;
+
+                // Check for overflow of the lock sstate variable.
+                if (nextc < 0) {
+                    throw new RuntimeException(__FILE__, __LINE__, "Maximum lock count exceeded");
+                }
+
+                setState(nextc);
+                return true;
+            }
+
+            return false;
+        }
     };
 
 }}}}
 
 ////////////////////////////////////////////////////////////////////////////////
-ReentrantLock::ReentrantLock() : handle(new LockHandle) {
+ReentrantLock::ReentrantLock() : Lock(), sync(new NonFairSync) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ReentrantLock::ReentrantLock(bool fair) : Lock(), sync(NULL) {
+    fair == true ? sync = new FairSync() : sync = new NonFairSync();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ReentrantLock::~ReentrantLock() {
     try{
-        delete this->handle;
+        delete this->sync;
     }
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantLock::lock() {
-
-    long long threadId = Thread::currentThread()->getId();
-
-    if( threadId == handle->lock_owner_tid ) {
-        handle->lock_count++;
-    } else {
-
-#ifdef HAVE_PTHREAD_H
-
-        if( pthread_mutex_lock( &( handle->handle ) ) != 0 ) {
-            throw RuntimeException(
-                __FILE__, __LINE__, "Failed to Lock OS Mutex" );
-        }
-
-#else
-
-        try{
-            EnterCriticalSection( &handle->handle );
-        } catch(...) {
-            throw RuntimeException(
-                __FILE__, __LINE__, "Failed to Lock OS Mutex" );
-        }
-
-#endif
-
-        handle->lock_owner_tid = threadId;
-        handle->lock_owner = Thread::currentThread();
-        handle->lock_count = 1;
-    }
+    this->sync->lock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantLock::lockInterruptibly() {
-
-    this->lock();
+    this->sync->acquireInterruptibly(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::tryLock() {
-
-    long long threadId = Thread::currentThread()->getId();
-
-    if( threadId == handle->lock_owner_tid ) {
-        handle->lock_count++;
-    } else {
-
-        unsigned int result = 0;
-
-#ifdef HAVE_PTHREAD_H
-        result = pthread_mutex_trylock( &( handle->handle ) );
-#else
-        try{
-            result = TryEnterCriticalSection( &handle->handle );
-        } catch(...) {
-            throw RuntimeException(
-                __FILE__, __LINE__, "Failed to Lock OS Mutex" );
-        }
-#endif
-
-        if( result == 0 ) {
-            handle->lock_owner_tid = threadId;
-            handle->lock_count = 1;
-            handle->lock_owner = Thread::currentThread();
-        } else {
-            return false;
-        }
-    }
-
-    return true;
+    return this->sync->nonfairTryAcquire(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ReentrantLock::tryLock( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
-
-//    long long threadId = Thread::getId();
-//
-//    if( threadId == handle->lock_owner_tid ) {
-//        handle->lock_count++;
-//    } else {
-//
-//        if( pthread_mutex_timedlock( &( handle->handle ) ) == 0 ) {
-//            handle->lock_owner_tid = threadId;
-//            handle->lock_count = 1;
-//            handle->lock_owner = Thread::currentThread();
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    return true;
-
-    return false;
+bool ReentrantLock::tryLock(long long time, const TimeUnit& unit) {
+    return this->sync->tryAcquireNanos(1, unit.toNanos(time));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantLock::unlock() {
-
-    if( handle->lock_owner_tid == 0 ) {
-        return;
-    }
-
-    if( handle->lock_owner_tid != Thread::currentThread()->getId() ) {
-        throw IllegalMonitorStateException(
-            __FILE__, __LINE__,
-            "Unlock Failed, this thread is not the Lock Owner!" );
-    }
-
-    handle->lock_count--;
-
-    if( handle->lock_count == 0 ) {
-        handle->lock_owner_tid = 0;
-        handle->lock_owner = NULL;
-
-#ifdef HAVE_PTHREAD_H
-        pthread_mutex_unlock( &( handle->handle ) );
-#else
-        try{
-            LeaveCriticalSection( &handle->handle );
-        } catch(...) {
-            throw RuntimeException(
-                __FILE__, __LINE__, "Failed to Unlock OS Mutex" );
-        }
-#endif
-    }
+    this->sync->release(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Condition* ReentrantLock::newCondition() {
-
-    return new ConditionObject( this->handle );
+    return this->sync->getNewCondition();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int ReentrantLock::getHoldCount() const {
-
-    long long threadId = Thread::currentThread()->getId();
-
-    if( threadId == handle->lock_owner_tid ) {
-        return (int)handle->lock_count;
-    }
-
-    return 0;
+    return this->sync->getHoldCount();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::isHeldByCurrentThread() const {
-
-    long long threadId = Thread::currentThread()->getId();
-
-    if( threadId == handle->lock_owner_tid ) {
-        return true;
-    }
-
-    return false;
+    return this->sync->isHeldExclusively();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::isLocked() const {
-    return this->handle->lock_count > 0;
+    return this->sync->isLocked();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ReentrantLock::isFair() const {
-    return false;
+    return this->sync->isFair();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -388,7 +286,7 @@ std::string ReentrantLock::toString() const {
 
     result << "ReentrantLock: ";
 
-    Thread* current = handle->lock_owner;
+    Thread* current = this->sync->getOwner();
 
     if( current != NULL ) {
         result << "[Locked by Thread: " << current->getName() << "]";
@@ -400,169 +298,82 @@ std::string ReentrantLock::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::await() {
-
-    // Save the current owner as we are going to unlock and release for
-    // someone else to lock on potentially.  When we come back and
-    // re-lock we want to restore to the state we were in before.
-    long long lock_owner_tid = lock->lock_owner_tid;
-    long long lock_count = lock->lock_count;
-    Thread* lock_owner = lock->lock_owner;
-
-    // Clear the owner for now.
-    lock->lock_owner = NULL;
-    lock->lock_count = 0;
-    lock->lock_owner_tid = 0;
-
-#ifdef HAVE_PTHREAD_H
-    if( pthread_cond_wait( &condition, &lock->handle ) != 0 ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to wait on OS Condition object." );
-    }
-#else
-
-#endif
-
-    // restore the owner
-    lock->lock_owner = lock_owner;
-    lock->lock_count = lock_count;
-    lock->lock_owner_tid = lock_owner_tid;
+decaf::lang::Thread* ReentrantLock::getOwner() const {
+    return this->sync->getOwner();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::awaitUninterruptibly() {
-    this->await();
+int ReentrantLock::getQueueLength() const {
+    return this->sync->getQueueLength();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ConditionObject::awaitNanos( long long nanosTimeout ) {
-
-    // Save the current owner as we are going to unlock and release for
-    // someone else to lock on potentially.  When we come back and
-    // re-lock we want to restore to the state we were in before.
-    long long lock_owner_tid = lock->lock_owner_tid;
-    long long lock_count = lock->lock_count;
-    Thread* lock_owner = lock->lock_owner;
-
-    // Clear the owner for now.
-    lock->lock_owner = NULL;
-    lock->lock_count = 0;
-    lock->lock_owner_tid = 0;
-
-#ifdef HAVE_PTHREAD_H
-
-    // Get time now as nanoseconds.
-    struct timeval tv;
-    gettimeofday( &tv, NULL );
-    long long timeNow = TimeUnit::SECONDS.toNanos( tv.tv_sec ) +
-                        TimeUnit::MICROSECONDS.toNanos( tv.tv_usec );
-
-    // Convert delay to nanoseconds and add it to now.
-    long long delay = nanosTimeout + timeNow;
-
-    struct timespec abstime;
-    abstime.tv_sec = TimeUnit::NANOSECONDS.toSeconds( delay );
-    abstime.tv_nsec = delay % 1000000000;
-
-    unsigned int result = pthread_cond_timedwait( &condition, &lock->handle, &abstime );
-
-    if( result != 0 && result != ETIMEDOUT ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to wait on OS Condition object." );
-    }
-
-#else
-
-#endif
-
-    // restore the owner
-    lock->lock_owner = lock_owner;
-    lock->lock_count = lock_count;
-    lock->lock_owner_tid = lock_owner_tid;
-
-    return 0;
+Collection<decaf::lang::Thread*>* ReentrantLock::getQueuedThreads() const {
+    return this->sync->getQueuedThreads();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::await( long long time DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED ) {
-
-    return false;
+bool ReentrantLock::hasQueuedThreads() const {
+    return this->sync->hasQueuedThreads();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConditionObject::awaitUntil( const Date& deadline DECAF_UNUSED ) {
+bool ReentrantLock::hasQueuedThread(decaf::lang::Thread* thread) const {
 
-    return false;
+    if (thread == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The thread to check was NULL");
+    }
+
+    return this->sync->isQueued(thread);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signal() {
+int ReentrantLock::getWaitQueueLength(Condition* condition) const {
 
-#ifdef HAVE_PTHREAD_H
-    if( pthread_cond_signal( &condition ) ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to signal OS Condition object." );
-    }
-#else
-
-    try {
-
-        bool doWake = false;
-
-        EnterCriticalSection( &criticalSection );
-
-        if( numWaiting > numWake ) {
-            doWake = true;
-            numWake++;
-            generation++;
-        }
-
-        LeaveCriticalSection( &criticalSection );
-
-        if( doWake ) {
-            ReleaseSemaphore( semaphore, 1, NULL );
-        }
-
-    } catch(...) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to signal OS Condition object." );
+    if (condition == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The Condition to check was NULL");
     }
 
-#endif
+    const AbstractQueuedSynchronizer::ConditionObject* cond =
+        dynamic_cast<const AbstractQueuedSynchronizer::ConditionObject*>(condition);
+
+    if (cond == NULL) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Condition is not associated with this Lock");
+    }
+
+    return this->sync->getWaitQueueLength(cond);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConditionObject::signalAll() {
+bool ReentrantLock::hasWaiters(Condition* condition) const {
 
-#ifdef HAVE_PTHREAD_H
-    if( pthread_cond_broadcast( &condition ) ) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to broadcast signal OS Condition object." );
-    }
-#else
-
-    try {
-
-        unsigned int numWakeTemp = 0;
-
-        EnterCriticalSection( &criticalSection );
-
-        if( numWaiting > numWake ) {
-            numWakeTemp = numWaiting - numWake;
-            numWake = numWaiting;
-            generation++;
-        }
-
-        LeaveCriticalSection( &criticalSection );
-
-        if( numWakeTemp ) {
-            ReleaseSemaphore( semaphore, numWake, NULL );
-        }
-
-    } catch(...) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to broadcast signal OS Condition object." );
+    if (condition == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The Condition to check was NULL");
     }
 
-#endif
+    const AbstractQueuedSynchronizer::ConditionObject* cond =
+        dynamic_cast<const AbstractQueuedSynchronizer::ConditionObject*>(condition);
+
+    if (cond == NULL) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Condition is not associated with this Lock");
+    }
+
+    return this->sync->hasWaiters(cond);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Collection<decaf::lang::Thread*>* ReentrantLock::getWaitingThreads(Condition* condition) const {
+
+    if (condition == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The Condition to check was NULL");
+    }
+
+    const AbstractQueuedSynchronizer::ConditionObject* cond =
+        dynamic_cast<const AbstractQueuedSynchronizer::ConditionObject*>(condition);
+
+    if (cond == NULL) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Condition is not associated with this Lock");
+    }
+
+    return this->sync->getWaitingThreads(cond);
 }

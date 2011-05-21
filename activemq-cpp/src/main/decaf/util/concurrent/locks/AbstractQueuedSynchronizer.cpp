@@ -1603,7 +1603,7 @@ Collection<Thread*>* AbstractQueuedSynchronizer::getSharedQueuedThreads() const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AbstractQueuedSynchronizer::owns(ConditionObject* condition) const {
+bool AbstractQueuedSynchronizer::owns(const ConditionObject* condition) const {
     if (condition == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "Condition Pointer arg was NULL");
     }
@@ -1611,7 +1611,7 @@ bool AbstractQueuedSynchronizer::owns(ConditionObject* condition) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AbstractQueuedSynchronizer::hasWaiters(ConditionObject* condition) const {
+bool AbstractQueuedSynchronizer::hasWaiters(const ConditionObject* condition) const {
     if (!owns(condition)) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Not owner");
     }
@@ -1619,7 +1619,7 @@ bool AbstractQueuedSynchronizer::hasWaiters(ConditionObject* condition) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int AbstractQueuedSynchronizer::getWaitQueueLength(ConditionObject* condition) const {
+int AbstractQueuedSynchronizer::getWaitQueueLength(const ConditionObject* condition) const {
     if (!owns(condition)) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Not owner");
     }
@@ -1627,7 +1627,7 @@ int AbstractQueuedSynchronizer::getWaitQueueLength(ConditionObject* condition) c
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Collection<Thread*>* AbstractQueuedSynchronizer::getWaitingThreads(ConditionObject* condition) const {
+Collection<Thread*>* AbstractQueuedSynchronizer::getWaitingThreads(const ConditionObject* condition) const {
     if (!owns(condition)) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Not owner");
     }
@@ -1637,4 +1637,25 @@ Collection<Thread*>* AbstractQueuedSynchronizer::getWaitingThreads(ConditionObje
 ////////////////////////////////////////////////////////////////////////////////
 AbstractQueuedSynchronizer::ConditionObject* AbstractQueuedSynchronizer::createDefaultConditionObject() {
     return new DefaultConditionObject(this->impl);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AbstractQueuedSynchronizer::hasQueuedPredecessors() const {
+
+    bool result = false;
+
+    PlatformThread::readerLockMutex(this->impl->rwLock);
+
+    // The correctness of this depends on head being initialized
+    // before tail and on head->next being accurate if the current
+    // thread is first in queue.
+    Node* t = this->impl->tail.get(); // Read fields in reverse initialization order
+    Node* h = this->impl->head.get();
+    Node* s = NULL;
+
+    result = h != t && ((s = h->next) == NULL || s->thread != Thread::currentThread());
+
+    PlatformThread::unlockRWMutex(this->impl->rwLock);
+
+    return result;
 }

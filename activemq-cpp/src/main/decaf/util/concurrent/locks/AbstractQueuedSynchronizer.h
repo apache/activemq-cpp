@@ -205,7 +205,7 @@ namespace locks {
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
          * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
          */
-        Collection<decaf::lang::Thread*>* getWaitingThreads(AbstractQueuedSynchronizer::ConditionObject* condition) const;
+        Collection<decaf::lang::Thread*>* getWaitingThreads(const AbstractQueuedSynchronizer::ConditionObject* condition) const;
 
         /**
          * Gets an estimated count of the number of threads that are currently waiting on the given
@@ -219,7 +219,7 @@ namespace locks {
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
          * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
          */
-        int getWaitQueueLength(AbstractQueuedSynchronizer::ConditionObject* condition) const;
+        int getWaitQueueLength(const AbstractQueuedSynchronizer::ConditionObject* condition) const;
 
         /**
          * @returns true if there has ever been the need for the acquire method to block.
@@ -241,7 +241,7 @@ namespace locks {
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
          * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
          */
-        bool hasWaiters(AbstractQueuedSynchronizer::ConditionObject* condition) const;
+        bool hasWaiters(const AbstractQueuedSynchronizer::ConditionObject* condition) const;
 
         /**
          * Traverse the Queue if waiting threads to see if the given thread is present.
@@ -259,7 +259,7 @@ namespace locks {
          *
          * @throws NullPointerException if the condition pointer is NULL.
          */
-        bool owns(AbstractQueuedSynchronizer::ConditionObject* condition) const;
+        bool owns(const AbstractQueuedSynchronizer::ConditionObject* condition) const;
 
         /**
          * When held in exclusive mode this method releases the Synchronizer.  This method calls
@@ -454,6 +454,40 @@ namespace locks {
          * @returns a new ConditionObject that is owned by the caller.
          */
         virtual ConditionObject* createDefaultConditionObject();
+
+        /**
+         * Queries whether any threads have been waiting to acquire longer than the
+         * current thread.
+         *
+         * Note that because cancellations due to interrupts and timeouts may occur at any
+         * time, a true return does not guarantee that some other thread will acquire before
+         * the current thread.  Likewise, it is possible for another thread to win a race to
+         * enqueue after this method has returned false, due to the queue being empty.
+         *
+         * This method is designed to be used by a fair synchronizer to avoid barging. Such a
+         * synchronizer's tryAcquire method should return false, and its tryAcquireShared method
+         * should return a negative value, if this method returns true (unless this is a
+         * reentrant acquire).  For example, the tryAcquire method for a fair, reentrant,
+         * exclusive mode synchronizer might look like this:
+         *
+         * <pre> {@code
+         * virtual bool tryAcquire(int arg) {
+         *   if (isHeldExclusively()) {
+         *     // A reentrant acquire; increment hold count
+         *     return true;
+         *   } else if (hasQueuedPredecessors()) {
+         *     return false;
+         *   } else {
+         *     // try to acquire normally
+         *   }
+         * }}
+         * </pre>
+         *
+         * @return true if there is a queued thread preceding the current thread,
+         *         and false if the current thread is at the head of the queue
+         *         or the queue is empty
+         */
+        bool hasQueuedPredecessors() const;
 
         friend class SynchronizerState;
     };
