@@ -291,6 +291,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicReferenc
 
 #include <decaf/util/concurrent/locks/LockSupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::LockSupportTest );
+#include <decaf/util/concurrent/locks/AbstractQueuedSynchronizerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::AbstractQueuedSynchronizerTest );
+#include <decaf/util/concurrent/locks/ReentrantLockTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantLockTest );
 
 #include <decaf/util/AbstractCollectionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );

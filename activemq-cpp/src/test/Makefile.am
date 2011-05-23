@@ -219,6 +219,7 @@ cc_sources = \
     decaf/util/concurrent/atomic/AtomicReferenceTest.cpp \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizerTest.cpp \
     decaf/util/concurrent/locks/LockSupportTest.cpp \
+    decaf/util/concurrent/locks/ReentrantLockTest.cpp \
     decaf/util/zip/Adler32Test.cpp \
     decaf/util/zip/CRC32Test.cpp \
     decaf/util/zip/CheckedInputStreamTest.cpp \
@@ -444,6 +445,7 @@ h_sources = \
     decaf/util/concurrent/atomic/AtomicReferenceTest.h \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizerTest.h \
     decaf/util/concurrent/locks/LockSupportTest.h \
+    decaf/util/concurrent/locks/ReentrantLockTest.h \
     decaf/util/zip/Adler32Test.h \
     decaf/util/zip/CRC32Test.h \
     decaf/util/zip/CheckedInputStreamTest.h \
