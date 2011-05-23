@@ -426,7 +426,9 @@ namespace locks {
                 // Attempt to set next on tail, this can fail if another thread can in
                 // and replaced the old tail but that's ok since that means next is up
                 // to date in that case.
-                tail.compareAndSet(node, NULL);
+                PlatformThread::writerLockMutex(this->rwLock);
+                if(tail.get()->next == node) tail.get()->next = NULL;
+                PlatformThread::unlockRWMutex(this->rwLock);
                 delete node;
             } else {
                 // If successor needs signal, try to set pred's next-link
@@ -437,7 +439,7 @@ namespace locks {
 
                 // Did we become the tail.
                 if (node == tail.get() && compareAndSetTail(node, node->prev)) {
-                    tail.compareAndSet(node, NULL);
+                    tail.get()->next = NULL;
                 } else {
                     node->prev->next = node->next;
                     node->next->prev = node->prev;
