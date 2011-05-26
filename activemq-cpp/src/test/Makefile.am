@@ -211,6 +211,7 @@ cc_sources = \
     decaf/util/concurrent/ExecutorsTestSupport.cpp \
     decaf/util/concurrent/LinkedBlockingQueueTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
+    decaf/util/concurrent/SemaphoreTest.cpp \
     decaf/util/concurrent/SynchronousQueueTest.cpp \
     decaf/util/concurrent/ThreadPoolExecutorTest.cpp \
     decaf/util/concurrent/TimeUnitTest.cpp \
@@ -437,6 +438,7 @@ h_sources = \
     decaf/util/concurrent/ExecutorsTestSupport.h \
     decaf/util/concurrent/LinkedBlockingQueueTest.h \
     decaf/util/concurrent/MutexTest.h \
+    decaf/util/concurrent/SemaphoreTest.h \
     decaf/util/concurrent/SynchronousQueueTest.h \
     decaf/util/concurrent/ThreadPoolExecutorTest.h \
     decaf/util/concurrent/TimeUnitTest.h \

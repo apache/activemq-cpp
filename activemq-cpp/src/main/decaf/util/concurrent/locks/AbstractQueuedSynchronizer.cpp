@@ -207,9 +207,14 @@ namespace locks {
         }
         virtual ~SynchronizerState() {
 
+            // Ensure that the destructor waits for other operations to complete.
+            PlatformThread::writerLockMutex(rwLock);
+
             while (tail.get() != NULL) {
                 delete tail.getAndSet(tail.get()->prev);
             }
+
+            PlatformThread::unlockRWMutex(rwLock);
 
             PlatformThread::destroyRWMutex(rwLock);
         }
@@ -426,9 +431,7 @@ namespace locks {
                 // Attempt to set next on tail, this can fail if another thread can in
                 // and replaced the old tail but that's ok since that means next is up
                 // to date in that case.
-                PlatformThread::writerLockMutex(this->rwLock);
-                if(tail.get()->next == node) tail.get()->next = NULL;
-                PlatformThread::unlockRWMutex(this->rwLock);
+                Atomics::compareAndSwap<Node>(tail.get()->next, node, NULL);
                 delete node;
             } else {
                 // If successor needs signal, try to set pred's next-link
@@ -439,7 +442,7 @@ namespace locks {
 
                 // Did we become the tail.
                 if (node == tail.get() && compareAndSetTail(node, node->prev)) {
-                    tail.get()->next = NULL;
+                    Atomics::compareAndSwap<Node>(tail.get()->next, node, NULL);
                 } else {
                     node->prev->next = node->next;
                     node->next->prev = node->prev;
@@ -457,7 +460,6 @@ namespace locks {
                 }
 
                 delete node;
-
             }
         }
 

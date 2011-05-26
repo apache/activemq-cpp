@@ -281,6 +281,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ExecutorsTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::TimeUnitTest );
 #include <decaf/util/concurrent/LinkedBlockingQueueTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::LinkedBlockingQueueTest );
+#include <decaf/util/concurrent/SemaphoreTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::SemaphoreTest );
 
 #include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );
