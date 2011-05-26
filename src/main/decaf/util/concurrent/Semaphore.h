@@ -24,15 +24,14 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
+#include <decaf/util/Collection.h>
 #include <decaf/util/concurrent/TimeUnit.h>
-
-#include <memory>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 
-    class SemaphoreHandle;
+    class SemSync;
 
     /**
      * A counting semaphore. Conceptually, a semaphore maintains a set of permits. Each acquire()
@@ -134,7 +133,7 @@ namespace concurrent {
      * fairness considerations.
      *
      * This class also provides convenience methods to acquire and release multiple permits at a time.
-     * Beware of the increased risk of indefinite postponement when these methods are used without
+     * Beware of the increased risk of indefinitely postponing when these methods are used without
      * fairness set true.
      *
      * @since 1.0
@@ -142,7 +141,7 @@ namespace concurrent {
     class DECAF_API Semaphore {
     private:
 
-        std::auto_ptr<SemaphoreHandle> handle;
+        SemSync* sync;
 
     private:
 
@@ -461,6 +460,44 @@ namespace concurrent {
          * @returns a string identifying this semaphore, as well as its state
          */
         std::string toString() const;
+
+        /**
+         * Gets an estimated count of the number of threads that are currently waiting to acquire, this
+         * value changes dynamically so the result of this method can be invalid immediately after it
+         * is called.
+         *
+         * @returns an estimate of the number of waiting threads.
+         */
+        int getQueueLength() const;
+
+        /**
+         * @returns true if there are threads that are currently waiting to acquire this Semaphore.
+         */
+        bool hasQueuedThreads() const;
+
+    protected:
+
+        /**
+         * Reduces the number of available permits which can be useful for subclasses.  If the subclass
+         * is tracking a resource that is transiently available this method can be used to modify the
+         * Semaphore to reflect that resources current state.  This method does not block waiting for
+         * the number of permits to be available, unlike the acquire method.
+         *
+         * @param reduceBy
+         *      The number of permits to remove from the current available set.
+         *
+         * @throws IllegalArgumentException if the param passed in negative.
+         */
+        void reducePermits(int reduceBy);
+
+        /**
+         * Creates and returns a new Collection object that contains a best effort snapshot of the
+         * threads that are currently waiting to acquire.
+         *
+         * @returns a Collection pointer that contains waiting threads for lock acquisition.
+         *          The caller owns the returned pointer.
+         */
+        decaf::util::Collection<decaf::lang::Thread*>* getQueuedThreads() const;
 
     };
 

@@ -529,30 +529,33 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////
 void ArrayPointerTest::testThreadSafety() {
 
-    ArrayPointer<ArrayPointerTestThread*> thread( 10 );
+    const int NUM_THREADS = 50;
+    const int ITERATIONS = 1000;
+
+    ArrayPointer<ArrayPointerTestThread*> thread( NUM_THREADS );
     Gate gate;
 
-    for( int i = 0; i < 10; i++ ) {
+    for( int i = 0; i < NUM_THREADS; i++ ) {
         thread[i] = new ArrayPointerTestThread( &gate );
         thread[i]->start();
     }
 
-    for( int j = 0; j < 1000; j++ ) {
+    for( int j = 0; j < ITERATIONS; j++ ) {
         // Put this in its own scope so that the main thread frees the string
         // before the threads.
         {
             ArrayPointer<std::string> s( 1 );
-            for( int i = 0; i < 10; i++ ) {
+            for( int i = 0; i < NUM_THREADS; i++ ) {
                 thread[i]->setString( s );
             }
         }
 
         // Signal the threads to free the string.
-        gate.open( 10 );
+        gate.open( NUM_THREADS );
         gate.close();
     }
 
-    for( int i = 0; i < 10; i++ ) {
+    for( int i = 0; i < NUM_THREADS; i++ ) {
         thread[i]->join();
         delete thread[i];
     }

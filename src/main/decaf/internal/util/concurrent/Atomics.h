@@ -36,6 +36,14 @@ namespace concurrent {
 
     public:
 
+        template<typename T>
+        static bool compareAndSwap(T*& target, T* expect, T* update) {
+
+            return Atomics::compareAndSet((volatile void**)&target, (void*)expect, (void*)update);
+        }
+
+    public:
+
         static bool compareAndSet32(volatile int* target, int expect, int update);
         static bool compareAndSet(volatile void** target, void* expect, void* update);
 

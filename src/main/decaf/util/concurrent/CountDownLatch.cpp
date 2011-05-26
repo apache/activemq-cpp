@@ -17,41 +17,86 @@
 
 #include "CountDownLatch.h"
 
+#include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/concurrent/TimeUnit.h>
+#include <decaf/util/concurrent/locks/AbstractQueuedSynchronizer.h>
 
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::locks;
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::CountDownLatch( int count ) : count(count), mutex() {
+namespace decaf{
+namespace util{
+namespace concurrent{
+
+    class LatchSync : public AbstractQueuedSynchronizer {
+    private:
+
+        LatchSync(const LatchSync&);
+        LatchSync& operator= (const LatchSync&);
+
+    public:
+
+        LatchSync(int count) : AbstractQueuedSynchronizer() {
+            this->setState(count);
+        }
+        virtual ~LatchSync() {}
+
+        int getCount() const {
+            return getState();
+        }
+
+    protected:
+
+        virtual int tryAcquireShared(int acquires DECAF_UNUSED) {
+            return getState() == 0 ? 1 : -1;
+        }
+
+        virtual bool tryReleaseShared(int releases DECAF_UNUSED) {
+
+            for (;;) {
+
+                int current = getState();
+                if (current == 0) {
+                    return false;
+                }
+
+                int next = current - 1;
+                if (compareAndSetState(current, next)) {
+                    return next == 0;
+                }
+            }
+        }
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+CountDownLatch::CountDownLatch(int count) {
+    if (count < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Count must be non-negative.");
+    }
+
+    this->sync = new LatchSync(count);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CountDownLatch::~CountDownLatch() {
     try {
-
-        synchronized( &mutex ) {
-            mutex.notifyAll();
-        }
+        delete sync;
     }
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CountDownLatch::await() {
-
     try {
-
-        synchronized( &mutex ) {
-            if( count == 0 ){
-                return;
-            }
-
-            mutex.wait();
-        }
+        this->sync->acquireSharedInterruptibly(1);
     }
     DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
     DECAF_CATCH_RETHROW( decaf::lang::Exception )
@@ -60,27 +105,8 @@ void CountDownLatch::await() {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CountDownLatch::await( long long timeOut ) {
-
     try {
-
-        if( timeOut < 0 ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__, "Timeout value cannot be less than zero." );
-        }
-
-        synchronized( &mutex ) {
-            if( count == 0 ){
-                return true;
-            }
-
-            if (timeOut > 0) {
-                mutex.wait( timeOut );
-            }
-
-            return count == 0;
-        }
-
-        return true;
+        return this->sync->tryAcquireSharedNanos(1, TimeUnit::MILLISECONDS.toNanos(timeOut));
     }
     DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
     DECAF_CATCH_RETHROW( decaf::lang::Exception )
@@ -89,9 +115,8 @@ bool CountDownLatch::await( long long timeOut ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CountDownLatch::await( long long timeout, const TimeUnit& unit ) {
-
     try{
-        return this->await( unit.toMillis( timeout ) );
+        return this->sync->tryAcquireSharedNanos(1, unit.toNanos(timeout));
     }
     DECAF_CATCH_RETHROW( decaf::lang::exceptions::InterruptedException )
     DECAF_CATCH_RETHROW( decaf::lang::Exception )
@@ -101,19 +126,18 @@ bool CountDownLatch::await( long long timeout, const TimeUnit& unit ) {
 ////////////////////////////////////////////////////////////////////////////////
 void CountDownLatch::countDown() {
     try {
-
-        if( count == 0 ) {
-            return;
-        }
-
-        synchronized( &mutex ) {
-            count--;
-
-            // Signal when done.
-            if( count == 0 ){
-                mutex.notifyAll();
-            }
-        }
+        this->sync->releaseShared(1);
     }
     DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int CountDownLatch::getCount() const {
+    return this->sync->getCount();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string CountDownLatch::toString() const {
+    return std::string("CountDownLatch[count = ") +
+           Integer::toString(this->sync->getCount()) + "]";
 }

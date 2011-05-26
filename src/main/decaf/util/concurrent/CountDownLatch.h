@@ -28,18 +28,12 @@ namespace decaf{
 namespace util{
 namespace concurrent{
 
+    class LatchSync;
+
     class DECAF_API CountDownLatch {
     private:
 
-        /**
-         * number to count down to
-         */
-        int count;
-
-        /**
-         * Mutex to protect the counts, and wait on.
-         */
-        Mutex mutex;
+        LatchSync* sync;
 
     public:
 
@@ -151,9 +145,15 @@ namespace concurrent{
          * Gets the current count
          * @returns int count value
          */
-        virtual int getCount() const {
-            return this->count;
-        }
+        virtual int getCount() const;
+
+        /**
+         * Returns the string representation of this latch, includes the current
+         * count value at the time of calling.
+         *
+         * @returns string describing this CountDownLatch instance.
+         */
+        virtual std::string toString() const;
 
     };
 

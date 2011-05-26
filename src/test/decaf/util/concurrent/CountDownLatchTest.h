@@ -20,6 +20,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/concurrent/ExecutorsTestSupport.h>
 
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
@@ -28,11 +29,20 @@ namespace decaf{
 namespace util{
 namespace concurrent{
 
-    class CountDownLatchTest : public CppUnit::TestFixture {
+    class CountDownLatchTest : public ExecutorsTestSupport {
 
         CPPUNIT_TEST_SUITE( CountDownLatchTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST( test2 );
+        CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testGetCount );
+        CPPUNIT_TEST( testCountDown );
+        CPPUNIT_TEST( testAwait );
+        CPPUNIT_TEST( testTimedAwait );
+        CPPUNIT_TEST( testAwaitInterruptedException );
+        CPPUNIT_TEST( testTimedAwaitInterruptedException );
+        CPPUNIT_TEST( testAwaitTimeout );
+        CPPUNIT_TEST( testToString );
         CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -64,8 +74,18 @@ namespace concurrent{
         CountDownLatchTest() {}
         virtual ~CountDownLatchTest() {}
 
-        virtual void test();
-        virtual void test2();
+        void test();
+        void test2();
+        void testConstructor();
+        void testGetCount();
+        void testCountDown();
+        void testAwait();
+        void testTimedAwait();
+        void testAwaitInterruptedException();
+        void testTimedAwaitInterruptedException();
+        void testAwaitTimeout();
+        void testToString();
+
     };
 
 }}}
