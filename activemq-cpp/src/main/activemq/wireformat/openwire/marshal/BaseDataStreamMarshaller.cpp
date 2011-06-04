@@ -674,8 +674,10 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
 
         if( bs->readBoolean() ) {
             int size = dataIn->readInt();
-            data.resize( size );
-            dataIn->readFully( &data[0], (int)data.size() );
+            if (size > 0) {
+                data.resize( size );
+                dataIn->readFully( &data[0], (int)data.size() );
+            }
         }
 
         return data;
@@ -694,8 +696,10 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
         if( dataIn->readBoolean() ) {
             int size = dataIn->readInt();
             std::vector<unsigned char> data;
-            data.resize( size );
-            dataIn->readFully( &data[0], (int)data.size() );
+            if (size > 0) {
+                data.resize( size );
+                dataIn->readFully( &data[0], (int)data.size() );
+            }
             return data;
         }
 
@@ -708,14 +712,14 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArray(
-    decaf::io::DataInputStream* dataIn,
-    utils::BooleanStream* bs AMQCPP_UNUSED,
-    int size ) {
+    decaf::io::DataInputStream* dataIn, utils::BooleanStream* bs AMQCPP_UNUSED, int size ) {
 
     try{
         std::vector<unsigned char> data;
-        data.resize( size );
-        dataIn->readFully( &data[0], (int)data.size() );
+        if (size > 0) {
+            data.resize( size );
+            dataIn->readFully( &data[0], (int)data.size() );
+        }
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -729,8 +733,10 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
 
     try{
         std::vector<unsigned char> data;
-        data.resize( size );
-        dataIn->readFully( &data[0], (int)data.size() );
+        if (size > 0) {
+            data.resize( size );
+            dataIn->readFully( &data[0], (int)data.size() );
+        }
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
