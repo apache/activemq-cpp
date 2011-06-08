@@ -73,7 +73,7 @@ void ActiveMQTempTopicMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( false );
 
     ActiveMQTempTopic outCommand;
@@ -113,7 +113,7 @@ void ActiveMQTempTopicMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( true );
 
     ActiveMQTempTopic outCommand;

@@ -73,7 +73,7 @@ void ShutdownInfoMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( false );
 
     ShutdownInfo outCommand;
@@ -113,7 +113,7 @@ void ShutdownInfoMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( true );
 
     ShutdownInfo outCommand;

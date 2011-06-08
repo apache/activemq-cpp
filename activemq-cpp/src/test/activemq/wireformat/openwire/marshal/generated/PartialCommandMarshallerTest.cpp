@@ -73,7 +73,7 @@ void PartialCommandMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( false );
 
     PartialCommand outCommand;
@@ -113,7 +113,7 @@ void PartialCommandMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( true );
 
     PartialCommand outCommand;

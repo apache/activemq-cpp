@@ -73,7 +73,7 @@ void ControlCommandMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( false );
 
     ControlCommand outCommand;
@@ -113,7 +113,7 @@ void ControlCommandMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( true );
 
     ControlCommand outCommand;

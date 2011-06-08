@@ -73,7 +73,7 @@ void ProducerInfoMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( false );
 
     ProducerInfo outCommand;
@@ -113,7 +113,7 @@ void ProducerInfoMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 6 );
+    openWireFormat.setVersion( 8 );
     openWireFormat.setTightEncodingEnabled( true );
 
     ProducerInfo outCommand;
