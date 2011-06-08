@@ -59,6 +59,7 @@ namespace commands{
         bool clientMaster;
         bool faultTolerant;
         bool failoverReconnect;
+        std::string clientIp;
 
     public:
 
@@ -121,6 +122,10 @@ namespace commands{
 
         virtual bool isFailoverReconnect() const;
         virtual void setFailoverReconnect( bool failoverReconnect );
+
+        virtual const std::string& getClientIp() const;
+        virtual std::string& getClientIp();
+        virtual void setClientIp( const std::string& clientIp );
 
         /**
          * @return an answer of true to the isConnectionInfo() query.

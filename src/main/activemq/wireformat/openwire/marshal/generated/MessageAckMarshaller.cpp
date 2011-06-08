@@ -59,6 +59,9 @@ void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
 
         MessageAck* info =
             dynamic_cast<MessageAck*>( dataStructure );
+
+        int wireVersion = wireFormat->getVersion();
+
         info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >(
             tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
         info->setTransactionId( Pointer<TransactionId>( dynamic_cast< TransactionId* >(
@@ -71,6 +74,10 @@ void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
         info->setLastMessageId( Pointer<MessageId>( dynamic_cast< MessageId* >(
             tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
         info->setMessageCount( dataIn->readInt() );
+        if( wireVersion >= 7 ) {
+            info->setPoisonCause( Pointer<BrokerError>( dynamic_cast< BrokerError* >(
+                tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -86,11 +93,17 @@ int MessageAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructu
             dynamic_cast<MessageAck*>( dataStructure );
 
         int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+
+        int wireVersion = wireFormat->getVersion();
+
         rc += tightMarshalCachedObject1( wireFormat, info->getDestination().get(), bs );
         rc += tightMarshalCachedObject1( wireFormat, info->getTransactionId().get(), bs );
         rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId().get(), bs );
         rc += tightMarshalNestedObject1( wireFormat, info->getFirstMessageId().get(), bs );
         rc += tightMarshalNestedObject1( wireFormat, info->getLastMessageId().get(), bs );
+        if( wireVersion >= 7 ) {
+            rc += tightMarshalBrokerError1( wireFormat, info->getPoisonCause().get(), bs );
+        }
 
         return rc + 5;
     }
@@ -108,6 +121,9 @@ void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 
         MessageAck* info =
             dynamic_cast<MessageAck*>( dataStructure );
+
+        int wireVersion = wireFormat->getVersion();
+
         tightMarshalCachedObject2( wireFormat, info->getDestination().get(), dataOut, bs );
         tightMarshalCachedObject2( wireFormat, info->getTransactionId().get(), dataOut, bs );
         tightMarshalCachedObject2( wireFormat, info->getConsumerId().get(), dataOut, bs );
@@ -115,6 +131,9 @@ void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
         tightMarshalNestedObject2( wireFormat, info->getFirstMessageId().get(), dataOut, bs );
         tightMarshalNestedObject2( wireFormat, info->getLastMessageId().get(), dataOut, bs );
         dataOut->writeInt( info->getMessageCount() );
+        if( wireVersion >= 7 ) {
+            tightMarshalBrokerError2( wireFormat, info->getPoisonCause().get(), dataOut, bs );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -129,6 +148,9 @@ void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStruc
         BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
         MessageAck* info =
             dynamic_cast<MessageAck*>( dataStructure );
+
+        int wireVersion = wireFormat->getVersion();
+
         info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >( 
             looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
         info->setTransactionId( Pointer<TransactionId>( dynamic_cast< TransactionId* >( 
@@ -141,6 +163,10 @@ void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStruc
         info->setLastMessageId( Pointer<MessageId>( dynamic_cast< MessageId* >( 
             looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
         info->setMessageCount( dataIn->readInt() );
+        if( wireVersion >= 7 ) {
+            info->setPoisonCause( Pointer<BrokerError>( dynamic_cast< BrokerError* >(
+                looseUnmarshalBrokerError( wireFormat, dataIn ) ) ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -155,6 +181,9 @@ void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructu
         MessageAck* info =
             dynamic_cast<MessageAck*>( dataStructure );
         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        int wireVersion = wireFormat->getVersion();
+
         looseMarshalCachedObject( wireFormat, info->getDestination().get(), dataOut );
         looseMarshalCachedObject( wireFormat, info->getTransactionId().get(), dataOut );
         looseMarshalCachedObject( wireFormat, info->getConsumerId().get(), dataOut );
@@ -162,6 +191,9 @@ void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructu
         looseMarshalNestedObject( wireFormat, info->getFirstMessageId().get(), dataOut );
         looseMarshalNestedObject( wireFormat, info->getLastMessageId().get(), dataOut );
         dataOut->writeInt( info->getMessageCount() );
+        if( wireVersion >= 7 ) {
+            looseMarshalBrokerError( wireFormat, info->getPoisonCause().get(), dataOut );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

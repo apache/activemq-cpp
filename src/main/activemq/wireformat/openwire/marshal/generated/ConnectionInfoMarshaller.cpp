@@ -89,6 +89,9 @@ void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
         if( wireVersion >= 6 ) {
             info->setFailoverReconnect( bs->readBoolean() );
         }
+        if( wireVersion >= 8 ) {
+            info->setClientIp( tightUnmarshalString( dataIn, bs ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -122,6 +125,9 @@ int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
         }
         if( wireVersion >= 6 ) {
             bs->writeBoolean( info->isFailoverReconnect() );
+        }
+        if( wireVersion >= 8 ) {
+            rc += tightMarshalString1( info->getClientIp(), bs );
         }
 
         return rc + 0;
@@ -158,6 +164,9 @@ void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
         }
         if( wireVersion >= 6 ) {
             bs->readBoolean();
+        }
+        if( wireVersion >= 8 ) {
+            tightMarshalString2( info->getClientIp(), dataOut, bs );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
@@ -203,6 +212,9 @@ void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataS
         if( wireVersion >= 6 ) {
             info->setFailoverReconnect( dataIn->readBoolean() );
         }
+        if( wireVersion >= 8 ) {
+            info->setClientIp( looseUnmarshalString( dataIn ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -235,6 +247,9 @@ void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
         }
         if( wireVersion >= 6 ) {
             dataOut->writeBoolean( info->isFailoverReconnect() );
+        }
+        if( wireVersion >= 8 ) {
+            looseMarshalString( info->getClientIp(), dataOut );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )

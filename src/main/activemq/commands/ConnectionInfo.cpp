@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo::ConnectionInfo() 
     : BaseCommand(), connectionId(NULL), clientId(""), password(""), userName(""), brokerPath(), brokerMasterConnector(false), 
-      manageable(false), clientMaster(false), faultTolerant(false), failoverReconnect(false) {
+      manageable(false), clientMaster(false), faultTolerant(false), failoverReconnect(false), clientIp("") {
 
 }
 
@@ -87,6 +87,7 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     this->setClientMaster( srcPtr->isClientMaster() );
     this->setFaultTolerant( srcPtr->isFaultTolerant() );
     this->setFailoverReconnect( srcPtr->isFailoverReconnect() );
+    this->setClientIp( srcPtr->getClientIp() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +141,8 @@ std::string ConnectionInfo::toString() const {
     stream << "FaultTolerant = " << this->isFaultTolerant();
     stream << ", ";
     stream << "FailoverReconnect = " << this->isFailoverReconnect();
+    stream << ", ";
+    stream << "ClientIp = " << this->getClientIp();
     stream << " }";
 
     return stream.str();
@@ -196,6 +199,9 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->isFailoverReconnect() != valuePtr->isFailoverReconnect() ) {
+        return false;
+    }
+    if( this->getClientIp() != valuePtr->getClientIp() ) {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
@@ -327,6 +333,21 @@ bool ConnectionInfo::isFailoverReconnect() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionInfo::setFailoverReconnect( bool failoverReconnect ) {
     this->failoverReconnect = failoverReconnect;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ConnectionInfo::getClientIp() const {
+    return clientIp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& ConnectionInfo::getClientIp() {
+    return clientIp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionInfo::setClientIp( const std::string& clientIp ) {
+    this->clientIp = clientIp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId()
+XATransactionId::XATransactionId() 
     : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
 }

@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 MessageAck::MessageAck() 
     : BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
-      messageCount(0) {
+      messageCount(0), poisonCause(NULL) {
 
 }
 
@@ -84,6 +84,7 @@ void MessageAck::copyDataStructure( const DataStructure* src ) {
     this->setFirstMessageId( srcPtr->getFirstMessageId() );
     this->setLastMessageId( srcPtr->getLastMessageId() );
     this->setMessageCount( srcPtr->getMessageCount() );
+    this->setPoisonCause( srcPtr->getPoisonCause() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +139,13 @@ std::string MessageAck::toString() const {
     }
     stream << ", ";
     stream << "MessageCount = " << this->getMessageCount();
+    stream << ", ";
+    stream << "PoisonCause = ";
+    if( this->getPoisonCause() != NULL ) {
+        stream << this->getPoisonCause()->toString();
+    } else {
+        stream << "NULL";
+    }
     stream << " }";
 
     return stream.str();
@@ -195,6 +203,13 @@ bool MessageAck::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getMessageCount() != valuePtr->getMessageCount() ) {
+        return false;
+    }
+    if( this->getPoisonCause() != NULL ) {
+        if( !this->getPoisonCause()->equals( valuePtr->getPoisonCause().get() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getPoisonCause() != NULL ) {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
@@ -296,6 +311,21 @@ int MessageAck::getMessageCount() const {
 ////////////////////////////////////////////////////////////////////////////////
 void MessageAck::setMessageCount( int messageCount ) {
     this->messageCount = messageCount;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const decaf::lang::Pointer<BrokerError>& MessageAck::getPoisonCause() const {
+    return poisonCause;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<BrokerError>& MessageAck::getPoisonCause() {
+    return poisonCause;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageAck::setPoisonCause( const decaf::lang::Pointer<BrokerError>& poisonCause ) {
+    this->poisonCause = poisonCause;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -25,6 +25,7 @@
 
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BaseCommand.h>
+#include <activemq/commands/BrokerError.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/MessageId.h>
 #include <activemq/commands/TransactionId.h>
@@ -57,6 +58,7 @@ namespace commands{
         Pointer<MessageId> firstMessageId;
         Pointer<MessageId> lastMessageId;
         int messageCount;
+        Pointer<BrokerError> poisonCause;
 
     public:
 
@@ -108,6 +110,10 @@ namespace commands{
 
         virtual int getMessageCount() const;
         virtual void setMessageCount( int messageCount );
+
+        virtual const Pointer<BrokerError>& getPoisonCause() const;
+        virtual Pointer<BrokerError>& getPoisonCause();
+        virtual void setPoisonCause( const Pointer<BrokerError>& poisonCause );
 
         /**
          * @return an answer of true to the isMessageAck() query.
