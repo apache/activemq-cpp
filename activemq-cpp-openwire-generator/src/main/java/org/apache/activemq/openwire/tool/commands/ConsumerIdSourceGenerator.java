@@ -36,7 +36,7 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
         super.generateAdditionalConstructors(out);
     }
 
-    protected String generateInitializerList(String current) {
+    protected String generateInitializerList() {
         return super.generateInitializerList() + ", parentId()";
     }
 

@@ -121,7 +121,11 @@ public class XATransactionIdSourceGenerator extends CommandSourceGenerator {
         out.println("int XATransactionId::getBranchQualifier( unsigned char* buffer, int size ) const {");
         out.println("");
         out.println("    if( size < 0 ) {");
-        out.println("        throw cms::XAException(\"Invalid negative size value passed to getBranchQualifier()\");");
+        out.println("        throw cms::XAException(\"Error: Negative size value passed to getBranchQualifier()\");");
+        out.println("    }");
+        out.println("");
+        out.println("    if( buffer == NULL ) {");
+        out.println("        throw cms::XAException(\"Error: NULL buffer pointer passed to getBranchQualifier()\");");
         out.println("    }");
         out.println("");
         out.println("    if( size < (int)this->branchQualifier.size() ) {");
@@ -141,7 +145,11 @@ public class XATransactionIdSourceGenerator extends CommandSourceGenerator {
         out.println("int XATransactionId::getGlobalTransactionId( unsigned char* buffer, int size ) const {");
         out.println("");
         out.println("    if( size < 0 ) {");
-        out.println("        throw cms::XAException(\"Invalid negative size value passed to getGlobalTransactionId()\");");
+        out.println("        throw cms::XAException(\"Error: Negative size value passed to getGlobalTransactionId()\");");
+        out.println("    }");
+        out.println("");
+        out.println("    if( buffer == NULL ) {");
+        out.println("        throw cms::XAException(\"Error: NULL buffer pointer passed to getGlobalTransactionId()\");");
         out.println("    }");
         out.println("");
         out.println("    if( size < (int)this->globalTransactionId.size() ) {");

@@ -39,12 +39,12 @@ public class ProducerIdHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateProperties( PrintWriter out ) {
 
+        super.generateProperties(out);
+
         out.println("    private:");
         out.println("");
         out.println("        mutable Pointer<SessionId> parentId;");
         out.println("");
-
-        super.generateProperties(out);
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
