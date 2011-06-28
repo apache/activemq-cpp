@@ -40,9 +40,8 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     DECAF_DOWNLOAD_APU
   fi
 
-  APR_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] "]
+  APR_VER_REGEXES=["1\.[3-4]\.[0-9] 1\.[3-4]\.1[0-9] "]
   APU_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] "]
-
   dnl check APR version number against regex
 
   AC_MSG_CHECKING([APR version])
@@ -76,7 +75,7 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
 
   APU_WANTED_REGEX_MATCH=0
   for apu_wanted_regex in $APU_VER_REGEXES; do
-    if test `expr $apr_version : $apu_wanted_regex` -ne 0; then
+    if test `expr $apu_version : $apu_wanted_regex` -ne 0; then
       APU_WANTED_REGEX_MATCH=1
       break
     fi
