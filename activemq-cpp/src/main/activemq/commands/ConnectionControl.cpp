@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionControl::ConnectionControl() 
     : BaseCommand(), close(false), exit(false), faultTolerant(false), resume(false), suspend(false), connectedBrokers(""), reconnectTo(""), 
-      rebalanceConnection(false) {
+      rebalanceConnection(false), token() {
 
 }
 
@@ -85,6 +85,7 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
     this->setConnectedBrokers( srcPtr->getConnectedBrokers() );
     this->setReconnectTo( srcPtr->getReconnectTo() );
     this->setRebalanceConnection( srcPtr->isRebalanceConnection() );
+    this->setToken( srcPtr->getToken() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +117,17 @@ std::string ConnectionControl::toString() const {
     stream << "ReconnectTo = " << this->getReconnectTo();
     stream << ", ";
     stream << "RebalanceConnection = " << this->isRebalanceConnection();
+    stream << ", ";
+    stream << "Token = ";
+    if( this->getToken().size() > 0 ) {
+        stream << "[";
+        for( size_t itoken = 0; itoken < this->getToken().size(); ++itoken ) {
+            stream << this->getToken()[itoken] << ",";
+        }
+        stream << "]";
+    } else {
+        stream << "NULL";
+    }
     stream << " }";
 
     return stream.str();
@@ -157,6 +169,11 @@ bool ConnectionControl::equals( const DataStructure* value ) const {
     }
     if( this->isRebalanceConnection() != valuePtr->isRebalanceConnection() ) {
         return false;
+    }
+    for( size_t itoken = 0; itoken < this->getToken().size(); ++itoken ) {
+        if( this->getToken()[itoken] != valuePtr->getToken()[itoken] ) {
+            return false;
+        }
     }
     if( !BaseCommand::equals( value ) ) {
         return false;
@@ -252,6 +269,21 @@ bool ConnectionControl::isRebalanceConnection() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionControl::setRebalanceConnection( bool rebalanceConnection ) {
     this->rebalanceConnection = rebalanceConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::vector<unsigned char>& ConnectionControl::getToken() const {
+    return token;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char>& ConnectionControl::getToken() {
+    return token;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionControl::setToken( const std::vector<unsigned char>& token ) {
+    this->token = token;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

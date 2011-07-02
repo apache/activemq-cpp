@@ -54,6 +54,7 @@ namespace commands{
         std::string connectedBrokers;
         std::string reconnectTo;
         bool rebalanceConnection;
+        std::vector<unsigned char> token;
 
     public:
 
@@ -105,6 +106,10 @@ namespace commands{
 
         virtual bool isRebalanceConnection() const;
         virtual void setRebalanceConnection( bool rebalanceConnection );
+
+        virtual const std::vector<unsigned char>& getToken() const;
+        virtual std::vector<unsigned char>& getToken();
+        virtual void setToken( const std::vector<unsigned char>& token );
 
         /**
          * @return an answer of true to the isConnectionControl() query.

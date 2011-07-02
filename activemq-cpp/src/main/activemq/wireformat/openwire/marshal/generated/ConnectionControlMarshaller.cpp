@@ -76,6 +76,9 @@ void ConnectionControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Da
         if( wireVersion >= 6 ) {
             info->setRebalanceConnection( bs->readBoolean() );
         }
+        if( wireVersion >= 8 ) {
+            info->setToken( tightUnmarshalByteArray( dataIn, bs ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -107,6 +110,10 @@ int ConnectionControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Data
         }
         if( wireVersion >= 6 ) {
             bs->writeBoolean( info->isRebalanceConnection() );
+        }
+        if( wireVersion >= 8 ) {
+            bs->writeBoolean( info->getToken().size() != 0 );
+            rc += info->getToken().size() == 0 ? 0 : (int)info->getToken().size() + 4;
         }
 
         return rc + 0;
@@ -142,6 +149,12 @@ void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
         if( wireVersion >= 6 ) {
             bs->readBoolean();
         }
+        if( wireVersion >= 8 ) {
+            if( bs->readBoolean() ) {
+                dataOut->writeInt( (int)info->getToken().size() );
+                dataOut->write( (const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size() );
+            }
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -173,6 +186,9 @@ void ConnectionControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Da
         if( wireVersion >= 6 ) {
             info->setRebalanceConnection( dataIn->readBoolean() );
         }
+        if( wireVersion >= 8 ) {
+            info->setToken( looseUnmarshalByteArray( dataIn ) );
+        }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -203,6 +219,13 @@ void ConnectionControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, Data
         }
         if( wireVersion >= 6 ) {
             dataOut->writeBoolean( info->isRebalanceConnection() );
+        }
+        if( wireVersion >= 8 ) {
+            dataOut->write( info->getToken().size() != 0 );
+            if( info->getToken().size() != 0 ) {
+                dataOut->writeInt( (int)info->getToken().size() );
+                dataOut->write( (const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size() );
+            }
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
