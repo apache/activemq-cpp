@@ -26,6 +26,15 @@ namespace util {
 namespace concurrent {
 
     /**
+     * Base class of all Callable<T> objects, used to allow identification via type casting.
+     */
+    class CallableType {
+    public:
+
+        virtual ~CallableType() {}
+    };
+
+    /**
      * A task that returns a result and may throw an exception. Implementors define a single method with no
      * arguments called call.  This interface differs from the Runnable interface in that a Callable object
      * can return a result and is allowed to throw an exceptions from its call method.
@@ -35,7 +44,7 @@ namespace concurrent {
      * @since 1.0
      */
     template<typename V>
-    class DECAF_API Callable {
+    class Callable : public CallableType {
     public:
 
         virtual ~Callable() {}
