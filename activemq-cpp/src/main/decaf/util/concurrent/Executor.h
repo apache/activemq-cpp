@@ -90,18 +90,37 @@ namespace concurrent {
         virtual ~Executor() {}
 
         /**
-         * Executes the given command at some time in the future.  The command
-         * may execute in a new thread, in a pooled thread, or in the calling
-         * thread, at the discretion of the <tt>Executor</tt> implementation.
+         * This method is the same as calling the two param execute method and passing
+         * true as the second argument.
          *
-         * @param command the runnable task
+         * @param command
+         *      The runnable task to be executed.
          *
          * @throws RejectedExecutionException if this task cannot be
          *         accepted for execution.
          *
          * @throws NullPointerException if command is null
          */
-        virtual void execute( decaf::lang::Runnable* command ) = 0;
+
+        virtual void execute(decaf::lang::Runnable* command) = 0;
+
+        /**
+         * Executes the given command at some time in the future.  The command
+         * may execute in a new thread, in a pooled thread, or in the calling
+         * thread, at the discretion of the <tt>Executor</tt> implementation.
+         *
+         * @param command
+         *      The runnable task to be executed.
+         * @param takeOwnership
+         *      Indicates if the Executor should assume ownership of the task and
+         *      delete the pointer once the task has completed.
+         *
+         * @throws RejectedExecutionException if this task cannot be
+         *         accepted for execution.
+         *
+         * @throws NullPointerException if command is null
+         */
+        virtual void execute(decaf::lang::Runnable* command, bool takeOwnership) = 0;
 
     };
 

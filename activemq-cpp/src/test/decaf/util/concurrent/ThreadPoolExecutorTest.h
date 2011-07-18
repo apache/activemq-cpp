@@ -53,7 +53,7 @@ namespace concurrent{
         CPPUNIT_TEST( testGetLargestPoolSize );
         CPPUNIT_TEST( testGetMaximumPoolSize );
         CPPUNIT_TEST( testGetPoolSize );
-        //CPPUNIT_TEST( testGetTaskCount );
+        CPPUNIT_TEST( testGetTaskCount );
         CPPUNIT_TEST( testIsShutdown );
         CPPUNIT_TEST( testIsTerminated );
         CPPUNIT_TEST( testIsTerminating );

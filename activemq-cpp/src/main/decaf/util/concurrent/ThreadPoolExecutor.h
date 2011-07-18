@@ -212,6 +212,8 @@ namespace concurrent{
 
         virtual void execute(decaf::lang::Runnable* task);
 
+        virtual void execute(decaf::lang::Runnable* task, bool takeOwnership);
+
         virtual void shutdown();
 
         virtual ArrayList<decaf::lang::Runnable*> shutdownNow();
@@ -492,6 +494,13 @@ namespace concurrent{
          * ensure that all subclasses have their terminated method invoked.
          */
         virtual void terminated();
+
+    protected:
+
+        /**
+         * Used by some Decaf ThreadPoolExecutor extensions to correctly handle the shutdown case.
+         */
+        virtual void onShutdown();
 
     public:  // RejectedExecutionHandler implementations.
 

@@ -239,7 +239,7 @@ void ThreadPoolExecutorTest::testAwaitTermination()
 ///////////////////////////////////////////////////////////////////////////////
 void ThreadPoolExecutorTest::testMoreTasksThanMaxPoolSize() {
 
-    ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+    ThreadPoolExecutor pool(3, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
 
     CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3);
 
@@ -559,7 +559,7 @@ void ThreadPoolExecutorTest::testGetQueue() {
     ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, q);
     Runnable* tasks[5];
     for (int i = 0; i < 5; i++){
-        tasks[i] = new MediumRunnable(this);
+        tasks[i] = new MediumPossiblyInterruptedRunnable(this);
         p1.execute(tasks[i]);
     }
     try {
@@ -583,7 +583,7 @@ void ThreadPoolExecutorTest::testRemove() {
     ThreadPoolExecutor p1(1, 1, LONG_DELAY_MS, TimeUnit::MILLISECONDS, q);
     Runnable* tasks[5];
     for (int i = 0; i < 5; i++){
-        tasks[i] = new MediumRunnable(this);
+        tasks[i] = new MediumPossiblyInterruptedRunnable(this);
         p1.execute(tasks[i]);
     }
 
@@ -619,7 +619,7 @@ void ThreadPoolExecutorTest::testShutDownNow() {
     try {
 
         for (int i = 0; i < 5; i++) {
-            p1.execute(new MediumRunnable(this));
+            p1.execute(new MediumPossiblyInterruptedRunnable(this));
         }
     }
     catch(...) {

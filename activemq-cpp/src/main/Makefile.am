@@ -451,6 +451,7 @@ cc_sources = \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
     decaf/util/concurrent/RejectedExecutionHandler.cpp \
+    decaf/util/concurrent/RunnableFuture.cpp \
     decaf/util/concurrent/Semaphore.cpp \
     decaf/util/concurrent/SynchronousQueue.cpp \
     decaf/util/concurrent/ThreadFactory.cpp \
@@ -1047,6 +1048,7 @@ h_sources = \
     decaf/util/concurrent/Mutex.h \
     decaf/util/concurrent/RejectedExecutionException.h \
     decaf/util/concurrent/RejectedExecutionHandler.h \
+    decaf/util/concurrent/RunnableFuture.h \
     decaf/util/concurrent/Semaphore.h \
     decaf/util/concurrent/Synchronizable.h \
     decaf/util/concurrent/SynchronousQueue.h \
