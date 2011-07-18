@@ -130,6 +130,47 @@ namespace concurrent {
             }
         };
 
+        class SmallInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            SmallInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~SmallInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(SMALL_DELAY_MS);
+                    parent->threadShouldThrow();
+                } catch(decaf::lang::Exception& e) {
+                }
+            }
+        };
+
+        class SmallPossiblyInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            SmallPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~SmallPossiblyInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(SMALL_DELAY_MS);
+                } catch(decaf::lang::exceptions::InterruptedException& e) {
+                }
+            }
+        };
+
         class MediumRunnable : public decaf::lang::Runnable {
         private:
 
@@ -147,6 +188,47 @@ namespace concurrent {
                     Thread::sleep(MEDIUM_DELAY_MS);
                 } catch(decaf::lang::Exception& e) {
                     parent->threadUnexpectedException(e);
+                }
+            }
+        };
+
+        class MediumInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            MediumInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~MediumInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(MEDIUM_DELAY_MS);
+                    parent->threadShouldThrow();
+                } catch(decaf::lang::Exception& e) {
+                }
+            }
+        };
+
+        class MediumPossiblyInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            MediumPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~MediumPossiblyInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(MEDIUM_DELAY_MS);
+                } catch(decaf::lang::exceptions::InterruptedException& e) {
                 }
             }
         };
@@ -171,6 +253,48 @@ namespace concurrent {
                 }
             }
         };
+
+        class LongInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            LongInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~LongInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(LONG_DELAY_MS);
+                    parent->threadShouldThrow();
+                } catch(decaf::lang::Exception& e) {
+                }
+            }
+        };
+
+        class LongPossiblyInterruptedRunnable : public decaf::lang::Runnable {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            LongPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            }
+
+            virtual ~LongPossiblyInterruptedRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(LONG_DELAY_MS);
+                } catch(decaf::lang::exceptions::InterruptedException& e) {
+                }
+            }
+        };
+
 
         class SimpleThreadFactory : public ThreadFactory {
         public:

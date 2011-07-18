@@ -26,7 +26,7 @@ namespace decaf {
 namespace util {
 namespace concurrent {
 
-    class FutureType {
+    class DECAF_API FutureType {
     public:
 
         virtual ~FutureType() {}
