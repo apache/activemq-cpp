@@ -687,14 +687,12 @@ namespace {
             thread->interrupted = false;
         }
 
-        PlatformThread::lockMutex(library->globalLock);
         if (thread->interruptingThread) {
             PlatformThread::lockMutex(thread->interruptingThread->mutex);
             thread->interruptingThread->canceled = true;
             PlatformThread::unlockMutex(thread->interruptingThread->mutex);
             thread->interruptingThread = NULL;
         }
-        PlatformThread::unlockMutex(library->globalLock);
 
         PlatformThread::unlockMutex(thread->mutex);
 
