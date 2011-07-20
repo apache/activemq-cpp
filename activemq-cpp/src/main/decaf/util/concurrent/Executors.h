@@ -21,8 +21,12 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/util/concurrent/ThreadFactory.h>
+#include <decaf/util/concurrent/Callable.h>
+
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 namespace decaf {
 namespace util {
@@ -36,6 +40,40 @@ namespace concurrent {
      * @since 1.0
      */
     class DECAF_API Executors {
+    private:
+
+        /**
+         * A Callable subclass that runs given task and returns given result
+         */
+        template<typename E>
+        class RunnableAdapter : public Callable<E> {
+        private:
+
+            decaf::lang::Runnable* task;
+            bool owns;
+            E result;
+
+        public:
+
+            RunnableAdapter(decaf::lang::Runnable* task, bool owns, const E& result) :
+                Callable<E>(), task(task), owns(owns), result(result) {
+            }
+
+            virtual ~RunnableAdapter() {
+                try{
+                    if (owns) {
+                        delete this->task;
+                    }
+                }
+                DECAF_CATCHALL_NOTHROW()
+            }
+
+            virtual E call() {
+                this->task->run();
+                return result;
+            }
+        };
+
     private:
 
         Executors();
@@ -97,6 +135,104 @@ namespace concurrent {
          * @throws IllegalArgumentException if nThreads is less than or equal to zero.
          */
         static ExecutorService* newFixedThreadPool(int nThreads, ThreadFactory* threadFactory);
+
+        /**
+         * Creates an Executor that uses a single worker thread operating off an unbounded queue
+         * owned by the executor.  If the Executor's single thread should terminate for some reason
+         * such as failure during the execution of a task, a new Thread will be created if the Executor
+         * has not been shutdown and there are more tasks in the queue.  The Executor returned from this
+         * method is owned by the caller but unlike the Executor returned from the method
+         * newFixedThreadPool(1) this one cannot be reconfigurable to use more threads later on.
+         *
+         * @returns a new Executor pointer that is owned by the caller.
+         */
+        static ExecutorService* newSingleThreadExecutor();
+
+        /**
+         * Creates an Executor that uses a single worker thread operating off an unbounded queue
+         * owned by the executor.  If the Executor's single thread should terminate for some reason
+         * such as failure during the execution of a task, a new Thread will be created if the Executor
+         * has not been shutdown and there are more tasks in the queue.  The Executor returned from this
+         * method is owned by the caller but unlike the Executor returned from the method
+         * newFixedThreadPool(1) this one cannot be reconfigurable to use more threads later on.
+         *
+         * @param threadFactory
+         *      Instance of a ThreadFactory that will be used by the Executor to spawn new
+         *      worker threads.  This parameter cannot be NULL and ownership passes to the Executor.
+         *
+         * @returns a new Executor pointer that is owned by the caller.
+         *
+         * @throws NullPointerException if threadFactory is NULL.
+         */
+        static ExecutorService* newSingleThreadExecutor(ThreadFactory* threadFactory);
+
+        /**
+         * Returns a new ExecutorService derived instance that wraps and takes ownership of the given
+         * ExecutorService pointer.  The returned ExecutorService delegates all calls to the wrapped
+         * ExecutorService instance but does not allow any configuration changes.  This method provides
+         * a means of locking an ExecutorService instance configuration and prevents changes that might
+         * be accomplished with casting.
+         *
+         * @param executor
+         *      The ExecutorService pointer to wrap and take ownership of.
+         *
+         * @returns a new ExecutorService pointer that is owned by the caller.
+         *
+         * @throws NullPointerException if ExecutorService is NULL.
+         */
+        static ExecutorService* unconfigurableExecutorService(ExecutorService* executor);
+
+    public:
+
+        /**
+         * Returns a Callable object that, when called, runs the given task and returns the default
+         * value of the template type E (or E()).
+         *
+         * @param task
+         *      The Runnable task that is to be executed.
+         * @param owns
+         *      Does the callable instance own the given Runnable task pointer, default is true.
+         *
+         * @returns a new Callable<E> pointer that is owned by the caller.
+         *
+         * @throws NullPointerException if the Runnable task is NULL
+         */
+        template<typename E>
+        static Callable<E>* callable(decaf::lang::Runnable* task, bool owns = true) {
+
+            if (task == NULL) {
+                throw decaf::lang::exceptions::NullPointerException(__FILE__, __LINE__,
+                    "The Runnable task argument cannot be NULL");
+            }
+
+            return new RunnableAdapter<E>(task, owns, E());
+        }
+
+        /**
+         * Returns a Callable object that, when called, runs the given task and returns the default
+         * value of the template type E (or E()).
+         *
+         * @param task
+         *      The Runnable task that is to be executed.
+         * @param result
+         *      The value that is returned from the callable upon completion.
+         * @param owns
+         *      Does the callable instance own the given Runnable task pointer, default is true.
+         *
+         * @returns a new Callable<E> pointer that is owned by the caller.
+         *
+         * @throws NullPointerException if the Runnable task is NULL
+         */
+        template<typename E>
+        static Callable<E>* callable(decaf::lang::Runnable* task, const E& result, bool owns = true) {
+
+            if (task == NULL) {
+                throw decaf::lang::exceptions::NullPointerException(__FILE__, __LINE__,
+                    "The Runnable task argument cannot be NULL");
+            }
+
+            return new RunnableAdapter<E>(task, owns, result);
+        }
 
     private:
 
