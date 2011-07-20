@@ -540,40 +540,56 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
         // Clear the listener, we don't care about async errors at this point.
         this->config->transport->setTransportListener( NULL );
 
-        if( this->config->isConnectionInfoSentToBroker ) {
-
-            // Remove our ConnectionId from the Broker
-            Pointer<RemoveInfo> command( this->config->connectionInfo->createRemoveCommand() );
-            command->setLastDeliveredSequenceId( lastDeliveredSequenceId );
-            this->syncRequest( command, this->config->closeTimeout );
-
-            // Send the disconnect command to the broker.
-            Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
-            oneway( shutdown );
-        }
-
         // Allow the Support class to shutdown its resources, including the Transport.
         bool hasException = false;
         exceptions::ActiveMQException e;
 
-        if( this->config->transport != NULL ){
+        if (this->config->isConnectionInfoSentToBroker) {
 
-            try{
-                this->config->transport->close();
-            }catch( exceptions::ActiveMQException& ex ){
-                if( !hasException ){
+            try {
+                // Remove our ConnectionId from the Broker
+                Pointer<RemoveInfo> command(this->config->connectionInfo->createRemoveCommand());
+                command->setLastDeliveredSequenceId(lastDeliveredSequenceId);
+                this->syncRequest(command, this->config->closeTimeout);
+            } catch(exceptions::ActiveMQException& ex) {
+                if (!hasException) {
                     hasException = true;
-                    ex.setMark(__FILE__, __LINE__ );
+                    ex.setMark(__FILE__, __LINE__);
                     e = ex;
                 }
             }
 
-            try{
-                this->config->transport.reset( NULL );
-            }catch( exceptions::ActiveMQException& ex ){
-                if( !hasException ){
+            try {
+                // Send the disconnect command to the broker.
+                Pointer<ShutdownInfo> shutdown(new ShutdownInfo());
+                oneway(shutdown);
+            } catch(exceptions::ActiveMQException& ex) {
+                if (!hasException) {
                     hasException = true;
-                    ex.setMark(__FILE__, __LINE__ );
+                    ex.setMark(__FILE__, __LINE__);
+                    e = ex;
+                }
+            }
+        }
+
+        if (this->config->transport != NULL) {
+
+            try {
+                this->config->transport->close();
+            } catch(exceptions::ActiveMQException& ex) {
+                if (!hasException) {
+                    hasException = true;
+                    ex.setMark(__FILE__, __LINE__);
+                    e = ex;
+                }
+            }
+
+            try {
+                this->config->transport.reset(NULL);
+            } catch(exceptions::ActiveMQException& ex) {
+                if (!hasException) {
+                    hasException = true;
+                    ex.setMark(__FILE__, __LINE__);
                     e = ex;
                 }
             }
@@ -581,7 +597,7 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
 
         // If we encountered an exception - throw the first one we encountered.
         // This will preserve the stack trace for logging purposes.
-        if( hasException ){
+        if (hasException) {
             throw e;
         }
     }
