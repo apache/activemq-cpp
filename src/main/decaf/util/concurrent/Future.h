@@ -51,7 +51,7 @@ namespace concurrent {
          * @returns false if the task could not be canceled, typically because it has
          *          already completed normally; true otherwise
          */
-        virtual bool cancel( bool mayInterruptIfRunning ) = 0;
+        virtual bool cancel(bool mayInterruptIfRunning) = 0;
 
         /**
          * Returns true if this task was canceled before it completed normally.
@@ -92,25 +92,32 @@ namespace concurrent {
 
         /**
          * Waits if necessary for the computation to complete, and then retrieves its result.
+         *
          * @returns the computed result.
-         * @throws CancellationException - if the computation was canceled
-         * @throws ExecutionException - if the computation threw an exception
-         * @throws InterruptedException - if the current thread was interrupted while waiting
+         *
+         * @throws CancellationException if the computation was canceled
+         * @throws ExecutionException if the computation threw an exception
+         * @throws InterruptedException if the current thread was interrupted while waiting
          */
         virtual V get() = 0;
 
         /**
          * Waits if necessary for at most the given time for the computation to complete, and
          * then retrieves its result, if available.
-         * @param timeout - the maximum time to wait
-         * @param unit - the time unit of the timeout argument
+         *
+         * @param timeout
+         *      The maximum time to wait for this Future to finish.
+         * @param unit
+         *      The time unit of the timeout argument.
+         *
          * @returns the computed result
-         * @throws CancellationException - if the computation was canceled
-         * @throws ExecutionException - if the computation threw an exception
-         * @throws InterruptedException - if the current thread was interrupted while waiting
-         * @throws TimeoutException - if the wait timed out
+         *
+         * @throws CancellationException if the computation was canceled
+         * @throws ExecutionException if the computation threw an exception
+         * @throws InterruptedException if the current thread was interrupted while waiting
+         * @throws TimeoutException if the wait timed out before the future completed.
          */
-        virtual V get( long long timeout, const TimeUnit& unit ) = 0;
+        virtual V get(long long timeout, const TimeUnit& unit) = 0;
 
     };
 
