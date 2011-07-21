@@ -25,6 +25,7 @@
 #include <decaf/lang/Runnable.h>
 
 #include <decaf/lang/Throwable.h>
+#include <decaf/util/concurrent/Callable.h>
 #include <decaf/util/concurrent/ThreadFactory.h>
 #include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/util/concurrent/ThreadPoolExecutor.h>
@@ -85,6 +86,20 @@ namespace concurrent {
             virtual ~NoOpRunnable() {}
 
             virtual void run() {
+            }
+        };
+
+        template<typename E>
+        class NoOpCallable : public Callable<E> {
+        public:
+
+            NoOpCallable() : decaf::util::concurrent::Callable<E>() {
+            }
+
+            virtual ~NoOpCallable() {}
+
+            virtual E call() {
+                return E();
             }
         };
 
