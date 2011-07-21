@@ -209,6 +209,7 @@ cc_sources = \
     decaf/util/concurrent/CountDownLatchTest.cpp \
     decaf/util/concurrent/ExecutorsTest.cpp \
     decaf/util/concurrent/ExecutorsTestSupport.cpp \
+    decaf/util/concurrent/FutureTaskTest.cpp \
     decaf/util/concurrent/LinkedBlockingQueueTest.cpp \
     decaf/util/concurrent/MutexTest.cpp \
     decaf/util/concurrent/SemaphoreTest.cpp \
@@ -436,6 +437,7 @@ h_sources = \
     decaf/util/concurrent/CountDownLatchTest.h \
     decaf/util/concurrent/ExecutorsTest.h \
     decaf/util/concurrent/ExecutorsTestSupport.h \
+    decaf/util/concurrent/FutureTaskTest.h \
     decaf/util/concurrent/LinkedBlockingQueueTest.h \
     decaf/util/concurrent/MutexTest.h \
     decaf/util/concurrent/SemaphoreTest.h \

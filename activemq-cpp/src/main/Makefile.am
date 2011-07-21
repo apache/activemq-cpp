@@ -447,6 +447,7 @@ cc_sources = \
     decaf/util/concurrent/ExecutorService.cpp \
     decaf/util/concurrent/Executors.cpp \
     decaf/util/concurrent/Future.cpp \
+    decaf/util/concurrent/FutureTask.cpp \
     decaf/util/concurrent/LinkedBlockingQueue.cpp \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
@@ -1043,6 +1044,7 @@ h_sources = \
     decaf/util/concurrent/ExecutorService.h \
     decaf/util/concurrent/Executors.h \
     decaf/util/concurrent/Future.h \
+    decaf/util/concurrent/FutureTask.h \
     decaf/util/concurrent/LinkedBlockingQueue.h \
     decaf/util/concurrent/Lock.h \
     decaf/util/concurrent/Mutex.h \
