@@ -64,6 +64,52 @@ ExecutorsTest::~ExecutorsTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testNewSingleThreadExecutor1() {
+
+    Pointer<ExecutorService> e(Executors::newSingleThreadExecutor());
+
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+
+    joinPool(e.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testNewSingleThreadExecutor2() {
+
+    Pointer<ExecutorService> e(Executors::newSingleThreadExecutor(new SimpleThreadFactory()));
+
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+
+    joinPool(e.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testNewSingleThreadExecutor3() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a NullPointerException",
+        Executors::newSingleThreadExecutor(NULL),
+        NullPointerException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testCastNewSingleThreadExecutor() {
+
+    Pointer<ExecutorService> e(Executors::newSingleThreadExecutor());
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a ClassCastException",
+        e.dynamicCast<ThreadPoolExecutor>(),
+        ClassCastException);
+
+    joinPool(e.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ExecutorsTest::testDefaultThreadFactory() {
 
     CountDownLatch shutdown(1);
@@ -126,4 +172,57 @@ void ExecutorsTest::testNewFixedThreadPool4() {
         "Should throw a IllegalArgumentException",
         Executors::newFixedThreadPool(0),
         IllegalArgumentException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testUnconfigurableExecutorService() {
+
+    Pointer<ExecutorService> e(Executors::unconfigurableExecutorService(Executors::newFixedThreadPool(2)));
+
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+    e->execute(new NoOpRunnable());
+
+    joinPool(e.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testUnconfigurableExecutorServiceNPE() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a NullPointerException",
+        Executors::unconfigurableExecutorService(NULL),
+        NullPointerException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testCallable1() {
+
+    Pointer< Callable<int> > c(Executors::callable<int>(new NoOpRunnable()));
+    CPPUNIT_ASSERT_EQUAL(0, c->call());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testCallable2() {
+
+    Pointer< Callable<int> > c(Executors::callable<int>(new NoOpRunnable(), 42));
+    CPPUNIT_ASSERT_EQUAL(42, c->call());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testCallableNPE1() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a NullPointerException",
+        Executors::callable<int>(NULL),
+        NullPointerException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExecutorsTest::testCallableNPE2() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a NullPointerException",
+        Executors::callable<int>(NULL, 42),
+        NullPointerException);
 }

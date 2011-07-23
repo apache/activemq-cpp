@@ -32,6 +32,16 @@ namespace concurrent {
         CPPUNIT_TEST( testNewFixedThreadPool2 );
         CPPUNIT_TEST( testNewFixedThreadPool3 );
         CPPUNIT_TEST( testNewFixedThreadPool4 );
+        CPPUNIT_TEST( testNewSingleThreadExecutor1 );
+        CPPUNIT_TEST( testNewSingleThreadExecutor2 );
+        CPPUNIT_TEST( testNewSingleThreadExecutor3 );
+        CPPUNIT_TEST( testCastNewSingleThreadExecutor );
+        CPPUNIT_TEST( testUnconfigurableExecutorService );
+        CPPUNIT_TEST( testUnconfigurableExecutorServiceNPE );
+        CPPUNIT_TEST( testCallable1 );
+        CPPUNIT_TEST( testCallable2 );
+        CPPUNIT_TEST( testCallableNPE1 );
+        CPPUNIT_TEST( testCallableNPE2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -44,6 +54,16 @@ namespace concurrent {
         void testNewFixedThreadPool2();
         void testNewFixedThreadPool3();
         void testNewFixedThreadPool4();
+        void testNewSingleThreadExecutor1();
+        void testNewSingleThreadExecutor2();
+        void testNewSingleThreadExecutor3();
+        void testCastNewSingleThreadExecutor();
+        void testUnconfigurableExecutorService();
+        void testUnconfigurableExecutorServiceNPE();
+        void testCallable1();
+        void testCallable2();
+        void testCallableNPE1();
+        void testCallableNPE2();
 
     };
 
