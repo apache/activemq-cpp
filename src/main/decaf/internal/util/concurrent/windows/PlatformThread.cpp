@@ -157,6 +157,8 @@ bool PlatformThread::tryReaderLockMutex(decaf_rwmutex_t mutex) {
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to release RW Mutex object.");
     }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,7 +193,7 @@ void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
 
     DWORD result = 0;
 
-    if (! ::ReleaseMutex(rwlock->write_mutex)) {
+    if (! ::ReleaseMutex(rwlock->writeMutex)) {
         result = ::GetLastError();
     }
 
