@@ -412,9 +412,20 @@ void ActiveMQSession::recover() {
 
     try{
 
-        throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "Recover Method is not yet supported." );
+        checkClosed();
+
+        if (isTransacted()) {
+            throw cms::IllegalStateException("This session is transacted");
+        }
+
+        synchronized( &this->consumers ) {
+            std::vector< ActiveMQConsumer* > consumers = this->consumers.values();
+
+            std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
+            for( ; iter != consumers.end(); ++iter ) {
+                (*iter)->rollback();
+            }
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

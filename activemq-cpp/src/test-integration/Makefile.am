@@ -39,6 +39,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
     activemq/test/openwire/OpenwireIndividualAckTest.cpp \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
+    activemq/test/openwire/OpenwireJmsRecoverTest.cpp \
     activemq/test/openwire/OpenwireMapMessageTest.cpp \
     activemq/test/openwire/OpenwireMessageCompressionTest.cpp \
     activemq/test/openwire/OpenwireMessagePriorityTest.cpp \
@@ -90,6 +91,7 @@ h_sources = \
     activemq/test/openwire/OpenwireExpirationTest.h \
     activemq/test/openwire/OpenwireIndividualAckTest.h \
     activemq/test/openwire/OpenwireJmsMessageGroupsTest.h \
+    activemq/test/openwire/OpenwireJmsRecoverTest.h \
     activemq/test/openwire/OpenwireMapMessageTest.h \
     activemq/test/openwire/OpenwireMessageCompressionTest.h \
     activemq/test/openwire/OpenwireMessagePriorityTest.h \
