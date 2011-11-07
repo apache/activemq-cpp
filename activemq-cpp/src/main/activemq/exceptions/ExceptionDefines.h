@@ -26,7 +26,7 @@
 #define AMQ_CATCH_RETHROW( type ) \
     catch( type& ex ){ \
         ex.setMark( __FILE__, __LINE__ ); \
-        throw ex; \
+        throw; \
     }
 
 /**
