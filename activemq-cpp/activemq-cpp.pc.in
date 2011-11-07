@@ -25,3 +25,4 @@ Description: ActiveMQ C++ library.
 Version: @VERSION@
 Libs: -L${libdir} -l@ACTIVEMQ_LIBRARY_NAME@ -lpthread -ldl -luuid
 Cflags: -I${includedir}/@ACTIVEMQ_LIBRARY_NAME@-@VERSION@
+Libs.private = @AMQ_LIBS@
