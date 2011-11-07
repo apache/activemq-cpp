@@ -65,18 +65,6 @@ namespace{
             FilterOutputStream::doWriteByte( value );
         }
 
-        virtual void doWriteArray( const unsigned char* buffer, int size ) {
-
-            (*length) += size;
-            FilterOutputStream::doWriteArray( buffer, size );
-        }
-
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
-
-            (*this->length) += length;
-            FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );
-        }
-
     };
 }
 
