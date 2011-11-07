@@ -49,9 +49,6 @@ namespace logging{
     class DECAF_API Handler : public io::Closeable {
     private:
 
-        // Default Logging Level for Handler
-        static const Level DEFAULT_LEVEL;
-
         // Formats this Handlers output
         Formatter* formatter;
 
