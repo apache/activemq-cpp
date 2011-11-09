@@ -1131,7 +1131,7 @@ void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
             if( !this->internal->unconsumedMessages->isClosed() ) {
 
                 // Don't dispatch expired messages, ack it and then destroy it
-                if( dispatch->getMessage()->isExpired() ) {
+                if( dispatch->getMessage() != NULL && dispatch->getMessage()->isExpired() ) {
                     this->ackLater( dispatch, ActiveMQConstants::ACK_TYPE_CONSUMED );
 
                     // stop now, don't queue
