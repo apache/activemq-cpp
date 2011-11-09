@@ -54,8 +54,10 @@ namespace state {
         //        Either we need to implement something similar to LinkedHashMap or find
         //        some other way of tracking the eldest entry into the map and removing it
         //        if the cache size is exceeded.
-        ConcurrentStlMap< Pointer<MessageId>, Pointer<Message>,
+        ConcurrentStlMap< Pointer<MessageId>, Pointer<Command>,
                           MessageId::COMPARATOR > messageCache;
+
+        ConcurrentStlMap< std::string, Pointer<Command> > messagePullCache;
 
         bool trackTransactions;
         bool restoreSessions;
@@ -121,6 +123,8 @@ namespace state {
         virtual Pointer<Command> processRollbackTransaction( TransactionInfo* info );
 
         virtual Pointer<Command> processEndTransaction( TransactionInfo* info );
+
+        virtual Pointer<Command> processMessagePull( MessagePull* pull );
 
         bool isRestoreConsumers() const {
             return this->restoreConsumers;
