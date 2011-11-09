@@ -45,164 +45,174 @@ OpenwireSimpleTest::~OpenwireSimpleTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
 
-    try {
+    cmsProvider->setTopic( false );
+    cmsProvider->setDestinationName(
+        UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
 
-        cmsProvider->setTopic( false );
-        cmsProvider->setDestinationName(
-            UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
+    cmsProvider->reconnectSession();
 
-        cmsProvider->reconnectSession();
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
-        // Create CMS Object for Comms
-        cms::Session* session( cmsProvider->getSession() );
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
 
-        auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+    // Send some text messages
+    producer->send( txtMessage.get() );
 
-        // Send some text messages
-        producer->send( txtMessage.get() );
+    auto_ptr<cms::Message> message( consumer->receive( 1000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
+}
 
-        auto_ptr<cms::Message> message( consumer->receive( 1000 ) );
-        CPPUNIT_ASSERT( message.get() != NULL );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testWithZeroConsumerPrefetchAndNoMessage() {
+
+    cmsProvider->setTopic( false );
+    cmsProvider->setDestinationName(
+        UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
+
+    cmsProvider->reconnectSession();
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+
+    // Should be no message and no exceptions
+    auto_ptr<cms::Message> message( consumer->receiveNoWait() );
+    CPPUNIT_ASSERT( message.get() == NULL );
+
+    // Should be no message and no exceptions
+    message.reset( consumer->receive(1000) );
+    CPPUNIT_ASSERT( message.get() == NULL );
+
+    consumer->close();
+    session->close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenwireSimpleTest::testMapMessageSendToQueue() {
 
-    try {
+    cmsProvider->setTopic( false );
+    cmsProvider->setDestinationName(
+        UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
 
-        cmsProvider->setTopic( false );
-        cmsProvider->setDestinationName(
-            UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
+    cmsProvider->reconnectSession();
 
-        cmsProvider->reconnectSession();
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
-        // Create CMS Object for Comms
-        cms::Session* session( cmsProvider->getSession() );
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+    unsigned char byteValue = 'A';
+    char charValue = 'B';
+    bool booleanValue = true;
+    short shortValue = 2048;
+    int intValue = 655369;
+    long long longValue = 0xFFFFFFFF00000000ULL;
+    float floatValue = 45.6545f;
+    double doubleValue = 654564.654654;
+    std::string stringValue = "The test string";
 
-        unsigned char byteValue = 'A';
-        char charValue = 'B';
-        bool booleanValue = true;
-        short shortValue = 2048;
-        int intValue = 655369;
-        long long longValue = 0xFFFFFFFF00000000ULL;
-        float floatValue = 45.6545f;
-        double doubleValue = 654564.654654;
-        std::string stringValue = "The test string";
+    auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
 
-        auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
+    mapMessage->setString( "stringKey", stringValue );
+    mapMessage->setBoolean( "boolKey", booleanValue );
+    mapMessage->setByte( "byteKey", byteValue );
+    mapMessage->setChar( "charKey", charValue );
+    mapMessage->setShort( "shortKey", shortValue );
+    mapMessage->setInt( "intKey", intValue );
+    mapMessage->setLong( "longKey", longValue );
+    mapMessage->setFloat( "floatKey", floatValue );
+    mapMessage->setDouble( "doubleKey", doubleValue );
 
-        mapMessage->setString( "stringKey", stringValue );
-        mapMessage->setBoolean( "boolKey", booleanValue );
-        mapMessage->setByte( "byteKey", byteValue );
-        mapMessage->setChar( "charKey", charValue );
-        mapMessage->setShort( "shortKey", shortValue );
-        mapMessage->setInt( "intKey", intValue );
-        mapMessage->setLong( "longKey", longValue );
-        mapMessage->setFloat( "floatKey", floatValue );
-        mapMessage->setDouble( "doubleKey", doubleValue );
+    std::vector<unsigned char> bytes;
+    bytes.push_back( 65 );
+    bytes.push_back( 66 );
+    bytes.push_back( 67 );
+    bytes.push_back( 68 );
+    bytes.push_back( 69 );
+    mapMessage->setBytes( "bytesKey", bytes );
 
-        std::vector<unsigned char> bytes;
-        bytes.push_back( 65 );
-        bytes.push_back( 66 );
-        bytes.push_back( 67 );
-        bytes.push_back( 68 );
-        bytes.push_back( 69 );
-        mapMessage->setBytes( "bytesKey", bytes );
+    // Send some text messages
+    producer->send( mapMessage.get() );
 
-        // Send some text messages
-        producer->send( mapMessage.get() );
+    auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
 
-        auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
-        CPPUNIT_ASSERT( message.get() != NULL );
-
-        cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
-        CPPUNIT_ASSERT( recvMapMessage != NULL );
-        CPPUNIT_ASSERT( recvMapMessage->getString( "stringKey" ) == stringValue );
-        CPPUNIT_ASSERT( recvMapMessage->getBoolean( "boolKey" ) == booleanValue );
-        CPPUNIT_ASSERT( recvMapMessage->getByte( "byteKey" ) == byteValue );
-        CPPUNIT_ASSERT( recvMapMessage->getChar( "charKey" ) == charValue );
-        CPPUNIT_ASSERT( recvMapMessage->getShort( "shortKey" ) == shortValue );
-        CPPUNIT_ASSERT( recvMapMessage->getInt( "intKey" ) == intValue );
-        CPPUNIT_ASSERT( recvMapMessage->getLong( "longKey" ) == longValue );
-        CPPUNIT_ASSERT( recvMapMessage->getFloat( "floatKey" ) == floatValue );
-        CPPUNIT_ASSERT( recvMapMessage->getDouble( "doubleKey" ) == doubleValue );
-        CPPUNIT_ASSERT( recvMapMessage->getBytes( "bytesKey" ) == bytes );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
+    CPPUNIT_ASSERT( recvMapMessage != NULL );
+    CPPUNIT_ASSERT( recvMapMessage->getString( "stringKey" ) == stringValue );
+    CPPUNIT_ASSERT( recvMapMessage->getBoolean( "boolKey" ) == booleanValue );
+    CPPUNIT_ASSERT( recvMapMessage->getByte( "byteKey" ) == byteValue );
+    CPPUNIT_ASSERT( recvMapMessage->getChar( "charKey" ) == charValue );
+    CPPUNIT_ASSERT( recvMapMessage->getShort( "shortKey" ) == shortValue );
+    CPPUNIT_ASSERT( recvMapMessage->getInt( "intKey" ) == intValue );
+    CPPUNIT_ASSERT( recvMapMessage->getLong( "longKey" ) == longValue );
+    CPPUNIT_ASSERT( recvMapMessage->getFloat( "floatKey" ) == floatValue );
+    CPPUNIT_ASSERT( recvMapMessage->getDouble( "doubleKey" ) == doubleValue );
+    CPPUNIT_ASSERT( recvMapMessage->getBytes( "bytesKey" ) == bytes );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenwireSimpleTest::testMapMessageSendToTopic() {
 
-    try {
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
-        // Create CMS Object for Comms
-        cms::Session* session( cmsProvider->getSession() );
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+    unsigned char byteValue = 'A';
+    char charValue = 'B';
+    bool booleanValue = true;
+    short shortValue = 2048;
+    int intValue = 655369;
+    long long longValue = 0xFFFFFFFF00000000ULL;
+    float floatValue = 45.6545f;
+    double doubleValue = 654564.654654;
+    std::string stringValue = "The test string";
 
-        unsigned char byteValue = 'A';
-        char charValue = 'B';
-        bool booleanValue = true;
-        short shortValue = 2048;
-        int intValue = 655369;
-        long long longValue = 0xFFFFFFFF00000000ULL;
-        float floatValue = 45.6545f;
-        double doubleValue = 654564.654654;
-        std::string stringValue = "The test string";
+    auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
 
-        auto_ptr<cms::MapMessage> mapMessage( session->createMapMessage() );
+    mapMessage->setString( "stringKey", stringValue );
+    mapMessage->setBoolean( "boolKey", booleanValue );
+    mapMessage->setByte( "byteKey", byteValue );
+    mapMessage->setChar( "charKey", charValue );
+    mapMessage->setShort( "shortKey", shortValue );
+    mapMessage->setInt( "intKey", intValue );
+    mapMessage->setLong( "longKey", longValue );
+    mapMessage->setFloat( "floatKey", floatValue );
+    mapMessage->setDouble( "doubleKey", doubleValue );
 
-        mapMessage->setString( "stringKey", stringValue );
-        mapMessage->setBoolean( "boolKey", booleanValue );
-        mapMessage->setByte( "byteKey", byteValue );
-        mapMessage->setChar( "charKey", charValue );
-        mapMessage->setShort( "shortKey", shortValue );
-        mapMessage->setInt( "intKey", intValue );
-        mapMessage->setLong( "longKey", longValue );
-        mapMessage->setFloat( "floatKey", floatValue );
-        mapMessage->setDouble( "doubleKey", doubleValue );
+    std::vector<unsigned char> bytes;
+    bytes.push_back( 65 );
+    bytes.push_back( 66 );
+    bytes.push_back( 67 );
+    bytes.push_back( 68 );
+    bytes.push_back( 69 );
+    mapMessage->setBytes( "bytesKey", bytes );
 
-        std::vector<unsigned char> bytes;
-        bytes.push_back( 65 );
-        bytes.push_back( 66 );
-        bytes.push_back( 67 );
-        bytes.push_back( 68 );
-        bytes.push_back( 69 );
-        mapMessage->setBytes( "bytesKey", bytes );
+    // Send some text messages
+    producer->send( mapMessage.get() );
 
-        // Send some text messages
-        producer->send( mapMessage.get() );
+    auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
 
-        auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
-        CPPUNIT_ASSERT( message.get() != NULL );
-
-        cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
-        CPPUNIT_ASSERT( recvMapMessage != NULL );
-        CPPUNIT_ASSERT( recvMapMessage->getString( "stringKey" ) == stringValue );
-        CPPUNIT_ASSERT( recvMapMessage->getBoolean( "boolKey" ) == booleanValue );
-        CPPUNIT_ASSERT( recvMapMessage->getByte( "byteKey" ) == byteValue );
-        CPPUNIT_ASSERT( recvMapMessage->getChar( "charKey" ) == charValue );
-        CPPUNIT_ASSERT( recvMapMessage->getShort( "shortKey" ) == shortValue );
-        CPPUNIT_ASSERT( recvMapMessage->getInt( "intKey" ) == intValue );
-        CPPUNIT_ASSERT( recvMapMessage->getLong( "longKey" ) == longValue );
-        CPPUNIT_ASSERT( recvMapMessage->getFloat( "floatKey" ) == floatValue );
-        CPPUNIT_ASSERT( recvMapMessage->getDouble( "doubleKey" ) == doubleValue );
-        CPPUNIT_ASSERT( recvMapMessage->getBytes( "bytesKey" ) == bytes );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message.get() );
+    CPPUNIT_ASSERT( recvMapMessage != NULL );
+    CPPUNIT_ASSERT( recvMapMessage->getString( "stringKey" ) == stringValue );
+    CPPUNIT_ASSERT( recvMapMessage->getBoolean( "boolKey" ) == booleanValue );
+    CPPUNIT_ASSERT( recvMapMessage->getByte( "byteKey" ) == byteValue );
+    CPPUNIT_ASSERT( recvMapMessage->getChar( "charKey" ) == charValue );
+    CPPUNIT_ASSERT( recvMapMessage->getShort( "shortKey" ) == shortValue );
+    CPPUNIT_ASSERT( recvMapMessage->getInt( "intKey" ) == intValue );
+    CPPUNIT_ASSERT( recvMapMessage->getLong( "longKey" ) == longValue );
+    CPPUNIT_ASSERT( recvMapMessage->getFloat( "floatKey" ) == floatValue );
+    CPPUNIT_ASSERT( recvMapMessage->getDouble( "doubleKey" ) == doubleValue );
+    CPPUNIT_ASSERT( recvMapMessage->getBytes( "bytesKey" ) == bytes );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -245,7 +255,7 @@ void OpenwireSimpleTest::testDestroyDestination() {
     } catch( ActiveMQException& ex ) {
         ex.printStackTrace();
         CPPUNIT_ASSERT_MESSAGE( "CAUGHT EXCEPTION", false );
-    } AMQ_CATCHALL_THROW( ActiveMQException )
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
