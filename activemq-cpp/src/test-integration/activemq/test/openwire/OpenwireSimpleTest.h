@@ -40,6 +40,7 @@ namespace openwire{
         CPPUNIT_TEST( testBytesMessageSendRecv );
         CPPUNIT_TEST( testQuickCreateAndDestroy );
         CPPUNIT_TEST( testWithZeroConsumerPrefetch );
+        CPPUNIT_TEST( testWithZeroConsumerPrefetchAndNoMessage );
         CPPUNIT_TEST( testMapMessageSendToQueue );
         CPPUNIT_TEST( testMapMessageSendToTopic );
         CPPUNIT_TEST( testDestroyDestination );
@@ -57,6 +58,7 @@ namespace openwire{
         }
 
         void testWithZeroConsumerPrefetch();
+        void testWithZeroConsumerPrefetchAndNoMessage();
         void testMapMessageSendToQueue();
         void testMapMessageSendToTopic();
         void tesstStreamMessage();
