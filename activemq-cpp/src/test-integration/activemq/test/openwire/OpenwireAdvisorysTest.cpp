@@ -83,12 +83,13 @@ void OpenwireAdvisorysTest::testConnectionAdvisories() {
 
     std::auto_ptr<Connection> otherConnection( factory->createConnection() );
     CPPUNIT_ASSERT( otherConnection.get() != NULL );
+    otherConnection->start();
 
     std::auto_ptr<cms::Message> message;
     int connectionInfoCount = 0;
 
     do {
-        message.reset( consumer->receive(2000) );
+        message.reset( consumer->receive(3000) );
 
         commands::Message* amqMessage = dynamic_cast<commands::Message*>( message.get() );
         if(amqMessage != NULL) {
