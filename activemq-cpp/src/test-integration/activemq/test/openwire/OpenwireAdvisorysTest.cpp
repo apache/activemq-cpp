@@ -83,6 +83,7 @@ void OpenwireAdvisorysTest::testConnectionAdvisories() {
 
     std::auto_ptr<Connection> otherConnection( factory->createConnection() );
     CPPUNIT_ASSERT( otherConnection.get() != NULL );
+    otherConnection->start();
 
     std::auto_ptr<cms::Message> message;
     int connectionInfoCount = 0;
