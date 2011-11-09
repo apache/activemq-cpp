@@ -108,11 +108,18 @@ Pointer<Tracked> ConnectionStateTracker::track( const Pointer<Command>& command 
 void ConnectionStateTracker::trackBack( const Pointer<Command>& command ) {
 
     try{
-        if( trackMessages && command != NULL && command->isMessage() ) {
-            Pointer<Message> message =
-                command.dynamicCast<Message>();
-            if( message->getTransactionId() == NULL ) {
-                currentCacheSize = currentCacheSize + message->getSize();
+        if (command != NULL) {
+            if (trackMessages && command->isMessage()) {
+                Pointer<Message> message = command.dynamicCast<Message>();
+                if (message->getTransactionId() == NULL) {
+                    currentCacheSize = currentCacheSize + message->getSize();
+                }
+            } else {
+                Pointer<MessagePull> messagePull = command.dynamicCast<MessagePull>();
+                if (messagePull != NULL) {
+                    // just needs to be a rough estimate of size, ~4 identifiers
+                    currentCacheSize += 400;
+                }
             }
         }
     }
@@ -148,11 +155,18 @@ void ConnectionStateTracker::restore( const Pointer<transport::Transport>& trans
         }
 
         // Now we flush messages
-        std::vector< Pointer<Message> > messages = messageCache.values();
-        std::vector< Pointer<Message> >::const_iterator messageIter = messages.begin();
+        std::vector< Pointer<Command> > messages = messageCache.values();
+        std::vector< Pointer<Command> >::const_iterator messageIter = messages.begin();
 
         for( ; messageIter != messages.end(); ++messageIter ) {
             transport->oneway( *messageIter );
+        }
+
+        std::vector< Pointer<Command> > messagePulls = messagePullCache.values();
+        std::vector< Pointer<Command> >::const_iterator messagePullIter = messagePulls.begin();
+
+        for(; messagePullIter != messagePulls.end(); ++messagePullIter) {
+            transport->oneway(*messagePullIter);
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -790,8 +804,25 @@ Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo*
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> ConnectionStateTracker::processMessagePull(MessagePull* pull) {
+
+    try{
+
+        if (pull != NULL && pull->getDestination() != NULL && pull->getConsumerId() != NULL) {
+            std::string id = pull->getDestination()->toString() + "::" + pull->getConsumerId()->toString();
+            messagePullCache.put(id, Pointer<Command>(pull->cloneDataStructure()));
+        }
+
+        return Pointer<Command>();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::connectionInterruptProcessingComplete(
-    transport::Transport* transport, const Pointer<ConnectionId>& connectionId ) {
+    transport::Transport* transport, const Pointer<ConnectionId>& connectionId) {
 
     Pointer<ConnectionState> connectionState = connectionStates.get( connectionId );
 
