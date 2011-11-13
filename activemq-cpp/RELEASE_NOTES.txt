@@ -1,4 +1,22 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.1                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-369] - dynamic library segfaults on load under Mac OS/X
+    [AMQCPP-370] - pkg-config does not properly indicate static dependencies
+    [AMQCPP-371] - bytesmessages's size doubled If Message body compression enabled
+    [AMQCPP-373] - AMQ_CATCH_RETHROW upcasts the re-thrown exception
+    [AMQCPP-374] - BaseDataStreamMarshaller::tightUnmarshalByteArray crashes
+    [AMQCPP-382] - Spurious error messages printed by consumer when no messages
+                   available to consumer
+
+Improvement
+
+    [AMQCPP-383] - Implement the Session recover method.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.4.0                               ==
 =========================================================================
 
