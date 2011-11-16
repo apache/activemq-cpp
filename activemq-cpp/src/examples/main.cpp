@@ -140,33 +140,18 @@ public:
 
 private:
 
-    void cleanup(){
+    void cleanup() {
+        if (connection != NULL) {
+            connection->close();
+        }
 
-        // Destroy resources.
-        try{
-            if( destination != NULL ) delete destination;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
+        delete destination;
         destination = NULL;
-
-        try{
-            if( producer != NULL ) delete producer;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
+        delete producer;
         producer = NULL;
-
-        // Close open resources.
-        try{
-            if( session != NULL ) session->close();
-            if( connection != NULL ) connection->close();
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-
-        try{
-            if( session != NULL ) delete session;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
+        delete session;
         session = NULL;
-
-        try{
-            if( connection != NULL ) delete connection;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
+        delete connection;
         connection = NULL;
     }
 };
@@ -317,39 +302,17 @@ public:
 
 private:
 
-    void cleanup(){
-
-        //*************************************************
-        // Always close destination, consumers and producers before
-        // you destroy their sessions and connection.
-        //*************************************************
-
-        // Destroy resources.
-        try{
-            if( destination != NULL ) delete destination;
-        }catch (CMSException& e) { e.printStackTrace(); }
+    void cleanup() {
+        if (connection != NULL) {
+            connection->close();
+        }
+        delete destination;
         destination = NULL;
-
-        try{
-            if( consumer != NULL ) delete consumer;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        delete consumer;
         consumer = NULL;
-
-        // Close open resources.
-        try{
-            if( session != NULL ) session->close();
-            if( connection != NULL ) connection->close();
-        }catch (CMSException& e) { e.printStackTrace(); }
-
-        // Now Destroy them
-        try{
-            if( session != NULL ) delete session;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        delete session;
         session = NULL;
-
-        try{
-            if( connection != NULL ) delete connection;
-        }catch (CMSException& e) { e.printStackTrace(); }
+        delete connection;
         connection = NULL;
     }
 };
