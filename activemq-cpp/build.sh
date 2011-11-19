@@ -130,7 +130,7 @@ run_Make() {
 run_Check() {
     check_Configure
     pushd $AMQCPP_BUILD_DIR
-    make check
+    make check -j 4
     popd
     exit
 }
