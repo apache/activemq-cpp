@@ -584,7 +584,7 @@ void ActiveMQBytesMessage::storeContent() {
 
             if( !this->compressed ) {
 
-                std::pair<const unsigned char*, int> array = this->bytesOut->toByteArray();
+                std::pair<unsigned char*, int> array = this->bytesOut->toByteArray();
                 this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
                 delete [] array.first;
 
@@ -600,7 +600,7 @@ void ActiveMQBytesMessage::storeContent() {
                 this->bytesOut->writeTo( &doBuffer );
 
                 // Now store the annotated content.
-                std::pair<const unsigned char*, int> array = buffer.toByteArray();
+                std::pair<unsigned char*, int> array = buffer.toByteArray();
                 this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
                 delete [] array.first;
             }

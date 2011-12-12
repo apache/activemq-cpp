@@ -139,7 +139,7 @@ void ActiveMQTextMessage::beforeMarshal( wireformat::WireFormat* wireFormat ) {
         dataOut.close();
 
         if( bytesOut->size() > 0 ) {
-            std::pair<const unsigned char*, int> array = bytesOut->toByteArray();
+            std::pair<unsigned char*, int> array = bytesOut->toByteArray();
             this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
             delete [] array.first;
         }
