@@ -845,7 +845,7 @@ void ActiveMQStreamMessage::storeContent() {
         this->dataOut->close();
 
         if( this->bytesOut->size() > 0 ) {
-            std::pair<const unsigned char*, int> array = this->bytesOut->toByteArray();
+            std::pair<unsigned char*, int> array = this->bytesOut->toByteArray();
             this->setContent( std::vector<unsigned char>( array.first, array.first + array.second ) );
             delete [] array.first;
         }
