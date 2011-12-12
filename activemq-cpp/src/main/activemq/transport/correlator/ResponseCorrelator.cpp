@@ -103,7 +103,7 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
         Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
+            requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
         }
 
         // The finalizer will cleanup the map even if an exception is thrown.
@@ -147,7 +147,7 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
         Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
+            requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
         }
 
         // The finalizer will cleanup the map even if an exception is thrown.

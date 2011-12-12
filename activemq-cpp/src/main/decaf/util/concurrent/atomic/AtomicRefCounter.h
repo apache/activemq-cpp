@@ -19,6 +19,7 @@
 #define _DECAF_UTIL_CONCURRENT_ATOMIC_ATOMICREFCOUNTER_H_
 
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <algorithm>
 
 namespace decaf{
 namespace util{

@@ -52,7 +52,7 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<uns
         }
 
         if( bytesOut.size() > 0 ) {
-            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            std::pair<unsigned char*, int> array = bytesOut.toByteArray();
             buffer.insert( buffer.begin(), array.first, array.first + array.second );
             delete [] array.first;
         }
@@ -96,7 +96,7 @@ void PrimitiveTypesMarshaller::marshal( const PrimitiveList* list, std::vector<u
         }
 
         if( bytesOut.size() > 0 ) {
-            std::pair<const unsigned char*, int> array = bytesOut.toByteArray();
+            std::pair<unsigned char*, int> array = bytesOut.toByteArray();
             buffer.insert( buffer.begin(), array.first, array.first + array.second );
             delete [] array.first;
         }
