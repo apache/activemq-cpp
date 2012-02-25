@@ -25,6 +25,7 @@
 #include <decaf/util/concurrent/locks/ReentrantLock.h>
 #include <decaf/util/concurrent/locks/AbstractQueuedSynchronizer.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/RejectedExecutionException.h>
@@ -52,6 +53,30 @@ using namespace decaf::util::concurrent::locks;
 namespace decaf{
 namespace util{
 namespace concurrent{
+
+    using decaf::lang::Pointer;
+
+    /**
+     * Any task that we don't own we wrap in this Runnable object so that the
+     * task deletion logic can remain unchanged and thread safe.
+     */
+    class UnownedTaskWrapper : public Runnable {
+    private:
+
+        Runnable* task;
+
+    public:
+
+        UnownedTaskWrapper(Runnable* task) : Runnable(), task(task) {
+        }
+
+        virtual ~UnownedTaskWrapper() {
+        }
+
+        virtual void run() {
+            this->task->run();
+        }
+    };
 
     /**
      * The main pool control state, ctl, is an atomic integer packing
@@ -352,12 +377,19 @@ namespace concurrent{
 
                 // Ensure dead Worker Threads are destroyed, the Timer might not have
                 // run recently.
-                Pointer< Iterator<Worker*> > iter(this->deadWorkers.iterator());
-                while(iter->hasNext()) {
-                    Worker* worker = iter->next();
+                Pointer< Iterator<Worker*> > workers(this->deadWorkers.iterator());
+                while(workers->hasNext()) {
+                    Worker* worker = workers->next();
                     worker->thread->join();
                     delete worker;
                 }
+
+                Pointer< Iterator<Runnable*> > tasks(this->workQueue->iterator());
+                while(tasks->hasNext()) {
+                    delete tasks->next();
+                }
+
+                this->workQueue->clear();
             }
             DECAF_CATCH_NOTHROW(Exception)
             DECAF_CATCHALL_NOTHROW()
@@ -688,10 +720,20 @@ namespace concurrent{
             processWorkerExit(w, completedAbruptly);
         }
 
-        void execute(Runnable* task, bool takeOwnership DECAF_UNUSED) {
+        void execute(Runnable* task, bool takeOwnership) {
 
             if (task == NULL) {
                 throw NullPointerException(__FILE__, __LINE__, "Runnable task cannot be NULL");
+            }
+
+            Runnable* target = task;
+
+            /**
+             * If we don't own it then wrap it so that our deletion logic is
+             * still valid.
+             */
+            if (!takeOwnership) {
+                target = new UnownedTaskWrapper(task);
             }
 
             /*
@@ -716,21 +758,21 @@ namespace concurrent{
              */
             int c = ctl.get();
             if (workerCountOf(c) < corePoolSize) {
-                if (addWorker(task, true)) {
+                if (addWorker(target, true)) {
                     return;
                 }
                 c = ctl.get();
             }
 
-            if (isRunning(c) && workQueue->offer(task)) {
+            if (isRunning(c) && workQueue->offer(target)) {
                 int recheck = ctl.get();
-                if (!isRunning(recheck) && this->remove(task)) {
-                    this->rejectionHandler->rejectedExecution(task, this->parent);
+                if (!isRunning(recheck) && this->remove(target)) {
+                    this->rejectionHandler->rejectedExecution(target, this->parent);
                 } else if (workerCountOf(recheck) == 0) {
                     addWorker(NULL, false);
                 }
-            } else if (!addWorker(task, false)) {
-                this->rejectionHandler->rejectedExecution(task, this->parent);
+            } else if (!addWorker(target, false)) {
+                this->rejectionHandler->rejectedExecution(target, this->parent);
             }
         }
 
@@ -935,9 +977,9 @@ namespace concurrent{
         }
 
         bool remove(Runnable* task) {
-            bool removed = this->workQueue->remove(task);
+            bool result = this->workQueue->remove(task);
             this->tryTerminate();
-            return removed;
+            return result;
         }
 
     private:

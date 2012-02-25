@@ -40,6 +40,10 @@ namespace concurrent {
         AbstractExecutorService();
         virtual ~AbstractExecutorService();
 
+    protected:
+
+        virtual void doSubmit(FutureType* future);
+
     };
 
 }}}
