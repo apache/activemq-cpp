@@ -41,24 +41,25 @@ LockSupport::~LockSupport() {
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupport::unpark( decaf::lang::Thread* thread ) throw() {
 
-    try{
-        Threading::unpark( thread );
-    } DECAF_CATCHALL_NOTHROW()
+    try {
+		Threading::unpark(thread);
+	}
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupport::park() throw() {
 
-    try{
-        Threading::park( Thread::currentThread() );
-    } DECAF_CATCHALL_NOTHROW()
+    try {
+		Threading::park(Thread::currentThread());
+	}
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void LockSupport::parkNanos( long long nanos ) throw() {
 
-    try{
-
+    try {
         long long mills = 0;
 
         if( nanos >= 1000000 ) {
@@ -67,8 +68,8 @@ void LockSupport::parkNanos( long long nanos ) throw() {
         }
 
         Threading::park(Thread::currentThread(), mills, (int)nanos);
-
-    } DECAF_CATCHALL_NOTHROW()
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +84,6 @@ void LockSupport::parkUntil( long long deadline ) throw() {
         }
 
         Threading::park(Thread::currentThread(), ( deadline - now ), 0);
-
-    } DECAF_CATCHALL_NOTHROW()
+    }
+    DECAF_CATCHALL_NOTHROW()
 }

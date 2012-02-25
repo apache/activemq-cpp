@@ -22,6 +22,7 @@
 
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/ArrayList.h>
+#include <decaf/util/concurrent/Future.h>
 #include <decaf/util/concurrent/Executor.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
@@ -105,6 +106,33 @@ namespace concurrent {
          * @return true if all tasks have completed after a request to shut down was made.
          */
         virtual bool isTerminated() const = 0;
+
+        /**
+         * Submits a Runnable object for execution.  A Future object is created and returned
+         * that will return the default value of the template type upon completion.
+         *
+         * @param task
+         *      Pointer to a Runnable object that will be executed by this ExecutorService.
+         *
+         * @returns a new Future<?> pointer that is owned by the caller.
+         *
+         * @throws NullPointerException if the Runnable pointer passed is NULL.
+         */
+        template<typename E>
+        Future<E>* submit(decaf::lang::Runnable* task) {
+            return NULL;
+        }
+
+    protected:
+
+        /**
+         * Perform the actual submit of a FutureType instance, the caller is responsible for
+         * creating the properly typed Future<E> object and returning that to its caller.
+         *
+         * @param future
+         *      Pointer to a base FutureType instance that is to be submitted to the Executor.
+         */
+        virtual void doSubmit(FutureType* future) = 0;
 
     };
 

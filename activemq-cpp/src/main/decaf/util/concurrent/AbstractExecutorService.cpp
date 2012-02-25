@@ -21,6 +21,7 @@ using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 AbstractExecutorService::AbstractExecutorService() : ExecutorService() {
@@ -28,4 +29,10 @@ AbstractExecutorService::AbstractExecutorService() : ExecutorService() {
 
 ////////////////////////////////////////////////////////////////////////////////
 AbstractExecutorService::~AbstractExecutorService() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractExecutorService::doSubmit(FutureType* future) {
+
+    throw UnsupportedOperationException();
 }
