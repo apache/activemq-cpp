@@ -58,9 +58,9 @@ namespace util {
          * This implementation returns true if offer succeeds, else throws an
          * IllegalStateException.
          */
-        virtual bool add( const E& value ) {
+        virtual bool add(const E& value) {
 
-            if( offer( value ) ) {
+            if (this->offer(value )) {
                 return true;
             }
 
@@ -75,14 +75,14 @@ namespace util {
          * throws an IllegalArgumentException if so, otherwise it delegates the add to
          * the AbstractCollection's addAll implementation.
          */
-        virtual bool addAll( const Collection<E>& collection ) {
+        virtual bool addAll(const Collection<E>& collection) {
 
-            if( this == &collection ) {
+            if (this == &collection) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__, "A Queue cannot be added to itself." );
             }
 
-            return AbstractCollection<E>::addAll( collection );
+            return AbstractCollection<E>::addAll(collection);
         }
 
         using AbstractCollection<E>::remove;
@@ -95,7 +95,7 @@ namespace util {
         virtual E remove() {
 
             E result;
-            if( this->poll( result ) == true ) {
+            if (this->poll(result) == true) {
                 return result;
             }
 
@@ -112,7 +112,7 @@ namespace util {
         virtual E element() const {
 
             E result;
-            if( this->peek( result ) == true ) {
+            if (this->peek( result ) == true) {
                 return result;
             }
 
@@ -127,7 +127,7 @@ namespace util {
          */
         virtual void clear() {
 
-            if( this->isEmpty() ) {
+            if (this->isEmpty()) {
                 return;
             }
 
@@ -135,10 +135,9 @@ namespace util {
             bool successful = true;
 
             do {
-                successful = this->poll( result );
-            } while( successful );
+                successful = this->poll(result);
+            } while(successful);
         }
-
     };
 
 }}
