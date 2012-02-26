@@ -36,6 +36,7 @@ namespace concurrent{
         CPPUNIT_TEST_SUITE( ThreadPoolExecutorTest );
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testSimpleTasks );
+        CPPUNIT_TEST( testSimpleTasksCallerOwns );
         CPPUNIT_TEST( testMoreTasksThanMaxPoolSize );
         CPPUNIT_TEST( testTasksThatThrow );
         CPPUNIT_TEST( testAwaitTermination );
@@ -116,6 +117,7 @@ namespace concurrent{
 
         void testConstructor();
         void testSimpleTasks();
+        void testSimpleTasksCallerOwns();
         void testMoreTasksThanMaxPoolSize();
         void testTasksThatThrow();
         void testAwaitTermination();

@@ -197,6 +197,38 @@ void ThreadPoolExecutorTest::testSimpleTasks()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testSimpleTasksCallerOwns()
+{
+    CountDownLatch myLatch( 3 );
+
+    int taskValue1 = 1;
+    int taskValue2 = 2;
+    int taskValue3 = 3;
+
+    MyTask task1(&myLatch, &taskValue1);
+    MyTask task2(&myLatch, &taskValue2);
+    MyTask task3(&myLatch, &taskValue3);
+
+    ThreadPoolExecutor pool(1, 3, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    pool.execute(&task1, false);
+    pool.execute(&task2, false);
+    pool.execute(&task3, false);
+
+    // Wait for them to finish, if we can't do this in 30 seconds then
+    // there's probably something really wrong.
+    CPPUNIT_ASSERT( myLatch.await( 30000 ) );
+
+    CPPUNIT_ASSERT( taskValue1 == 101 );
+    CPPUNIT_ASSERT( taskValue2 == 102 );
+    CPPUNIT_ASSERT( taskValue3 == 103 );
+
+    CPPUNIT_ASSERT( pool.getMaximumPoolSize() == 3 );
+
+    pool.shutdown();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void ThreadPoolExecutorTest::testAwaitTermination()
 {
     CountDownLatch myLatch( 3 );
