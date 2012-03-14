@@ -30,6 +30,8 @@ const int ExecutorsTestSupport::SMALL_DELAY_MS = 50 * 5;
 const int ExecutorsTestSupport::MEDIUM_DELAY_MS = 50 * 10;
 const int ExecutorsTestSupport::LONG_DELAY_MS = 50 * 50;
 
+const std::string ExecutorsTestSupport::TEST_STRING = "a test string";
+
 ///////////////////////////////////////////////////////////////////////////////
 ExecutorsTestSupport::ExecutorsTestSupport() : threadFailed(false) {
 }

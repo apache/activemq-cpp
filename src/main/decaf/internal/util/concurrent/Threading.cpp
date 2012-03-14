@@ -19,6 +19,7 @@
 
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/System.h>
+#include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/Executors.h>
 

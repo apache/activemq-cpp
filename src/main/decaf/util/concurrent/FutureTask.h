@@ -26,7 +26,6 @@
 
 #include <decaf/util/concurrent/RunnableFuture.h>
 #include <decaf/util/concurrent/Callable.h>
-#include <decaf/util/concurrent/Executors.h>
 #include <decaf/util/concurrent/CancellationException.h>
 #include <decaf/util/concurrent/ExecutionException.h>
 #include <decaf/util/concurrent/TimeoutException.h>
@@ -50,7 +49,7 @@ namespace concurrent {
      * A FutureTask can be used to wrap a Callable or Runnable object. Because FutureTask
      * implements Runnable, a FutureTask can be submitted to an Executor for execution.
      *
-     * In addition to serving as a standalone class, this class provides protected functionality
+     * In addition to serving as a stand-alone class, this class provides protected functionality
      * that may be useful when creating customized task classes.
      *
      * @since 1.0
@@ -58,6 +57,48 @@ namespace concurrent {
     template<typename T>
     class FutureTask : public RunnableFuture<T> {
     private:
+
+        /**
+         * A Callable subclass that runs given task and returns given result, used to
+         * wrap either a Runnable or Callable pointer and
+         */
+        class FutureTaskAdapter : public decaf::util::concurrent::Callable<T> {
+        private:
+
+            decaf::lang::Runnable* task;
+            decaf::util::concurrent::Callable<T>* callable;
+            bool owns;
+            T result;
+
+        public:
+
+            FutureTaskAdapter(decaf::lang::Runnable* task, const T& result, bool owns = true) :
+                decaf::util::concurrent::Callable<T>(), task(task), callable(NULL), owns(owns), result(result) {
+            }
+
+            FutureTaskAdapter(decaf::util::concurrent::Callable<T>* task, bool owns = true) :
+                decaf::util::concurrent::Callable<T>(), task(NULL), callable(task), owns(owns), result(T()) {
+            }
+
+            virtual ~FutureTaskAdapter() {
+                try{
+                    if (owns) {
+                        delete this->task;
+                        delete this->callable;
+                    }
+                }
+                DECAF_CATCHALL_NOTHROW()
+            }
+
+            virtual T call() {
+                if (this->task != NULL) {
+                    this->task->run();
+                    return result;
+                } else {
+                    return this->callable->call();
+                }
+            }
+        };
 
         /**
          * Synchronization control for FutureTask.
@@ -103,7 +144,6 @@ namespace concurrent {
             }
 
             virtual ~FutureTaskSync() {
-
             }
 
             bool innerIsCancelled() const {
@@ -210,13 +250,20 @@ namespace concurrent {
                     return;
                 }
 
-                runner = decaf::lang::Thread::currentThread();
+                this->runner = decaf::lang::Thread::currentThread();
                 if (getState() == RUNNING) { // recheck after setting thread
                     T result;
                     try {
                         result = this->callable->call();
                     } catch(decaf::lang::Exception& ex) {
                         this->parent->setException(ex);
+                        return;
+                    } catch(std::exception& stdex) {
+                        this->parent->setException(decaf::lang::Exception(&stdex));
+                        return;
+                    } catch(...) {
+                        this->parent->setException(decaf::lang::Exception(
+                            __FILE__, __LINE__, "FutureTask Caught Unknown exception during task execution."));
                         return;
                     }
                     this->parent->set(result);
@@ -239,6 +286,13 @@ namespace concurrent {
                     return compareAndSetState(RUNNING, READY);
                 } catch(decaf::lang::Exception& ex) {
                     this->parent->setException(ex);
+                    return false;
+                } catch(std::exception& stdex) {
+                    this->parent->setException(decaf::lang::Exception(&stdex));
+                    return false;
+                } catch(...) {
+                    this->parent->setException(decaf::lang::Exception(
+                        __FILE__, __LINE__, "FutureTask Caught Unknown exception during task execution."));
                     return false;
                 }
             }
@@ -270,7 +324,7 @@ namespace concurrent {
 
     private:
 
-        FutureTaskSync* sync;
+        Pointer<FutureTaskSync> sync;
 
     public:
 
@@ -280,16 +334,18 @@ namespace concurrent {
          *
          * @param callable
          *      The callable task that will be invoked when run.
+         * @param takeOwnership
+         *      Boolean value indicating if the Executor now owns the pointer to the task.
          *
          * @throws NullPointerException if callable pointer is NULL
          */
-        FutureTask(Callable<T>* callable) : sync(NULL) {
+        FutureTask(Callable<T>* callable, bool takeOwnership = true) : sync(NULL) {
             if (callable == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(__FILE__, __LINE__,
                     "The Callable pointer passed to the constructor was NULL");
             }
 
-            this->sync = new FutureTaskSync(this, callable);
+            this->sync.reset(new FutureTaskSync(this, new FutureTaskAdapter(callable, takeOwnership)));
         }
 
         /**
@@ -301,23 +357,21 @@ namespace concurrent {
          *      The runnable task that the future will execute.
          * @param result
          *      The result to return on successful completion.
+         * @param takeOwnership
+         *      Boolean value indicating if the Executor now owns the pointer to the task.
          *
          * @throws NullPointerException if runnable is NULL.
          */
-        FutureTask(decaf::lang::Runnable* runnable, const T& result) {
+        FutureTask(decaf::lang::Runnable* runnable, const T& result, bool takeOwnership = true) : sync(NULL) {
             if (runnable == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(__FILE__, __LINE__,
                     "The Runnable pointer passed to the constructor was NULL");
             }
 
-            sync = new FutureTaskSync(this, Executors::callable<T>(runnable, result));
+            this->sync.reset(new FutureTaskSync(this, new FutureTaskAdapter(runnable, result, takeOwnership)));
         }
 
         virtual ~FutureTask() {
-            try{
-                delete this->sync;
-            }
-            DECAF_CATCHALL_NOTHROW()
         }
 
         virtual bool isCancelled() const {
@@ -338,6 +392,10 @@ namespace concurrent {
 
         virtual T get(long long timeout, const TimeUnit& unit) {
             return this->sync->innerGet(unit.toNanos(timeout));
+        }
+
+        FutureTask<T>* clone() {
+            return new FutureTask<T>(*this);
         }
 
     public:
@@ -392,6 +450,16 @@ namespace concurrent {
          */
         virtual bool runAndReset() {
             return this->sync->innerRunAndReset();
+        }
+
+    public:
+
+        FutureTask(const FutureTask<T>& source) : RunnableFuture<T>(), sync(source.sync) {
+        }
+
+        FutureTask<T>& operator= (const FutureTask<T>& source) {
+            this->sync = source.sync;
+            return *this;
         }
 
     };

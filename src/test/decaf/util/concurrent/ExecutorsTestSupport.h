@@ -21,6 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <decaf/lang/Boolean.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 
@@ -44,6 +45,8 @@ namespace concurrent {
         static const int SMALL_DELAY_MS;
         static const int MEDIUM_DELAY_MS;
         static const int LONG_DELAY_MS;
+
+        static const std::string TEST_STRING;
 
     protected:
 
@@ -142,6 +145,30 @@ namespace concurrent {
                 } catch(decaf::lang::Exception& e) {
                     parent->threadUnexpectedException(e);
                 }
+            }
+        };
+
+        template<typename E>
+        class SmallCallable : public Callable<E> {
+        private:
+
+            ExecutorsTestSupport* parent;
+
+        public:
+
+            SmallCallable(ExecutorsTestSupport* parent) : decaf::util::concurrent::Callable<E>(), parent(parent) {
+            }
+
+            virtual ~SmallCallable() {}
+
+            virtual E call() {
+                try {
+                    Thread::sleep(SMALL_DELAY_MS);
+                } catch(decaf::lang::Exception& e) {
+                    parent->threadUnexpectedException(e);
+                }
+
+                return E();
             }
         };
 
@@ -336,6 +363,27 @@ namespace concurrent {
             }
         };
 
+        class TrackedShortRunnable : public Runnable {
+        private:
+
+            bool* done;
+
+        public:
+
+            TrackedShortRunnable(bool* done) : decaf::lang::Runnable(), done(done) {
+            }
+
+            virtual ~TrackedShortRunnable() {}
+
+            virtual void run() {
+                try {
+                    Thread::sleep(SMALL_DELAY_MS);
+                    *done = true;
+                } catch(decaf::lang::Exception& e) {
+                }
+            }
+        };
+
         class TrackedNoOpRunnable : public Runnable {
         private:
 
@@ -371,6 +419,19 @@ namespace concurrent {
                     *done = true;
                 } catch(decaf::lang::Exception& e) {
                 }
+            }
+        };
+
+        class StringTask : public decaf::util::concurrent::Callable<std::string> {
+        public:
+
+            StringTask() : decaf::util::concurrent::Callable<std::string>() {
+            }
+
+            virtual ~StringTask() {}
+
+            std::string call() {
+                return TEST_STRING;
             }
         };
 

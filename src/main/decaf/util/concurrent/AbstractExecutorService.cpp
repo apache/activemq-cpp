@@ -17,6 +17,8 @@
 
 #include "AbstractExecutorService.h"
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
@@ -34,5 +36,16 @@ AbstractExecutorService::~AbstractExecutorService() {
 ////////////////////////////////////////////////////////////////////////////////
 void AbstractExecutorService::doSubmit(FutureType* future) {
 
-    throw UnsupportedOperationException();
+    try {
+        // Its supposed to be a RunnableFuture<?> be we should double check.
+        Runnable* task = dynamic_cast<Runnable*>(future);
+        if (task == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "Could not cast FutureType to a Runnabke");
+        }
+
+        // Ensure that we tell the subclass it owns the Future.
+        this->execute(task, true);
+    }
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(RejectedExecutionException)
 }
