@@ -29,6 +29,8 @@ namespace concurrent {
         CPPUNIT_TEST_SUITE( FutureTaskTest );
         CPPUNIT_TEST( testConstructor1 );
         CPPUNIT_TEST( testConstructor2 );
+        CPPUNIT_TEST( testConstructor3 );
+        CPPUNIT_TEST( testConstructor4 );
         CPPUNIT_TEST( testIsDone );
         CPPUNIT_TEST( testRunAndReset );
         CPPUNIT_TEST( testResetAfterCancel );
@@ -57,6 +59,8 @@ namespace concurrent {
 
         void testConstructor1();
         void testConstructor2();
+        void testConstructor3();
+        void testConstructor4();
         void testIsDone();
         void testRunAndReset();
         void testResetAfterCancel();

@@ -24,6 +24,8 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
+#include <typeinfo>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
@@ -54,6 +56,58 @@ namespace {
         }
     };
 
+    class FutureRunnable : public decaf::lang::Runnable {
+    public:
+
+        FutureRunnable() {
+        }
+
+        virtual ~FutureRunnable() {
+        }
+
+        virtual void run() {
+        }
+    };
+
+    template<typename E>
+    class FutureCallable : public Callable<E> {
+    public:
+
+        FutureCallable() {
+        }
+
+        virtual ~FutureCallable() {
+        }
+
+        virtual E call() {
+            return E();
+        }
+    };
+
+    template<typename E>
+    class MediumSleepCallable : public Callable<E> {
+    private:
+
+        FutureTaskTest* parent;
+
+    public:
+
+        MediumSleepCallable(FutureTaskTest* parent) : Callable<E>(), parent(parent) {
+        }
+
+        virtual ~MediumSleepCallable() {
+        }
+
+        virtual E call() {
+            try {
+                Thread::sleep(FutureTaskTest::MEDIUM_DELAY_MS);
+                this->parent->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+
+            return E();
+        }
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +134,31 @@ void FutureTaskTest::testConstructor2() {
         "Should have thrown a NullPointerException",
         new FutureTask<std::string>(NULL, "Test"),
         NullPointerException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FutureTaskTest::testConstructor3() {
+    FutureTask<int> task(new FutureRunnable(), 10);
+    CPPUNIT_ASSERT(!task.isCancelled());
+    CPPUNIT_ASSERT(!task.isDone());
+
+    task.run();
+
+    CPPUNIT_ASSERT(!task.isCancelled());
+    CPPUNIT_ASSERT(task.isDone());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FutureTaskTest::testConstructor4() {
+
+    FutureTask<std::string> task(new FutureCallable<std::string>());
+    CPPUNIT_ASSERT(!task.isCancelled());
+    CPPUNIT_ASSERT(!task.isDone());
+
+    task.run();
+
+    CPPUNIT_ASSERT(!task.isCancelled());
+    CPPUNIT_ASSERT(task.isDone());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +196,6 @@ void FutureTaskTest::testSet() {
         unexpectedException();
     }
 }
-
-#include <typeinfo>
 
 ////////////////////////////////////////////////////////////////////////////////
 void FutureTaskTest::testSetException() {
@@ -162,35 +239,6 @@ void FutureTaskTest::testCancelAfterRun() {
     CPPUNIT_ASSERT(!task.cancel(false));
     CPPUNIT_ASSERT(task.isDone());
     CPPUNIT_ASSERT(!task.isCancelled());
-}
-
-////////////////////////////////////////////////////////////////////////////////
-namespace {
-
-    template<typename E>
-    class MediumSleepCallable : public Callable<E> {
-    private:
-
-        FutureTaskTest* parent;
-
-    public:
-
-        MediumSleepCallable(FutureTaskTest* parent) : Callable<E>(), parent(parent) {
-        }
-
-        virtual ~MediumSleepCallable() {
-        }
-
-        virtual E call() {
-            try {
-                Thread::sleep(FutureTaskTest::MEDIUM_DELAY_MS);
-                this->parent->threadShouldThrow();
-            } catch (InterruptedException& success) {
-            }
-
-            return E();
-        }
-    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -319,6 +319,7 @@ cc_sources = \
     decaf/internal/util/Resource.cpp \
     decaf/internal/util/ResourceLifecycleManager.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
+    decaf/internal/util/concurrent/ExecutorsSupport.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
     decaf/internal/util/concurrent/Threading.cpp \
     decaf/internal/util/concurrent/unix/Atomics.cpp \
@@ -840,6 +841,7 @@ h_sources = \
     decaf/internal/util/ResourceLifecycleManager.h \
     decaf/internal/util/TimerTaskHeap.h \
     decaf/internal/util/concurrent/Atomics.h \
+    decaf/internal/util/concurrent/ExecutorsSupport.h \
     decaf/internal/util/concurrent/PlatformThread.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
     decaf/internal/util/concurrent/Threading.h \

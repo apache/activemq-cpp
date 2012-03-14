@@ -23,6 +23,7 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/ArrayList.h>
 #include <decaf/util/concurrent/Future.h>
+#include <decaf/util/concurrent/FutureTask.h>
 #include <decaf/util/concurrent/Executor.h>
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
@@ -72,7 +73,7 @@ namespace concurrent {
          *
          * @throws InterruptedException if this call is interrupted while awaiting termination.
          */
-        virtual bool awaitTermination( long long timeout, const TimeUnit& unit ) = 0;
+        virtual bool awaitTermination(long long timeout, const TimeUnit& unit) = 0;
 
         /**
          * Performs an orderly shutdown of this Executor.  Previously queued tasks are allowed
@@ -108,26 +109,153 @@ namespace concurrent {
         virtual bool isTerminated() const = 0;
 
         /**
+         * Submits a value-returning task for execution and returns a Future pointer
+         * representing the pending results of the task. The Future's <tt>get</tt> method
+         * will return the task's result upon successful completion.  The caller owns the
+         * returned pointer and is responsible for deleting it.  The returned value is a
+         * proxy to the actual FutureTask that is submitted for execution so is legal for
+         * the caller to delete this value before its execution has completed.
+         *
+         * @param task
+         *      Pointer to the Callable<?> task to submit.
+         * @param takeOwnership
+         *      Boolean value indicating if the Executor now owns the pointer to the task.
+         *
+         * @return a Future<?> pointer representing pending completion of the task.
+         *
+         * @throws RejectedExecutionException if the task cannot be scheduled for execution
+         * @throws NullPointerException if the task is null
+         */
+        template<typename E>
+        Future<E>* submit(Callable<E>* task, bool takeOwnership = true) {
+
+            // Creates a new FutureTask to wrap the target task, and then creates a clone
+            // that will act as the proxy to return to the caller.
+            Pointer< FutureTask<E> > newTask(new FutureTask<E>(task, takeOwnership));
+            Pointer< FutureTask<E> > proxy(newTask->clone());
+
+            try {
+                // Its safe to submit and allow the task to be executed only after creating
+                // the proxy so that if its run on the current thread and destroyed the
+                // proxy still holds a vlid reference to the inner FutureTask data keeping it
+                // from being destroyed before the caller has a chance to call get().
+                this->doSubmit(newTask.get());
+
+                // No exception so we can release our ref, the executor owns it now.
+                newTask.release();
+
+                return proxy.release();
+            } catch(decaf::util::concurrent::RejectedExecutionException& ex) {
+                // Policy will delete the submitted task
+                newTask.release();
+                ex.setMark(__FILE__, __LINE__);
+                throw;
+            }
+            DECAF_CATCH_RETHROW(decaf::lang::exceptions::NullPointerException)
+            DECAF_CATCHALL_THROW(decaf::lang::Exception)
+        }
+
+        /**
+         * Submits a Runnable task for execution and returns a Future representing that
+         * task. The Future's <tt>get</tt> method will return the given result upon successful
+         * completion.  The caller owns the returned pointer and is responsible for deleting it.
+         * The returned value is a proxy to the actual FutureTask that is submitted for execution
+         * so is legal for the caller to delete this value before its execution has completed.
+         *
+         * @param task
+         *      The pointer to the task to submit.
+         * @param result
+         *      The result to return
+         * @param takeOwnership
+         *      Boolean value indicating if the Executor now owns the pointer to the task.
+         *
+         * @return a Future<?> pointer representing pending completion of the task,
+         *
+         * @throws RejectedExecutionException if the task cannot be scheduled for execution
+         * @throws NullPointerException if the task is null
+         */
+        template<typename E>
+        Future<E>* submit(decaf::lang::Runnable* task, const E& result, bool takeOwnership = true) {
+
+            // Creates a new FutureTask to wrap the target task, and then creates a clone
+            // that will act as the proxy to return to the caller.
+            Pointer< FutureTask<E> > newTask(new FutureTask<E>(task, result, takeOwnership));
+            Pointer< FutureTask<E> > proxy(newTask->clone());
+
+            try {
+                // Its safe to submit and allow the task to be executed only after creating
+                // the proxy so that if its run on the current thread and destroyed the
+                // proxy still holds a vlid reference to the inner FutureTask data keeping it
+                // from being destroyed before the caller has a chance to call get().
+                this->doSubmit(newTask.get());
+
+                // No exception so we can release our reference, the executor owns it now.
+                newTask.release();
+
+                return proxy.release();
+            } catch(decaf::util::concurrent::RejectedExecutionException& ex) {
+                // Policy will delete the submitted task
+                newTask.release();
+                ex.setMark(__FILE__, __LINE__);
+                throw;
+            }
+            DECAF_CATCH_RETHROW(decaf::lang::exceptions::NullPointerException)
+            DECAF_CATCHALL_THROW(decaf::lang::Exception)
+        }
+
+        /**
          * Submits a Runnable object for execution.  A Future object is created and returned
-         * that will return the default value of the template type upon completion.
+         * that will return the default value of the template type upon completion.  The caller
+         * owns the returned pointer and is responsible for deleting it.  The returned value is
+         * a proxy to the actual FutureTask that is submitted for execution so is legal for the
+         * caller to delete this value before its execution has completed.
          *
          * @param task
          *      Pointer to a Runnable object that will be executed by this ExecutorService.
+         * @param takeOwnership
+         *      Boolean value indicating if the Executor now owns the pointer to the task.
          *
          * @returns a new Future<?> pointer that is owned by the caller.
          *
+         * @throws RejectedExecutionException if the task cannot be scheduled for execution
          * @throws NullPointerException if the Runnable pointer passed is NULL.
          */
         template<typename E>
-        Future<E>* submit(decaf::lang::Runnable* task) {
-            return NULL;
+        Future<E>* submit(decaf::lang::Runnable* task, bool takeOwnership = true) {
+
+            // Creates a new FutureTask to wrap the target task, and then creates a clone
+            // that will act as the proxy to return to the caller.
+            Pointer< FutureTask<E> > newTask(new FutureTask<E>(task, E(), takeOwnership));
+            Pointer< FutureTask<E> > proxy(newTask->clone());
+
+            try {
+                // Its safe to submit and allow the task to be executed only after creating
+                // the proxy so that if its run on the current thread and destroyed the
+                // proxy still holds a vlid reference to the inner FutureTask data keeping it
+                // from being destroyed before the caller has a chance to call get().
+                this->doSubmit(newTask.get());
+
+                // No exception so we can release our ref, the executor owns it now.
+                newTask.release();
+
+                return proxy.release();
+            } catch(decaf::util::concurrent::RejectedExecutionException& ex) {
+                // Policy will delete the submitted task
+                newTask.release();
+                ex.setMark(__FILE__, __LINE__);
+                throw;
+            }
+            DECAF_CATCH_RETHROW(decaf::lang::exceptions::NullPointerException)
+            DECAF_CATCHALL_THROW(decaf::lang::Exception)
         }
 
     protected:
 
         /**
          * Perform the actual submit of a FutureType instance, the caller is responsible for
-         * creating the properly typed Future<E> object and returning that to its caller.
+         * creating the properly typed Future<E> object and returning that to its caller.  The
+         * pointer provided is the property of this Executor and must be deleted by this executor
+         * once its completed.
          *
          * @param future
          *      Pointer to a base FutureType instance that is to be submitted to the Executor.

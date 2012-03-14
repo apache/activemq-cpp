@@ -203,6 +203,7 @@ cc_sources = \
     decaf/util/StringTokenizerTest.cpp \
     decaf/util/TimerTest.cpp \
     decaf/util/UUIDTest.cpp \
+    decaf/util/concurrent/AbstractExecutorServiceTest.cpp \
     decaf/util/concurrent/ConcurrentStlMapTest.cpp \
     decaf/util/concurrent/CopyOnWriteArrayListTest.cpp \
     decaf/util/concurrent/CopyOnWriteArraySetTest.cpp \
@@ -431,6 +432,7 @@ h_sources = \
     decaf/util/StringTokenizerTest.h \
     decaf/util/TimerTest.h \
     decaf/util/UUIDTest.h \
+    decaf/util/concurrent/AbstractExecutorServiceTest.h \
     decaf/util/concurrent/ConcurrentStlMapTest.h \
     decaf/util/concurrent/CopyOnWriteArrayListTest.h \
     decaf/util/concurrent/CopyOnWriteArraySetTest.h \

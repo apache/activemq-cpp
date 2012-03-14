@@ -22,8 +22,6 @@
 
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
-#include <decaf/util/concurrent/ExecutorService.h>
-#include <decaf/util/concurrent/ThreadFactory.h>
 #include <decaf/util/concurrent/Callable.h>
 
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -31,6 +29,9 @@
 namespace decaf {
 namespace util {
 namespace concurrent {
+
+    class ThreadFactory;
+    class ExecutorService;
 
     /**
      * Implements a set of utilities for use with Executors, ExecutorService, ThreadFactory,
@@ -42,11 +43,17 @@ namespace concurrent {
     class DECAF_API Executors {
     private:
 
+        Executors();
+        Executors(const Executors&);
+        Executors& operator= (const Executors&);
+
+    private:
+
         /**
          * A Callable subclass that runs given task and returns given result
          */
         template<typename E>
-        class RunnableAdapter : public Callable<E> {
+        class RunnableAdapter : public decaf::util::concurrent::Callable<E> {
         private:
 
             decaf::lang::Runnable* task;
@@ -56,7 +63,7 @@ namespace concurrent {
         public:
 
             RunnableAdapter(decaf::lang::Runnable* task, bool owns, const E& result) :
-                Callable<E>(), task(task), owns(owns), result(result) {
+                decaf::util::concurrent::Callable<E>(), task(task), owns(owns), result(result) {
             }
 
             virtual ~RunnableAdapter() {
@@ -73,12 +80,6 @@ namespace concurrent {
                 return result;
             }
         };
-
-    private:
-
-        Executors();
-        Executors(const Executors&);
-        Executors& operator= (const Executors&);
 
     public:
 
