@@ -749,7 +749,7 @@ namespace locks {
                         LockSupport::parkNanos(nanosTimeout);
                     }
 
-                    long now = System::nanoTime();
+                    long long now = System::nanoTime();
                     nanosTimeout -= now - lastTime;
                     lastTime = now;
 
@@ -1053,7 +1053,7 @@ namespace locks {
                     break;
                 }
 
-                long now = System::nanoTime();
+                long long now = System::nanoTime();
                 nanosTimeout -= now - lastTime;
                 lastTime = now;
             }
