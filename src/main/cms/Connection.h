@@ -72,7 +72,7 @@ namespace cms{
     {
     public:
 
-        virtual ~Connection() throw();
+        virtual ~Connection();
 
         /**
          * Closes this connection as well as any Sessions created from it

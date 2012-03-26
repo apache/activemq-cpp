@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_CORE_ACTIVEMQPRODUCER_H_
-#define _ACTIVEMQ_CORE_ACTIVEMQPRODUCER_H_
+
+#ifndef _ACTIVEMQ_CORE_KERNELS_ACTIVEMQPRODUCERKERNEL_H_
+#define _ACTIVEMQ_CORE_KERNELS_ACTIVEMQPRODUCERKERNEL_H_
 
 #include <cms/MessageProducer.h>
 #include <cms/Message.h>
@@ -23,38 +24,82 @@
 #include <cms/DeliveryMode.h>
 
 #include <activemq/util/Config.h>
+#include <activemq/util/MemoryUsage.h>
 #include <activemq/commands/ProducerInfo.h>
-#include <activemq/core/kernels/ActiveMQProducerKernel.h>
+#include <activemq/commands/ProducerAck.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
-namespace activemq{
-namespace core{
+#include <memory>
+
+namespace activemq {
+namespace core {
+    class ActiveMQSession;
+namespace kernels {
 
     using decaf::lang::Pointer;
 
-    class ActiveMQSession;
-
-    class AMQCPP_API ActiveMQProducer : public cms::MessageProducer {
+    class AMQCPP_API ActiveMQProducerKernel : public cms::MessageProducer {
     private:
 
-        Pointer<activemq::core::kernels::ActiveMQProducerKernel> kernel;
+        // Disable sending timestamps
+        bool disableTimestamps;
+
+        // Disable adding a Message Id
+        bool disableMessageId;
+
+        // The default delivery Mode of this Producer
+        int defaultDeliveryMode;
+
+        // The default priority Level to send at
+        int defaultPriority;
+
+        // The default time to live value for messages in milliseconds
+        long long defaultTimeToLive;
+
+        // The default Send Timeout for this Producer.
+        long long sendTimeout;
+
+        // Session that this producer sends to.
+        ActiveMQSession* session;
+
+        // This Producers protocol specific info object
+        Pointer<commands::ProducerInfo> producerInfo;
+
+        // Boolean that indicates if the consumer has been closed
+        bool closed;
+
+        // Memory Usage Class, created only if the Producer is tracking its usage.
+        std::auto_ptr<util::MemoryUsage> memoryUsage;
+
+        // The Destination assigned at creation, NULL if not assigned.
+        Pointer<cms::Destination> destination;
 
     private:
 
-        ActiveMQProducer(const ActiveMQProducer&);
-        ActiveMQProducer& operator=(const ActiveMQProducer&);
+        ActiveMQProducerKernel(const ActiveMQProducerKernel&);
+        ActiveMQProducerKernel& operator=(const ActiveMQProducerKernel&);
 
     public:
 
         /**
-         * Constructor, creates an instance of an ActiveMQProducer to wrap the
-         * provided ActiveMQProducerKernel.
+         * Constructor, creates an instance of an ActiveMQProducerKernel
          *
-         * @param kernel
-         *        The Producer kernel pointer that implements the producers functionality.
+         * @param session
+         *        The Session which is the parent of this Producer.
+         * @param producerId
+         *        Pointer to a ProducerId object which identifies this producer.
+         * @param destination
+         *        The assigned Destination this Producer sends to, or null if not set.
+         *        The Producer does not own the Pointer passed.
+         * @param sendTimeout
+         *        The configured send timeout for this Producer.
          */
-        ActiveMQProducer(Pointer<activemq::core::kernels::ActiveMQProducerKernel> kernel);
+        ActiveMQProducerKernel(ActiveMQSession* session,
+                               const Pointer<commands::ProducerId>& producerId,
+                               const Pointer<commands::ActiveMQDestination>& destination,
+                               long long sendTimeout);
 
-        virtual ~ActiveMQProducer();
+        virtual ~ActiveMQProducerKernel();
 
     public:  // cms::MessageProducer methods.
 
@@ -74,7 +119,7 @@ namespace core{
          * @param mode - The DeliveryMode to use for Message sends.
          */
         virtual void setDeliveryMode(int mode) {
-            this->kernel->setDeliveryMode(mode);
+            this->defaultDeliveryMode = mode;
         }
 
         /**
@@ -82,7 +127,7 @@ namespace core{
          * @return The DeliveryMode
          */
         virtual int getDeliveryMode() const {
-            return this->kernel->getDeliveryMode();
+            return this->defaultDeliveryMode;
         }
 
         /**
@@ -90,7 +135,7 @@ namespace core{
          * @param value - boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageID(bool value) {
-            this->kernel->setDisableMessageID(value);
+            this->disableMessageId = value;
         }
 
         /**
@@ -98,7 +143,7 @@ namespace core{
          * @return a boolean indicating state enable / disable (true / false) for MessageIds.
          */
         virtual bool getDisableMessageID() const {
-            return this->kernel->getDisableMessageID();
+            return this->disableMessageId;
         }
 
         /**
@@ -106,7 +151,7 @@ namespace core{
          * @param value - boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageTimeStamp(bool value) {
-            this->kernel->setDisableMessageTimeStamp(value);
+            this->disableTimestamps = value;
         }
 
         /**
@@ -114,7 +159,7 @@ namespace core{
          * @returns boolean indicating state of enable / disable (true / false)
          */
         virtual bool getDisableMessageTimeStamp() const {
-            return this->kernel->getDisableMessageTimeStamp();
+            return this->disableTimestamps;
         }
 
         /**
@@ -122,7 +167,7 @@ namespace core{
          * @param priority int value for Priority level
          */
         virtual void setPriority(int priority) {
-            this->kernel->setPriority(priority);
+            this->defaultPriority = priority;
         }
 
         /**
@@ -130,7 +175,7 @@ namespace core{
          * @return int based priority level
          */
         virtual int getPriority() const {
-            return this->kernel->getPriority();
+            return this->defaultPriority;
         }
 
         /**
@@ -138,7 +183,7 @@ namespace core{
          * @param time The new default time to live value in milliseconds.
          */
         virtual void setTimeToLive(long long time) {
-            this->kernel->setTimeToLive(time);
+            this->defaultTimeToLive = time;
         }
 
         /**
@@ -146,7 +191,7 @@ namespace core{
          * @return The default time to live value in milliseconds.
          */
         virtual long long getTimeToLive() const {
-            return this->kernel->getTimeToLive();
+            return this->defaultTimeToLive;
         }
 
         /**
@@ -154,7 +199,7 @@ namespace core{
          * @param time The new default send timeout value in milliseconds.
          */
         virtual void setSendTimeout(long long time) {
-            this->kernel->setSendTimeout(time);
+            this->sendTimeout = time;
         }
 
         /**
@@ -162,7 +207,7 @@ namespace core{
          * @return The default send timeout value in milliseconds.
          */
         virtual long long getSendTimeout() const {
-            return this->kernel->getSendTimeout();
+            return this->sendTimeout;
         }
 
     public:
@@ -171,7 +216,7 @@ namespace core{
          * @returns true if this Producer has been closed.
          */
         bool isClosed() const {
-            return this->kernel->isClosed();
+            return this->closed;
         }
 
         /**
@@ -179,7 +224,8 @@ namespace core{
          * @return ProducerInfo Reference
          */
         const Pointer<commands::ProducerInfo>& getProducerInfo() const {
-            return this->kernel->getProducerInfo();
+            this->checkClosed();
+            return this->producerInfo;
         }
 
         /**
@@ -187,10 +233,31 @@ namespace core{
          * @return ProducerId Reference
          */
         const Pointer<commands::ProducerId>& getProducerId() const {
-            return this->kernel->getProducerId();
+            this->checkClosed();
+            return this->producerInfo->getProducerId();
         }
-   };
 
-}}
+        /**
+         * Handles the work of Processing a ProducerAck Command from the Broker.
+         * @param ack - The ProducerAck message received from the Broker.
+         */
+        virtual void onProducerAck(const commands::ProducerAck& ack);
 
-#endif /*_ACTIVEMQ_CORE_ACTIVEMQPRODUCER_H_*/
+        /**
+         * Performs Producer object cleanup but doesn't attempt to send the Remove command
+         * to the broker.  Called when the parent resource if closed first to avoid the message
+         * send and avoid any exceptions that might be thrown from an attempt to send a remove
+         * command to a failed transport.
+         */
+        void dispose();
+
+    private:
+
+       // Checks for the closed state and throws if so.
+       void checkClosed() const;
+
+    };
+
+}}}
+
+#endif /* _ACTIVEMQ_CORE_KERNELS_ACTIVEMQPRODUCERKERNEL_H_ */

@@ -101,6 +101,8 @@ cc_sources = \
     activemq/core/PrefetchPolicy.cpp \
     activemq/core/RedeliveryPolicy.cpp \
     activemq/core/SimplePriorityMessageDispatchChannel.cpp \
+    activemq/core/kernels/ActiveMQConsumerKernel.cpp \
+    activemq/core/kernels/ActiveMQProducerKernel.cpp \
     activemq/core/policies/DefaultPrefetchPolicy.cpp \
     activemq/core/policies/DefaultRedeliveryPolicy.cpp \
     activemq/exceptions/ActiveMQException.cpp \
@@ -596,6 +598,8 @@ h_sources = \
     activemq/core/RedeliveryPolicy.h \
     activemq/core/SimplePriorityMessageDispatchChannel.h \
     activemq/core/Synchronization.h \
+    activemq/core/kernels/ActiveMQConsumerKernel.h \
+    activemq/core/kernels/ActiveMQProducerKernel.h \
     activemq/core/policies/DefaultPrefetchPolicy.h \
     activemq/core/policies/DefaultRedeliveryPolicy.h \
     activemq/exceptions/ActiveMQException.h \
