@@ -36,7 +36,7 @@ namespace cms{
 
     public:
 
-        virtual ~Closeable() throw();
+        virtual ~Closeable();
 
         /**
          * Closes this object and deallocates the appropriate resources.

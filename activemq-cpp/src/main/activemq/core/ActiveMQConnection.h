@@ -30,6 +30,7 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
 #include <activemq/threads/Scheduler.h>
+#include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
@@ -47,7 +48,6 @@ namespace core{
     using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ActiveMQSession;
-    class ActiveMQProducer;
     class ConnectionConfig;
     class PrefetchPolicy;
     class RedeliveryPolicy;
@@ -93,8 +93,8 @@ namespace core{
 
     private:
 
-        ActiveMQConnection( const ActiveMQConnection& );
-        ActiveMQConnection& operator= ( const ActiveMQConnection& );
+        ActiveMQConnection(const ActiveMQConnection&);
+        ActiveMQConnection& operator=(const ActiveMQConnection&);
 
     public:
 
@@ -106,10 +106,10 @@ namespace core{
          * @param properties
          *        The Properties that were defined for this connection
          */
-        ActiveMQConnection( const Pointer<transport::Transport>& transport,
-                            const Pointer<decaf::util::Properties>& properties );
+        ActiveMQConnection(const Pointer<transport::Transport>& transport,
+                           const Pointer<decaf::util::Properties>& properties);
 
-        virtual ~ActiveMQConnection() throw();
+        virtual ~ActiveMQConnection();
 
         /**
          * Adds the session resources for the given session instance.
@@ -119,7 +119,7 @@ namespace core{
          *
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addSession( ActiveMQSession* session );
+        virtual void addSession(ActiveMQSession* session);
 
         /**
          * Removes the session resources for the given session instance.
@@ -129,7 +129,7 @@ namespace core{
          *
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeSession( ActiveMQSession* session );
+        virtual void removeSession(ActiveMQSession* session);
 
         /**
          * Adds an active Producer to the Set of known producers.
@@ -139,14 +139,14 @@ namespace core{
          *
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addProducer( ActiveMQProducer* producer );
+        virtual void addProducer(Pointer<kernels::ActiveMQProducerKernel> producer);
 
         /**
          * Removes an active Producer to the Set of known producers.
          * @param producerId - The ProducerId to remove from the the known set.
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeProducer( const Pointer<commands::ProducerId>& producerId );
+        virtual void removeProducer(const Pointer<commands::ProducerId>& producerId);
 
         /**
          * Adds a dispatcher for a consumer.
@@ -154,14 +154,14 @@ namespace core{
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addDispatcher( const Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher );
+        virtual void addDispatcher(const Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher);
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeDispatcher( const Pointer<commands::ConsumerId>& consumer );
+        virtual void removeDispatcher(const Pointer<commands::ConsumerId>& consumer);
 
         /**
          * If supported sends a message pull request to the service provider asking
@@ -173,7 +173,7 @@ namespace core{
          *
          * @throws ActiveMQException if an error occurs while removing performing the operation.
          */
-        virtual void sendPullRequest( const commands::ConsumerInfo* consumer, long long timeout );
+        virtual void sendPullRequest(const commands::ConsumerInfo* consumer, long long timeout);
 
         /**
          * Checks if this connection has been closed
@@ -217,7 +217,7 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
-        virtual void destroyDestination( const commands::ActiveMQDestination* destination );
+        virtual void destroyDestination(const commands::ActiveMQDestination* destination);
 
         /**
          * Requests that the Broker removes the given Destination.  Calling this
@@ -237,7 +237,7 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
-        virtual void destroyDestination( const cms::Destination* destination );
+        virtual void destroyDestination(const cms::Destination* destination);
 
     public:   // Connection Interface Methods
 
@@ -261,12 +261,12 @@ namespace core{
         /**
          * {@inheritDoc}
          */
-        virtual void setClientID( const std::string& clientID );
+        virtual void setClientID(const std::string& clientID);
 
         /**
          * {@inheritDoc}
          */
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode );
+        virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode);
 
         /**
          * {@inheritDoc}
@@ -291,7 +291,7 @@ namespace core{
         /**
          * {@inheritDoc}
          */
-        virtual void setExceptionListener( cms::ExceptionListener* listener );
+        virtual void setExceptionListener(cms::ExceptionListener* listener);
 
     public:   // Configuration Options
 
@@ -299,7 +299,7 @@ namespace core{
          * Sets the username that should be used when creating a new connection
          * @param username string
          */
-        void setUsername( const std::string& username );
+        void setUsername(const std::string& username);
 
         /**
          * Gets the username that this factory will use when creating a new
@@ -312,7 +312,7 @@ namespace core{
          * Sets the password that should be used when creating a new connection
          * @param password string
          */
-        void setPassword( const std::string& password );
+        void setPassword(const std::string& password);
 
         /**
          * Gets the password that this factory will use when creating a new
@@ -325,14 +325,14 @@ namespace core{
          * Sets the Client Id.
          * @param clientId - The new clientId value.
          */
-        void setDefaultClientId( const std::string& clientId );
+        void setDefaultClientId(const std::string& clientId);
 
         /**
          * Sets the Broker URL that should be used when creating a new
          * connection instance
          * @param brokerURL string
          */
-        void setBrokerURL( const std::string& brokerURL );
+        void setBrokerURL(const std::string& brokerURL);
 
         /**
          * Gets the Broker URL that this factory will use when creating a new
@@ -349,7 +349,7 @@ namespace core{
          * @param policy
          *      The new PrefetchPolicy that the ConnectionFactory should clone for Connections.
          */
-        void setPrefetchPolicy( PrefetchPolicy* policy );
+        void setPrefetchPolicy(PrefetchPolicy* policy);
 
         /**
          * Gets the pointer to the current PrefetchPolicy that is in use by this ConnectionFactory.
@@ -366,7 +366,7 @@ namespace core{
          * @param policy
          *      The new RedeliveryPolicy that the ConnectionFactory should clone for Connections.
          */
-        void setRedeliveryPolicy( RedeliveryPolicy* policy );
+        void setRedeliveryPolicy(RedeliveryPolicy* policy);
 
         /**
          * Gets the pointer to the current RedeliveryPolicy that is in use by this ConnectionFactory.
@@ -388,7 +388,7 @@ namespace core{
          * @param value
          *        The value of the dispatch asynchronously option sent to the broker.
          */
-        void setDispatchAsync( bool value );
+        void setDispatchAsync(bool value);
 
         /**
          * Gets if the Connection should always send things Synchronously.
@@ -402,7 +402,7 @@ namespace core{
          * @param value
          *        true if sends should always be Synchronous.
          */
-        void setAlwaysSyncSend( bool value );
+        void setAlwaysSyncSend(bool value);
 
         /**
          * Gets if the useAsyncSend option is set
@@ -414,7 +414,7 @@ namespace core{
          * Sets the useAsyncSend option
          * @param value - true to activate, false to disable.
          */
-        void setUseAsyncSend( bool value );
+        void setUseAsyncSend(bool value);
 
         /**
          * Gets if the Connection is configured for Message body compression.
@@ -428,7 +428,7 @@ namespace core{
          * @param value
          *      Boolean indicating if Message body compression is enabled.
          */
-        void setUseCompression( bool value );
+        void setUseCompression(bool value);
 
         /**
          * Sets the Compression level used when Message body compression is enabled, a
@@ -439,7 +439,7 @@ namespace core{
          * @param value
          *      A signed int value that controls the compression level.
          */
-        void setCompressionLevel( int value );
+        void setCompressionLevel(int value);
 
         /**
          * Gets the currently configured Compression level for Message bodies.
@@ -459,7 +459,7 @@ namespace core{
          * cause all messages to be sent using a Synchronous request is non-zero.
          * @param timeout - The time to wait for a response.
          */
-        void setSendTimeout( unsigned int timeout );
+        void setSendTimeout(unsigned int timeout);
 
         /**
          * Gets the assigned close timeout for this Connector
@@ -471,7 +471,7 @@ namespace core{
          * Sets the close timeout to use when sending the disconnect request.
          * @param timeout - The time to wait for a close message.
          */
-        void setCloseTimeout( unsigned int timeout );
+        void setCloseTimeout(unsigned int timeout);
 
         /**
          * Gets the configured producer window size for Producers that are created
@@ -488,7 +488,7 @@ namespace core{
          * message to be sent.
          * @param windowSize - The size in bytes of the Producers memory window.
          */
-        void setProducerWindowSize( unsigned int windowSize );
+        void setProducerWindowSize(unsigned int windowSize);
 
         /**
          * @returns true if the Connections that this factory creates should support the
@@ -503,7 +503,7 @@ namespace core{
          * @param value
          *      Boolean indicating if Message priority should be enabled.
          */
-        void setMessagePrioritySupported( bool value );
+        void setMessagePrioritySupported(bool value);
 
         /**
          * Get the Next Temporary Destination Id
@@ -530,7 +530,7 @@ namespace core{
          *      The TransportListener instance to add to this Connection's set of listeners
          *      to notify of Transport events.
          */
-        void addTransportListener( transport::TransportListener* transportListener );
+        void addTransportListener(transport::TransportListener* transportListener);
 
         /**
          * Removes a registered TransportListener from the Connection's set of Transport
@@ -540,20 +540,20 @@ namespace core{
          * @param transportListener
          *      The pointer to the TransportListener to remove from the set of listeners.
          */
-        void removeTransportListener( transport::TransportListener* transportListener );
+        void removeTransportListener(transport::TransportListener* transportListener);
 
         /**
          * Event handler for the receipt of a non-response command from the
          * transport.
          * @param command the received command object.
          */
-        virtual void onCommand( const Pointer<commands::Command>& command );
+        virtual void onCommand(const Pointer<commands::Command>& command);
 
         /**
          * Event handler for an exception from a command transport.
          * @param ex The exception.
          */
-        virtual void onException( const decaf::lang::Exception& ex );
+        virtual void onException(const decaf::lang::Exception& ex);
 
         /**
          * The transport has suffered an interruption from which it hopes to recover
@@ -621,7 +621,7 @@ namespace core{
          * @throws ActiveMQException if not currently connected, or if the operation
          *         fails for any reason.
          */
-        void oneway( Pointer<commands::Command> command );
+        void oneway(Pointer<commands::Command> command);
 
         /**
          * Sends a synchronous request and returns the response from the broker.  This
@@ -637,7 +637,7 @@ namespace core{
          * @throws BrokerException if the response from the broker is of type ExceptionResponse.
          * @throws ActiveMQException if any other error occurs while sending the Command.
          */
-        Pointer<commands::Response> syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
+        Pointer<commands::Response> syncRequest(Pointer<commands::Command> command, unsigned int timeout = 0);
 
         /**
          * Notify the exception listener
@@ -664,7 +664,7 @@ namespace core{
          * @param ex
          *      The exception that caused the error condition.
          */
-        void onAsyncException( const decaf::lang::Exception& ex );
+        void onAsyncException(const decaf::lang::Exception& ex);
 
         /**
          * Check for Closed State and Throw an exception if true.
@@ -693,7 +693,7 @@ namespace core{
         virtual Pointer<commands::SessionId> getNextSessionId();
 
         // Sends a oneway disconnect message to the broker.
-        void disconnect( long long lastDeliveredSequenceId );
+        void disconnect(long long lastDeliveredSequenceId);
 
         // Waits for all Consumers to handle the Transport Interrupted event.
         void waitForTransportInterruptionProcessingToComplete();

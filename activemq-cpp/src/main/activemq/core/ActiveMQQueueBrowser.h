@@ -33,8 +33,10 @@
 
 namespace activemq {
 namespace core {
+namespace kernels {
+    class ActiveMQConsumerKernel;
+}
 
-    class ActiveMQConsumer;
     class ActiveMQSession;
     class Browser;
 
@@ -58,20 +60,20 @@ namespace core {
         mutable decaf::util::concurrent::Mutex wait;
         decaf::util::concurrent::atomic::AtomicBoolean browseDone;
 
-        mutable ActiveMQConsumer* browser;
+        mutable Pointer<activemq::core::kernels::ActiveMQConsumerKernel> browser;
 
     private:
 
-        ActiveMQQueueBrowser( const ActiveMQQueueBrowser& );
-        ActiveMQQueueBrowser& operator= ( const ActiveMQQueueBrowser& );
+        ActiveMQQueueBrowser(const ActiveMQQueueBrowser&);
+        ActiveMQQueueBrowser& operator=(const ActiveMQQueueBrowser&);
 
     public:
 
-        ActiveMQQueueBrowser( ActiveMQSession* session,
-                              const Pointer<commands::ConsumerId>& consumerId,
-                              const Pointer<commands::ActiveMQDestination>& destination,
-                              const std::string& selector,
-                              bool dispatchAsync );
+        ActiveMQQueueBrowser(ActiveMQSession* session,
+                             const Pointer<commands::ConsumerId>& consumerId,
+                             const Pointer<commands::ActiveMQDestination>& destination,
+                             const std::string& selector,
+                             bool dispatchAsync);
 
         virtual ~ActiveMQQueueBrowser() throw();
 
@@ -95,7 +97,7 @@ namespace core {
         void notifyMessageAvailable();
         void waitForMessageAvailable();
 
-        ActiveMQConsumer* createConsumer();
+        Pointer<activemq::core::kernels::ActiveMQConsumerKernel> createConsumer();
         void destroyConsumer();
 
     };

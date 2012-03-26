@@ -18,7 +18,7 @@
 #include "ActiveMQSessionExecutor.h"
 
 #include <activemq/core/ActiveMQConnection.h>
-#include <activemq/core/ActiveMQConsumer.h>
+#include <activemq/core/kernels/ActiveMQConsumerKernel.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/FifoMessageDispatchChannel.h>
 #include <activemq/core/SimplePriorityMessageDispatchChannel.h>
@@ -28,6 +28,7 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::core::kernels;
 using namespace activemq::threads;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
@@ -35,13 +36,13 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) :
-            session( session ), messageQueue(), taskRunner() {
+ActiveMQSessionExecutor::ActiveMQSessionExecutor(ActiveMQSession* session) :
+    session(session), messageQueue(), taskRunner() {
 
-    if( this->session->getConnection()->isMessagePrioritySupported() ) {
-        this->messageQueue.reset( new SimplePriorityMessageDispatchChannel() );
+    if (this->session->getConnection()->isMessagePrioritySupported()) {
+        this->messageQueue.reset(new SimplePriorityMessageDispatchChannel());
     } else {
-        this->messageQueue.reset( new FifoMessageDispatchChannel() );
+        this->messageQueue.reset(new FifoMessageDispatchChannel());
     }
 }
 
@@ -66,7 +67,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch ) {
 
     // Add the data to the queue.
-    this->messageQueue->enqueue( dispatch );
+    this->messageQueue->enqueue(dispatch);
     this->wakeup();
 }
 
@@ -74,7 +75,7 @@ void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch 
 void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& dispatch ) {
 
     // Add the data to the queue.
-    this->messageQueue->enqueueFirst( dispatch );
+    this->messageQueue->enqueueFirst(dispatch);
     this->wakeup();
 }
 
@@ -82,9 +83,9 @@ void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& disp
 void ActiveMQSessionExecutor::wakeup() {
 
     Pointer<TaskRunner> taskRunner = this->taskRunner;
-    synchronized( messageQueue.get() ) {
-        if( this->taskRunner == NULL ) {
-            this->taskRunner.reset( new DedicatedTaskRunner( this ) );
+    synchronized(messageQueue.get()) {
+        if (this->taskRunner == NULL) {
+            this->taskRunner.reset(new DedicatedTaskRunner(this));
         }
 
         taskRunner = this->taskRunner;
@@ -96,10 +97,9 @@ void ActiveMQSessionExecutor::wakeup() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::start() {
 
-    if( !messageQueue->isRunning() ) {
-
+    if (!messageQueue->isRunning()) {
         messageQueue->start();
-        if( hasUncomsumedMessages() ) {
+        if (hasUncomsumedMessages()) {
             this->wakeup();
         }
     }
@@ -108,11 +108,11 @@ void ActiveMQSessionExecutor::start() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::stop() {
 
-    if( messageQueue->isRunning() ) {
+    if (messageQueue->isRunning()) {
         messageQueue->stop();
         Pointer<TaskRunner> taskRunner = this->taskRunner;
-        if( taskRunner != NULL ) {
-            this->taskRunner.reset( NULL );
+        if (taskRunner != NULL) {
+            this->taskRunner.reset(NULL);
             taskRunner->shutdown();
         }
     }
@@ -123,28 +123,28 @@ void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch
 
     try {
 
-        ActiveMQConsumer* consumer = NULL;
+        Pointer<ActiveMQConsumerKernel> consumer;
 
-        synchronized( &( this->session->consumers ) ) {
-            if( this->session->consumers.containsKey( dispatch->getConsumerId() ) ) {
-                consumer = this->session->consumers.get( dispatch->getConsumerId() );
+        synchronized(&( this->session->consumers)) {
+            if (this->session->consumers.containsKey(dispatch->getConsumerId())) {
+                consumer = this->session->consumers.get(dispatch->getConsumerId());
             }
         }
 
         // If the consumer is not available, just ignore the message.
         // Otherwise, dispatch the message to the consumer.
-        if( consumer != NULL ) {
-            consumer->dispatch( dispatch );
+        if (consumer != NULL) {
+            consumer->dispatch(dispatch);
         }
 
-    } catch( decaf::lang::Exception& ex ) {
-        ex.setMark(__FILE__, __LINE__ );
+    } catch (decaf::lang::Exception& ex) {
+        ex.setMark(__FILE__, __LINE__);
         ex.printStackTrace();
-    } catch( std::exception& ex ) {
-        ActiveMQException amqex( __FILE__, __LINE__, ex.what() );
+    } catch (std::exception& ex) {
+        ActiveMQException amqex(__FILE__, __LINE__, ex.what());
         amqex.printStackTrace();
-    } catch( ... ) {
-        ActiveMQException amqex( __FILE__, __LINE__, "caught unknown exception" );
+    } catch (...) {
+        ActiveMQException amqex(__FILE__, __LINE__, "caught unknown exception");
         amqex.printStackTrace();
     }
 }
@@ -154,14 +154,13 @@ bool ActiveMQSessionExecutor::iterate() {
 
     try {
 
-        synchronized( &( this->session->consumers ) ) {
-
-            std::vector<ActiveMQConsumer*> consumers = this->session->consumers.values();
-            std::vector<ActiveMQConsumer*>::iterator iter = consumers.begin();
+        synchronized(&(this->session->consumers)) {
+            std::vector<Pointer<ActiveMQConsumerKernel> > consumers = this->session->consumers.values();
+            std::vector<Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
 
             // Deliver any messages queued on the consumer to their listeners.
-            for( ; iter != consumers.end(); ++iter ) {
-                if( (*iter)->iterate() ) {
+            for (; iter != consumers.end(); ++iter) {
+                if ((*iter)->iterate()) {
                     return true;
                 }
             }
@@ -170,24 +169,24 @@ bool ActiveMQSessionExecutor::iterate() {
         // No messages left queued on the listeners.. so now dispatch messages
         // queued on the session
         Pointer<MessageDispatch> message = messageQueue->dequeueNoWait();
-        if( message != NULL ) {
-            dispatch( message );
+        if (message != NULL) {
+            dispatch(message);
             return !messageQueue->isEmpty();
         }
 
         return false;
 
-    } catch( decaf::lang::Exception& ex ) {
-        ex.setMark(__FILE__, __LINE__ );
-        session->fire( ex );
+    } catch (decaf::lang::Exception& ex) {
+        ex.setMark(__FILE__, __LINE__);
+        session->fire(ex);
         return true;
-    } catch( std::exception& stdex ) {
-        ActiveMQException ex( __FILE__, __LINE__, stdex.what() );
-        session->fire( ex );
+    } catch (std::exception& stdex) {
+        ActiveMQException ex(__FILE__, __LINE__, stdex.what());
+        session->fire(ex);
         return true;
-    } catch( ... ) {
-        ActiveMQException ex(__FILE__, __LINE__, "caught unknown exception" );
-        session->fire( ex );
+    } catch (...) {
+        ActiveMQException ex(__FILE__, __LINE__, "caught unknown exception");
+        session->fire(ex);
         return true;
     }
 }

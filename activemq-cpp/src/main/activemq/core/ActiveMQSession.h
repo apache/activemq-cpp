@@ -24,6 +24,8 @@
 #include <activemq/util/Usage.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
+#include <activemq/core/kernels/ActiveMQConsumerKernel.h>
+#include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/Response.h>
 #include <activemq/commands/SessionInfo.h>
@@ -63,7 +65,7 @@ namespace core{
     private:
 
         typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     ActiveMQConsumer*,
+                                     Pointer<activemq::core::kernels::ActiveMQConsumerKernel>,
                                      commands::ConsumerId::COMPARATOR> ConsumersMap;
 
         friend class ActiveMQSessionExecutor;
@@ -135,10 +137,10 @@ namespace core{
 
     public:
 
-        ActiveMQSession( ActiveMQConnection* connection,
-                         const Pointer<commands::SessionId>& id,
-                         cms::Session::AcknowledgeMode ackMode,
-                         const decaf::util::Properties& properties );
+        ActiveMQSession(ActiveMQConnection* connection,
+                        const Pointer<commands::SessionId>& id,
+                        cms::Session::AcknowledgeMode ackMode,
+                        const decaf::util::Properties& properties);
 
         virtual ~ActiveMQSession() throw();
 
@@ -146,7 +148,7 @@ namespace core{
          * Redispatches the given set of unconsumed messages to the consumers.
          * @param unconsumedMessages - unconsumed messages to be redelivered.
          */
-        virtual void redispatch( MessageDispatchChannel& unconsumedMessages );
+        virtual void redispatch(MessageDispatchChannel& unconsumedMessages);
 
         /**
          * Stops asynchronous message delivery.
@@ -183,7 +185,7 @@ namespace core{
         /**
          * Fires the given exception to the exception listener of the connection
          */
-        void fire( const exceptions::ActiveMQException& ex );
+        void fire(const exceptions::ActiveMQException& ex);
 
     public:  // Methods from ActiveMQMessageDispatcher
 
@@ -191,7 +193,7 @@ namespace core{
          * Dispatches a message to a particular consumer.
          * @param message - the message to be dispatched
          */
-        virtual void dispatch( const Pointer<MessageDispatch>& message );
+        virtual void dispatch(const Pointer<MessageDispatch>& message);
 
     public:   // Implements Methods
 
@@ -203,29 +205,29 @@ namespace core{
 
         virtual void recover();
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination );
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination);
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
-                                                      const std::string& selector );
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination,
+                                                     const std::string& selector);
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
-                                                      const std::string& selector,
-                                                      bool noLocal );
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination,
+                                                     const std::string& selector,
+                                                     bool noLocal);
 
-        virtual cms::MessageConsumer* createDurableConsumer( const cms::Topic* destination,
-                                                             const std::string& name,
-                                                             const std::string& selector,
-                                                             bool noLocal = false );
+        virtual cms::MessageConsumer* createDurableConsumer(const cms::Topic* destination,
+                                                            const std::string& name,
+                                                            const std::string& selector,
+                                                            bool noLocal = false);
 
-        virtual cms::MessageProducer* createProducer( const cms::Destination* destination );
+        virtual cms::MessageProducer* createProducer(const cms::Destination* destination);
 
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue );
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue);
 
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector );
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue, const std::string& selector);
 
-        virtual cms::Queue* createQueue( const std::string& queueName );
+        virtual cms::Queue* createQueue(const std::string& queueName);
 
-        virtual cms::Topic* createTopic( const std::string& topicName );
+        virtual cms::Topic* createTopic(const std::string& topicName);
 
         virtual cms::TemporaryQueue* createTemporaryQueue();
 
@@ -235,7 +237,7 @@ namespace core{
 
         virtual cms::BytesMessage* createBytesMessage();
 
-        virtual cms::BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize );
+        virtual cms::BytesMessage* createBytesMessage(const unsigned char* bytes, int bytesSize);
 
         virtual cms::StreamMessage* createStreamMessage();
 
@@ -249,7 +251,7 @@ namespace core{
 
         virtual bool isTransacted() const;
 
-        virtual void unsubscribe( const std::string& name );
+        virtual void unsubscribe(const std::string& name);
 
    public:   // ActiveMQSession specific Methods
 
@@ -270,7 +272,7 @@ namespace core{
          *
          * @throws CMSException
          */
-        void send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage );
+        void send(cms::Message* message, kernels::ActiveMQProducerKernel* producer, util::Usage* usage);
 
         /**
          * This method gets any registered exception listener of this sessions
@@ -328,7 +330,7 @@ namespace core{
          * @param value
          *      The new value to assign to the Last Delivered Sequence Id property.
          */
-        void setLastDeliveredSequenceId( long long value ) {
+        void setLastDeliveredSequenceId(long long value) {
             this->lastDeliveredSequenceId = value;
         }
 
@@ -341,7 +343,7 @@ namespace core{
          * @throws ActiveMQException if not currently connected, or if the
          *         operation fails for any reason.
          */
-        void oneway( Pointer<commands::Command> command );
+        void oneway(Pointer<commands::Command> command);
 
         /**
          * Sends a synchronous request and returns the response from the broker.
@@ -357,11 +359,11 @@ namespace core{
          * @throws ActiveMQException thrown if an error response was received
          *         from the broker, or if any other error occurred.
          */
-        Pointer<commands::Response> syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 );
+        Pointer<commands::Response> syncRequest(Pointer<commands::Command> command, unsigned int timeout = 0);
 
         /**
-         * Adds a MessageConsumer to this session registering it with the Connection and store
-         * a reference to it so the session can ensure that all resources are closed when
+         * Adds a MessageConsumerKernel to this session registering it with the Connection and
+         * store a reference to it so the session can ensure that all resources are closed when
          * the session is closed.
          *
          * @param consumer
@@ -369,7 +371,7 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addConsumer( ActiveMQConsumer* consumer );
+        void addConsumer(Pointer<activemq::core::kernels::ActiveMQConsumerKernel> consumer);
 
         /**
          * Dispose of a MessageConsumer from this session.  Removes it from the Connection
@@ -380,30 +382,30 @@ namespace core{
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeConsumer( const Pointer<commands::ConsumerId>& consumerId );
+        void removeConsumer(const Pointer<commands::ConsumerId>& consumerId);
 
         /**
          * Adds a MessageProducer to this session registering it with the Connection and store
          * a reference to it so the session can ensure that all resources are closed when
          * the session is closed.
          *
-         * @param consumer
-         *      The ActiveMQProducer instance to add to this session.
+         * @param producer
+         *      The ActiveMQProducerKernel instance to add to this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addProducer( ActiveMQProducer* producer );
+        void addProducer(Pointer<activemq::core::kernels::ActiveMQProducerKernel> producer);
 
         /**
          * Dispose of a MessageProducer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
          *
          * @param producerId
-         *      The ProducerId of the MessageProducer to remove from this session.
+         *      The ProducerId of the producer to remove to this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeProducer( ActiveMQProducer* producer );
+        void removeProducer(const Pointer<commands::ProducerId>& producerId);
 
         /**
          * Starts if not already start a Transaction for this Session.  If the session
@@ -490,12 +492,12 @@ namespace core{
        // Send the Destination Creation Request to the Broker, alerting it
        // that we've created a new Temporary Destination.
        // @param tempDestination - The new Temporary Destination
-       void createTemporaryDestination( commands::ActiveMQTempDestination* tempDestination );
+       void createTemporaryDestination(commands::ActiveMQTempDestination* tempDestination);
 
        // Send the Destination Destruction Request to the Broker, alerting
        // it that we've removed an existing Temporary Destination.
        // @param tempDestination - The Temporary Destination to remove
-       void destroyTemporaryDestination( commands::ActiveMQTempDestination* tempDestination );
+       void destroyTemporaryDestination(commands::ActiveMQTempDestination* tempDestination);
 
        // Creates a new Temporary Destination name using the connection id
        // and a rolling count.

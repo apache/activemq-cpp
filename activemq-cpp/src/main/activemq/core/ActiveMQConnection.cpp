@@ -64,6 +64,7 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::core::kernels;
 using namespace activemq::core::policies;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
@@ -84,8 +85,8 @@ namespace core{
     class ConnectionConfig {
     private:
 
-        ConnectionConfig( const ConnectionConfig& );
-        ConnectionConfig& operator= ( const ConnectionConfig& );
+        ConnectionConfig(const ConnectionConfig&);
+        ConnectionConfig& operator=(const ConnectionConfig&);
 
     public:
 
@@ -94,7 +95,7 @@ namespace core{
                                      commands::ConsumerId::COMPARATOR > DispatcherMap;
 
         typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
-                                     ActiveMQProducer*,
+                                     Pointer<ActiveMQProducerKernel>,
                                      commands::ProducerId::COMPARATOR > ProducerMap;
 
     public:
@@ -184,17 +185,17 @@ namespace core{
                              activeSessions(),
                              transportListeners() {
 
-            this->defaultPrefetchPolicy.reset( new DefaultPrefetchPolicy() );
-            this->defaultRedeliveryPolicy.reset( new DefaultRedeliveryPolicy() );
-            this->clientIdGenerator.reset(new util::IdGenerator );
-            this->connectionInfo.reset( new ConnectionInfo() );
-            this->brokerInfoReceived.reset( new CountDownLatch(1) );
+            this->defaultPrefetchPolicy.reset(new DefaultPrefetchPolicy());
+            this->defaultRedeliveryPolicy.reset(new DefaultRedeliveryPolicy());
+            this->clientIdGenerator.reset(new util::IdGenerator);
+            this->connectionInfo.reset(new ConnectionInfo());
+            this->brokerInfoReceived.reset(new CountDownLatch(1));
 
             // Generate a connectionId
             std::string uniqueId = CONNECTION_ID_GENERATOR.generateId();
-            decaf::lang::Pointer<ConnectionId> connectionId( new ConnectionId() );
+            decaf::lang::Pointer<ConnectionId> connectionId(new ConnectionId());
             connectionId->setValue(uniqueId);
-            this->connectionInfo->setConnectionId( connectionId );
+            this->connectionInfo->setConnectionId(connectionId);
             this->scheduler.reset(new Scheduler(std::string("ActiveMQConnection[")+uniqueId+"] Scheduler"));
             this->scheduler->start();
         }
@@ -209,23 +210,23 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& transport,
-                                        const Pointer<decaf::util::Properties>& properties ) :
-    config( NULL ),
-    connectionMetaData( new ActiveMQConnectionMetaData() ),
+ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport>& transport,
+                                       const Pointer<decaf::util::Properties>& properties) :
+    config(NULL),
+    connectionMetaData(new ActiveMQConnectionMetaData()),
     started(false),
     closed(false),
     closing(false),
     transportFailed(false) {
 
-    Pointer<ConnectionConfig> configuration( new ConnectionConfig );
+    Pointer<ConnectionConfig> configuration(new ConnectionConfig);
 
     // Register for messages and exceptions from the connector.
-    transport->setTransportListener( this );
+    transport->setTransportListener(this);
 
     // Set the initial state of the ConnectionInfo
-    configuration->connectionInfo->setManageable( false );
-    configuration->connectionInfo->setFaultTolerant( transport->isFaultTolerant() );
+    configuration->connectionInfo->setManageable(false);
+    configuration->connectionInfo->setFaultTolerant(transport->isFaultTolerant());
 
     // Store of the transport and properties, the Connection now owns them.
     configuration->properties = properties;
@@ -235,7 +236,7 @@ ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& tra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::~ActiveMQConnection() throw() {
+ActiveMQConnection::~ActiveMQConnection() {
     try {
 
         try{
@@ -255,8 +256,8 @@ void ActiveMQConnection::addDispatcher(
 
     try{
         // Add the consumer to the map.
-        synchronized( &this->config->dispatchers ) {
-            this->config->dispatchers.put( consumer, dispatcher );
+        synchronized(&this->config->dispatchers) {
+            this->config->dispatchers.put(consumer, dispatcher);
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -267,8 +268,8 @@ void ActiveMQConnection::removeDispatcher( const decaf::lang::Pointer<ConsumerId
 
     try{
         // Remove the consumer from the map.
-        synchronized( &this->config->dispatchers ) {
-            this->config->dispatchers.remove( consumer );
+        synchronized(&this->config->dispatchers) {
+            this->config->dispatchers.remove(consumer);
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -277,13 +278,13 @@ void ActiveMQConnection::removeDispatcher( const decaf::lang::Pointer<ConsumerId
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session* ActiveMQConnection::createSession() {
     try {
-        return createSession( Session::AUTO_ACKNOWLEDGE );
+        return createSession(Session::AUTO_ACKNOWLEDGE);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode ackMode ) {
+cms::Session* ActiveMQConnection::createSession(cms::Session::AcknowledgeMode ackMode) {
 
     try {
 
@@ -292,7 +293,7 @@ cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode a
 
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
-            this, getNextSessionId(), ackMode, *this->config->properties );
+            this, getNextSessionId(), ackMode, *this->config->properties);
 
         return session;
     }
@@ -302,9 +303,9 @@ cms::Session* ActiveMQConnection::createSession( cms::Session::AcknowledgeMode a
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<SessionId> ActiveMQConnection::getNextSessionId() {
 
-    decaf::lang::Pointer<SessionId> sessionId( new SessionId() );
-    sessionId->setConnectionId( this->config->connectionInfo->getConnectionId()->getValue() );
-    sessionId->setValue( this->config->sessionIds.getNextSequenceId() );
+    decaf::lang::Pointer<SessionId> sessionId(new SessionId());
+    sessionId->setConnectionId(this->config->connectionInfo->getConnectionId()->getValue());
+    sessionId->setValue(this->config->sessionIds.getNextSequenceId());
 
     return sessionId;
 }
@@ -315,43 +316,40 @@ void ActiveMQConnection::addSession( ActiveMQSession* session ) {
     try {
 
         // Remove this session from the set of active sessions.
-        this->config->activeSessions.add( session );
+        this->config->activeSessions.add(session);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
+void ActiveMQConnection::removeSession(ActiveMQSession* session) {
 
     try {
-
         // Remove this session from the set of active sessions.
-        this->config->activeSessions.remove( session );
+        this->config->activeSessions.remove(session);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addProducer( ActiveMQProducer* producer ) {
+void ActiveMQConnection::addProducer(Pointer<ActiveMQProducerKernel> producer) {
 
     try {
-
         // Add this producer from the set of active consumer.
-        synchronized( &this->config->activeProducers ) {
-            this->config->activeProducers.put( producer->getProducerInfo()->getProducerId(), producer );
+        synchronized(&this->config->activeProducers) {
+            this->config->activeProducers.put(producer->getProducerInfo()->getProducerId(), producer);
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>& producerId ) {
+void ActiveMQConnection::removeProducer(const decaf::lang::Pointer<ProducerId>& producerId) {
 
     try {
-
         // Remove this producer from the set of active consumer.
-        synchronized( &this->config->activeProducers ) {
-            this->config->activeProducers.remove( producerId );
+        synchronized(&this->config->activeProducers) {
+            this->config->activeProducers.remove(producerId);
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -360,7 +358,7 @@ void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>&
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnection::getClientID() const {
 
-    if( this->isClosed() ) {
+    if (this->isClosed()) {
         return "";
     }
 
@@ -370,30 +368,30 @@ std::string ActiveMQConnection::getClientID() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setClientID( const std::string& clientID ) {
 
-    if( this->closed.get() ) {
-        throw cms::IllegalStateException( "Connection is already closed", NULL );
+    if (this->closed.get()) {
+        throw cms::IllegalStateException("Connection is already closed", NULL);
     }
 
-    if( this->config->clientIDSet ) {
-        throw cms::IllegalStateException( "Client ID is already set", NULL );
+    if (this->config->clientIDSet) {
+        throw cms::IllegalStateException("Client ID is already set", NULL);
     }
 
-    if( this->config->isConnectionInfoSentToBroker ) {
-        throw cms::IllegalStateException( "Cannot set client Id on a Connection already in use.", NULL );
+    if (this->config->isConnectionInfoSentToBroker) {
+        throw cms::IllegalStateException("Cannot set client Id on a Connection already in use.", NULL);
     }
 
-    if( clientID.empty() ) {
-        throw cms::InvalidClientIdException( "Client ID cannot be an empty string", NULL );
+    if (clientID.empty()) {
+        throw cms::InvalidClientIdException("Client ID cannot be an empty string", NULL);
     }
 
-    this->config->connectionInfo->setClientId( clientID );
+    this->config->connectionInfo->setClientId(clientID);
     this->config->userSpecifiedClientID = true;
     ensureConnectionInfoSent();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::setDefaultClientId( const std::string& clientId ) {
-    this->setClientID( clientId );
+void ActiveMQConnection::setDefaultClientId(const std::string& clientId) {
+    this->setClientID(clientId);
     this->config->userSpecifiedClientID = true;
 }
 
@@ -402,12 +400,12 @@ void ActiveMQConnection::close() {
 
     try {
 
-        if( this->isClosed() ) {
+        if (this->isClosed()) {
             return;
         }
 
         // If we are running lets stop first.
-        if( !this->transportFailed.get() ) {
+        if (!this->transportFailed.get()) {
             this->stop();
         }
 
@@ -415,7 +413,7 @@ void ActiveMQConnection::close() {
         // passed on from the transport as it goes down.
         this->closing.set( true );
 
-        if(this->config->scheduler != NULL) {
+        if (this->config->scheduler != NULL) {
             try {
                 this->config->scheduler->stop();
             }
@@ -423,30 +421,29 @@ void ActiveMQConnection::close() {
         }
 
         // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+        std::auto_ptr< Iterator<ActiveMQSession*> > iter(this->config->activeSessions.iterator());
 
         long long lastDeliveredSequenceId = 0;
 
         // Dispose of all the Session resources we know are still open.
-        while( iter->hasNext() ) {
+        while (iter->hasNext()) {
             ActiveMQSession* session = iter->next();
             try{
                 session->dispose();
-
                 lastDeliveredSequenceId =
-                    Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
+                    Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
             } catch( cms::CMSException& ex ){
                 /* Absorb */
             }
         }
 
         // Now inform the Broker we are shutting down.
-        this->disconnect( lastDeliveredSequenceId );
+        this->disconnect(lastDeliveredSequenceId);
 
         // Once current deliveries are done this stops the delivery
         // of any new messages.
-        this->started.set( false );
-        this->closed.set( true );
+        this->started.set(false);
+        this->closed.set(true);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -720,11 +717,11 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             ProducerAck* producerAck = dynamic_cast<ProducerAck*>( command.get() );
 
             // Get the consumer info object for this consumer.
-            ActiveMQProducer* producer = NULL;
+            Pointer<ActiveMQProducerKernel> producer;
             synchronized( &this->config->activeProducers ) {
-                producer = this->config->activeProducers.get( producerAck->getProducerId() );
-                if( producer != NULL ){
-                    producer->onProducerAck( *producerAck );
+                producer = this->config->activeProducers.get(producerAck->getProducerId());
+                if (producer != NULL) {
+                    producer->onProducerAck(*producerAck);
                 }
             }
 
@@ -747,7 +744,6 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             } catch( ... ) { /* do nothing */ }
 
         } else {
-            //LOGDECAF_WARN( logger, "Received an unknown command" );
         }
 
         Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
@@ -974,7 +970,7 @@ const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const {
 ////////////////////////////////////////////////////////////////////////////////
 const ConnectionId& ActiveMQConnection::getConnectionId() const {
     checkClosed();
-    return *( this->config->connectionInfo->getConnectionId() );
+    return *(this->config->connectionInfo->getConnectionId());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1040,10 +1036,6 @@ void ActiveMQConnection::signalInterruptionProcessingComplete() {
         if( failoverTransport != NULL ) {
             failoverTransport->setConnectionInterruptProcessingComplete(
                 this->config->connectionInfo->getConnectionId() );
-
-            //if( LOG.isDebugEnabled() ) {
-            //    LOG.debug("transportInterruptionProcessingComplete for: " + this.getConnectionInfo().getConnectionId());
-            //}
         }
     }
 }

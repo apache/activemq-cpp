@@ -57,7 +57,7 @@ namespace cms{
     class CMS_API MessageProducer : public Closeable {
     public:
 
-        virtual ~MessageProducer() throw();
+        virtual ~MessageProducer();
 
         /**
          * Sends the message to the default producer destination, but does
@@ -74,7 +74,7 @@ namespace cms{
          * @throws UnsupportedOperationException - if a client uses this method with a
          *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( Message* message ) = 0;
+        virtual void send(Message* message) = 0;
 
         /**
          * Sends the message to the default producer destination, but does
@@ -96,7 +96,7 @@ namespace cms{
          * @throws UnsupportedOperationException - if a client uses this method with a
          *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( Message* message, int deliveryMode, int priority, long long timeToLive ) = 0;
+        virtual void send(Message* message, int deliveryMode, int priority, long long timeToLive) = 0;
 
         /**
          * Sends the message to the designated destination, but does
@@ -115,7 +115,7 @@ namespace cms{
          * @throws UnsupportedOperationException - if a client uses this method with a
          *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( const Destination* destination, Message* message ) = 0;
+        virtual void send(const Destination* destination, Message* message) = 0;
 
         /**
          * Sends the message to the designated destination, but does
@@ -139,8 +139,8 @@ namespace cms{
          * @throws UnsupportedOperationException - if a client uses this method with a
          *         MessageProducer that did not specify a destination at creation time.
          */
-        virtual void send( const Destination* destination, Message* message,
-                           int deliveryMode, int priority, long long timeToLive ) = 0;
+        virtual void send(const Destination* destination, Message* message,
+                          int deliveryMode, int priority, long long timeToLive) = 0;
 
         /**
          * Sets the delivery mode for this Producer
@@ -150,7 +150,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setDeliveryMode( int mode ) = 0;
+        virtual void setDeliveryMode(int mode) = 0;
 
         /**
          * Gets the delivery mode for this Producer
@@ -169,7 +169,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setDisableMessageID( bool value ) = 0;
+        virtual void setDisableMessageID(bool value) = 0;
 
         /**
          * Gets if Message Ids are disabled for this Producer
@@ -186,7 +186,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setDisableMessageTimeStamp( bool value ) = 0;
+        virtual void setDisableMessageTimeStamp(bool value) = 0;
 
         /**
          * Gets if Message Time Stamps are disabled for this Producer
@@ -205,7 +205,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setPriority( int priority ) = 0;
+        virtual void setPriority(int priority) = 0;
 
         /**
          * Gets the Priority level that this producer sends messages at
@@ -226,7 +226,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setTimeToLive( long long time ) = 0;
+        virtual void setTimeToLive(long long time) = 0;
 
         /**
          * Gets the Time to Live that this producer sends messages with
