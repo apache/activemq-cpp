@@ -314,8 +314,10 @@ void ActiveMQConnection::addSession( ActiveMQSession* session ) {
 
     try {
 
-        // Remove this session from the set of active sessions.
-        this->config->activeSessions.add( session );
+        synchronized( &this->config->activeSessions ) {
+        	// Remove this session from the set of active sessions.
+        	this->config->activeSessions.add( session );
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -325,8 +327,10 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
 
     try {
 
-        // Remove this session from the set of active sessions.
-        this->config->activeSessions.remove( session );
+        synchronized( &this->config->activeSessions ) {
+        	// Remove this session from the set of active sessions.
+        	this->config->activeSessions.remove( session );
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -422,22 +426,25 @@ void ActiveMQConnection::close() {
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+		long long lastDeliveredSequenceId = 0;
 
-        long long lastDeliveredSequenceId = 0;
+        synchronized( &this->config->activeSessions ) {
 
-        // Dispose of all the Session resources we know are still open.
-        while( iter->hasNext() ) {
-            ActiveMQSession* session = iter->next();
-            try{
-                session->dispose();
+			// Get the complete list of active sessions.
+			std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
 
-                lastDeliveredSequenceId =
-                    Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
-            }
+			// Dispose of all the Session resources we know are still open.
+			while( iter->hasNext() ) {
+				ActiveMQSession* session = iter->next();
+				try{
+					session->dispose();
+
+					lastDeliveredSequenceId =
+						Math::max( lastDeliveredSequenceId, session->getLastDeliveredSequenceId() );
+				} catch( cms::CMSException& ex ){
+					/* Absorb */
+				}
+			}
         }
 
         // Now inform the Broker we are shutting down.
@@ -456,17 +463,20 @@ void ActiveMQConnection::cleanup() {
 
     try{
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+        synchronized( &this->config->activeSessions ) {
 
-        // Dispose of all the Session resources we know are still open.
-        while( iter->hasNext() ) {
-            ActiveMQSession* session = iter->next();
-            try{
-                session->dispose();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
-            }
+			// Get the complete list of active sessions.
+			std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+
+			// Dispose of all the Session resources we know are still open.
+			while( iter->hasNext() ) {
+				ActiveMQSession* session = iter->next();
+				try{
+					session->dispose();
+				} catch( cms::CMSException& ex ){
+					/* Absorb */
+				}
+			}
         }
 
         if( this->config->isConnectionInfoSentToBroker ) {
