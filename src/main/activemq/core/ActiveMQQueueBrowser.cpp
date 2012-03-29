@@ -57,7 +57,7 @@ namespace core{
 
     public:
 
-        Browser(ActiveMQQueueBrowser* parent, ActiveMQSession* session,
+        Browser(ActiveMQQueueBrowser* parent, ActiveMQSessionKernel* session,
                 const Pointer<commands::ConsumerId>& id,
                 const Pointer<commands::ActiveMQDestination>& destination,
                 const std::string& name, const std::string& selector,
@@ -90,7 +90,7 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueueBrowser::ActiveMQQueueBrowser(ActiveMQSession* session,
+ActiveMQQueueBrowser::ActiveMQQueueBrowser(ActiveMQSessionKernel* session,
                                            const Pointer<commands::ConsumerId>& consumerId,
                                            const Pointer<commands::ActiveMQDestination>& destination,
                                            const std::string& selector,
@@ -258,8 +258,8 @@ Pointer<ActiveMQConsumerKernel> ActiveMQQueueBrowser::createConsumer() {
     int prefetch = this->session->getConnection()->getPrefetchPolicy()->getQueueBrowserPrefetch();
 
     Pointer<ActiveMQConsumerKernel> consumer(
-        new Browser( this, session, consumerId, destination, "", selector,
-                     prefetch, 0, false, true, dispatchAsync, NULL ) );
+        new Browser(this, session, consumerId, destination, "", selector,
+                    prefetch, 0, false, true, dispatchAsync, NULL ) );
 
     try {
         this->session->addConsumer(consumer);

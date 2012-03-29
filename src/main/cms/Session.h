@@ -147,7 +147,7 @@ namespace cms{
 
     public:
 
-        virtual ~Session() throw();
+        virtual ~Session();
 
         /**
          * Closes this session as well as any active child consumers or

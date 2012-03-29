@@ -43,6 +43,7 @@
 #include <activemq/core/FifoMessageDispatchChannel.h>
 #include <activemq/core/SimplePriorityMessageDispatchChannel.h>
 #include <activemq/core/RedeliveryPolicy.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/threads/Scheduler.h>
 #include <cms/ExceptionListener.h>
 #include <memory>
@@ -195,23 +196,23 @@ namespace kernels {
     class ClientAckHandler : public ActiveMQAckHandler {
     private:
 
-        ActiveMQSession* session;
+        ActiveMQSessionKernel* session;
 
     private:
 
-        ClientAckHandler( const ClientAckHandler& );
-        ClientAckHandler& operator= ( const ClientAckHandler& );
+        ClientAckHandler(const ClientAckHandler&);
+        ClientAckHandler& operator=(const ClientAckHandler&);
 
     public:
 
-        ClientAckHandler( ActiveMQSession* session ) : session(session) {
+        ClientAckHandler( ActiveMQSessionKernel* session ) : session(session) {
             if( session == NULL ) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Ack Handler Created with NULL Session.");
             }
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
+        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED ) {
 
             try {
                 this->session->acknowledge();
@@ -300,7 +301,7 @@ namespace kernels {
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSession* session,
+ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
                                                const Pointer<ConsumerId>& id,
                                                const Pointer<ActiveMQDestination>& destination,
                                                const std::string& name,

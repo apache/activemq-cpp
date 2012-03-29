@@ -18,40 +18,43 @@
 #include "ActiveMQXAConnection.h"
 
 #include <activemq/core/ActiveMQXASession.h>
+#include <activemq/core/kernels/ActiveMQXASessionKernel.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::core::kernels;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQXAConnection::ActiveMQXAConnection( const Pointer<transport::Transport>& transport,
-                                            const Pointer<decaf::util::Properties>& properties )
-  : ActiveMQConnection(transport, properties ) {
+ActiveMQXAConnection::ActiveMQXAConnection(const Pointer<transport::Transport>& transport,
+                                           const Pointer<decaf::util::Properties>& properties)
+  : ActiveMQConnection(transport, properties) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQXAConnection::~ActiveMQXAConnection() throw() {
+ActiveMQXAConnection::~ActiveMQXAConnection() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::XASession* ActiveMQXAConnection::createXASession() {
-    return dynamic_cast<cms::XASession*>( this->createSession( cms::Session::SESSION_TRANSACTED ) );
+    return dynamic_cast<cms::XASession*>(this->createSession(cms::Session::SESSION_TRANSACTED));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQXAConnection::createSession( cms::Session::AcknowledgeMode ackMode AMQCPP_UNUSED ) {
+cms::Session* ActiveMQXAConnection::createSession(cms::Session::AcknowledgeMode ackMode AMQCPP_UNUSED) {
 
     try {
 
         checkClosedOrFailed();
         ensureConnectionInfoSent();
 
-        // Create the session instance.
-        cms::Session* session = new ActiveMQXASession(
-            this, getNextSessionId(), this->getProperties() );
+        Pointer<ActiveMQXASessionKernel> session(
+            new ActiveMQXASessionKernel(this, getNextSessionId(), this->getProperties()));
 
-        return session;
+        this->addSession(session);
+
+        return new ActiveMQXASession(session);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

@@ -28,11 +28,13 @@
 
 namespace activemq{
 namespace core{
+namespace kernels{
+    class ActiveMQSessionKernel;
+}
 
     using decaf::lang::Pointer;
     using activemq::commands::MessageDispatch;
 
-    class ActiveMQSession;
     class ActiveMQConsumer;
 
     /**
@@ -43,7 +45,7 @@ namespace core{
     private:
 
         /** Session that is this executors parent. */
-        ActiveMQSession* session;
+        activemq::core::kernels::ActiveMQSessionKernel* session;
 
         /** The Channel that holds the waiting Messages for Dispatching. */
         Pointer<MessageDispatchChannel> messageQueue;
@@ -53,15 +55,15 @@ namespace core{
 
     private:
 
-        ActiveMQSessionExecutor( const ActiveMQSessionExecutor& );
-        ActiveMQSessionExecutor& operator= ( const ActiveMQSessionExecutor& );
+        ActiveMQSessionExecutor(const ActiveMQSessionExecutor&);
+        ActiveMQSessionExecutor& operator=(const ActiveMQSessionExecutor&);
 
     public:
 
         /**
          * Creates an un-started executor for the given session.
          */
-        ActiveMQSessionExecutor( ActiveMQSession* session );
+        ActiveMQSessionExecutor(activemq::core::kernels::ActiveMQSessionKernel* session);
 
         /**
          * Calls stop() then clear().
@@ -73,14 +75,14 @@ namespace core{
          * end of the queue.
          * @param data - the data to be dispatched.
          */
-        virtual void execute( const Pointer<MessageDispatch>& data );
+        virtual void execute(const Pointer<MessageDispatch>& data);
 
         /**
          * Executes the dispatch.  Adds the given data to the
          * beginning of the queue.
          * @param data - the data to be dispatched.
          */
-        virtual void executeFirst( const Pointer<MessageDispatch>& data );
+        virtual void executeFirst(const Pointer<MessageDispatch>& data);
 
         /**
          * Removes all messages in the Dispatch Channel so that non are delivered.
@@ -162,7 +164,7 @@ namespace core{
          * Dispatches a message to a particular consumer.
          * @param data - The message to be dispatched.
          */
-        virtual void dispatch( const Pointer<MessageDispatch>& data );
+        virtual void dispatch(const Pointer<MessageDispatch>& data);
 
     };
 

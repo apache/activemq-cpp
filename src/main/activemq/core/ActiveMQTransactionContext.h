@@ -35,13 +35,15 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
+namespace kernels {
+    class ActiveMQSessionKernel;
+}
 
     using decaf::lang::Pointer;
 
     class LocalTransactionEventListener;
-    class ActiveMQSession;
     class ActiveMQConnection;
     class TxContextData;
 
@@ -61,7 +63,7 @@ namespace core{
         TxContextData* context;
 
         // Session this Transaction is associated with
-        ActiveMQSession* session;
+        activemq::core::kernels::ActiveMQSessionKernel* session;
 
         // The Connection that is the parent of the Session.
         ActiveMQConnection* connection;
@@ -71,8 +73,8 @@ namespace core{
 
     private:
 
-        ActiveMQTransactionContext( const ActiveMQTransactionContext& );
-        ActiveMQTransactionContext& operator= ( const ActiveMQTransactionContext& );
+        ActiveMQTransactionContext(const ActiveMQTransactionContext&);
+        ActiveMQTransactionContext& operator=(const ActiveMQTransactionContext&);
 
     public:
 
@@ -84,8 +86,8 @@ namespace core{
          * @param properties
          *      Configuration parameters for this object
          */
-        ActiveMQTransactionContext( ActiveMQSession* session,
-                                    const decaf::util::Properties& properties );
+        ActiveMQTransactionContext(activemq::core::kernels::ActiveMQSessionKernel* session,
+                                   const decaf::util::Properties& properties);
 
         virtual ~ActiveMQTransactionContext();
 
@@ -93,13 +95,13 @@ namespace core{
          * Adds a Synchronization to this Transaction.
          * @param sync - The Synchronization instance to add.
          */
-        virtual void addSynchronization( const Pointer<Synchronization>& sync );
+        virtual void addSynchronization(const Pointer<Synchronization>& sync);
 
         /**
          * Removes a Synchronization to this Transaction.
          * @param sync - The Synchronization instance to add.
          */
-        virtual void removeSynchronization( const Pointer<Synchronization>& sync );
+        virtual void removeSynchronization(const Pointer<Synchronization>& sync);
 
         /**
          * Begins a new transaction if one is not currently in progress.
@@ -153,33 +155,33 @@ namespace core{
 
     public:  // XAResource implementation.
 
-        virtual void commit( const cms::Xid* xid, bool onePhase );
+        virtual void commit(const cms::Xid* xid, bool onePhase);
 
-        virtual void end( const cms::Xid* xid, int flags );
+        virtual void end(const cms::Xid* xid, int flags);
 
-        virtual void forget( const cms::Xid* xid );
+        virtual void forget(const cms::Xid* xid);
 
         virtual int getTransactionTimeout() const;
 
-        virtual bool isSameRM( const cms::XAResource* theXAResource );
+        virtual bool isSameRM(const cms::XAResource* theXAResource);
 
-        virtual int prepare( const cms::Xid* xid );
+        virtual int prepare(const cms::Xid* xid);
 
-        virtual int recover(int flag, cms::Xid** recovered );
+        virtual int recover(int flag, cms::Xid** recovered);
 
-        virtual void rollback( const cms::Xid* xid );
+        virtual void rollback(const cms::Xid* xid);
 
-        virtual bool setTransactionTimeout( int seconds );
+        virtual bool setTransactionTimeout(int seconds);
 
-        virtual void start( const cms::Xid* xid, int flags );
+        virtual void start(const cms::Xid* xid, int flags);
 
     private:
 
         std::string getResourceManagerId() const;
-        void setXid( const cms::Xid* xid );
-        bool equals( const cms::Xid* local, const cms::Xid* remote );
-        cms::XAException toXAException( cms::CMSException& ex );
-        cms::XAException toXAException( decaf::lang::Exception& ex );
+        void setXid(const cms::Xid* xid);
+        bool equals(const cms::Xid* local, const cms::Xid* remote);
+        cms::XAException toXAException(cms::CMSException& ex);
+        cms::XAException toXAException(decaf::lang::Exception& ex);
 
         void beforeEnd();
         void afterCommit();

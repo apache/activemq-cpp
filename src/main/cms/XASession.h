@@ -54,7 +54,7 @@ namespace cms {
     class CMS_API XASession : public virtual cms::Session {
     public:
 
-        virtual ~XASession() throw();
+        virtual ~XASession();
 
         /**
          * Returns the XA resource associated with this Session to the caller.

@@ -25,6 +25,7 @@
 #include <cms/MessageEnumeration.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
@@ -48,7 +49,7 @@ namespace kernels {
 
         friend class Browser;
 
-        ActiveMQSession* session;
+        activemq::core::kernels::ActiveMQSessionKernel* session;
         Pointer<commands::ConsumerId> consumerId;
         Pointer<commands::ActiveMQDestination> destination;
         std::string selector;
@@ -69,7 +70,7 @@ namespace kernels {
 
     public:
 
-        ActiveMQQueueBrowser(ActiveMQSession* session,
+        ActiveMQQueueBrowser(activemq::core::kernels::ActiveMQSessionKernel* session,
                              const Pointer<commands::ConsumerId>& consumerId,
                              const Pointer<commands::ActiveMQDestination>& destination,
                              const std::string& selector,

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "ActiveMQXASession.h"
+#include "ActiveMQXASessionKernel.h"
 
 #include <cms/TransactionInProgressException.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
@@ -27,42 +27,44 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQXASession::ActiveMQXASession(Pointer<ActiveMQXASessionKernel> kernel) :
-    ActiveMQSession(kernel), xaKernel(kernel) {
+ActiveMQXASessionKernel::ActiveMQXASessionKernel(ActiveMQConnection* connection,
+                                                 const Pointer<commands::SessionId>& sessionId,
+                                                 const decaf::util::Properties& properties ) :
+    ActiveMQSessionKernel(connection, sessionId, cms::Session::AUTO_ACKNOWLEDGE, properties) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQXASession::~ActiveMQXASession() {
+ActiveMQXASessionKernel::~ActiveMQXASessionKernel() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQXASession::isTransacted() const {
-    return this->xaKernel->isTransacted();
+bool ActiveMQXASessionKernel::isTransacted() const {
+    return this->transaction->isInXATransaction();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQXASession::isAutoAcknowledge() const {
+bool ActiveMQXASessionKernel::isAutoAcknowledge() const {
     // Force this to always be true so the Session acts like an Auto Ack session
     // when there is no active XA Transaction.
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQXASession::doStartTransaction() {
+void ActiveMQXASessionKernel::doStartTransaction() {
     // Controlled by the XAResource so this method is now a No-op.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQXASession::commit() {
+void ActiveMQXASessionKernel::commit() {
     throw cms::TransactionInProgressException("Cannot commit inside an XASession");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQXASession::rollback() {
+void ActiveMQXASessionKernel::rollback() {
     throw cms::TransactionInProgressException("Cannot rollback inside an XASession");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::XAResource* ActiveMQXASession::getXAResource() const {
-    return this->xaKernel->getXAResource();
+cms::XAResource* ActiveMQXASessionKernel::getXAResource() const {
+    return this->transaction.get();
 }

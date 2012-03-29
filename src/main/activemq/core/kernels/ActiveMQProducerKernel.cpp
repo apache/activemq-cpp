@@ -18,7 +18,7 @@
 #include "ActiveMQProducerKernel.h"
 
 #include <cms/Message.h>
-#include <activemq/core/ActiveMQSession.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/CMSExceptionSupport.h>
@@ -41,7 +41,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSession* session,
+ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSessionKernel* session,
                                                const Pointer<commands::ProducerId>& producerId,
                                                const Pointer<ActiveMQDestination>& destination,
                                                long long sendTimeout) : disableTimestamps(false),
