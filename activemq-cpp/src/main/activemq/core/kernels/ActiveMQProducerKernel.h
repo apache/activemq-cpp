@@ -33,10 +33,11 @@
 
 namespace activemq {
 namespace core {
-    class ActiveMQSession;
 namespace kernels {
 
     using decaf::lang::Pointer;
+
+    class ActiveMQSessionKernel;
 
     class AMQCPP_API ActiveMQProducerKernel : public cms::MessageProducer {
     private:
@@ -60,7 +61,7 @@ namespace kernels {
         long long sendTimeout;
 
         // Session that this producer sends to.
-        ActiveMQSession* session;
+        ActiveMQSessionKernel* session;
 
         // This Producers protocol specific info object
         Pointer<commands::ProducerInfo> producerInfo;
@@ -94,7 +95,7 @@ namespace kernels {
          * @param sendTimeout
          *        The configured send timeout for this Producer.
          */
-        ActiveMQProducerKernel(ActiveMQSession* session,
+        ActiveMQProducerKernel(ActiveMQSessionKernel* session,
                                const Pointer<commands::ProducerId>& producerId,
                                const Pointer<commands::ActiveMQDestination>& destination,
                                long long sendTimeout);

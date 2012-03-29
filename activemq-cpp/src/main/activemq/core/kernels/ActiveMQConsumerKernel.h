@@ -37,12 +37,12 @@
 
 namespace activemq {
 namespace core {
-    class ActiveMQSession;
 namespace kernels {
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicBoolean;
 
+    class ActiveMQSessionKernel;
     class ActiveMQConsumerKernelConfig;
 
     class AMQCPP_API ActiveMQConsumerKernel : public cms::MessageConsumer, public Dispatcher {
@@ -56,7 +56,7 @@ namespace kernels {
         /**
          * The ActiveMQSession that owns this class instance.
          */
-        ActiveMQSession* session;
+        ActiveMQSessionKernel* session;
 
         /**
          * The ConsumerInfo object for this class instance.
@@ -65,12 +65,12 @@ namespace kernels {
 
     private:
 
-        ActiveMQConsumerKernel( const ActiveMQConsumerKernel& );
-        ActiveMQConsumerKernel& operator= ( const ActiveMQConsumerKernel& );
+        ActiveMQConsumerKernel(const ActiveMQConsumerKernel&);
+        ActiveMQConsumerKernel& operator=(const ActiveMQConsumerKernel&);
 
     public:
 
-        ActiveMQConsumerKernel(ActiveMQSession* session,
+        ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
                                const Pointer<commands::ConsumerId>& id,
                                const Pointer<commands::ActiveMQDestination>& destination,
                                const std::string& name,
@@ -94,17 +94,17 @@ namespace kernels {
 
         virtual cms::Message* receive();
 
-        virtual cms::Message* receive( int millisecs );
+        virtual cms::Message* receive(int millisecs);
 
         virtual cms::Message* receiveNoWait();
 
-        virtual void setMessageListener( cms::MessageListener* listener );
+        virtual void setMessageListener(cms::MessageListener* listener);
 
         virtual cms::MessageListener* getMessageListener() const;
 
         virtual std::string getMessageSelector() const;
 
-        virtual void acknowledge( const Pointer<commands::MessageDispatch>& dispatch );
+        virtual void acknowledge(const Pointer<commands::MessageDispatch>& dispatch);
 
     public:  // Dispatcher Methods
 
@@ -174,7 +174,7 @@ namespace kernels {
          * Sets the Synchronization Registered state of this consumer.
          * @param value - true if registered false otherwise.
          */
-        void setSynchronizationRegistered( bool value );
+        void setSynchronizationRegistered(bool value);
 
         /**
          * Deliver any pending messages to the registered MessageListener if there
@@ -214,7 +214,7 @@ namespace kernels {
          * @param value
          *      The new value to assign to the Last Delivered Sequence Id property.
          */
-        void setLastDeliveredSequenceId( long long value );
+        void setLastDeliveredSequenceId(long long value);
 
         /**
          * @returns the number of Message's this consumer is waiting to Dispatch.
@@ -230,7 +230,7 @@ namespace kernels {
          * @param policy
          *      Pointer to a Redelivery Policy object that his Consumer will use.
          */
-        void setRedeliveryPolicy( RedeliveryPolicy* policy );
+        void setRedeliveryPolicy(RedeliveryPolicy* policy);
 
         /**
          * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
@@ -246,7 +246,7 @@ namespace kernels {
          * @param error
          *      The error that is to be thrown when a Receive call is made.
          */
-        void setFailureError( decaf::lang::Exception* error );
+        void setFailureError(decaf::lang::Exception* error);
 
         /**
          * Gets the error that caused this Consumer to be in a Failed state, or NULL if
@@ -273,28 +273,26 @@ namespace kernels {
          * @throws InvalidStateException if this consumer is closed upon
          *         entering this method.
          */
-        Pointer<MessageDispatch> dequeue( long long timeout );
+        Pointer<MessageDispatch> dequeue(long long timeout);
 
         /**
          * Pre-consume processing
          * @param dispatch - the message being consumed.
          */
-        void beforeMessageIsConsumed(
-            const Pointer<commands::MessageDispatch>& dispatch );
+        void beforeMessageIsConsumed(const Pointer<commands::MessageDispatch>& dispatch);
 
         /**
          * Post-consume processing
          * @param dispatch - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
-        void afterMessageIsConsumed(
-            const Pointer<commands::MessageDispatch>& dispatch, bool messageExpired );
+        void afterMessageIsConsumed(const Pointer<commands::MessageDispatch>& dispatch, bool messageExpired);
 
     private:
 
         // Using options from the Destination URI override any settings that are
         // defined for this consumer.
-        void applyDestinationOptions( const Pointer<commands::ConsumerInfo>& info );
+        void applyDestinationOptions(const Pointer<commands::ConsumerInfo>& info);
 
         // If supported sends a message pull request to the service provider asking
         // for the delivery of a new message.  This is used in the case where the
@@ -302,7 +300,7 @@ namespace kernels {
         // capable of delivering messages on a pull basis.  No request is made if
         // there are already messages in the unconsumed queue since there's no need
         // for a server round-trip in that instance.
-        void sendPullRequest( long long timeout );
+        void sendPullRequest(long long timeout);
 
         // Checks for the closed state and throws if so.
         void checkClosed() const;
@@ -310,10 +308,10 @@ namespace kernels {
         // Sends an ack as needed in order to keep them coming in if the current
         // ack mode allows the consumer to receive up to the prefetch limit before
         // an real ack is sent.
-        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType );
+        void ackLater(const Pointer<commands::MessageDispatch>& message, int ackType);
 
         // Create an Ack Message that acks all messages that have been delivered so far.
-        Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );
+        Pointer<commands::MessageAck> makeAckForAllDeliveredMessages(int type);
 
         // Should Acks be sent on each dispatched message
         bool isAutoAcknowledgeEach() const;

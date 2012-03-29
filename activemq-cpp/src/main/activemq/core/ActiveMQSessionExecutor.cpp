@@ -19,6 +19,7 @@
 
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/kernels/ActiveMQConsumerKernel.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/FifoMessageDispatchChannel.h>
 #include <activemq/core/SimplePriorityMessageDispatchChannel.h>
@@ -36,7 +37,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSessionExecutor::ActiveMQSessionExecutor(ActiveMQSession* session) :
+ActiveMQSessionExecutor::ActiveMQSessionExecutor(ActiveMQSessionKernel* session) :
     session(session), messageQueue(), taskRunner() {
 
     if (this->session->getConnection()->isMessagePrioritySupported()) {
@@ -64,7 +65,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch ) {
+void ActiveMQSessionExecutor::execute(const Pointer<MessageDispatch>& dispatch) {
 
     // Add the data to the queue.
     this->messageQueue->enqueue(dispatch);
@@ -72,7 +73,7 @@ void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& dispatch ) {
+void ActiveMQSessionExecutor::executeFirst(const Pointer<MessageDispatch>& dispatch) {
 
     // Add the data to the queue.
     this->messageQueue->enqueueFirst(dispatch);
@@ -119,7 +120,7 @@ void ActiveMQSessionExecutor::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch ) {
+void ActiveMQSessionExecutor::dispatch(const Pointer<MessageDispatch>& dispatch) {
 
     try {
 
@@ -139,13 +140,10 @@ void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch
 
     } catch (decaf::lang::Exception& ex) {
         ex.setMark(__FILE__, __LINE__);
-        ex.printStackTrace();
     } catch (std::exception& ex) {
         ActiveMQException amqex(__FILE__, __LINE__, ex.what());
-        amqex.printStackTrace();
     } catch (...) {
         ActiveMQException amqex(__FILE__, __LINE__, "caught unknown exception");
-        amqex.printStackTrace();
     }
 }
 

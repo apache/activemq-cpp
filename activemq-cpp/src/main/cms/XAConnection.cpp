@@ -20,6 +20,6 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-XAConnection::~XAConnection() throw() {
+XAConnection::~XAConnection() {
 
 }

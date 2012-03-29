@@ -31,6 +31,7 @@
 #include <activemq/transport/TransportListener.h>
 #include <activemq/threads/Scheduler.h>
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
@@ -119,7 +120,7 @@ namespace core{
          *
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void addSession(ActiveMQSession* session);
+        virtual void addSession(Pointer<activemq::core::kernels::ActiveMQSessionKernel> session);
 
         /**
          * Removes the session resources for the given session instance.
@@ -129,7 +130,7 @@ namespace core{
          *
          * @throws CMSException if an error occurs while removing performing the operation.
          */
-        virtual void removeSession(ActiveMQSession* session);
+        virtual void removeSession(Pointer<activemq::core::kernels::ActiveMQSessionKernel> session);
 
         /**
          * Adds an active Producer to the Set of known producers.

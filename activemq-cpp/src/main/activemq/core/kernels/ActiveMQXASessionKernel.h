@@ -15,32 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CORE_ACTIVEMQXASESSION_H_
-#define _ACTIVEMQ_CORE_ACTIVEMQXASESSION_H_
+#ifndef _ACTIVEMQ_CORE_KERNELS_ACTIVEMQXASESSIONKERNEL_H_
+#define _ACTIVEMQ_CORE_KERNELS_ACTIVEMQXASESSIONKERNEL_H_
 
 #include <activemq/util/Config.h>
 
 #include <cms/XASession.h>
-#include <activemq/core/ActiveMQSession.h>
-#include <activemq/core/kernels/ActiveMQXASessionKernel.h>
+#include <activemq/core/kernels/ActiveMQSessionKernel.h>
 
 namespace activemq {
 namespace core {
+namespace kernels {
 
     using decaf::lang::Pointer;
 
-    class AMQCPP_API ActiveMQXASession : public cms::XASession, public ActiveMQSession {
-    private:
-
-        Pointer<activemq::core::kernels::ActiveMQXASessionKernel> xaKernel;
-
+    class AMQCPP_API ActiveMQXASessionKernel : public cms::XASession, public ActiveMQSessionKernel {
     public:
 
-        ActiveMQXASession(Pointer<activemq::core::kernels::ActiveMQXASessionKernel> kernel);
+        ActiveMQXASessionKernel(ActiveMQConnection* connection,
+                                const Pointer<commands::SessionId>& sessionId,
+                                const decaf::util::Properties& properties);
 
-        virtual ~ActiveMQXASession();
+        virtual ~ActiveMQXASessionKernel();
 
-    public:  // Override ActiveMQSession methods to make them XA Aware
+    public:  // Override ActiveMQSessionKernel methods to make them XA Aware
 
         virtual bool isTransacted() const;
 
@@ -58,6 +56,6 @@ namespace core {
 
     };
 
-}}
+}}}
 
-#endif /* _ACTIVEMQ_CORE_ACTIVEMQXASESSION_H_ */
+#endif /* _ACTIVEMQ_CORE_KERNELS_ACTIVEMQXASESSIONKERNEL_H_ */

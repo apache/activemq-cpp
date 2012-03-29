@@ -28,23 +28,22 @@ namespace core {
 
     using decaf::lang::Pointer;
 
-    class AMQCPP_API ActiveMQXAConnection : public cms::XAConnection,
-                                            public ActiveMQConnection {
+    class AMQCPP_API ActiveMQXAConnection : public cms::XAConnection, public ActiveMQConnection {
     private:
 
-        ActiveMQXAConnection( const ActiveMQXAConnection& );
-        ActiveMQXAConnection& operator= ( const ActiveMQXAConnection& );
+        ActiveMQXAConnection(const ActiveMQXAConnection&);
+        ActiveMQXAConnection& operator= (const ActiveMQXAConnection&);
 
     public:
 
-        ActiveMQXAConnection( const Pointer<transport::Transport>& transport,
-                              const Pointer<decaf::util::Properties>& properties );
+        ActiveMQXAConnection(const Pointer<transport::Transport>& transport,
+                             const Pointer<decaf::util::Properties>& properties);
 
-        virtual ~ActiveMQXAConnection() throw();
+        virtual ~ActiveMQXAConnection();
 
         virtual cms::XASession* createXASession();
 
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode );
+        virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode);
 
     };
 
