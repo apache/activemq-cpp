@@ -626,7 +626,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
             this->addProducer(producer);
             this->connection->oneway(producer->getProducerInfo());
         } catch (Exception& ex) {
-            this->removeProducer(producer->getProducerId());
+            this->removeProducer(producer);
             throw ex;
         }
 
@@ -1145,28 +1145,14 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::removeProducer(const Pointer<commands::ProducerId>& producerId) {
+void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> producer) {
 
     try{
 
         this->checkClosed();
 
-        this->connection->removeProducer(producerId);
-
-        std::auto_ptr<Iterator<Pointer< ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
-
-        Pointer<ActiveMQProducerKernel> toRemove;
-        while (producerIter->hasNext()) {
-            Pointer<ActiveMQProducerKernel> temp = producerIter->next();
-            if (temp->getProducerId()->equals(*producerId)) {
-                toRemove = temp;
-                break;
-            }
-        }
-
-        if (toRemove != NULL) {
-            this->config->producers.remove(toRemove);
-        }
+        this->connection->removeProducer(producer->getProducerId());
+        this->config->producers.remove(producer);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

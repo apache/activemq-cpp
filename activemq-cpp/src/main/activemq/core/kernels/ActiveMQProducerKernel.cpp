@@ -115,7 +115,13 @@ void ActiveMQProducerKernel::close() {
 void ActiveMQProducerKernel::dispose() {
 
     if (!this->isClosed()) {
-        this->session->removeProducer(this->producerInfo->getProducerId());
+        Pointer<ActiveMQProducerKernel> producer(this);
+        try {
+            this->session->removeProducer(producer);
+        } catch(Exception& e) {
+            producer.release();
+            throw;
+        }
         this->closed = true;
     }
 }

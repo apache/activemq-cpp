@@ -402,12 +402,12 @@ namespace kernels {
          * Dispose of a MessageProducer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
          *
-         * @param producerId
-         *      The ProducerId of the producer to remove to this session.
+         * @param producer
+         *      The Producer kernel instance to remove from this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeProducer(const Pointer<commands::ProducerId>& producerId);
+        void removeProducer(Pointer<activemq::core::kernels::ActiveMQProducerKernel> producer);
 
         /**
          * Starts if not already start a Transaction for this Session.  If the session
