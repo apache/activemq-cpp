@@ -34,16 +34,14 @@ namespace cms {
 
         TransactionRolledBackException();
 
-        TransactionRolledBackException( const TransactionRolledBackException& ex );
+        TransactionRolledBackException(const TransactionRolledBackException& ex);
 
-        TransactionRolledBackException( const std::string& message );
+        TransactionRolledBackException(const std::string& message);
 
-        TransactionRolledBackException( const std::string& message,
-                                        const std::exception* cause );
+        TransactionRolledBackException(const std::string& message, const std::exception* cause);
 
-        TransactionRolledBackException( const std::string& message,
-                                        const std::exception* cause,
-                                        const std::vector< std::pair< std::string, int> >& stackTrace );
+        TransactionRolledBackException(const std::string& message, const std::exception* cause,
+                                       const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~TransactionRolledBackException() throw();
 

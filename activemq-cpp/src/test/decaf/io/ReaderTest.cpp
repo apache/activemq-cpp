@@ -54,7 +54,7 @@ namespace {
             this->current_offset = 0;
         }
 
-        virtual void close() throw( decaf::io::IOException ) {
+        virtual void close() {
             contents.clear();
         }
 

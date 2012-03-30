@@ -55,7 +55,7 @@ AdvisoryProducer::AdvisoryProducer( cms::Session* session ) : consumerOnline(fal
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AdvisoryProducer::~AdvisoryProducer() throw() {
+AdvisoryProducer::~AdvisoryProducer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ void AdvisoryProducer::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AdvisoryProducer::onMessage( const cms::Message* message ) throw() {
+void AdvisoryProducer::onMessage( const cms::Message* message ) {
 
     if( message->getCMSType() == "Advisory" ) {
 

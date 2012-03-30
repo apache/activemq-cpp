@@ -33,14 +33,14 @@ namespace concurrent{
         /**
          * Default Constructor
          */
-        CancellationException() throw() : decaf::lang::Exception() {}
+        CancellationException() : decaf::lang::Exception() {}
 
         /**
          * Conversion Constructor from some other Exception
          *
          * @param ex An exception that should become this type of Exception
          */
-        CancellationException( const decaf::lang::Exception& ex ) throw()
+        CancellationException( const decaf::lang::Exception& ex )
         : decaf::lang::Exception()
         {
             *(Exception*)this = ex;
@@ -51,7 +51,7 @@ namespace concurrent{
          *
          * @param ex - The Exception to copy in this new instance.
          */
-        CancellationException( const CancellationException& ex ) throw()
+        CancellationException( const CancellationException& ex )
         : decaf::lang::Exception()
         {
             *(Exception*)this = ex;
@@ -63,7 +63,7 @@ namespace concurrent{
          * be thrown, the object is cloned caller retains ownership.
          */
         CancellationException( const std::exception* cause )
-            throw() : decaf::lang::Exception( cause ) {}
+             : decaf::lang::Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -75,7 +75,7 @@ namespace concurrent{
          * @param ... - list of primitives that are formatted into the message
          */
         CancellationException( const char* file, const int lineNumber,
-                               const char* msg, ... ) throw()
+                               const char* msg, ... )
             : decaf::lang::Exception()
         {
 
@@ -99,7 +99,7 @@ namespace concurrent{
          */
         CancellationException( const char* file, const int lineNumber,
                                 const std::exception* cause,
-                                const char* msg, ... ) throw()
+                                const char* msg, ... )
             : decaf::lang::Exception( cause )
         {
             va_list vargs ;

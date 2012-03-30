@@ -36,16 +36,14 @@ namespace cms{
 
         IllegalStateException();
 
-        IllegalStateException( const IllegalStateException& ex );
+        IllegalStateException(const IllegalStateException& ex);
 
-        IllegalStateException( const std::string& message );
+        IllegalStateException(const std::string& message);
 
-        IllegalStateException( const std::string& message,
-                               const std::exception* cause );
+        IllegalStateException(const std::string& message, const std::exception* cause);
 
-        IllegalStateException( const std::string& message,
-                               const std::exception* cause,
-                               const std::vector< std::pair< std::string, int> >& stackTrace );
+        IllegalStateException(const std::string& message, const std::exception* cause,
+                              const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~IllegalStateException() throw();
 

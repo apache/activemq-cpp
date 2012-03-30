@@ -50,8 +50,8 @@ namespace core{
 
     private:
 
-        ActiveMQConnectionFactory( const ActiveMQConnectionFactory& );
-        ActiveMQConnectionFactory& operator= ( const ActiveMQConnectionFactory& );
+        ActiveMQConnectionFactory(const ActiveMQConnectionFactory&);
+        ActiveMQConnectionFactory& operator=(const ActiveMQConnectionFactory&);
 
     public:
 
@@ -63,9 +63,7 @@ namespace core{
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory( const std::string& uri,
-                                   const std::string& username = "",
-                                   const std::string& password = "" );
+        ActiveMQConnectionFactory(const std::string& uri, const std::string& username = "", const std::string& password = "");
 
         /**
          * Constructor
@@ -73,11 +71,9 @@ namespace core{
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory( const decaf::net::URI& uri,
-                                   const std::string& username = "",
-                                   const std::string& password = "" );
+        ActiveMQConnectionFactory(const decaf::net::URI& uri, const std::string& username = "", const std::string& password = "");
 
-        virtual ~ActiveMQConnectionFactory() throw();
+        virtual ~ActiveMQConnectionFactory();
 
         /**
          * Creates a connection with the default user identity. The
@@ -102,8 +98,7 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password );
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password);
 
         /**
          * Creates a connection with the specified user identity. The
@@ -120,9 +115,7 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password,
-                                                   const std::string& clientId );
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password, const std::string& clientId);
 
     public:   // Configuration Options
 
@@ -130,7 +123,7 @@ namespace core{
          * Sets the username that should be used when creating a new connection
          * @param username string
          */
-        void setUsername( const std::string& username );
+        void setUsername(const std::string& username);
 
         /**
          * Gets the username that this factory will use when creating a new
@@ -143,7 +136,7 @@ namespace core{
          * Sets the password that should be used when creating a new connection
          * @param password string
          */
-        void setPassword( const std::string& password );
+        void setPassword(const std::string& password);
 
         /**
          * Gets the password that this factory will use when creating a new
@@ -162,7 +155,7 @@ namespace core{
          * Sets the Client Id.
          * @param clientId - The new clientId value.
          */
-        void setClientId( const std::string& clientId );
+        void setClientId(const std::string& clientId);
 
         /**
          * Sets the Broker URI that should be used when creating a new connection instance.
@@ -170,7 +163,7 @@ namespace core{
          * @param brokerURI
          *      The string form of the Broker URI, this will be converted to a URI object.
          */
-        void setBrokerURI( const std::string& uri );
+        void setBrokerURI(const std::string& uri);
 
         /**
          * Sets the Broker URI that should be used when creating a new connection instance.
@@ -178,7 +171,7 @@ namespace core{
          * @param brokerURI
          *      The URI of the broker that this client will connect to.
          */
-        void setBrokerURI( const decaf::net::URI& uri );
+        void setBrokerURI(const decaf::net::URI& uri);
 
         /**
          * Gets the Broker URI that this factory will use when creating a new
@@ -195,7 +188,7 @@ namespace core{
          * @param listener
          * 		The listener to set on the connection or NULL for no listener.
          */
-        void setExceptionListener( cms::ExceptionListener* listener );
+        void setExceptionListener(cms::ExceptionListener* listener);
 
         /**
          * Returns the currently set ExceptionListener that will be set on any new Connection
@@ -213,7 +206,7 @@ namespace core{
          * @param policy
          *      The new PrefetchPolicy that the ConnectionFactory should clone for Connections.
          */
-        void setPrefetchPolicy( PrefetchPolicy* policy );
+        void setPrefetchPolicy(PrefetchPolicy* policy);
 
         /**
          * Gets the pointer to the current PrefetchPolicy that is in use by this ConnectionFactory.
@@ -230,7 +223,7 @@ namespace core{
          * @param policy
          *      The new RedeliveryPolicy that the ConnectionFactory should clone for Connections.
          */
-        void setRedeliveryPolicy( RedeliveryPolicy* policy );
+        void setRedeliveryPolicy(RedeliveryPolicy* policy);
 
         /**
          * Gets the pointer to the current RedeliveryPolicy that is in use by this ConnectionFactory.
@@ -252,7 +245,7 @@ namespace core{
          * @param value
          *        The value of the dispatch asynchronously option sent to the broker.
          */
-        void setDispatchAsync( bool value );
+        void setDispatchAsync(bool value);
 
         /**
          * Gets if the Connection should always send things Synchronously.
@@ -266,7 +259,7 @@ namespace core{
          * @param value
          *        true if sends should always be Synchronous.
          */
-        void setAlwaysSyncSend( bool value );
+        void setAlwaysSyncSend(bool value);
 
         /**
          * Gets if the useAsyncSend option is set
@@ -278,7 +271,7 @@ namespace core{
          * Sets the useAsyncSend option
          * @param value - true to activate, false to disable.
          */
-        void setUseAsyncSend( bool value );
+        void setUseAsyncSend(bool value);
 
         /**
          * Gets if the Connection is configured for Message body compression.
@@ -292,7 +285,7 @@ namespace core{
          * @param value
          *      Boolean indicating if Message body compression is enabled.
          */
-        void setUseCompression( bool value );
+        void setUseCompression(bool value);
 
         /**
          * Sets the Compression level used when Message body compression is enabled, a
@@ -303,7 +296,7 @@ namespace core{
          * @param value
          *      A signed int value that controls the compression level.
          */
-        void setCompressionLevel( int value );
+        void setCompressionLevel(int value);
 
         /**
          * Gets the currently configured Compression level for Message bodies.
@@ -335,7 +328,7 @@ namespace core{
          * Sets the close timeout to use when sending the disconnect request.
          * @param timeout - The time to wait for a close message.
          */
-        void setCloseTimeout( unsigned int timeout );
+        void setCloseTimeout(unsigned int timeout);
 
         /**
          * Gets the configured producer window size for Producers that are created
@@ -352,7 +345,7 @@ namespace core{
          * message to be sent.
          * @param windowSize - The size in bytes of the Producers memory window.
          */
-        void setProducerWindowSize( unsigned int windowSize );
+        void setProducerWindowSize(unsigned int windowSize);
 
         /**
          * @returns true if the Connections that this factory creates should support the
@@ -367,7 +360,7 @@ namespace core{
          * @param value
          *      Boolean indicating if Message priority should be enabled.
          */
-        void setMessagePrioritySupported( bool value );
+        void setMessagePrioritySupported(bool value);
 
     public:
 
@@ -387,10 +380,8 @@ namespace core{
          *
          * @throw CMSException.
          */
-        static cms::Connection* createConnection( const std::string& uri,
-                                                  const std::string& username,
-                                                  const std::string& password,
-                                                  const std::string& clientId = "" );
+        static cms::Connection* createConnection(const std::string& uri, const std::string& username,
+                                                 const std::string& password, const std::string& clientId = "");
 
     protected:
 
@@ -406,17 +397,15 @@ namespace core{
          *
          * @returns a new ActiveMQConnection pointer instance.
          */
-        virtual ActiveMQConnection* createActiveMQConnection( const Pointer<transport::Transport>& transport,
-                                                              const Pointer<decaf::util::Properties>& properties );
+        virtual ActiveMQConnection* createActiveMQConnection(const Pointer<transport::Transport>& transport,
+                                                             const Pointer<decaf::util::Properties>& properties);
 
     private:
 
-        cms::Connection* doCreateConnection( const decaf::net::URI& uri,
-                                             const std::string& username,
-                                             const std::string& password,
-                                             const std::string& clientId );
+        cms::Connection* doCreateConnection(const decaf::net::URI& uri, const std::string& username,
+                                            const std::string& password, const std::string& clientId);
 
-        void configureConnection( ActiveMQConnection* connection );
+        void configureConnection(ActiveMQConnection* connection);
 
     };
 

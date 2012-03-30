@@ -29,20 +29,20 @@ namespace exceptions{
     class AMQCPP_API BrokerException : public exceptions::ActiveMQException {
     public:
 
-        BrokerException() throw() {}
+        BrokerException() {}
 
-        BrokerException( const exceptions::ActiveMQException& ex ) throw()
+        BrokerException( const exceptions::ActiveMQException& ex )
             : exceptions::ActiveMQException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
 
-        BrokerException( const BrokerException& ex ) throw()
+        BrokerException( const BrokerException& ex )
             : exceptions::ActiveMQException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
 
         BrokerException( const char* file, const int lineNumber,
-                         const char* msg, ... ) throw()
+                         const char* msg, ... )
           : exceptions::ActiveMQException() {
 
             va_list vargs;
@@ -54,7 +54,7 @@ namespace exceptions{
         }
 
         BrokerException( const char* file, const int lineNumber,
-                         const commands::BrokerError* error ) throw()
+                         const commands::BrokerError* error )
           : exceptions::ActiveMQException() {
 
             std::ostringstream ostream;

@@ -46,9 +46,9 @@ namespace test{
         decaf::util::StlSet<long long> threadIds;
 
         SlowListener() { count = 0; }
-        virtual ~SlowListener() throw() {};
+        virtual ~SlowListener() {}
 
-        void onMessage( const cms::Message* message ) throw() {
+        void onMessage( const cms::Message* message ) {
 
             synchronized( &threadIds ) {
                 count++;

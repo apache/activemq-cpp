@@ -34,13 +34,13 @@ namespace io {
         /**
          * Default Constructor
          */
-        UnsupportedEncodingException() throw() {}
+        UnsupportedEncodingException() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        UnsupportedEncodingException( const lang::Exception& ex ) throw()
+        UnsupportedEncodingException( const lang::Exception& ex )
         : IOException()
         {
             *(lang::Exception*)this = ex;
@@ -50,7 +50,7 @@ namespace io {
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        UnsupportedEncodingException( const UnsupportedEncodingException& ex ) throw()
+        UnsupportedEncodingException( const UnsupportedEncodingException& ex )
         : IOException()
         {
             *(lang::Exception*)this = ex;
@@ -68,7 +68,7 @@ namespace io {
          */
         UnsupportedEncodingException( const char* file, const int lineNumber,
                                       const std::exception* cause,
-                                      const char* msg, ... ) throw() : IOException( cause )
+                                      const char* msg, ... ) : IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -83,7 +83,7 @@ namespace io {
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        UnsupportedEncodingException( const std::exception* cause ) throw() : IOException( cause ) {}
+        UnsupportedEncodingException( const std::exception* cause ) : IOException( cause ) {}
 
         /**
          * Constructor
@@ -93,7 +93,7 @@ namespace io {
          * @param ... list of primitives that are formatted into the message
          */
         UnsupportedEncodingException( const char* file, const int lineNumber,
-                                      const char* msg, ... ) throw()
+                                      const char* msg, ... )
         : IOException()
         {
             va_list vargs;

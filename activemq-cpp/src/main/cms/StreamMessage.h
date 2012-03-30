@@ -61,7 +61,7 @@ namespace cms {
     class CMS_API StreamMessage : public Message {
     public:
 
-        virtual ~StreamMessage() throw();
+        virtual ~StreamMessage();
 
         /**
          * Reads a Boolean from the Stream message stream

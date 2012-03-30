@@ -43,7 +43,7 @@ namespace cmsutil {
             this->messageContext = messageContext;
         }
 
-        virtual ~DummySession() throw() {}
+        virtual ~DummySession() {}
 
         virtual void close() {}
 
@@ -58,8 +58,7 @@ namespace cmsutil {
         virtual void recover() {}
 
         virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination )
-                throw ( cms::CMSException ) {
+            const cms::Destination* destination ) {
 
             return new DummyConsumer(messageContext, destination, "", false);
         }
@@ -83,42 +82,40 @@ namespace cmsutil {
             const cms::Topic* destination,
             const std::string& name,
             const std::string& selector,
-            bool noLocal = false )
-                throw ( cms::CMSException ) { return NULL; }
+            bool noLocal = false ) { return NULL; }
 
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
-            throw ( cms::CMSException ) { return new DummyProducer(messageContext, destination); }
+        { return new DummyProducer(messageContext, destination); }
 
         virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue )
-            throw( cms::CMSException ) { return NULL; }
+        { return NULL; }
 
         virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
-            throw( cms::CMSException ) { return NULL; }
+        { return NULL; }
 
         virtual cms::Queue* createQueue( const std::string& queueName )
-            throw ( cms::CMSException ) {
+        {
             return new activemq::commands::ActiveMQQueue( queueName );
         }
 
-        virtual cms::Topic* createTopic( const std::string& topicName )
-            throw ( cms::CMSException ) {
+        virtual cms::Topic* createTopic( const std::string& topicName ) {
             return new activemq::commands::ActiveMQTopic( topicName );
         }
 
         virtual cms::TemporaryQueue* createTemporaryQueue()
-            throw ( cms::CMSException ) { return NULL; }
+            { return NULL; }
 
         virtual cms::TemporaryTopic* createTemporaryTopic()
-            throw ( cms::CMSException ){ return NULL; }
+            { return NULL; }
 
         virtual cms::Message* createMessage()
-            throw ( cms::CMSException ){ return NULL; }
+            { return NULL; }
 
         virtual cms::BytesMessage* createBytesMessage()
-            throw ( cms::CMSException){ return NULL; }
+            { return NULL; }
 
         virtual cms::BytesMessage* createBytesMessage(
-            const unsigned char* bytes, int bytesSize ) throw ( cms::CMSException){
+            const unsigned char* bytes, int bytesSize ) {
             return NULL;
         }
 
@@ -134,7 +131,7 @@ namespace cmsutil {
         virtual cms::MapMessage* createMapMessage()
             throw ( cms::CMSException ){ return NULL; }
 
-        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const throw ( cms::CMSException ) {
+        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const {
             return mode;
         }
 
@@ -142,12 +139,11 @@ namespace cmsutil {
             this->mode = mode;
         }
 
-        virtual bool isTransacted() const throw ( cms::CMSException ){
+        virtual bool isTransacted() const {
             return mode==cms::Session::SESSION_TRANSACTED;
         }
 
-        virtual void unsubscribe( const std::string& name )
-            throw ( cms::CMSException ){}
+        virtual void unsubscribe( const std::string& name ) {}
 
     };
 

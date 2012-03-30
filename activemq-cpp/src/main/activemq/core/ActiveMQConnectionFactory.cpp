@@ -193,19 +193,19 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI ) {
+cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory(const std::string& brokerURI) {
 
     return new ActiveMQConnectionFactory( brokerURI );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory() : settings( new FactorySettings() ) {
+ActiveMQConnectionFactory::ActiveMQConnectionFactory() : settings(new FactorySettings()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& uri,
-                                                      const std::string& username,
-                                                      const std::string& password ) : settings( new FactorySettings() ) {
+ActiveMQConnectionFactory::ActiveMQConnectionFactory(const std::string& uri,
+                                                     const std::string& username,
+                                                     const std::string& password) : settings( new FactorySettings() ) {
 
     this->setBrokerURI(FactorySettings::createURI(uri));
 
@@ -219,9 +219,9 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const std::string& uri,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory( const decaf::net::URI& uri,
-                                                      const std::string& username,
-                                                      const std::string& password ) : settings( new FactorySettings() ) {
+ActiveMQConnectionFactory::ActiveMQConnectionFactory(const decaf::net::URI& uri,
+                                                     const std::string& username,
+                                                     const std::string& password) : settings( new FactorySettings() ) {
 
     this->setBrokerURI(uri);
 
@@ -235,7 +235,7 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory( const decaf::net::URI& uri
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::~ActiveMQConnectionFactory() throw() {
+ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
     try{
         delete this->settings;
     }
@@ -249,25 +249,20 @@ cms::Connection* ActiveMQConnectionFactory::createConnection() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
-                                                              const std::string& password ) {
-
+cms::Connection* ActiveMQConnectionFactory::createConnection(const std::string& username, const std::string& password) {
     return doCreateConnection( settings->brokerURI, username, password, settings->clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection( const std::string& username,
-                                                              const std::string& password,
-                                                              const std::string& clientId ) {
-
+cms::Connection* ActiveMQConnectionFactory::createConnection(const std::string& username, const std::string& password, const std::string& clientId) {
     return doCreateConnection( settings->brokerURI, username, password, clientId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net::URI& uri,
-                                                                const std::string& username,
-                                                                const std::string& password,
-                                                                const std::string& clientId ) {
+cms::Connection* ActiveMQConnectionFactory::doCreateConnection(const decaf::net::URI& uri,
+                                                               const std::string& username,
+                                                               const std::string& password,
+                                                               const std::string& clientId) {
 
     Pointer<Transport> transport;
     auto_ptr<ActiveMQConnection> connection;
@@ -335,7 +330,7 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection( const decaf::net
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnection* ActiveMQConnectionFactory::createActiveMQConnection(
     const Pointer<transport::Transport>& transport,
-    const Pointer<decaf::util::Properties>& properties ) {
+    const Pointer<decaf::util::Properties>& properties) {
 
     return new ActiveMQConnection( transport, properties );
 }
@@ -345,7 +340,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& uri,
     const std::string& username,
     const std::string& password,
-    const std::string& clientId ) {
+    const std::string& clientId) {
 
     ActiveMQConnectionFactory factory;
 
@@ -353,29 +348,29 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::configureConnection( ActiveMQConnection* connection ) {
+void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connection) {
 
-    connection->setUsername( this->settings->username );
-    connection->setPassword( this->settings->password );
-    connection->setDispatchAsync( this->settings->dispatchAsync );
-    connection->setAlwaysSyncSend( this->settings->alwaysSyncSend );
-    connection->setUseAsyncSend( this->settings->useAsyncSend );
-    connection->setUseCompression( this->settings->useCompression );
-    connection->setCompressionLevel( this->settings->compressionLevel );
-    connection->setSendTimeout( this->settings->sendTimeout );
-    connection->setCloseTimeout( this->settings->closeTimeout );
-    connection->setProducerWindowSize( this->settings->producerWindowSize );
-    connection->setPrefetchPolicy( this->settings->defaultPrefetchPolicy->clone() );
-    connection->setRedeliveryPolicy( this->settings->defaultRedeliveryPolicy->clone() );
-    connection->setMessagePrioritySupported( this->settings->messagePrioritySupported );
+    connection->setUsername(this->settings->username);
+    connection->setPassword(this->settings->password);
+    connection->setDispatchAsync(this->settings->dispatchAsync);
+    connection->setAlwaysSyncSend(this->settings->alwaysSyncSend);
+    connection->setUseAsyncSend(this->settings->useAsyncSend);
+    connection->setUseCompression(this->settings->useCompression);
+    connection->setCompressionLevel(this->settings->compressionLevel);
+    connection->setSendTimeout(this->settings->sendTimeout);
+    connection->setCloseTimeout(this->settings->closeTimeout);
+    connection->setProducerWindowSize(this->settings->producerWindowSize);
+    connection->setPrefetchPolicy(this->settings->defaultPrefetchPolicy->clone());
+    connection->setRedeliveryPolicy(this->settings->defaultRedeliveryPolicy->clone());
+    connection->setMessagePrioritySupported(this->settings->messagePrioritySupported);
 
-    if( this->settings->defaultListener ) {
-        connection->setExceptionListener( this->settings->defaultListener );
+    if (this->settings->defaultListener) {
+        connection->setExceptionListener(this->settings->defaultListener);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setUsername( const std::string& username ) {
+void ActiveMQConnectionFactory::setUsername(const std::string& username) {
     settings->username = username;
 }
 
@@ -385,7 +380,7 @@ const std::string& ActiveMQConnectionFactory::getUsername() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setPassword( const std::string& password ){
+void ActiveMQConnectionFactory::setPassword(const std::string& password) {
     settings->password = password;
 }
 
@@ -400,17 +395,17 @@ std::string ActiveMQConnectionFactory::getClientId() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setClientId( const std::string& clientId ) {
+void ActiveMQConnectionFactory::setClientId(const std::string& clientId) {
     this->settings->clientId = clientId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setBrokerURI( const std::string& uri ) {
+void ActiveMQConnectionFactory::setBrokerURI(const std::string& uri) {
     this->setBrokerURI(FactorySettings::createURI(uri));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setBrokerURI( const decaf::net::URI& uri ) {
+void ActiveMQConnectionFactory::setBrokerURI(const decaf::net::URI& uri) {
     this->settings->updateConfiguration(uri);
 }
 
@@ -420,7 +415,7 @@ const decaf::net::URI& ActiveMQConnectionFactory::getBrokerURI() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setExceptionListener( cms::ExceptionListener* listener ) {
+void ActiveMQConnectionFactory::setExceptionListener(cms::ExceptionListener* listener) {
     this->settings->defaultListener = listener;
 }
 
@@ -430,8 +425,8 @@ cms::ExceptionListener* ActiveMQConnectionFactory::getExceptionListener() const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setPrefetchPolicy( PrefetchPolicy* policy ) {
-    this->settings->defaultPrefetchPolicy.reset( policy );
+void ActiveMQConnectionFactory::setPrefetchPolicy(PrefetchPolicy* policy) {
+    this->settings->defaultPrefetchPolicy.reset(policy);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -440,8 +435,8 @@ PrefetchPolicy* ActiveMQConnectionFactory::getPrefetchPolicy() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setRedeliveryPolicy( RedeliveryPolicy* policy ) {
-    this->settings->defaultRedeliveryPolicy.reset( policy );
+void ActiveMQConnectionFactory::setRedeliveryPolicy(RedeliveryPolicy* policy) {
+    this->settings->defaultRedeliveryPolicy.reset(policy);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -455,7 +450,7 @@ bool ActiveMQConnectionFactory::isDispatchAsync() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setDispatchAsync( bool value ) {
+void ActiveMQConnectionFactory::setDispatchAsync(bool value) {
     this->settings->dispatchAsync = value;
 }
 
@@ -465,7 +460,7 @@ bool ActiveMQConnectionFactory::isAlwaysSyncSend() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setAlwaysSyncSend( bool value ) {
+void ActiveMQConnectionFactory::setAlwaysSyncSend(bool value) {
     this->settings->alwaysSyncSend = value;
 }
 
@@ -475,7 +470,7 @@ bool ActiveMQConnectionFactory::isUseAsyncSend() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setUseAsyncSend( bool value ) {
+void ActiveMQConnectionFactory::setUseAsyncSend(bool value) {
     this->settings->useAsyncSend = value;
 }
 
@@ -485,7 +480,7 @@ bool ActiveMQConnectionFactory::isUseCompression() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setUseCompression( bool value ) {
+void ActiveMQConnectionFactory::setUseCompression(bool value) {
     this->settings->useCompression = value;
 }
 
@@ -495,13 +490,13 @@ int ActiveMQConnectionFactory::getCompressionLevel() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setCompressionLevel( int value ) {
+void ActiveMQConnectionFactory::setCompressionLevel(int value) {
 
-    if( value < 0 ) {
+    if (value < 0) {
         this->settings->compressionLevel = -1;
     }
 
-    this->settings->compressionLevel = Math::min( value, 9 );
+    this->settings->compressionLevel = Math::min(value, 9);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -510,7 +505,7 @@ unsigned int ActiveMQConnectionFactory::getSendTimeout() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setSendTimeout( unsigned int timeout ) {
+void ActiveMQConnectionFactory::setSendTimeout(unsigned int timeout) {
     this->settings->sendTimeout = timeout;
 }
 
@@ -520,7 +515,7 @@ unsigned int ActiveMQConnectionFactory::getCloseTimeout() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setCloseTimeout( unsigned int timeout ) {
+void ActiveMQConnectionFactory::setCloseTimeout(unsigned int timeout) {
     this->settings->closeTimeout = timeout;
 }
 
@@ -530,7 +525,7 @@ unsigned int ActiveMQConnectionFactory::getProducerWindowSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setProducerWindowSize( unsigned int windowSize ) {
+void ActiveMQConnectionFactory::setProducerWindowSize(unsigned int windowSize) {
     this->settings->producerWindowSize = windowSize;
 }
 
@@ -540,6 +535,6 @@ bool ActiveMQConnectionFactory::isMessagePrioritySupported() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::setMessagePrioritySupported( bool value ) {
+void ActiveMQConnectionFactory::setMessagePrioritySupported(bool value) {
     this->settings->messagePrioritySupported = value;
 }

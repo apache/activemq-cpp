@@ -45,18 +45,18 @@ namespace advisories {
 
     private:
 
-        TempDestinationAdvisoryConsumer( const TempDestinationAdvisoryConsumer& );
-        TempDestinationAdvisoryConsumer& operator= ( const TempDestinationAdvisoryConsumer& );
+        TempDestinationAdvisoryConsumer(const TempDestinationAdvisoryConsumer&);
+        TempDestinationAdvisoryConsumer& operator=(const TempDestinationAdvisoryConsumer&);
 
     public:
 
-        TempDestinationAdvisoryConsumer( cms::Session* session );
-        virtual ~TempDestinationAdvisoryConsumer() throw();
+        TempDestinationAdvisoryConsumer(cms::Session* session);
+        virtual ~TempDestinationAdvisoryConsumer();
 
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage(const cms::Message* message);
 
     };
 

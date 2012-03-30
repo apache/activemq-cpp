@@ -40,7 +40,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        ActiveMQException() throw();
+        ActiveMQException();
 
         /**
          * Copy Constructor
@@ -48,7 +48,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose internal data is copied into this instance.
          */
-        ActiveMQException( const ActiveMQException& ex ) throw();
+        ActiveMQException( const ActiveMQException& ex );
 
         /**
          * Copy Constructor
@@ -56,7 +56,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose internal data is copied into this instance.
          */
-        ActiveMQException( const decaf::lang::Exception& ex ) throw();
+        ActiveMQException( const decaf::lang::Exception& ex );
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -72,8 +72,7 @@ namespace exceptions{
          * @param ...
          *      The list of primitives that are formatted into the message.
          */
-        ActiveMQException( const char* file, const int lineNumber,
-                           const char* msg, ... ) throw();
+        ActiveMQException(const char* file, const int lineNumber, const char* msg, ...);
 
         virtual ~ActiveMQException() throw();
 

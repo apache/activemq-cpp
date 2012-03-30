@@ -57,16 +57,14 @@ namespace cms{
 
         CMSException();
 
-        CMSException( const CMSException& ex );
+        CMSException(const CMSException& ex);
 
-        CMSException( const std::string& message );
+        CMSException(const std::string& message);
 
-        CMSException( const std::string& message,
-                      const std::exception* cause );
+        CMSException(const std::string& message, const std::exception* cause);
 
-        CMSException( const std::string& message,
-                      const std::exception* cause,
-                      const std::vector< std::pair< std::string, int> >& stackTrace );
+        CMSException(const std::string& message, const std::exception* cause,
+                     const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~CMSException() throw();
 
@@ -101,7 +99,7 @@ namespace cms{
          * @param file The name of the file calling this method (use __FILE__).
          * @param lineNumber The line number in the calling file (use __LINE__).
          */
-        virtual void setMark( const char* file, const int lineNumber );
+        virtual void setMark(const char* file, const int lineNumber);
 
         /**
          * Prints the stack trace to std::err
@@ -113,7 +111,7 @@ namespace cms{
          *
          * @param stream the target output stream.
          */
-        virtual void printStackTrace( std::ostream& stream ) const;
+        virtual void printStackTrace(std::ostream& stream) const;
 
         /**
          * Gets the stack trace as one contiguous string.
@@ -138,7 +136,7 @@ namespace cms{
          * @param other
          *      The CMSException to assign to this instance.
          */
-        CMSException& operator= ( const cms::CMSException& ) {
+        CMSException& operator=(const cms::CMSException&) {
             return *this;
         }
 

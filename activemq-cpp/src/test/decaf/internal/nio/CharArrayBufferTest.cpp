@@ -53,8 +53,7 @@ namespace{
             return (int)this->value.length();
         }
 
-        virtual char charAt( int index ) const
-            throw( lang::exceptions::IndexOutOfBoundsException ) {
+        virtual char charAt( int index ) const {
 
             if( index > (int)this->value.length() ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
@@ -65,8 +64,7 @@ namespace{
             return this->value.at( index );
         }
 
-        virtual CharSequence* subSequence( int start, int end ) const
-            throw( lang::exceptions::IndexOutOfBoundsException ) {
+        virtual CharSequence* subSequence( int start, int end ) const {
 
             if( start > end ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(

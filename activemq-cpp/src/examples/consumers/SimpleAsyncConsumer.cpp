@@ -81,7 +81,7 @@ public:
         clientAck(clientAck) {
     }
 
-    virtual ~SimpleAsyncConsumer() throw() {
+    virtual ~SimpleAsyncConsumer() {
         this->cleanup();
     }
 
@@ -134,7 +134,7 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ) throw() {
+    virtual void onMessage( const Message* message ) {
 
         static int count = 0;
 

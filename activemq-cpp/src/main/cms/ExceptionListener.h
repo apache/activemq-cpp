@@ -47,7 +47,7 @@ namespace cms{
          * @param ex
          *      Exception Object that occurred.
          */
-        virtual void onException( const cms::CMSException& ex ) = 0;
+        virtual void onException(const cms::CMSException& ex) = 0;
 
     };
 

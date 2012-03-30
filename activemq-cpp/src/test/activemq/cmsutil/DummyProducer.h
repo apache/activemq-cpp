@@ -45,9 +45,9 @@ namespace cmsutil {
             this->dest = dest;
             this->messageContext = messageContext;
         }
-        virtual ~DummyProducer() throw() {}
+        virtual ~DummyProducer() {}
 
-        virtual void close() throw( cms::CMSException ){}
+        virtual void close() {}
 
         /**
          * Sends the message to the default producer destination, but does

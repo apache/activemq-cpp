@@ -24,25 +24,24 @@ TransactionRolledBackException::TransactionRolledBackException() : CMSException(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionRolledBackException::TransactionRolledBackException( const TransactionRolledBackException& ex )
-    : CMSException( ex ) {
+TransactionRolledBackException::TransactionRolledBackException(const TransactionRolledBackException& ex) :
+    CMSException(ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionRolledBackException::TransactionRolledBackException( const std::string& message )
-    : CMSException( message, NULL ) {
+TransactionRolledBackException::TransactionRolledBackException(const std::string& message) :
+    CMSException(message, NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionRolledBackException::TransactionRolledBackException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+TransactionRolledBackException::TransactionRolledBackException(const std::string& message, const std::exception* cause) :
+    CMSException(message, cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionRolledBackException::TransactionRolledBackException( const std::string& message,
-                                                                const std::exception* cause,
-                                                                const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+TransactionRolledBackException::TransactionRolledBackException(const std::string& message, const std::exception* cause,
+                                                               const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

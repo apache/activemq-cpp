@@ -33,7 +33,7 @@ namespace cms{
     class CMS_API MessageListener{
     public:
 
-        virtual ~MessageListener() throw();
+        virtual ~MessageListener();
 
         /**
          * Called asynchronously when a new message is received, the message
@@ -52,7 +52,7 @@ namespace cms{
          * @param message
          *      Message object {const} pointer recipient does not own.
          */
-        virtual void onMessage( const Message* message ) throw() = 0;
+        virtual void onMessage( const Message* message ) = 0;
 
     };
 

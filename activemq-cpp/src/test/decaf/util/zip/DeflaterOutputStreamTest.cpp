@@ -78,7 +78,7 @@ namespace{
 
     protected:
 
-        void deflate() throw( IOException ) {
+        void deflate() {
             deflateFlag = true;
             DeflaterOutputStream::deflate();
         }

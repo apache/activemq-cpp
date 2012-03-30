@@ -34,7 +34,7 @@ namespace concurrent{
         /**
          * Default Constructor
          */
-        RejectedExecutionException() throw() : decaf::lang::Exception() {}
+        RejectedExecutionException() : decaf::lang::Exception() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -42,7 +42,7 @@ namespace concurrent{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        RejectedExecutionException( const Exception& ex ) throw()
+        RejectedExecutionException( const Exception& ex )
         : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
@@ -52,7 +52,7 @@ namespace concurrent{
          *
          * @param ex - The Exception to copy in this new instance.
          */
-        RejectedExecutionException( const RejectedExecutionException& ex ) throw()
+        RejectedExecutionException( const RejectedExecutionException& ex )
         : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
@@ -63,7 +63,7 @@ namespace concurrent{
          * be thrown, the object is cloned caller retains ownership.
          */
         RejectedExecutionException( const std::exception* cause )
-            throw() : decaf::lang::Exception( cause ) {}
+            : decaf::lang::Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -75,7 +75,7 @@ namespace concurrent{
          * @param ... - list of primitives that are formatted into the message
          */
         RejectedExecutionException( const char* file, const int lineNumber,
-                                    const char* msg, ... ) throw()
+                                    const char* msg, ... )
         : decaf::lang::Exception() {
 
             va_list vargs;
@@ -98,7 +98,7 @@ namespace concurrent{
          */
         RejectedExecutionException( const char* file, const int lineNumber,
                                     const std::exception* cause,
-                                    const char* msg, ... ) throw()
+                                    const char* msg, ... )
         : decaf::lang::Exception( cause ) {
 
             va_list vargs ;

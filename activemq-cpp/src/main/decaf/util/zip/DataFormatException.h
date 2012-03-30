@@ -32,13 +32,13 @@ namespace zip{
         /**
          * Default Constructor
          */
-        DataFormatException() throw();
+        DataFormatException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        DataFormatException( const lang::Exception& ex ) throw()
+        DataFormatException( const lang::Exception& ex )
         : lang::Exception() {
             *(lang::Exception*)this = ex;
         }
@@ -47,7 +47,7 @@ namespace zip{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        DataFormatException( const DataFormatException& ex ) throw()
+        DataFormatException( const DataFormatException& ex )
         : lang::Exception() {
             *(lang::Exception*)this = ex;
         }
@@ -64,7 +64,7 @@ namespace zip{
          */
         DataFormatException( const char* file, const int lineNumber,
                              const std::exception* cause,
-                             const char* msg, ... ) throw() : lang::Exception( cause )
+                             const char* msg, ... ) : lang::Exception( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -79,7 +79,7 @@ namespace zip{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        DataFormatException( const std::exception* cause ) throw() : lang::Exception( cause ) {}
+        DataFormatException( const std::exception* cause ) : lang::Exception( cause ) {}
 
         /**
          * Constructor
@@ -89,7 +89,7 @@ namespace zip{
          * @param ... list of primitives that are formatted into the message
          */
         DataFormatException( const char* file, const int lineNumber,
-                             const char* msg, ... ) throw()
+                             const char* msg, ... )
         : lang::Exception() {
             va_list vargs;
             va_start( vargs, msg );

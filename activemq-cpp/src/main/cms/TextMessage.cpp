@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-TextMessage::~TextMessage() throw() {
+TextMessage::~TextMessage() {
 
 }
 

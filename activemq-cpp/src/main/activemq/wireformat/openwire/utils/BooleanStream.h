@@ -65,7 +65,7 @@ namespace utils{
 
         BooleanStream();
 
-        virtual ~BooleanStream() throw();
+        virtual ~BooleanStream();
 
         /**
          * Read a boolean data element from the internal data buffer

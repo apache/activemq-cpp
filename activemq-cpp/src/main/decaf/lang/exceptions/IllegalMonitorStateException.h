@@ -36,7 +36,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalMonitorStateException() throw() {};
+        IllegalMonitorStateException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -44,7 +44,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalMonitorStateException(const Exception& ex) throw()
+        IllegalMonitorStateException(const Exception& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -56,7 +56,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalMonitorStateException(const IllegalMonitorStateException& ex) throw()
+        IllegalMonitorStateException(const IllegalMonitorStateException& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -73,7 +73,7 @@ namespace exceptions{
          */
         IllegalMonitorStateException( const char* file,
                                       const int lineNumber,
-                                      const char* msg, ...) throw()
+                                      const char* msg, ...)
         {
             va_list vargs;
             va_start( vargs, msg);
@@ -95,7 +95,7 @@ namespace exceptions{
          */
         IllegalMonitorStateException( const char* file, const int lineNumber,
                                       const std::exception* cause,
-                                      const char* msg, ... ) throw()
+                                      const char* msg, ... )
             : Exception( cause ) {
 
             va_list vargs ;
@@ -111,7 +111,7 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        IllegalMonitorStateException( const std::exception* cause ) throw()
+        IllegalMonitorStateException( const std::exception* cause )
             : Exception( cause ) {
         }
 

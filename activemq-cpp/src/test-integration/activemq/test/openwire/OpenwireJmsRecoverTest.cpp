@@ -160,10 +160,10 @@ namespace {
             : session(session), errorMessages(errorMessages), doneCountDownLatch(doneCountDownLatch), counter(0) {
         }
 
-        virtual ~ClientAckMessageListener() throw() {
+        virtual ~ClientAckMessageListener() {
         }
 
-        virtual void onMessage(const cms::Message* msg) throw() {
+        virtual void onMessage(const cms::Message* msg) {
             counter++;
             try {
                 const TextMessage* message = dynamic_cast<const TextMessage*>(msg);
@@ -241,10 +241,10 @@ namespace {
             : session(session), errorMessages(errorMessages), doneCountDownLatch(doneCountDownLatch), counter(0) {
         }
 
-        virtual ~AutoAckMessageListener() throw() {
+        virtual ~AutoAckMessageListener() {
         }
 
-        virtual void onMessage(const cms::Message* msg) throw() {
+        virtual void onMessage(const cms::Message* msg) {
             counter++;
             try {
                 const TextMessage* message = dynamic_cast<const TextMessage*>(msg);

@@ -176,18 +176,16 @@ namespace cms {
 
         XAException();
 
-        XAException( int errorCode );
+        XAException(int errorCode);
 
-        XAException( const XAException& ex );
+        XAException(const XAException& ex);
 
-        XAException( const std::string& message );
+        XAException(const std::string& message);
 
-        XAException( const std::string& message,
-                     const std::exception* cause );
+        XAException(const std::string& message, const std::exception* cause);
 
-        XAException( const std::string& message,
-                     const std::exception* cause,
-                     const std::vector< std::pair< std::string, int> >& stackTrace );
+        XAException(const std::string& message, const std::exception* cause,
+                    const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~XAException() throw();
 
@@ -199,7 +197,7 @@ namespace cms {
          * @param errorCode
          *      The error code to assign to this XAException.
          */
-        void setErrorCode( int errorCode ) {
+        void setErrorCode(int errorCode) {
             this->errorCode = errorCode;
         }
 

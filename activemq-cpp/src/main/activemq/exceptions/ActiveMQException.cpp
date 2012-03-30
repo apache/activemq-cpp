@@ -29,11 +29,11 @@ using namespace std;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException() throw() : decaf::lang::Exception() {
+ActiveMQException::ActiveMQException() : decaf::lang::Exception() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
+ActiveMQException::ActiveMQException( const ActiveMQException& ex )
 : decaf::lang::Exception() {
 
   this->message = ex.getMessage();
@@ -42,7 +42,7 @@ ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException( const Exception& ex ) throw()
+ActiveMQException::ActiveMQException( const Exception& ex )
 : decaf::lang::Exception() {
 
   this->message = ex.getMessage();
@@ -52,7 +52,7 @@ ActiveMQException::ActiveMQException( const Exception& ex ) throw()
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const char* file, const int lineNumber,
-                                      const char* msg, ... ) throw()
+                                      const char* msg, ... )
 : decaf::lang::Exception() {
 
     va_list vargs;
@@ -64,7 +64,7 @@ ActiveMQException::ActiveMQException( const char* file, const int lineNumber,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::~ActiveMQException() throw(){
+ActiveMQException::~ActiveMQException() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

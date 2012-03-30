@@ -35,16 +35,14 @@ namespace cms{
 
         CMSSecurityException();
 
-        CMSSecurityException( const CMSSecurityException& ex );
+        CMSSecurityException(const CMSSecurityException& ex);
 
-        CMSSecurityException( const std::string& message );
+        CMSSecurityException(const std::string& message);
 
-        CMSSecurityException( const std::string& message,
-                              const std::exception* cause );
+        CMSSecurityException(const std::string& message, const std::exception* cause);
 
-        CMSSecurityException( const std::string& message,
-                              const std::exception* cause,
-                              const std::vector< std::pair< std::string, int> >& stackTrace );
+        CMSSecurityException(const std::string& message, const std::exception* cause,
+                             const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~CMSSecurityException() throw();
 

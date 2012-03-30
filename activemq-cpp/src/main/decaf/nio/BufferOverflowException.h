@@ -30,13 +30,13 @@ namespace nio{
         /**
          * Default Constructor
          */
-        BufferOverflowException() throw() {}
+        BufferOverflowException() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        BufferOverflowException( const lang::Exception& ex ) throw()
+        BufferOverflowException( const lang::Exception& ex )
         : lang::Exception() {
             *(lang::Exception*)this = ex;
         }
@@ -45,7 +45,7 @@ namespace nio{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        BufferOverflowException( const BufferOverflowException& ex ) throw()
+        BufferOverflowException( const BufferOverflowException& ex )
         : lang::Exception() {
             *(lang::Exception*)this = ex;
         }
@@ -62,7 +62,7 @@ namespace nio{
          */
         BufferOverflowException( const char* file, const int lineNumber,
                                  const std::exception* cause,
-                                 const char* msg, ... ) throw() : lang::Exception( cause )
+                                 const char* msg, ... ) : lang::Exception( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -78,7 +78,7 @@ namespace nio{
          * be thrown, the object is cloned caller retains ownership.
          */
         BufferOverflowException( const std::exception* cause )
-            throw() : lang::Exception( cause ) {}
+            : lang::Exception( cause ) {}
 
         /**
          * Constructor
@@ -88,7 +88,7 @@ namespace nio{
          * @param ... list of primitives that are formatted into the message
          */
         BufferOverflowException( const char* file, const int lineNumber,
-                                 const char* msg, ... ) throw()
+                                 const char* msg, ... )
         : lang::Exception() {
 
             va_list vargs;

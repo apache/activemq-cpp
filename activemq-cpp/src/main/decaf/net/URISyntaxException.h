@@ -36,14 +36,14 @@ namespace net{
         /**
          * Default Constructor
          */
-        URISyntaxException() throw() : decaf::lang::Exception(), reason(), input(), index( -1 ) {
+        URISyntaxException() : decaf::lang::Exception(), reason(), input(), index( -1 ) {
         }
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        URISyntaxException( const Exception& ex ) throw() : Exception(), reason(), input(), index( -1 ) {
+        URISyntaxException( const Exception& ex ) : Exception(), reason(), input(), index( -1 ) {
             *(Exception*)this = ex;
         }
 
@@ -51,7 +51,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        URISyntaxException( const URISyntaxException& ex ) throw()
+        URISyntaxException( const URISyntaxException& ex )
             : Exception(), reason( ex.getReason() ), input( ex.getInput() ), index( ex.getIndex() ) {
 
             *(Exception*)this = ex;
@@ -70,7 +70,7 @@ namespace net{
         URISyntaxException( const char* file, const int lineNumber,
                             const std::exception* cause,
                             const char* msg, ... )
-        throw() : lang::Exception( cause ), reason(), input(), index( -1 )
+        : lang::Exception( cause ), reason(), input(), index( -1 )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -86,7 +86,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         URISyntaxException( const std::exception* cause )
-            throw() : lang::Exception( cause ), reason(), input(), index( -1 ) {}
+            : lang::Exception( cause ), reason(), input(), index( -1 ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -98,7 +98,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         URISyntaxException( const char* file, const int lineNumber,
-                            const char* msg DECAF_UNUSED ) throw ()
+                            const char* msg DECAF_UNUSED )
         : Exception(), reason( "<Unknown Reason>" ), input( "<No Address Given>" ), index( -1 )
         {
             const char * message = "Input: %s, Reason it failed: %s";
@@ -120,7 +120,7 @@ namespace net{
          */
         URISyntaxException( const char* file, const int lineNumber,
                             const std::string& input,
-                            const std::string& reason ) throw ()
+                            const std::string& reason )
         : Exception(), reason( reason ), input( input ), index( -1 ) {
 
             const char * message = "Input: %s, Reason it failed: %s";
@@ -144,7 +144,7 @@ namespace net{
         URISyntaxException( const char* file, const int lineNumber,
                             const std::string& input,
                             const std::string& reason,
-                            int index ) throw ()
+                            int index )
         : Exception(), reason( reason ), input( input ), index( index ) {
 
             const char * message = "Input: %s, Index %d resulted in this error: %s";

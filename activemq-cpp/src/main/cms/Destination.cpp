@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-Destination::~Destination() throw() {
+Destination::~Destination() {
 
 }
 

@@ -34,16 +34,14 @@ namespace cms {
 
         UnsupportedOperationException();
 
-        UnsupportedOperationException( const UnsupportedOperationException& ex );
+        UnsupportedOperationException(const UnsupportedOperationException& ex);
 
-        UnsupportedOperationException( const std::string& message );
+        UnsupportedOperationException(const std::string& message);
 
-        UnsupportedOperationException( const std::string& message,
-                                       const std::exception* cause );
+        UnsupportedOperationException(const std::string& message, const std::exception* cause);
 
-        UnsupportedOperationException( const std::string& message,
-                                       const std::exception* cause,
-                                       const std::vector< std::pair< std::string, int> >& stackTrace );
+        UnsupportedOperationException(const std::string& message, const std::exception* cause,
+                                      const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~UnsupportedOperationException() throw();
 

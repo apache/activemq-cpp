@@ -56,7 +56,7 @@ namespace core {
                                      const std::string& username = "",
                                      const std::string& password = "" );
 
-        virtual ~ActiveMQXAConnectionFactory() throw();
+        virtual ~ActiveMQXAConnectionFactory();
 
         virtual cms::XAConnection* createXAConnection();
 

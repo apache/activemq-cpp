@@ -35,13 +35,13 @@ namespace concurrent{
         /**
          * Default Constructor
          */
-        TimeoutException() throw() : decaf::lang::Exception() {}
+        TimeoutException() : decaf::lang::Exception() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        TimeoutException( const decaf::lang::Exception& ex ) throw()
+        TimeoutException( const decaf::lang::Exception& ex )
         : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
@@ -52,7 +52,7 @@ namespace concurrent{
          * @param ex
          *      The exception to copy from.
          */
-        TimeoutException( const TimeoutException& ex ) throw()
+        TimeoutException( const TimeoutException& ex )
         : decaf::lang::Exception() {
             *(Exception*)this = ex;
         }
@@ -64,7 +64,7 @@ namespace concurrent{
          *      be thrown, the object is cloned caller retains ownership.
          */
         TimeoutException( const std::exception* cause )
-            throw() : decaf::lang::Exception( cause ) {}
+            : decaf::lang::Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -76,7 +76,7 @@ namespace concurrent{
          * @param ... list of primitives that are formatted into the message
          */
         TimeoutException( const char* file, const int lineNumber,
-                          const char* msg, ... ) throw()
+                          const char* msg, ... )
             : decaf::lang::Exception()
         {
 
@@ -100,7 +100,7 @@ namespace concurrent{
          */
         TimeoutException( const char* file, const int lineNumber,
                           const std::exception* cause,
-                          const char* msg, ... ) throw()
+                          const char* msg, ... )
             : decaf::lang::Exception( cause )
         {
             va_list vargs ;

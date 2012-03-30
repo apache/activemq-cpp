@@ -374,7 +374,7 @@ namespace util{
         /**
          * Clear all data from that Array, setting the underlying bytes to zero.
          */
-        virtual void clear() throw();
+        virtual void clear();
 
         /**
          * Allows the ByteArrayAdapter to be indexed as a standard array.  calling the

@@ -91,7 +91,7 @@ namespace lang {
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
          */
-        Pointer( const Pointer& value ) throw() :
+        Pointer( const Pointer& value ) :
             REFCOUNTER( value ), value( value.value ), onDelete( onDeleteFunc ) {}
 
         /**
@@ -99,7 +99,7 @@ namespace lang {
          * instance and increments the reference counter.
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value ) throw() :
+        Pointer( const Pointer<T1, R1>& value ) :
             REFCOUNTER( value ), value( value.get() ), onDelete( onDeleteFunc ) {}
 
         /**
@@ -110,7 +110,7 @@ namespace lang {
          * @param value - Pointer instance to cast to this type.
          */
         template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) throw() :
+        Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) :
             REFCOUNTER( value ), value( static_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
         }
 
@@ -140,7 +140,7 @@ namespace lang {
             }
         }
 
-        virtual ~Pointer() throw() {
+        virtual ~Pointer() {
             if( REFCOUNTER::release() == true ) {
                 onDelete( this->value );
             }
@@ -191,7 +191,7 @@ namespace lang {
          * Exception Safe Swap Function
          * @param value - the value to swap with this.
          */
-        void swap( Pointer& value ) throw() {
+        void swap( Pointer& value ) {
             std::swap( this->value, value.value );
             REFCOUNTER::swap( value );
         }
@@ -200,7 +200,7 @@ namespace lang {
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
-        Pointer& operator= ( const Pointer& right ) throw() {
+        Pointer& operator= ( const Pointer& right ) {
             if( this == (void*)&right ) {
                 return *this;
             }
@@ -210,7 +210,7 @@ namespace lang {
             return *this;
         }
         template< typename T1, typename R1>
-        Pointer& operator= ( const Pointer<T1, R1>& right ) throw() {
+        Pointer& operator= ( const Pointer<T1, R1>& right ) {
             if( this == (void*)&right ) {
                 return *this;
             }

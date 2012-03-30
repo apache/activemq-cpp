@@ -76,7 +76,7 @@ namespace kernels {
                              const std::string& selector,
                              bool dispatchAsync);
 
-        virtual ~ActiveMQQueueBrowser() throw();
+        virtual ~ActiveMQQueueBrowser();
 
     public:
 

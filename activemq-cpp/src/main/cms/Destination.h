@@ -48,7 +48,7 @@ namespace cms{
 
     public:
 
-        virtual ~Destination() throw();
+        virtual ~Destination();
 
         /**
          * Retrieve the Destination Type for this Destination
@@ -71,7 +71,7 @@ namespace cms{
          * @param source
          *      The source Destination object.
          */
-        virtual void copy( const cms::Destination& source ) = 0;
+        virtual void copy(const cms::Destination& source) = 0;
 
         /**
          * Compares two Destination instances to determine if they represent the same
@@ -82,7 +82,7 @@ namespace cms{
          *
          * @return true if the two destinations are the same.
          */
-        virtual bool equals( const cms::Destination& other ) const = 0;
+        virtual bool equals(const cms::Destination& other) const = 0;
 
         /**
          * Retrieve any properties that might be part of the destination

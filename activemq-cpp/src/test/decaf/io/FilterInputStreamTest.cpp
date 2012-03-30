@@ -67,16 +67,16 @@ namespace {
             return len - pos;
         }
 
-        virtual void close() throw(IOException){
+        virtual void close() {
             this->closed = true;
         }
-        virtual long long skip( long long num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+        virtual long long skip( long long num ) {
             return ( pos += (int)std::min( num, (long long)available() ) );
         }
 
     protected:
 
-        virtual int doReadByte() throw (IOException){
+        virtual int doReadByte() {
             if( this->isThrowOnRead() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -91,10 +91,7 @@ namespace {
         }
 
         virtual int doReadArrayBounded( unsigned char* buffer, int size,
-                                        int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException ) {
+                                        int offset, int length ) {
 
             int numToRead = std::min( length, available() );
 

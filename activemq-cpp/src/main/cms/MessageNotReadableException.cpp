@@ -24,25 +24,21 @@ MessageNotReadableException::MessageNotReadableException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageNotReadableException::MessageNotReadableException( const MessageNotReadableException& ex )
-    : CMSException( ex ) {
+MessageNotReadableException::MessageNotReadableException(const MessageNotReadableException& ex) : CMSException(ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageNotReadableException::MessageNotReadableException( const std::string& message )
-    : CMSException( message, NULL ) {
+MessageNotReadableException::MessageNotReadableException(const std::string& message) : CMSException(message, NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageNotReadableException::MessageNotReadableException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+MessageNotReadableException::MessageNotReadableException(const std::string& message, const std::exception* cause) : CMSException(message, cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageNotReadableException::MessageNotReadableException( const std::string& message,
-                                                          const std::exception* cause,
-                                                          const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+MessageNotReadableException::MessageNotReadableException(const std::string& message, const std::exception* cause,
+                                                         const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -36,7 +36,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        InvalidStateException() throw() {}
+        InvalidStateException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -44,7 +44,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InvalidStateException(const Exception& ex) throw()
+        InvalidStateException(const Exception& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -56,7 +56,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InvalidStateException( const InvalidStateException& ex ) throw()
+        InvalidStateException( const InvalidStateException& ex )
         : Exception()
         {
             *(Exception*)this = ex;
@@ -74,7 +74,7 @@ namespace exceptions{
          */
         InvalidStateException( const char* file, const int lineNumber,
                                const std::exception* cause,
-                               const char* msg, ... ) throw()
+                               const char* msg, ... )
             : Exception( cause )
         {
             va_list vargs;
@@ -90,7 +90,7 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        InvalidStateException( const std::exception* cause ) throw()
+        InvalidStateException( const std::exception* cause )
             : Exception( cause ) {
         }
 
@@ -105,7 +105,7 @@ namespace exceptions{
          */
         InvalidStateException( const char* file,
                                const int lineNumber,
-                               const char* msg, ... ) throw()
+                               const char* msg, ... )
         : Exception()
         {
             va_list vargs;

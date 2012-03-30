@@ -61,7 +61,7 @@ namespace advisories {
     public:
 
         AdvisoryProducer( cms::Session* session );
-        virtual ~AdvisoryProducer() throw();
+        virtual ~AdvisoryProducer();
 
         /**
          * Shut down the processing that occurs in the Run method.
@@ -76,7 +76,7 @@ namespace advisories {
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage( const cms::Message* message );
 
     };
 

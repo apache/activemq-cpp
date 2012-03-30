@@ -36,7 +36,7 @@ namespace {
 
         virtual ~MockOutputStream() {}
 
-        virtual void doWriteByte( unsigned char c ) throw( decaf::io::IOException ) {
+        virtual void doWriteByte( unsigned char c ) {
             buffer.push_back( c );
         }
 

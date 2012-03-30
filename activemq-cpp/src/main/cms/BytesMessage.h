@@ -66,7 +66,7 @@ namespace cms{
     class CMS_API BytesMessage : public Message{
     public:
 
-        virtual ~BytesMessage() throw();
+        virtual ~BytesMessage();
 
         /**
          * sets the bytes given to the message body.

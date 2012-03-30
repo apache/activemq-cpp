@@ -49,7 +49,7 @@ ActiveMQXAConnectionFactory::ActiveMQXAConnectionFactory( const decaf::net::URI&
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQXAConnectionFactory::~ActiveMQXAConnectionFactory() throw() {
+ActiveMQXAConnectionFactory::~ActiveMQXAConnectionFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

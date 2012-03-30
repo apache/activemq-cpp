@@ -108,7 +108,7 @@ namespace cmsutil {
             : SessionCallback(), action( action ), parent( parent ), destination( destination ) {
             }
 
-            virtual ~ProducerExecutor() throw() {}
+            virtual ~ProducerExecutor() {}
 
             virtual void doInCms( cms::Session* session );
 
@@ -140,7 +140,7 @@ namespace cmsutil {
             : ProducerExecutor( action, parent, NULL ), destinationName( destinationName ) {
             }
 
-            virtual ~ResolveProducerExecutor() throw() {}
+            virtual ~ResolveProducerExecutor() {}
 
             virtual cms::Destination* getDestination( cms::Session* session );
         };
@@ -168,7 +168,7 @@ namespace cmsutil {
             : ProducerCallback(), messageCreator( messageCreator ), parent( parent ) {
             }
 
-            virtual ~SendExecutor() throw() {}
+            virtual ~SendExecutor() {}
 
             virtual void doInCms( cms::Session* session,
                                   cms::MessageProducer* producer ) {
@@ -209,7 +209,7 @@ namespace cmsutil {
               parent( parent ) {
             }
 
-            virtual ~ReceiveExecutor() throw() {}
+            virtual ~ReceiveExecutor() {}
 
             virtual void doInCms( cms::Session* session );
 
@@ -247,7 +247,7 @@ namespace cmsutil {
 
             }
 
-            virtual ~ResolveReceiveExecutor() throw() {}
+            virtual ~ResolveReceiveExecutor() {}
 
             virtual cms::Destination* getDestination( cms::Session* session );
         };
@@ -292,7 +292,7 @@ namespace cmsutil {
         CmsTemplate();
         CmsTemplate( cms::ConnectionFactory* connectionFactory );
 
-        virtual ~CmsTemplate() throw();
+        virtual ~CmsTemplate();
 
         /**
          * Sets the destination object to be used by default for send/receive operations.

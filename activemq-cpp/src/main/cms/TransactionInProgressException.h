@@ -35,16 +35,14 @@ namespace cms {
 
         TransactionInProgressException();
 
-        TransactionInProgressException( const TransactionInProgressException& ex );
+        TransactionInProgressException(const TransactionInProgressException& ex);
 
-        TransactionInProgressException( const std::string& message );
+        TransactionInProgressException(const std::string& message);
 
-        TransactionInProgressException( const std::string& message,
-                                        const std::exception* cause );
+        TransactionInProgressException(const std::string& message, const std::exception* cause);
 
-        TransactionInProgressException( const std::string& message,
-                                        const std::exception* cause,
-                                        const std::vector< std::pair< std::string, int> >& stackTrace );
+        TransactionInProgressException(const std::string& message, const std::exception* cause,
+                                       const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~TransactionInProgressException() throw();
 

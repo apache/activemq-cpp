@@ -35,7 +35,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalArgumentException() throw() : Exception() {}
+        IllegalArgumentException() : Exception() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -43,7 +43,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalArgumentException( const Exception& ex ) throw()
+        IllegalArgumentException( const Exception& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -54,7 +54,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalArgumentException( const IllegalArgumentException& ex ) throw()
+        IllegalArgumentException( const IllegalArgumentException& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -65,7 +65,7 @@ namespace exceptions{
          * be thrown, the object is cloned caller retains ownership.
          */
         IllegalArgumentException( const std::exception* cause )
-            throw() : Exception( cause ) {}
+            : Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -77,7 +77,7 @@ namespace exceptions{
          * @param ... list of primitives that are formatted into the message
          */
         IllegalArgumentException(const char* file, const int lineNumber,
-            const char* msg, ...) throw()
+            const char* msg, ...)
             : Exception()
         {
 
@@ -101,7 +101,7 @@ namespace exceptions{
          */
         IllegalArgumentException( const char* file, const int lineNumber,
                                   const std::exception* cause,
-                                  const char* msg, ... ) throw()
+                                  const char* msg, ... )
             : Exception( cause )
         {
             va_list vargs ;

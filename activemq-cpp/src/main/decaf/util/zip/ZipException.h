@@ -35,13 +35,13 @@ namespace zip{
         /**
          * Default Constructor
          */
-        ZipException() throw();
+        ZipException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        ZipException( const lang::Exception& ex ) throw()
+        ZipException( const lang::Exception& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -50,7 +50,7 @@ namespace zip{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        ZipException( const ZipException& ex ) throw()
+        ZipException( const ZipException& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -67,7 +67,7 @@ namespace zip{
          */
         ZipException( const char* file, const int lineNumber,
                       const std::exception* cause,
-                      const char* msg, ... ) throw() : IOException( cause )
+                      const char* msg, ... ) : IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -82,7 +82,7 @@ namespace zip{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        ZipException( const std::exception* cause ) throw() : IOException( cause ) {}
+        ZipException( const std::exception* cause ) : IOException( cause ) {}
 
         /**
          * Constructor
@@ -93,7 +93,7 @@ namespace zip{
          * @param ... list of primitives that are formatted into the message
          */
         ZipException( const char* file, const int lineNumber,
-                      const char* msg, ... ) throw()
+                      const char* msg, ... )
         : IOException()
         {
             va_list vargs;

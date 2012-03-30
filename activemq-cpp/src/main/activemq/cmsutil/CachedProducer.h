@@ -42,7 +42,7 @@ namespace cmsutil {
         CachedProducer( cms::MessageProducer* producer ) : producer( producer ) {
         }
 
-        virtual ~CachedProducer() throw() {}
+        virtual ~CachedProducer() {}
 
         /**
          * Does nothing - the real producer resource will be closed

@@ -23,7 +23,7 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException() throw() {
+ZipException::ZipException() {
 
 }
 

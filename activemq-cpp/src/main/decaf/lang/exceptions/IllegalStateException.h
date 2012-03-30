@@ -36,7 +36,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalStateException() throw() {};
+        IllegalStateException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -44,7 +44,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalStateException(const Exception& ex) throw()
+        IllegalStateException(const Exception& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -56,7 +56,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IllegalStateException(const IllegalStateException& ex) throw()
+        IllegalStateException(const IllegalStateException& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -73,7 +73,7 @@ namespace exceptions{
          */
         IllegalStateException( const char* file,
                                const int lineNumber,
-                               const char* msg, ...) throw()
+                               const char* msg, ...)
         : Exception()
         {
             va_list vargs;
@@ -96,7 +96,7 @@ namespace exceptions{
          */
         IllegalStateException( const char* file, const int lineNumber,
                                const std::exception* cause,
-                               const char* msg, ... ) throw() : Exception( cause )
+                               const char* msg, ... ) : Exception( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -111,7 +111,7 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        IllegalStateException( const std::exception* cause ) throw() : Exception( cause ) {}
+        IllegalStateException( const std::exception* cause ) : Exception( cause ) {}
 
         /**
          * Clones this exception.  This is useful for cases where you need

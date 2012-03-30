@@ -56,7 +56,7 @@ namespace lang{
         /**
          * Default Constructor
          */
-        Exception() throw();
+        Exception();
 
         /**
          * Copy Constructor
@@ -64,7 +64,7 @@ namespace lang{
          * @param ex
          *      The <code>Exception</code> instance to copy.
          */
-        Exception( const Exception& ex ) throw();
+        Exception( const Exception& ex );
 
         /**
          * Constructor
@@ -73,7 +73,7 @@ namespace lang{
          *      Pointer to the exception that caused this one to
          *      be thrown, the object is cloned caller retains ownership.
          */
-        Exception( const std::exception* cause ) throw();
+        Exception( const std::exception* cause );
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -85,7 +85,7 @@ namespace lang{
          * @param ... list of primitives that are formatted into the message
          */
         Exception( const char* file, const int lineNumber,
-                   const char* msg, ... ) throw();
+                   const char* msg, ... );
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -99,7 +99,7 @@ namespace lang{
          */
         Exception( const char* file, const int lineNumber,
                    const std::exception* cause,
-                   const char* msg, ... ) throw();
+                   const char* msg, ... );
 
         virtual ~Exception() throw();
 

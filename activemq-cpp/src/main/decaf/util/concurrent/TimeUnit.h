@@ -202,7 +202,6 @@ namespace concurrent {
          *
          * <pre>
          *    Object poll( long long timeout, const TimeUnit& unit )
-         *      throw( InterruptedException ) {
          *
          *      while( empty ) {
          *        unit.timedWait(this, timeout);

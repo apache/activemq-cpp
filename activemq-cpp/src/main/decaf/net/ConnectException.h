@@ -30,7 +30,7 @@ namespace net{
         /**
          * Default Constructor
          */
-        ConnectException() throw() {}
+        ConnectException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -38,7 +38,7 @@ namespace net{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        ConnectException( const Exception& ex ) throw()
+        ConnectException( const Exception& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -49,7 +49,7 @@ namespace net{
          *
          * @param ex An exception that should become this type of Exception
          */
-        ConnectException( const ConnectException& ex ) throw()
+        ConnectException( const ConnectException& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -68,7 +68,7 @@ namespace net{
         ConnectException( const char* file, const int lineNumber,
                           const std::exception* cause,
                           const char* msg, ... )
-        throw() : SocketException( cause )
+        : SocketException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -84,7 +84,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         ConnectException( const std::exception* cause )
-            throw() : SocketException( cause ) {}
+            : SocketException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -96,7 +96,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         ConnectException( const char* file, const int lineNumber,
-                          const char* msg, ... ) throw ()
+                          const char* msg, ... )
         : SocketException()
         {
             va_list vargs ;

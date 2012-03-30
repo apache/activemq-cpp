@@ -197,7 +197,7 @@ public:
         brokerURI(brokerURI) {
     }
 
-    virtual ~HelloWorldConsumer() throw() {
+    virtual ~HelloWorldConsumer() {
         cleanup();
     }
 
@@ -260,7 +260,7 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ) throw() {
+    virtual void onMessage( const Message* message ) {
 
         static int count = 0;
 

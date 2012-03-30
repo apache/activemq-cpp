@@ -178,10 +178,10 @@ namespace lang {
          * Copy constructor. Copies the value contained in the ArrayPointer to the new
          * instance and increments the reference counter.
          */
-        ArrayPointer( const ArrayPointer& value ) throw() :
+        ArrayPointer( const ArrayPointer& value ) :
             REFCOUNTER( value ), array( value.array ), onDelete( onDeleteFunc ) {}
 
-        virtual ~ArrayPointer() throw() {
+        virtual ~ArrayPointer() {
             if( REFCOUNTER::release() == true ) {
                 onDelete( this->array );
             }
@@ -246,7 +246,7 @@ namespace lang {
          * Exception Safe Swap Function
          * @param value - the value to swap with this.
          */
-        void swap( ArrayPointer& value ) throw() {
+        void swap( ArrayPointer& value ) {
             std::swap( this->array, value.array );
             REFCOUNTER::swap( value );
         }
@@ -272,7 +272,7 @@ namespace lang {
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
-        ArrayPointer& operator= ( const ArrayPointer& right ) throw() {
+        ArrayPointer& operator= ( const ArrayPointer& right ) {
             if( this == (void*)&right ) {
                 return *this;
             }
@@ -282,7 +282,7 @@ namespace lang {
             return *this;
         }
         template< typename T1, typename R1>
-        ArrayPointer& operator= ( const ArrayPointer<T1, R1>& right ) throw() {
+        ArrayPointer& operator= ( const ArrayPointer<T1, R1>& right ) {
             if( this == (void*)&right ) {
                 return *this;
             }

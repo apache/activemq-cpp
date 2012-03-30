@@ -30,14 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        SocketTimeoutException() throw() {}
+        SocketTimeoutException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        SocketTimeoutException( const Exception& ex ) throw()
-        : io::InterruptedIOException()
+        SocketTimeoutException( const Exception& ex ) : io::InterruptedIOException()
         {
             *(Exception*)this = ex;
         }
@@ -46,7 +45,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        SocketTimeoutException( const SocketTimeoutException& ex ) throw()
+        SocketTimeoutException( const SocketTimeoutException& ex )
         : io::InterruptedIOException()
         {
             *(Exception*)this = ex;
@@ -65,7 +64,7 @@ namespace net{
         SocketTimeoutException( const char* file, const int lineNumber,
                                 const std::exception* cause,
                                 const char* msg, ... )
-        throw() : io::InterruptedIOException( cause )
+        : io::InterruptedIOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +80,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         SocketTimeoutException( const std::exception* cause )
-            throw() : io::InterruptedIOException( cause ) {}
+            : io::InterruptedIOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +92,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         SocketTimeoutException( const char* file, const int lineNumber,
-                                const char* msg, ... ) throw ()
+                                const char* msg, ... )
         : io::InterruptedIOException()
         {
             va_list vargs ;

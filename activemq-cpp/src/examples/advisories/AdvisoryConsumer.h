@@ -49,23 +49,23 @@ namespace advisories {
 
      private:
 
-         AdvisoryConsumer( const AdvisoryConsumer& );
-         AdvisoryConsumer& operator= ( const AdvisoryConsumer& );
+         AdvisoryConsumer(const AdvisoryConsumer&);
+        AdvisoryConsumer& operator=(const AdvisoryConsumer&);
 
     public:
 
-        AdvisoryConsumer( cms::Session* session );
-        virtual ~AdvisoryConsumer() throw();
+        AdvisoryConsumer(cms::Session* session);
+        virtual ~AdvisoryConsumer();
 
         /**
          * Close down Consumer resources.
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close();
 
         /**
          * Async Message callback.
          */
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage(const cms::Message* message);
 
     };
 

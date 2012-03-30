@@ -34,7 +34,7 @@ namespace util{
         /**
          * Default Constructor
          */
-        NoSuchElementException() throw();
+        NoSuchElementException();
 
         /**
          * Conversion Constructor from some other Exception
@@ -42,7 +42,7 @@ namespace util{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NoSuchElementException( const decaf::lang::exceptions::RuntimeException& ex ) throw()
+        NoSuchElementException( const decaf::lang::exceptions::RuntimeException& ex )
         : decaf::lang::exceptions::RuntimeException()
         {
             *(decaf::lang::exceptions::RuntimeException*)this = ex;
@@ -54,7 +54,7 @@ namespace util{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NoSuchElementException( const NoSuchElementException& ex ) throw()
+        NoSuchElementException( const NoSuchElementException& ex )
         : decaf::lang::exceptions::RuntimeException()
         {
             *(decaf::lang::exceptions::RuntimeException*)this = ex;
@@ -72,7 +72,7 @@ namespace util{
          */
         NoSuchElementException( const char* file, const int lineNumber,
                                 const std::exception* cause,
-                                const char* msg, ... ) throw() : decaf::lang::exceptions::RuntimeException( cause )
+                                const char* msg, ... ) : decaf::lang::exceptions::RuntimeException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -87,7 +87,7 @@ namespace util{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        NoSuchElementException( const std::exception* cause ) throw() : decaf::lang::exceptions::RuntimeException( cause ) {}
+        NoSuchElementException( const std::exception* cause ) : decaf::lang::exceptions::RuntimeException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -100,7 +100,7 @@ namespace util{
          */
         NoSuchElementException( const char* file,
                                 const int lineNumber,
-                                const char* msg, ... ) throw()
+                                const char* msg, ... )
         : decaf::lang::exceptions::RuntimeException()
         {
             va_list vargs;

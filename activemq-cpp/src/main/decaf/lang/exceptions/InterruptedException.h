@@ -34,7 +34,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        InterruptedException() throw() {};
+        InterruptedException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -42,7 +42,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InterruptedException(const Exception& ex) throw()
+        InterruptedException(const Exception& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -54,7 +54,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InterruptedException(const InterruptedException& ex) throw()
+        InterruptedException(const InterruptedException& ex)
         : Exception()
         {
             *(Exception*)this = ex;
@@ -72,7 +72,7 @@ namespace exceptions{
          */
         InterruptedException( const char* file, const int lineNumber,
                               const std::exception* cause,
-                              const char* msg, ... ) throw()
+                              const char* msg, ... )
             : Exception( cause )
         {
 
@@ -89,7 +89,7 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        InterruptedException( const std::exception* cause ) throw()
+        InterruptedException( const std::exception* cause )
             : Exception( cause ) {
         }
 
@@ -104,7 +104,7 @@ namespace exceptions{
          */
         InterruptedException( const char* file,
                               const int lineNumber,
-                              const char* msg, ... ) throw()
+                              const char* msg, ... )
         : Exception()
         {
             va_list vargs;

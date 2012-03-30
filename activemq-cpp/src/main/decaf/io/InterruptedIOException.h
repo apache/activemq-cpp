@@ -32,13 +32,13 @@ namespace io{
         /**
          * Default Constructor
          */
-        InterruptedIOException() throw() {}
+        InterruptedIOException() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        InterruptedIOException( const lang::Exception& ex ) throw()
+        InterruptedIOException( const lang::Exception& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -47,7 +47,7 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        InterruptedIOException( const InterruptedIOException& ex ) throw()
+        InterruptedIOException( const InterruptedIOException& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -64,7 +64,7 @@ namespace io{
          */
         InterruptedIOException( const char* file, const int lineNumber,
                                 const std::exception* cause,
-                                const char* msg, ... ) throw() : IOException( cause )
+                                const char* msg, ... ) : IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -79,7 +79,7 @@ namespace io{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        InterruptedIOException( const std::exception* cause ) throw() : IOException( cause ) {}
+        InterruptedIOException( const std::exception* cause ) : IOException( cause ) {}
 
         /**
          * Constructor
@@ -90,7 +90,7 @@ namespace io{
          * @param ... list of primitives that are formatted into the message
          */
         InterruptedIOException( const char* file, const int lineNumber,
-                                const char* msg, ... ) throw()
+                                const char* msg, ... )
         : IOException() {
             va_list vargs;
             va_start( vargs, msg );

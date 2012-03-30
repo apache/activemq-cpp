@@ -24,25 +24,22 @@ IllegalStateException::IllegalStateException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IllegalStateException::IllegalStateException( const IllegalStateException& ex )
-    : CMSException( ex ) {
+IllegalStateException::IllegalStateException(const IllegalStateException& ex) : CMSException(ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IllegalStateException::IllegalStateException( const std::string& message )
-    : CMSException( message, NULL ) {
+IllegalStateException::IllegalStateException(const std::string& message) : CMSException(message, NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IllegalStateException::IllegalStateException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+IllegalStateException::IllegalStateException(const std::string& message, const std::exception* cause) :
+    CMSException(message, cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IllegalStateException::IllegalStateException( const std::string& message,
-                                              const std::exception* cause,
-                                              const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+IllegalStateException::IllegalStateException(const std::string& message, const std::exception* cause,
+                                             const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

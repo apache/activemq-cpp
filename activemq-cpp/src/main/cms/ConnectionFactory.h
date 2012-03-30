@@ -38,7 +38,7 @@ namespace cms{
     class CMS_API ConnectionFactory {
     public:
 
-        virtual ~ConnectionFactory() throw();
+        virtual ~ConnectionFactory();
 
         /**
          * Creates a connection with the default user identity. The
@@ -71,8 +71,7 @@ namespace cms{
          *         is responsible for closing the connection and deleting the instance.
          * @throws CMSException if an internal error occurs while creating the Connection.
          */
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password ) = 0;
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password) = 0;
 
         /**
          * Creates a connection with the specified user identity. The
@@ -95,9 +94,7 @@ namespace cms{
          *         is responsible for closing the connection and deleting the instance.
          * @throws CMSException if an internal error occurs while creating the Connection.
          */
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password,
-                                                   const std::string& clientId ) = 0;
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password, const std::string& clientId) = 0;
 
     public:
 
@@ -116,7 +113,7 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs while creating the ConnectionFactory.
          */
-        static ConnectionFactory* createCMSConnectionFactory( const std::string& brokerURI );
+        static ConnectionFactory* createCMSConnectionFactory(const std::string& brokerURI);
 
     };
 

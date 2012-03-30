@@ -296,7 +296,7 @@ void ByteArrayAdapter::resize( int size ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayAdapter::clear() throw() {
+void ByteArrayAdapter::clear() {
     memset( this->array.bytes, 0, this->size );
 }
 

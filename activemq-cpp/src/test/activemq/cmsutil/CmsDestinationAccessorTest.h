@@ -39,7 +39,7 @@ namespace cmsutil{
 
         public:
 
-            virtual ~MyAccessor() throw(){
+            virtual ~MyAccessor() {
                 try {
                     destroy();
                 } catch( ... ) {

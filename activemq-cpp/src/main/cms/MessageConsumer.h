@@ -60,7 +60,7 @@ namespace cms{
     class CMS_API MessageConsumer : public Closeable, public Startable, public Stoppable {
     public:
 
-        virtual ~MessageConsumer() throw();
+        virtual ~MessageConsumer();
 
         /**
          * Synchronously Receive a Message

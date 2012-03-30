@@ -30,13 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        UnknownServiceException() throw() {}
+        UnknownServiceException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        UnknownServiceException( const Exception& ex ) throw()
+        UnknownServiceException( const Exception& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -46,7 +46,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        UnknownServiceException( const UnknownServiceException& ex ) throw()
+        UnknownServiceException( const UnknownServiceException& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -65,7 +65,7 @@ namespace net{
         UnknownServiceException( const char* file, const int lineNumber,
                                  const std::exception* cause,
                                  const char* msg, ... )
-        throw() : io::IOException( cause )
+        : io::IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +81,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         UnknownServiceException( const std::exception* cause )
-            throw() : io::IOException( cause ) {}
+            : io::IOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +93,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         UnknownServiceException( const char* file, const int lineNumber,
-                                 const char* msg, ... ) throw ()
+                                 const char* msg, ... )
         : io::IOException()
         {
             va_list vargs ;

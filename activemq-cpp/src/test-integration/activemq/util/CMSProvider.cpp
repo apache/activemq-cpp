@@ -53,7 +53,7 @@ CMSProvider::CMSProvider( const std::string& brokerURL,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSProvider::~CMSProvider() throw() {
+CMSProvider::~CMSProvider() {
     try{
         close();
     }

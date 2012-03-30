@@ -82,7 +82,7 @@ namespace kernels {
                                bool dispatchAsync,
                                cms::MessageListener* listener);
 
-        virtual ~ActiveMQConsumerKernel() throw();
+        virtual ~ActiveMQConsumerKernel();
 
     public:  // Interface Implementation
 

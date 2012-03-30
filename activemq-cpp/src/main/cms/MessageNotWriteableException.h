@@ -33,16 +33,14 @@ namespace cms{
 
         MessageNotWriteableException();
 
-        MessageNotWriteableException( const MessageNotWriteableException& ex );
+        MessageNotWriteableException(const MessageNotWriteableException& ex);
 
-        MessageNotWriteableException( const std::string& message );
+        MessageNotWriteableException(const std::string& message);
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause );
+        MessageNotWriteableException(const std::string& message, const std::exception* cause);
 
-        MessageNotWriteableException( const std::string& message,
-                                      const std::exception* cause,
-                                      const std::vector< std::pair< std::string, int> >& stackTrace );
+        MessageNotWriteableException(const std::string& message, const std::exception* cause,
+                                     const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~MessageNotWriteableException() throw();
 

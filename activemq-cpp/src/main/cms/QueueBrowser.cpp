@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-QueueBrowser::~QueueBrowser() throw() {
+QueueBrowser::~QueueBrowser() {
 
 }
 

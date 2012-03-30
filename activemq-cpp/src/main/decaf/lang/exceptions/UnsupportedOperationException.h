@@ -35,13 +35,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        UnsupportedOperationException() throw() {};
+        UnsupportedOperationException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        UnsupportedOperationException( const Exception& ex ) throw()
+        UnsupportedOperationException( const Exception& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -50,7 +50,7 @@ namespace exceptions{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        UnsupportedOperationException( const UnsupportedOperationException& ex ) throw()
+        UnsupportedOperationException( const UnsupportedOperationException& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -67,7 +67,7 @@ namespace exceptions{
          */
         UnsupportedOperationException( const char* file, const int lineNumber,
                                const std::exception* cause,
-                               const char* msg, ... ) throw() : Exception( cause )
+                               const char* msg, ... ) : Exception( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -83,7 +83,7 @@ namespace exceptions{
          * be thrown, the object is cloned caller retains ownership.
          */
         UnsupportedOperationException( const std::exception* cause )
-            throw() : Exception( cause ) {}
+            : Exception( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -96,7 +96,7 @@ namespace exceptions{
          */
         UnsupportedOperationException( const char* file,
                                        const int lineNumber,
-                                       const char* msg, ... ) throw()
+                                       const char* msg, ... )
         : Exception()
         {
             va_list vargs;

@@ -49,8 +49,9 @@ public:
 
     virtual unsigned char getDataStructureType() const { return 1; }
 
-    virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-        throw( exceptions::ActiveMQException ) { return decaf::lang::Pointer<commands::Command>(); }
+    virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor ) {
+        return decaf::lang::Pointer<commands::Command>();
+    }
 
     virtual std::string toString() const{ return ""; }
     virtual MyCommand* cloneDataStructure() const{
@@ -78,8 +79,7 @@ public:
     virtual bool hasNegotiator() const { return false; }
 
     virtual Pointer<Transport> createNegotiator(
-        const Pointer<transport::Transport>& transport )
-            throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+        const Pointer<transport::Transport>& transport ) {
 
         return Pointer<wireformat::WireFormatNegotiator>();
     }

@@ -24,25 +24,22 @@ MessageFormatException::MessageFormatException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException::MessageFormatException( const MessageFormatException& ex )
-    : CMSException( ex ) {
+MessageFormatException::MessageFormatException(const MessageFormatException& ex) : CMSException(ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException::MessageFormatException( const std::string& message )
-    : CMSException( message, NULL ) {
+MessageFormatException::MessageFormatException(const std::string& message) : CMSException(message, NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException::MessageFormatException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+MessageFormatException::MessageFormatException(const std::string& message, const std::exception* cause) :
+    CMSException(message, cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException::MessageFormatException( const std::string& message,
-                                                const std::exception* cause,
-                                                const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+MessageFormatException::MessageFormatException(const std::string& message, const std::exception* cause,
+                                               const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

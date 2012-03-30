@@ -30,7 +30,7 @@ namespace net{
         /**
          * Default Constructor
          */
-        BindException() throw() {}
+        BindException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -38,7 +38,7 @@ namespace net{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        BindException( const Exception& ex ) throw()
+        BindException( const Exception& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -50,7 +50,7 @@ namespace net{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        BindException( const BindException& ex ) throw()
+        BindException( const BindException& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -69,7 +69,7 @@ namespace net{
         BindException( const char* file, const int lineNumber,
                        const std::exception* cause,
                        const char* msg, ... )
-        throw() : SocketException( cause )
+        : SocketException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -85,7 +85,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         BindException( const std::exception* cause )
-            throw() : SocketException( cause ) {}
+            : SocketException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -97,7 +97,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         BindException( const char* file, const int lineNumber,
-                       const char* msg, ... ) throw ()
+                       const char* msg, ... )
         : SocketException()
         {
             va_list vargs ;

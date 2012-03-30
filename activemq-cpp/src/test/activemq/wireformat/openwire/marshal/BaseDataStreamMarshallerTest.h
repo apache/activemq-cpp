@@ -107,7 +107,7 @@ namespace marshal{
             virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
                                      decaf::io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                     utils::BooleanStream* bs )
              {
                 BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
@@ -130,7 +130,7 @@ namespace marshal{
 
             virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                        commands::DataStructure* dataStructure,
-                                       utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                       utils::BooleanStream* bs )
             {
                 SimpleDataStructure* info =
                     dynamic_cast<SimpleDataStructure*>( dataStructure );
@@ -150,7 +150,7 @@ namespace marshal{
             virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                         commands::DataStructure* dataStructure,
                                         decaf::io::DataOutputStream* dataOut,
-                                        utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                        utils::BooleanStream* bs )
             {
                 BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -174,7 +174,7 @@ namespace marshal{
 
             virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                          commands::DataStructure* dataStructure,
-                                         decaf::io::DataInputStream* dataIn ) throw( decaf::io::IOException )
+                                         decaf::io::DataInputStream* dataIn )
             {
                 BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
                 SimpleDataStructure* info =
@@ -196,7 +196,7 @@ namespace marshal{
 
             virtual void looseMarshal( OpenWireFormat* wireFormat,
                                        commands::DataStructure* dataStructure,
-                                       decaf::io::DataOutputStream* dataOut ) throw( decaf::io::IOException )
+                                       decaf::io::DataOutputStream* dataOut )
             {
                 SimpleDataStructure* info =
                     dynamic_cast<SimpleDataStructure*>( dataStructure );
@@ -290,7 +290,7 @@ namespace marshal{
             virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
                                      decaf::io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                     utils::BooleanStream* bs )
              {
                 BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
@@ -304,7 +304,7 @@ namespace marshal{
 
             virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                        commands::DataStructure* dataStructure,
-                                       utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                       utils::BooleanStream* bs )
             {
                 ComplexDataStructure* info =
                     dynamic_cast<ComplexDataStructure*>( dataStructure );
@@ -319,7 +319,7 @@ namespace marshal{
             virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                         commands::DataStructure* dataStructure,
                                         decaf::io::DataOutputStream* dataOut,
-                                        utils::BooleanStream* bs ) throw( decaf::io::IOException )
+                                        utils::BooleanStream* bs )
             {
                 BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -333,7 +333,7 @@ namespace marshal{
 
             virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                          commands::DataStructure* dataStructure,
-                                         decaf::io::DataInputStream* dataIn ) throw( decaf::io::IOException )
+                                         decaf::io::DataInputStream* dataIn )
             {
                 BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
                 ComplexDataStructure* info =
@@ -346,7 +346,7 @@ namespace marshal{
 
             virtual void looseMarshal( OpenWireFormat* wireFormat,
                                        commands::DataStructure* dataStructure,
-                                       decaf::io::DataOutputStream* dataOut ) throw( decaf::io::IOException )
+                                       decaf::io::DataOutputStream* dataOut )
             {
                 ComplexDataStructure* info =
                     dynamic_cast<ComplexDataStructure*>( dataStructure );
