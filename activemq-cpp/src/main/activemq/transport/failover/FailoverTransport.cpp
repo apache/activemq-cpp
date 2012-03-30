@@ -285,9 +285,12 @@ void FailoverTransport::oneway( const Pointer<Command>& command ) {
                                 requestMap.remove( command->getCommandId() );
                             }
 
-                            // Rethrow the exception so it will handled by
-                            // the outer catch
+                            // Rethrow the exception so it will handled by the outer catch
                             throw e;
+                        } else {
+                        	// Trigger the reconnect since we can't count on inactivity or
+                        	// other socket events to trip the failover condition.
+                        	handleTransportFailure(e);
                         }
                     }
 
