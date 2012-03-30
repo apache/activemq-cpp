@@ -62,9 +62,9 @@ namespace chat{
     public:
 
         Chat();
-        virtual ~Chat() throw();
+        virtual ~Chat();
 
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage( const cms::Message* message );
         virtual void onException( const cms::CMSException& ex );
 
         /**

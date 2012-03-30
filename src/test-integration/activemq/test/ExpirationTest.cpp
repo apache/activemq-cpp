@@ -115,7 +115,7 @@ namespace test {
             this->numReceived = 0;
         }
 
-        virtual ~Consumer() throw() {
+        virtual ~Consumer() {
         }
 
         virtual int getNumReceived() const{
@@ -137,7 +137,7 @@ namespace test {
             }
         }
 
-        virtual void onMessage( const cms::Message* message ) throw() {
+        virtual void onMessage( const cms::Message* message ) {
 
             try{
                 const TextMessage* textMessage =

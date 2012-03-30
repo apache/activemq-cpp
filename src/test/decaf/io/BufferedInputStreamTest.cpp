@@ -160,13 +160,11 @@ namespace {
             return (int)numToRead;
         }
 
-        virtual void close() throw( decaf::io::IOException){
+        virtual void close() {
             this->closed = true;
         }
 
-        virtual long long skip( long long num )
-            throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
-
+        virtual long long skip( long long num ) {
             return ( pos += (int)std::min( num, (long long)available() ) );
         }
 

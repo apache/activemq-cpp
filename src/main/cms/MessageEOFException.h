@@ -34,16 +34,14 @@ namespace cms{
 
         MessageEOFException();
 
-        MessageEOFException( const MessageEOFException& ex );
+        MessageEOFException(const MessageEOFException& ex);
 
-        MessageEOFException( const std::string& message );
+        MessageEOFException(const std::string& message);
 
-        MessageEOFException( const std::string& message,
-                             const std::exception* cause );
+        MessageEOFException(const std::string& message, const std::exception* cause);
 
-        MessageEOFException( const std::string& message,
-                             const std::exception* cause,
-                             const std::vector< std::pair< std::string, int> >& stackTrace );
+        MessageEOFException(const std::string& message, const std::exception* cause,
+                            const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~MessageEOFException() throw();
 

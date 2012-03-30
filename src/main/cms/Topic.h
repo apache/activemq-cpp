@@ -36,7 +36,7 @@ namespace cms{
     class CMS_API Topic : public Destination {
     public:
 
-        virtual ~Topic() throw();
+        virtual ~Topic();
 
         /**
          * Gets the name of this topic.

@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-ObjectMessage::~ObjectMessage() throw() {
+ObjectMessage::~ObjectMessage() {
 
 }
 

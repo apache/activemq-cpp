@@ -29,14 +29,14 @@ namespace net{
     {
     public:
 
-        SocketException() throw() {}
+        SocketException() {}
 
-        SocketException( const lang::Exception& ex ) throw()
+        SocketException( const lang::Exception& ex )
         : io::IOException() {
             *(lang::Exception*)this = ex;
         }
 
-        SocketException( const SocketException& ex ) throw()
+        SocketException( const SocketException& ex )
         : io::IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -54,7 +54,7 @@ namespace net{
         SocketException( const char* file, const int lineNumber,
                          const std::exception* cause,
                          const char* msg, ... )
-        throw() : io::IOException( cause )
+        : io::IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -70,7 +70,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         SocketException( const std::exception* cause )
-            throw() : io::IOException( cause ) {}
+        : io::IOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -82,7 +82,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         SocketException( const char* file, const int lineNumber,
-                         const char* msg, ...) throw()
+                         const char* msg, ...)
         : io::IOException() {
             va_list vargs;
             va_start( vargs, msg );

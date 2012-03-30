@@ -59,7 +59,7 @@ MessagePropertyInterceptor& MessagePropertyInterceptor::operator= ( const Messag
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagePropertyInterceptor::~MessagePropertyInterceptor() throw() {
+MessagePropertyInterceptor::~MessagePropertyInterceptor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

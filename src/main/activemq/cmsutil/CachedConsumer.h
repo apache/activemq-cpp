@@ -42,7 +42,7 @@ namespace cmsutil {
         CachedConsumer( cms::MessageConsumer* consumer ) : consumer( consumer ) {
         }
 
-        virtual ~CachedConsumer() throw() {}
+        virtual ~CachedConsumer() {}
 
         /**
          * Does nothing - the real producer resource will be closed

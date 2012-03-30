@@ -129,7 +129,7 @@ namespace cms {
          *       Manager has rolled back the transaction and released
          *       resources held by the transaction.
          */
-        virtual void commit( const Xid* xid, bool onePhase ) = 0;
+        virtual void commit(const Xid* xid, bool onePhase) = 0;
 
         /**
          * Ends the work done for a transaction branch. The Resource Manager
@@ -161,7 +161,7 @@ namespace cms {
          *      errorcode include: XAER_RMERR, XAER_RMFAIL, XAER_NOTA,
          *      XAER_INVAL, XAER_PROTO, or XA_RB*.
          */
-        virtual void end( const Xid* xid, int flags ) = 0;
+        virtual void end(const Xid* xid, int flags) = 0;
 
         /**
          * Informs the Resource Manager that it can forget about a specified
@@ -175,7 +175,7 @@ namespace cms {
          *      errorcode include: XAER_RMERR, XAER_RMFAIL, XAER_NOTA,
          *      XAER_INVAL, or XAER_PROTO.
          */
-        virtual void forget( const Xid* xid ) = 0;
+        virtual void forget(const Xid* xid) = 0;
 
         /**
          * Gets the transaction timeout value for this XAResource. The default
@@ -201,7 +201,7 @@ namespace cms {
          *      if an error occurs. Possible error identified in the
          *      errorcode include: XAER_RMERR and XAER_RMFAIL.
          */
-        virtual bool isSameRM( const XAResource* theXAResource ) = 0;
+        virtual bool isSameRM(const XAResource* theXAResource) = 0;
 
         /**
          * Requests the Resource manager to prepare to commit a specified
@@ -221,7 +221,7 @@ namespace cms {
          *      errorcode include: XA_RB*, XAER_RMERR, XAER_RMFAIL,
          *      XAER_NOTA, XAER_INVAL, or XAER_PROTO.
          */
-        virtual int prepare( const Xid* xid ) = 0;
+        virtual int prepare(const Xid* xid) = 0;
 
         /**
          * Get a list of prepared transaction branches.
@@ -242,7 +242,7 @@ namespace cms {
          *      errorcode include: XAER_RMERR, XAER_RMFAIL, XAER_INVAL, and
          *      XAER_PROTO.
          */
-        virtual int recover(int flag, Xid** recovered ) = 0;
+        virtual int recover(int flag, Xid** recovered) = 0;
 
         /**
          * Requests the Resource Manager to rollback a specified transaction branch.
@@ -253,7 +253,7 @@ namespace cms {
          * @throws XAException
          *      if an error occurs.
          */
-        virtual void rollback( const Xid* xid ) = 0;
+        virtual void rollback(const Xid* xid) = 0;
 
         /**
          * Sets the transaction timeout value for this XAResource. If the value is
@@ -269,7 +269,7 @@ namespace cms {
          *      if an error occurs. Possible error identified in the
          *      errorcode include: XAER_RMERR, XAER_RMFAIL, or XAER_INVAL.
          */
-        virtual bool setTransactionTimeout( int seconds ) = 0;
+        virtual bool setTransactionTimeout(int seconds) = 0;
 
         /**
          * Starts work for a specified transaction branch.
@@ -296,7 +296,7 @@ namespace cms {
          *      XAER_DUPID, XAER_OUTSIDE, XAER_NOTA, XAER_INVAL, or
          *      XAER_PROTO.
          */
-        virtual void start( const Xid* xid, int flags ) = 0;
+        virtual void start(const Xid* xid, int flags) = 0;
 
     };
 

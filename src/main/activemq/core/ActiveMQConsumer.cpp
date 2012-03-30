@@ -67,7 +67,7 @@ ActiveMQConsumer::ActiveMQConsumer(const Pointer<ActiveMQConsumerKernel>& kernel
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::~ActiveMQConsumer() throw () {
+ActiveMQConsumer::~ActiveMQConsumer() {
 
     try {
 

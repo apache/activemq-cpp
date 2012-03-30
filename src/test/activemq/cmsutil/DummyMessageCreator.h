@@ -27,7 +27,7 @@ namespace cmsutil {
     class DummyMessageCreator : public MessageCreator {
     public:
 
-        virtual ~DummyMessageCreator() throw() {}
+        virtual ~DummyMessageCreator() {}
 
         virtual cms::Message* createMessage(cms::Session* session )
                     throw (cms::CMSException) {

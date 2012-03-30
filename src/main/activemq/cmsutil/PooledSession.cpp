@@ -39,7 +39,7 @@ PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession::~PooledSession() throw() {
+PooledSession::~PooledSession() {
 
     // Destroy cached producers.
     std::vector<CachedProducer*> cachedProducers = producerCache.values();

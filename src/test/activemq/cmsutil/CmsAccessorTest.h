@@ -40,7 +40,7 @@ namespace cmsutil{
 
         public:
 
-            virtual ~MyAccessor() throw(){}
+            virtual ~MyAccessor() {}
 
             virtual cms::Connection* createConnection() {
                 return CmsAccessor::createConnection();

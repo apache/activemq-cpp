@@ -37,8 +37,8 @@ namespace cms {
     class CMS_API Xid {
     private:
 
-        Xid( const Xid& );
-        Xid& operator= ( const Xid& );
+        Xid(const Xid&);
+        Xid& operator=(const Xid&);
 
     public:
 
@@ -72,7 +72,7 @@ namespace cms {
          *
          * @returns true if both Xid's represent that same id value.
          */
-        virtual bool equals( const Xid* other ) const = 0;
+        virtual bool equals(const Xid* other) const = 0;
 
         /**
          * Gets the transaction branch qualifier component of the XID.  The value of this
@@ -90,7 +90,7 @@ namespace cms {
          *
          * @throws XAException if the size parameter is less than zero or buffer is NULL.
          */
-        virtual int getBranchQualifier( unsigned char* buffer, int size ) const = 0;
+        virtual int getBranchQualifier(unsigned char* buffer, int size) const = 0;
 
         /**
          * Gets the format identifier component of the XID.
@@ -116,7 +116,7 @@ namespace cms {
          *
          * @throws XAException if the size parameter is less than zero or buffer is NULL.
          */
-        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const = 0;
+        virtual int getGlobalTransactionId(unsigned char* buffer, int size) const = 0;
 
     };
 

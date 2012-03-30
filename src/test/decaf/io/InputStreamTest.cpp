@@ -32,7 +32,7 @@ namespace{
 
         virtual ~MockInputStream() {}
 
-        virtual int doReadByte() throw( decaf::io::IOException ) {
+        virtual int doReadByte() {
             return 0;
         }
 

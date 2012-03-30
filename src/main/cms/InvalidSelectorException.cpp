@@ -24,25 +24,22 @@ InvalidSelectorException::InvalidSelectorException() : CMSException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidSelectorException::InvalidSelectorException( const InvalidSelectorException& ex )
-    : CMSException( ex ) {
+InvalidSelectorException::InvalidSelectorException(const InvalidSelectorException& ex) : CMSException(ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidSelectorException::InvalidSelectorException( const std::string& message )
-    : CMSException( message, NULL ) {
+InvalidSelectorException::InvalidSelectorException(const std::string& message) : CMSException(message, NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidSelectorException::InvalidSelectorException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ) {
+InvalidSelectorException::InvalidSelectorException(const std::string& message, const std::exception* cause) :
+    CMSException(message, cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InvalidSelectorException::InvalidSelectorException( const std::string& message,
-                                                    const std::exception* cause,
-                                                    const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ) {
+InvalidSelectorException::InvalidSelectorException(const std::string& message, const std::exception* cause,
+                                                   const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

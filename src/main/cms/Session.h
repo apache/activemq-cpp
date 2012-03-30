@@ -208,7 +208,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageConsumer* createConsumer( const Destination* destination ) = 0;
+        virtual MessageConsumer* createConsumer(const Destination* destination) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination, using a
@@ -225,8 +225,7 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createConsumer( const Destination* destination,
-                                                 const std::string& selector ) = 0;
+        virtual MessageConsumer* createConsumer(const Destination* destination, const std::string& selector) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination, using a
@@ -247,9 +246,7 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createConsumer( const Destination* destination,
-                                                 const std::string& selector,
-                                                 bool noLocal ) = 0;
+        virtual MessageConsumer* createConsumer(const Destination* destination, const std::string& selector, bool noLocal) = 0;
 
         /**
          * Creates a durable subscriber to the specified topic, using a Message
@@ -274,10 +271,7 @@ namespace cms{
          * @throws InvalidDestinationException - if an invalid destination is specified.
          * @throws InvalidSelectorException - if the message selector is invalid.
          */
-        virtual MessageConsumer* createDurableConsumer( const Topic* destination,
-                                                        const std::string& name,
-                                                        const std::string& selector,
-                                                        bool noLocal = false ) = 0;
+        virtual MessageConsumer* createDurableConsumer(const Topic* destination, const std::string& name, const std::string& selector, bool noLocal = false) = 0;
 
         /**
          * Creates a MessageProducer to send messages to the specified
@@ -290,7 +284,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if an invalid destination is specified.
          */
-        virtual MessageProducer* createProducer( const Destination* destination = NULL ) = 0;
+        virtual MessageProducer* createProducer(const Destination* destination = NULL) = 0;
 
         /**
          * Creates a new QueueBrowser to peek at Messages on the given Queue.
@@ -302,7 +296,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if the destination given is invalid.
          */
-        virtual QueueBrowser* createBrowser( const cms::Queue* queue ) = 0;
+        virtual QueueBrowser* createBrowser(const cms::Queue* queue) = 0;
 
         /**
          * Creates a new QueueBrowser to peek at Messages on the given Queue.
@@ -316,7 +310,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws InvalidDestinationException - if the destination given is invalid.
          */
-        virtual QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector ) = 0;
+        virtual QueueBrowser* createBrowser(const cms::Queue* queue, const std::string& selector) = 0;
 
         /**
          * Creates a queue identity given a Queue name.
@@ -327,7 +321,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Queue* createQueue( const std::string& queueName ) = 0;
+        virtual Queue* createQueue(const std::string& queueName) = 0;
 
         /**
          * Creates a topic identity given a Queue name.
@@ -338,7 +332,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Topic* createTopic( const std::string& topicName ) = 0;
+        virtual Topic* createTopic(const std::string& topicName) = 0;
 
         /**
          * Creates a TemporaryQueue object.
@@ -380,7 +374,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize ) = 0;
+        virtual BytesMessage* createBytesMessage(const unsigned char* bytes, int bytesSize) = 0;
 
         /**
          * Creates a new StreamMessage
@@ -404,7 +398,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual TextMessage* createTextMessage( const std::string& text ) = 0;
+        virtual TextMessage* createTextMessage(const std::string& text) = 0;
 
         /**
          * Creates a new MapMessage
@@ -447,7 +441,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual void unsubscribe( const std::string& name ) = 0;
+        virtual void unsubscribe(const std::string& name) = 0;
 
     };
 

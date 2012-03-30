@@ -20,6 +20,6 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-BytesMessage::~BytesMessage() throw() {
+BytesMessage::~BytesMessage() {
 
 }

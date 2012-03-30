@@ -30,17 +30,17 @@ using namespace decaf::internal::net::ssl;
 using namespace decaf::internal::net::ssl::openssl;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocketException::OpenSSLSocketException() throw() {
+OpenSSLSocketException::OpenSSLSocketException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocketException::OpenSSLSocketException( const Exception& ex ) throw()
+OpenSSLSocketException::OpenSSLSocketException( const Exception& ex )
 : SocketException() {
     *(Exception*)this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocketException::OpenSSLSocketException( const OpenSSLSocketException& ex ) throw()
+OpenSSLSocketException::OpenSSLSocketException( const OpenSSLSocketException& ex )
 : SocketException() {
     *(Exception*)this = ex;
 }
@@ -48,7 +48,7 @@ OpenSSLSocketException::OpenSSLSocketException( const OpenSSLSocketException& ex
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLSocketException::OpenSSLSocketException( const char* file, const int lineNumber,
                                                 const std::exception* cause,
-                                                const char* msg, ... ) throw()
+                                                const char* msg, ... )
 : SocketException( cause ) {
 
     va_list vargs;
@@ -60,14 +60,14 @@ OpenSSLSocketException::OpenSSLSocketException( const char* file, const int line
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocketException::OpenSSLSocketException( const std::exception* cause ) throw()
+OpenSSLSocketException::OpenSSLSocketException( const std::exception* cause )
 : SocketException( cause ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenSSLSocketException::OpenSSLSocketException( const char* file, const int lineNumber,
-                                                const char* msg, ... ) throw()
+                                                const char* msg, ... )
 : SocketException() {
 
     va_list vargs ;
@@ -79,7 +79,7 @@ OpenSSLSocketException::OpenSSLSocketException( const char* file, const int line
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLSocketException::OpenSSLSocketException( const char* file, const int lineNumber ) throw()
+OpenSSLSocketException::OpenSSLSocketException( const char* file, const int lineNumber )
 : SocketException() {
 
     // Get from the OpenSSL error Stack.

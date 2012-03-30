@@ -35,7 +35,7 @@ namespace cms{
     class CMS_API MessageEnumeration {
     public:
 
-        virtual ~MessageEnumeration() throw();
+        virtual ~MessageEnumeration();
 
         /**
          * Returns true if there are more Message in the Browser that can be retrieved

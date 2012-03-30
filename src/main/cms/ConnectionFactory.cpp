@@ -20,6 +20,6 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionFactory::~ConnectionFactory() throw() {
+ConnectionFactory::~ConnectionFactory() {
 
 }

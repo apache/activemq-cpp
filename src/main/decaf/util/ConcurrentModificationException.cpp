@@ -24,7 +24,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConcurrentModificationException::ConcurrentModificationException() throw() {
+ConcurrentModificationException::ConcurrentModificationException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

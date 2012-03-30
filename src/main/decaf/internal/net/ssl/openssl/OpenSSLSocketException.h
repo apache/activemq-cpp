@@ -40,7 +40,7 @@ namespace openssl {
         /**
          * Creates an new OpenSSLSocketException with default values.
          */
-        OpenSSLSocketException() throw();
+        OpenSSLSocketException();
 
         /**
          * Conversion Constructor from some other Exception.
@@ -48,7 +48,7 @@ namespace openssl {
          * @param ex
          *      An Exception object that should become this type of Exception.
          */
-        OpenSSLSocketException( const Exception& ex ) throw();
+        OpenSSLSocketException( const Exception& ex );
 
         /**
          * Copy Constructor.
@@ -56,7 +56,7 @@ namespace openssl {
          * @param ex
          *      The OpenSSLSocketException whose values should be copied to this instance.
          */
-        OpenSSLSocketException( const OpenSSLSocketException& ex ) throw();
+        OpenSSLSocketException( const OpenSSLSocketException& ex );
 
         /**
          * Create a new OpenSSLSocketException and initializes the file name and line number
@@ -76,7 +76,7 @@ namespace openssl {
          */
         OpenSSLSocketException( const char* file, const int lineNumber,
                                 const std::exception* cause,
-                                const char* msg, ... ) throw();
+                                const char* msg, ... );
 
         /**
          * Creates a new OpenSSLSocketException with the passed exception set as the
@@ -86,7 +86,7 @@ namespace openssl {
          *      Pointer to the exception that caused this one to be thrown, the object
          *      is cloned caller retains ownership.
          */
-        OpenSSLSocketException( const std::exception* cause ) throw();
+        OpenSSLSocketException( const std::exception* cause );
 
         /**
          * Create a new OpenSSLSocketException and initializes the file name and line number
@@ -102,7 +102,7 @@ namespace openssl {
          * @param ...
          *      The list of primitives that are formatted into the message
          */
-        OpenSSLSocketException( const char* file, const int lineNumber, const char* msg, ... ) throw ();
+        OpenSSLSocketException( const char* file, const int lineNumber, const char* msg, ... );
 
         /**
          * Create a new OpenSSLSocketException and initializes the file name and line number
@@ -114,7 +114,7 @@ namespace openssl {
          * @param lineNumber
          *      The line number where the exception occurred.
          */
-        OpenSSLSocketException( const char* file, const int lineNumber ) throw();
+        OpenSSLSocketException( const char* file, const int lineNumber );
 
         /**
          * Clones this exception.  This is useful for cases where you need to preserve

@@ -32,7 +32,7 @@ namespace cmsutil {
     class AMQCPP_API MessageCreator {
     public:
 
-        virtual ~MessageCreator() throw () {}
+        virtual ~MessageCreator() {}
 
         /**
          * Creates a message from the given session.

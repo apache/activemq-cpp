@@ -30,14 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        ProtocolException() throw() {}
+        ProtocolException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        ProtocolException( const Exception& ex ) throw()
-        : io::IOException()
+        ProtocolException( const Exception& ex ) : io::IOException()
         {
             *(Exception*)this = ex;
         }
@@ -46,7 +45,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        ProtocolException( const ProtocolException& ex ) throw()
+        ProtocolException( const ProtocolException& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -65,7 +64,7 @@ namespace net{
         ProtocolException( const char* file, const int lineNumber,
                            const std::exception* cause,
                            const char* msg, ... )
-        throw() : io::IOException( cause )
+        : io::IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +80,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         ProtocolException( const std::exception* cause )
-            throw() : io::IOException( cause ) {}
+            : io::IOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +92,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         ProtocolException( const char* file, const int lineNumber,
-                            const char* msg, ... ) throw ()
+                            const char* msg, ... )
         : io::IOException()
         {
             va_list vargs ;

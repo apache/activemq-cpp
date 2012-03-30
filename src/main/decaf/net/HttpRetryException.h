@@ -30,13 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        HttpRetryException() throw() {}
+        HttpRetryException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        HttpRetryException( const Exception& ex ) throw()
+        HttpRetryException( const Exception& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -46,7 +46,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        HttpRetryException( const HttpRetryException& ex ) throw()
+        HttpRetryException( const HttpRetryException& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -65,7 +65,7 @@ namespace net{
         HttpRetryException( const char* file, const int lineNumber,
                             const std::exception* cause,
                             const char* msg, ... )
-        throw() : io::IOException( cause )
+        : io::IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +81,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         HttpRetryException( const std::exception* cause )
-            throw() : io::IOException( cause ) {}
+            : io::IOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +93,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         HttpRetryException( const char* file, const int lineNumber,
-                            const char* msg, ... ) throw ()
+                            const char* msg, ... )
         : io::IOException()
         {
             va_list vargs ;

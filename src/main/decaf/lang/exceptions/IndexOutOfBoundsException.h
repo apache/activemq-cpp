@@ -34,7 +34,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IndexOutOfBoundsException() throw() {}
+        IndexOutOfBoundsException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -42,7 +42,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IndexOutOfBoundsException( const Exception& ex ) throw()
+        IndexOutOfBoundsException( const Exception& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -53,7 +53,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        IndexOutOfBoundsException( const IndexOutOfBoundsException& ex ) throw()
+        IndexOutOfBoundsException( const IndexOutOfBoundsException& ex )
         : Exception() {
             *(Exception*)this = ex;
         }
@@ -68,7 +68,7 @@ namespace exceptions{
          * @param ... list of primitives that are formatted into the message
          */
         IndexOutOfBoundsException( const char* file, const int lineNumber,
-                                   const char* msg, ...) throw()
+                                   const char* msg, ...)
                                    : Exception()
         {
             va_list vargs ;
@@ -91,7 +91,7 @@ namespace exceptions{
          */
         IndexOutOfBoundsException( const char* file, const int lineNumber,
                                    const std::exception* cause,
-                                   const char* msg, ... ) throw()
+                                   const char* msg, ... )
         : Exception( cause ) {
 
             va_list vargs;
@@ -107,7 +107,7 @@ namespace exceptions{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        IndexOutOfBoundsException( const std::exception* cause ) throw()
+        IndexOutOfBoundsException( const std::exception* cause )
         : Exception( cause ) {}
 
         /**

@@ -57,7 +57,7 @@ namespace cmsutil {
                   queueMap() {
             }
 
-            virtual ~SessionResolver() throw() {}
+            virtual ~SessionResolver() {}
 
             cms::Topic* getTopic(const std::string& topicName );
 
@@ -84,7 +84,7 @@ namespace cmsutil {
 
         DynamicDestinationResolver();
 
-        virtual ~DynamicDestinationResolver() throw();
+        virtual ~DynamicDestinationResolver();
 
         virtual void init( ResourceLifecycleManager* mgr ) {
 

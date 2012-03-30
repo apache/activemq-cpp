@@ -34,16 +34,14 @@ namespace cms{
 
         InvalidClientIdException();
 
-        InvalidClientIdException( const InvalidClientIdException& ex );
+        InvalidClientIdException(const InvalidClientIdException& ex);
 
-        InvalidClientIdException( const std::string& message );
+        InvalidClientIdException(const std::string& message);
 
-        InvalidClientIdException( const std::string& message,
-                                  const std::exception* cause );
+        InvalidClientIdException(const std::string& message, const std::exception* cause);
 
-        InvalidClientIdException( const std::string& message,
-                                  const std::exception* cause,
-                                  const std::vector< std::pair< std::string, int> >& stackTrace );
+        InvalidClientIdException(const std::string& message, const std::exception* cause,
+                                 const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~InvalidClientIdException() throw();
 

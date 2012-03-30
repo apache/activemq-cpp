@@ -31,13 +31,13 @@ namespace nio{
         /**
          * Default Constructor
          */
-        ReadOnlyBufferException() throw() {}
+        ReadOnlyBufferException() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        ReadOnlyBufferException( const lang::Exception& ex ) throw()
+        ReadOnlyBufferException( const lang::Exception& ex )
         : lang::exceptions::UnsupportedOperationException() {
             *(lang::Exception*)this = ex;
         }
@@ -46,7 +46,7 @@ namespace nio{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        ReadOnlyBufferException( const ReadOnlyBufferException& ex ) throw()
+        ReadOnlyBufferException( const ReadOnlyBufferException& ex )
         : lang::exceptions::UnsupportedOperationException() {
             *(lang::Exception*)this = ex;
         }
@@ -64,7 +64,7 @@ namespace nio{
         ReadOnlyBufferException( const char* file, const int lineNumber,
                                  const std::exception* cause,
                                  const char* msg, ... )
-            throw() : lang::exceptions::UnsupportedOperationException( cause )
+            : lang::exceptions::UnsupportedOperationException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -80,7 +80,7 @@ namespace nio{
          * be thrown, the object is cloned caller retains ownership.
          */
         ReadOnlyBufferException( const std::exception* cause )
-            throw() : lang::exceptions::UnsupportedOperationException( cause ) {}
+            : lang::exceptions::UnsupportedOperationException( cause ) {}
 
         /**
          * Constructor
@@ -90,7 +90,7 @@ namespace nio{
          * @param ... list of primitives that are formatted into the message
          */
         ReadOnlyBufferException( const char* file, const int lineNumber,
-                                  const char* msg, ... ) throw()
+                                  const char* msg, ... )
         : lang::exceptions::UnsupportedOperationException() {
 
             va_list vargs;

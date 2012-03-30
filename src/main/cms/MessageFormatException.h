@@ -37,16 +37,14 @@ namespace cms{
 
         MessageFormatException();
 
-        MessageFormatException( const MessageFormatException& ex );
+        MessageFormatException(const MessageFormatException& ex);
 
-        MessageFormatException( const std::string& message );
+        MessageFormatException(const std::string& message);
 
-        MessageFormatException( const std::string& message,
-                                const std::exception* cause );
+        MessageFormatException(const std::string& message, const std::exception* cause);
 
-        MessageFormatException( const std::string& message,
-                                const std::exception* cause,
-                                const std::vector< std::pair< std::string, int> >& stackTrace );
+        MessageFormatException(const std::string& message, const std::exception* cause,
+                               const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~MessageFormatException() throw();
 

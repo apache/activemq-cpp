@@ -131,7 +131,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+        virtual void clear() {
             synchronized( &mutex ) {
                 valueMap.clear();
             }

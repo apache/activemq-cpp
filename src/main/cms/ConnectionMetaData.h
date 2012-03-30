@@ -31,7 +31,7 @@ namespace cms{
     class CMS_API ConnectionMetaData {
     public:
 
-        virtual ~ConnectionMetaData() throw();
+        virtual ~ConnectionMetaData();
 
         /**
          * Gets the CMS API version.

@@ -44,7 +44,7 @@ namespace lang{
     class DECAF_API Throwable : public std::exception {
     public:
 
-        Throwable() throw() : std::exception() {}
+        Throwable() : std::exception() {}
 
         virtual ~Throwable() throw() {}
 

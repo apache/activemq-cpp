@@ -34,16 +34,14 @@ namespace cms{
 
         InvalidSelectorException();
 
-        InvalidSelectorException( const InvalidSelectorException& ex );
+        InvalidSelectorException(const InvalidSelectorException& ex);
 
-        InvalidSelectorException( const std::string& message );
+        InvalidSelectorException(const std::string& message);
 
-        InvalidSelectorException( const std::string& message,
-                                  const std::exception* cause );
+        InvalidSelectorException(const std::string& message, const std::exception* cause);
 
-        InvalidSelectorException( const std::string& message,
-                                  const std::exception* cause,
-                                  const std::vector< std::pair< std::string, int> >& stackTrace );
+        InvalidSelectorException(const std::string& message, const std::exception* cause,
+                                 const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~InvalidSelectorException() throw();
 

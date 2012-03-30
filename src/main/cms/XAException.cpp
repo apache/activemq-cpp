@@ -51,28 +51,26 @@ XAException::XAException() : CMSException(), errorCode(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( int errorCode ) : CMSException(), errorCode(errorCode) {
+XAException::XAException(int errorCode) : CMSException(), errorCode(errorCode) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( const XAException& ex ) : CMSException( ex ), errorCode(ex.errorCode) {
+XAException::XAException(const XAException& ex) : CMSException(ex), errorCode(ex.errorCode) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( const std::string& message )
-    : CMSException( message, NULL ), errorCode(0) {
+XAException::XAException(const std::string& message) : CMSException(message, NULL), errorCode(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( const std::string& message, const std::exception* cause )
-    : CMSException( message, cause ), errorCode(0) {
+XAException::XAException(const std::string& message, const std::exception* cause) :
+    CMSException(message, cause), errorCode(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XAException::XAException( const std::string& message,
-                          const std::exception* cause,
-                          const std::vector< std::pair< std::string, int> >& stackTrace )
-    : CMSException( message, cause, stackTrace ), errorCode(0) {
+XAException::XAException(const std::string& message, const std::exception* cause,
+                         const std::vector<std::pair<std::string, int> >& stackTrace) :
+    CMSException(message, cause, stackTrace), errorCode(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,13 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        UnknownHostException() throw() {}
+        UnknownHostException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        UnknownHostException( const Exception& ex ) throw()
+        UnknownHostException( const Exception& ex )
         : io::IOException()
         {
             *(Exception*)this = ex;
@@ -46,8 +46,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        UnknownHostException( const UnknownHostException& ex ) throw()
-        : io::IOException()
+        UnknownHostException( const UnknownHostException& ex ) : io::IOException()
         {
             *(Exception*)this = ex;
         }
@@ -65,7 +64,7 @@ namespace net{
         UnknownHostException( const char* file, const int lineNumber,
                               const std::exception* cause,
                               const char* msg, ... )
-        throw() : io::IOException( cause )
+        : io::IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +80,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         UnknownHostException( const std::exception* cause )
-            throw() : io::IOException( cause ) {}
+            : io::IOException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +92,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         UnknownHostException( const char* file, const int lineNumber,
-                              const char* msg, ... ) throw ()
+                              const char* msg, ... )
         : io::IOException()
         {
             va_list vargs ;

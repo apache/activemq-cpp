@@ -31,13 +31,13 @@ namespace util{
         /**
          * Default Constructor
          */
-        ConcurrentModificationException() throw();
+        ConcurrentModificationException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        ConcurrentModificationException( const lang::Exception& ex ) throw()
+        ConcurrentModificationException( const lang::Exception& ex )
         : lang::exceptions::RuntimeException() {
             *(lang::Exception*)this = ex;
         }
@@ -46,7 +46,7 @@ namespace util{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        ConcurrentModificationException( const ConcurrentModificationException& ex ) throw()
+        ConcurrentModificationException( const ConcurrentModificationException& ex )
         : lang::exceptions::RuntimeException() {
             *(lang::Exception*)this = ex;
         }
@@ -64,7 +64,7 @@ namespace util{
         ConcurrentModificationException( const char* file, const int lineNumber,
                                          const std::exception* cause,
                                          const char* msg, ... )
-            throw() : lang::exceptions::RuntimeException( cause )
+        : lang::exceptions::RuntimeException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -80,7 +80,7 @@ namespace util{
          * be thrown, the object is cloned caller retains ownership.
          */
         ConcurrentModificationException( const std::exception* cause )
-            throw() : lang::exceptions::RuntimeException( cause ) {}
+            : lang::exceptions::RuntimeException( cause ) {}
 
         /**
          * Constructor
@@ -90,7 +90,7 @@ namespace util{
          * @param ... list of primitives that are formatted into the message
          */
         ConcurrentModificationException( const char* file, const int lineNumber,
-                                         const char* msg, ... ) throw()
+                                         const char* msg, ... )
         : lang::exceptions::RuntimeException() {
 
             va_list vargs;

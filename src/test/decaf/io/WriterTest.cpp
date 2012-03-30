@@ -49,13 +49,13 @@ namespace {
             close();
         }
 
-        virtual void close() throw( decaf::io::IOException ) {
+        virtual void close() {
             flush();
             delete [] contents;
             contents = NULL;
         }
 
-        virtual void flush() throw( decaf::io::IOException ) {
+        virtual void flush() {
         }
 
         virtual void doWriteArrayBounded(

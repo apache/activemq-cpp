@@ -48,7 +48,7 @@ Chat::Chat() : connection(), session(),  consumer(), producer(), topic(),
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Chat::~Chat() throw() {
+Chat::~Chat() {
 
     try {
 
@@ -175,7 +175,7 @@ void Chat::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Chat::onMessage( const cms::Message* message ) throw() {
+void Chat::onMessage( const cms::Message* message ) {
 
     // Cast the message as a TextMessage if possible.
     try {

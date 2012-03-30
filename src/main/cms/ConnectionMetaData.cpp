@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionMetaData::~ConnectionMetaData() throw() {
+ConnectionMetaData::~ConnectionMetaData() {
 
 }
 

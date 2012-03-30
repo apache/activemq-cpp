@@ -111,7 +111,7 @@ namespace locks {
          *
          * @param thread the thread to unport, or NULL in which case the method has no effect.
          */
-        static void unpark( decaf::lang::Thread* thread ) throw();
+        static void unpark( decaf::lang::Thread* thread );
 
         /**
          * Disables the current thread for thread scheduling purposes unless the permit is available.
@@ -128,7 +128,7 @@ namespace locks {
          * re-check the conditions which caused the thread to park in the first place. Callers may
          * also determine, for example, the interrupt status of the thread upon return.
          */
-        static void park() throw();
+        static void park();
 
         /**
          * Disables the current thread for thread scheduling purposes, for up to the specified
@@ -150,7 +150,7 @@ namespace locks {
          *
          * @param nanos the maximum number of nanoseconds to wait
          */
-        static void parkNanos( long long nanos ) throw();
+        static void parkNanos( long long nanos );
 
         /**
          * Disables the current thread for thread scheduling purposes, until the specified deadline,
@@ -172,7 +172,7 @@ namespace locks {
          *
          * @param deadline the absolute time, in milliseconds from the Epoch, to wait until
          */
-        static void parkUntil( long long deadline ) throw();
+        static void parkUntil( long long deadline );
 
     };
 

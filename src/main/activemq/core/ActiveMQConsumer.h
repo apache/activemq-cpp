@@ -59,7 +59,7 @@ namespace core{
          */
         ActiveMQConsumer(const Pointer<activemq::core::kernels::ActiveMQConsumerKernel>& kernel);
 
-        virtual ~ActiveMQConsumer() throw();
+        virtual ~ActiveMQConsumer();
 
     public:  // Interface Implementation for cms::MessageConsumer
 

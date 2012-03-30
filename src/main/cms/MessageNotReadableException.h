@@ -33,16 +33,14 @@ namespace cms{
 
         MessageNotReadableException();
 
-        MessageNotReadableException( const MessageNotReadableException& ex );
+        MessageNotReadableException(const MessageNotReadableException& ex);
 
-        MessageNotReadableException( const std::string& message );
+        MessageNotReadableException(const std::string& message);
 
-        MessageNotReadableException( const std::string& message,
-                                     const std::exception* cause );
+        MessageNotReadableException(const std::string& message, const std::exception* cause);
 
-        MessageNotReadableException( const std::string& message,
-                                     const std::exception* cause,
-                                     const std::vector< std::pair< std::string, int> >& stackTrace );
+        MessageNotReadableException(const std::string& message, const std::exception* cause,
+                                    const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~MessageNotReadableException() throw();
 

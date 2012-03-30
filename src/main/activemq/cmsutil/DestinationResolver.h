@@ -32,7 +32,7 @@ namespace cmsutil {
     class AMQCPP_API DestinationResolver {
     public:
 
-        virtual ~DestinationResolver() throw() {}
+        virtual ~DestinationResolver() {}
 
         /**
          * Initializes this destination resolver for use.  Ensures that any

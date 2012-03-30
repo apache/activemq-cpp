@@ -49,7 +49,7 @@ namespace correlator{
         virtual unsigned char getDataStructureType() const { return 1; }
 
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException ) { return decaf::lang::Pointer<commands::Command>(); }
+        { return decaf::lang::Pointer<commands::Command>(); }
 
         virtual MyCommand* cloneDataStructure() const{
             MyCommand* command = new MyCommand;
@@ -83,7 +83,6 @@ namespace correlator{
         }
 
         virtual void oneway( const Pointer<Command>& command )
-            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             synchronized( &mutex ){
                 requests.push( command );
@@ -92,7 +91,6 @@ namespace correlator{
         }
 
         virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED )
-            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
@@ -100,7 +98,6 @@ namespace correlator{
 
         virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED,
                                              unsigned int timeout AMQCPP_UNUSED )
-            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
@@ -121,7 +118,7 @@ namespace correlator{
             return this->listener;
         }
 
-        virtual void start() throw( decaf::io::IOException ){
+        virtual void start() {
             close();
 
             done = false;
@@ -129,10 +126,10 @@ namespace correlator{
             thread->start();
         }
 
-        virtual void stop() throw( decaf::io::IOException ){
+        virtual void stop() {
         }
 
-        virtual void close() throw( decaf::io::IOException ){
+        virtual void close() {
 
             done = true;
 
@@ -232,8 +229,7 @@ namespace correlator{
             return "";
         }
 
-        virtual void reconnect( const decaf::net::URI& uri )
-            throw( decaf::io::IOException ) {}
+        virtual void reconnect( const decaf::net::URI& uri ) {}
 
         virtual bool isReconnectSupported() const {
             return false;

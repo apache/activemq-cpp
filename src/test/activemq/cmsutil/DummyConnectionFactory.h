@@ -32,7 +32,7 @@ namespace cmsutil {
 
     public:
 
-        virtual ~DummyConnectionFactory() throw() {}
+        virtual ~DummyConnectionFactory() {}
 
         virtual cms::Connection* createConnection() throw ( cms::CMSException ) {
 

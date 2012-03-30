@@ -30,7 +30,7 @@ namespace nio{
         /**
          * Default Constructor
          */
-        InvalidMarkException() throw() {}
+        InvalidMarkException() {}
 
         /**
          * Conversion Constructor from some other Exception
@@ -38,7 +38,7 @@ namespace nio{
          * @param ex
          *      The Exception whose state data is to be copied into this Exception.
          */
-        InvalidMarkException( const lang::Exception& ex ) throw()
+        InvalidMarkException( const lang::Exception& ex )
         : lang::exceptions::IllegalStateException() {
             *(lang::Exception*)this = ex;
         }
@@ -49,7 +49,7 @@ namespace nio{
          * @param ex
          *      The Exception whose state data is to be copied into this Exception.
          */
-        InvalidMarkException( const InvalidMarkException& ex ) throw()
+        InvalidMarkException( const InvalidMarkException& ex )
         : lang::exceptions::IllegalStateException() {
             *(lang::Exception*)this = ex;
         }
@@ -67,7 +67,7 @@ namespace nio{
         InvalidMarkException( const char* file, const int lineNumber,
                               const std::exception* cause,
                               const char* msg, ... )
-            throw() : lang::exceptions::IllegalStateException( cause )
+            : lang::exceptions::IllegalStateException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -83,7 +83,7 @@ namespace nio{
          * be thrown, the object is cloned caller retains ownership.
          */
         InvalidMarkException( const std::exception* cause )
-            throw() : lang::exceptions::IllegalStateException( cause ) {}
+            : lang::exceptions::IllegalStateException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -95,7 +95,7 @@ namespace nio{
          * @param ... list of primitives that are formatted into the message
          */
         InvalidMarkException( const char* file, const int lineNumber,
-                              const char* msg, ... ) throw ()
+                              const char* msg, ... )
         : lang::exceptions::IllegalStateException() {
 
             va_list vargs ;

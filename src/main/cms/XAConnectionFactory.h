@@ -73,8 +73,8 @@ namespace cms {
          * @throws CMSSecurityException if the client authentication fails because the user name or
          *                              password are invalid.
          */
-        virtual XAConnection* createXAConnection( const std::string& userName,
-                                                  const std::string& password ) = 0;
+        virtual XAConnection* createXAConnection(const std::string& userName, const std::string& password ) = 0;
+
     public:
 
         /**
@@ -97,7 +97,7 @@ namespace cms {
          * @throws CMSException if an internal error occurs while creating the XAConnectionFactory.
          * @throws UnsupportedOperationException if the provider does not support the XA API.
          */
-        static XAConnectionFactory* createCMSXAConnectionFactory( const std::string& brokerURI );
+        static XAConnectionFactory* createCMSXAConnectionFactory(const std::string& brokerURI);
 
     };
 

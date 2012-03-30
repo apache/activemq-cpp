@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-TemporaryQueue::~TemporaryQueue() throw() {
+TemporaryQueue::~TemporaryQueue() {
 
 }
 

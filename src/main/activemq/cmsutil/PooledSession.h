@@ -57,7 +57,7 @@ namespace cmsutil {
         /**
          * Does nothing
          */
-        virtual ~PooledSession() throw();
+        virtual ~PooledSession();
 
         /**
          * Returns a non-constant reference to the internal session object.

@@ -33,13 +33,13 @@ namespace io{
         /**
          * Default Constructor
          */
-        EOFException() throw(){}
+        EOFException() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        EOFException( const lang::Exception& ex ) throw()
+        EOFException( const lang::Exception& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -48,7 +48,7 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        EOFException( const EOFException& ex ) throw()
+        EOFException( const EOFException& ex )
         : IOException() {
             *(lang::Exception*)this = ex;
         }
@@ -65,7 +65,7 @@ namespace io{
          */
         EOFException( const char* file, const int lineNumber,
                       const std::exception* cause,
-                      const char* msg, ... ) throw() : IOException( cause )
+                      const char* msg, ... ) : IOException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -80,7 +80,7 @@ namespace io{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        EOFException( const std::exception* cause ) throw() : IOException( cause ) {}
+        EOFException( const std::exception* cause ) : IOException( cause ) {}
 
         /**
          * Constructor
@@ -91,7 +91,7 @@ namespace io{
          * @param ... list of primitives that are formatted into the message
          */
         EOFException( const char* file, const int lineNumber,
-                      const char* msg, ... ) throw()
+                      const char* msg, ... )
         : IOException()
         {
             va_list vargs;

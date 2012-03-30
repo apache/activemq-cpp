@@ -39,7 +39,7 @@ LockSupport::~LockSupport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LockSupport::unpark( decaf::lang::Thread* thread ) throw() {
+void LockSupport::unpark( decaf::lang::Thread* thread ) {
 
     try {
 		Threading::unpark(thread);
@@ -48,7 +48,7 @@ void LockSupport::unpark( decaf::lang::Thread* thread ) throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LockSupport::park() throw() {
+void LockSupport::park() {
 
     try {
 		Threading::park(Thread::currentThread());
@@ -57,7 +57,7 @@ void LockSupport::park() throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LockSupport::parkNanos( long long nanos ) throw() {
+void LockSupport::parkNanos( long long nanos ) {
 
     try {
         long long mills = 0;
@@ -73,7 +73,7 @@ void LockSupport::parkNanos( long long nanos ) throw() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LockSupport::parkUntil( long long deadline ) throw() {
+void LockSupport::parkUntil( long long deadline ) {
 
     try{
 

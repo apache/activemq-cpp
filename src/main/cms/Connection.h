@@ -111,7 +111,7 @@ namespace cms{
          *
          * @throws CMSException
          */
-        virtual Session* createSession( Session::AcknowledgeMode ackMode ) = 0;
+        virtual Session* createSession(Session::AcknowledgeMode ackMode) = 0;
 
         /**
          * Get the Client Id for this session, the client Id is provider specific and is either
@@ -141,7 +141,7 @@ namespace cms{
          * @throws InvalidClientIDException if the id given is somehow invalid or is a duplicate.
          * @throws IllegalStateException if the client tries to set the id after a Connection method has been called.
          */
-        virtual void setClientID( const std::string& clientID ) = 0;
+        virtual void setClientID(const std::string& clientID) = 0;
 
         /**
          * Gets the registered Exception Listener for this connection
@@ -156,7 +156,7 @@ namespace cms{
          * @param listener
          *        pointer to and <code>ExceptionListener</code>
          */
-        virtual void setExceptionListener( ExceptionListener* listener ) = 0;
+        virtual void setExceptionListener(ExceptionListener* listener) = 0;
 
     };
 

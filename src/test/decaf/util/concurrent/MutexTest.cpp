@@ -227,50 +227,39 @@ public:
     }
     virtual ~MyNotifiedThread(){}
 
-    virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void lock() {
         mutex->lock();
     }
 
-    virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual bool tryLock() {
         return mutex->tryLock();
     }
 
-    virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void unlock() {
         mutex->unlock();
     }
 
-    virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                               decaf::lang::exceptions::IllegalMonitorStateException,
-                               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait() {
 
         mutex->wait();
     }
 
-    virtual void wait( long long millisecs )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs ) {
 
         mutex->wait( millisecs );
     }
 
-    virtual void wait( long long millisecs, int nanos )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalArgumentException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs, int nanos ) {
 
         mutex->wait( millisecs, nanos );
     }
 
-    virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                 decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notify() {
 
         mutex->notify();
     }
 
-    virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notifyAll() {
 
         mutex->notifyAll();
     }
@@ -475,50 +464,39 @@ public:
     }
     virtual ~MyRecursiveLockThread(){}
 
-    virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void lock() {
         mutex->lock();
     }
 
-    virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual bool tryLock() {
         return mutex->tryLock();
     }
 
-    virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+    virtual void unlock() {
         mutex->unlock();
     }
 
-    virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                               decaf::lang::exceptions::IllegalMonitorStateException,
-                               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait()  {
 
         mutex->wait();
     }
 
-    virtual void wait( long long millisecs )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs ) {
 
         mutex->wait( millisecs );
     }
 
-    virtual void wait( long long millisecs, int nanos )
-        throw( decaf::lang::exceptions::RuntimeException,
-               decaf::lang::exceptions::IllegalArgumentException,
-               decaf::lang::exceptions::IllegalMonitorStateException,
-               decaf::lang::exceptions::InterruptedException ) {
+    virtual void wait( long long millisecs, int nanos ) {
 
         mutex->wait( millisecs, nanos );
     }
 
-    virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                 decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notify() {
 
         mutex->notify();
     }
 
-    virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                    decaf::lang::exceptions::IllegalMonitorStateException ) {
+    virtual void notifyAll() {
 
         mutex->notifyAll();
     }

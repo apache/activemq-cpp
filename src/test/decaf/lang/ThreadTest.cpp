@@ -329,7 +329,7 @@ namespace lang{
         Handler() : executed( false ) {
         }
 
-        virtual void uncaughtException( const Thread* t, const Throwable& error ) throw() {
+        virtual void uncaughtException( const Thread* t, const Throwable& error ) {
             this->executed = true;
         }
 

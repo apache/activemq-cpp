@@ -34,7 +34,7 @@ namespace cms{
     class CMS_API CMSProperties {
     public:
 
-        virtual ~CMSProperties() throw();
+        virtual ~CMSProperties();
 
         /**
          * Returns the current count of all the Properties that are currently stored in
@@ -59,7 +59,7 @@ namespace cms{
          * @return the value of the property with the given name, if it
          *         exists.  If it does not exist, returns NULL.
          */
-        virtual const char* getProperty( const std::string& name ) const = 0;
+        virtual const char* getProperty(const std::string& name) const = 0;
 
         /**
          * Looks up the value for the given property.
@@ -71,8 +71,7 @@ namespace cms{
          * @return The value of the property specified by <code>name</code>, if it
          *         exists, otherwise the <code>defaultValue</code>.
          */
-        virtual std::string getProperty( const std::string& name,
-                                         const std::string& defaultValue ) const = 0;
+        virtual std::string getProperty(const std::string& name, const std::string& defaultValue) const = 0;
 
         /**
          * Sets the value for a given property.  If the property already
@@ -83,8 +82,7 @@ namespace cms{
          * @param value
          *      The value to be written.
          */
-        virtual void setProperty( const std::string& name,
-                                  const std::string& value ) = 0;
+        virtual void setProperty(const std::string& name, const std::string& value) = 0;
 
         /**
          * Check to see if the Property exists in the set
@@ -93,7 +91,7 @@ namespace cms{
          *      the name of the property to check
          * @return true if property exists, false otherwise.
          */
-        virtual bool hasProperty( const std::string& name ) const = 0;
+        virtual bool hasProperty(const std::string& name) const = 0;
 
         /**
          * Removes the property with the given name.  If the property existed in the
@@ -105,7 +103,7 @@ namespace cms{
          *
          * @returns the value that was removed from the Properties, or empty string.
          */
-        virtual std::string remove( const std::string& name ) = 0;
+        virtual std::string remove(const std::string& name) = 0;
 
         /**
          * Returns a vector containing all the names of the properties currently stored
@@ -130,7 +128,7 @@ namespace cms{
          * @param source
          *      The source properties object.
          */
-        virtual void copy( const CMSProperties* source ) = 0;
+        virtual void copy(const CMSProperties* source) = 0;
 
         /**
          * Clones this object.

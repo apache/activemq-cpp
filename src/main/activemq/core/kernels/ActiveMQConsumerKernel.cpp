@@ -367,7 +367,7 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumerKernel::~ActiveMQConsumerKernel() throw() {
+ActiveMQConsumerKernel::~ActiveMQConsumerKernel() {
 
     try {
 

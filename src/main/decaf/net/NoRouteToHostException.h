@@ -30,13 +30,13 @@ namespace net{
         /**
          * Default Constructor
          */
-        NoRouteToHostException() throw() {}
+        NoRouteToHostException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        NoRouteToHostException( const Exception& ex ) throw()
+        NoRouteToHostException( const Exception& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -46,7 +46,7 @@ namespace net{
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        NoRouteToHostException( const NoRouteToHostException& ex ) throw()
+        NoRouteToHostException( const NoRouteToHostException& ex )
         : SocketException()
         {
             *(Exception*)this = ex;
@@ -65,7 +65,7 @@ namespace net{
         NoRouteToHostException( const char* file, const int lineNumber,
                                const std::exception* cause,
                                const char* msg, ... )
-        throw() : SocketException( cause )
+        : SocketException( cause )
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -81,7 +81,7 @@ namespace net{
          * be thrown, the object is cloned caller retains ownership.
          */
         NoRouteToHostException( const std::exception* cause )
-            throw() : SocketException( cause ) {}
+            : SocketException( cause ) {}
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -93,7 +93,7 @@ namespace net{
          * @param ... list of primitives that are formatted into the message
          */
         NoRouteToHostException( const char* file, const int lineNumber,
-                                const char* msg, ... ) throw ()
+                                const char* msg, ... )
         : SocketException()
         {
             va_list vargs ;

@@ -53,7 +53,7 @@ namespace cms{
     class CMS_API QueueBrowser : public Closeable {
     public:
 
-        virtual ~QueueBrowser() throw();
+        virtual ~QueueBrowser();
 
         /**
          * @returns the Queue that this browser is listening on.

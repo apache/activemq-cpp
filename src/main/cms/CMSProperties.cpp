@@ -20,6 +20,6 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSProperties::~CMSProperties() throw() {
+CMSProperties::~CMSProperties() {
 
 }

@@ -126,14 +126,14 @@ namespace lang
              * This method is defined to indicate that it will not throw an exception, throwing
              * and exception from this method will on most systems result in a segmentation fault.
              */
-            virtual void uncaughtException( const Thread* thread, const Throwable& error ) throw() = 0;
+            virtual void uncaughtException(const Thread* thread, const Throwable& error) = 0;
 
         };
 
     private:
 
-        Thread( const Thread& );
-        Thread& operator= ( const Thread& );
+        Thread(const Thread&);
+        Thread& operator=(const Thread&);
 
     public:
 
@@ -421,7 +421,7 @@ namespace lang
          *      The UncaightExceptionHandler to invoke when a Thread terminates due
          *      to an uncaught exception, passing NULL clears this value.
          */
-        static void setDefaultUncaughtExceptionHandler( UncaughtExceptionHandler* handler );
+        static void setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler* handler);
 
     private:
 

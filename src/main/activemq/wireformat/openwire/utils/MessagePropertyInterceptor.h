@@ -68,7 +68,7 @@ namespace utils {
          */
         MessagePropertyInterceptor( commands::Message* message, util::PrimitiveMap* properties );
 
-        virtual ~MessagePropertyInterceptor() throw();
+        virtual ~MessagePropertyInterceptor();
 
         /**
          * Gets a boolean property.

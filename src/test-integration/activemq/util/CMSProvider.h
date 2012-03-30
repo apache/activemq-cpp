@@ -62,7 +62,7 @@ namespace util {
         CMSProvider( const std::string& brokerURL,
                      cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
 
-        virtual ~CMSProvider() throw();
+        virtual ~CMSProvider();
 
         virtual void close() throw( decaf::io::IOException );
 

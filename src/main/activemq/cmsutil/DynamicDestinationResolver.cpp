@@ -76,7 +76,7 @@ DynamicDestinationResolver::DynamicDestinationResolver()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DynamicDestinationResolver::~DynamicDestinationResolver() throw() {
+DynamicDestinationResolver::~DynamicDestinationResolver() {
     destroy();
 }
 

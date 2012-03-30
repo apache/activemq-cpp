@@ -31,7 +31,7 @@ namespace cmsutil {
     class AMQCPP_API ProducerCallback {
     public:
 
-        virtual ~ProducerCallback() throw() {}
+        virtual ~ProducerCallback() {}
 
         /**
          * Execute an action given a session and producer.

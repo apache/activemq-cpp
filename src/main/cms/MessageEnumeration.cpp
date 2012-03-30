@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageEnumeration::~MessageEnumeration() throw() {
+MessageEnumeration::~MessageEnumeration() {
 
 }
 

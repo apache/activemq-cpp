@@ -64,7 +64,7 @@ namespace locks {
      *      Object* items = new Object[100];
      *      int putptr, takeptr, count;
      *
-     *      public void put( Object* x ) throw( InterruptedException ) {
+     *      public void put( Object* x ) {
      *        lock->lock();
      *        try {
      *          while( count == 100 )
@@ -78,7 +78,7 @@ namespace locks {
      *        }
      *      }
      *
-     *      public Object take() throw( InterruptedException ) {
+     *      public Object take() {
      *        lock->lock();
      *        try {
      *          while(count == 0)
@@ -395,7 +395,7 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual bool awaitUntil( const Date& deadline ) = 0;
+        virtual bool awaitUntil(const Date& deadline) = 0;
 
         /**
          * Wakes up one waiting thread.

@@ -113,7 +113,7 @@ CmsTemplate::CmsTemplate( cms::ConnectionFactory* connectionFactory ) : CmsDesti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsTemplate::~CmsTemplate() throw() {
+CmsTemplate::~CmsTemplate() {
 
     try {
         destroy();

@@ -43,7 +43,7 @@ namespace util{
 
         ActiveMQProperties();
 
-        virtual ~ActiveMQProperties() throw();
+        virtual ~ActiveMQProperties();
 
         virtual decaf::util::Properties& getProperties() {
             return this->properties;

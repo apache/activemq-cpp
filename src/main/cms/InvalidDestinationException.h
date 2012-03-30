@@ -34,16 +34,14 @@ namespace cms{
 
         InvalidDestinationException();
 
-        InvalidDestinationException( const InvalidDestinationException& ex );
+        InvalidDestinationException(const InvalidDestinationException& ex);
 
-        InvalidDestinationException( const std::string& message );
+        InvalidDestinationException(const std::string& message);
 
-        InvalidDestinationException( const std::string& message,
-                                     const std::exception* cause );
+        InvalidDestinationException(const std::string& message, const std::exception* cause);
 
-        InvalidDestinationException( const std::string& message,
-                                     const std::exception* cause,
-                                     const std::vector< std::pair< std::string, int> >& stackTrace );
+        InvalidDestinationException(const std::string& message, const std::exception* cause,
+                                    const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~InvalidDestinationException() throw();
 

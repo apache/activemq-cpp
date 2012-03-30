@@ -38,7 +38,7 @@ namespace util {
     public:
 
         CMSListener( cms::Session* session );
-        virtual ~CMSListener() throw();
+        virtual ~CMSListener();
 
         unsigned int getNumReceived() const {
             return this->numReceived;
@@ -49,7 +49,7 @@ namespace util {
         virtual void asyncWaitForMessages( unsigned int count );
 
         virtual void onException( const cms::CMSException& error );
-        virtual void onMessage( const cms::Message* message ) throw();
+        virtual void onMessage( const cms::Message* message );
 
     };
 

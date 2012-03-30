@@ -38,19 +38,19 @@ namespace cmsutil {
         DummyConnection(MessageContext* messageContext ) {
             this->messageContext = messageContext;
         }
-        virtual ~DummyConnection() throw() {}
+        virtual ~DummyConnection() {}
 
-        virtual const cms::ConnectionMetaData* getMetaData() const throw( cms::CMSException ) {
+        virtual const cms::ConnectionMetaData* getMetaData() const {
             return NULL;
         }
 
-        virtual void close() throw( cms::CMSException ) {
+        virtual void close() {
         }
 
-        virtual void start() throw( cms::CMSException ) {
+        virtual void start() {
         }
 
-        virtual void stop() throw( cms::CMSException ) {
+        virtual void stop() {
         }
 
         virtual cms::Session* createSession() throw ( cms::CMSException ) {

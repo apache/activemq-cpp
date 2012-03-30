@@ -20,7 +20,7 @@
 using namespace cms;
 
 ////////////////////////////////////////////////////////////////////////////////
-TemporaryTopic::~TemporaryTopic() throw() {
+TemporaryTopic::~TemporaryTopic() {
 
 }
 
