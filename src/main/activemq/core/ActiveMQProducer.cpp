@@ -33,8 +33,7 @@ using namespace decaf::lang::exceptions;
 ActiveMQProducer::ActiveMQProducer(Pointer<ActiveMQProducerKernel> kernel) : kernel(kernel) {
 
     if (kernel == NULL) {
-        throw ActiveMQException(
-            __FILE__, __LINE__,
+        throw ActiveMQException(__FILE__, __LINE__,
             "ActiveMQProducer::ActiveMQProducer - Initialized with NULL Kernel");
     }
 }

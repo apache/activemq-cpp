@@ -124,7 +124,7 @@ namespace {
 
         CloseSynhcronization(ActiveMQSessionKernel* session) : Synchronization(), session(session) {
 
-            if(session == NULL) {
+            if (session == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Session.");
             }
@@ -225,7 +225,7 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSessionKernel::~ActiveMQSessionKernel() {
-    try{
+    try {
         // Destroy this session's resources
         close();
     }
@@ -246,11 +246,11 @@ void ActiveMQSessionKernel::fire(const activemq::exceptions::ActiveMQException& 
 void ActiveMQSessionKernel::close() {
 
     // If we're already closed, just return.
-    if( this->closed.get() ) {
+    if (this->closed.get()) {
         return;
     }
 
-    if( this->transaction->isInXATransaction() ) {
+    if (this->transaction->isInXATransaction()) {
 
         // TODO - Right now we don't have a safe way of dealing with this case
         // since the session might be deleted before the XA Transaction is finalized
@@ -298,13 +298,13 @@ void ActiveMQSessionKernel::dispose() {
 
     private:
 
-        Finalizer( const Finalizer& );
-        Finalizer& operator= ( const Finalizer& );
+        Finalizer(const Finalizer&);
+        Finalizer& operator=(const Finalizer&);
 
     public:
 
         Finalizer(ActiveMQSessionKernel* session, ActiveMQConnection* connection) :
-            session( session ), connection( connection ) {
+            session(session), connection(connection) {
         }
 
         ~Finalizer() {
@@ -314,6 +314,7 @@ void ActiveMQSessionKernel::dispose() {
             } catch(...) {
                 session.release();
             }
+            session.release();
             this->session->closed = true;
         }
     };
@@ -351,10 +352,10 @@ void ActiveMQSessionKernel::dispose() {
         // Dispose of all Producers, the dispose method skips the RemoveInfo command.
         std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
 
-        while( producerIter->hasNext() ) {
+        while (producerIter->hasNext()) {
             try{
                 producerIter->next()->dispose();
-            } catch( cms::CMSException& ex ){
+            } catch (cms::CMSException& ex) {
                 /* Absorb */
             }
         }
@@ -371,10 +372,8 @@ void ActiveMQSessionKernel::commit() {
 
         this->checkClosed();
 
-        if( !this->isTransacted() ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQSessionKernel::commit - This Session is not Transacted");
+        if (!this->isTransacted()) {
+            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQSessionKernel::commit - This Session is not Transacted");
         }
 
         // Commit the Transaction
@@ -386,14 +385,12 @@ void ActiveMQSessionKernel::commit() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::rollback() {
 
-    try{
+    try {
 
         this->checkClosed();
 
-        if( !this->isTransacted() ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQSessionKernel::rollback - This Session is not Transacted" );
+        if (!this->isTransacted()) {
+            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQSessionKernel::rollback - This Session is not Transacted");
         }
 
         // Roll back the Transaction
@@ -405,7 +402,7 @@ void ActiveMQSessionKernel::rollback() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::recover() {
 
-    try{
+    try {
 
         checkClosed();
 
@@ -428,15 +425,15 @@ void ActiveMQSessionKernel::recover() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::clearMessagesInProgress() {
 
-    if( this->executor.get() != NULL ) {
+    if (this->executor.get() != NULL) {
         this->executor->clearMessagesInProgress();
     }
 
-    synchronized( &this->consumers ) {
+    synchronized(&this->consumers) {
         std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
 
         std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for( ; iter != consumers.end(); ++iter ) {
+        for (; iter != consumers.end(); ++iter) {
             (*iter)->inProgressClearRequired();
 
             this->connection->getScheduler()->executeAfterDelay(
@@ -448,11 +445,11 @@ void ActiveMQSessionKernel::clearMessagesInProgress() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::acknowledge() {
 
-    synchronized( &this->consumers ) {
+    synchronized(&this->consumers) {
         std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
 
         std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for( ; iter != consumers.end(); ++iter ) {
+        for (; iter != consumers.end(); ++iter) {
             (*iter)->acknowledge();
         }
     }
@@ -461,20 +458,20 @@ void ActiveMQSessionKernel::acknowledge() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::deliverAcks() {
 
-    synchronized( &this->consumers ) {
+    synchronized(&this->consumers) {
         std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
 
         std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for( ; iter != consumers.end(); ++iter ) {
+        for (; iter != consumers.end(); ++iter) {
             (*iter)->deliverAcks();
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destination* destination ) {
+cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destination* destination) {
 
-    try{
+    try {
         this->checkClosed();
         return this->createConsumer(destination, "", false);
     }
@@ -482,10 +479,9 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destination* destination,
-                                                       const std::string& selector ) {
+cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destination* destination, const std::string& selector) {
 
-    try{
+    try {
         this->checkClosed();
         return this->createConsumer(destination, selector, false);
     }
@@ -493,11 +489,10 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destination* destination,
-                                                       const std::string& selector,
-                                                       bool noLocal ) {
+cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destination* destination,
+                                                            const std::string& selector, bool noLocal) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -506,16 +501,14 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destinat
         const ActiveMQDestination* amqDestination =
             dynamic_cast<const ActiveMQDestination*>( destination );
 
-        if( amqDestination == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Destination was either NULL or not created by this CMS Client" );
+        if (amqDestination == NULL) {
+            throw ActiveMQException(__FILE__, __LINE__, "Destination was either NULL or not created by this CMS Client");
         }
 
         Pointer<ActiveMQDestination> dest( amqDestination->cloneDataStructure() );
 
         int prefetch = 0;
-        if( dest->isTopic() ) {
+        if (dest->isTopic()) {
             prefetch = this->connection->getPrefetchPolicy()->getTopicPrefetch();
         } else {
             prefetch = this->connection->getPrefetchPolicy()->getQueuePrefetch();
@@ -545,27 +538,22 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer( const cms::Destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer( const cms::Topic* destination,
-                                                              const std::string& name,
-                                                              const std::string& selector,
-                                                              bool noLocal ) {
+cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer(const cms::Topic* destination, const std::string& name,
+                                                                   const std::string& selector, bool noLocal) {
 
-    try{
+    try {
 
         this->checkClosed();
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
-        const ActiveMQDestination* amqDestination =
-            dynamic_cast<const ActiveMQDestination*>( destination );
+        const ActiveMQDestination* amqDestination = dynamic_cast<const ActiveMQDestination*> (destination);
 
-        if( amqDestination == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Destination was either NULL or not created by this CMS Client" );
+        if (amqDestination == NULL) {
+            throw ActiveMQException(__FILE__, __LINE__, "Destination was either NULL or not created by this CMS Client");
         }
 
-        Pointer<ActiveMQDestination> dest( amqDestination->cloneDataStructure() );
+        Pointer<ActiveMQDestination> dest(amqDestination->cloneDataStructure());
 
         // Create the consumer instance.
         Pointer<ActiveMQConsumerKernel> consumer(
@@ -594,7 +582,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer( const cms::T
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destination* destination ) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -622,7 +610,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
         Pointer<ActiveMQProducerKernel> producer( new ActiveMQProducerKernel(
             this, this->getNextProducerId(), dest, this->connection->getSendTimeout() ) );
 
-        try{
+        try {
             this->addProducer(producer);
             this->connection->oneway(producer->getProducerInfo());
         } catch (Exception& ex) {
@@ -638,7 +626,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
 ////////////////////////////////////////////////////////////////////////////////
 cms::QueueBrowser* ActiveMQSessionKernel::createBrowser( const cms::Queue* queue ) {
 
-    try{
+    try {
         return ActiveMQSessionKernel::createBrowser(queue, "");
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -648,19 +636,17 @@ cms::QueueBrowser* ActiveMQSessionKernel::createBrowser( const cms::Queue* queue
 cms::QueueBrowser* ActiveMQSessionKernel::createBrowser(const cms::Queue* queue,
                                                   const std::string& selector) {
 
-    try{
+    try {
 
         this->checkClosed();
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
         const ActiveMQDestination* amqDestination =
-            dynamic_cast<const ActiveMQDestination*> (queue);
+            dynamic_cast<const ActiveMQDestination*>(queue);
 
         if (amqDestination == NULL) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "Destination was either NULL or not created by this CMS Client" );
+            throw ActiveMQException(__FILE__, __LINE__, "Destination was either NULL or not created by this CMS Client");
         }
 
         Pointer<ActiveMQDestination> dest(amqDestination->cloneDataStructure());
@@ -676,9 +662,9 @@ cms::QueueBrowser* ActiveMQSessionKernel::createBrowser(const cms::Queue* queue,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* ActiveMQSessionKernel::createQueue( const std::string& queueName ) {
+cms::Queue* ActiveMQSessionKernel::createQueue(const std::string& queueName) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -693,9 +679,9 @@ cms::Queue* ActiveMQSessionKernel::createQueue( const std::string& queueName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* ActiveMQSessionKernel::createTopic( const std::string& topicName ) {
+cms::Topic* ActiveMQSessionKernel::createTopic(const std::string& topicName) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -712,7 +698,7 @@ cms::Topic* ActiveMQSessionKernel::createTopic( const std::string& topicName ) {
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* ActiveMQSessionKernel::createTemporaryQueue() {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -730,7 +716,7 @@ cms::TemporaryQueue* ActiveMQSessionKernel::createTemporaryQueue() {
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* ActiveMQSessionKernel::createTemporaryTopic() {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -748,8 +734,7 @@ cms::TemporaryTopic* ActiveMQSessionKernel::createTemporaryTopic() {
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* ActiveMQSessionKernel::createMessage() {
 
-    try{
-
+    try {
         this->checkClosed();
         commands::ActiveMQMessage* message = new commands::ActiveMQMessage();
         message->setConnection(this->connection);
@@ -761,8 +746,7 @@ cms::Message* ActiveMQSessionKernel::createMessage() {
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* ActiveMQSessionKernel::createBytesMessage() {
 
-    try{
-
+    try {
         this->checkClosed();
         commands::ActiveMQBytesMessage* message = new commands::ActiveMQBytesMessage();
         message->setConnection(this->connection);
@@ -772,10 +756,9 @@ cms::BytesMessage* ActiveMQSessionKernel::createBytesMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSessionKernel::createBytesMessage( const unsigned char* bytes, int bytesSize ) {
+cms::BytesMessage* ActiveMQSessionKernel::createBytesMessage(const unsigned char* bytes, int bytesSize) {
 
-    try{
-
+    try {
         this->checkClosed();
         cms::BytesMessage* msg = createBytesMessage();
         msg->setBodyBytes(bytes, bytesSize);
@@ -787,8 +770,7 @@ cms::BytesMessage* ActiveMQSessionKernel::createBytesMessage( const unsigned cha
 ////////////////////////////////////////////////////////////////////////////////
 cms::StreamMessage* ActiveMQSessionKernel::createStreamMessage() {
 
-    try{
-
+    try {
         this->checkClosed();
         commands::ActiveMQStreamMessage* message = new commands::ActiveMQStreamMessage();
         message->setConnection(this->connection);
@@ -800,8 +782,7 @@ cms::StreamMessage* ActiveMQSessionKernel::createStreamMessage() {
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* ActiveMQSessionKernel::createTextMessage() {
 
-    try{
-
+    try {
         this->checkClosed();
         commands::ActiveMQTextMessage* message = new commands::ActiveMQTextMessage();
         message->setConnection(this->connection);
@@ -811,10 +792,9 @@ cms::TextMessage* ActiveMQSessionKernel::createTextMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSessionKernel::createTextMessage( const std::string& text ) {
+cms::TextMessage* ActiveMQSessionKernel::createTextMessage(const std::string& text) {
 
     try {
-
         this->checkClosed();
         cms::TextMessage* msg = createTextMessage();
         msg->setText(text.c_str());
@@ -826,8 +806,7 @@ cms::TextMessage* ActiveMQSessionKernel::createTextMessage( const std::string& t
 ////////////////////////////////////////////////////////////////////////////////
 cms::MapMessage* ActiveMQSessionKernel::createMapMessage() {
 
-    try{
-
+    try {
         this->checkClosed();
         commands::ActiveMQMapMessage* message = new commands::ActiveMQMapMessage();
         message->setConnection(this->connection);
@@ -915,7 +894,7 @@ void ActiveMQSessionKernel::send(cms::Message* message, ActiveMQProducerKernel* 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQSessionKernel::getExceptionListener() {
 
-    if( connection != NULL ) {
+    if (connection != NULL) {
         return connection->getExceptionListener();
     }
 
@@ -930,7 +909,7 @@ Pointer<Scheduler> ActiveMQSessionKernel::getScheduler() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::unsubscribe(const std::string& name) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -950,7 +929,7 @@ void ActiveMQSessionKernel::unsubscribe(const std::string& name) {
 void ActiveMQSessionKernel::dispatch(const Pointer<MessageDispatch>& dispatch) {
 
     if (this->executor.get() != NULL) {
-        this->executor->execute( dispatch );
+        this->executor->execute(dispatch);
     }
 }
 
@@ -961,7 +940,7 @@ void ActiveMQSessionKernel::redispatch(MessageDispatchChannel& unconsumedMessage
     std::vector< Pointer<MessageDispatch> >::reverse_iterator iter = messages.rbegin();
 
     for (; iter != messages.rend(); ++iter) {
-        executor->executeFirst( *iter );
+        executor->executeFirst(*iter);
     }
 }
 
@@ -1056,7 +1035,7 @@ std::string ActiveMQSessionKernel::createTemporaryDestinationName() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::oneway(Pointer<Command> command) {
 
-    try{
+    try {
         this->checkClosed();
         this->connection->oneway(command);
     }
@@ -1068,7 +1047,7 @@ void ActiveMQSessionKernel::oneway(Pointer<Command> command) {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> ActiveMQSessionKernel::syncRequest(Pointer<Command> command, unsigned int timeout) {
 
-    try{
+    try {
         this->checkClosed();
         return this->connection->syncRequest(command, timeout);
     }
@@ -1079,17 +1058,15 @@ Pointer<Response> ActiveMQSessionKernel::syncRequest(Pointer<Command> command, u
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::checkClosed() const {
-    if( this->closed.get() ) {
-        throw ActiveMQException(
-            __FILE__, __LINE__,
-            "ActiveMQSessionKernel - Session Already Closed" );
+    if (this->closed.get()) {
+        throw ActiveMQException(__FILE__, __LINE__, "ActiveMQSessionKernel - Session Already Closed");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -1109,7 +1086,7 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::removeConsumer(const Pointer<ConsumerId>& consumerId) {
 
-    try{
+    try {
 
         this->checkClosed();
 
@@ -1130,13 +1107,9 @@ void ActiveMQSessionKernel::removeConsumer(const Pointer<ConsumerId>& consumerId
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer) {
 
-    try{
-
+    try {
         this->checkClosed();
-
         this->config->producers.add(producer);
-
-        // Add to the Connections list
         this->connection->addProducer(producer);
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -1147,10 +1120,8 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> producer) {
 
-    try{
-
+    try {
         this->checkClosed();
-
         this->connection->removeProducer(producer->getProducerId());
         this->config->producers.remove(producer);
     }
