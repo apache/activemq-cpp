@@ -206,7 +206,7 @@ namespace kernels {
     public:
 
         ClientAckHandler( ActiveMQSessionKernel* session ) : session(session) {
-            if( session == NULL ) {
+            if (session == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Ack Handler Created with NULL Session.");
             }
@@ -246,13 +246,13 @@ namespace kernels {
             }
         }
 
-        void acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED ) {
+        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED ) {
 
             try {
 
-                if( this->dispatch != NULL ) {
-                    this->consumer->acknowledge( this->dispatch );
-                    this->dispatch.reset( NULL );
+                if (this->dispatch != NULL) {
+                    this->consumer->acknowledge(this->dispatch);
+                    this->dispatch.reset(NULL);
                 }
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -277,7 +277,7 @@ namespace kernels {
 
         StartConsumerTask( ActiveMQConsumerKernel* consumer ) : Runnable(), consumer(NULL) {
 
-            if( consumer == NULL ) {
+            if (consumer == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
@@ -288,7 +288,7 @@ namespace kernels {
         virtual ~StartConsumerTask() {}
 
         virtual void run() {
-            try{
+            try {
                 if(!this->consumer->isClosed()) {
                     this->consumer->start();
                 }
@@ -371,7 +371,7 @@ ActiveMQConsumerKernel::~ActiveMQConsumerKernel() {
 
     try {
 
-        try{
+        try {
             this->close();
         } catch(...) {}
 

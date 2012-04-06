@@ -106,6 +106,8 @@ void ActiveMQProducerKernel::close() {
             Pointer<RemoveInfo> info(new RemoveInfo);
             info->setObjectId(this->producerInfo->getProducerId());
             this->session->oneway(info);
+
+            this->closed = true;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -122,6 +124,7 @@ void ActiveMQProducerKernel::dispose() {
             producer.release();
             throw;
         }
+        producer.release();
         this->closed = true;
     }
 }
