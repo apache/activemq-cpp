@@ -35,6 +35,14 @@
 namespace decaf {
 namespace util {
 
+    class DECAF_API PriorityQueueBase {
+    protected:
+
+        static const int DEFAULT_CAPACITY;
+        static const int DEFAULT_CAPACITY_RATIO;
+
+    };
+
     /**
      * An unbounded priority queue based on a binary heap algorithm. The elements of the priority queue
      * are ordered according to their natural ordering, or by a Comparator provided to one of the constructors
@@ -66,11 +74,8 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class PriorityQueue : public AbstractQueue<E> {
+    class PriorityQueue : public AbstractQueue<E>, private PriorityQueueBase {
     private:
-
-        static const int DEFAULT_CAPACITY = 11;
-        static const int DEFAULT_CAPACITY_RATIO = 2;
 
         int _size;
         int capacity;
