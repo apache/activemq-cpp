@@ -669,7 +669,7 @@ void AbstractQueuedSynchronizerTest::testAwaitNanosTimeout() {
     AbstractQueuedSynchronizer::ConditionObject* c = mutex.newCondition();
     try {
         mutex.acquire(1);
-        long t = c->awaitNanos(100);
+        long long t = c->awaitNanos(100);
         CPPUNIT_ASSERT(t <= 0);
         mutex.release(1);
     } catch(Exception& ex) {

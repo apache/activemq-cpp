@@ -50,7 +50,7 @@ namespace concurrent{
     struct RWLOCK {
         HANDLE writeMutex;
         HANDLE readEvent;
-        LONG readers;
+        volatile LONG readers;
     };
 
     typedef void* PLATFORM_THREAD_ENTRY_ARG;
