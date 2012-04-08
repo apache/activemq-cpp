@@ -51,7 +51,7 @@ void* Atomics::getAndSet(volatile void** target, void* newValue) {
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndIncrement(volatile int* target) {
-	return ::InterlockedIncrement((volatile LONG*)target);
+	return ::InterlockedIncrement((volatile LONG*)target) - 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
