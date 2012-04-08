@@ -209,7 +209,7 @@ void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
                    __FILE__, __LINE__, "Failed to signal OS event object.");
            }
         }
-    } else {
+    } else if (result != 0) {
         throw RuntimeException(
             __FILE__, __LINE__, "Failed to signal unlock OS Mutex object.");
     }
@@ -227,7 +227,7 @@ void PlatformThread::destroyRWMutex(decaf_rwmutex_t mutex) {
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::createCondition(decaf_condition_t* condition) {
 
-    *condition = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+    *condition = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 
     if (condition == NULL) {
         throw RuntimeException(
