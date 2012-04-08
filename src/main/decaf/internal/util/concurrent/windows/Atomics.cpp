@@ -22,6 +22,14 @@ using namespace decaf::internal::util;
 using namespace decaf::internal::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
+void Atomics::initialize() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Atomics::shutdown() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Atomics::compareAndSet32(volatile int* target, int expect, int update ) {
     return InterlockedCompareExchange((volatile apr_uint32_t*)target, update, expect) == (unsigned int)expect;
 }
