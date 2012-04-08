@@ -2748,6 +2748,42 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="kernels"
+					>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQConsumerKernel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQConsumerKernel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQProducerKernel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQProducerKernel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQSessionKernel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQSessionKernel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQXASessionKernel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\core\kernels\ActiveMQXASessionKernel.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="exceptions"
@@ -4375,6 +4411,18 @@
 						Name="concurrent"
 						>
 						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\Atomics.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ExecutorsSupport.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ExecutorsSupport.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\internal\util\concurrent\PlatformThread.h"
 							>
 						</File>
@@ -4413,6 +4461,10 @@
 						<Filter
 							Name="windows"
 							>
+							<File
+								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\Atomics.cpp"
+								>
+							</File>
 							<File
 								RelativePath="..\src\main\decaf\internal\util\concurrent\windows\PlatformDefs.h"
 								>
@@ -5768,6 +5820,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\FutureTask.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\FutureTask.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\LinkedBlockingQueue.cpp"
 						>
 					</File>
@@ -5801,6 +5861,14 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RunnableFuture.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RunnableFuture.h"
 						>
 					</File>
 					<File
@@ -5899,6 +5967,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\AbstractQueuedSynchronizer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\AbstractQueuedSynchronizer.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\Condition.h"
 							>
 						</File>
@@ -5916,6 +5992,10 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReentrantLock.cpp"
 							>
 						</File>
 						<File

@@ -916,6 +916,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.cpp"
 							>
 						</File>

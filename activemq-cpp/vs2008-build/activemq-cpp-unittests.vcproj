@@ -2354,6 +2354,14 @@
 					Name="concurrent"
 					>
 					<File
+						RelativePath="..\src\test\decaf\util\concurrent\AbstractExecutorServiceTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\AbstractExecutorServiceTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\decaf\util\concurrent\ConcurrentStlMapTest.cpp"
 						>
 					</File>
@@ -2402,6 +2410,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test\decaf\util\concurrent\FutureTaskTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\FutureTaskTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.cpp"
 						>
 					</File>
@@ -2415,6 +2431,22 @@
 					</File>
 					<File
 						RelativePath="..\src\test\decaf\util\concurrent\MutexTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\SemaphoreTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\SemaphoreTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\SynchronousQueueTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\SynchronousQueueTest.h"
 						>
 					</File>
 					<File
@@ -2465,11 +2497,27 @@
 						Name="locks"
 						>
 						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\AbstractQueuedSynchronizerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\AbstractQueuedSynchronizerTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test\decaf\util\concurrent\locks\LockSupportTest.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\src\test\decaf\util\concurrent\locks\LockSupportTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\ReentrantLockTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\ReentrantLockTest.h"
 							>
 						</File>
 					</Filter>
