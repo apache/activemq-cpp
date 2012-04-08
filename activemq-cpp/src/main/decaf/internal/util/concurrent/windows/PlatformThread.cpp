@@ -109,7 +109,7 @@ void PlatformThread::readerLockMutex(decaf_rwmutex_t mutex) {
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::writerLockMutex(decaf_rwmutex_t mutex) {
 
-    DWORD code = ::WaitForSingleObject(mutex->writMmutex, INFINITE);
+    DWORD code = ::WaitForSingleObject(mutex->writeMutex, INFINITE);
 
     if (code == WAIT_FAILED || code == WAIT_TIMEOUT) {
         throw RuntimeException(
@@ -164,7 +164,7 @@ bool PlatformThread::tryReaderLockMutex(decaf_rwmutex_t mutex) {
 ////////////////////////////////////////////////////////////////////////////////
 bool PlatformThread::tryWriterLockMutex(decaf_rwmutex_t mutex) {
 
-    DWORD code = ::WaitForSingleObject(mutex->writMmutex, 0);
+    DWORD code = ::WaitForSingleObject(mutex->writeMutex, 0);
 
     if (code == WAIT_FAILED) {
         throw RuntimeException(
@@ -193,7 +193,7 @@ void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
 
     DWORD result = 0;
 
-    if (! ::ReleaseMutex(rwlock->writeMutex)) {
+    if (! ::ReleaseMutex(mutex->writeMutex)) {
         result = ::GetLastError();
     }
 
@@ -202,7 +202,7 @@ void PlatformThread::unlockRWMutex(decaf_rwmutex_t mutex) {
 
         // If there are readers and this is the last release, signal the event
         // so that any waiting writers get nofitied.
-        if (mutex->readers > 0 && ::InterlockedDecrement(mutex->readers) == 0) {
+        if (mutex->readers > 0 && ::InterlockedDecrement(&mutex->readers) == 0) {
 
            if (! ::SetEvent(mutex->readEvent)) {
                throw RuntimeException(
