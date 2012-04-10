@@ -23,6 +23,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,22 +38,28 @@ BrokerError::~BrokerError() {
 ////////////////////////////////////////////////////////////////////////////////
 void BrokerError::copyDataStructure( const DataStructure* src ) {
 
-    const BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
+    const BrokerError* srcErr = dynamic_cast<const BrokerError*> (src);
 
-    if( srcErr == NULL || src == NULL ) {
-        throw decaf::lang::exceptions::NullPointerException(
-            __FILE__, __LINE__,
-            "BrokerError::copyCommand - src is NULL or invalid" );
+    if (srcErr == NULL || src == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "BrokerError::copyCommand - src is NULL or invalid");
     }
 
-    this->setMessage( srcErr->getMessage() );
-    this->setExceptionClass( srcErr->getExceptionClass() );
-    this->setStackTraceElements( srcErr->getStackTraceElements() );
-    this->setCause( srcErr->getCause() );
+    this->setMessage(srcErr->getMessage());
+    this->setExceptionClass(srcErr->getExceptionClass());
+    this->setStackTraceElements(srcErr->getStackTraceElements());
+    this->setCause(srcErr->getCause());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> BrokerError::visit( activemq::state::CommandVisitor* visitor ) {
+Pointer<commands::Command> BrokerError::visit( activemq::state::CommandVisitor* visitor ) {
+    return visitor->processBrokerError(this);
+}
 
-    return visitor->processBrokerError( this );
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Exception BrokerError::createExceptionObject() {
+
+    // TODO Would be nice to actually create an exception matching the broker reported
+    // type as well as preserving the supplied stack trace and possible embedded cause.
+    Exception theCause(__FILE__, __LINE__, this->getMessage().c_str());
+    return theCause;
 }

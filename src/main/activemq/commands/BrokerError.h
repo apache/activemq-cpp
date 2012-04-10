@@ -20,18 +20,19 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/Exception.h>
 #include <decaf/lang/Pointer.h>
 
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     /**
-     * This class represents an Exception sent from the Broker.  The Broker
-     * sends java Throwables, so we must mimic its structure here.
+     * This class represents an Exception sent from the Broker.  The Broker sends a java
+     * Throwable structure, so we must mimic its structure here.  We provide a means in this
+     * class to create a Decaf Exception that represents the error from the broker.
      */
     class AMQCPP_API BrokerError : public BaseCommand {
     public:
@@ -73,7 +74,6 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual BrokerError* cloneDataStructure() const {
-
             BrokerError* error = new BrokerError();
             error->copyDataStructure( this );
             return error;
@@ -84,7 +84,7 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         /**
          * Allows a Visitor to visit this command and return a response to the
@@ -93,8 +93,7 @@ namespace commands{
          *
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor );
+        virtual decaf::lang::Pointer<commands::Command> visit(activemq::state::CommandVisitor* visitor);
 
         /**
          * Gets the string holding the error message
@@ -108,7 +107,7 @@ namespace commands{
          * Sets the string that contains the error Message
          * @param message - String Error Message
          */
-        virtual void setMessage( const std::string& message ) {
+        virtual void setMessage(const std::string& message) {
             this->message = message;
         }
 
@@ -124,7 +123,7 @@ namespace commands{
          * Sets the string that contains the Exception Class name
          * @param exceptionClass - String Exception Class name
          */
-        virtual void setExceptionClass( const std::string& exceptionClass ) {
+        virtual void setExceptionClass(const std::string& exceptionClass) {
             this->exceptionClass = exceptionClass;
         }
 
@@ -140,7 +139,7 @@ namespace commands{
          * Sets the Broker Error that caused this exception
          * @param cause - Broker Error
          */
-        virtual void setCause( const decaf::lang::Pointer<BrokerError>& cause ) {
+        virtual void setCause(const decaf::lang::Pointer<BrokerError>& cause) {
             this->cause = cause;
         }
 
@@ -148,7 +147,7 @@ namespace commands{
          * Gets the Stack Trace Elements for the Exception
          * @returns Stack Trace Elements
          */
-        virtual const std::vector< decaf::lang::Pointer<StackTraceElement> >& getStackTraceElements() const {
+        virtual const std::vector<decaf::lang::Pointer<StackTraceElement> >& getStackTraceElements() const {
             return stackTraceElements;
         }
 
@@ -156,9 +155,16 @@ namespace commands{
          * Sets the Stack Trace Elements for this Exception
          * @param stackTraceElements - Stack Trace Elements
          */
-        virtual void setStackTraceElements( const std::vector< decaf::lang::Pointer<StackTraceElement> >& stackTraceElements ) {
+        virtual void setStackTraceElements(const std::vector<decaf::lang::Pointer<StackTraceElement> >& stackTraceElements) {
             this->stackTraceElements = stackTraceElements;
         }
+
+        /**
+         * Creates and returns a Decaf Exception object that contains the error data from the Broker.
+         *
+         * @return a new instance of a Decaf Exception
+         */
+        decaf::lang::Exception createExceptionObject();
 
     };
 
