@@ -35,6 +35,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
+#include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -653,9 +654,17 @@ namespace core{
         void setTransportInterruptionProcessingComplete();
 
         /**
+         * Sets the pointer to the first exception that caused the Connection to become failed.
+         *
+         * @param pointer to the exception instance that is to be the first failure error if the
+         *        first error is already set this value is deleted.
+         */
+        void setFirstFailureError(decaf::lang::Exception* error);
+
+        /**
          * Gets the pointer to the first exception that caused the Connection to become failed.
          *
-         * @returns pointer to and Exception instance or NULL if none is set.
+         * @returns pointer to an Exception instance or NULL if none is set.
          */
         decaf::lang::Exception* getFirstFailureError() const;
 
@@ -685,6 +694,11 @@ namespace core{
          * If its not been sent, then send the ConnectionInfo to the Broker.
          */
         void ensureConnectionInfoSent();
+
+        /**
+         * @returns the ExecutorService used to run jobs for this Connection
+         */
+        decaf::util::concurrent::ExecutorService* getExecutor() const;
 
     protected:
 
