@@ -101,7 +101,6 @@ namespace concurrent {
          *
          * @throws NullPointerException if command is null
          */
-
         virtual void execute(decaf::lang::Runnable* command) = 0;
 
         /**
