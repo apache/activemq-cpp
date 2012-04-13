@@ -193,9 +193,10 @@ std::string Integer::toBinaryString( int value ) {
 std::string Integer::toOctalString( int value ) {
 
     int count = 1, j = value;
+    unsigned int uvalue = (unsigned int) value;
 
     if( value < 0 ) {
-        count = 11;
+        count = 11;  // (8 * sizeof(value) + 2) / 3;
     } else {
         while ( (j >>= 3) != 0 ) {
             count++;
@@ -208,8 +209,8 @@ std::string Integer::toOctalString( int value ) {
     char* buffer = new char[length + 1];
 
     do {
-        buffer[--count] = (char)( (value & 7) + '0' );
-        value >>= 3;
+        buffer[--count] = (char)( (uvalue & 7) + '0' );
+        uvalue >>= 3;
     } while( count > 0 );
 
     // Ensure there's a null
