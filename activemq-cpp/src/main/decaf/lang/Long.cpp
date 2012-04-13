@@ -378,7 +378,7 @@ std::string Long::toBinaryString( long long value ) {
     long long j = value;
 
     if( value < 0 ) {
-        count = 32;
+        count = 64;  // 8 * sizeof(long long);
     } else {
         while ( (j >>= 1) != 0) {
             count++;
@@ -408,9 +408,10 @@ std::string Long::toOctalString( long long value ) {
 
     int count = 1;
     long long j = value;
+    unsigned long long uvalue = (unsigned long long) value;
 
     if( value < 0 ) {
-        count = 11;
+        count = 22; // (8 * sizeof(long long) + 2) / 3;
     } else {
         while ( (j >>= 3) != 0 ) {
             count++;
@@ -424,7 +425,7 @@ std::string Long::toOctalString( long long value ) {
 
     do {
         buffer[--count] = (char)( (value & 7) + '0' );
-        value >>= 3;
+        uvalue >>= 3;
     } while( count > 0 );
 
     // Ensure there's a null
@@ -442,7 +443,7 @@ std::string Long::toHexString( long long value ) {
     long long j = value;
 
     if( value < 0 ) {
-        count = 8;
+        count = 16; // 8 * sizeof(long long) / 4
     } else {
         while( (j >>= 4) != 0 ) {
             count++;
