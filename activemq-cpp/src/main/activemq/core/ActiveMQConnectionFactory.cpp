@@ -167,15 +167,15 @@ namespace core{
 
             this->clientId = properties->getProperty(
                 core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_CLIENTID ), "" );
+                    core::ActiveMQConstants::PARAM_CLIENTID ), clientId );
 
             this->username = properties->getProperty(
                 core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_USERNAME ), "" );
+                    core::ActiveMQConstants::PARAM_USERNAME ), username );
 
             this->password = properties->getProperty(
                 core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_PASSWORD ), "" );
+                    core::ActiveMQConstants::PARAM_PASSWORD ), password );
 
             this->defaultPrefetchPolicy->configure( *properties );
             this->defaultRedeliveryPolicy->configure( *properties );
