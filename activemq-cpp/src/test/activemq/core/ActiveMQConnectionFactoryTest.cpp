@@ -138,6 +138,68 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::test3WithOpenWire()
+{
+    try
+    {
+        std::string URI = std::string() +
+            "mock://127.0.0.1:23232";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        std::auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection(username, password) );
+        CPPUNIT_ASSERT( connection.get() != NULL );
+
+        connection->setClientID(clientId);
+
+        ActiveMQConnection* amqConnection =
+            dynamic_cast< ActiveMQConnection* >( connection.get() );
+        CPPUNIT_ASSERT( amqConnection != NULL );
+        CPPUNIT_ASSERT( username == amqConnection->getUsername() );
+        CPPUNIT_ASSERT( password == amqConnection->getPassword() );
+        CPPUNIT_ASSERT( clientId == amqConnection->getClientID() );
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::test4WithOpenWire()
+{
+    try
+    {
+        std::string URI = std::string() +
+            "mock://127.0.0.1:23232";
+
+        ActiveMQConnectionFactory connectionFactory( URI, username, password );
+
+        std::auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection() );
+        CPPUNIT_ASSERT( connection.get() != NULL );
+
+        connection->setClientID(clientId);
+
+        ActiveMQConnection* amqConnection =
+            dynamic_cast< ActiveMQConnection* >( connection.get() );
+        CPPUNIT_ASSERT( amqConnection != NULL );
+        CPPUNIT_ASSERT( username == amqConnection->getUsername() );
+        CPPUNIT_ASSERT( password == amqConnection->getPassword() );
+        CPPUNIT_ASSERT( clientId == amqConnection->getClientID() );
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactoryTest::testExceptionWithPortOutOfRange() {
     try
     {
