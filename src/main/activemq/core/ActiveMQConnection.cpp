@@ -821,17 +821,6 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
         } else if (command->isBrokerInfo()) {
             this->config->brokerInfo = command.dynamicCast<BrokerInfo>();
             this->config->brokerInfoReceived->countDown();
-        } else if (command->isShutdownInfo()) {
-
-            try {
-                if (!this->isClosed()) {
-                    fire(ActiveMQException(__FILE__, __LINE__,
-                             "ActiveMQConnection::onCommand - "
-                             "Broker closed this connection."));
-                }
-            } catch( ... ) { /* do nothing */ }
-
-        } else {
         }
 
         Pointer< Iterator<TransportListener*> > iter(this->config->transportListeners.iterator());
