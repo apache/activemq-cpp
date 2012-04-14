@@ -29,6 +29,8 @@ namespace core{
         CPPUNIT_TEST_SUITE( ActiveMQConnectionFactoryTest );
         CPPUNIT_TEST( test1WithOpenWire );
         CPPUNIT_TEST( test2WithOpenWire );
+        CPPUNIT_TEST( test3WithOpenWire );
+        CPPUNIT_TEST( test4WithOpenWire );
         CPPUNIT_TEST( testExceptionOnCreate );
         CPPUNIT_TEST( testCreateWithURIOptions );
         CPPUNIT_TEST( testTransportListener );
@@ -51,6 +53,8 @@ namespace core{
 
         void test1WithOpenWire();
         void test2WithOpenWire();
+        void test3WithOpenWire();
+        void test4WithOpenWire();
         void testExceptionOnCreate();
         void testExceptionWithPortOutOfRange();
         void testCreateWithURIOptions();
