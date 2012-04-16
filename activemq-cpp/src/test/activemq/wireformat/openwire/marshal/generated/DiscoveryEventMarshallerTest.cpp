@@ -73,7 +73,7 @@ void DiscoveryEventMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( false );
 
     DiscoveryEvent outCommand;
@@ -113,7 +113,7 @@ void DiscoveryEventMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( true );
 
     DiscoveryEvent outCommand;

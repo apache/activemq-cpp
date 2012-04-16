@@ -73,7 +73,7 @@ void SessionInfoMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( false );
 
     SessionInfo outCommand;
@@ -113,7 +113,7 @@ void SessionInfoMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( true );
 
     SessionInfo outCommand;

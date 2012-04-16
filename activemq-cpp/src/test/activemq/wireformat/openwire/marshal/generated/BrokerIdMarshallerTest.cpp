@@ -73,7 +73,7 @@ void BrokerIdMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( false );
 
     BrokerId outCommand;
@@ -113,7 +113,7 @@ void BrokerIdMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 8 );
+    openWireFormat.setVersion( 9 );
     openWireFormat.setTightEncodingEnabled( true );
 
     BrokerId outCommand;
