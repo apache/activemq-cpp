@@ -47,7 +47,7 @@ namespace atomic {
          * Creates a new AtomicBoolean with the initial value.
          * @param initialValue - The initial value of this boolean.
          */
-        AtomicBoolean( bool initialValue );
+        AtomicBoolean(bool initialValue);
 
         virtual ~AtomicBoolean() {}
 
@@ -63,7 +63,7 @@ namespace atomic {
          * Unconditionally sets to the given value.
          * @param newValue - the new value
          */
-        void set( bool newValue ) {
+        void set(bool newValue) {
             this->value = newValue ? 1 : 0;
         }
 
@@ -76,7 +76,7 @@ namespace atomic {
          * @returns true if successful. False return indicates that the actual value
          * was not equal to the expected value.
          */
-        bool compareAndSet( bool expect, bool update );
+        bool compareAndSet(bool expect, bool update);
 
         /**
          * Atomically sets to the given value and returns the previous value.
@@ -84,7 +84,7 @@ namespace atomic {
          * @param newValue - the new value
          * @returns the previous value
          */
-        bool getAndSet( bool newValue );
+        bool getAndSet(bool newValue);
 
         /**
          * Returns the String representation of the current value.
