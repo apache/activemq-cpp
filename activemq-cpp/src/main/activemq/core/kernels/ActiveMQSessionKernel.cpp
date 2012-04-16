@@ -55,6 +55,7 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -68,11 +69,41 @@ using namespace activemq::exceptions;
 using namespace activemq::threads;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::atomic;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace {
+namespace activemq{
+namespace core{
+namespace kernels{
+
+    class CloseSynhcronization;
+
+    class SessionConfig {
+    public:
+
+        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
+                                     Pointer<ActiveMQConsumerKernel>,
+                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
+
+    private:
+
+        SessionConfig(const SessionConfig&);
+        SessionConfig& operator=(const SessionConfig&);
+
+    public:
+
+        AtomicBoolean synchronizationRegistered;
+        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
+        Pointer<Scheduler> scheduler;
+        Pointer<CloseSynhcronization> closeSync;
+
+    public:
+
+        SessionConfig() : synchronizationRegistered(false), producers(), scheduler(), closeSync() {}
+        ~SessionConfig() {}
+    };
 
     /**
      * Class used to clear a Consumer's dispatch queue asynchronously from the
@@ -114,6 +145,7 @@ namespace {
     private:
 
         ActiveMQSessionKernel* session;
+        SessionConfig* config;
 
     private:
 
@@ -122,9 +154,10 @@ namespace {
 
     public:
 
-        CloseSynhcronization(ActiveMQSessionKernel* session) : Synchronization(), session(session) {
+        CloseSynhcronization(ActiveMQSessionKernel* session, SessionConfig* config) :
+            Synchronization(), session(session), config(config) {
 
-            if (session == NULL) {
+            if (session == NULL || config == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Session.");
             }
@@ -136,42 +169,16 @@ namespace {
         }
 
         virtual void afterCommit() {
+            config->closeSync.release();
             session->doClose();
+            config->synchronizationRegistered.set(false);
         }
 
         virtual void afterRollback() {
+            config->closeSync.release();
             session->doClose();
+            config->synchronizationRegistered.set(false);
         }
-    };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace core{
-namespace kernels{
-
-    class SessionConfig {
-    public:
-
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     Pointer<ActiveMQConsumerKernel>,
-                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
-
-    private:
-
-        SessionConfig(const SessionConfig&);
-        SessionConfig& operator=(const SessionConfig&);
-
-    public:
-
-        bool synchronizationRegistered;
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
-        Pointer<Scheduler> scheduler;
-
-    public:
-
-        SessionConfig() : synchronizationRegistered(false), producers(), scheduler() {}
-        ~SessionConfig() {}
     };
 
 }}}
@@ -205,7 +212,7 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
 
     this->connection->oneway(this->sessionInfo);
 
-    this->closed = false;
+    this->closed.set(false);
     this->lastDeliveredSequenceId = -1;
 
     // Create a Transaction objet
@@ -250,22 +257,16 @@ void ActiveMQSessionKernel::close() {
         return;
     }
 
-    if (this->transaction->isInXATransaction()) {
-
-        // TODO - Right now we don't have a safe way of dealing with this case
-        // since the session might be deleted before the XA Transaction is finalized
-        // registering a Synchronization could result in an segmentation fault.
-        //
-        // For now we just close badly and throw an exception.
-        doClose();
-
-        throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "The Consumer is still in an Active XA Transaction, commit it first." );
-    }
-
     try {
-        doClose();
+
+        if (this->transaction->isInXATransaction()) {
+            if (!this->config->synchronizationRegistered.compareAndSet(false, true)) {
+                this->config->closeSync.reset(new CloseSynhcronization(this, this->config));
+                this->transaction->addSynchronization(this->config->closeSync);
+            }
+        } else {
+            doClose();
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -289,6 +290,11 @@ void ActiveMQSessionKernel::doClose() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::dispose() {
+
+    // Prevent Dispose loop if transaction has a close synchronization registered.
+    if (!closed.compareAndSet(false, true)) {
+        return;
+    }
 
     class Finalizer {
     private:
@@ -315,7 +321,6 @@ void ActiveMQSessionKernel::dispose() {
                 session.release();
             }
             session.release();
-            this->session->closed = true;
         }
     };
 
@@ -633,8 +638,7 @@ cms::QueueBrowser* ActiveMQSessionKernel::createBrowser( const cms::Queue* queue
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* ActiveMQSessionKernel::createBrowser(const cms::Queue* queue,
-                                                  const std::string& selector) {
+cms::QueueBrowser* ActiveMQSessionKernel::createBrowser(const cms::Queue* queue, const std::string& selector) {
 
     try {
 
