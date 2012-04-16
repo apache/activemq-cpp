@@ -729,17 +729,6 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
             this->config->brokerInfo =
                 command.dynamicCast<BrokerInfo>();
             this->config->brokerInfoReceived->countDown();
-        } else if( command->isShutdownInfo() ) {
-
-            try {
-                if( !this->isClosed() ) {
-                    fire( ActiveMQException(
-                        __FILE__, __LINE__,
-                        "ActiveMQConnection::onCommand - "
-                        "Broker closed this connection."));
-                }
-            } catch( ... ) { /* do nothing */ }
-
         } else {
             //LOGDECAF_WARN( logger, "Received an unknown command" );
         }
