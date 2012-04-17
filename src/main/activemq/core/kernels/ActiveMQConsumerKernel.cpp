@@ -742,7 +742,11 @@ void ActiveMQConsumerKernel::afterMessageIsConsumed(const Pointer<MessageDispatc
         }
 
         if (messageExpired == true) {
+            synchronized(&this->internal->dispatchedMessages) {
+                this->internal->dispatchedMessages.remove(message);
+            }
             ackLater(message, ActiveMQConstants::ACK_TYPE_DELIVERED);
+            return;
         }
 
         if (session->isTransacted()) {
