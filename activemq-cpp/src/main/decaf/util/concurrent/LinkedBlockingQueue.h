@@ -337,7 +337,7 @@ namespace concurrent {
         }
 
         virtual E take() {
-            E value;
+            E value = E();
             int c = -1;
             synchronized(&this->takeLock) {
 
