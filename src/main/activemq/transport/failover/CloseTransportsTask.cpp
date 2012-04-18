@@ -30,7 +30,8 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-CloseTransportsTask::CloseTransportsTask() : transports() {
+CloseTransportsTask::CloseTransportsTask() :
+    transports() {
 
 }
 
@@ -40,42 +41,31 @@ CloseTransportsTask::~CloseTransportsTask() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CloseTransportsTask::add( const Pointer<Transport>& transport ) {
-    synchronized( &transports ) {
-        transports.push( transport );
-    }
+void CloseTransportsTask::add(const Pointer<Transport>& transport) {
+    transports.put(transport);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CloseTransportsTask::isPending() const {
-
     bool result = false;
-
-    synchronized( &transports ) {
-        result = !transports.isEmpty();
-    }
-
+    result = !transports.isEmpty();
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CloseTransportsTask::iterate() {
 
-    synchronized( &transports ) {
+    if (!transports.isEmpty()) {
+        Pointer<Transport> transport = transports.take();
 
-        if( !transports.isEmpty() ) {
-            Pointer<Transport> transport = transports.pop();
-
-            try{
-                transport->close();
-            }
-            AMQ_CATCHALL_NOTHROW()
-
-            transport.reset( NULL );
-
-            return !transports.isEmpty();
+        try {
+            transport->close();
         }
+        AMQ_CATCHALL_NOTHROW()
 
+        transport.reset(NULL);
+
+        return !transports.isEmpty();
     }
 
     return false;
