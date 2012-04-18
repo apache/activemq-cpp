@@ -22,7 +22,7 @@
 #include <activemq/threads/CompositeTask.h>
 #include <activemq/transport/Transport.h>
 
-#include <decaf/util/LinkedList.h>
+#include <decaf/util/concurrent/LinkedBlockingQueue.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
@@ -30,12 +30,11 @@ namespace transport {
 namespace failover {
 
     using decaf::lang::Pointer;
-    using decaf::util::LinkedList;
 
     class AMQCPP_API CloseTransportsTask: public activemq::threads::CompositeTask {
     private:
 
-        mutable LinkedList< Pointer<Transport> > transports;
+        mutable decaf::util::concurrent::LinkedBlockingQueue< Pointer<Transport> > transports;
 
     public:
 
@@ -46,7 +45,7 @@ namespace failover {
         /**
          * Add a new Transport to close.
          */
-        void add( const Pointer<Transport>& transport );
+        void add(const Pointer<Transport>& transport);
 
         /**
          * This Task is pending if there are transports in the Queue that need to be
