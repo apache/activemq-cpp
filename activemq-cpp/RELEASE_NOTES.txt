@@ -1,4 +1,18 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.2                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-387] - Credentials are not propagated correctly when passed through the
+    			   ActiveMQConnectionFactory constructor in the CPP client API (However,
+    			   it works correctly when passed through the createConnection method)
+    [AMQCPP-391] - Potential hang on connect if wireformatinfo response is not received
+                   before timeout and failover transport is in use.
+    [AMQCPP-392] - Class Priority Queue defines constant in non-spec complaint manner
+    [AMQCPP-393] - TimeToLive feature makes some messages disappear
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.4.1                               ==
 =========================================================================
 
