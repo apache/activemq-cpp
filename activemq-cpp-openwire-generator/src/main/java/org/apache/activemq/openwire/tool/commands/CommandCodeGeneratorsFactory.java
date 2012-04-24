@@ -36,25 +36,30 @@ public class CommandCodeGeneratorsFactory {
      * method call to override the virtual method in the base Command interface.
      */
     {
-        commandsWithShortcuts = new HashSet<String>();
-        commandsWithShortcuts.add( "Response" );
-        commandsWithShortcuts.add( "RemoveInfo" );
-        commandsWithShortcuts.add( "MessageDispatch" );
-        commandsWithShortcuts.add( "BrokerInfo" );
-        commandsWithShortcuts.add( "KeepAliveInfo" );
-        commandsWithShortcuts.add( "WireFormatInfo" );
-        commandsWithShortcuts.add( "Message" );
-        commandsWithShortcuts.add( "MessageAck" );
-        commandsWithShortcuts.add( "ProducerAck" );
-        commandsWithShortcuts.add( "ProducerInfo" );
-        commandsWithShortcuts.add( "MessageDispatchNotification" );
-        commandsWithShortcuts.add( "ShutdownInfo" );
-        commandsWithShortcuts.add( "TransactionInfo" );
-        commandsWithShortcuts.add( "ConnectionControl" );
-        commandsWithShortcuts.add( "ConnectionInfo" );
-        commandsWithShortcuts.add( "ConsumerInfo" );
-        commandsWithShortcuts.add( "RemoveSubscriptionInfo" );
-
+		commandsWithShortcuts = new HashSet<String>();
+		commandsWithShortcuts.add("BrokerInfo");
+		commandsWithShortcuts.add("ControlCommand");
+		commandsWithShortcuts.add("ConnectionControl");
+		commandsWithShortcuts.add("ConnectionError");
+		commandsWithShortcuts.add("ConnectionInfo");
+		commandsWithShortcuts.add("ConsumerControl");
+		commandsWithShortcuts.add("ConsumerInfo");
+		commandsWithShortcuts.add("FlushCommand");
+		commandsWithShortcuts.add("KeepAliveInfo");
+		commandsWithShortcuts.add("Message");
+		commandsWithShortcuts.add("MessageAck");
+		commandsWithShortcuts.add("MessageDispatch");
+		commandsWithShortcuts.add("MessageDispatchNotification");
+		commandsWithShortcuts.add("MessagePull");
+		commandsWithShortcuts.add("RemoveInfo");
+		commandsWithShortcuts.add("RemoveSubscriptionInfo");
+		commandsWithShortcuts.add("ReplayCommand");
+		commandsWithShortcuts.add("Response");
+		commandsWithShortcuts.add("ProducerAck");
+		commandsWithShortcuts.add("ProducerInfo");
+		commandsWithShortcuts.add("ShutdownInfo");
+		commandsWithShortcuts.add("TransactionInfo");
+		commandsWithShortcuts.add("WireFormatInfo");
     }
 
     /**
