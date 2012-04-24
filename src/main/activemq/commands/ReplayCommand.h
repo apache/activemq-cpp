@@ -80,6 +80,13 @@ namespace commands{
         virtual int getLastNakNumber() const;
         virtual void setLastNakNumber( int lastNakNumber );
 
+        /**
+         * @return an answer of true to the isReplayCommand() query.
+         */
+        virtual bool isReplayCommand() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };

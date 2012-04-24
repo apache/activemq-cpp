@@ -72,6 +72,13 @@ namespace commands{
 
         virtual bool equals( const DataStructure* value ) const;
 
+        /**
+         * @return an answer of true to the isFlushCommand() query.
+         */
+        virtual bool isFlushCommand() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };

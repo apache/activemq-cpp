@@ -99,6 +99,13 @@ namespace commands{
         virtual Pointer<MessageId>& getMessageId();
         virtual void setMessageId( const Pointer<MessageId>& messageId );
 
+        /**
+         * @return an answer of true to the isMessagePull() query.
+         */
+        virtual bool isMessagePull() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };
