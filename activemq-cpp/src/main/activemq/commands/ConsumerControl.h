@@ -104,6 +104,13 @@ namespace commands{
         virtual bool isStop() const;
         virtual void setStop( bool stop );
 
+        /**
+         * @return an answer of true to the isConsumerControl() query.
+         */
+        virtual bool isConsumerControl() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };

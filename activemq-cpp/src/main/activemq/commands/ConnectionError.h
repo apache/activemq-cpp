@@ -84,6 +84,13 @@ namespace commands{
         virtual Pointer<ConnectionId>& getConnectionId();
         virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
+        /**
+         * @return an answer of true to the isConnectionError() query.
+         */
+        virtual bool isConnectionError() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };

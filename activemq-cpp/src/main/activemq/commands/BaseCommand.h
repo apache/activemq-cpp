@@ -21,8 +21,8 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/Command.h>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     class AMQCPP_API BaseCommand : public Command {
     private:
@@ -37,7 +37,7 @@ namespace commands{
 
         virtual ~BaseCommand() {}
 
-        virtual void setCommandId( int id ) {
+            virtual void setCommandId(int id) {
             this->commandId = id;
         }
 
@@ -45,7 +45,7 @@ namespace commands{
             return commandId;
         }
 
-        virtual void setResponseRequired( const bool required ) {
+        virtual void setResponseRequired(const bool required) {
             this->responseRequired = required;
         }
 
@@ -53,13 +53,10 @@ namespace commands{
             return responseRequired;
         }
 
-        virtual void copyDataStructure( const DataStructure* src ) {
-
-            const BaseCommand* command =
-                dynamic_cast< const BaseCommand* >( src );
-
-            this->setResponseRequired( command->isResponseRequired() );
-            this->setCommandId( command->getCommandId() );
+        virtual void copyDataStructure(const DataStructure* src) {
+            const BaseCommand* command = dynamic_cast<const BaseCommand*> (src);
+            this->setResponseRequired(command->isResponseRequired());
+            this->setCommandId(command->getCommandId());
         }
 
         /**
@@ -85,11 +82,20 @@ namespace commands{
          * same type, and that each element of the objects are the same.
          * @returns true if DataStructure's are Equal.
          */
-        virtual bool equals( const DataStructure* value ) const {
-            return BaseDataStructure::equals( value );
+        virtual bool equals(const DataStructure* value) const {
+            return BaseDataStructure::equals(value);
         }
 
+        virtual bool isBrokerInfo() const  {
+            return false;
+        }
+        virtual bool isControlCommand() const {
+            return false;
+        }
         virtual bool isConnectionControl() const {
+            return false;
+        }
+        virtual bool isConnectionError() const {
             return false;
         }
         virtual bool isConnectionInfo() const {
@@ -98,13 +104,22 @@ namespace commands{
         virtual bool isConsumerInfo() const {
             return false;
         }
-        virtual bool isBrokerInfo() const  {
+        virtual bool isConsumerControl() const {
+            return false;
+        }
+        virtual bool isDestinationInfo() const {
+            return false;
+        }
+        virtual bool isFlushCommand() const {
             return false;
         }
         virtual bool isMessage() const  {
             return false;
         }
         virtual bool isMessageAck() const  {
+            return false;
+        }
+        virtual bool isMessagePull() const  {
             return false;
         }
         virtual bool isKeepAliveInfo() const {
@@ -129,6 +144,12 @@ namespace commands{
             return false;
         }
         virtual bool isRemoveSubscriptionInfo() const {
+            return false;
+        }
+        virtual bool isReplayCommand() const {
+            return false;
+        }
+        virtual bool isSessionInfo() const  {
             return false;
         }
         virtual bool isShutdownInfo() const  {

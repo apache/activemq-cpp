@@ -77,6 +77,13 @@ namespace commands{
         virtual std::string& getCommand();
         virtual void setCommand( const std::string& command );
 
+        /**
+         * @return an answer of true to the isControlCommand() query.
+         */
+        virtual bool isControlCommand() const {
+            return true;
+        }
+
         virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
 
     };
