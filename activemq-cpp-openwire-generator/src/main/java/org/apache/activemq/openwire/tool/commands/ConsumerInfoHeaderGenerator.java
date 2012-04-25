@@ -29,8 +29,27 @@ public class ConsumerInfoHeaderGenerator extends CommandHeaderGenerator {
         super.populateIncludeFilesSet();
     }
 
+    protected void generateProperties( PrintWriter out ) {
+
+        super.generateProperties(out);
+
+        out.println("    private:");
+        out.println("");
+        out.println("        // Prefetch size that is controlled by the Broker." );
+        out.println("        int currentPrefetchSize;");
+        out.println("");
+    }
+
     protected void generateAdditonalMembers( PrintWriter out ) {
         out.println("        Pointer<RemoveInfo> createRemoveCommand() const;");
+        out.println("");
+        out.println("        int getCurrentPrefetchSize() const {");
+        out.println("            return this->currentPrefetchSize;");
+        out.println("        }");
+        out.println("");
+        out.println("        void setCurrentPrefetchSize(int currentPrefetchSize) {");
+        out.println("            this->currentPrefetchSize = currentPrefetchSize;");
+        out.println("        }");
         out.println("");
 
         super.generateAdditonalMembers( out );
