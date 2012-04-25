@@ -76,6 +76,11 @@ namespace commands{
 
     private:
 
+        // Prefetch size that is controlled by the Broker.
+        int currentPrefetchSize;
+
+    private:
+
         ConsumerInfo( const ConsumerInfo& );
         ConsumerInfo& operator= ( const ConsumerInfo& );
 
@@ -96,6 +101,14 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         Pointer<RemoveInfo> createRemoveCommand() const;
+
+        int getCurrentPrefetchSize() const {
+            return this->currentPrefetchSize;
+        }
+
+        void setCurrentPrefetchSize(int currentPrefetchSize) {
+            this->currentPrefetchSize = currentPrefetchSize;
+        }
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
