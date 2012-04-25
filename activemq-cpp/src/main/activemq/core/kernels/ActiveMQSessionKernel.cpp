@@ -1135,6 +1135,32 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::setPrefetchSize(Pointer<ConsumerId> id, int prefetch) {
+
+    synchronized(&this->consumers) {
+        if (this->consumers.containsKey(id)) {
+            Pointer<ActiveMQConsumerKernel> consumer = this->consumers.get(id);
+            consumer->setPrefetchSize(prefetch);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::close(Pointer<ConsumerId> id) {
+
+    synchronized(&this->consumers) {
+        if (this->consumers.containsKey(id)) {
+            Pointer<ActiveMQConsumerKernel> consumer = this->consumers.get(id);
+
+            try {
+                consumer->close();
+            } catch (cms::CMSException& e) {
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::doStartTransaction() {
 
     if (this->isTransacted() && !this->transaction->isInXATransaction()) {

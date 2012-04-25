@@ -719,6 +719,15 @@ namespace core{
         // Allow subclasses to access the original Properties object for this connection.
         const decaf::util::Properties& getProperties() const;
 
+        // Process the ControlCommand command
+        void onControlCommand(Pointer<commands::Command> command);
+
+        // Process the ConnectionControl command
+        void onConnectionControl(Pointer<commands::Command> command);
+
+        // Process the ConsumerControl command
+        void onConsumerControl(Pointer<commands::Command> command);
+
     };
 
 }}
