@@ -1348,3 +1348,9 @@ decaf::lang::Exception* ActiveMQConsumerKernel::getFailureError() const {
 
     return this->internal->failureError.get();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumerKernel::setPrefetchSize(int prefetchSize) {
+    deliverAcks();
+    this->consumerInfo->setCurrentPrefetchSize(prefetchSize);
+}

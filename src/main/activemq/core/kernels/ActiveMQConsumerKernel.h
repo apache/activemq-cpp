@@ -256,6 +256,12 @@ namespace kernels {
          */
         decaf::lang::Exception* getFailureError() const;
 
+        /**
+         * Sets the current prefetch size for the consumer as indicated by a Broker
+         * ConsumerControl command.
+         */
+        void setPrefetchSize(int prefetchSize);
+
     protected:
 
         /**

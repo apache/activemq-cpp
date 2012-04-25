@@ -316,7 +316,7 @@ ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport>& tran
     transport->setTransportListener(this);
 
     // Set the initial state of the ConnectionInfo
-    configuration->connectionInfo->setManageable(false);
+    configuration->connectionInfo->setManageable(true);
     configuration->connectionInfo->setFaultTolerant(transport->isFaultTolerant());
 
     // Store of the transport and properties, the Connection now owns them.
@@ -797,6 +797,7 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
                         message->setReadOnlyBody(true);
                         message->setReadOnlyProperties(true);
                         message->setRedeliveryCounter(dispatch->getRedeliveryCounter());
+                        message->setConnection(this);
                     }
 
                     dispatcher->dispatch(dispatch);
@@ -821,6 +822,20 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
         } else if (command->isBrokerInfo()) {
             this->config->brokerInfo = command.dynamicCast<BrokerInfo>();
             this->config->brokerInfoReceived->countDown();
+        } else if (command->isConnectionControl()) {
+            this->onConnectionControl(command);
+        } else if (command->isControlCommand()) {
+            this->onControlCommand(command);
+        } else if (command->isConnectionError()) {
+
+            Pointer<ConnectionError> connectionError = command.dynamicCast<ConnectionError>();
+            Pointer<BrokerError> brokerError = connectionError->getException();
+            if (brokerError != NULL) {
+                this->onAsyncException(brokerError->createExceptionObject());
+            }
+
+        } else if (command->isConsumerControl()) {
+            this->onConsumerControl(command);
         }
 
         Pointer< Iterator<TransportListener*> > iter(this->config->transportListeners.iterator());
@@ -834,6 +849,34 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onControlCommand(Pointer<commands::Command> command AMQCPP_UNUSED) {
+    // Don't need to do anything yet as close and shutdown are applicable yet.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onConnectionControl(Pointer<commands::Command> command AMQCPP_UNUSED) {
+    // Don't need to do anything yet as we don't support optimizeAcknowledge.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onConsumerControl(Pointer<commands::Command> command) {
+
+    Pointer<ConsumerControl> consumerControl = command.dynamicCast<ConsumerControl>();
+
+    // Get the complete list of active sessions.
+    std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+
+    while (iter->hasNext()) {
+        Pointer<ActiveMQSessionKernel> session = iter->next();
+        if (consumerControl->isClose()) {
+            session->close(consumerControl->getConsumerId());
+        } else {
+            session->setPrefetchSize(consumerControl->getConsumerId(), consumerControl->getPrefetch());
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

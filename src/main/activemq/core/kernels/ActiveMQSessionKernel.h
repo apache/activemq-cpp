@@ -478,6 +478,25 @@ namespace kernels {
          */
         void dispose();
 
+        /**
+         * Set the prefetch level for the given consumer if it exists in this Session to
+         * the value specified.
+         *
+         * @param id
+         *      The consumer Id to search for and set prefetch level.
+         * @param prefetch
+         *      The new prefetch value.
+         */
+        void setPrefetchSize(Pointer<commands::ConsumerId> id, int prefetch);
+
+        /**
+         * Close the specified consumer if present in this Session.
+         *
+         * @param id
+         *      The consumer Id to close.
+         */
+        void close(Pointer<commands::ConsumerId> id);
+
    private:
 
        /**
