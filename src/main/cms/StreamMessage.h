@@ -58,7 +58,7 @@ namespace cms {
      *
      * @since 1.3
      */
-    class CMS_API StreamMessage : public Message {
+    class CMS_API StreamMessage: public Message {
     public:
 
         virtual ~StreamMessage();
@@ -86,7 +86,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBoolean( bool value ) = 0;
+        virtual void writeBoolean(bool value) = 0;
 
         /**
          * Reads a Byte from the Stream message stream
@@ -109,7 +109,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeByte( unsigned char value ) = 0;
+        virtual void writeByte(unsigned char value) = 0;
 
         /**
          * Reads a byte array from the Stream message stream.
@@ -135,7 +135,7 @@ namespace cms {
          * @throw MessageFormatException - if this type conversion is invalid.
          * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual int readBytes( std::vector<unsigned char>& value ) const = 0;
+        virtual int readBytes(std::vector<unsigned char>& value) const = 0;
 
         /**
          * Writes a byte array to the Stream message stream using the vector
@@ -147,7 +147,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const std::vector<unsigned char>& value ) = 0;
+        virtual void writeBytes(const std::vector<unsigned char>& value) = 0;
 
         /**
          * Reads a portion of the Stream message stream.
@@ -180,7 +180,7 @@ namespace cms {
          * @throw MessageFormatException - if this type conversion is invalid.
          * @throw MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual int readBytes( unsigned char* buffer, int length ) const = 0;
+        virtual int readBytes(unsigned char* buffer, int length) const = 0;
 
         /**
          * Writes a portion of a byte array to the Stream message stream.
@@ -196,7 +196,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const unsigned char* value, int offset, int length ) = 0;
+        virtual void writeBytes(const unsigned char* value, int offset, int length) = 0;
 
         /**
          * Reads a Char from the Stream message stream
@@ -219,7 +219,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeChar( char value ) = 0;
+        virtual void writeChar(char value) = 0;
 
         /**
          * Reads a 32 bit float from the Stream message stream
@@ -241,7 +241,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeFloat( float value ) = 0;
+        virtual void writeFloat(float value) = 0;
 
         /**
          * Reads a 64 bit double from the Stream message stream
@@ -263,7 +263,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeDouble( double value ) = 0;
+        virtual void writeDouble(double value) = 0;
 
         /**
          * Reads a 16 bit signed short from the Stream message stream
@@ -286,7 +286,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeShort( short value ) = 0;
+        virtual void writeShort(short value) = 0;
 
         /**
          * Reads a 16 bit unsigned short from the Stream message stream
@@ -309,7 +309,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeUnsignedShort( unsigned short value ) = 0;
+        virtual void writeUnsignedShort(unsigned short value) = 0;
 
         /**
          * Reads a 32 bit signed integer from the Stream message stream
@@ -332,7 +332,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeInt( int value ) = 0;
+        virtual void writeInt(int value) = 0;
 
         /**
          * Reads a 64 bit long from the Stream message stream
@@ -355,7 +355,7 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeLong( long long value ) = 0;
+        virtual void writeLong(long long value) = 0;
 
         /**
          * Reads an ASCII String from the Stream message stream
@@ -378,7 +378,16 @@ namespace cms {
          *                        to some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeString( const std::string& value ) = 0;
+        virtual void writeString(const std::string& value) = 0;
+
+        /**
+         * Puts the message body in read-only mode and repositions the stream
+         * of bytes to the beginning.
+         *
+         * @throws CMSException - If the provider fails to perform the reset operation.
+         * @throws MessageFormatException - If the Message has an invalid format.
+         */
+        virtual void reset() = 0;
 
     };
 
