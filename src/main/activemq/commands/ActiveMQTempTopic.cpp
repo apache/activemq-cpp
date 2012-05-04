@@ -27,16 +27,11 @@ ActiveMQTempTopic::ActiveMQTempTopic() : ActiveMQTempDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempTopic::ActiveMQTempTopic( const std::string& name ) :
-    ActiveMQTempDestination( name )
-{}
+ActiveMQTempTopic::ActiveMQTempTopic(const std::string& name) : ActiveMQTempDestination(name) {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempTopic::~ActiveMQTempTopic() throw() {
-    try {
-        this->close();
-    }
-    AMQ_CATCHALL_NOTHROW()
+ActiveMQTempTopic::~ActiveMQTempTopic() throw () {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,14 +41,18 @@ unsigned char ActiveMQTempTopic::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempTopic* ActiveMQTempTopic::cloneDataStructure() const {
-    std::auto_ptr<ActiveMQTempTopic> message( new ActiveMQTempTopic() );
-    message->copyDataStructure( this );
-    return message.release();
+    std::auto_ptr<ActiveMQTempTopic> copy(new ActiveMQTempTopic());
+    copy->copyDataStructure(this);
+    copy->connection = this->connection;
+    copy->connectionId = this->connectionId;
+    copy->sequenceId = this->sequenceId;
+
+    return copy.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempTopic::copyDataStructure( const DataStructure* src ) {
-    ActiveMQTempDestination::copyDataStructure( src );
+void ActiveMQTempTopic::copyDataStructure(const DataStructure* src) {
+    ActiveMQTempDestination::copyDataStructure(src);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,19 +61,19 @@ std::string ActiveMQTempTopic::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempTopic::equals( const DataStructure* value ) const {
-    return ActiveMQDestination::equals( value );
+bool ActiveMQTempTopic::equals(const DataStructure* value) const {
+    return ActiveMQDestination::equals(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempTopic::equals( const cms::Destination& value ) const {
-    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
-    return ActiveMQDestination::equals( dest );
+bool ActiveMQTempTopic::equals(const cms::Destination& value) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*> (&value);
+    return ActiveMQDestination::equals(dest);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempTopic::destroy() {
-    try{
+    try {
         close();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

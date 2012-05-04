@@ -275,29 +275,29 @@ void ActiveMQConnectionFactoryTest::testTransportListener() {
 
     MyTransportListener listener;
 
-    ActiveMQConnectionFactory connectionFactory( URI );
+    ActiveMQConnectionFactory connectionFactory(URI);
 
     std::auto_ptr<cms::Connection> connection(
-        connectionFactory.createConnection() );
-    CPPUNIT_ASSERT( connection.get() != NULL );
+        connectionFactory.createConnection());
+    CPPUNIT_ASSERT(connection.get() != NULL);
 
     ActiveMQConnection* amqConnection =
         dynamic_cast< ActiveMQConnection* >( connection.get() );
 
-    amqConnection->addTransportListener( & listener );
+    amqConnection->addTransportListener(&listener);
 
-    std::auto_ptr<ActiveMQSession> session( dynamic_cast<ActiveMQSession*>(
-        amqConnection->createSession() ) );
+    std::auto_ptr<ActiveMQSession> session(
+        dynamic_cast<ActiveMQSession*> (amqConnection->createSession()));
 
-    std::auto_ptr<cms::Destination> destination( session->createTopic( "TEST" ) );
+    std::auto_ptr<cms::Destination> destination(session->createTopic("TEST"));
 
-    std::auto_ptr<ActiveMQProducer> producer( dynamic_cast<ActiveMQProducer*>(
-        session->createProducer( destination.get() ) ) );
+    std::auto_ptr<ActiveMQProducer> producer(
+        dynamic_cast<ActiveMQProducer*> (session->createProducer(destination.get())));
 
-    std::auto_ptr<cms::TextMessage> message( session->createTextMessage() );
-    producer->send( message.get() );
+    std::auto_ptr<cms::TextMessage> message(session->createTextMessage());
+    producer->send(message.get());
 
-    Thread::sleep( 2000 );
+    Thread::sleep(2000);
 
     CPPUNIT_ASSERT( listener.isInterrupted() );
     CPPUNIT_ASSERT( listener.isResumed() );

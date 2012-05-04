@@ -15,42 +15,37 @@
  * limitations under the License.
  */
 
-#include "ConnectionStateTest.h"
+#include "AdvisorySupportTest.h"
 
-#include <activemq/state/ConnectionState.h>
-#include <activemq/state/SessionState.h>
-#include <activemq/commands/SessionInfo.h>
+#include <activemq/util/AdvisorySupport.h>
+#include <activemq/commands/ActiveMQDestination.h>
+
 #include <decaf/lang/Pointer.h>
 
-using namespace std;
 using namespace activemq;
-using namespace activemq::state;
+using namespace activemq::util;
 using namespace activemq::commands;
+using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTest::test() {
-
-    // Create a Session
-    Pointer<SessionId> sid(new SessionId);
-    sid->setConnectionId("CONNECTION");
-    sid->setValue(42);
-    Pointer<SessionInfo> sinfo(new SessionInfo);
-    sinfo->setSessionId(sid);
-
-    Pointer<ConnectionId> connectionId(new ConnectionId());
-    connectionId->setValue("CONNECTION");
-    Pointer<ConnectionInfo> info(new ConnectionInfo);
-    info->setConnectionId(connectionId);
-
-    ConnectionState state(info);
-
-    state.addSession(sinfo);
-    CPPUNIT_ASSERT( state.getSessionStates().size() == 2 );
-    state.removeSession(sinfo->getSessionId());
-    CPPUNIT_ASSERT( state.getSessionStates().size() == 1 );
-
-    state.addSession(sinfo);
-    state.addSession(sinfo);
-    CPPUNIT_ASSERT( state.getSessionStates().size() == 2 );
+AdvisorySupportTest::AdvisorySupportTest() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+AdvisorySupportTest::~AdvisorySupportTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AdvisorySupportTest::testGetTempDestinationCompositeAdvisoryTopic() {
+
+    Pointer<ActiveMQDestination> topic(AdvisorySupport::getTempDestinationCompositeAdvisoryTopic());
+    CPPUNIT_ASSERT(topic != NULL);
+    CPPUNIT_ASSERT(topic->isComposite());
+    CPPUNIT_ASSERT(topic->isTopic());
+    CPPUNIT_ASSERT(topic->isTemporary() == false);
+
+    CPPUNIT_ASSERT(topic->getPhysicalName().find(".TempTopic") != std::string::npos);
+    CPPUNIT_ASSERT(topic->getPhysicalName().find(".TempQueue") != std::string::npos);
+}
+

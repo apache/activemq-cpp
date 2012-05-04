@@ -46,19 +46,26 @@ namespace commands{
          */
         core::ActiveMQConnection* connection;
 
+        /**
+         * The Connection Id of the Connection that created this Temporary Destination.
+         */
+        std::string connectionId;
+
+        int sequenceId;
+
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPDESTINATION = 0;
 
     private:
 
-        ActiveMQTempDestination( const ActiveMQTempDestination& );
-        ActiveMQTempDestination& operator= ( const ActiveMQTempDestination& );
+        ActiveMQTempDestination(const ActiveMQTempDestination&);
+        ActiveMQTempDestination& operator=(const ActiveMQTempDestination&);
 
     public:
 
         ActiveMQTempDestination();
-        ActiveMQTempDestination( const std::string& name );
+        ActiveMQTempDestination(const std::string& name);
         virtual ~ActiveMQTempDestination() throw();
 
         virtual unsigned char getDataStructureType() const;
@@ -67,17 +74,19 @@ namespace commands{
             return NULL;
         }
 
-        virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQDestination::copyDataStructure( src );
+        virtual void copyDataStructure(const DataStructure* src) {
+            ActiveMQDestination::copyDataStructure(src);
         }
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQDestination::equals( value );
+        virtual bool equals(const DataStructure* value) const {
+            return ActiveMQDestination::equals(value);
         }
 
         virtual void close();
+
+        virtual void setPhysicalName(const std::string& physicalName);
 
         /**
          * Sets the Parent Connection that is notified when this destination is
@@ -86,10 +95,25 @@ namespace commands{
          * @param connection
          *      The parent connection to be used to destroy this destination if closed..
          */
-        void setConnection( core::ActiveMQConnection* connection ) {
+        void setConnection(core::ActiveMQConnection* connection) {
             this->connection = connection;
         }
 
+        /**
+         * Retrieves the Parent Connection that created this Connection.
+         *
+         * @returns pointer to a Connection if one was set, false otherwise.
+         */
+        core::ActiveMQConnection* getConnection() const {
+            return this->connection;
+        }
+
+        /**
+         * @returns the connection Id of the Connection that created this temporary destination.
+         */
+        std::string getConnectionId() const {
+            return this->connectionId;
+        }
     };
 
 }}

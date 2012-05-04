@@ -269,19 +269,17 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V remove( const K& key ) {
+        virtual V remove(const K& key) {
 
-            V result;
+            V result = V();
 
-            synchronized( &mutex ) {
-                typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
-                if( iter == valueMap.end() ) {
-                    throw NoSuchElementException(
-                        __FILE__, __LINE__, "Key is not present in this Map." );
+            synchronized(&mutex) {
+                typename std::map<K, V, COMPARATOR>::iterator iter = valueMap.find(key);
+                if (iter == valueMap.end()) {
+                    return result;
                 }
-
                 result = iter->second;
-                valueMap.erase( iter );
+                valueMap.erase(iter);
             }
 
             return result;

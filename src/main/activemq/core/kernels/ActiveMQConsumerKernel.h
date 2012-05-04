@@ -110,7 +110,7 @@ namespace kernels {
 
         virtual void dispatch( const Pointer<MessageDispatch>& message );
 
-    public:  // ActiveMQConsumer Methods
+    public:  // ActiveMQConsumerKernel Methods
 
         /**
          * Method called to acknowledge all messages that have been received so far.
@@ -261,6 +261,13 @@ namespace kernels {
          * ConsumerControl command.
          */
         void setPrefetchSize(int prefetchSize);
+
+        /**
+         * Checks if the given destination is the Destination that this Consumer is subscribed to.
+         *
+         * @return true if the consumer is subscribed to the given destination.
+         */
+        bool isInUse(Pointer<commands::ActiveMQDestination> destination) const;
 
     protected:
 

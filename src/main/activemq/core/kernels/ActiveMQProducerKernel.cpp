@@ -23,6 +23,7 @@
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/ActiveMQProperties.h>
+#include <activemq/util/ActiveMQMessageTransformation.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -54,7 +55,8 @@ ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSessionKernel* session,
                                                                         producerInfo(),
                                                                         closed(false),
                                                                         memoryUsage(),
-                                                                        destination() {
+                                                                        destination(),
+                                                                        messageSequence() {
 
     if (session == NULL || producerId == NULL) {
         throw ActiveMQException(
@@ -75,7 +77,7 @@ ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSessionKernel* session,
         this->producerInfo->setDispatchAsync(
             Boolean::parseBoolean(options.getProperty("producer.dispatchAsync", "false")));
 
-        this->destination = destination.dynamicCast<cms::Destination> ();
+        this->destination = destination.dynamicCast<cms::Destination>();
     }
 
     // TODO - Check for need of MemoryUsage if there's a producer Windows size
@@ -176,13 +178,20 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
             throw cms::InvalidDestinationException("Don't understand null destinations", NULL);
         }
 
-        const cms::Destination* dest;
-        if (destination == dynamic_cast<cms::Destination*> (this->producerInfo->getDestination().get())) {
-            dest = destination;
+        Pointer<ActiveMQDestination> dest;
+        const ActiveMQDestination* transformed;
+
+        if (destination == this->destination.get()) {
+            dest = this->producerInfo->getDestination();
         } else if (this->producerInfo->getDestination() == NULL) {
-            // TODO - We should apply a Transform so ensure the user hasn't create some
-            //        external cms::Destination implementation.
-            dest = destination;
+            // We always need to use a copy of the users destination since we want to control
+            // its lifetime.  If the transform results in a new destination we can use that, but
+            // if its already an ActiveMQDestination then we need to clone it.
+            if (ActiveMQMessageTransformation::transformDestination(destination, &transformed)) {
+                dest.reset(const_cast<ActiveMQDestination*>(transformed));
+            } else {
+                dest.reset(transformed->cloneDataStructure());
+            }
         } else {
             throw cms::UnsupportedOperationException(
                 string("This producer can only send messages to: ") +
@@ -193,27 +202,16 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
             throw cms::CMSException("No destination specified", NULL);
         }
 
-        // configure the message
-        message->setCMSDestination(dest);
-        message->setCMSDeliveryMode(deliveryMode);
-        message->setCMSPriority(priority);
-
-        long long expiration = 0LL;
-
-        if (!disableTimestamps) {
-
-            long long timeStamp = System::currentTimeMillis();
-            message->setCMSTimestamp(timeStamp);
-            if (timeToLive > 0LL) {
-                expiration = timeToLive + timeStamp;
+        if (this->memoryUsage.get() != NULL) {
+            try {
+                this->memoryUsage->waitForSpace();
+            } catch (InterruptedException& e) {
+                throw cms::CMSException("Send aborted due to thread interrupt.");
             }
         }
 
-        message->setCMSExpiration(expiration);
-
-        // Delegate send to the session so that it can choose how to
-        // send the message.
-        this->session->send(message, this, this->memoryUsage.get());
+        this->session->send(this, dest, message, deliveryMode, priority, timeToLive,
+                            this->memoryUsage.get(), this->sendTimeout);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

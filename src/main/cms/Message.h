@@ -181,7 +181,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual bool propertyExists( const std::string& name ) const = 0;
+        virtual bool propertyExists(const std::string& name) const = 0;
 
         /**
          * Gets a boolean property.
@@ -193,7 +193,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual bool getBooleanProperty( const std::string& name ) const = 0;
+        virtual bool getBooleanProperty(const std::string& name) const = 0;
 
         /**
          * Gets a byte property.
@@ -205,7 +205,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual unsigned char getByteProperty( const std::string& name ) const = 0;
+        virtual unsigned char getByteProperty(const std::string& name) const = 0;
 
         /**
          * Gets a double property.
@@ -217,7 +217,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual double getDoubleProperty( const std::string& name ) const = 0;
+        virtual double getDoubleProperty(const std::string& name) const = 0;
 
         /**
          * Gets a float property.
@@ -229,7 +229,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual float getFloatProperty( const std::string& name ) const = 0;
+        virtual float getFloatProperty(const std::string& name) const = 0;
 
         /**
          * Gets a int property.
@@ -241,7 +241,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual int getIntProperty( const std::string& name ) const = 0;
+        virtual int getIntProperty(const std::string& name) const = 0;
 
         /**
          * Gets a long property.
@@ -253,7 +253,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual long long getLongProperty( const std::string& name ) const = 0;
+        virtual long long getLongProperty(const std::string& name) const = 0;
 
         /**
          * Gets a short property.
@@ -265,7 +265,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual short getShortProperty( const std::string& name ) const = 0;
+        virtual short getShortProperty(const std::string& name) const = 0;
 
         /**
          * Gets a string property.
@@ -277,7 +277,7 @@ namespace cms{
          * @throws CMSException if the property does not exist.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual std::string getStringProperty( const std::string& name ) const = 0;
+        virtual std::string getStringProperty(const std::string& name) const = 0;
 
         /**
          * Sets a boolean property.
@@ -484,7 +484,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSDestination( const Destination* destination ) = 0;
+        virtual void setCMSDestination(const Destination* destination) = 0;
 
         /**
          * Gets the message's expiration value.
@@ -524,7 +524,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSExpiration( long long expireTime ) = 0;
+        virtual void setCMSExpiration(long long expireTime) = 0;
 
         /**
          * The CMSMessageID header field contains a value that uniquely
@@ -570,7 +570,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSMessageID( const std::string& id ) = 0;
+        virtual void setCMSMessageID(const std::string& id) = 0;
 
         /**
          * Gets the message priority level.
@@ -601,7 +601,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSPriority( int priority ) = 0;
+        virtual void setCMSPriority(int priority) = 0;
 
         /**
          * Gets an indication of whether this message is being redelivered.
@@ -627,7 +627,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSRedelivered( bool redelivered ) = 0;
+        virtual void setCMSRedelivered(bool redelivered) = 0;
 
         /**
          * Gets the Destination object to which a reply to this message should
@@ -666,7 +666,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSReplyTo( const cms::Destination* destination ) = 0;
+        virtual void setCMSReplyTo(const cms::Destination* destination) = 0;
 
         /**
          * Gets the message timestamp.
@@ -708,7 +708,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSTimestamp( long long timeStamp ) = 0;
+        virtual void setCMSTimestamp(long long timeStamp) = 0;
 
         /**
          * Gets the message type identifier supplied by the client when the
@@ -751,7 +751,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSType( const std::string& type ) = 0;
+        virtual void setCMSType(const std::string& type) = 0;
 
     };
 }

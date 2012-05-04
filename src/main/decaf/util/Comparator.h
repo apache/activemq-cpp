@@ -53,7 +53,7 @@ namespace util{
          *
          * @return true if the vale of left is less than the value of right.
          */
-        virtual bool operator() ( const T& left, const T& right ) const = 0;
+        virtual bool operator() (const T& left, const T& right) const = 0;
 
         /**
          * Compares its two arguments for order. Returns a negative integer, zero,
@@ -85,7 +85,7 @@ namespace util{
          * @returns a negative integer, zero, or a positive integer as the first
          *          argument is less than, equal to, or greater than the second.
          */
-        virtual int compare( const T& o1, const T& o2 ) const = 0;
+        virtual int compare(const T& o1, const T& o2) const = 0;
 
     };
 

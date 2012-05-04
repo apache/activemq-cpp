@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/util/MemoryUsage.h>
+#include <activemq/util/LongSequenceGenerator.h>
 #include <activemq/commands/ProducerInfo.h>
 #include <activemq/commands/ProducerAck.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -74,6 +75,9 @@ namespace kernels {
 
         // The Destination assigned at creation, NULL if not assigned.
         Pointer<cms::Destination> destination;
+
+        // Generator of Message Sequence Id numbers for this producer.
+        util::LongSequenceGenerator messageSequence;
 
     private:
 
@@ -211,8 +215,6 @@ namespace kernels {
             return this->sendTimeout;
         }
 
-    public:
-
         /**
          * @returns true if this Producer has been closed.
          */
@@ -251,6 +253,13 @@ namespace kernels {
          * command to a failed transport.
          */
         void dispose();
+
+        /**
+         * @returns the next sequence number for a Message sent from this Producer.
+         */
+        long long getNextMessageSequence() {
+            return this->messageSequence.getNextSequenceId();
+        }
 
     private:
 

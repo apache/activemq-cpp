@@ -15,38 +15,52 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHER_H_
-#define ACTIVEMQ_CORE_DISPATCHER_H_
+#ifndef _ACTIVEMQ_CORE_ADVISORYCONSUMER_H_
+#define _ACTIVEMQ_CORE_ADVISORYCONSUMER_H_
 
-#include <activemq/commands/MessageDispatch.h>
 #include <activemq/util/Config.h>
+#include <activemq/core/Dispatcher.h>
+#include <activemq/core/ActiveMQConnection.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/DestinationInfo.h>
+
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace core {
 
-    using decaf::lang::Pointer;
-    using activemq::commands::MessageDispatch;
+    class AdvisoryConsumerConfig;
 
-    /**
-     * Interface for an object responsible for dispatching messages to
-     * consumers.
-     */
-    class AMQCPP_API Dispatcher {
+    using decaf::lang::Pointer;
+
+    class AMQCPP_API AdvisoryConsumer : Dispatcher {
+    private:
+
+        AdvisoryConsumerConfig* config;
+        ActiveMQConnection* connection;
+
+    private:
+
+        AdvisoryConsumer(const AdvisoryConsumer&);
+        AdvisoryConsumer& operator= (const AdvisoryConsumer&);
+
     public:
 
-        virtual ~Dispatcher(){}
+        AdvisoryConsumer(ActiveMQConnection* connection, Pointer<commands::ConsumerId> consumerId);
+        virtual ~AdvisoryConsumer();
 
-        /**
-         * Dispatches a message to a particular consumer.
-         *
-         * @param message
-         *      The message to be dispatched to a waiting consumer.
-         */
-        virtual void dispatch(const Pointer<MessageDispatch>& message) = 0;
+    public:
+
+        void dispose();
+
+        virtual void dispatch(const Pointer<MessageDispatch>& message);
+
+    private:
+
+        void processDestinationInfo(Pointer<commands::DestinationInfo> destination);
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/
+#endif /* _ACTIVEMQ_CORE_ADVISORYCONSUMER_H_ */

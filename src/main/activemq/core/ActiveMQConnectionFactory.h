@@ -362,6 +362,23 @@ namespace core{
          */
         void setMessagePrioritySupported(bool value);
 
+        /**
+         * Is the Connection created by this factory configured to watch for advisory messages
+         * that inform the Connection about temporary destination create / destroy.
+         *
+         * @return true if Connection's will listen for temporary destination advisory messages.
+         */
+        bool isWatchTopicAdvisories() const;
+
+        /**
+         * Sets whether Connection's created by this factory will listen for advisory messages
+         * regarding temporary destination creation and deletion.
+         *
+         * @param value
+         *      Boolean indicating if advisory message monitoring should be enabled.
+         */
+        void setWatchTopicAdvisories(bool value);
+
     public:
 
         /**

@@ -359,12 +359,12 @@ namespace lang {
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <
-        virtual bool operator() ( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {
+        virtual bool operator() (const Pointer<T,R>& left, const Pointer<T,R>& right) const {
             return *left < *right;
         }
 
         // Requires that the type in the pointer is an instance of a Comparable.
-        virtual int compare( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {
+        virtual int compare(const Pointer<T,R>& left, const Pointer<T,R>& right) const {
             return *left < *right ? -1 : *right < *left ? 1 : 0;
         }
 

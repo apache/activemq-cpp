@@ -15,38 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHER_H_
-#define ACTIVEMQ_CORE_DISPATCHER_H_
+#ifndef _ACTIVEMQ_UTIL_ACTIVEMQMESSAGETRANSFORMATIONTEST_H_
+#define _ACTIVEMQ_UTIL_ACTIVEMQMESSAGETRANSFORMATIONTEST_H_
 
-#include <activemq/commands/MessageDispatch.h>
-#include <activemq/util/Config.h>
-#include <decaf/lang/Pointer.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace activemq {
-namespace core {
+namespace util {
 
-    using decaf::lang::Pointer;
-    using activemq::commands::MessageDispatch;
+    class ActiveMQMessageTransformationTest : public CppUnit::TestFixture {
+    private:
 
-    /**
-     * Interface for an object responsible for dispatching messages to
-     * consumers.
-     */
-    class AMQCPP_API Dispatcher {
+        CPPUNIT_TEST_SUITE( ActiveMQMessageTransformationTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
     public:
 
-        virtual ~Dispatcher(){}
+        ActiveMQMessageTransformationTest();
+        virtual ~ActiveMQMessageTransformationTest();
 
-        /**
-         * Dispatches a message to a particular consumer.
-         *
-         * @param message
-         *      The message to be dispatched to a waiting consumer.
-         */
-        virtual void dispatch(const Pointer<MessageDispatch>& message) = 0;
-
+        void test() {}
     };
 
 }}
 
-#endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/
+#endif /* _ACTIVEMQ_UTIL_ACTIVEMQMESSAGETRANSFORMATIONTEST_H_ */

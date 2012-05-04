@@ -55,6 +55,8 @@ cc_sources = \
     activemq/transport/failover/FailoverTransportTest.cpp \
     activemq/transport/inactivity/InactivityMonitorTest.cpp \
     activemq/transport/mock/MockTransportFactoryTest.cpp \
+    activemq/util/ActiveMQMessageTransformationTest.cpp \
+    activemq/util/AdvisorySupportTest.cpp \
     activemq/util/IdGeneratorTest.cpp \
     activemq/util/LongSequenceGeneratorTest.cpp \
     activemq/util/MarshallingSupportTest.cpp \
@@ -284,6 +286,8 @@ h_sources = \
     activemq/transport/failover/FailoverTransportTest.h \
     activemq/transport/inactivity/InactivityMonitorTest.h \
     activemq/transport/mock/MockTransportFactoryTest.h \
+    activemq/util/ActiveMQMessageTransformationTest.h \
+    activemq/util/AdvisorySupportTest.h \
     activemq/util/IdGeneratorTest.h \
     activemq/util/LongSequenceGeneratorTest.h \
     activemq/util/MarshallingSupportTest.h \

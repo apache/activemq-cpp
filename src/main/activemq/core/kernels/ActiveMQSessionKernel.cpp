@@ -27,6 +27,7 @@
 #include <activemq/core/ActiveMQSessionExecutor.h>
 #include <activemq/core/PrefetchPolicy.h>
 #include <activemq/util/ActiveMQProperties.h>
+#include <activemq/util/ActiveMQMessageTransformation.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
 #include <activemq/commands/ConsumerInfo.h>
@@ -55,6 +56,7 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -98,10 +100,12 @@ namespace kernels{
         decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
         Pointer<Scheduler> scheduler;
         Pointer<CloseSynhcronization> closeSync;
+        ConsumersMap consumers;
+        Mutex sendMutex;
 
     public:
 
-        SessionConfig() : synchronizationRegistered(false), producers(), scheduler(), closeSync() {}
+        SessionConfig() : synchronizationRegistered(false), producers(), scheduler(), closeSync(), consumers(), sendMutex() {}
         ~SessionConfig() {}
     };
 
@@ -830,66 +834,98 @@ bool ActiveMQSessionKernel::isTransacted() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::send(cms::Message* message, ActiveMQProducerKernel* producer, util::Usage* usage) {
+void ActiveMQSessionKernel::send(kernels::ActiveMQProducerKernel* producer, Pointer<commands::ActiveMQDestination> destination,
+                                 cms::Message* message, int deliveryMode, int priority, long long timeToLive,
+                                 util::MemoryUsage* producerWindow, long long sendTimeout) {
 
     try {
 
         this->checkClosed();
 
-        commands::Message* amqMessage = dynamic_cast< commands::Message* >(message);
-
-        if (amqMessage == NULL) {
-            throw ActiveMQException(__FILE__, __LINE__,
-                "ActiveMQSessionKernel::send - Message is not a valid Open Wire type.");
+        if (destination->isTemporary()) {
+            Pointer<ActiveMQTempDestination> tempDest = destination.dynamicCast<ActiveMQTempDestination>();
+            if (this->connection->isDeleted(tempDest)) {
+                throw cms::InvalidDestinationException(
+                    std::string("Cannot publish to a deleted Destination: ") + destination->toString());
+            }
         }
 
-        // Clear any old data that might be in the message object
-        amqMessage->getMessageId().reset(NULL);
-        amqMessage->getProducerId().reset(NULL);
-        amqMessage->getTransactionId().reset(NULL);
+        synchronized(&this->config->sendMutex) {
 
-        // Always assign the message ID, regardless of the disable
-        // flag.  Not adding a message ID will cause an NPE at the broker.
-        decaf::lang::Pointer<commands::MessageId> id(new commands::MessageId());
-        id->setProducerId(producer->getProducerInfo()->getProducerId());
-        id->setProducerSequenceId(this->getNextProducerSequenceId());
+            // Ensure that a new transaction is started if this is the first message
+            // sent since the last commit, Broker is notified of a new TX.
+            doStartTransaction();
 
-        amqMessage->setMessageId(id);
+            Pointer<TransactionId> txId = this->transaction->getTransactionId();
+            Pointer<ProducerInfo> producerInfo = producer->getProducerInfo();
+            Pointer<ProducerId> producerId = producerInfo->getProducerId();
+            long long sequenceId = producer->getNextMessageSequence();
 
-        // Ensure that a new transaction is started if this is the first message
-        // sent since the last commit.
-        doStartTransaction();
-        amqMessage->setTransactionId(this->transaction->getTransactionId());
+            // Set the "CMS" header fields on the original message, see JMS 1.1 spec section 3.4.11
+            message->setCMSDeliveryMode(deliveryMode);
+            long long expiration = 0LL;
+            if (!producer->getDisableMessageTimeStamp()) {
+                long long timeStamp = System::currentTimeMillis();
+                message->setCMSTimestamp(timeStamp);
+                if (timeToLive > 0) {
+                    expiration = timeToLive + timeStamp;
+                }
+            }
+            message->setCMSExpiration(expiration);
+            message->setCMSPriority(priority);
+            message->setCMSRedelivered(false);
 
-        // NOTE:
-        // Now we copy the message before sending, this allows the user to reuse the
-        // message object without interfering with the copy that's being sent.  We
-        // could make this step optional to increase performance but for now we won't.
-        // To not do this implies that the user must never reuse the message object, or
-        // know that the configuration of Transports doesn't involve the message hanging
-        // around beyond the point that send returns.
-        Pointer<commands::Message> msgCopy(amqMessage->cloneDataStructure());
+            // transform to our own message format here
+            commands::Message* transformed = NULL;
+            Pointer<commands::Message> amqMessage;
 
-        msgCopy->onSend();
-        msgCopy->setProducerId( producer->getProducerInfo()->getProducerId() );
+            // Always assign the message ID, regardless of the disable flag.
+            // Not adding a message ID will cause an NPE at the broker.
+            decaf::lang::Pointer<commands::MessageId> id(new commands::MessageId());
+            id->setProducerId(producerId);
+            id->setProducerSequenceId(sequenceId);
 
-        if (this->connection->getSendTimeout() <= 0 &&
-            !msgCopy->isResponseRequired() &&
-            !this->connection->isAlwaysSyncSend() &&
-            (!msgCopy->isPersistent() || this->connection->isUseAsyncSend() ||
-               msgCopy->getTransactionId() != NULL)) {
-
-            if (usage != NULL) {
-                usage->enqueueUsage(msgCopy->getSize());
+            // NOTE:
+            // Now we copy the message before sending, this allows the user to reuse the
+            // message object without interfering with the copy that's being sent.  We
+            // could make this step optional to increase performance but for now we won't.
+            // To not do this implies that the user must never reuse the message object, or
+            // know that the configuration of Transports doesn't involve the message hanging
+            // around beyond the point that send returns.  When the transform step results in
+            // a new Message object being created we can just use that new instance, but when
+            // the original cms::Message pointer was already a commands::Message then we need
+            // to clone it.
+            if (ActiveMQMessageTransformation::transformMessage(message, connection, &transformed)) {
+                amqMessage.reset(transformed);
+                // Sets the Message ID on the original message per spec.
+                message->setCMSMessageID(id->toString());
+            } else {
+                amqMessage.reset(transformed->cloneDataStructure());
             }
 
-            // No Response Required.
-            this->connection->oneway(msgCopy);
+            amqMessage->setMessageId(id);
+            amqMessage->getBrokerPath().clear();
+            amqMessage->setTransactionId(txId);
+            amqMessage->setConnection(this->connection);
 
-        } else {
+            // destination format is provider specific so only set on transformed message
+            amqMessage->setDestination(destination);
 
-            // Send the message to the broker.
-            this->connection->syncRequest(msgCopy, this->connection->getSendTimeout());
+            amqMessage->onSend();
+            amqMessage->setProducerId(producerId);
+
+            if (sendTimeout <= 0 && !amqMessage->isResponseRequired() && !this->connection->isAlwaysSyncSend() &&
+                (!amqMessage->isPersistent() || this->connection->isUseAsyncSend() || amqMessage->getTransactionId() != NULL)) {
+
+                if (producerWindow != NULL) {
+                    producerWindow->enqueueUsage(amqMessage->getSize());
+                }
+
+                // No Response Required, send is asynchronous.
+                this->connection->oneway(amqMessage);
+            } else {
+                this->connection->syncRequest(amqMessage, (unsigned int)sendTimeout);
+            }
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -998,10 +1034,28 @@ void ActiveMQSessionKernel::createTemporaryDestination(commands::ActiveMQTempDes
 
         // Now that its setup, link it to this Connection so it can be closed.
         tempDestination->setConnection(this->connection);
+        this->connection->addTempDestination(Pointer<ActiveMQTempDestination>(tempDestination->cloneDataStructure()));
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQSessionKernel::isInUse(Pointer<ActiveMQDestination> destination) {
+
+    synchronized(&this->consumers) {
+        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
+
+        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
+        for (; iter != consumers.end(); ++iter) {
+            if ((*iter)->isInUse(destination)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1040,7 +1094,6 @@ std::string ActiveMQSessionKernel::createTemporaryDestinationName() {
 void ActiveMQSessionKernel::oneway(Pointer<Command> command) {
 
     try {
-        this->checkClosed();
         this->connection->oneway(command);
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -1092,8 +1145,6 @@ void ActiveMQSessionKernel::removeConsumer(const Pointer<ConsumerId>& consumerId
 
     try {
 
-        this->checkClosed();
-
         synchronized(&this->consumers) {
             if (this->consumers.containsKey(consumerId)) {
                 // Remove this Id both from the Sessions Map of Consumers and from the Connection.
@@ -1125,7 +1176,6 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> producer) {
 
     try {
-        this->checkClosed();
         this->connection->removeProducer(producer->getProducerId());
         this->config->producers.remove(producer);
     }

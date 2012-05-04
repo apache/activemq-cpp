@@ -40,7 +40,7 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId::ConsumerId() 
+ConsumerId::ConsumerId()
     : BaseDataStructure(), connectionId(""), sessionId(0), value(0), parentId() {
 
 }

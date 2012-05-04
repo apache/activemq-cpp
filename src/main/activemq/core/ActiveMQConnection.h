@@ -519,6 +519,23 @@ namespace core{
          */
         long long getNextLocalTransactionId();
 
+        /**
+         * Is the Connection configured to watch for advisory messages to maintain state of
+         * temporary destination create and destroy.
+         *
+         * @return true if the Connection will listen for temporary topic advisory messages.
+         */
+        bool isWatchTopicAdvisories() const;
+
+        /**
+         * Sets whether this Connection is listening for advisory messages regarding temporary
+         * destination creation and deletion.
+         *
+         * @param value
+         *      Boolean indicating if advisory message monitoring should be enabled.
+         */
+        void setWatchTopicAdvisories(bool value);
+
     public: // TransportListener
 
         /**
@@ -677,6 +694,14 @@ namespace core{
         void onAsyncException(const decaf::lang::Exception& ex);
 
         /**
+         * Handles async client internal exceptions which don't usually affect the connection
+         * itself.  These are reported but do not shutdown the Connection.
+         *
+         * @param error the exception that the problem
+         */
+        void onClientInternalException(const decaf::lang::Exception& ex);
+
+        /**
          * Check for Closed State and Throw an exception if true.
          *
          * @throws CMSException if the Connection is closed.
@@ -699,6 +724,51 @@ namespace core{
          * @returns the ExecutorService used to run jobs for this Connection
          */
         decaf::util::concurrent::ExecutorService* getExecutor() const;
+
+        /**
+         * Adds the given Temporary Destination to this Connections collection of known
+         * Temporary Destinations.
+         *
+         * @param destination
+         *      The temporary destination that this connection should track.
+         */
+        void addTempDestination(Pointer<commands::ActiveMQTempDestination> destination);
+
+        /**
+         * Removes the given Temporary Destination to this Connections collection of known
+         * Temporary Destinations.
+         *
+         * @param destination
+         *      The temporary destination that this connection should stop tracking.
+         */
+        void removeTempDestination(Pointer<commands::ActiveMQTempDestination> destination);
+
+        /**
+         * Removes the given Temporary Destination to this Connections collection of known
+         * Temporary Destinations.
+         *
+         * @param destination
+         *      The temporary destination that this connection should remove from the Broker.
+         *
+         * @throws CMSException if the temporary destination is in use by an active Session.
+         */
+        void deleteTempDestination(Pointer<commands::ActiveMQTempDestination> destination);
+
+        /**
+         * Removes any TempDestinations that this connection has cached, ignoring any exceptions
+         * generated because the destination is in use as they should not be removed.  This method
+         * is useful for Connection pools that retain connection objects for long durations and
+         * want to periodically purge old temporary destination instances this connection is tracking.
+         */
+        void cleanUpTempDestinations();
+
+        /**
+         * Determines whether the supplied Temporary Destination has already been deleted from the
+         * Broker.  If watchTopicAdvisories is disabled this method will always return false.
+         *
+         * @returns true if the temporary destination was deleted already.
+         */
+        bool isDeleted(Pointer<commands::ActiveMQTempDestination> destination) const;
 
     protected:
 

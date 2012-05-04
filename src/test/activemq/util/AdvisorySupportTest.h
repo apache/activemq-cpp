@@ -15,38 +15,31 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHER_H_
-#define ACTIVEMQ_CORE_DISPATCHER_H_
+#ifndef _ACTIVEMQ_UTIL_ADVISORYSUPPORTTEST_H_
+#define _ACTIVEMQ_UTIL_ADVISORYSUPPORTTEST_H_
 
-#include <activemq/commands/MessageDispatch.h>
-#include <activemq/util/Config.h>
-#include <decaf/lang/Pointer.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace activemq {
-namespace core {
+namespace util {
 
-    using decaf::lang::Pointer;
-    using activemq::commands::MessageDispatch;
+    class AdvisorySupportTest : public CppUnit::TestFixture {
+    private:
 
-    /**
-     * Interface for an object responsible for dispatching messages to
-     * consumers.
-     */
-    class AMQCPP_API Dispatcher {
+        CPPUNIT_TEST_SUITE( AdvisorySupportTest );
+        CPPUNIT_TEST( testGetTempDestinationCompositeAdvisoryTopic );
+        CPPUNIT_TEST_SUITE_END();
+
     public:
 
-        virtual ~Dispatcher(){}
+        AdvisorySupportTest();
+        virtual ~AdvisorySupportTest();
 
-        /**
-         * Dispatches a message to a particular consumer.
-         *
-         * @param message
-         *      The message to be dispatched to a waiting consumer.
-         */
-        virtual void dispatch(const Pointer<MessageDispatch>& message) = 0;
+        void testGetTempDestinationCompositeAdvisoryTopic();
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/
+#endif /* _ACTIVEMQ_UTIL_ADVISORYSUPPORTTEST_H_ */

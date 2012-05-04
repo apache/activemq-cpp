@@ -74,6 +74,7 @@ namespace core{
         bool useAsyncSend;
         bool messagePrioritySupported;
         bool useCompression;
+        bool watchTopicAdvisories;
         int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
@@ -83,23 +84,24 @@ namespace core{
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
-        FactorySettings() : properties( new Properties() ),
+        FactorySettings() : properties(new Properties()),
                             username(),
                             password(),
                             clientId(),
-                            brokerURI( ActiveMQConnectionFactory::DEFAULT_URI ),
-                            dispatchAsync( true ),
-                            alwaysSyncSend( false ),
-                            useAsyncSend( false ),
-                            messagePrioritySupported( true ),
-                            useCompression( false ),
-                            compressionLevel( -1 ),
-                            sendTimeout( 0 ),
-                            closeTimeout( 15000 ),
-                            producerWindowSize( 0 ),
-                            defaultListener( NULL ),
-                            defaultPrefetchPolicy( new DefaultPrefetchPolicy() ),
-                            defaultRedeliveryPolicy( new DefaultRedeliveryPolicy() ) {
+                            brokerURI(ActiveMQConnectionFactory::DEFAULT_URI),
+                            dispatchAsync(true),
+                            alwaysSyncSend(false),
+                            useAsyncSend(false),
+                            messagePrioritySupported(true),
+                            useCompression(false),
+                            watchTopicAdvisories(true),
+                            compressionLevel(-1),
+                            sendTimeout(0),
+                            closeTimeout(15000),
+                            producerWindowSize(0),
+                            defaultListener(NULL),
+                            defaultPrefetchPolicy(new DefaultPrefetchPolicy()),
+                            defaultRedeliveryPolicy(new DefaultRedeliveryPolicy()) {
         }
 
         void updateConfiguration( const URI& uri ) {
@@ -363,6 +365,7 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setPrefetchPolicy(this->settings->defaultPrefetchPolicy->clone());
     connection->setRedeliveryPolicy(this->settings->defaultRedeliveryPolicy->clone());
     connection->setMessagePrioritySupported(this->settings->messagePrioritySupported);
+    connection->setWatchTopicAdvisories(this->settings->watchTopicAdvisories);
 
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
@@ -537,4 +540,14 @@ bool ActiveMQConnectionFactory::isMessagePrioritySupported() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setMessagePrioritySupported(bool value) {
     this->settings->messagePrioritySupported = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isWatchTopicAdvisories() const {
+    return this->settings->watchTopicAdvisories;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setWatchTopicAdvisories(bool value) {
+    this->settings->watchTopicAdvisories = value;
 }

@@ -22,6 +22,7 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/core/AdvisoryConsumer.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
@@ -101,6 +102,10 @@ namespace core{
                                      Pointer<ActiveMQProducerKernel>,
                                      commands::ProducerId::COMPARATOR > ProducerMap;
 
+        typedef decaf::util::concurrent::ConcurrentStlMap< Pointer<commands::ActiveMQTempDestination>,
+                                                           Pointer<commands::ActiveMQTempDestination>,
+                                                           commands::ActiveMQTempDestination::COMPARATOR > TempDestinationMap;
+
     public:
 
         static util::IdGenerator CONNECTION_ID_GENERATOR;
@@ -112,6 +117,7 @@ namespace core{
         Pointer<ExecutorService> executor;
 
         util::LongSequenceGenerator sessionIds;
+        util::LongSequenceGenerator consumerIdGenerator;
         util::LongSequenceGenerator tempDestinationIds;
         util::LongSequenceGenerator localTransactionIds;
 
@@ -128,6 +134,7 @@ namespace core{
         bool alwaysSyncSend;
         bool useAsyncSend;
         bool messagePrioritySupported;
+        bool watchTopicAdvisories;
         bool useCompression;
         int compressionLevel;
         unsigned int sendTimeout;
@@ -144,6 +151,7 @@ namespace core{
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
         Pointer<CountDownLatch> transportInterruptionProcessingComplete;
         Pointer<CountDownLatch> brokerInfoReceived;
+        Pointer<AdvisoryConsumer> advisoryConsumer;
 
         Pointer<Exception> firstFailureError;
 
@@ -153,41 +161,47 @@ namespace core{
         decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQSessionKernel> > activeSessions;
         decaf::util::concurrent::CopyOnWriteArrayList<transport::TransportListener*> transportListeners;
 
+        TempDestinationMap activeTempDestinations;
+
         ConnectionConfig() : properties(),
                              transport(),
                              clientIdGenerator(),
                              scheduler(),
                              sessionIds(),
+                             consumerIdGenerator(),
                              tempDestinationIds(),
                              localTransactionIds(),
                              brokerURL(""),
-                             clientIDSet( false ),
-                             isConnectionInfoSentToBroker( false ),
-                             userSpecifiedClientID( false ),
+                             clientIDSet(false),
+                             isConnectionInfoSentToBroker(false),
+                             userSpecifiedClientID(false),
                              ensureConnectionInfoSentMutex(),
                              mutex(),
-                             dispatchAsync( true ),
-                             alwaysSyncSend( false ),
-                             useAsyncSend( false ),
-                             messagePrioritySupported( true ),
-                             useCompression( false ),
-                             compressionLevel( -1 ),
-                             sendTimeout( 0 ),
-                             closeTimeout( 15000 ),
-                             producerWindowSize( 0 ),
-                             defaultPrefetchPolicy( NULL ),
-                             defaultRedeliveryPolicy( NULL ),
-                             exceptionListener( NULL ),
+                             dispatchAsync(true),
+                             alwaysSyncSend(false),
+                             useAsyncSend(false),
+                             messagePrioritySupported(true),
+                             watchTopicAdvisories(true),
+                             useCompression(false),
+                             compressionLevel(-1),
+                             sendTimeout(0),
+                             closeTimeout(15000),
+                             producerWindowSize(0),
+                             defaultPrefetchPolicy(NULL),
+                             defaultRedeliveryPolicy(NULL),
+                             exceptionListener(NULL),
                              connectionInfo(),
                              brokerInfo(),
                              brokerWireFormatInfo(),
                              transportInterruptionProcessingComplete(),
                              brokerInfoReceived(),
+                             advisoryConsumer(),
                              firstFailureError(),
                              dispatchers(),
                              activeProducers(),
                              activeSessions(),
-                             transportListeners() {
+                             transportListeners(),
+                             activeTempDestinations() {
 
             this->defaultPrefetchPolicy.reset(new DefaultPrefetchPolicy());
             this->defaultRedeliveryPolicy.reset(new DefaultRedeliveryPolicy());
@@ -523,6 +537,16 @@ void ActiveMQConnection::close() {
             }
         }
 
+        // As TemporaryQueue and TemporaryTopic instances are bound
+        // to a connection we should just delete them after the connection
+        // is closed to free up memory
+        std::vector< Pointer<ActiveMQTempDestination> > values = this->config->activeTempDestinations.values();
+        std::vector< Pointer<ActiveMQTempDestination> >::iterator iterator = values.begin();
+        for(; iterator != values.end(); ++iterator) {
+            Pointer<ActiveMQTempDestination> dest = *iterator;
+            dest->close();
+        }
+
         try {
             if (this->config->executor != NULL) {
                 this->config->executor->shutdown();
@@ -829,10 +853,7 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
         } else if (command->isConnectionError()) {
 
             Pointer<ConnectionError> connectionError = command.dynamicCast<ConnectionError>();
-            Pointer<BrokerError> brokerError = connectionError->getException();
-            if (brokerError != NULL) {
-                this->onAsyncException(brokerError->createExceptionObject());
-            }
+            this->config->executor->execute(new ConnectionErrorRunnable(this, connectionError));
 
         } else if (command->isConsumerControl()) {
             this->onConsumerControl(command);
@@ -903,6 +924,19 @@ void ActiveMQConnection::onAsyncException(const decaf::lang::Exception& ex) {
         if (this->config->exceptionListener != NULL) {
             this->config->executor->execute(new OnAsyncExceptionRunnable(this, ex));
         }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onClientInternalException(const decaf::lang::Exception& ex) {
+
+    if ( !closed.get() && !closing.get() ) {
+
+        if (this->config->exceptionListener != NULL) {
+            this->config->executor->execute(new OnAsyncExceptionRunnable(this, ex));
+        }
+
+        // TODO Turn this into an invocation on a special ClientInternalExceptionListener
     }
 }
 
@@ -1032,6 +1066,12 @@ void ActiveMQConnection::ensureConnectionInfoSent() {
             syncRequest(this->config->connectionInfo);
 
             this->config->isConnectionInfoSentToBroker = true;
+
+            Pointer<SessionId> sessionId(new SessionId(this->config->connectionInfo->getConnectionId().get(), -1));
+            Pointer<ConsumerId> consumerId(new ConsumerId(*sessionId, this->config->consumerIdGenerator.getNextSequenceId()));
+            if (this->config->watchTopicAdvisories) {
+                this->config->advisoryConsumer.reset(new AdvisoryConsumer(this, consumerId));
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -1116,15 +1156,15 @@ void ActiveMQConnection::signalInterruptionProcessingComplete() {
 
     Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
 
-    if( cdl->getCount() == 0 ) {
+    if (cdl->getCount() == 0) {
 
-        this->config->transportInterruptionProcessingComplete.reset( NULL );
+        this->config->transportInterruptionProcessingComplete.reset(NULL);
         FailoverTransport* failoverTransport =
-            dynamic_cast<FailoverTransport*>( this->config->transport->narrow( typeid( FailoverTransport ) ) );
+            dynamic_cast<FailoverTransport*>(this->config->transport->narrow(typeid(FailoverTransport)));
 
-        if( failoverTransport != NULL ) {
+        if (failoverTransport != NULL) {
             failoverTransport->setConnectionInterruptProcessingComplete(
-                this->config->connectionInfo->getConnectionId() );
+                this->config->connectionInfo->getConnectionId());
         }
     }
 }
@@ -1343,4 +1383,100 @@ const decaf::util::Properties& ActiveMQConnection::getProperties() const {
 ////////////////////////////////////////////////////////////////////////////////
 ExecutorService* ActiveMQConnection::getExecutor() const {
     return this->config->executor.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isWatchTopicAdvisories() const {
+    return this->config->watchTopicAdvisories;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setWatchTopicAdvisories(bool value) {
+    this->config->watchTopicAdvisories = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::addTempDestination(Pointer<ActiveMQTempDestination> destination) {
+    this->config->activeTempDestinations.put(destination, destination);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeTempDestination(Pointer<ActiveMQTempDestination> destination) {
+    this->config->activeTempDestinations.remove(destination);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::deleteTempDestination(Pointer<ActiveMQTempDestination> destination) {
+
+    try {
+
+        if (destination == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "Destination passed was NULL");
+        }
+
+        checkClosedOrFailed();
+        ensureConnectionInfoSent();
+
+        Pointer< Iterator< Pointer<ActiveMQSessionKernel> > > iterator(this->config->activeSessions.iterator());
+        while (iterator->hasNext()) {
+            Pointer<ActiveMQSessionKernel> session = iterator->next();
+            if (session->isInUse(destination)) {
+                throw new ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+            }
+        }
+
+        this->config->activeTempDestinations.remove(destination);
+
+        Pointer<DestinationInfo> command(new DestinationInfo());
+
+        command->setConnectionId(this->config->connectionInfo->getConnectionId());
+        command->setOperationType(ActiveMQConstants::DESTINATION_REMOVE_OPERATION);
+        command->setDestination(Pointer<ActiveMQDestination> (destination->cloneDataStructure()));
+
+        // Send the message to the broker.
+        syncRequest(command);
+    }
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::IllegalStateException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::cleanUpTempDestinations() {
+
+    if (this->config->activeTempDestinations.isEmpty()) {
+        return;
+    }
+
+    std::vector< Pointer<ActiveMQTempDestination> > values = this->config->activeTempDestinations.values();
+    std::vector< Pointer<ActiveMQTempDestination> >::iterator iterator = values.begin();
+    for(; iterator != values.end(); ++iterator) {
+        Pointer<ActiveMQTempDestination> dest = *iterator;
+
+        try {
+
+            // Only delete this temporary destination if it was created from this connection, since the
+            // advisory consumer tracks all temporary destinations there can be others in our mapping that
+            // this connection did not create.
+            std::string thisConnectionId = this->config->connectionInfo->getConnectionId() != NULL ?
+                this->config->connectionInfo->getConnectionId()->toString() : "";
+            if (dest->getConnectionId() == thisConnectionId) {
+                this->deleteTempDestination(dest);
+            }
+
+        } catch(Exception& ex) {
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isDeleted(Pointer<ActiveMQTempDestination> destination) const {
+
+    if (this->config->advisoryConsumer == NULL) {
+        return false;
+    }
+
+    return !this->config->activeTempDestinations.containsKey(destination);
 }

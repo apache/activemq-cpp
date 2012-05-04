@@ -28,7 +28,25 @@ using namespace activemq::commands;
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempTopicTest::test()
 {
-    ActiveMQTempTopic myQueue;
+    ActiveMQTempTopic myTopic;
 
-    CPPUNIT_ASSERT( myQueue.getDestinationType() == cms::Destination::TEMPORARY_TOPIC );
+    CPPUNIT_ASSERT( myTopic.getDestinationType() == cms::Destination::TEMPORARY_TOPIC );
+
+    myTopic.setPhysicalName("ID:SomeValue:0:1");
+    std::string connectionId = myTopic.getConnectionId();
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("ConnectionId did not parse correctly",
+        std::string("ID:SomeValue:0"), myTopic.getConnectionId());
+
+    myTopic.setPhysicalName("");
+    myTopic.setPhysicalName("ID:SomeValue:0:A");
+    connectionId = myTopic.getConnectionId();
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("ConnectionId should not have parsed",
+        std::string("ID:SomeValue:0"), myTopic.getConnectionId());
+
+    myTopic.setPhysicalName("");
+    myTopic.setPhysicalName("SomeValueThatWillNotParse");
+    connectionId = myTopic.getConnectionId();
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("ConnectionId should not have parsed",
+        std::string(""), myTopic.getConnectionId());
 }
