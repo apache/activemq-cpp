@@ -233,6 +233,21 @@ ActiveMQDestination* AdvisorySupport::getExpiredMessageTopic(const ActiveMQDesti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination* AdvisorySupport::getExpiredTopicMessageAdvisoryTopic(const cms::Destination* destination) {
+
+    const ActiveMQDestination* transformed = NULL;
+
+    bool doDelete = ActiveMQMessageTransformation::transformDestination(destination, &transformed);
+    ActiveMQDestination* advisoryDest = getExpiredTopicMessageAdvisoryTopic(transformed);
+
+    if (doDelete) {
+        delete transformed;
+    }
+
+    return advisoryDest;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getExpiredTopicMessageAdvisoryTopic(const ActiveMQDestination* destination) {
     return new ActiveMQTopic(EXPIRED_TOPIC_MESSAGES_TOPIC_PREFIX + destination->getPhysicalName());
 }
@@ -519,22 +534,6 @@ bool AdvisorySupport::isDestinationAdvisoryTopic(const cms::Destination* destina
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool AdvisorySupport::isTempDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
-    if (destination->isComposite()) {
-        ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
-        for (int i = 0; i < compositeDestinations.size(); i++) {
-            if (!isTempDestinationAdvisoryTopic(compositeDestinations.get(i).get())) {
-                return false;
-            }
-        }
-        return true;
-    } else {
-        std::string name = destination->getPhysicalName();
-        return name == ADVISORY_TOPIC_PREFIX + "TempQueue" || name == ADVISORY_TOPIC_PREFIX + "TempTopic";
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
@@ -548,6 +547,37 @@ bool AdvisorySupport::isDestinationAdvisoryTopic(const ActiveMQDestination* dest
         std::string name = destination->getPhysicalName();
         return name == ADVISORY_TOPIC_PREFIX + "TempQueue" || name == ADVISORY_TOPIC_PREFIX + "TempTopic" ||
                name == ADVISORY_TOPIC_PREFIX + "Queue" || name == ADVISORY_TOPIC_PREFIX + "Topic";
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AdvisorySupport::isTempDestinationAdvisoryTopic(const cms::Destination* destination) {
+
+    const ActiveMQDestination* transformed = NULL;
+
+    bool doDelete = ActiveMQMessageTransformation::transformDestination(destination, &transformed);
+    bool result = isTempDestinationAdvisoryTopic(transformed);
+
+    if (doDelete) {
+        delete transformed;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AdvisorySupport::isTempDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination->isComposite()) {
+        ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
+        for (int i = 0; i < compositeDestinations.size(); i++) {
+            if (!isTempDestinationAdvisoryTopic(compositeDestinations.get(i).get())) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        std::string name = destination->getPhysicalName();
+        return name == ADVISORY_TOPIC_PREFIX + "TempQueue" || name == ADVISORY_TOPIC_PREFIX + "TempTopic";
     }
 }
 
@@ -860,6 +890,37 @@ bool AdvisorySupport::isMessageDiscardedAdvisoryTopic(const ActiveMQDestination*
     } else {
         return destination->isTopic() &&
                destination->getPhysicalName().find(MESSAGE_DISCAREDED_TOPIC_PREFIX) == 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AdvisorySupport::isMessageDLQdAdvisoryTopic(const cms::Destination* destination) {
+
+    const ActiveMQDestination* transformed = NULL;
+
+    bool doDelete = ActiveMQMessageTransformation::transformDestination(destination, &transformed);
+    bool result = isMessageDLQdAdvisoryTopic(transformed);
+
+    if (doDelete) {
+        delete transformed;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AdvisorySupport::isMessageDLQdAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination->isComposite()) {
+        ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
+        for (int i = 0; i < compositeDestinations.size(); i++) {
+            if (isMessageDLQdAdvisoryTopic(compositeDestinations.get(i).get())) {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        return destination->isTopic() &&
+               destination->getPhysicalName().find(MESSAGE_DLQ_TOPIC_PREFIX) == 0;
     }
 }
 
