@@ -511,46 +511,42 @@ void ActiveMQSessionTest::testTransactionCloseWithoutCommit() {
 
     MyCMSMessageListener msgListener1;
 
-    CPPUNIT_ASSERT( connection.get() != NULL );
+    CPPUNIT_ASSERT(connection.get() != NULL);
 
     // Create an Transacted Session
-    std::auto_ptr<cms::Session> session(
-        connection->createSession( cms::Session::SESSION_TRANSACTED ) );
+    std::auto_ptr<cms::Session> session(connection->createSession(cms::Session::SESSION_TRANSACTED));
 
     // Create a Topic
-    std::auto_ptr<cms::Topic> topic1( session->createTopic( "TestTopic1" ) );
+    std::auto_ptr<cms::Topic> topic1(session->createTopic("TestTopic1"));
 
-    CPPUNIT_ASSERT( topic1.get() != NULL );
+    CPPUNIT_ASSERT(topic1.get() != NULL );
 
     // Create a consumer
     std::auto_ptr<ActiveMQConsumer> consumer1(
-        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1.get() ) ) );
+        dynamic_cast<ActiveMQConsumer*> (session->createConsumer(topic1.get())));
 
-    CPPUNIT_ASSERT( consumer1.get() != NULL );
+    CPPUNIT_ASSERT(consumer1.get() != NULL);
 
-    CPPUNIT_ASSERT( consumer1->getMessageSelector() == "" );
+    CPPUNIT_ASSERT(consumer1->getMessageSelector() == "");
 
-    CPPUNIT_ASSERT( consumer1->receiveNoWait() == NULL );
-    CPPUNIT_ASSERT( consumer1->receive( 5 ) == NULL );
+    CPPUNIT_ASSERT(consumer1->receiveNoWait() == NULL);
+    CPPUNIT_ASSERT(consumer1->receive( 5 ) == NULL);
 
-    consumer1->setMessageListener( &msgListener1 );
+    consumer1->setMessageListener(&msgListener1);
 
-    for( int i = 0; i < MSG_COUNT; ++i ) {
-        injectTextMessage( "This is a Test 1" , *topic1, *( consumer1->getConsumerId() ) );
+    for (int i = 0; i < MSG_COUNT; ++i) {
+        injectTextMessage("This is a Test 1", *topic1, *(consumer1->getConsumerId()));
     }
 
-    msgListener1.asyncWaitForMessages( MSG_COUNT );
+    msgListener1.asyncWaitForMessages(MSG_COUNT);
 
-    CPPUNIT_ASSERT_EQUAL( MSG_COUNT, (int)msgListener1.messages.size() );
+    CPPUNIT_ASSERT_EQUAL(MSG_COUNT, (int)msgListener1.messages.size());
 
     // This is what we are testing, since there was no commit, the session
     // will rollback the transaction when this are closed.
     // session->commit();
 
-    // TODO - We should be able to close the consumer but we don't have a way
-    // to keep the consumer alive if deleted after calling close so the session
-    // segfaults on attempting to rollback the transaction and visiting all its
-    // registered Synchronizations.
+    consumer1->close();
     session->close();
 }
 

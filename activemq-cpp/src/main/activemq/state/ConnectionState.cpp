@@ -19,8 +19,12 @@
 
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
+#include <activemq/commands/SessionId.h>
+#include <activemq/commands/SessionInfo.h>
+
 using namespace activemq;
 using namespace activemq::state;
+using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) :
@@ -31,6 +35,13 @@ ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) :
     disposed(false),
     connectionInterruptProcessingComplete(true),
     recoveringPullConsumers() {
+
+    Pointer<SessionId> sessionId(new SessionId(info->getConnectionId().get(), -1));
+    Pointer<SessionInfo> session(new SessionInfo());
+    session->setSessionId(sessionId);
+
+    // Add the default session id.
+    addSession(session);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

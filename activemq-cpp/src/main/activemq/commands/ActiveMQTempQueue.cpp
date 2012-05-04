@@ -28,16 +28,11 @@ ActiveMQTempQueue::ActiveMQTempQueue() : ActiveMQTempDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempQueue::ActiveMQTempQueue( const std::string& name ) :
-    ActiveMQTempDestination( name )
+ActiveMQTempQueue::ActiveMQTempQueue(const std::string& name) : ActiveMQTempDestination( name )
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempQueue::~ActiveMQTempQueue() throw() {
-    try {
-        this->close();
-    }
-    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,14 +42,17 @@ unsigned char ActiveMQTempQueue::getDataStructureType() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempQueue* ActiveMQTempQueue::cloneDataStructure() const {
-    std::auto_ptr<ActiveMQTempQueue> message( new ActiveMQTempQueue() );
-    message->copyDataStructure( this );
-    return message.release();
+    std::auto_ptr<ActiveMQTempQueue> copy(new ActiveMQTempQueue());
+    copy->copyDataStructure(this);
+    copy->connection = this->connection;
+    copy->connectionId = this->connectionId;
+    copy->sequenceId = this->sequenceId;
+    return copy.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempQueue::copyDataStructure( const DataStructure* src ) {
-    ActiveMQTempDestination::copyDataStructure( src );
+void ActiveMQTempQueue::copyDataStructure(const DataStructure* src) {
+    ActiveMQTempDestination::copyDataStructure(src);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,14 +61,14 @@ std::string ActiveMQTempQueue::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempQueue::equals( const DataStructure* value ) const {
-    return ActiveMQDestination::equals( value );
+bool ActiveMQTempQueue::equals(const DataStructure* value) const {
+    return ActiveMQDestination::equals(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQTempQueue::equals( const cms::Destination& value ) const {
-    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*>( &value );
-    return ActiveMQDestination::equals( dest );
+bool ActiveMQTempQueue::equals(const cms::Destination& value) const {
+    const ActiveMQDestination* dest = dynamic_cast<const ActiveMQDestination*> (&value);
+    return ActiveMQDestination::equals(dest);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

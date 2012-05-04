@@ -69,8 +69,8 @@ namespace kernels {
     class ActiveMQConsumerKernelConfig {
     private:
 
-        ActiveMQConsumerKernelConfig( const ActiveMQConsumerKernelConfig& );
-        ActiveMQConsumerKernelConfig& operator= ( const ActiveMQConsumerKernelConfig& );
+        ActiveMQConsumerKernelConfig(const ActiveMQConsumerKernelConfig&);
+        ActiveMQConsumerKernelConfig& operator=(const ActiveMQConsumerKernelConfig&);
 
     public:
 
@@ -289,7 +289,7 @@ namespace kernels {
 
         virtual void run() {
             try {
-                if(!this->consumer->isClosed()) {
+                if (!this->consumer->isClosed()) {
                     this->consumer->start();
                 }
             } catch(cms::CMSException& ex) {
@@ -311,18 +311,34 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
                                                bool noLocal,
                                                bool browser,
                                                bool dispatchAsync,
-                                               cms::MessageListener* listener ) : internal(NULL), session(NULL), consumerInfo() {
+                                               cms::MessageListener* listener) : internal(NULL), session(NULL), consumerInfo() {
 
     if (session == NULL) {
-        throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConsumerKernel::ActiveMQConsumerKernel - Init with NULL Session");
+        throw IllegalArgumentException(__FILE__, __LINE__, "Consumer created with NULL Session");
     }
 
     if (destination == NULL) {
-        throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConsumerKernel::ActiveMQConsumerKernel - Init with NULL Destination");
+        throw cms::InvalidDestinationException("Consumer created with NULL Destination");
+    } else if (destination->getPhysicalName() == "") {
+        throw cms::InvalidDestinationException("Destination given has no Physical Name.");
+    } else if (destination->isTemporary()) {
+
+        std::string physicalName = destination->getPhysicalName();
+        std::string connectionId = session->getConnection()->getConnectionInfo().getConnectionId()->getValue();
+
+        if (physicalName.find(connectionId) == std::string::npos) {
+            throw cms::InvalidDestinationException("Cannot use a Temporary destination from another Connection");
+        }
+
+        Pointer<ActiveMQTempDestination> tempDest = destination.dynamicCast<ActiveMQTempDestination>();
+
+        if (session->getConnection()->isDeleted(tempDest)) {
+            throw cms::InvalidDestinationException("Cannot use a Temporary destination that has been deleted");
+        }
     }
 
-    if (destination->getPhysicalName() == "") {
-        throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConsumerKernel::ActiveMQConsumerKernel - Destination given has no Physical Name.");
+    if (prefetch < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
     }
 
     this->internal = new ActiveMQConsumerKernelConfig();
@@ -448,6 +464,7 @@ void ActiveMQConsumerKernel::doClose() {
 void ActiveMQConsumerKernel::dispose() {
 
     try {
+
         if (!this->isClosed()) {
 
             if (!session->isTransacted()) {
@@ -513,7 +530,7 @@ std::string ActiveMQConsumerKernel::getMessageSelector() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue( long long timeout ) {
+decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue(long long timeout) {
 
     try {
 
@@ -528,29 +545,29 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue( long long
         // Loop until the time is up or we get a non-expired message
         while (true) {
 
-            Pointer<MessageDispatch> dispatch = this->internal->unconsumedMessages->dequeue( timeout );
+            Pointer<MessageDispatch> dispatch = this->internal->unconsumedMessages->dequeue(timeout);
             if (dispatch == NULL) {
 
-                if( timeout > 0 && !this->internal->unconsumedMessages->isClosed() ) {
-                    timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
+                if (timeout > 0 && !this->internal->unconsumedMessages->isClosed()) {
+                    timeout = Math::max(deadline - System::currentTimeMillis(), 0LL);
                 } else {
-                    if( this->internal->failureError != NULL ) {
+                    if (this->internal->failureError != NULL) {
                         throw CMSExceptionSupport::create(*this->internal->failureError);
                     } else {
-                        return Pointer<MessageDispatch>();
+                        return Pointer<MessageDispatch> ();
                     }
                 }
 
-            } else if( dispatch->getMessage() == NULL ) {
+            } else if (dispatch->getMessage() == NULL) {
 
-                return Pointer<MessageDispatch>();
+                return Pointer<MessageDispatch> ();
 
-            } else if( dispatch->getMessage()->isExpired() ) {
+            } else if (dispatch->getMessage()->isExpired()) {
 
-                beforeMessageIsConsumed( dispatch );
-                afterMessageIsConsumed( dispatch, true );
-                if( timeout > 0 ) {
-                    timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
+                beforeMessageIsConsumed(dispatch);
+                afterMessageIsConsumed(dispatch, true);
+                if (timeout > 0) {
+                    timeout = Math::max(deadline - System::currentTimeMillis(), 0LL);
                 }
 
                 continue;
@@ -573,24 +590,24 @@ cms::Message* ActiveMQConsumerKernel::receive() {
         this->checkClosed();
 
         // Send a request for a new message if needed
-        this->sendPullRequest( 0 );
+        this->sendPullRequest(0);
 
         // Wait for the next message.
-        Pointer<MessageDispatch> message = dequeue( -1 );
-        if( message == NULL ) {
+        Pointer<MessageDispatch> message = dequeue(-1);
+        if (message == NULL) {
             return NULL;
         }
 
         // Message pre-processing
-        beforeMessageIsConsumed( message );
+        beforeMessageIsConsumed(message);
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
+            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( message, false );
+        afterMessageIsConsumed(message, false);
 
         // Return the cloned message.
         return clonedMessage;
@@ -606,24 +623,24 @@ cms::Message* ActiveMQConsumerKernel::receive( int millisecs ) {
         this->checkClosed();
 
         // Send a request for a new message if needed
-        this->sendPullRequest( millisecs );
+        this->sendPullRequest(millisecs);
 
         // Wait for the next message.
-        Pointer<MessageDispatch> message = dequeue( millisecs );
-        if( message == NULL ) {
+        Pointer<MessageDispatch> message = dequeue(millisecs);
+        if (message == NULL) {
             return NULL;
         }
 
         // Message preprocessing
-        beforeMessageIsConsumed( message );
+        beforeMessageIsConsumed(message);
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
+            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( message, false );
+        afterMessageIsConsumed(message, false);
 
         // Return the cloned message.
         return clonedMessage;
@@ -639,24 +656,24 @@ cms::Message* ActiveMQConsumerKernel::receiveNoWait() {
         this->checkClosed();
 
         // Send a request for a new message if needed
-        this->sendPullRequest( -1 );
+        this->sendPullRequest(-1);
 
         // Get the next available message, if there is one.
-        Pointer<MessageDispatch> message = dequeue( 0 );
-        if( message == NULL ) {
+        Pointer<MessageDispatch> message = dequeue(0);
+        if (message == NULL) {
             return NULL;
         }
 
         // Message preprocessing
-        beforeMessageIsConsumed( message );
+        beforeMessageIsConsumed(message);
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
+            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( message, false );
+        afterMessageIsConsumed(message, false);
 
         // Return the cloned message.
         return clonedMessage;
@@ -671,31 +688,30 @@ void ActiveMQConsumerKernel::setMessageListener( cms::MessageListener* listener 
 
         this->checkClosed();
 
-        if( this->consumerInfo->getPrefetchSize() == 0 && listener != NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
+        if (this->consumerInfo->getPrefetchSize() == 0 && listener != NULL) {
+            throw ActiveMQException(__FILE__, __LINE__,
                 "Cannot deliver async when Prefetch is Zero, set Prefecth to at least One.");
         }
 
-        if( listener != NULL ) {
+        if (listener != NULL) {
 
             // Now that we have a valid message listener, redispatch all the messages that it missed.
             bool wasStarted = session->isStarted();
-            if( wasStarted ) {
+            if (wasStarted) {
                 session->stop();
             }
 
-            synchronized( &(this->internal->listenerMutex) ) {
+            synchronized(&(this->internal->listenerMutex)) {
                 this->internal->listener = listener;
             }
 
-            this->session->redispatch( *(this->internal->unconsumedMessages) );
+            this->session->redispatch(*(this->internal->unconsumedMessages));
 
-            if( wasStarted ) {
+            if (wasStarted) {
                 this->session->start();
             }
         } else {
-            synchronized( &(this->internal->listenerMutex) ) {
+            synchronized(&(this->internal->listenerMutex)) {
                 this->internal->listener = NULL;
             }
         }
@@ -708,26 +724,25 @@ void ActiveMQConsumerKernel::beforeMessageIsConsumed(const Pointer<MessageDispat
 
     // If the Session is in ClientAcknowledge or IndividualAcknowledge mode, then
     // we set the handler in the message to this object and send it out.
-    if( session->isClientAcknowledge() ) {
-        Pointer<ActiveMQAckHandler> ackHandler( new ClientAckHandler( this->session ) );
-        dispatch->getMessage()->setAckHandler( ackHandler );
-    } else if( session->isIndividualAcknowledge() ) {
-        Pointer<ActiveMQAckHandler> ackHandler( new IndividualAckHandler( this, dispatch ) );
-        dispatch->getMessage()->setAckHandler( ackHandler );
+    if (session->isClientAcknowledge()) {
+        Pointer<ActiveMQAckHandler> ackHandler(new ClientAckHandler(this->session));
+        dispatch->getMessage()->setAckHandler(ackHandler);
+    } else if (session->isIndividualAcknowledge()) {
+        Pointer<ActiveMQAckHandler> ackHandler(new IndividualAckHandler(this, dispatch));
+        dispatch->getMessage()->setAckHandler(ackHandler);
     }
 
-    this->internal->lastDeliveredSequenceId =
-        dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
+    this->internal->lastDeliveredSequenceId = dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
 
-    if( !isAutoAcknowledgeBatch() ) {
+    if (!isAutoAcknowledgeBatch()) {
 
         // When not in an Auto
-        synchronized( &this->internal->dispatchedMessages ) {
-            this->internal->dispatchedMessages.addFirst( dispatch );
+        synchronized(&this->internal->dispatchedMessages) {
+            this->internal->dispatchedMessages.addFirst(dispatch);
         }
 
-        if( this->session->isTransacted() ) {
-            ackLater( dispatch, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        if (this->session->isTransacted()) {
+            ackLater(dispatch, ActiveMQConstants::ACK_TYPE_DELIVERED);
         }
     }
 }
@@ -1353,4 +1368,9 @@ decaf::lang::Exception* ActiveMQConsumerKernel::getFailureError() const {
 void ActiveMQConsumerKernel::setPrefetchSize(int prefetchSize) {
     deliverAcks();
     this->consumerInfo->setCurrentPrefetchSize(prefetchSize);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumerKernel::isInUse(Pointer<ActiveMQDestination> destination) const {
+    return this->consumerInfo->getDestination()->equals(destination.get());
 }

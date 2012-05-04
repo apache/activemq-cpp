@@ -97,6 +97,7 @@ cc_sources = \
     activemq/core/ActiveMQXAConnection.cpp \
     activemq/core/ActiveMQXAConnectionFactory.cpp \
     activemq/core/ActiveMQXASession.cpp \
+    activemq/core/AdvisoryConsumer.cpp \
     activemq/core/FifoMessageDispatchChannel.cpp \
     activemq/core/PrefetchPolicy.cpp \
     activemq/core/RedeliveryPolicy.cpp \
@@ -145,7 +146,9 @@ cc_sources = \
     activemq/transport/tcp/SslTransportFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
+    activemq/util/ActiveMQMessageTransformation.cpp \
     activemq/util/ActiveMQProperties.cpp \
+    activemq/util/AdvisorySupport.cpp \
     activemq/util/CMSExceptionSupport.cpp \
     activemq/util/CompositeData.cpp \
     activemq/util/IdGenerator.cpp \
@@ -592,6 +595,7 @@ h_sources = \
     activemq/core/ActiveMQXAConnection.h \
     activemq/core/ActiveMQXAConnectionFactory.h \
     activemq/core/ActiveMQXASession.h \
+    activemq/core/AdvisoryConsumer.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
     activemq/core/FifoMessageDispatchChannel.h \
@@ -659,7 +663,9 @@ h_sources = \
     activemq/transport/tcp/SslTransportFactory.h \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/tcp/TcpTransportFactory.h \
+    activemq/util/ActiveMQMessageTransformation.h \
     activemq/util/ActiveMQProperties.h \
+    activemq/util/AdvisorySupport.h \
     activemq/util/CMSExceptionSupport.h \
     activemq/util/CompositeData.h \
     activemq/util/Config.h \

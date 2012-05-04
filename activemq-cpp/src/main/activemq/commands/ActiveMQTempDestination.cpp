@@ -20,19 +20,22 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/util/CMSExceptionSupport.h>
 
+#include <decaf/lang/Integer.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination() :
-    ActiveMQDestination(), Closeable(), connection( NULL ) {
+    ActiveMQDestination(), Closeable(), connection(NULL), connectionId(), sequenceId(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
-    ActiveMQDestination( name ), Closeable(), connection( NULL ) {
+ActiveMQTempDestination::ActiveMQTempDestination(const std::string& name) :
+    ActiveMQDestination(name), Closeable(), connection(NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +48,30 @@ unsigned char ActiveMQTempDestination::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempDestination::setPhysicalName(const std::string& physicalName) {
+
+    ActiveMQDestination::setPhysicalName(physicalName);
+    this->connectionId = "";
+    this->sequenceId = 0;
+
+    size_t pos = physicalName.find_last_of(":");
+    if (pos != std::string::npos) {
+        std::string seqStr = physicalName.substr(pos + 1);
+        if (!seqStr.empty()) {
+
+            try {
+                this->sequenceId = Integer::parseInt(seqStr);
+            } catch (decaf::lang::exceptions::NumberFormatException& e) {
+                // Not the expected format so ignore.
+            }
+
+            // The rest should be the connection id.
+            this->connectionId = physicalName.substr(0, pos);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQTempDestination::toString() const {
     return ActiveMQDestination::toString();
 }
@@ -52,8 +79,15 @@ std::string ActiveMQTempDestination::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestination::close() {
     try {
-        if( this->connection != NULL ) {
-            this->connection->destroyDestination( this );
+        if (this->connection != NULL) {
+            Pointer<ActiveMQTempDestination> thisPtr(this);
+            try {
+                this->connection->deleteTempDestination(thisPtr);
+                thisPtr.release();
+            } catch(ActiveMQException& ex) {
+                thisPtr.release();
+                throw;
+            }
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

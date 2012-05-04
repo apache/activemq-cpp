@@ -63,19 +63,19 @@ namespace lang{
          * @returns a negative integer, zero, or a positive integer as this
          * object is less than, equal to, or greater than the specified object.
          */
-        virtual int compareTo( const T& value ) const = 0;
+        virtual int compareTo(const T& value) const = 0;
 
         /**
          * @return true if this value is considered equal to the passed value.
          */
-        virtual bool equals( const T& value ) const = 0;
+        virtual bool equals(const T& value) const = 0;
 
         /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const T& value ) const = 0;
+        virtual bool operator==(const T& value) const = 0;
 
         /**
          * Compares this object to another and returns true if this object
@@ -83,7 +83,7 @@ namespace lang{
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const T& value ) const = 0;
+        virtual bool operator<(const T& value) const = 0;
 
     };
 

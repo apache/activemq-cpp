@@ -41,24 +41,24 @@ namespace commands{
 
     private:
 
-        ActiveMQTempQueue( const ActiveMQTempQueue& );
-        ActiveMQTempQueue& operator= ( const ActiveMQTempQueue& );
+        ActiveMQTempQueue(const ActiveMQTempQueue&);
+        ActiveMQTempQueue& operator=(const ActiveMQTempQueue&);
 
     public:
 
         ActiveMQTempQueue();
-        ActiveMQTempQueue( const std::string& name );
-        virtual ~ActiveMQTempQueue() throw();
+        ActiveMQTempQueue(const std::string& name);
+        virtual ~ActiveMQTempQueue() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQTempQueue* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const cms::Destination* getCMSDestination() const {
             return this;
@@ -71,20 +71,18 @@ namespace commands{
         }
 
         virtual cms::Destination* clone() const {
-            return dynamic_cast<cms::Destination*>(
-                this->cloneDataStructure() );
+            return dynamic_cast<cms::Destination*> (this->cloneDataStructure());
         }
 
-        virtual void copy( const cms::Destination& source ) {
-            this->copyDataStructure(
-                dynamic_cast<const DataStructure*>( &source ) );
+        virtual void copy(const cms::Destination& source) {
+            this->copyDataStructure(dynamic_cast<const DataStructure*> (&source));
         }
 
         virtual const cms::CMSProperties& getCMSProperties() const {
             return this->getOptions();
         }
 
-        virtual bool equals( const cms::Destination& other ) const;
+        virtual bool equals(const cms::Destination& other) const;
 
     public:
 

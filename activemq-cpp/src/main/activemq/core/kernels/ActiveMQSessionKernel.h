@@ -255,7 +255,7 @@ namespace kernels {
 
         virtual void unsubscribe(const std::string& name);
 
-   public:   // ActiveMQSession specific Methods
+   public:   // ActiveMQSessionKernel specific Methods
 
         /**
          * Sends a message from the Producer specified using this session's connection
@@ -264,24 +264,37 @@ namespace kernels {
          * <p>
          * Asynchronous sends will be chosen if at all possible.
          *
-         * @param message
-         *        The message to send to the broker.
          * @param producer
-         *        The sending Producer
+         *      The sending Producer
+         * @param destination
+         *      The target destination for the Message.
+         * @param message
+         *      The message to send to the broker.
+         * @param deliveryMode
+         *      The delivery mode to assign to the outgoing message.
+         * @param priority
+         *      The priority value to assign to the outgoing message.
+         * @param timeToLive
+         *      The time to live for the outgoing message.
          * @param usage
-         *        Pointer to a Usage tracker which if set will be increased by the size
-         *        of the given message.
+         *      Pointer to a Usage tracker which if set will be increased by the size
+         *      of the given message.
+         * @param sendTimeout
+         *      The amount of time to block during send before failing, or 0 to wait forever.
          *
-         * @throws CMSException
+         * @throws CMSException if an error occurs while sending the message.
          */
-        void send(cms::Message* message, kernels::ActiveMQProducerKernel* producer, util::Usage* usage);
+        void send(kernels::ActiveMQProducerKernel* producer, Pointer<commands::ActiveMQDestination> destination,
+                  cms::Message* message, int deliveryMode, int priority, long long timeToLive,
+                  util::MemoryUsage* producerWindow, long long sendTimeout);
 
         /**
          * This method gets any registered exception listener of this sessions
          * connection and returns it.  Mainly intended for use by the objects
          * that this session creates so that they can notify the client of
          * exceptions that occur in the context of another thread.
-         * @returns cms::ExceptionListener pointer or NULL
+         *
+         * @returns the registered cms::ExceptionListener pointer or NULL
          */
         cms::ExceptionListener* getExceptionListener();
 
@@ -496,6 +509,13 @@ namespace kernels {
          *      The consumer Id to close.
          */
         void close(Pointer<commands::ConsumerId> id);
+
+        /**
+         * Checks if the given destination is currently in use by any consumers in this Session.
+         *
+         * @return true if there is a consumer of this destination in this Session.
+         */
+        bool isInUse(Pointer<commands::ActiveMQDestination> destination);
 
    private:
 

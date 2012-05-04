@@ -115,6 +115,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::IOTransportTest );
 #include <activemq/exceptions/ActiveMQExceptionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
 
+#include <activemq/util/AdvisorySupportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::AdvisorySupportTest );
+#include <activemq/util/ActiveMQMessageTransformationTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::ActiveMQMessageTransformationTest );
 #include <activemq/util/IdGeneratorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::IdGeneratorTest );
 #include <activemq/util/LongSequenceGeneratorTest.h>

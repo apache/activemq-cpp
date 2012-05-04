@@ -44,8 +44,8 @@ namespace core {
 
         DispatchData() {}
 
-        DispatchData( const decaf::lang::Pointer<commands::ConsumerId>& consumer,
-                      const decaf::lang::Pointer<commands::Message>& message ) {
+        DispatchData(const decaf::lang::Pointer<commands::ConsumerId>& consumer,
+                     const decaf::lang::Pointer<commands::Message>& message) {
             this->consumerId = consumer;
             this->message = message;
         }
