@@ -29,6 +29,46 @@ namespace util {
 
         CPPUNIT_TEST_SUITE( AdvisorySupportTest );
         CPPUNIT_TEST( testGetTempDestinationCompositeAdvisoryTopic );
+        CPPUNIT_TEST( testGetAllDestinationsCompositeAdvisoryTopic );
+        CPPUNIT_TEST( testGetAllDestinationAdvisoryTopics );
+        CPPUNIT_TEST( testGetConnectionAdvisoryTopic );
+        CPPUNIT_TEST( testGetQueueAdvisoryTopic );
+        CPPUNIT_TEST( testGetTopicAdvisoryTopic );
+        CPPUNIT_TEST( testGetTempQueueAdvisoryTopic );
+        CPPUNIT_TEST( testGetTempTopicAdvisoryTopic );
+        CPPUNIT_TEST( testGetConsumerAdvisoryTopic );
+        CPPUNIT_TEST( testGetProducerAdvisoryTopic );
+        CPPUNIT_TEST( testGetExpiredMessageTopic );
+        CPPUNIT_TEST( testGetExpiredTopicMessageAdvisoryTopic );
+        CPPUNIT_TEST( testGetExpiredQueueMessageAdvisoryTopic );
+        CPPUNIT_TEST( testGetNoConsumersAdvisoryTopic );
+        CPPUNIT_TEST( testGetNoTopicConsumersAdvisoryTopic );
+        CPPUNIT_TEST( testGetNoQueueConsumersAdvisoryTopic );
+        CPPUNIT_TEST( testGetSlowConsumerAdvisoryTopic );
+        CPPUNIT_TEST( testGetFastProducerAdvisoryTopic );
+        CPPUNIT_TEST( testGetMessageDiscardedAdvisoryTopic );
+        CPPUNIT_TEST( testGetMessageDeliveredAdvisoryTopic );
+        CPPUNIT_TEST( testGetMessageConsumedAdvisoryTopic );
+        CPPUNIT_TEST( testGetMessageDLQdAdvisoryTopic );
+        CPPUNIT_TEST( testGetMasterBrokerAdvisoryTopic );
+        CPPUNIT_TEST( testGetNetworkBridgeAdvisoryTopic );
+        CPPUNIT_TEST( testGetFullAdvisoryTopic );
+        CPPUNIT_TEST( testGetDestinationAdvisoryTopic );
+        CPPUNIT_TEST( testIsDestinationAdvisoryTopic );
+        CPPUNIT_TEST( testIsTempDestinationAdvisoryTopic );
+        CPPUNIT_TEST( testIsAdvisoryTopic );
+        CPPUNIT_TEST( testIsConnectionAdvisoryTopic );
+        CPPUNIT_TEST( testIsProducerAdvisoryTopic );
+        CPPUNIT_TEST( testIsConsumerAdvisoryTopic );
+        CPPUNIT_TEST( testIsSlowConsumerAdvisoryTopic );
+        CPPUNIT_TEST( testIsFastProducerAdvisoryTopic );
+        CPPUNIT_TEST( testIsMessageConsumedAdvisoryTopic );
+        CPPUNIT_TEST( testIsMasterBrokerAdvisoryTopic );
+        CPPUNIT_TEST( testIsMessageDeliveredAdvisoryTopic );
+        CPPUNIT_TEST( testIsMessageDiscardedAdvisoryTopic );
+        CPPUNIT_TEST( testIsMessageDLQdAdvisoryTopic );
+        CPPUNIT_TEST( testIsFullAdvisoryTopic );
+        CPPUNIT_TEST( testIsNetworkBridgeAdvisoryTopic );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -37,6 +77,47 @@ namespace util {
         virtual ~AdvisorySupportTest();
 
         void testGetTempDestinationCompositeAdvisoryTopic();
+        void testGetAllDestinationsCompositeAdvisoryTopic();
+        void testGetAllDestinationAdvisoryTopics();
+        void testGetConnectionAdvisoryTopic();
+        void testGetQueueAdvisoryTopic();
+        void testGetTopicAdvisoryTopic();
+        void testGetTempQueueAdvisoryTopic();
+        void testGetTempTopicAdvisoryTopic();
+        void testGetConsumerAdvisoryTopic();
+        void testGetProducerAdvisoryTopic();
+        void testGetExpiredMessageTopic();
+        void testGetExpiredTopicMessageAdvisoryTopic();
+        void testGetExpiredQueueMessageAdvisoryTopic();
+        void testGetNoConsumersAdvisoryTopic();
+        void testGetNoTopicConsumersAdvisoryTopic();
+        void testGetNoQueueConsumersAdvisoryTopic();
+        void testGetSlowConsumerAdvisoryTopic();
+        void testGetFastProducerAdvisoryTopic();
+        void testGetMessageDiscardedAdvisoryTopic();
+        void testGetMessageDeliveredAdvisoryTopic();
+        void testGetMessageConsumedAdvisoryTopic();
+        void testGetMessageDLQdAdvisoryTopic();
+        void testGetMasterBrokerAdvisoryTopic();
+        void testGetNetworkBridgeAdvisoryTopic();
+        void testGetFullAdvisoryTopic();
+        void testGetDestinationAdvisoryTopic();
+
+        void testIsDestinationAdvisoryTopic();
+        void testIsTempDestinationAdvisoryTopic();
+        void testIsAdvisoryTopic();
+        void testIsConnectionAdvisoryTopic();
+        void testIsProducerAdvisoryTopic();
+        void testIsConsumerAdvisoryTopic();
+        void testIsSlowConsumerAdvisoryTopic();
+        void testIsFastProducerAdvisoryTopic();
+        void testIsMessageConsumedAdvisoryTopic();
+        void testIsMasterBrokerAdvisoryTopic();
+        void testIsMessageDeliveredAdvisoryTopic();
+        void testIsMessageDiscardedAdvisoryTopic();
+        void testIsMessageDLQdAdvisoryTopic();
+        void testIsFullAdvisoryTopic();
+        void testIsNetworkBridgeAdvisoryTopic();
 
     };
 
