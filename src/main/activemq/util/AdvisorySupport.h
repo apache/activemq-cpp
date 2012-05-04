@@ -200,6 +200,14 @@ namespace util {
          *
          * @return Pointer to the requested Advisory Topic destination.
          */
+        static commands::ActiveMQDestination* getExpiredTopicMessageAdvisoryTopic(const cms::Destination* destination);
+
+        /**
+         * Returns a new Pointer to an Destination that will consume advisory messages for expiration events
+         * for messages on the specified destination.
+         *
+         * @return Pointer to the requested Advisory Topic destination.
+         */
         static commands::ActiveMQDestination* getExpiredTopicMessageAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
@@ -408,14 +416,19 @@ namespace util {
         static bool isDestinationAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is a Temporary Destination advisory topic.
-         */
-        static bool isTempDestinationAdvisoryTopic(const commands::ActiveMQDestination* destination);
-
-        /**
          * @returns true if the specified destination is a Destination advisory topic.
          */
         static bool isDestinationAdvisoryTopic(const commands::ActiveMQDestination* destination);
+
+        /**
+         * @returns true if the specified destination is a Temporary Destination advisory topic.
+         */
+        static bool isTempDestinationAdvisoryTopic(const cms::Destination* destination);
+
+        /**
+         * @returns true if the specified destination is a Temporary Destination advisory topic.
+         */
+        static bool isTempDestinationAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
          * @returns true if the specified destination is an advisory topic.
@@ -516,6 +529,16 @@ namespace util {
          * @returns true if the specified destination is an Message Discarded advisory topic.
          */
         static bool isMessageDiscardedAdvisoryTopic(const commands::ActiveMQDestination* destination);
+
+        /**
+         * @returns true if the specified destination is an Message DLQ'd advisory topic.
+         */
+        static bool isMessageDLQdAdvisoryTopic(const cms::Destination* destination);
+
+        /**
+         * @returns true if the specified destination is an Message DLQ'd advisory topic.
+         */
+        static bool isMessageDLQdAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
          * @returns true if the specified destination is an Destination Full advisory topic.
