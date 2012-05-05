@@ -18,6 +18,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/util/URISupport.h>
 #include <activemq/util/CMSExceptionSupport.h>
+#include <activemq/util/AdvisorySupport.h>
 
 #include <activemq/commands/ActiveMQTopic.h>
 #include <activemq/commands/ActiveMQQueue.h>
@@ -37,13 +38,6 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string ActiveMQDestination::ADVISORY_PREFIX = "ActiveMQ.Advisory.";
-const std::string ActiveMQDestination::CONSUMER_ADVISORY_PREFIX =
-    ActiveMQDestination::ADVISORY_PREFIX + "Consumers.";
-const std::string ActiveMQDestination::PRODUCER_ADVISORY_PREFIX =
-    ActiveMQDestination::ADVISORY_PREFIX + "Producers.";
-const std::string ActiveMQDestination::CONNECTION_ADVISORY_PREFIX =
-    ActiveMQDestination::ADVISORY_PREFIX + "Connections.";
 const std::string ActiveMQDestination::DEFAULT_ORDERED_TARGET = "coordinator";
 const std::string ActiveMQDestination::TEMP_PREFIX = "{TD{";
 const std::string ActiveMQDestination::TEMP_POSTFIX = "}TD}";
@@ -103,7 +97,7 @@ void ActiveMQDestination::setPhysicalName(const std::string& physicalName) {
         URISupport::parseQuery(optstring, &options.getProperties());
     }
 
-    this->advisory = physicalName.find_first_of(ADVISORY_PREFIX) == 0;
+    this->advisory = physicalName.find_first_of(AdvisorySupport::ADVISORY_TOPIC_PREFIX) == 0;
     this->compositeDestinations.clear();
 }
 
