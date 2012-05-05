@@ -33,51 +33,6 @@ namespace commands{
         CPPUNIT_TEST( testOptions );
         CPPUNIT_TEST_SUITE_END();
 
-        class MyDestination : public ActiveMQDestination {
-        public:
-
-            /**
-             * Returns the Type of Destination that this object represents
-             * @returns int type qualifier.
-             */
-            virtual cms::Destination::DestinationType getDestinationType() const {
-                return cms::Destination::TOPIC;
-            }
-
-            /**
-             * Clone this object and return a new instance that the
-             * caller now owns, this will be an exact copy of this one
-             * @returns new copy of this object.
-             */
-            virtual MyDestination* cloneDataStructure() const {
-                MyDestination* message = new MyDestination();
-                message->copyDataStructure( this );
-                return message;
-            }
-
-            /**
-             * Copy the contents of the passed object into this objects
-             * members, overwriting any existing data.
-             * @return src - Source Object
-             */
-            virtual void copyDataStructure( const DataStructure* src ) {
-                ActiveMQDestination::copyDataStructure( src );
-            }
-        };
-
-        class MyTempDestination : public MyDestination {
-        public:
-
-            /**
-             * Returns the Type of Destination that this object represents
-             * @returns int type qualifier.
-             */
-            virtual cms::Destination::DestinationType getDestinationType() const {
-                return cms::Destination::TEMPORARY_TOPIC;
-            }
-
-        };
-
     public:
 
         ActiveMQDestinationTest() {}

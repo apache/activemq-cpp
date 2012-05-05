@@ -50,26 +50,6 @@ namespace commands{
         };
 
         /**
-         * prefix for Advisory message destinations
-         */
-        static const std::string ADVISORY_PREFIX;
-
-        /**
-         * prefix for consumer advisory destinations
-         */
-        static const std::string CONSUMER_ADVISORY_PREFIX;
-
-        /**
-         * prefix for producer advisory destinations
-         */
-        static const std::string PRODUCER_ADVISORY_PREFIX;
-
-        /**
-         * prefix for connection advisory destinations
-         */
-        static const std::string CONNECTION_ADVISORY_PREFIX;
-
-        /**
          * The default target for ordered destinations
          */
         static const std::string DEFAULT_ORDERED_TARGET;
@@ -154,29 +134,26 @@ namespace commands{
             this->advisory = advisory;
         }
 
-        /**
-         * @return true if this is a destination for Consumer advisories
-         */
-        virtual bool isConsumerAdvisory() const {
-            return isAdvisory() &&
-                   physicalName.find(CONSUMER_ADVISORY_PREFIX) == 0;
-        }
-
-        /**
-         * @return true if this is a destination for Producer advisories
-         */
-        virtual bool isProducerAdvisory() const {
-            return isAdvisory() &&
-                   physicalName.find(PRODUCER_ADVISORY_PREFIX) == 0;
-        }
-
-        /**
-         * @return true if this is a destination for Connection advisories
-         */
-        virtual bool isConnectionAdvisory() const {
-            return isAdvisory() &&
-                   physicalName.find(CONNECTION_ADVISORY_PREFIX) == 0;
-        }
+//        /**
+//         * @return true if this is a destination for Consumer advisories
+//         */
+//        virtual bool isConsumerAdvisory() const {
+//            return isAdvisory() && physicalName.find(CONSUMER_ADVISORY_PREFIX) == 0;
+//        }
+//
+//        /**
+//         * @return true if this is a destination for Producer advisories
+//         */
+//        virtual bool isProducerAdvisory() const {
+//            return isAdvisory() && physicalName.find(PRODUCER_ADVISORY_PREFIX) == 0;
+//        }
+//
+//        /**
+//         * @return true if this is a destination for Connection advisories
+//         */
+//        virtual bool isConnectionAdvisory() const {
+//            return isAdvisory() && physicalName.find(CONNECTION_ADVISORY_PREFIX) == 0;
+//        }
 
         /**
          * @return Returns the exclusive.
@@ -269,7 +246,7 @@ namespace commands{
          *         destinations.
          */
         virtual bool isComposite() const {
-            return physicalName.find_first_of(COMPOSITE_SEPARATOR) > 0;
+            return physicalName.find_first_of(COMPOSITE_SEPARATOR) != std::string::npos;
         }
 
         /**
