@@ -28,7 +28,7 @@ namespace util {
     private:
 
         CPPUNIT_TEST_SUITE( ActiveMQMessageTransformationTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testTransformDestination );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,7 +36,7 @@ namespace util {
         ActiveMQMessageTransformationTest();
         virtual ~ActiveMQMessageTransformationTest();
 
-        void test() {}
+        void testTransformDestination();
     };
 
 }}
