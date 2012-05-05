@@ -360,6 +360,14 @@ namespace util {
          *
          * @return Pointer to the requested Advisory Topic destination.
          */
+        static commands::ActiveMQDestination* getMessageDLQdAdvisoryTopic(const cms::Destination* destination);
+
+        /**
+         * Returns a new Pointer to an Destination that will consume advisory messages when a message is
+         * sent to the DLQ from the specified destination
+         *
+         * @return Pointer to the requested Advisory Topic destination.
+         */
         static commands::ActiveMQDestination* getMessageDLQdAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**

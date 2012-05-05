@@ -175,6 +175,10 @@ ActiveMQDestination* AdvisorySupport::getConsumerAdvisoryTopic(const cms::Destin
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getConsumerAdvisoryTopic(const ActiveMQDestination* destination) {
 
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isQueue()) {
         return new ActiveMQTopic(QUEUE_CONSUMER_ADVISORY_TOPIC_PREFIX + destination->getPhysicalName());
     } else {
@@ -199,6 +203,10 @@ ActiveMQDestination* AdvisorySupport::getProducerAdvisoryTopic(const cms::Destin
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getProducerAdvisoryTopic(const ActiveMQDestination* destination) {
+
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
 
     if (destination->isQueue()) {
         return new ActiveMQTopic(QUEUE_PRODUCER_ADVISORY_TOPIC_PREFIX + destination->getPhysicalName());
@@ -225,6 +233,10 @@ ActiveMQDestination* AdvisorySupport::getExpiredMessageTopic(const cms::Destinat
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getExpiredMessageTopic(const ActiveMQDestination* destination) {
 
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isQueue()) {
         return getExpiredQueueMessageAdvisoryTopic(destination);
     }
@@ -249,6 +261,10 @@ ActiveMQDestination* AdvisorySupport::getExpiredTopicMessageAdvisoryTopic(const 
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getExpiredTopicMessageAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     return new ActiveMQTopic(EXPIRED_TOPIC_MESSAGES_TOPIC_PREFIX + destination->getPhysicalName());
 }
 
@@ -269,6 +285,10 @@ ActiveMQDestination* AdvisorySupport::getExpiredQueueMessageAdvisoryTopic(const 
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getExpiredQueueMessageAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     return new ActiveMQTopic(EXPIRED_QUEUE_MESSAGES_TOPIC_PREFIX + destination->getPhysicalName());
 }
 
@@ -289,6 +309,10 @@ ActiveMQDestination* AdvisorySupport::getNoConsumersAdvisoryTopic(const cms::Des
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getNoConsumersAdvisoryTopic(const ActiveMQDestination* destination) {
+
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
 
     if (destination->isQueue()) {
         return getNoQueueConsumersAdvisoryTopic(destination);
@@ -313,6 +337,10 @@ ActiveMQDestination* AdvisorySupport::getNoTopicConsumersAdvisoryTopic(const cms
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getNoTopicConsumersAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     return new ActiveMQTopic(NO_TOPIC_CONSUMERS_TOPIC_PREFIX + destination->getPhysicalName());
 }
 
@@ -333,6 +361,10 @@ ActiveMQDestination* AdvisorySupport::getNoQueueConsumersAdvisoryTopic(const cms
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getNoQueueConsumersAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     return new ActiveMQTopic(NO_QUEUE_CONSUMERS_TOPIC_PREFIX + destination->getPhysicalName());
 }
 
@@ -353,6 +385,10 @@ ActiveMQDestination* AdvisorySupport::getSlowConsumerAdvisoryTopic(const cms::De
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getSlowConsumerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = SLOW_CONSUMER_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -375,6 +411,10 @@ ActiveMQDestination* AdvisorySupport::getFastProducerAdvisoryTopic(const cms::De
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getFastProducerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = FAST_PRODUCER_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -397,6 +437,10 @@ ActiveMQDestination* AdvisorySupport::getMessageDiscardedAdvisoryTopic(const cms
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getMessageDiscardedAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = MESSAGE_DISCAREDED_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -419,6 +463,10 @@ ActiveMQDestination* AdvisorySupport::getMessageDeliveredAdvisoryTopic(const cms
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getMessageDeliveredAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = MESSAGE_DELIVERED_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -441,13 +489,36 @@ ActiveMQDestination* AdvisorySupport::getMessageConsumedAdvisoryTopic(const cms:
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getMessageConsumedAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = MESSAGE_CONSUMED_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination* AdvisorySupport::getMessageDLQdAdvisoryTopic(const cms::Destination* destination) {
+
+    const ActiveMQDestination* transformed = NULL;
+
+    bool doDelete = ActiveMQMessageTransformation::transformDestination(destination, &transformed);
+    ActiveMQDestination* advisoryDest = getMessageDLQdAdvisoryTopic(transformed);
+
+    if (doDelete) {
+        delete transformed;
+    }
+
+    return advisoryDest;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getMessageDLQdAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = MESSAGE_DLQ_TOPIC_PREFIX + destination->getDestinationTypeAsString() + "."
             + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -480,6 +551,10 @@ ActiveMQDestination* AdvisorySupport::getFullAdvisoryTopic(const cms::Destinatio
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getFullAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     std::string name = FULL_TOPIC_PREFIX +
         destination->getDestinationTypeAsString() + "." + destination->getPhysicalName();
     return new ActiveMQTopic(name);
@@ -502,6 +577,10 @@ ActiveMQDestination* AdvisorySupport::getDestinationAdvisoryTopic(const cms::Des
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination* AdvisorySupport::getDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
+
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
 
     switch (destination->getDestinationType()) {
         case cms::Destination::QUEUE:
@@ -535,6 +614,10 @@ bool AdvisorySupport::isDestinationAdvisoryTopic(const cms::Destination* destina
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -567,6 +650,10 @@ bool AdvisorySupport::isTempDestinationAdvisoryTopic(const cms::Destination* des
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isTempDestinationAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -598,20 +685,23 @@ bool AdvisorySupport::isAdvisoryTopic(const cms::Destination* destination) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isAdvisoryTopic(const ActiveMQDestination* destination) {
-    if (destination != NULL) {
-        if (destination->isComposite()) {
-            ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
-            for (int i = 0; i < compositeDestinations.size(); i++) {
-                if (isAdvisoryTopic(compositeDestinations.get(i).get())) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            return destination->isTopic() &&
-                   destination->getPhysicalName().find(ADVISORY_TOPIC_PREFIX) == 0;
-        }
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
     }
+
+    if (destination->isComposite()) {
+        ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
+        for (int i = 0; i < compositeDestinations.size(); i++) {
+            if (isAdvisoryTopic(compositeDestinations.get(i).get())) {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        return destination->isTopic() &&
+               destination->getPhysicalName().find(ADVISORY_TOPIC_PREFIX) == 0;
+    }
+
     return false;
 }
 
@@ -632,6 +722,10 @@ bool AdvisorySupport::isConnectionAdvisoryTopic(const cms::Destination* destinat
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isConnectionAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -662,6 +756,10 @@ bool AdvisorySupport::isProducerAdvisoryTopic(const cms::Destination* destinatio
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isProducerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -693,6 +791,10 @@ bool AdvisorySupport::isConsumerAdvisoryTopic(const cms::Destination* destinatio
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isConsumerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -724,6 +826,10 @@ bool AdvisorySupport::isSlowConsumerAdvisoryTopic(const cms::Destination* destin
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isSlowConsumerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -755,6 +861,10 @@ bool AdvisorySupport::isFastProducerAdvisoryTopic(const cms::Destination* destin
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isFastProducerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -786,6 +896,10 @@ bool AdvisorySupport::isMessageConsumedAdvisoryTopic(const cms::Destination* des
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isMessageConsumedAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -817,6 +931,10 @@ bool AdvisorySupport::isMasterBrokerAdvisoryTopic(const cms::Destination* destin
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isMasterBrokerAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -848,6 +966,10 @@ bool AdvisorySupport::isMessageDeliveredAdvisoryTopic(const cms::Destination* de
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isMessageDeliveredAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -879,6 +1001,10 @@ bool AdvisorySupport::isMessageDiscardedAdvisoryTopic(const cms::Destination* de
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isMessageDiscardedAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -910,6 +1036,10 @@ bool AdvisorySupport::isMessageDLQdAdvisoryTopic(const cms::Destination* destina
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isMessageDLQdAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -941,6 +1071,10 @@ bool AdvisorySupport::isFullAdvisoryTopic(const cms::Destination* destination) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isFullAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
@@ -972,6 +1106,10 @@ bool AdvisorySupport::isNetworkBridgeAdvisoryTopic(const cms::Destination* desti
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AdvisorySupport::isNetworkBridgeAdvisoryTopic(const ActiveMQDestination* destination) {
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed ActiveMQDestination cannot be NULL");
+    }
+
     if (destination->isComposite()) {
         ArrayList< Pointer<ActiveMQDestination> > compositeDestinations = destination->getCompositeDestinations();
         for (int i = 0; i < compositeDestinations.size(); i++) {
