@@ -41,10 +41,14 @@
 #include <activemq/commands/ActiveMQObjectMessage.h>
 #include <activemq/commands/Message.h>
 
+#include <decaf/lang/exceptions/NullPointerException.h>
+
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::core;
 using namespace activemq::commands;
+
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMessageTransformation::ActiveMQMessageTransformation() {
@@ -57,8 +61,12 @@ ActiveMQMessageTransformation::~ActiveMQMessageTransformation() {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQMessageTransformation::transformDestination(const cms::Destination* destination, const ActiveMQDestination** amqDestination) {
 
+    if (destination == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Provided source cms::Destination pointer was NULL");
+    }
+
     if (amqDestination == NULL) {
-        throw cms::CMSException("Provided target ActiveMQMessage pointer was NULL");
+        throw NullPointerException(__FILE__, __LINE__, "Provided target ActiveMQDestination pointer was NULL");
     }
 
     *amqDestination = dynamic_cast<const ActiveMQDestination*>(destination);
@@ -88,8 +96,12 @@ bool ActiveMQMessageTransformation::transformDestination(const cms::Destination*
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQMessageTransformation::transformMessage(cms::Message* message, ActiveMQConnection* connection, Message** amqMessage) {
 
+    if (message == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Provided source cms::Message pointer was NULL");
+    }
+
     if (amqMessage == NULL) {
-        throw cms::CMSException("Provided target ActiveMQMessage pointer was NULL");
+        throw NullPointerException(__FILE__, __LINE__, "Provided target commands::Message pointer was NULL");
     }
 
     *amqMessage = dynamic_cast<Message*>(message);
@@ -169,6 +181,14 @@ bool ActiveMQMessageTransformation::transformMessage(cms::Message* message, Acti
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMessageTransformation::copyProperties(const cms::Message* fromMessage, cms::Message* toMessage) {
+
+    if (fromMessage == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Provided source cms::Message pointer was NULL");
+    }
+
+    if (toMessage == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Provided destination cms::Message pointer was NULL");
+    }
 
     toMessage->setCMSMessageID(fromMessage->getCMSMessageID());
     toMessage->setCMSCorrelationID(fromMessage->getCMSCorrelationID());
