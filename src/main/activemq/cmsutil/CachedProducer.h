@@ -116,6 +116,14 @@ namespace cmsutil {
             return producer->getTimeToLive();
         }
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            producer->setMessageTransformer(transformer);
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return producer->getMessageTransformer();
+        }
+
     };
 
 }}

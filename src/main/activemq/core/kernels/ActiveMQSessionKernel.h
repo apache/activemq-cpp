@@ -299,6 +299,22 @@ namespace kernels {
         cms::ExceptionListener* getExceptionListener();
 
         /**
+         * Set an MessageTransformer instance that is passed on to all MessageProducer and MessageConsumer
+         * objects created from this Session.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to set on all MessageConsumers and MessageProducers.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer);
+
+        /**
+         * Gets the currently configured MessageTransformer for this Session.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const;
+
+        /**
          * Gets the Session Information object for this session, if the
          * session is closed than this method throws an exception.
          * @return SessionInfo Reference

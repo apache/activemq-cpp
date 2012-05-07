@@ -295,6 +295,16 @@ namespace core{
          */
         virtual void setExceptionListener(cms::ExceptionListener* listener);
 
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer);
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const;
+
     public:   // Configuration Options
 
         /**

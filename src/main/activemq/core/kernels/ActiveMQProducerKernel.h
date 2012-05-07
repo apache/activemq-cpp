@@ -22,6 +22,7 @@
 #include <cms/Message.h>
 #include <cms/Destination.h>
 #include <cms/DeliveryMode.h>
+#include <cms/MessageTransformer.h>
 
 #include <activemq/util/Config.h>
 #include <activemq/util/MemoryUsage.h>
@@ -79,6 +80,9 @@ namespace kernels {
         // Generator of Message Sequence Id numbers for this producer.
         util::LongSequenceGenerator messageSequence;
 
+        // Used to tranform Message before sending them to the CMS bus.
+        cms::MessageTransformer* transformer;
+
     private:
 
         ActiveMQProducerKernel(const ActiveMQProducerKernel&);
@@ -91,6 +95,8 @@ namespace kernels {
          *
          * @param session
          *        The Session which is the parent of this Producer.
+         * @param parent
+         *        Pointer to the cms::MessageProducer that will wrap this kernel object.
          * @param producerId
          *        Pointer to a ProducerId object which identifies this producer.
          * @param destination
@@ -118,6 +124,26 @@ namespace kernels {
 
         virtual void send(const cms::Destination* destination, cms::Message* message,
                           int deliveryMode, int priority, long long timeToLive);
+
+        /**
+         * Set an MessageTransformer instance that is applied to all cms::Message objects before they
+         * are sent on to the CMS bus.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to apply on each cms:;MessageSend.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
+        }
+
+        /**
+         * Gets the currently configured MessageTransformer for this MessageProducer.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return this->transformer;
+        }
 
         /**
          * Sets the delivery mode for this Producer

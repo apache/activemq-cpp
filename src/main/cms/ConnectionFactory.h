@@ -18,12 +18,15 @@
 #define _CMS_CONNECTIONFACTORY_H_
 
 #include <cms/Config.h>
-#include <cms/Connection.h>
 #include <cms/CMSException.h>
 
 #include <string>
 
 namespace cms{
+
+    class Connection;
+    class ExceptionListener;
+    class MessageTransformer;
 
     /**
      * Defines the interface for a factory that creates connection objects, the Connection
@@ -51,7 +54,7 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs while creating the Connection.
          */
-        virtual Connection* createConnection() = 0;
+        virtual cms::Connection* createConnection() = 0;
 
         /**
          * Creates a connection with the default specified identity. The
@@ -96,6 +99,46 @@ namespace cms{
          */
         virtual cms::Connection* createConnection(const std::string& username, const std::string& password, const std::string& clientId) = 0;
 
+        /**
+         * Set an ExceptionListener instance that is passed on to all Connection objects created from
+         * this ConnectionFactory
+         *
+         * @param transformer
+         *      Pointer to the cms::ExceptionListener to set on all newly created Connection objects/
+         */
+        virtual void setExceptionListener(cms::ExceptionListener* listener) = 0;
+
+        /**
+         * Gets the currently configured ExceptionListener for this ConnectionFactory.
+         *
+         * The CMS code never takes ownership of the ExceptionListener pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the ExceptionListener has been assigned.
+         *
+         * @returns the pointer to the currently set cms::ExceptionListener.
+         */
+        virtual cms::ExceptionListener* getExceptionListener() const = 0;
+
+        /**
+         * Set an MessageTransformer instance that is passed on to all Connection objects created from
+         * this ConnectionFactory
+         *
+         * The CMS code never takes ownership of the MessageTransformer pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the MessageTransformer has been assigned.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to set on all newly created Connection objects.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) = 0;
+
+        /**
+         * Gets the currently configured MessageTransformer for this ConnectionFactory.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const = 0;
+
     public:
 
         /**
@@ -113,7 +156,7 @@ namespace cms{
          *
          * @throws CMSException if an internal error occurs while creating the ConnectionFactory.
          */
-        static ConnectionFactory* createCMSConnectionFactory(const std::string& brokerURI);
+        static cms::ConnectionFactory* createCMSConnectionFactory(const std::string& brokerURI);
 
     };
 

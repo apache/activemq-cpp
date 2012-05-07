@@ -26,8 +26,10 @@ namespace cmsutil {
 
     class DummyConsumer : public cms::MessageConsumer {
     private:
+
         std::string selector;
         cms::MessageListener* listener;
+        cms::MessageTransformer* transformer;
         MessageContext* messageContext;
         const cms::Destination* dest;
         bool noLocal;
@@ -40,6 +42,7 @@ namespace cmsutil {
             this->noLocal = noLocal;
             this->dest = dest;
             this->listener = NULL;
+            this->transformer = NULL;
         }
         virtual ~DummyConsumer() {}
 
@@ -72,6 +75,14 @@ namespace cmsutil {
         virtual std::string getMessageSelector() const
             throw ( cms::CMSException ) {
             return selector;
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return transformer;
+        }
+
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
         }
 
     };

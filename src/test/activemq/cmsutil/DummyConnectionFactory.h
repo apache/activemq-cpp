@@ -29,31 +29,24 @@ namespace cmsutil {
     private:
 
         MessageContext messageContext;
+        cms::ExceptionListener* listener;
+        cms::MessageTransformer* transformer;
 
     public:
 
         virtual ~DummyConnectionFactory() {}
 
-        virtual cms::Connection* createConnection() throw ( cms::CMSException ) {
-
+        virtual cms::Connection* createConnection() {
             return new DummyConnection(&messageContext);
         }
 
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password )
-            throw ( cms::CMSException ) {
-
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password) {
             return new DummyConnection(&messageContext);
         }
 
-        virtual cms::Connection* createConnection( const std::string& username,
-                                                   const std::string& password,
-                                                   const std::string& clientId )
-            throw ( cms::CMSException ) {
-
+        virtual cms::Connection* createConnection(const std::string& username, const std::string& password, const std::string& clientId) {
             DummyConnection* c = new DummyConnection(&messageContext);
             c->setClientID(clientId);
-
             return c;
         }
 
@@ -61,6 +54,21 @@ namespace cmsutil {
             return &messageContext;
         }
 
+        virtual cms::ExceptionListener* getExceptionListener() const {
+            return listener;
+        }
+
+        virtual void setExceptionListener(cms::ExceptionListener* listener) {
+            this->listener = listener;
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return transformer;
+        }
+
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
+        }
     };
 
 }}

@@ -84,6 +84,14 @@ namespace cmsutil {
             return consumer->getMessageSelector();
         }
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            consumer->setMessageTransformer(transformer);
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return consumer->getMessageTransformer();
+        }
+
     };
 
 }}

@@ -102,10 +102,13 @@ namespace kernels{
         Pointer<CloseSynhcronization> closeSync;
         ConsumersMap consumers;
         Mutex sendMutex;
+        cms::MessageTransformer* transformer;
 
     public:
 
-        SessionConfig() : synchronizationRegistered(false), producers(), scheduler(), closeSync(), consumers(), sendMutex() {}
+        SessionConfig() : synchronizationRegistered(false),
+                          producers(), scheduler(), closeSync(),
+                          consumers(), sendMutex(), transformer(NULL) {}
         ~SessionConfig() {}
     };
 
@@ -537,6 +540,8 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destinati
             throw ex;
         }
 
+        consumer->setMessageTransformer(this->config->transformer);
+
         if (this->connection->isStarted()) {
             consumer->start();
         }
@@ -578,6 +583,8 @@ cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer(const cms::To
             this->removeConsumer(consumer->getConsumerId());
             throw ex;
         }
+
+        consumer->setMessageTransformer(this->config->transformer);
 
         if (this->connection->isStarted()) {
             consumer->start();
@@ -626,6 +633,8 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
             this->removeProducer(producer);
             throw ex;
         }
+
+        producer->setMessageTransformer(this->config->transformer);
 
         return new ActiveMQProducer(producer);
     }
@@ -939,6 +948,16 @@ cms::ExceptionListener* ActiveMQSessionKernel::getExceptionListener() {
     }
 
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::setMessageTransformer(cms::MessageTransformer* transformer) {
+    this->config->transformer = transformer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageTransformer* ActiveMQSessionKernel::getMessageTransformer() const {
+    return this->config->transformer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,7 @@ namespace cmsutil {
 
     class DummyProducer : public cms::MessageProducer {
     private:
+
         const cms::Destination* dest;
         int deliveryMode;
         bool disableMessageId;
@@ -33,21 +34,25 @@ namespace cmsutil {
         int priority;
         long long ttl;
         MessageContext* messageContext;
+        cms::MessageTransformer* transformer;
 
     public:
 
         DummyProducer(MessageContext* messageContext, const cms::Destination* dest) {
-            deliveryMode = 1;
-            disableMessageId = false;
-            disableMessageTimestamp = false;
-            priority = 4;
-            ttl = 0L;
+            this->deliveryMode = 1;
+            this->disableMessageId = false;
+            this->disableMessageTimestamp = false;
+            this->priority = 4;
+            this->ttl = 0L;
             this->dest = dest;
             this->messageContext = messageContext;
+            this->transformer = NULL;
         }
-        virtual ~DummyProducer() {}
+        virtual ~DummyProducer() {
+        }
 
-        virtual void close() {}
+        virtual void close() {
+        }
 
         /**
          * Sends the message to the default producer destination, but does
@@ -58,7 +63,7 @@ namespace cmsutil {
          *      The message to be sent.
          * @throws cms::CMSException
          */
-        virtual void send( cms::Message* message ) throw ( cms::CMSException ){
+        virtual void send(cms::Message* message) throw (cms::CMSException) {
             send(message, deliveryMode, priority, ttl);
         }
 
@@ -76,8 +81,7 @@ namespace cmsutil {
          *      The time to live value for this message in milliseconds.
          * @throws cms::CMSException
          */
-        virtual void send( cms::Message* message, int deliveryMode, int priority,
-            long long timeToLive) throw ( cms::CMSException ){
+        virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive) throw (cms::CMSException) {
 
             send(dest, message, deliveryMode, priority, timeToLive);
         }
@@ -93,8 +97,7 @@ namespace cmsutil {
          *      the message to be sent.
          * @throws cms::CMSException
          */
-        virtual void send( const cms::Destination* destination,
-                           cms::Message* message ) throw ( cms::CMSException ){
+        virtual void send(const cms::Destination* destination, cms::Message* message) throw (cms::CMSException) {
             send(dest, message, deliveryMode, priority, ttl);
         }
 
@@ -114,9 +117,8 @@ namespace cmsutil {
          *      The time to live value for this message in milliseconds.
          * @throws cms::CMSException
          */
-        virtual void send( const cms::Destination* destination,
-            cms::Message* message, int deliveryMode, int priority,
-            long long timeToLive) throw ( cms::CMSException ){
+        virtual void send(const cms::Destination* destination, cms::Message* message, int deliveryMode, int priority, long long timeToLive)
+            throw (cms::CMSException) {
 
             messageContext->send(destination, message, deliveryMode, priority, timeToLive);
         }
@@ -127,7 +129,7 @@ namespace cmsutil {
          * @param mode
          *      The DeliveryMode
          */
-        virtual void setDeliveryMode( int mode ) throw ( cms::CMSException ) {
+        virtual void setDeliveryMode(int mode) throw (cms::CMSException) {
             this->deliveryMode = mode;
         }
 
@@ -136,7 +138,7 @@ namespace cmsutil {
          *
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const throw ( cms::CMSException ) {
+        virtual int getDeliveryMode() const throw (cms::CMSException) {
             return deliveryMode;
         }
 
@@ -146,7 +148,7 @@ namespace cmsutil {
          * @param value
          *      boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID( bool value ) throw ( cms::CMSException ) {
+        virtual void setDisableMessageID(bool value) throw (cms::CMSException) {
             disableMessageId = value;
         }
 
@@ -155,7 +157,7 @@ namespace cmsutil {
          *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageID() const throw ( cms::CMSException ) {
+        virtual bool getDisableMessageID() const throw (cms::CMSException) {
             return disableMessageId;
         }
 
@@ -163,7 +165,7 @@ namespace cmsutil {
          * Sets if Message Time Stamps are disbled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp( bool value ) throw ( cms::CMSException ) {
+        virtual void setDisableMessageTimeStamp(bool value) throw (cms::CMSException) {
             disableMessageTimestamp = value;
         }
 
@@ -172,7 +174,7 @@ namespace cmsutil {
          *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const throw ( cms::CMSException ) {
+        virtual bool getDisableMessageTimeStamp() const throw (cms::CMSException) {
             return disableMessageTimestamp;
         }
 
@@ -182,7 +184,7 @@ namespace cmsutil {
          * @param priority
          *      int value for Priority level
          */
-        virtual void setPriority( int priority ) throw ( cms::CMSException ) {
+        virtual void setPriority(int priority) throw (cms::CMSException) {
             this->priority = priority;
         }
 
@@ -191,7 +193,7 @@ namespace cmsutil {
          *
          * @return int based priority level
          */
-        virtual int getPriority() const throw ( cms::CMSException ) {
+        virtual int getPriority() const throw (cms::CMSException) {
             return priority;
         }
 
@@ -203,7 +205,7 @@ namespace cmsutil {
          * @param time
          *      default time to live value in milliseconds
          */
-        virtual void setTimeToLive( long long time ) throw ( cms::CMSException ) {
+        virtual void setTimeToLive(long long time) throw (cms::CMSException) {
             ttl = time;
         }
 
@@ -212,10 +214,17 @@ namespace cmsutil {
          *
          * @return Time to live value in milliseconds
          */
-        virtual long long getTimeToLive() const throw ( cms::CMSException ) {
+        virtual long long getTimeToLive() const throw (cms::CMSException) {
             return ttl;
         }
 
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return transformer;
+        }
+
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
+        }
     };
 
 }}

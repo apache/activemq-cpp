@@ -145,6 +145,7 @@ namespace core{
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
         cms::ExceptionListener* exceptionListener;
+        cms::MessageTransformer* transformer;
 
         Pointer<commands::ConnectionInfo> connectionInfo;
         Pointer<commands::BrokerInfo> brokerInfo;
@@ -190,6 +191,7 @@ namespace core{
                              defaultPrefetchPolicy(NULL),
                              defaultRedeliveryPolicy(NULL),
                              exceptionListener(NULL),
+                             transformer(NULL),
                              connectionInfo(),
                              brokerInfo(),
                              brokerWireFormatInfo(),
@@ -399,6 +401,8 @@ cms::Session* ActiveMQConnection::createSession(cms::Session::AcknowledgeMode ac
         // that at any time since we only refer to the Pointer to the session kernel.
         Pointer<ActiveMQSessionKernel> session(new ActiveMQSessionKernel(
             this, getNextSessionId(), ackMode, *this->config->properties));
+
+        session->setMessageTransformer(this->config->transformer);
 
         this->addSession(session);
 
@@ -1207,6 +1211,16 @@ void ActiveMQConnection::setExceptionListener(cms::ExceptionListener* listener) 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQConnection::getExceptionListener() const {
     return this->config->exceptionListener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setMessageTransformer(cms::MessageTransformer* transformer) {
+    this->config->transformer = transformer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageTransformer* ActiveMQConnection::getMessageTransformer() const {
+    return this->config->transformer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

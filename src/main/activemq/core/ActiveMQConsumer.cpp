@@ -189,3 +189,13 @@ const Pointer<commands::ConsumerId>& ActiveMQConsumer::getConsumerId() const {
 decaf::lang::Exception* ActiveMQConsumer::getFailureError() const {
     return this->config->kernel->getFailureError();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::setMessageTransformer(cms::MessageTransformer* transformer) {
+    this->config->kernel->setMessageTransformer(transformer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageTransformer* ActiveMQConsumer::getMessageTransformer() const {
+    return this->config->kernel->getMessageTransformer();
+}

@@ -28,6 +28,7 @@
 namespace cms{
 
     class ExceptionListener;
+    class MessageTransformer;
 
     /**
      * The client's connection to its provider.
@@ -157,6 +158,26 @@ namespace cms{
          *        pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener(ExceptionListener* listener) = 0;
+
+        /**
+         * Set an MessageTransformer instance that is passed on to all Session objects created from
+         * this Connection.
+         *
+         * The CMS code never takes ownership of the MessageTransformer pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the MessageTransformer has been assigned.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to set on all newly created Session objects.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) = 0;
+
+        /**
+         * Gets the currently configured MessageTransformer for this Connection.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 
     };
 

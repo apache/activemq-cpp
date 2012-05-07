@@ -106,6 +106,10 @@ namespace kernels {
 
         virtual void acknowledge(const Pointer<commands::MessageDispatch>& dispatch);
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer);
+
+        virtual cms::MessageTransformer* getMessageTransformer() const;
+
     public:  // Dispatcher Methods
 
         virtual void dispatch( const Pointer<MessageDispatch>& message );
@@ -302,6 +306,10 @@ namespace kernels {
         void afterMessageIsConsumed(const Pointer<commands::MessageDispatch>& dispatch, bool messageExpired);
 
     private:
+
+        // Creates a deliverable cms::Message from a received MessageDispatch, transforming if needed
+        // and configuring appropriate ack handlers.
+        Pointer<cms::Message> createCMSMessage(Pointer<commands::MessageDispatch> dispatch);
 
         // Using options from the Destination URI override any settings that are
         // defined for this consumer.

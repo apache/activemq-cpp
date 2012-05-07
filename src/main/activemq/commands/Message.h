@@ -137,6 +137,18 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
+         * Create a Pointer based copy of this message.  Useful for chaining a clone
+         * operation with other operation such as casting to a cms Message type.
+         *
+         *   Pointer<cms::Message> cmsMsg = message->copy().dynamic_cast<cms::Message>();
+         *
+         * @returns a Pointer<Message> which is a duplicate of this object.
+         */
+        Pointer<Message> copy() const {
+            return Pointer<Message>(this->cloneDataStructure());
+        }
+
+        /**
          * Handles the marshaling of the objects properties into the
          * internal byte array before the object is marshaled to the
          * wire

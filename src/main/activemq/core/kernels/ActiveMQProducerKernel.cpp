@@ -202,6 +202,20 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
             throw cms::CMSException("No destination specified", NULL);
         }
 
+        cms::Message* outbound = message;
+        Pointer<cms::Message> scopedMessage;
+        if (this->transformer != NULL) {
+            if (this->transformer->producerTransform(this->session, this, message, &outbound)) {
+                // scopedMessage ensures that when we are responsible for the lifetime of the
+                // transformed message, the message remains valid until the send operation either
+                // succeeds or throws an exception.
+                scopedMessage.reset(outbound);
+            }
+            if (outbound == NULL) {
+                throw NullPointerException(__FILE__, __LINE__, "MessageTransformer set transformed message to NULL");
+            }
+        }
+
         if (this->memoryUsage.get() != NULL) {
             try {
                 this->memoryUsage->waitForSpace();
@@ -210,7 +224,7 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
             }
         }
 
-        this->session->send(this, dest, message, deliveryMode, priority, timeToLive,
+        this->session->send(this, dest, outbound, deliveryMode, priority, timeToLive,
                             this->memoryUsage.get(), this->sendTimeout);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
