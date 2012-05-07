@@ -165,6 +165,14 @@ namespace core{
             return this->kernel->getSendTimeout();
         }
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->kernel->setMessageTransformer(transformer);
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return this->kernel->getMessageTransformer();
+        }
+
     public:
 
         /**

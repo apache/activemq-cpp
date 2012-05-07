@@ -72,6 +72,19 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
 
         super.generateAdditonalMembers(out);
 
+
+        out.println("        /**");
+        out.println("         * Create a Pointer based copy of this message.  Useful for chaining a clone");
+        out.println("         * operation with other operation such as casting to a cms Message type.");
+        out.println("         *");
+        out.println("         *   Pointer<cms::Message> cmsMsg = message->copy().dynamic_cast<cms::Message>();");
+        out.println("         *");
+        out.println("         * @returns a Pointer<Message> which is a duplicate of this object.");
+        out.println("         */");
+        out.println("        Pointer<Message> copy() const {");
+        out.println("            return Pointer<Message>(this->cloneDataStructure());");
+        out.println("        }");
+        out.println("");
         out.println("        /**");
         out.println("         * Handles the marshaling of the objects properties into the");
         out.println("         * internal byte array before the object is marshaled to the");

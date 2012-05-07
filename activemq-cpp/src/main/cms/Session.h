@@ -37,6 +37,8 @@
 
 namespace cms{
 
+    class MessageTransformer;
+
     /**
      * A Session object is a single-threaded context for producing and consuming
      * messages.
@@ -442,6 +444,26 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          */
         virtual void unsubscribe(const std::string& name) = 0;
+
+        /**
+         * Set an MessageTransformer instance that is passed on to all MessageProducer and MessageConsumer
+         * objects created from this Session.
+         *
+         * The CMS code never takes ownership of the MessageTransformer pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the MessageTransformer has been assigned.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to set on all MessageConsumers and MessageProducers.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) = 0;
+
+        /**
+         * Gets the currently configured MessageTransformer for this Session.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 
     };
 

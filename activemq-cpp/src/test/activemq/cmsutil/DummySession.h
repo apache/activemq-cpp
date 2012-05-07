@@ -35,101 +35,110 @@ namespace cmsutil {
 
         cms::Session::AcknowledgeMode mode;
         MessageContext* messageContext;
+        cms::MessageTransformer* transformer;
 
     public:
 
         DummySession(MessageContext* messageContext) {
             this->mode = cms::Session::AUTO_ACKNOWLEDGE;
             this->messageContext = messageContext;
+            this->transformer = NULL;
         }
 
-        virtual ~DummySession() {}
+        virtual ~DummySession() {
+        }
 
-        virtual void close() {}
+        virtual void close() {
+        }
 
-        virtual void start() {}
+        virtual void start() {
+        }
 
-        virtual void stop() {}
+        virtual void stop() {
+        }
 
-        virtual void commit() {}
+        virtual void commit() {
+        }
 
-        virtual void rollback() {}
+        virtual void rollback() {
+        }
 
-        virtual void recover() {}
+        virtual void recover() {
+        }
 
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination) {
 
             return new DummyConsumer(messageContext, destination, "", false);
         }
 
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination,
-            const std::string& selector )
-                throw ( cms::CMSException ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination, const std::string& selector) throw (cms::CMSException) {
             return new DummyConsumer(messageContext, destination, selector, false);
         }
 
-        virtual cms::MessageConsumer* createConsumer(
-            const cms::Destination* destination,
-            const std::string& selector,
-            bool noLocal )
-                throw ( cms::CMSException ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination, const std::string& selector, bool noLocal) throw (cms::CMSException) {
             return new DummyConsumer(messageContext, destination, selector, noLocal);
         }
 
-        virtual cms::MessageConsumer* createDurableConsumer(
-            const cms::Topic* destination,
-            const std::string& name,
-            const std::string& selector,
-            bool noLocal = false ) { return NULL; }
-
-        virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
-        { return new DummyProducer(messageContext, destination); }
-
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue )
-        { return NULL; }
-
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector )
-        { return NULL; }
-
-        virtual cms::Queue* createQueue( const std::string& queueName )
-        {
-            return new activemq::commands::ActiveMQQueue( queueName );
-        }
-
-        virtual cms::Topic* createTopic( const std::string& topicName ) {
-            return new activemq::commands::ActiveMQTopic( topicName );
-        }
-
-        virtual cms::TemporaryQueue* createTemporaryQueue()
-            { return NULL; }
-
-        virtual cms::TemporaryTopic* createTemporaryTopic()
-            { return NULL; }
-
-        virtual cms::Message* createMessage()
-            { return NULL; }
-
-        virtual cms::BytesMessage* createBytesMessage()
-            { return NULL; }
-
-        virtual cms::BytesMessage* createBytesMessage(
-            const unsigned char* bytes, int bytesSize ) {
+        virtual cms::MessageConsumer* createDurableConsumer(const cms::Topic* destination, const std::string& name, const std::string& selector,
+            bool noLocal = false) {
             return NULL;
         }
 
-        virtual cms::StreamMessage* createStreamMessage()
-            throw ( cms::CMSException ){ return NULL; }
+        virtual cms::MessageProducer* createProducer(const cms::Destination* destination) {
+            return new DummyProducer(messageContext, destination);
+        }
 
-        virtual cms::TextMessage* createTextMessage()
-            throw ( cms::CMSException ){ return NULL; }
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue) {
+            return NULL;
+        }
 
-        virtual cms::TextMessage* createTextMessage( const std::string& text )
-            throw ( cms::CMSException ){ return NULL; }
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue, const std::string& selector) {
+            return NULL;
+        }
 
-        virtual cms::MapMessage* createMapMessage()
-            throw ( cms::CMSException ){ return NULL; }
+        virtual cms::Queue* createQueue(const std::string& queueName) {
+            return new activemq::commands::ActiveMQQueue(queueName);
+        }
+
+        virtual cms::Topic* createTopic(const std::string& topicName) {
+            return new activemq::commands::ActiveMQTopic(topicName);
+        }
+
+        virtual cms::TemporaryQueue* createTemporaryQueue() {
+            return NULL;
+        }
+
+        virtual cms::TemporaryTopic* createTemporaryTopic() {
+            return NULL;
+        }
+
+        virtual cms::Message* createMessage() {
+            return NULL;
+        }
+
+        virtual cms::BytesMessage* createBytesMessage() {
+            return NULL;
+        }
+
+        virtual cms::BytesMessage* createBytesMessage(const unsigned char* bytes, int bytesSize) {
+            return NULL;
+        }
+
+        virtual cms::StreamMessage* createStreamMessage() throw (cms::CMSException) {
+            return NULL;
+        }
+
+        virtual cms::TextMessage* createTextMessage() throw (cms::CMSException) {
+            return NULL;
+        }
+
+        virtual cms::TextMessage* createTextMessage(const std::string& text) throw (cms::CMSException) {
+            return NULL;
+        }
+
+        virtual cms::MapMessage* createMapMessage() throw (cms::CMSException) {
+            return NULL;
+        }
 
         virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const {
             return mode;
@@ -140,11 +149,19 @@ namespace cmsutil {
         }
 
         virtual bool isTransacted() const {
-            return mode==cms::Session::SESSION_TRANSACTED;
+            return mode == cms::Session::SESSION_TRANSACTED;
         }
 
-        virtual void unsubscribe( const std::string& name ) {}
+        virtual void unsubscribe(const std::string& name) {
+        }
 
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return transformer;
+        }
+
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
+        }
     };
 
 }}

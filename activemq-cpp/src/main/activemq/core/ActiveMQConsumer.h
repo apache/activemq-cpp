@@ -81,6 +81,10 @@ namespace core{
 
         virtual std::string getMessageSelector() const;
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer);
+
+        virtual cms::MessageTransformer* getMessageTransformer() const;
+
     public:
 
         /**

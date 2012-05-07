@@ -26,19 +26,21 @@ namespace cmsutil {
 
     class MessageContext;
 
-    class DummyConnection : public cms::Connection {
+    class DummyConnection: public cms::Connection {
     private:
 
         cms::ExceptionListener* listener;
+        cms::MessageTransformer* transformer;
         std::string clientId;
         MessageContext* messageContext;
 
     public:
 
-        DummyConnection(MessageContext* messageContext ) {
+        DummyConnection(MessageContext* messageContext) {
             this->messageContext = messageContext;
         }
-        virtual ~DummyConnection() {}
+        virtual ~DummyConnection() {
+        }
 
         virtual const cms::ConnectionMetaData* getMetaData() const {
             return NULL;
@@ -53,12 +55,11 @@ namespace cmsutil {
         virtual void stop() {
         }
 
-        virtual cms::Session* createSession() throw ( cms::CMSException ) {
+        virtual cms::Session* createSession() throw (cms::CMSException) {
             return new DummySession(messageContext);
         }
 
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
-            throw ( cms::CMSException ) {
+        virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode) throw (cms::CMSException) {
 
             DummySession* s = new DummySession(messageContext);
             s->setAcknowledgeMode(ackMode);
@@ -69,7 +70,7 @@ namespace cmsutil {
             return clientId;
         }
 
-        virtual void setClientID( const std::string& id ) {
+        virtual void setClientID(const std::string& id) {
             this->clientId = id;
         }
 
@@ -77,8 +78,16 @@ namespace cmsutil {
             return listener;
         }
 
-        virtual void setExceptionListener( cms::ExceptionListener* listener ) {
+        virtual void setExceptionListener(cms::ExceptionListener* listener) {
             this->listener = listener;
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return transformer;
+        }
+
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            this->transformer = transformer;
         }
     };
 

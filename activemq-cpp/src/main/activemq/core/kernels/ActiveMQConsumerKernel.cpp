@@ -28,6 +28,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/ActiveMQProperties.h>
+#include <activemq/util/ActiveMQMessageTransformation.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessageAck.h>
@@ -46,6 +47,7 @@
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/threads/Scheduler.h>
 #include <cms/ExceptionListener.h>
+#include <cms/MessageTransformer.h>
 #include <memory>
 
 using namespace std;
@@ -75,6 +77,7 @@ namespace kernels {
     public:
 
         cms::MessageListener* listener;
+        cms::MessageTransformer* transformer;
         decaf::util::concurrent::Mutex listenerMutex;
         AtomicBoolean deliveringAcks;
         AtomicBoolean started;
@@ -93,6 +96,7 @@ namespace kernels {
         Pointer<Scheduler> scheduler;
 
         ActiveMQConsumerKernelConfig() : listener(NULL),
+                                         transformer(NULL),
                                          listenerMutex(),
                                          deliveringAcks(),
                                          started(),
@@ -311,7 +315,9 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
                                                bool noLocal,
                                                bool browser,
                                                bool dispatchAsync,
-                                               cms::MessageListener* listener) : internal(NULL), session(NULL), consumerInfo() {
+                                               cms::MessageListener* listener) : internal(NULL),
+                                                                                 session(NULL),
+                                                                                 consumerInfo() {
 
     if (session == NULL) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Consumer created with NULL Session");
@@ -598,19 +604,12 @@ cms::Message* ActiveMQConsumerKernel::receive() {
             return NULL;
         }
 
-        // Message pre-processing
         beforeMessageIsConsumed(message);
-
-        // Need to clone the message because the user is responsible for freeing
-        // its copy of the message.
-        cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
-
-        // Post processing (may result in the message being deleted)
         afterMessageIsConsumed(message, false);
 
-        // Return the cloned message.
-        return clonedMessage;
+        // Need to clone the message because the user is responsible for freeing
+        // its copy of the message, createCMSMessage will do this for us.
+        return createCMSMessage(message).release();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -631,19 +630,12 @@ cms::Message* ActiveMQConsumerKernel::receive( int millisecs ) {
             return NULL;
         }
 
-        // Message preprocessing
         beforeMessageIsConsumed(message);
-
-        // Need to clone the message because the user is responsible for freeing
-        // its copy of the message.
-        cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
-
-        // Post processing (may result in the message being deleted)
         afterMessageIsConsumed(message, false);
 
-        // Return the cloned message.
-        return clonedMessage;
+        // Need to clone the message because the user is responsible for freeing
+        // its copy of the message, createCMSMessage will do this for us.
+        return createCMSMessage(message).release();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -664,25 +656,18 @@ cms::Message* ActiveMQConsumerKernel::receiveNoWait() {
             return NULL;
         }
 
-        // Message preprocessing
         beforeMessageIsConsumed(message);
-
-        // Need to clone the message because the user is responsible for freeing
-        // its copy of the message.
-        cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>(message->getMessage()->cloneDataStructure());
-
-        // Post processing (may result in the message being deleted)
         afterMessageIsConsumed(message, false);
 
-        // Return the cloned message.
-        return clonedMessage;
+        // Need to clone the message because the user is responsible for freeing
+        // its copy of the message, createCMSMessage will do this for us.
+        return createCMSMessage(message).release();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumerKernel::setMessageListener( cms::MessageListener* listener ) {
+void ActiveMQConsumerKernel::setMessageListener(cms::MessageListener* listener) {
 
     try {
 
@@ -721,16 +706,6 @@ void ActiveMQConsumerKernel::setMessageListener( cms::MessageListener* listener 
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumerKernel::beforeMessageIsConsumed(const Pointer<MessageDispatch>& dispatch) {
-
-    // If the Session is in ClientAcknowledge or IndividualAcknowledge mode, then
-    // we set the handler in the message to this object and send it out.
-    if (session->isClientAcknowledge()) {
-        Pointer<ActiveMQAckHandler> ackHandler(new ClientAckHandler(this->session));
-        dispatch->getMessage()->setAckHandler(ackHandler);
-    } else if (session->isIndividualAcknowledge()) {
-        Pointer<ActiveMQAckHandler> ackHandler(new IndividualAckHandler(this, dispatch));
-        dispatch->getMessage()->setAckHandler(ackHandler);
-    }
 
     this->internal->lastDeliveredSequenceId = dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
 
@@ -1102,8 +1077,7 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
 
             clearMessagesInProgress();
             if (this->internal->clearDispatchList) {
-                // we are reconnecting so lets flush the in progress
-                // messages
+                // we are reconnecting so lets flush the in progress messages
                 this->internal->clearDispatchList = false;
                 this->internal->unconsumedMessages->clear();
             }
@@ -1113,8 +1087,6 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                 // Don't dispatch expired messages, ack it and then destroy it
                 if (dispatch->getMessage() != NULL && dispatch->getMessage()->isExpired()) {
                     this->ackLater(dispatch, ActiveMQConstants::ACK_TYPE_CONSUMED);
-
-                    // stop now, don't queue
                     return;
                 }
 
@@ -1123,9 +1095,9 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                     // If we have a listener, send the message.
                     if (this->internal->listener != NULL && internal->unconsumedMessages->isRunning()) {
 
+                        Pointer<cms::Message> message = createCMSMessage(dispatch);
                         beforeMessageIsConsumed(dispatch);
-                        this->internal->listener->onMessage(
-                            dynamic_cast<cms::Message*> (dispatch->getMessage().get()));
+                        this->internal->listener->onMessage(message.get());
                         afterMessageIsConsumed(dispatch, false);
 
                     } else {
@@ -1138,6 +1110,55 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
             }
         }
     }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<cms::Message> ActiveMQConsumerKernel::createCMSMessage(Pointer<MessageDispatch> dispatch) {
+
+    try {
+
+        Pointer<Message> message = dispatch->getMessage()->copy();
+        if (this->internal->transformer != NULL) {
+            cms::Message* source = dynamic_cast<cms::Message*>(message.get());
+            cms::Message* transformed = NULL;
+
+            if (this->internal->transformer->consumerTransform(
+                (cms::Session*)this->session, (cms::MessageConsumer*)this, source, &transformed)) {
+
+                if (transformed == NULL) {
+                    throw NullPointerException(__FILE__, __LINE__, "Client MessageTransformer returned a NULL message");
+                }
+
+                Message* amqMessage = NULL;
+
+                // If the transform create a new ActiveMQ Message command then we can discard the transformed
+                // cms::Message here, otherwise the transformed message was already an ActiveMQ Message
+                // command of some sort so we just place casted amqMessage in our Pointer and let it get
+                // cleaned up after its been dispatched.
+                if (ActiveMQMessageTransformation::transformMessage(transformed, this->session->getConnection(), &amqMessage)){
+                    delete transformed;
+                }
+
+                message.reset(amqMessage);
+            }
+        }
+
+        // If the Session is in ClientAcknowledge or IndividualAcknowledge mode, then
+        // we set the handler in the message to this object and send it out.
+        if (session->isClientAcknowledge()) {
+            Pointer<ActiveMQAckHandler> ackHandler(new ClientAckHandler(this->session));
+            message->setAckHandler(ackHandler);
+        } else if (session->isIndividualAcknowledge()) {
+            Pointer<ActiveMQAckHandler> ackHandler(new IndividualAckHandler(this, dispatch));
+            message->setAckHandler(ackHandler);
+        }
+
+        return message.dynamicCast<cms::Message>();
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -1314,6 +1335,16 @@ RedeliveryPolicy* ActiveMQConsumerKernel::getRedeliveryPolicy() const {
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageListener* ActiveMQConsumerKernel::getMessageListener() const {
     return this->internal->listener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumerKernel::setMessageTransformer(cms::MessageTransformer* transformer) {
+    this->internal->transformer = transformer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageTransformer* ActiveMQConsumerKernel::getMessageTransformer() const {
+    return this->internal->transformer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

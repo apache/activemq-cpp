@@ -225,6 +225,14 @@ namespace cmsutil {
             session->unsubscribe( name );
         }
 
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
+            session->setMessageTransformer(transformer);
+        }
+
+        virtual cms::MessageTransformer* getMessageTransformer() const {
+            return session->getMessageTransformer();
+        }
+
     private:
 
         std::string getUniqueDestName( const cms::Destination* dest );

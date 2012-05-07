@@ -38,8 +38,8 @@ ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 ## ------------------------------------------------------------
 ## Define the Version variables for the CMS API Library
 ## ------------------------------------------------------------
-CMSAPI_MAJOR_VERSION=2
-CMSAPI_MINOR_VERSION=4
+CMSAPI_MAJOR_VERSION=3
+CMSAPI_MINOR_VERSION=0
 CMSAPI_VERSION=${CMSAPI_MAJOR_VERSION}.${CMSAPI_MINOR_VERSION}
 
 AC_SUBST(CMSAPI_MAJOR_VERSION)

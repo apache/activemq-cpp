@@ -27,6 +27,8 @@
 
 namespace cms{
 
+    class MessageTransformer;
+
     /**
      * A client uses a <code>MessageConsumer</code> to received messages
      * from a destination.
@@ -119,6 +121,26 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          */
         virtual std::string getMessageSelector() const = 0;
+
+        /**
+         * Set an MessageTransformer instance that is applied to all cms::Message objects before they
+         * are dispatched to client code.
+         *
+         * The CMS code never takes ownership of the MessageTransformer pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the MessageTransformer has been assigned.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to apply on each cms:;Message dispatch.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) = 0;
+
+        /**
+         * Gets the currently configured MessageTransformer for this MessageConsumer.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 
     };
 

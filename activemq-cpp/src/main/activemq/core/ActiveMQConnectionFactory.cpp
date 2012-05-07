@@ -16,6 +16,7 @@
 */
 #include "ActiveMQConnectionFactory.h"
 
+#include <cms/MessageTransformer.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/Boolean.h>
@@ -81,6 +82,7 @@ namespace core{
         unsigned int producerWindowSize;
 
         cms::ExceptionListener* defaultListener;
+        cms::MessageTransformer* defaultTransformer;
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
@@ -100,6 +102,7 @@ namespace core{
                             closeTimeout(15000),
                             producerWindowSize(0),
                             defaultListener(NULL),
+                            defaultTransformer(NULL),
                             defaultPrefetchPolicy(new DefaultPrefetchPolicy()),
                             defaultRedeliveryPolicy(new DefaultRedeliveryPolicy()) {
         }
@@ -370,6 +373,10 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
     }
+
+    if (this->settings->defaultTransformer) {
+        connection->setMessageTransformer(this->settings->defaultTransformer);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -425,6 +432,16 @@ void ActiveMQConnectionFactory::setExceptionListener(cms::ExceptionListener* lis
 ////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQConnectionFactory::getExceptionListener() const {
     return this->settings->defaultListener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setMessageTransformer(cms::MessageTransformer* transformer) {
+    this->settings->defaultTransformer = transformer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageTransformer* ActiveMQConnectionFactory::getMessageTransformer() const {
+    return this->settings->defaultTransformer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

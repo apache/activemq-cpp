@@ -188,7 +188,7 @@ namespace core{
          * @param listener
          * 		The listener to set on the connection or NULL for no listener.
          */
-        void setExceptionListener(cms::ExceptionListener* listener);
+        virtual void setExceptionListener(cms::ExceptionListener* listener);
 
         /**
          * Returns the currently set ExceptionListener that will be set on any new Connection
@@ -196,7 +196,23 @@ namespace core{
          *
          * @return a pointer to a CMS ExceptionListener instance or NULL if not set.
          */
-        cms::ExceptionListener* getExceptionListener() const;
+        virtual cms::ExceptionListener* getExceptionListener() const;
+
+        /**
+         * Set an MessageTransformer instance that is passed on to all Connection objects created from
+         * this ConnectionFactory
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to set on all newly created Connection objects.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer);
+
+        /**
+         * Gets the currently configured MessageTransformer for this ConnectionFactory.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const;
 
         /**
          * Sets the PrefetchPolicy instance that this factory should use when it creates

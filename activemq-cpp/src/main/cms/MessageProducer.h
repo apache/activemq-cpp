@@ -30,6 +30,8 @@
 
 namespace cms{
 
+    class MessageTransformer;
+
     /**
      * A client uses a <code>MessageProducer</code> object to send messages to
      * a Destination. A <code>MessageProducer</code> object is created by
@@ -236,6 +238,26 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          */
         virtual long long getTimeToLive() const = 0;
+
+        /**
+         * Set an MessageTransformer instance that is applied to all cms::Message objects before they
+         * are sent on to the CMS bus.
+         *
+         * The CMS code never takes ownership of the MessageTransformer pointer which implies that
+         * the client code must ensure that the object remains valid for the lifetime of the CMS
+         * object to which the MessageTransformer has been assigned.
+         *
+         * @param transformer
+         *      Pointer to the cms::MessageTransformer to apply on each cms:;MessageSend.
+         */
+        virtual void setMessageTransformer(cms::MessageTransformer* transformer) = 0;
+
+        /**
+         * Gets the currently configured MessageTransformer for this MessageProducer.
+         *
+         * @returns the pointer to the currently set cms::MessageTransformer.
+         */
+        virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 
     };
 
