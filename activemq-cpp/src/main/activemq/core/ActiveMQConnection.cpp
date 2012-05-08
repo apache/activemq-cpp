@@ -1435,7 +1435,7 @@ void ActiveMQConnection::deleteTempDestination(Pointer<ActiveMQTempDestination> 
         while (iterator->hasNext()) {
             Pointer<ActiveMQSessionKernel> session = iterator->next();
             if (session->isInUse(destination)) {
-                throw new ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+                throw ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
             }
         }
 
