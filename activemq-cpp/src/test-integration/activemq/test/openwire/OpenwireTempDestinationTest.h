@@ -27,14 +27,14 @@ namespace openwire{
     class OpenwireTempDestinationTest : public CMSTestFixture {
 
         CPPUNIT_TEST_SUITE( OpenwireTempDestinationTest );
-//        CPPUNIT_TEST( testBasics );
-//        CPPUNIT_TEST( testTwoConnections );
-//        CPPUNIT_TEST( testTempDestOnlyConsumedByLocalConn );
-//        CPPUNIT_TEST( testTempQueueHoldsMessagesWithConsumers );
-//        CPPUNIT_TEST( testTempQueueHoldsMessagesWithoutConsumers );
-//        CPPUNIT_TEST( testTmpQueueWorksUnderLoad );
-//        CPPUNIT_TEST( testPublishFailsForClosedConnection );
-//        CPPUNIT_TEST( testPublishFailsForDestoryedTempDestination );
+        CPPUNIT_TEST( testBasics );
+        CPPUNIT_TEST( testTwoConnections );
+        CPPUNIT_TEST( testTempDestOnlyConsumedByLocalConn );
+        CPPUNIT_TEST( testTempQueueHoldsMessagesWithConsumers );
+        CPPUNIT_TEST( testTempQueueHoldsMessagesWithoutConsumers );
+        CPPUNIT_TEST( testTmpQueueWorksUnderLoad );
+        CPPUNIT_TEST( testPublishFailsForClosedConnection );
+        CPPUNIT_TEST( testPublishFailsForDestoryedTempDestination );
         CPPUNIT_TEST( testDeleteDestinationWithSubscribersFails );
         CPPUNIT_TEST_SUITE_END();
 
