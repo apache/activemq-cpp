@@ -27,8 +27,15 @@ namespace openwire{
     class OpenwireTempDestinationTest : public CMSTestFixture {
 
         CPPUNIT_TEST_SUITE( OpenwireTempDestinationTest );
-        CPPUNIT_TEST( testBasics );
-        CPPUNIT_TEST( testTwoConnections );
+//        CPPUNIT_TEST( testBasics );
+//        CPPUNIT_TEST( testTwoConnections );
+//        CPPUNIT_TEST( testTempDestOnlyConsumedByLocalConn );
+//        CPPUNIT_TEST( testTempQueueHoldsMessagesWithConsumers );
+//        CPPUNIT_TEST( testTempQueueHoldsMessagesWithoutConsumers );
+//        CPPUNIT_TEST( testTmpQueueWorksUnderLoad );
+//        CPPUNIT_TEST( testPublishFailsForClosedConnection );
+//        CPPUNIT_TEST( testPublishFailsForDestoryedTempDestination );
+        CPPUNIT_TEST( testDeleteDestinationWithSubscribersFails );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,8 +43,15 @@ namespace openwire{
         OpenwireTempDestinationTest() {}
         virtual ~OpenwireTempDestinationTest() {}
 
-        virtual void testBasics();
-        virtual void testTwoConnections();
+        void testBasics();
+        void testTwoConnections();
+        void testTempDestOnlyConsumedByLocalConn();
+        void testTempQueueHoldsMessagesWithConsumers();
+        void testTempQueueHoldsMessagesWithoutConsumers();
+        void testTmpQueueWorksUnderLoad();
+        void testPublishFailsForClosedConnection();
+        void testPublishFailsForDestoryedTempDestination();
+        void testDeleteDestinationWithSubscribersFails();
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
