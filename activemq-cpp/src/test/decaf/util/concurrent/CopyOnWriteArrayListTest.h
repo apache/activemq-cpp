@@ -79,6 +79,7 @@ namespace concurrent {
         CPPUNIT_TEST( testGet2IndexOutOfBoundsException );
         CPPUNIT_TEST( testSet1IndexOutOfBoundsException );
         CPPUNIT_TEST( testSet2IndexOutOfBoundsException );
+        CPPUNIT_TEST( testConcurrentRandomAddRemoveAndIterate );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -141,6 +142,7 @@ namespace concurrent {
         void testGet2IndexOutOfBoundsException();
         void testSet1IndexOutOfBoundsException();
         void testSet2IndexOutOfBoundsException();
+        void testConcurrentRandomAddRemoveAndIterate();
 
     };
 

@@ -18,7 +18,10 @@
 #include "CopyOnWriteArrayListTest.h"
 
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
+#include <decaf/util/concurrent/ThreadPoolExecutor.h>
+#include <decaf/util/concurrent/LinkedBlockingQueue.h>
 #include <decaf/util/StlList.h>
+#include <decaf/util/Random.h>
 #include <decaf/lang/Integer.h>
 
 using namespace decaf;
@@ -956,4 +959,88 @@ void CopyOnWriteArrayListTest::testRetainAll() {
 
     list3.retainAll( collection );
     CPPUNIT_ASSERT_EQUAL( 0, list3.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class Target {
+    private:
+
+        int counter;
+
+    public:
+
+        Target() : counter(0) {
+        }
+
+        void increment() {
+            this->counter++;
+        }
+    };
+
+    class AddRemoveItemRunnable : public Runnable {
+    private:
+
+        Random rand;
+        CopyOnWriteArrayList<Target*>* list;
+
+    public:
+
+        AddRemoveItemRunnable(CopyOnWriteArrayList<Target*>* list) :
+            Runnable(), rand(), list(list) {
+        }
+
+        virtual ~AddRemoveItemRunnable() {}
+
+        virtual void run() {
+            TimeUnit::MILLISECONDS.sleep(rand.nextInt(10));
+            Target* target = new Target();
+            list->add(target);
+            TimeUnit::MILLISECONDS.sleep(rand.nextInt(10));
+            list->remove(target);
+            delete target;
+        }
+    };
+
+    class IterateAndExecuteMethodRunnable : public Runnable {
+    private:
+
+        Random rand;
+        CopyOnWriteArrayList<Target*>* list;
+
+    public:
+
+        IterateAndExecuteMethodRunnable(CopyOnWriteArrayList<Target*>* list) :
+            Runnable(), rand(), list(list) {
+        }
+
+        virtual ~IterateAndExecuteMethodRunnable() {}
+
+        virtual void run() {
+            TimeUnit::MILLISECONDS.sleep(rand.nextInt(15));
+            Pointer< Iterator<Target*> > iter(list->iterator());
+            while(iter->hasNext()) {
+                iter->next()->increment();
+            }
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CopyOnWriteArrayListTest::testConcurrentRandomAddRemoveAndIterate() {
+
+    ThreadPoolExecutor executor(50, Integer::MAX_VALUE, 60LL, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+    CopyOnWriteArrayList<Target*> list;
+
+    Random rand;
+
+    for (int i = 0; i < 3000; i++) {
+        executor.execute(new AddRemoveItemRunnable(&list));
+        executor.execute(new IterateAndExecuteMethodRunnable(&list));
+    }
+
+    executor.shutdown();
+    CPPUNIT_ASSERT_MESSAGE("executor terminated", executor.awaitTermination(45, TimeUnit::SECONDS));
 }
