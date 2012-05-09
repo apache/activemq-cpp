@@ -266,6 +266,7 @@ cc_sources = \
     cms/MessageNotReadableException.cpp \
     cms/MessageNotWriteableException.cpp \
     cms/MessageProducer.cpp \
+    cms/MessageTransformer.cpp \
     cms/ObjectMessage.cpp \
     cms/Queue.cpp \
     cms/QueueBrowser.cpp \
@@ -791,6 +792,7 @@ h_sources = \
     cms/MessageNotReadableException.h \
     cms/MessageNotWriteableException.h \
     cms/MessageProducer.h \
+    cms/MessageTransformer.h \
     cms/ObjectMessage.h \
     cms/Queue.h \
     cms/QueueBrowser.h \
