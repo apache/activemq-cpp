@@ -19,6 +19,7 @@
 #include "activemq/test/openwire/OpenwireAsyncSenderTest.h"
 #include "activemq/test/openwire/OpenwireClientAckTest.h"
 #include "activemq/test/openwire/OpenwireCmsTemplateTest.h"
+#include "activemq/test/openwire/OpenwireCmsConnectionStartStopTest.h"
 #include "activemq/test/openwire/OpenwireDurableTest.h"
 #include "activemq/test/openwire/OpenwireExpirationTest.h"
 #include "activemq/test/openwire/OpenwireIndividualAckTest.h"
@@ -38,6 +39,7 @@
 
 #include "activemq/test/stomp/StompAsyncSenderTest.h"
 #include "activemq/test/stomp/StompCmsTemplateTest.h"
+#include "activemq/test/stomp/StompCmsConnectionStartStopTest.h"
 #include "activemq/test/stomp/StompDurableTest.h"
 #include "activemq/test/stomp/StompExpirationTest.h"
 #include "activemq/test/stomp/StompSimpleRollbackTest.h"
@@ -51,6 +53,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAdvisorysTest
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireClientAckTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireCmsTemplateTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireCmsConnectionStartStopTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireDurableTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireExpirationTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireIndividualAckTest );
@@ -71,6 +74,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireXATransaction
 // Stomp Tests
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompAsyncSenderTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompCmsTemplateTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompCmsConnectionStartStopTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompDurableTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompExpirationTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompSimpleTest );
