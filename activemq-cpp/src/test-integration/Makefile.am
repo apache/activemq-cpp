@@ -18,6 +18,7 @@
 cc_sources = \
     TestRegistry.cpp \
     activemq/test/AsyncSenderTest.cpp \
+    activemq/test/CmsConnectionStartStopTest.cpp \
     activemq/test/CmsTemplateTest.cpp \
     activemq/test/DurableTest.cpp \
     activemq/test/ExpirationTest.cpp \
@@ -34,6 +35,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireAdvisorysTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireClientAckTest.cpp \
+    activemq/test/openwire/OpenwireCmsConnectionStartStopTest.cpp \
     activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
     activemq/test/openwire/OpenwireDurableTest.cpp \
     activemq/test/openwire/OpenwireExpirationTest.cpp \
@@ -52,6 +54,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
     activemq/test/openwire/OpenwireXATransactionsTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
+    activemq/test/stomp/StompCmsConnectionStartStopTest.cpp \
     activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
     activemq/test/stomp/StompExpirationTest.cpp \
@@ -70,6 +73,7 @@ cc_sources = \
 h_sources = \
     activemq/test/AsyncSenderTest.h \
     activemq/test/CMSTestFixture.h \
+    activemq/test/CmsConnectionStartStopTest.h \
     activemq/test/CmsTemplateTest.h \
     activemq/test/DurableTest.h \
     activemq/test/ExpirationTest.h \
@@ -86,6 +90,7 @@ h_sources = \
     activemq/test/openwire/OpenwireAdvisorysTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireClientAckTest.h \
+    activemq/test/openwire/OpenwireCmsConnectionStartStopTest.h \
     activemq/test/openwire/OpenwireCmsTemplateTest.h \
     activemq/test/openwire/OpenwireDurableTest.h \
     activemq/test/openwire/OpenwireExpirationTest.h \
@@ -104,6 +109,7 @@ h_sources = \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
     activemq/test/openwire/OpenwireXATransactionsTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
+    activemq/test/stomp/StompCmsConnectionStartStopTest.h \
     activemq/test/stomp/StompCmsTemplateTest.h \
     activemq/test/stomp/StompDurableTest.h \
     activemq/test/stomp/StompExpirationTest.h \
