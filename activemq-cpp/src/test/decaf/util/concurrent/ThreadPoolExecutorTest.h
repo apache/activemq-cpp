@@ -104,6 +104,7 @@ namespace concurrent{
         CPPUNIT_TEST( testKeepAliveTimeIllegalArgumentException );
         CPPUNIT_TEST( testTerminated );
         CPPUNIT_TEST( testBeforeAfter );
+        CPPUNIT_TEST( testConcurrentRandomDelayedThreads );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -185,6 +186,7 @@ namespace concurrent{
         void testKeepAliveTimeIllegalArgumentException();
         void testTerminated();
         void testBeforeAfter();
+        void testConcurrentRandomDelayedThreads();
 
     };
 
