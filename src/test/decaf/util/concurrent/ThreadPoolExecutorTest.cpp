@@ -17,6 +17,7 @@
 
 #include "ThreadPoolExecutorTest.h"
 
+#include <decaf/util/Random.h>
 #include <decaf/util/concurrent/ThreadPoolExecutor.h>
 #include <decaf/util/concurrent/LinkedBlockingQueue.h>
 
@@ -1301,4 +1302,59 @@ void ThreadPoolExecutorTest::testBeforeAfter() {
     }
 
     joinPool(tpe);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class CreateSessionRunnable : public Runnable {
+    private:
+
+        Random rand;
+
+    public:
+
+        CreateSessionRunnable() : Runnable(), rand() {
+        }
+
+        virtual ~CreateSessionRunnable() {}
+
+        virtual void run() {
+            TimeUnit::MILLISECONDS.sleep(rand.nextInt(75));
+        }
+    };
+
+    class StartStopRunnable : public Runnable {
+    private:
+
+        Random rand;
+
+    public:
+
+        StartStopRunnable() : Runnable(), rand() {
+        }
+
+        virtual ~StartStopRunnable() {}
+
+        virtual void run() {
+            TimeUnit::MILLISECONDS.sleep(rand.nextInt(100));
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testConcurrentRandomDelayedThreads() {
+
+    ThreadPoolExecutor executor(50, Integer::MAX_VALUE, 60LL, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+
+    Random rand;
+
+    for (int i = 0; i < 3000; i++) {
+        executor.execute(new CreateSessionRunnable());
+        executor.execute(new StartStopRunnable());
+    }
+
+    executor.shutdown();
+    CPPUNIT_ASSERT_MESSAGE("executor terminated", executor.awaitTermination(45, TimeUnit::SECONDS));
 }
