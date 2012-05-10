@@ -424,7 +424,9 @@ Pointer<SessionId> ActiveMQConnection::getNextSessionId() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addSession(Pointer<ActiveMQSessionKernel> session) {
     try {
-        this->config->activeSessions.add(session);
+        synchronized(&this->config->activeSessions) {
+            this->config->activeSessions.add(session);
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -432,7 +434,9 @@ void ActiveMQConnection::addSession(Pointer<ActiveMQSessionKernel> session) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::removeSession(Pointer<ActiveMQSessionKernel> session) {
     try {
-        this->config->activeSessions.remove(session);
+        synchronized(&this->config->activeSessions) {
+            this->config->activeSessions.remove(session);
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -618,10 +622,13 @@ void ActiveMQConnection::start() {
         // and not acknowledged.
         if (this->started.compareAndSet(false, true)) {
 
-            // Start all the sessions.
-            std::auto_ptr<Iterator< Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
-            while (iter->hasNext()) {
-                iter->next()->start();
+            synchronized(&this->config->activeSessions) {
+
+                // Start all the sessions.
+                std::auto_ptr<Iterator< Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
+                while (iter->hasNext()) {
+                    iter->next()->start();
+                }
             }
         }
     }
