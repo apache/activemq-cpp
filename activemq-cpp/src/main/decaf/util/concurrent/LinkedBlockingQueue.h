@@ -21,9 +21,8 @@
 #include <decaf/util/Config.h>
 
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/concurrent/Lock.h>
 #include <decaf/util/concurrent/BlockingQueue.h>
+#include <decaf/util/concurrent/locks/ReentrantLock.h>
 #include <decaf/util/AbstractQueue.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/lang/Integer.h>
@@ -137,8 +136,17 @@ namespace concurrent {
         int capacity;
         decaf::util::concurrent::atomic::AtomicInteger count;
 
-        mutable decaf::util::concurrent::Mutex putLock;
-        mutable decaf::util::concurrent::Mutex takeLock;
+        /** Lock held by take, poll, etc */
+        mutable locks::ReentrantLock takeLock;
+
+        /** Wait queue for waiting takes */
+        Pointer<locks::Condition> notEmpty;  // takeLock.newCondition();
+
+        /** Lock held by put, offer, etc */
+        mutable locks::ReentrantLock putLock;
+
+        /** Wait queue for waiting puts */
+        Pointer<locks::Condition> notFull; // putLock.newCondition();
 
         Pointer< QueueNode<E> > head;
         Pointer< QueueNode<E> > tail;
@@ -149,9 +157,11 @@ namespace concurrent {
          * Create a new instance with a Capacity of Integer::MAX_VALUE
          */
         LinkedBlockingQueue() : BlockingQueue<E>(), capacity(lang::Integer::MAX_VALUE), count(),
-                                putLock(), takeLock(), head(new QueueNode<E>()), tail() {
+                                takeLock(), notEmpty(), putLock(), notFull(), head(new QueueNode<E>()), tail() {
 
             this->tail = this->head;
+            this->notEmpty.reset(this->takeLock.newCondition());
+            this->notFull.reset(this->putLock.newCondition());
         }
 
         /**
@@ -163,13 +173,15 @@ namespace concurrent {
          * @throws IllegalArgumentException if the specified capacity is not greater than zero.
          */
         LinkedBlockingQueue(int capacity) : BlockingQueue<E>(), capacity(capacity), count(),
-                                            putLock(), takeLock(), head(new QueueNode<E>()), tail() {
+                                            takeLock(), notEmpty(), putLock(), notFull(), head(new QueueNode<E>()), tail() {
             if(capacity <= 0) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__, "Capacity value must be greater than zero.");
             }
 
             this->tail = this->head;
+            this->notEmpty.reset(this->takeLock.newCondition());
+            this->notFull.reset(this->putLock.newCondition());
         }
 
         /**
@@ -183,11 +195,13 @@ namespace concurrent {
          *         this Queue's capacity.
          */
         LinkedBlockingQueue(const Collection<E>& collection) : BlockingQueue<E>(),
-                                                               capacity(lang::Integer::MAX_VALUE),
-                                                               count(), putLock(), takeLock(),
+                                                               capacity(lang::Integer::MAX_VALUE), count(),
+                                                               takeLock(), notEmpty(), putLock(), notFull(),
                                                                head(new QueueNode<E>()), tail() {
 
             this->tail = this->head;
+            this->notEmpty.reset(this->takeLock.newCondition());
+            this->notFull.reset(this->putLock.newCondition());
 
             Pointer< Iterator<E> > iter(collection.iterator());
 
@@ -247,7 +261,7 @@ namespace concurrent {
             this->count.set(0);
 
             if(this->count.getAndSet(0) == this->capacity) {
-                this->putLock.notify();
+                this->notFull->signal();
             }
         }
 
@@ -259,10 +273,16 @@ namespace concurrent {
 
             int c = -1;
 
-            synchronized(&this->putLock) {
+            this->putLock.lockInterruptibly();
+            try {
 
-                while(this->count.get() == this->capacity) {
-                    this->putLock.wait();
+                // Note that count is used in wait guard even though it is not
+                // protected by lock. This works because count can only decrease at
+                // this point (all other puts are shut  out by lock), and we (or some
+                // other waiting put) are signaled if it ever changes from capacity.
+                // Similarly for all other uses of count in other wait guards.
+                while (this->count.get() == this->capacity) {
+                    this->notFull->await();
                 }
 
                 // This method now owns the putLock so we know we have at least
@@ -273,14 +293,19 @@ namespace concurrent {
                 c = this->count.getAndIncrement();
 
                 if(c + 1 < this->capacity) {
-                    this->putLock.notify();
+                    this->notFull->signal();
                 }
+            } catch(decaf::lang::Exception& ex) {
+                this->putLock.unlock();
+                throw;
             }
+
+            this->putLock.unlock();
 
             // When c is zero it means we at least incremented once so there was
             // something in the Queue, another take could have already happened but
             // we don't know so wake up a waiting taker.
-            if(c == 0) {
+            if (c == 0) {
                 this->signalNotEmpty();
             }
         }
@@ -288,20 +313,32 @@ namespace concurrent {
         virtual bool offer( const E& value, long long timeout, const TimeUnit& unit ) {
 
             int c = -1;
+            long long nanos = unit.toNanos(timeout);
 
-            synchronized(&this->putLock) {
+            this->putLock.lockInterruptibly();
+            try {
 
                 while(this->count.get() == this->capacity) {
-                    this->putLock.wait(unit.toMillis(timeout));
+                    if (nanos <= 0) {
+                        return false;
+                    }
+
+                    nanos = this->notFull->awaitNanos(nanos);
                 }
 
                 enqueue(value);
                 c = this->count.getAndIncrement();
 
                 if(c + 1 < this->capacity) {
-                    this->putLock.notify();
+                    this->notFull->signal();
                 }
+
+            } catch(decaf::lang::Exception& ex) {
+                this->putLock.unlock();
+                throw;
             }
+
+            this->putLock.unlock();
 
             if(c == 0) {
                 this->signalNotEmpty();
@@ -310,26 +347,34 @@ namespace concurrent {
             return true;
         }
 
-        virtual bool offer( const E& value ) {
+        virtual bool offer(const E& value) {
 
-            if(this->count.get() == this->capacity) {
+            if (this->count.get() == this->capacity) {
                 return false;
             }
 
             int c = -1;
-            synchronized(&this->putLock) {
-                if(this->count.get() < this->capacity) {
+            this->putLock.lockInterruptibly();
+            try {
+
+                if (this->count.get() < this->capacity) {
 
                     enqueue(value);
                     c = this->count.getAndIncrement();
 
-                    if(c + 1 < this->capacity) {
-                        this->putLock.notify();
+                    if (c + 1 < this->capacity) {
+                        this->notFull->signal();
                     }
                 }
+
+            } catch (decaf::lang::Exception& ex) {
+                this->putLock.unlock();
+                throw;
             }
 
-            if(c == 0) {
+            this->putLock.unlock();
+
+            if (c == 0) {
                 this->signalNotEmpty();
             }
 
@@ -337,12 +382,15 @@ namespace concurrent {
         }
 
         virtual E take() {
+
             E value = E();
             int c = -1;
-            synchronized(&this->takeLock) {
 
-                while(this->count.get() == 0) {
-                     this->takeLock.wait();
+            this->takeLock.lockInterruptibly();
+            try {
+
+                while (this->count.get() == 0) {
+                     this->notEmpty->await();
                 }
 
                 // Since this methods owns the takeLock and count != 0 we know that
@@ -351,41 +399,55 @@ namespace concurrent {
                 value = dequeue();
                 c = this->count.getAndDecrement();
 
-                if(c > 1) {
-                    this->takeLock.notify();
+                if (c > 1) {
+                    this->notEmpty->signal();
                 }
+
+            } catch (decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
+
+            this->takeLock.unlock();
 
             // When c equals capacity we have removed at least one element
             // from the Queue so we wake a blocked put operation if there is
             // one to prevent a deadlock.
-            if(c == this->capacity) {
+            if (c == this->capacity) {
                 this->signalNotFull();
             }
 
             return value;
         }
 
-        virtual bool poll( E& result, long long timeout, const TimeUnit& unit ) {
+        virtual bool poll(E& result, long long timeout, const TimeUnit& unit) {
             int c = -1;
-            synchronized(&this->takeLock) {
-                if(this->count.get() == 0) {
-                    if(timeout <= 0) {
+            long long nanos = unit.toNanos(timeout);
+
+            this->takeLock.lockInterruptibly();
+            try {
+
+                while (this->count.get() == 0) {
+                    if (nanos <= 0) {
                         return false;
                     }
-                    this->takeLock.wait(unit.toMillis(timeout));
-                    if(this->count.get() == 0) {
-                        return false;
-                    }
+
+                    nanos = this->notEmpty->awaitNanos(nanos);
                 }
 
                 result = dequeue();
                 c = this->count.getAndDecrement();
 
-                if(c > 1) {
-                    this->takeLock.notify();
+                if (c > 1) {
+                    this->notEmpty->signal();
                 }
+
+            } catch (decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
+
+            this->takeLock.unlock();
 
             if(c == this->capacity) {
                 this->signalNotFull();
@@ -396,24 +458,31 @@ namespace concurrent {
 
         virtual bool poll(E& result) {
 
-            if(this->count.get() == 0) {
+            if (this->count.get() == 0) {
                 return false;
             }
 
             int c = -1;
-            synchronized(&this->takeLock) {
+            this->takeLock.lock();
+            try {
 
-                if(this->count.get() > 0) {
+                if (this->count.get() > 0) {
                     result = dequeue();
                     c = this->count.getAndDecrement();
 
-                    if(c > 1) {
-                        this->takeLock.notify();
+                    if (c > 1) {
+                        this->notEmpty->signal();
                     }
                 }
+
+            } catch (decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
 
-            if(c == this->capacity) {
+            this->takeLock.unlock();
+
+            if (c == this->capacity) {
                 this->signalNotFull();
             }
 
@@ -426,14 +495,20 @@ namespace concurrent {
                 return false;
             }
 
-            synchronized(&this->takeLock) {
+            this->takeLock.lock();
+            try {
                 Pointer< QueueNode<E> > front = this->head->next;
                 if(front == NULL) {
                     return false;
                 } else {
                     result = front->get();
                 }
+            } catch (decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
+
+            this->takeLock.unlock();
 
             return true;
         }
@@ -492,7 +567,8 @@ namespace concurrent {
             decaf::lang::Exception delayed;
             int result = 0;
 
-            synchronized(&this->takeLock) {
+            this->takeLock.lock();
+            try {
 
                 // We get the count of Nodes that exist now, any puts that are done
                 // after this are not drained and since we hold the lock nothing can
@@ -514,17 +590,23 @@ namespace concurrent {
                     shouldThrow = true;
                 }
 
-                if(i > 0) {
+                if (i > 0) {
                     this->head = node;
                     signalNotFull = (this->count.getAndAdd(-i) == this->capacity);
                 }
+
+            } catch(decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
 
-            if(signalNotFull) {
+            this->takeLock.unlock();
+
+            if (signalNotFull) {
                 this->signalNotFull();
             }
 
-            if(shouldThrow) {
+            if (shouldThrow) {
                 throw delayed;
             }
 
@@ -726,15 +808,25 @@ namespace concurrent {
         }
 
         void signalNotEmpty() {
-            synchronized(&this->takeLock) {
-                this->takeLock.notify();
+            this->takeLock.lock();
+            try {
+                this->notEmpty->signal();
+            } catch(decaf::lang::Exception& ex) {
+                this->takeLock.unlock();
+                throw;
             }
+            this->takeLock.unlock();
         }
 
         void signalNotFull() {
-            synchronized(&this->putLock) {
-                this->putLock.notify();
+            this->putLock.lock();
+            try {
+                this->notFull->signal();
+            } catch(decaf::lang::Exception& ex) {
+                this->putLock.unlock();
+                throw;
             }
+            this->putLock.unlock();
         }
 
         // Must be called with the putLock locked.
@@ -759,6 +851,7 @@ namespace concurrent {
             while(current != NULL) {
                 temp = current;
                 current = current->next;
+                temp->next.reset(NULL);
                 temp.reset(NULL);
             }
         }

@@ -56,6 +56,11 @@ void ExecutorsTestSupport::unexpectedException() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void ExecutorsTestSupport::unexpectedException(Throwable& ex) {
+    CPPUNIT_FAIL(std::string("Unexpected exception: ") + ex.getMessage());
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void ExecutorsTestSupport::threadFail(const std::string& reason) {
     threadFailed = true;
     CPPUNIT_FAIL(reason);
