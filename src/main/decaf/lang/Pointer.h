@@ -339,6 +339,13 @@ namespace lang {
         return right.get() != left;
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    template< typename T, typename R>
+    std::ostream& operator<<(std::ostream &out, const Pointer<T,R>& pointer){
+        out << pointer.get();
+        return out;
+    }
+
     /**
      * This implementation of Comparator is designed to allows objects in a Collection
      * to be sorted or tested for equality based on the value of the Object being Pointed
