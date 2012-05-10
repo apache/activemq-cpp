@@ -723,6 +723,8 @@ namespace {
 
         PuttingThread(LinkedBlockingQueue<int>* q, int count) : theQ(q), count(count) {}
 
+        virtual ~PuttingThread() {}
+
         virtual void run() {
             try {
                 for(int i = 0; i < count; ++i) {
@@ -931,5 +933,291 @@ void LinkedBlockingQueueTest::testConcurrentPutAndTake() {
         CPPUNIT_ASSERT(list2.size() == SIZE);
         CPPUNIT_ASSERT(list3.size() == SIZE);
         CPPUNIT_ASSERT(list4.size() == SIZE);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestBlockingPutRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestBlockingPutRunnable(LinkedBlockingQueueTest* test) : Runnable(), test(test) {
+
+        }
+
+        virtual ~TestBlockingPutRunnable() {}
+
+        virtual void run() {
+            int added = 0;
+            try {
+                LinkedBlockingQueue<int> q(LinkedBlockingQueueTest::SIZE);
+                for (int i = 0; i < LinkedBlockingQueueTest::SIZE; ++i) {
+                    q.put(i);
+                    ++added;
+                }
+                q.put(LinkedBlockingQueueTest::SIZE);
+                test->threadShouldThrow();
+            } catch (InterruptedException& ie){
+                test->threadAssertEquals(added, LinkedBlockingQueueTest::SIZE);
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testBlockingPut() {
+    TestBlockingPutRunnable runnable(this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
+    } catch (InterruptedException& ie) {
+        unexpectedException();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestTimedOfferRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestTimedOfferRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestTimedOfferRunnable() {}
+
+        virtual void run() {
+            try {
+                queue->put(1);
+                queue->put(2);
+                test->threadAssertFalse(
+                    queue->offer(3, LinkedBlockingQueueTest::SHORT_DELAY_MS, TimeUnit::MILLISECONDS));
+                queue->offer(4, LinkedBlockingQueueTest::LONG_DELAY_MS, TimeUnit::MILLISECONDS);
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testTimedOffer() {
+
+    LinkedBlockingQueue<int> q(2);
+    TestTimedOfferRunnable runnable(&q, this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SMALL_DELAY_MS);
+        t.interrupt();
+        t.join();
+    } catch (Exception& ex) {
+        unexpectedException(ex);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestTakeFromEmptyRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestTakeFromEmptyRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestTakeFromEmptyRunnable() {}
+
+        virtual void run() {
+            try {
+                queue->take();
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testTakeFromEmpty() {
+
+    LinkedBlockingQueue<int> q(2);
+    TestTakeFromEmptyRunnable runnable(&q, this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
+    } catch (Exception& e){
+        unexpectedException();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestBlockingTakeRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestBlockingTakeRunnable(LinkedBlockingQueueTest* test) :
+            Runnable(), test(test) {
+        }
+
+        virtual ~TestBlockingTakeRunnable() {}
+
+        virtual void run() {
+            try {
+                LinkedBlockingQueue<int> queue;
+                populate(queue, LinkedBlockingQueueTest::SIZE);
+
+                for (int i = 0; i < LinkedBlockingQueueTest::SIZE; ++i) {
+                    test->threadAssertEquals(i, queue.take());
+                }
+                queue.take();
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testBlockingTake() {
+
+    TestBlockingTakeRunnable runnable(this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
+    } catch (InterruptedException& ie) {
+        unexpectedException(ie);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestInterruptedTimedPollRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestInterruptedTimedPollRunnable(LinkedBlockingQueueTest* test) :
+            Runnable(), test(test) {
+        }
+
+        virtual ~TestInterruptedTimedPollRunnable() {}
+
+        virtual void run() {
+            try {
+                LinkedBlockingQueue<int> queue;
+                populate(queue, LinkedBlockingQueueTest::SIZE);
+
+                for (int i = 0; i < LinkedBlockingQueueTest::SIZE; ++i) {
+                    test->threadAssertEquals(i, queue.take());
+                }
+                queue.take();
+                int result = 0;
+                test->threadAssertFalse(queue.poll(result, LinkedBlockingQueueTest::SHORT_DELAY_MS, TimeUnit::MILLISECONDS));
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testInterruptedTimedPoll() {
+
+    TestInterruptedTimedPollRunnable runnable(this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
+    } catch (InterruptedException& ie) {
+        unexpectedException();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestTimedPollWithOfferRunnable : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestTimedPollWithOfferRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestTimedPollWithOfferRunnable() {}
+
+        virtual void run() {
+            try {
+                int result = 0;
+                test->threadAssertFalse(queue->poll(result, LinkedBlockingQueueTest::SHORT_DELAY_MS, TimeUnit::MILLISECONDS));
+                test->threadAssertTrue(queue->poll(result, LinkedBlockingQueueTest::LONG_DELAY_MS, TimeUnit::MILLISECONDS));
+                queue->poll(result, LinkedBlockingQueueTest::LONG_DELAY_MS, TimeUnit::MILLISECONDS);
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testTimedPollWithOffer() {
+
+    LinkedBlockingQueue<int> q(2);
+    TestTimedPollWithOfferRunnable runnable(&q, this);
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SMALL_DELAY_MS);
+        CPPUNIT_ASSERT(q.offer(0, SHORT_DELAY_MS, TimeUnit::MILLISECONDS));
+        t.interrupt();
+        t.join();
+    } catch (Exception& e) {
+        unexpectedException(e);
     }
 }

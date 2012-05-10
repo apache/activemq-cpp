@@ -20,12 +20,13 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/concurrent/ExecutorsTestSupport.h>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 
-    class LinkedBlockingQueueTest : public CppUnit::TestFixture {
+    class LinkedBlockingQueueTest : public ExecutorsTestSupport {
 
         CPPUNIT_TEST_SUITE( LinkedBlockingQueueTest );
         CPPUNIT_TEST( testConstructor1 );
@@ -69,9 +70,15 @@ namespace concurrent {
         CPPUNIT_TEST( testConcurrentPut );
         CPPUNIT_TEST( testConcurrentTake );
         CPPUNIT_TEST( testConcurrentPutAndTake );
+        CPPUNIT_TEST( testBlockingPut );
+        CPPUNIT_TEST( testTimedOffer );
+        CPPUNIT_TEST( testTakeFromEmpty );
+        CPPUNIT_TEST( testBlockingTake );
+        CPPUNIT_TEST( testInterruptedTimedPoll );
+        CPPUNIT_TEST( testTimedPollWithOffer );
         CPPUNIT_TEST_SUITE_END();
 
-    private:
+    public:
 
         static const int SIZE;
 
@@ -121,6 +128,12 @@ namespace concurrent {
         void testConcurrentPut();
         void testConcurrentTake();
         void testConcurrentPutAndTake();
+        void testBlockingPut();
+        void testTimedOffer();
+        void testTakeFromEmpty();
+        void testBlockingTake();
+        void testInterruptedTimedPoll();
+        void testTimedPollWithOffer();
 
     };
 

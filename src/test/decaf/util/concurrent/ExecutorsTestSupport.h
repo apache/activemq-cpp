@@ -71,6 +71,7 @@ namespace concurrent {
         void threadAssertEquals(long long x, long long y);
 
         void unexpectedException();
+        void unexpectedException(decaf::lang::Throwable& ex);
         void shouldThrow();
 
         void joinPool(ExecutorService* exec);
