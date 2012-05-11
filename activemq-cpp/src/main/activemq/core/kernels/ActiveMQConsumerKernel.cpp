@@ -217,7 +217,6 @@ namespace kernels {
         }
 
         void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED ) {
-
             try {
                 this->session->acknowledge();
             }
@@ -250,10 +249,8 @@ namespace kernels {
             }
         }
 
-        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED ) {
-
+        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED) {
             try {
-
                 if (this->dispatch != NULL) {
                     this->consumer->acknowledge(this->dispatch);
                     this->dispatch.reset(NULL);
@@ -1205,16 +1202,7 @@ bool ActiveMQConsumerKernel::iterate() {
         if (this->internal->listener != NULL) {
             Pointer<MessageDispatch> dispatch = internal->unconsumedMessages->dequeueNoWait();
             if (dispatch != NULL) {
-
-                try {
-                    beforeMessageIsConsumed(dispatch);
-                    this->internal->listener->onMessage(
-                        dynamic_cast<cms::Message*> (dispatch->getMessage().get()));
-                    afterMessageIsConsumed(dispatch, false);
-                } catch (ActiveMQException& ex) {
-                    this->session->fire(ex);
-                }
-
+                this->dispatch(dispatch);
                 return true;
             }
         }
