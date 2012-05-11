@@ -17,6 +17,7 @@
 
 #include "SimpleTest.h"
 
+#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/library/ActiveMQCPP.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -27,6 +28,7 @@
 using namespace std;
 using namespace cms;
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::test;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -240,7 +242,7 @@ void SimpleTest::testMultipleConnections() {
     try {
 
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = cmsProvider->getConnectionFactory();
+        auto_ptr<ActiveMQConnectionFactory> factory(new ActiveMQConnectionFactory(cmsProvider->getBrokerURL()));
         auto_ptr<cms::Connection> connection1( factory->createConnection() );
         connection1->start();
 
@@ -330,24 +332,24 @@ void SimpleTest::testReceiveAlreadyInQueue() {
     try {
 
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = cmsProvider->getConnectionFactory();
-        auto_ptr<cms::Connection> connection( factory->createConnection() );
+        auto_ptr<ActiveMQConnectionFactory> factory(new ActiveMQConnectionFactory(cmsProvider->getBrokerURL()));
+        auto_ptr<cms::Connection> connection(factory->createConnection());
 
-        auto_ptr<cms::Session> session( connection->createSession() );
-        auto_ptr<cms::Topic> topic( session->createTopic( UUID::randomUUID().toString() ) );
-        auto_ptr<cms::MessageConsumer> consumer( session->createConsumer( topic.get() ) );
-        auto_ptr<cms::MessageProducer> producer( session->createProducer( topic.get() ) );
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
-        auto_ptr<cms::TextMessage> textMessage( session->createTextMessage() );
+        auto_ptr<cms::Session> session(connection->createSession());
+        auto_ptr<cms::Topic> topic(session->createTopic(UUID::randomUUID().toString()));
+        auto_ptr<cms::MessageConsumer> consumer(session->createConsumer(topic.get()));
+        auto_ptr<cms::MessageProducer> producer(session->createProducer(topic.get()));
+        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+        auto_ptr<cms::TextMessage> textMessage(session->createTextMessage());
 
         // Send some text messages
-        producer->send( textMessage.get() );
+        producer->send(textMessage.get());
 
-        Thread::sleep( 250 );
+        Thread::sleep(250);
 
         connection->start();
 
-        auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+        auto_ptr<cms::Message> message(consumer->receive(2000));
         CPPUNIT_ASSERT( message.get() != NULL );
 
         // Clean up if we can
@@ -355,7 +357,7 @@ void SimpleTest::testReceiveAlreadyInQueue() {
         producer->close();
         session->close();
 
-        this->cmsProvider->destroyDestination( topic.get() );
+        this->cmsProvider->destroyDestination(topic.get());
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -366,7 +368,7 @@ void SimpleTest::testQuickCreateAndDestroy() {
 
     try{
 
-        cms::ConnectionFactory* factory = cmsProvider->getConnectionFactory();
+        auto_ptr<ActiveMQConnectionFactory> factory(new ActiveMQConnectionFactory(cmsProvider->getBrokerURL()));
         auto_ptr<cms::Connection> connection( factory->createConnection() );
         auto_ptr<cms::Session> session( connection->createSession() );
 
@@ -399,18 +401,18 @@ void SimpleTest::testBytesMessageSendRecv() {
     try {
 
         // Create CMS Object for Comms
-        cms::Session* session( cmsProvider->getSession() );
+        cms::Session* session(cmsProvider->getSession());
         cms::MessageConsumer* consumer = cmsProvider->getConsumer();
         cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        auto_ptr<cms::BytesMessage> bytesMessage( session->createBytesMessage() );
+        auto_ptr<cms::BytesMessage> bytesMessage(session->createBytesMessage());
 
-        bytesMessage->writeBoolean( true );
-        bytesMessage->writeByte( 127 );
-        bytesMessage->writeDouble( 123456.789 );
-        bytesMessage->writeInt( 65537 );
-        bytesMessage->writeString( "TEST-STRING" );
+        bytesMessage->writeBoolean(true);
+        bytesMessage->writeByte(127);
+        bytesMessage->writeDouble(123456.789);
+        bytesMessage->writeInt(65537);
+        bytesMessage->writeString("TEST-STRING");
 
         // Send some text messages
         producer->send( bytesMessage.get() );
@@ -445,15 +447,12 @@ void SimpleTest::testLibraryInitShutdownInit() {
 
     {
         this->tearDown();
-
         // Shutdown the ActiveMQ library
         CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::shutdownLibrary() );
     }
-
     {
         // Initialize the ActiveMQ library
         CPPUNIT_ASSERT_NO_THROW( activemq::library::ActiveMQCPP::initializeLibrary() );
-
-        cmsProvider.reset( new util::CMSProvider( getBrokerURL() ) );
+        cmsProvider.reset(new util::CMSProvider(getBrokerURL()));
     }
 }
