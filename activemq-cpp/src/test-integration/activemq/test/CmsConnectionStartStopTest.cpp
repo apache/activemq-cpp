@@ -179,7 +179,7 @@ void CmsConnectionStartStopTest::testConcurrentSessionCreateWithStart() {
     CopyOnWriteArrayList<std::string> exceptions;
     Random rand;
 
-    for (int i=0; i<1000; i++) {
+    for (int i=0; i<2000; i++) {
         executor.execute(new CreateSessionRunnable(stoppedConnection.get(), &exceptions));
         executor.execute(new StartStopRunnable(stoppedConnection.get(), &exceptions));
     }
