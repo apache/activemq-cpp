@@ -17,6 +17,7 @@
 
 #include "QueueBrowserTest.h"
 
+#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -157,46 +158,46 @@ void QueueBrowserTest::testQueueBrowserWith2Consumers() {
 
     static const int numMessages = 100;
 
-    ActiveMQConnection* connection = dynamic_cast<ActiveMQConnection*>( cmsProvider->getConnection() );
+    ActiveMQConnection* connection = dynamic_cast<ActiveMQConnection*> (cmsProvider->getConnection());
     CPPUNIT_ASSERT( connection != NULL );
-    connection->setAlwaysSyncSend( false );
+    connection->setAlwaysSyncSend(false);
 
-    std::auto_ptr<cms::Session> session( connection->createSession( cms::Session::CLIENT_ACKNOWLEDGE ) );
-    std::auto_ptr<cms::Queue> queue( session->createQueue("testQueueBrowserWith2Consumers") );
+    std::auto_ptr<cms::Session> session(connection->createSession(cms::Session::CLIENT_ACKNOWLEDGE));
+    std::auto_ptr<cms::Queue> queue(session->createQueue("testQueueBrowserWith2Consumers"));
 
     std::auto_ptr<cms::Queue> queuePrefetch10(
         session->createQueue("testQueueBrowserWith2Consumers?consumer.prefetchSize=10") );
     std::auto_ptr<cms::Queue> queuePrefetch1(
         session->createQueue("testQueueBrowserWith2Consumers?consumer.prefetchSize=1") );
 
-    std::auto_ptr<ActiveMQConnection> connection2( dynamic_cast<ActiveMQConnection*>(
-                    cmsProvider->getConnectionFactory()->createConnection() ) );
+    std::auto_ptr<ActiveMQConnectionFactory> factory(new ActiveMQConnectionFactory(cmsProvider->getBrokerURL()));
+    std::auto_ptr<ActiveMQConnection> connection2(dynamic_cast<ActiveMQConnection*>(factory->createConnection()));
     connection2->start();
 
-    std::auto_ptr<cms::Session> session2( connection2->createSession( cms::Session::AUTO_ACKNOWLEDGE ) );
+    std::auto_ptr<cms::Session> session2(connection2->createSession(cms::Session::AUTO_ACKNOWLEDGE));
 
-    std::auto_ptr<cms::MessageProducer> producer( session->createProducer( queue.get() ) );
-    std::auto_ptr<cms::MessageConsumer> consumer( session->createConsumer( queuePrefetch10.get() ) );
+    std::auto_ptr<cms::MessageProducer> producer(session->createProducer(queue.get()));
+    std::auto_ptr<cms::MessageConsumer> consumer(session->createConsumer(queuePrefetch10.get()));
 
-    producer->setDeliveryMode( cms::DeliveryMode::NON_PERSISTENT );
+    producer->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
 
-    for( int i = 0; i < numMessages; i++ ) {
+    for (int i = 0; i < numMessages; i++) {
         std::auto_ptr<cms::TextMessage> message(
-            session->createTextMessage( std::string( "Message: " ) + Integer::toString( i ) ) );
-        producer->send( message.get() );
+            session->createTextMessage(std::string("Message: ") + Integer::toString(i)));
+        producer->send(message.get());
     }
 
     std::auto_ptr<cms::QueueBrowser> browser( session2->createBrowser( queuePrefetch1.get() ) );
     cms::MessageEnumeration* browserView = browser->getEnumeration();
 
     std::vector<cms::Message*> messages;
-    for( int i = 0; i < numMessages; i++ ) {
+    for (int i = 0; i < numMessages; i++) {
         cms::Message* m1 = consumer->receive( 5000 );
         CPPUNIT_ASSERT_MESSAGE( std::string( "m1 is null for index: " ) + Integer::toString( i ), m1 != NULL );
         messages.push_back( m1 );
     }
 
-    for( int i = 0 ; i < numMessages && browserView->hasMoreMessages(); i++ ) {
+    for (int i = 0; i < numMessages && browserView->hasMoreMessages(); i++) {
         cms::Message* m1 = messages[i];
         cms::Message* m2 = browserView->nextMessage();
         CPPUNIT_ASSERT_MESSAGE( std::string( "m2 is null for index: " ) + Integer::toString( i ), m2 != NULL );
@@ -207,7 +208,7 @@ void QueueBrowserTest::testQueueBrowserWith2Consumers() {
     CPPUNIT_ASSERT_MESSAGE( "nothing left in the browser", !browserView->hasMoreMessages() );
     CPPUNIT_ASSERT_MESSAGE( "consumer finished", consumer->receiveNoWait() == NULL );
 
-    for( std::size_t ix = 0; ix < messages.size(); ++ix ) {
+    for (std::size_t ix = 0; ix < messages.size(); ++ix) {
         cms::Message* msg = messages[ix];
         msg->acknowledge();
         delete msg;
