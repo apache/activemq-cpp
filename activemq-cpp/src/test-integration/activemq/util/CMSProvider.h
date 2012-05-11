@@ -59,22 +59,21 @@ namespace util {
 
     public:
 
-        CMSProvider( const std::string& brokerURL,
-                     cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
+        CMSProvider(const std::string& brokerURL, cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE);
 
         virtual ~CMSProvider();
 
-        virtual void close() throw( decaf::io::IOException );
+        virtual void close();
 
         std::string getBrokerURL() const {
             return this->brokerURL;
         }
 
-        void setBrokerURL( const std::string& brokerURL ) {
+        void setBrokerURL(const std::string& brokerURL) {
             this->brokerURL = brokerURL;
         }
 
-        void setDestinationName( const std::string name ) {
+        void setDestinationName(const std::string name) {
             this->destinationName = name;
         }
 
@@ -82,7 +81,7 @@ namespace util {
             return this->destinationName;
         }
 
-        void setSubscription( const std::string name ) {
+        void setSubscription(const std::string name) {
             this->subscription = name;
         }
 
@@ -90,7 +89,7 @@ namespace util {
             return this->subscription;
         }
 
-        void setTopic( bool value ) {
+        void setTopic(bool value) {
             this->topic = value;
         }
 
@@ -98,7 +97,7 @@ namespace util {
             return this->topic;
         }
 
-        void setDurable( bool value ) {
+        void setDurable(bool value) {
             this->durable = value;
         }
 
@@ -106,7 +105,7 @@ namespace util {
             return this->durable;
         }
 
-        void setAckMode( cms::Session::AcknowledgeMode ackMode ) {
+        void setAckMode(cms::Session::AcknowledgeMode ackMode) {
             this->ackMode = ackMode;
         }
 
@@ -122,9 +121,9 @@ namespace util {
          * is made and will remain open until a reconnect is requested or until
          * the CMSProvider instance is closed.
          */
-        virtual void initialize( const std::string& username = "",
-                                 const std::string& password = "",
-                                 const std::string& clientId = "" );
+        virtual void initialize(const std::string& username = "",
+                                const std::string& password = "",
+                                const std::string& clientId = "");
 
         /**
          * Forces a reconnect of the Connection and then of the Session and its
@@ -188,7 +187,7 @@ namespace util {
         /**
          * Destroys a Destination at the Broker side, freeing the resources associated with it.
          */
-        virtual void destroyDestination( const cms::Destination* destination );
+        virtual void destroyDestination(const cms::Destination* destination);
 
     };
 

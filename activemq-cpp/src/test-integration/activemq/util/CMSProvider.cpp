@@ -38,9 +38,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSProvider::CMSProvider( const std::string& brokerURL,
-                          cms::Session::AcknowledgeMode ackMode )
-: brokerURL( brokerURL ), ackMode( ackMode ) {
+CMSProvider::CMSProvider(const std::string& brokerURL, cms::Session::AcknowledgeMode ackMode) :
+    brokerURL(brokerURL), ackMode(ackMode) {
 
     this->topic = true;
     this->destinationName = UUID::randomUUID().toString();
@@ -62,72 +61,70 @@ CMSProvider::~CMSProvider() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSProvider::close() throw( decaf::io::IOException ) {
+void CMSProvider::close() {
 
-    if( this->consumer.get() != NULL ) {
-        try{
+    if (this->consumer.get() != NULL) {
+        try {
             this->consumer->close();
-        } catch( cms::CMSException& ex ) {
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
-    if( this->producer.get() != NULL ) {
-        try{
+    if (this->producer.get() != NULL) {
+        try {
             this->producer->close();
-        } catch( cms::CMSException& ex ) {
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
-    if( this->noDestProducer.get() != NULL ) {
-        try{
+    if (this->noDestProducer.get() != NULL) {
+        try {
             this->noDestProducer->close();
-        } catch( cms::CMSException& ex ) {
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
 
-    if( this->destination.get() != NULL && !isDurable() ) {
-        try{
-            this->destroyDestination( this->destination.get() );
-        } catch( cms::CMSException& ex ) {
+    if (this->destination.get() != NULL && !isDurable()) {
+        try {
+            this->destroyDestination(this->destination.get());
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
 
-    this->destination.reset( NULL );
-    this->tempDestination.reset( NULL );
+    this->destination.reset(NULL);
+    this->tempDestination.reset(NULL);
 
-    if( this->session.get() != NULL ) {
-        try{
+    if (this->session.get() != NULL) {
+        try {
             this->session->close();
-        } catch( cms::CMSException& ex ) {
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
 
-    if( this->connection.get() != NULL ) {
-        try{
+    if (this->connection.get() != NULL) {
+        try {
             this->connection->close();
-        } catch( cms::CMSException& ex ) {
+        } catch (cms::CMSException& ex) {
             ex.printStackTrace();
         }
     }
 
-    try{
-        this->consumer.reset( NULL );
-        this->producer.reset( NULL );
-        this->noDestProducer.reset( NULL );
-        this->session.reset( NULL );
-        this->connection.reset( NULL );
-    } catch( cms::CMSException& ex ) {
+    try {
+        this->consumer.reset(NULL);
+        this->producer.reset(NULL);
+        this->noDestProducer.reset(NULL);
+        this->session.reset(NULL);
+        this->connection.reset(NULL);
+    } catch (cms::CMSException& ex) {
         ex.printStackTrace();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSProvider::initialize( const std::string& username,
-                              const std::string& password,
-                              const std::string& clientId ) {
+void CMSProvider::initialize(const std::string& username, const std::string& password, const std::string& clientId ) {
 
     try {
 
@@ -135,12 +132,12 @@ void CMSProvider::initialize( const std::string& username,
         this->password = password;
         this->clientId = clientId;
 
-        if( this->clientId == "" ) {
+        if (this->clientId == "") {
             this->clientId = UUID::randomUUID().toString();
         }
 
         this->connectionFactory.reset(
-            cms::ConnectionFactory::createCMSConnectionFactory( this->brokerURL ) );
+            cms::ConnectionFactory::createCMSConnectionFactory(this->brokerURL));
 
         // Force a connect
         reconnect();
@@ -161,11 +158,10 @@ void CMSProvider::reconnect() {
         this->close();
 
         // Now create the connection
-        this->connection.reset( getConnectionFactory()->createConnection(
-            username, password, this->clientId ) );
+        this->connection.reset(getConnectionFactory()->createConnection(username, password, clientId));
         this->connection->start();
 
-        if( this->session.get() != NULL ) {
+        if (this->session.get() != NULL) {
             reconnectSession();
         }
     }
@@ -178,28 +174,27 @@ void CMSProvider::reconnectSession() {
 
     try{
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->consumer.get() != NULL ) {
+        if (this->consumer.get() != NULL) {
             this->consumer->close();
         }
-        if( this->producer.get() != NULL ) {
+        if (this->producer.get() != NULL) {
             this->producer->close();
         }
-        if( this->noDestProducer.get() != NULL ) {
+        if (this->noDestProducer.get() != NULL) {
             this->noDestProducer->close();
         }
 
         // Free any previously held resources.
-        this->destination.reset( NULL );
-        this->tempDestination.reset( NULL );
-        this->consumer.reset( NULL );
-        this->producer.reset( NULL );
-        this->noDestProducer.reset( NULL );
+        this->destination.reset(NULL);
+        this->tempDestination.reset(NULL);
+        this->consumer.reset(NULL);
+        this->producer.reset(NULL);
+        this->noDestProducer.reset(NULL);
 
         // Create a new session, if there was one here before it will be
         // destroyed.
@@ -214,19 +209,18 @@ void CMSProvider::unsubscribe() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->consumer.get() && this->durable && this->topic ) {
-             this->consumer->close();
+        if (this->consumer.get() && this->durable && this->topic) {
+            this->consumer->close();
 
-             // Wait a bit to let the broker clean out the consumer.
-             Thread::sleep( 1000 );
+            // Wait a bit to let the broker clean out the consumer.
+            Thread::sleep(1000);
 
-             this->session->unsubscribe( this->subscription );
+            this->session->unsubscribe(this->subscription);
         }
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -310,15 +304,13 @@ cms::MessageProducer* CMSProvider::getNoDestProducer() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->noDestProducer.get() == NULL ) {
-            this->noDestProducer.reset(
-                this->getSession()->createProducer( NULL ) );
+        if (this->noDestProducer.get() == NULL) {
+            this->noDestProducer.reset(this->getSession()->createProducer(NULL));
         }
 
         return this->noDestProducer.get();
@@ -332,21 +324,17 @@ cms::MessageConsumer* CMSProvider::getConsumer() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->consumer.get() == NULL ) {
-            if( this->durable && this->topic ) {
-               this->consumer.reset(
-                   this->getSession()->createDurableConsumer(
-                      dynamic_cast<cms::Topic*>( this->getDestination() ),
-                      this->subscription, "" ) );
+        if (this->consumer.get() == NULL) {
+            if (this->durable && this->topic) {
+                this->consumer.reset(this->getSession()->createDurableConsumer(
+                    dynamic_cast<cms::Topic*> (this->getDestination()), this->subscription, ""));
             } else {
-                this->consumer.reset(
-                    this->getSession()->createConsumer( this->getDestination() ) );
+                this->consumer.reset(this->getSession()->createConsumer(this->getDestination()));
             }
         }
 
@@ -361,19 +349,16 @@ cms::Destination* CMSProvider::getDestination() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->destination.get() == NULL ) {
-            if( this->topic == true ) {
-                this->destination.reset(
-                    this->getSession()->createTopic( this->getDestinationName() ) );
+        if (this->destination.get() == NULL) {
+            if (this->topic == true) {
+                this->destination.reset(this->getSession()->createTopic(this->getDestinationName()));
             } else {
-                this->destination.reset(
-                    this->getSession()->createQueue( this->getDestinationName() ) );
+                this->destination.reset(this->getSession()->createQueue(this->getDestinationName()));
             }
         }
 
@@ -388,19 +373,16 @@ cms::Destination* CMSProvider::getTempDestination() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->tempDestination.get() == NULL ) {
-            if( this->topic == true ) {
-                this->tempDestination.reset(
-                    this->getSession()->createTemporaryTopic() );
+        if (this->tempDestination.get() == NULL) {
+            if (this->topic == true) {
+                this->tempDestination.reset(this->getSession()->createTemporaryTopic());
             } else {
-                this->tempDestination.reset(
-                    this->getSession()->createTemporaryQueue() );
+                this->tempDestination.reset(this->getSession()->createTemporaryQueue());
             }
         }
 
@@ -411,26 +393,24 @@ cms::Destination* CMSProvider::getTempDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSProvider::destroyDestination( const cms::Destination* destination ) {
+void CMSProvider::destroyDestination(const cms::Destination* destination) {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        ActiveMQConnection* amqConnection =
-            dynamic_cast<ActiveMQConnection*>( this->connection.get() );
+        ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*> (this->connection.get());
 
-        try{
-            amqConnection->destroyDestination( destination );
-        } catch( decaf::lang::Exception& ex ) {
-            if( IntegrationCommon::debug ) {
+        try {
+            amqConnection->destroyDestination(destination);
+        } catch (decaf::lang::Exception& ex) {
+            if (IntegrationCommon::debug) {
                 ex.printStackTrace();
             }
-        } catch( ... ) {
+        } catch (...) {
         }
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
