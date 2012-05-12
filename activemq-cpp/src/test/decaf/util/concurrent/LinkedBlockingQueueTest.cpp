@@ -18,6 +18,7 @@
 #include "LinkedBlockingQueueTest.h"
 
 #include <decaf/util/LinkedList.h>
+#include <decaf/util/concurrent/Executors.h>
 #include <decaf/util/concurrent/LinkedBlockingQueue.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -1220,4 +1221,140 @@ void LinkedBlockingQueueTest::testTimedPollWithOffer() {
     } catch (Exception& e) {
         unexpectedException(e);
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestOfferInExecutor1 : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestOfferInExecutor1(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestOfferInExecutor1() {}
+
+        virtual void run() {
+            test->threadAssertFalse(queue->offer(3));
+            try {
+                test->threadAssertTrue(queue->offer(3, LinkedBlockingQueueTest::MEDIUM_DELAY_MS, TimeUnit::MILLISECONDS));
+                test->threadAssertEquals(0, queue->remainingCapacity());
+            } catch (InterruptedException& e) {
+                test->threadUnexpectedException(e);
+            }
+        }
+    };
+
+    class TestOfferInExecutor2 : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestOfferInExecutor2(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestOfferInExecutor2() {}
+
+        virtual void run() {
+            test->threadAssertFalse(queue->offer(3));
+            try {
+                Thread::sleep(LinkedBlockingQueueTest::SMALL_DELAY_MS);
+                test->threadAssertEquals(1, queue->take());
+            } catch (InterruptedException& e) {
+                test->threadUnexpectedException(e);
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testOfferInExecutor() {
+
+    LinkedBlockingQueue<int> q(2);
+    TestOfferInExecutor1* runnable1 = new TestOfferInExecutor1(&q, this);
+    TestOfferInExecutor2* runnable2 = new TestOfferInExecutor2(&q, this);
+    q.add(1);
+    q.add(2);
+    Pointer<ExecutorService> executor(Executors::newFixedThreadPool(2));
+    executor->execute(runnable1);
+    executor->execute(runnable2);
+
+    joinPool(executor.get());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestPollInExecutor1 : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestPollInExecutor1(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestPollInExecutor1() {}
+
+        virtual void run() {
+            int result = 0;
+            test->threadAssertFalse(queue->poll(result));
+            try {
+                test->threadAssertTrue(queue->poll(result, LinkedBlockingQueueTest::MEDIUM_DELAY_MS, TimeUnit::MILLISECONDS));
+                test->threadAssertTrue(queue->isEmpty());
+            } catch (InterruptedException& e) {
+                test->threadUnexpectedException(e);
+            }
+        }
+    };
+
+    class TestPollInExecutor2 : public Runnable {
+    private:
+
+        LinkedBlockingQueue<int>* queue;
+        LinkedBlockingQueueTest* test;
+
+    public:
+
+        TestPollInExecutor2(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
+            Runnable(), queue(queue), test(test) {
+        }
+
+        virtual ~TestPollInExecutor2() {}
+
+        virtual void run() {
+            try {
+                Thread::sleep(LinkedBlockingQueueTest::SMALL_DELAY_MS);
+                queue->put(1);
+            } catch (InterruptedException& e) {
+                test->threadUnexpectedException(e);
+            }
+        }
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void LinkedBlockingQueueTest::testPollInExecutor() {
+
+    LinkedBlockingQueue<int> q(2);
+    TestPollInExecutor1* runnable1 = new TestPollInExecutor1(&q, this);
+    TestPollInExecutor2* runnable2 = new TestPollInExecutor2(&q, this);
+    Pointer<ExecutorService> executor(Executors::newFixedThreadPool(2));
+    executor->execute(runnable1);
+    executor->execute(runnable2);
+
+    joinPool(executor.get());
 }
