@@ -501,8 +501,7 @@ namespace concurrent{
         void tryTerminate() {
             for (;;) {
                 int c = ctl.get();
-                if (isRunning(c) ||
-                    runStateAtLeast(c, TIDYING) ||
+                if (isRunning(c) || runStateAtLeast(c, TIDYING) ||
                     (runStateOf(c) == SHUTDOWN && !workQueue->isEmpty())) {
                     return;
                 }
@@ -694,6 +693,14 @@ namespace concurrent{
                         } catch (Exception& e) {
                             this->parent->afterExecute(task, &e);
                             throw;
+                        } catch (std::exception& stdex) {
+                            Exception ex(__FILE__, __LINE__, &stdex, "Caught unknown exception while executing task.");
+                            this->parent->afterExecute(task, &ex);
+                            throw ex;
+                        } catch (...) {
+                            Exception ex(__FILE__, __LINE__, "Caught unknown exception while executing task.");
+                            this->parent->afterExecute(task, &ex);
+                            throw ex;
                         }
 
                         this->parent->afterExecute(task, NULL);
@@ -1184,7 +1191,7 @@ namespace concurrent{
 
         /**
          * Performs blocking or timed wait for a task, depending on current configuration
-         * settings, or returns null if this worker must exit because of any of:
+         * settings, or returns NULL if this worker must exit because of any of:
          *
          *  1. There are more than maximumPoolSize workers (due to
          *     a call to setMaximumPoolSize).
