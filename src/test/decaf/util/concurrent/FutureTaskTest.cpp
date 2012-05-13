@@ -44,15 +44,15 @@ namespace {
         virtual ~PublicFutureTask() {}
 
         virtual bool runAndReset() {
-            return FutureTask::runAndReset();
+            return FutureTask<std::string>::runAndReset();
         }
 
         virtual void set(const std::string& x) {
-            FutureTask::set(x);
+            FutureTask<std::string>::set(x);
         }
 
         virtual void setException(const Exception& ex) {
-            FutureTask::setException(ex);
+            FutureTask<std::string>::setException(ex);
         }
     };
 
