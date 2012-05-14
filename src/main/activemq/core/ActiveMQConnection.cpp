@@ -37,6 +37,7 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/UUID.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/TimeUnit.h>
@@ -159,8 +160,8 @@ namespace core{
         DispatcherMap dispatchers;
         ProducerMap activeProducers;
 
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQSessionKernel> > activeSessions;
-        decaf::util::concurrent::CopyOnWriteArrayList<transport::TransportListener*> transportListeners;
+        decaf::util::LinkedList< Pointer<ActiveMQSessionKernel> > activeSessions;
+        decaf::util::LinkedList<transport::TransportListener*> transportListeners;
 
         TempDestinationMap activeTempDestinations;
 
@@ -303,12 +304,14 @@ namespace core{
                 // Clean up the Connection resources.
                 this->connection->cleanup();
 
-                Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
+                synchronized(&this->config->transportListeners) {
+                    Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
-                while( iter->hasNext() ) {
-                    try{
-                        iter->next()->onException(ex);
-                    } catch(...) {}
+                    while( iter->hasNext() ) {
+                        try{
+                            iter->next()->onException(ex);
+                        } catch(...) {}
+                    }
                 }
             } catch(Exception& ex) {}
         }
@@ -528,20 +531,22 @@ void ActiveMQConnection::close() {
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
-
+        // Get the complete list of active sessions and call dispose() which should not trigger
+        // any messages back to the broker.
         long long lastDeliveredSequenceId = 0;
+        synchronized(&this->config->activeSessions) {
+            std::auto_ptr< Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
 
-        // Dispose of all the Session resources we know are still open.
-        while (iter->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iter->next();
-            try{
-                session->dispose();
-                lastDeliveredSequenceId =
-                    Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
+            // Dispose of all the Session resources we know are still open.
+            while (iter->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iter->next();
+                try{
+                    session->dispose();
+                    lastDeliveredSequenceId =
+                        Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
             }
         }
 
@@ -578,16 +583,18 @@ void ActiveMQConnection::cleanup() {
 
     try {
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+        synchronized(&this->config->activeSessions) {
+            // Get the complete list of active sessions.
+            std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
 
-        // Dispose of all the Session resources we know are still open.
-        while (iter->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iter->next();
-            try{
-                session->dispose();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
+            // Dispose of all the Session resources we know are still open.
+            while (iter->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iter->next();
+                try{
+                    session->dispose();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
             }
         }
 
@@ -870,12 +877,13 @@ void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
             this->onConsumerControl(command);
         }
 
-        Pointer< Iterator<TransportListener*> > iter(this->config->transportListeners.iterator());
-
-        while (iter->hasNext()) {
-            try{
-                iter->next()->onCommand(command);
-            } catch(...) {}
+        synchronized(&this->config->transportListeners) {
+            Pointer< Iterator<TransportListener*> > iter(this->config->transportListeners.iterator());
+            while (iter->hasNext()) {
+                try{
+                    iter->next()->onCommand(command);
+                } catch(...) {}
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -898,15 +906,16 @@ void ActiveMQConnection::onConsumerControl(Pointer<commands::Command> command) {
 
     Pointer<ConsumerControl> consumerControl = command.dynamicCast<ConsumerControl>();
 
-    // Get the complete list of active sessions.
-    std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+    synchronized(&this->config->activeSessions) {
+        std::auto_ptr<Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQSessionKernel> session = iter->next();
-        if (consumerControl->isClose()) {
-            session->close(consumerControl->getConsumerId());
-        } else {
-            session->setPrefetchSize(consumerControl->getConsumerId(), consumerControl->getPrefetch());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQSessionKernel> session = iter->next();
+            if (consumerControl->isClose()) {
+                session->close(consumerControl->getConsumerId());
+            } else {
+                session->setPrefetchSize(consumerControl->getConsumerId(), consumerControl->getPrefetch());
+            }
         }
     }
 }
@@ -957,30 +966,33 @@ void ActiveMQConnection::transportInterrupted() {
     this->config->transportInterruptionProcessingComplete.reset(
         new CountDownLatch( (int)this->config->dispatchers.size() ) );
 
-    std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > sessions(this->config->activeSessions.iterator());
-
-    while (sessions->hasNext()) {
-        sessions->next()->clearMessagesInProgress();
+    synchronized(&this->config->activeSessions) {
+        std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > sessions(this->config->activeSessions.iterator());
+        while (sessions->hasNext()) {
+            sessions->next()->clearMessagesInProgress();
+        }
     }
 
-    Pointer< Iterator<TransportListener*> > listeners(this->config->transportListeners.iterator());
-
-    while (listeners->hasNext()) {
-        try{
-            listeners->next()->transportInterrupted();
-        } catch(...) {}
+    synchronized(&this->config->transportListeners) {
+        Pointer< Iterator<TransportListener*> > listeners(this->config->transportListeners.iterator());
+        while (listeners->hasNext()) {
+            try{
+                listeners->next()->transportInterrupted();
+            } catch(...) {}
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportResumed() {
 
-    Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
-
-    while( iter->hasNext() ) {
-        try{
-            iter->next()->transportResumed();
-        } catch(...) {}
+    synchronized(&this->config->transportListeners) {
+        Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
+        while( iter->hasNext() ) {
+            try{
+                iter->next()->transportResumed();
+            } catch(...) {}
+        }
     }
 }
 
@@ -1120,7 +1132,9 @@ void ActiveMQConnection::addTransportListener(TransportListener* transportListen
     }
 
     // Add this listener from the set of active TransportListeners
-    this->config->transportListeners.add(transportListener);
+    synchronized(&this->config->transportListeners) {
+        this->config->transportListeners.add(transportListener);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1131,7 +1145,9 @@ void ActiveMQConnection::removeTransportListener(TransportListener* transportLis
     }
 
     // Remove this listener from the set of active TransportListeners
-    this->config->transportListeners.remove(transportListener);
+    synchronized(&this->config->transportListeners) {
+        this->config->transportListeners.remove(transportListener);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1438,11 +1454,13 @@ void ActiveMQConnection::deleteTempDestination(Pointer<ActiveMQTempDestination> 
         checkClosedOrFailed();
         ensureConnectionInfoSent();
 
-        Pointer< Iterator< Pointer<ActiveMQSessionKernel> > > iterator(this->config->activeSessions.iterator());
-        while (iterator->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iterator->next();
-            if (session->isInUse(destination)) {
-                throw ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+        synchronized(&this->config->activeSessions) {
+            Pointer< Iterator< Pointer<ActiveMQSessionKernel> > > iterator(this->config->activeSessions.iterator());
+            while (iterator->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iterator->next();
+                if (session->isInUse(destination)) {
+                    throw ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+                }
             }
         }
 

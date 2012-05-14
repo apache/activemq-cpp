@@ -22,7 +22,7 @@
 #include <activemq/util/Service.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
+#include <decaf/util/ArrayList.h>
 
 namespace activemq {
 namespace util {
@@ -41,7 +41,7 @@ namespace util {
         decaf::util::concurrent::atomic::AtomicBoolean started;
         decaf::util::concurrent::atomic::AtomicBoolean stopping;
         decaf::util::concurrent::atomic::AtomicBoolean stopped;
-        decaf::util::concurrent::CopyOnWriteArrayList<ServiceListener*> listemers;
+        decaf::util::ArrayList<ServiceListener*> listeners;
 
     public:
 

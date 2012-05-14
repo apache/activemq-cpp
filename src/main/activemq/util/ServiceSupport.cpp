@@ -30,7 +30,7 @@ using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-ServiceSupport::ServiceSupport() : Service(), started(), stopping(), stopped(true), listemers() {
+ServiceSupport::ServiceSupport() : Service(), started(), stopping(), stopped(true), listeners() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,9 +62,11 @@ void ServiceSupport::start() {
         this->stopping.set(false);
         this->stopped.set(!success);
 
-        std::auto_ptr< Iterator<ServiceListener*> > iter(this->listemers.iterator());
-        while(iter->hasNext()) {
-            iter->next()->started(this);
+        synchronized(&this->listeners) {
+            std::auto_ptr< Iterator<ServiceListener*> > iter(this->listeners.iterator());
+            while(iter->hasNext()) {
+                iter->next()->started(this);
+            }
         }
     }
 }
@@ -84,9 +86,11 @@ void ServiceSupport::stop() {
         this->started.set(false);
         this->stopping.set(false);
 
-        std::auto_ptr< Iterator<ServiceListener*> > iter(this->listemers.iterator());
-        while(iter->hasNext()) {
-            iter->next()->stopped(this);
+        synchronized(&this->listeners) {
+            std::auto_ptr< Iterator<ServiceListener*> > iter(this->listeners.iterator());
+            while(iter->hasNext()) {
+                iter->next()->stopped(this);
+            }
         }
 
         stopper.throwFirstException();
@@ -111,13 +115,17 @@ bool ServiceSupport::isStopped() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::addServiceListener(ServiceListener* listener) {
     if(listener != NULL) {
-        this->listemers.add(listener);
+        synchronized(&this->listeners) {
+            this->listeners.add(listener);
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::removeServiceListener(ServiceListener* listener) {
     if(listener != NULL) {
-        this->listemers.remove(listener);
+        synchronized(&this->listeners) {
+            this->listeners.remove(listener);
+        }
     }
 }
