@@ -402,7 +402,7 @@ namespace kernels {
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addConsumer(Pointer<activemq::core::kernels::ActiveMQConsumerKernel> consumer);
+        void addConsumer(Pointer<ActiveMQConsumerKernel> consumer);
 
         /**
          * Dispose of a MessageConsumer from this session.  Removes it from the Connection
@@ -413,7 +413,7 @@ namespace kernels {
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeConsumer(const Pointer<commands::ConsumerId>& consumerId);
+        void removeConsumer(Pointer<commands::ConsumerId> consumerId);
 
         /**
          * Adds a MessageProducer to this session registering it with the Connection and store
@@ -425,7 +425,7 @@ namespace kernels {
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void addProducer(Pointer<activemq::core::kernels::ActiveMQProducerKernel> producer);
+        void addProducer(Pointer<ActiveMQProducerKernel> producer);
 
         /**
          * Dispose of a MessageProducer from this session.  Removes it from the Connection
@@ -436,7 +436,7 @@ namespace kernels {
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeProducer(Pointer<activemq::core::kernels::ActiveMQProducerKernel> producer);
+        void removeProducer(Pointer<ActiveMQProducerKernel> producer);
 
         /**
          * Starts if not already start a Transaction for this Session.  If the session
@@ -532,6 +532,16 @@ namespace kernels {
          * @return true if there is a consumer of this destination in this Session.
          */
         bool isInUse(Pointer<commands::ActiveMQDestination> destination);
+
+        /**
+         * @returns a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
+         */
+        Pointer<ActiveMQProducerKernel> lookupProducerKernel(Pointer<commands::ProducerId> id);
+
+        /**
+         * @returns a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
+         */
+        Pointer<ActiveMQConsumerKernel> lookupConsumerKernel(Pointer<commands::ConsumerId> id);
 
    private:
 
