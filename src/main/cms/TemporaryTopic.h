@@ -19,7 +19,7 @@
 #define _CMS_TEMPORARYTOPIC_H_
 
 #include <cms/Config.h>
-#include <cms/Destination.h>
+#include <cms/Topic.h>
 #include <cms/CMSException.h>
 
 namespace cms{
@@ -36,19 +36,10 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API TemporaryTopic : public Destination {
+    class CMS_API TemporaryTopic : public Topic {
     public:
 
         virtual ~TemporaryTopic();
-
-        /**
-         * Gets the name of this topic.
-         *
-         * @return The topic name.
-         *
-         * @throws CMSException - if an internal error occurs.
-         */
-        virtual std::string getTopicName() const = 0;
 
         /**
          * Destroy's the Temporary Destination at the Provider
