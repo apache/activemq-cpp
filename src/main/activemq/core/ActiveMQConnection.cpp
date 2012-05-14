@@ -532,7 +532,8 @@ void ActiveMQConnection::close() {
         }
 
         // Get the complete list of active sessions and call dispose() which should not trigger
-        // any messages back to the broker.
+        // any messages back to the broker, remove each before the dispose call to avoid a
+        // concurrent modification of the list.
         long long lastDeliveredSequenceId = 0;
         synchronized(&this->config->activeSessions) {
             std::auto_ptr< Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
@@ -540,6 +541,7 @@ void ActiveMQConnection::close() {
             // Dispose of all the Session resources we know are still open.
             while (iter->hasNext()) {
                 Pointer<ActiveMQSessionKernel> session = iter->next();
+                iter->remove();
                 try{
                     session->dispose();
                     lastDeliveredSequenceId =
@@ -584,16 +586,13 @@ void ActiveMQConnection::cleanup() {
     try {
 
         synchronized(&this->config->activeSessions) {
-            // Get the complete list of active sessions.
             std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
-
-            // Dispose of all the Session resources we know are still open.
             while (iter->hasNext()) {
                 Pointer<ActiveMQSessionKernel> session = iter->next();
+                iter->remove();
                 try{
                     session->dispose();
                 } catch( cms::CMSException& ex ){
-                    /* Absorb */
                 }
             }
         }

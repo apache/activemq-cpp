@@ -363,13 +363,16 @@ void ActiveMQSessionKernel::dispose() {
         }
 
         // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+        synchronized(&this->config->producers) {
+            std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
 
-        while (producerIter->hasNext()) {
-            try{
-                producerIter->next()->dispose();
-            } catch (cms::CMSException& ex) {
-                /* Absorb */
+            while (producerIter->hasNext()) {
+                Pointer<ActiveMQProducerKernel> producer = producerIter->next();
+                producerIter->remove();
+                try {
+                    producer->dispose();
+                } catch (cms::CMSException& ex) {
+                }
             }
         }
     }
