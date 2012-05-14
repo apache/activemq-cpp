@@ -267,7 +267,7 @@ namespace kernels {
     class StartConsumerTask : public Runnable {
     private:
 
-        ActiveMQConsumerKernel* consumer;
+        Pointer<ActiveMQConsumerKernel> consumer;
 
     private:
 
@@ -276,14 +276,11 @@ namespace kernels {
 
     public:
 
-        StartConsumerTask(ActiveMQConsumerKernel* consumer) : Runnable(), consumer(NULL) {
-
+        StartConsumerTask(Pointer<ActiveMQConsumerKernel> consumer) : Runnable(), consumer(consumer) {
             if (consumer == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
-
-            this->consumer = consumer;
         }
 
         virtual ~StartConsumerTask() {}
@@ -612,7 +609,7 @@ cms::Message* ActiveMQConsumerKernel::receive() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumerKernel::receive( int millisecs ) {
+cms::Message* ActiveMQConsumerKernel::receive(int millisecs) {
 
     try {
 
@@ -1049,8 +1046,10 @@ void ActiveMQConsumerKernel::rollback() {
                 }
 
                 if (internal->redeliveryDelay > 0 && !this->internal->unconsumedMessages->isClosed()) {
+                    Pointer<ActiveMQConsumerKernel> self =
+                        this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
                     this->internal->scheduler->executeAfterDelay(
-                        new StartConsumerTask(this), internal->redeliveryDelay);
+                        new StartConsumerTask(self), internal->redeliveryDelay);
                 } else {
                     start();
                 }

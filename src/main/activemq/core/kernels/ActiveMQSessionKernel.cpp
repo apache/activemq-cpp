@@ -623,8 +623,8 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
         }
 
         // Create the producer instance.
-        Pointer<ActiveMQProducerKernel> producer( new ActiveMQProducerKernel(
-            this, this->getNextProducerId(), dest, this->connection->getSendTimeout() ) );
+        Pointer<ActiveMQProducerKernel> producer(new ActiveMQProducerKernel(
+            this, this->getNextProducerId(), dest, this->connection->getSendTimeout()));
 
         try {
             this->addProducer(producer);
@@ -1160,7 +1160,7 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::removeConsumer(const Pointer<ConsumerId>& consumerId) {
+void ActiveMQSessionKernel::removeConsumer(Pointer<ConsumerId> consumerId) {
 
     try {
 
@@ -1201,6 +1201,33 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Pointer<ProducerId> id) {
+
+    std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+
+    while (producerIter->hasNext()) {
+        Pointer<ActiveMQProducerKernel> producer = producerIter->next();
+        if (producer->getProducerId()->equals(*id)) {
+            return producer;
+        }
+    }
+
+    return Pointer<ActiveMQProducerKernel>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Pointer<ConsumerId> id) {
+
+    synchronized(&this->consumers) {
+        if (this->consumers.containsKey(id)) {
+            return this->consumers.get(id);
+        }
+    }
+
+    return Pointer<ActiveMQConsumerKernel>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
