@@ -56,6 +56,7 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
@@ -97,7 +98,7 @@ namespace kernels{
     public:
 
         AtomicBoolean synchronizationRegistered;
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
+        decaf::util::LinkedList< Pointer<ActiveMQProducerKernel> > producers;
         Pointer<Scheduler> scheduler;
         Pointer<CloseSynhcronization> closeSync;
         ConsumersMap consumers;
@@ -1183,7 +1184,9 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 
     try {
         this->checkClosed();
-        this->config->producers.add(producer);
+        synchronized(&this->config->producers) {
+            this->config->producers.add(producer);
+        }
         this->connection->addProducer(producer);
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -1196,7 +1199,9 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 
     try {
         this->connection->removeProducer(producer->getProducerId());
-        this->config->producers.remove(producer);
+        synchronized(&this->config->producers) {
+            this->config->producers.remove(producer);
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1206,12 +1211,13 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Pointer<ProducerId> id) {
 
-    std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
-
-    while (producerIter->hasNext()) {
-        Pointer<ActiveMQProducerKernel> producer = producerIter->next();
-        if (producer->getProducerId()->equals(*id)) {
-            return producer;
+    synchronized(&this->config->producers) {
+        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+        while (producerIter->hasNext()) {
+            Pointer<ActiveMQProducerKernel> producer = producerIter->next();
+            if (producer->getProducerId()->equals(*id)) {
+                return producer;
+            }
         }
     }
 

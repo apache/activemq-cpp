@@ -34,7 +34,6 @@
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 #include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -47,7 +46,6 @@ namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
-    using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ActiveMQSession;
     class ConnectionConfig;
@@ -74,24 +72,24 @@ namespace core{
         /**
          * Indicates if this Connection is started
          */
-        AtomicBoolean started;
+        decaf::util::concurrent::atomic::AtomicBoolean started;
 
         /**
          * Indicates that this connection has been closed, it is no longer
          * usable after this becomes true
          */
-        AtomicBoolean closed;
+        decaf::util::concurrent::atomic::AtomicBoolean closed;
 
         /**
          * Indicates that this connection has been closed, it is no longer
          * usable after this becomes true
          */
-        AtomicBoolean closing;
+        decaf::util::concurrent::atomic::AtomicBoolean closing;
 
         /**
          * Indicates that this connection's Transport has failed.
          */
-        AtomicBoolean transportFailed;
+        decaf::util::concurrent::atomic::AtomicBoolean transportFailed;
 
     private:
 
