@@ -23,7 +23,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/util/concurrent/atomic/AtomicRefCounter.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/Comparator.h>
 #include <decaf/util/Arrays.h>
 #include <memory>
@@ -47,16 +47,17 @@ namespace lang {
      *
      * @since 1.0
      */
-    template< typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter >
-    class ArrayPointer : public REFCOUNTER {
+    template< typename T >
+    class ArrayPointer {
     private:
 
         struct ArrayData {
             T* value;
             int length;
+            decaf::util::concurrent::atomic::AtomicInteger refs;
 
-            ArrayData() : value( NULL ), length( 0 ) {}
-            ArrayData( T* value, int length ) : value( value ), length( length ) {
+            ArrayData() : value(NULL), length(0), refs(1) {}
+            ArrayData(T* value, int length) : value(value), length(length), refs(1) {
                 if( value != NULL && length <= 0 ) {
                     throw decaf::lang::exceptions::IllegalArgumentException(
                         __FILE__, __LINE__, "Non-NULL array pointer cannot have a size <= zero" );
@@ -66,6 +67,13 @@ namespace lang {
                     throw decaf::lang::exceptions::IllegalArgumentException(
                         __FILE__, __LINE__, "NULL array pointer cannot have a size > zero" );
                 }
+            }
+
+            bool release() {
+                if (this->refs.decrementAndGet() < 1) {
+                    return true;
+                }
+                return false;
             }
         };
 
@@ -83,7 +91,6 @@ namespace lang {
         typedef T* PointerType;              // type returned by operator->
         typedef T& ReferenceType;            // type returned by operator*
         typedef const T& ConstReferenceType; // type returned by const operator*
-        typedef REFCOUNTER CounterType;      // Type of the Reference Counter
 
     public:
 
@@ -93,7 +100,7 @@ namespace lang {
          * Initialized the contained array pointer to NULL, using the subscript operator
          * results in an exception unless reset to contain a real value.
          */
-        ArrayPointer() : REFCOUNTER(), array( new ArrayData() ), onDelete( onDeleteFunc ) {}
+        ArrayPointer() : array(new ArrayData()), onDelete(onDeleteFunc) {}
 
         /**
          * Create a new ArrayPointer instance and allocates an internal array that is sized
@@ -102,21 +109,18 @@ namespace lang {
          * @param size
          *      The size of the array to allocate for this ArrayPointer instance.
          */
-        ArrayPointer( int size ) :
-            REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
+        ArrayPointer(int size) : array(NULL), onDelete(onDeleteFunc) {
 
-            if( size == 0 ) {
+            if (size == 0) {
                 return;
             }
 
-            try{
+            try {
                 T* value = new T[size];
-                this->array = new ArrayData( value, size );
-            } catch( std::exception& ex ) {
-                REFCOUNTER::release();
+                this->array = new ArrayData(value, size);
+            } catch (std::exception& ex) {
                 throw ex;
-            } catch(...) {
-                REFCOUNTER::release();
+            } catch (...) {
                 throw std::bad_alloc();
             }
         }
@@ -131,22 +135,19 @@ namespace lang {
          * @param fillWith
          *      The value to initialize each element of the newly allocated array with.
          */
-        ArrayPointer( int size, const T& fillWith ) :
-            REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
+        ArrayPointer(int size, const T& fillWith) : array(NULL), onDelete(onDeleteFunc) {
 
-            if( size == 0 ) {
+            if (size == 0) {
                 return;
             }
 
-            try{
+            try {
                 T* value = new T[size];
-                decaf::util::Arrays::fill( value, size, 0, size, fillWith );
-                this->array = new ArrayData( value, size );
-            } catch( std::exception& ex ) {
-                REFCOUNTER::release();
+                decaf::util::Arrays::fill(value, size, 0, size, fillWith);
+                this->array = new ArrayData(value, size);
+            } catch (std::exception& ex) {
                 throw ex;
-            } catch(...) {
-                REFCOUNTER::release();
+            } catch (...) {
                 throw std::bad_alloc();
             }
         }
@@ -160,16 +161,13 @@ namespace lang {
          * @param size
          *      The size of the array this object is taking ownership of.
          */
-        explicit ArrayPointer( const PointerType value, int size ) :
-            REFCOUNTER(), array( NULL ), onDelete( onDeleteFunc ) {
+        explicit ArrayPointer(const PointerType value, int size) : array(NULL), onDelete(onDeleteFunc) {
 
-            try{
-                this->array = new ArrayData( value, size );
-            } catch( std::exception& ex ) {
-                REFCOUNTER::release();
+            try {
+                this->array = new ArrayData(value, size);
+            } catch (std::exception& ex) {
                 throw ex;
-            } catch(...) {
-                REFCOUNTER::release();
+            } catch (...) {
                 throw std::bad_alloc();
             }
         }
@@ -178,12 +176,13 @@ namespace lang {
          * Copy constructor. Copies the value contained in the ArrayPointer to the new
          * instance and increments the reference counter.
          */
-        ArrayPointer( const ArrayPointer& value ) :
-            REFCOUNTER( value ), array( value.array ), onDelete( onDeleteFunc ) {}
+        ArrayPointer(const ArrayPointer& value) : array(value.array), onDelete(onDeleteFunc) {
+            this->array->refs.incrementAndGet();
+        }
 
         virtual ~ArrayPointer() {
-            if( REFCOUNTER::release() == true ) {
-                onDelete( this->array );
+            if (this->array->release() == true) {
+                onDelete(this->array);
             }
         }
 
@@ -198,8 +197,8 @@ namespace lang {
          * @param size
          *      The size of the new array value this object now contains.
          */
-        void reset( T* value, int size = 0 ) {
-            ArrayPointer( value, size ).swap( *this );
+        void reset(T* value, int size = 0) {
+            ArrayPointer(value, size).swap(*this);
         }
 
         /**
@@ -217,6 +216,7 @@ namespace lang {
             T* temp = this->array->value;
             this->array->value = NULL;
             this->array->length = 0;
+            this->array->refs.set(1);
             return temp;
         }
 
@@ -246,9 +246,8 @@ namespace lang {
          * Exception Safe Swap Function
          * @param value - the value to swap with this.
          */
-        void swap( ArrayPointer& value ) {
-            std::swap( this->array, value.array );
-            REFCOUNTER::swap( value );
+        void swap(ArrayPointer& value) {
+            std::swap(this->array, value.array);
         }
 
         /**
@@ -259,12 +258,12 @@ namespace lang {
          */
         ArrayPointer clone() const {
 
-            if( this->array->length == 0 ){
+            if (this->array->length == 0) {
                 return ArrayPointer();
             }
 
-            ArrayPointer copy( this->array->length );
-            decaf::lang::System::arraycopy( this->array->value, 0, copy.get(), 0, this->array->length );
+            ArrayPointer copy(this->array->length);
+            decaf::lang::System::arraycopy(this->array->value, 0, copy.get(), 0, this->array->length);
             return copy;
         }
 
@@ -272,23 +271,23 @@ namespace lang {
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
-        ArrayPointer& operator= ( const ArrayPointer& right ) {
-            if( this == (void*)&right ) {
+        ArrayPointer& operator=(const ArrayPointer& right) {
+            if (this == (void*) &right) {
                 return *this;
             }
 
-            ArrayPointer temp( right );
-            temp.swap( *this );
+            ArrayPointer temp(right);
+            temp.swap(*this);
             return *this;
         }
-        template< typename T1, typename R1>
-        ArrayPointer& operator= ( const ArrayPointer<T1, R1>& right ) {
-            if( this == (void*)&right ) {
+        template< typename T1>
+        ArrayPointer& operator=(const ArrayPointer<T1>& right) {
+            if (this == (void*) &right) {
                 return *this;
             }
 
-            ArrayPointer temp( right );
-            temp.swap( *this );
+            ArrayPointer temp(right);
+            temp.swap(*this);
             return *this;
         }
 
@@ -300,20 +299,20 @@ namespace lang {
          *
          * @throws NullPointerException if the contained value is Null
          */
-        ReferenceType operator[]( int index ) {
-            if( this->array->value == NULL ) {
+        ReferenceType operator[](int index) {
+            if (this->array->value == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
             }
 
-            if( index < 0 || this->array->length <= index ) {
+            if (index < 0 || this->array->length <= index) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Array Index %d is out of bounds for this array.", this->array->length );
             }
 
             return this->array->value[index];
         }
-        ConstReferenceType operator[]( int index ) const {
+        ConstReferenceType operator[](int index) const {
             if( this->array->value == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "ArrayPointer operator& - Pointee is NULL." );
@@ -331,36 +330,36 @@ namespace lang {
             return this->array->value == NULL;
         }
 
-        inline friend bool operator==( const ArrayPointer& left, const T* right ) {
+        inline friend bool operator==(const ArrayPointer& left, const T* right) {
             return left.get() == right;
         }
 
-        inline friend bool operator==( const T* left, const ArrayPointer& right ) {
+        inline friend bool operator==(const T* left, const ArrayPointer& right) {
             return left == right.get();
         }
 
-        inline friend bool operator!=( const ArrayPointer& left, const T* right ) {
+        inline friend bool operator!=(const ArrayPointer& left, const T* right) {
             return left.get() != right;
         }
 
-        inline friend bool operator!=( const T* left, const ArrayPointer& right ) {
+        inline friend bool operator!=(const T* left, const ArrayPointer& right) {
             return left != right.get();
         }
 
-        template< typename T1, typename R1 >
-        bool operator==( const ArrayPointer<T1, R1>& right ) const {
+        template<typename T1>
+        bool operator==(const ArrayPointer<T1>& right) const {
             return this->array->value == right.get();
         }
 
-        template< typename T1, typename R1 >
-        bool operator!=( const ArrayPointer<T1, R1>& right ) const {
+        template<typename T1>
+        bool operator!=(const ArrayPointer<T1>& right) const {
             return this->array->value != right.get();
         }
 
     private:
 
         // Internal Static deletion function.
-        static void onDeleteFunc( ArrayData* value ) {
+        static void onDeleteFunc(ArrayData* value) {
             delete [] value->value;
             delete value;
         }
@@ -368,26 +367,26 @@ namespace lang {
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator==( const ArrayPointer<T, R>& left, const U* right ) {
+    template<typename T, typename U>
+    inline bool operator==(const ArrayPointer<T>& left, const U* right) {
         return left.get() == right;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator==( const U* left, const ArrayPointer<T, R>& right ) {
+    template<typename T, typename U>
+    inline bool operator==(const U* left, const ArrayPointer<T>& right) {
         return right.get() == left;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator!=( const ArrayPointer<T, R>& left, const U* right ) {
-        return !( left.get() == right );
+    template<typename T, typename U>
+    inline bool operator!=(const ArrayPointer<T>& left, const U* right) {
+        return !(left.get() == right);
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator!=( const U* left, const ArrayPointer<T, R>& right ) {
+    template<typename T, typename U>
+    inline bool operator!=(const U* left, const ArrayPointer<T>& right) {
         return right.get() != left;
     }
 
@@ -400,20 +399,20 @@ namespace lang {
      * Custom implementations are possible where an array of some type has a logical natural
      * ordering such as array of integers where the sum of all ints in the array is used.
      */
-    template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
-    class ArrayPointerComparator : public decaf::util::Comparator< ArrayPointer<T,R> > {
+    template< typename T >
+    class ArrayPointerComparator : public decaf::util::Comparator< ArrayPointer<T> > {
     public:
 
         virtual ~ArrayPointerComparator() {}
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <
-        virtual bool operator() ( const ArrayPointer<T,R>& left, const ArrayPointer<T,R>& right ) const {
+        virtual bool operator() ( const ArrayPointer<T>& left, const ArrayPointer<T>& right ) const {
             return left.get() < right.get();
         }
 
         // Requires that the type in the pointer is an instance of a Comparable.
-        virtual int compare( const ArrayPointer<T,R>& left, const ArrayPointer<T,R>& right ) const {
+        virtual int compare(const ArrayPointer<T>& left, const ArrayPointer<T>& right) const {
             return left.get() < right.get() ? -1 : right.get() < left.get() ? 1 : 0;
         }
 
@@ -430,13 +429,13 @@ namespace std{
      */
     template< typename T >
     struct less< decaf::lang::ArrayPointer<T> > :
-        public binary_function< decaf::lang::ArrayPointer<T>,
-                                decaf::lang::ArrayPointer<T>, bool>
+        public binary_function<decaf::lang::ArrayPointer<T>,
+                               decaf::lang::ArrayPointer<T>, bool>
     {
-        bool operator()( const decaf::lang::ArrayPointer<T>& left,
-                         const decaf::lang::ArrayPointer<T>& right ) const
+        bool operator()(const decaf::lang::ArrayPointer<T>& left,
+                        const decaf::lang::ArrayPointer<T>& right) const
         {
-            return less<T*>()( left.get(), right.get() );
+            return less<T*>()(left.get(), right.get());
         }
     };
 }
