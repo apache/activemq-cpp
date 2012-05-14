@@ -80,20 +80,20 @@ namespace util {
 
         private:
 
-            SimpleListIterator( const SimpleListIterator& );
-            SimpleListIterator operator= ( const SimpleListIterator& );
+            SimpleListIterator(const SimpleListIterator&);
+            SimpleListIterator operator=(const SimpleListIterator&);
 
         public:
 
-            SimpleListIterator( AbstractList<E>* parent, int start ) :
+            SimpleListIterator(AbstractList<E>* parent, int start) :
                 ListIterator<E>(), parent(NULL), numLeft(0), expectedModCount(0), lastPosition(-1) {
 
-                if( parent == NULL ) {
+                if (parent == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "List Iterator constructed with NULL parent" );
                 }
 
-                if( start < 0 || start > parent->size() ) {
+                if (start < 0 || start > parent->size()) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
                          __FILE__, __LINE__, "start index passed was negative or greater than size()" );
                 }
@@ -111,7 +111,7 @@ namespace util {
 
             virtual E next() {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
                 }
@@ -124,7 +124,7 @@ namespace util {
                     this->numLeft--;
 
                     return result;
-                } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
+                } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
                         __FILE__, __LINE__, "Next called without a next element to process." );
                 }
@@ -132,25 +132,25 @@ namespace util {
 
             virtual void remove() {
 
-                if( this->lastPosition == -1 ) {
+                if (this->lastPosition == -1) {
                     throw decaf::lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__, "Remove called before next() was called." );
                 }
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
                 }
 
                 try {
 
-                    if( this->lastPosition == this->parent->size() - this->numLeft ) {
+                    if (this->lastPosition == this->parent->size() - this->numLeft) {
                         this->numLeft--; // we're removing after a call to previous()
                     }
 
                     this->parent->removeAt( lastPosition );
 
-                } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
+                } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification detected." );
                 }
@@ -161,16 +161,16 @@ namespace util {
 
             virtual void add( const E& value ) {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
                 }
 
                 try {
-                    this->parent->add( this->parent->size() - this->numLeft, value );
+                    this->parent->add(this->parent->size() - this->numLeft, value);
                     this->expectedModCount = this->parent->modCount;
                     this->lastPosition = -1;
-                } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
+                } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
                         __FILE__, __LINE__, "Add called without a next element to process." );
                 }
@@ -186,7 +186,7 @@ namespace util {
 
             virtual E previous() {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification detected." );
                 }
@@ -194,7 +194,7 @@ namespace util {
                 try {
 
                     int index = this->parent->size() - this->numLeft - 1;
-                    E result = this->parent->get( index );
+                    E result = this->parent->get(index);
                     this->numLeft++;
                     this->lastPosition = index;
 
@@ -211,13 +211,13 @@ namespace util {
 
             virtual void set( const E& value ) {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification detected." );
                 }
 
                 try {
-                    this->parent->set( this->lastPosition, value );
+                    this->parent->set(this->lastPosition, value);
                 } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
                     throw decaf::lang::exceptions::IllegalStateException();
                 }
@@ -234,20 +234,20 @@ namespace util {
 
         private:
 
-            ConstSimpleListIterator( const ConstSimpleListIterator& );
-            ConstSimpleListIterator operator= ( const ConstSimpleListIterator& );
+            ConstSimpleListIterator(const ConstSimpleListIterator&);
+            ConstSimpleListIterator operator=(const ConstSimpleListIterator&);
 
         public:
 
-            ConstSimpleListIterator( const AbstractList<E>* parent, int start ) :
+            ConstSimpleListIterator(const AbstractList<E>* parent, int start) :
                 ListIterator<E>(), parent(parent), numLeft(0), expectedModCount(0), lastPosition(-1) {
 
-                if( parent == NULL ) {
+                if (parent == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "List Iterator constructed with NULL parent" );
                 }
 
-                if( start < 0 || start > parent->size() ) {
+                if (start < 0 || start > parent->size()) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
                          __FILE__, __LINE__, "start index passed was negative or greater than size()" );
                 }
@@ -265,7 +265,7 @@ namespace util {
 
             virtual E next() {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
                 }
@@ -273,12 +273,12 @@ namespace util {
                 try {
 
                     int index = this->parent->size() - this->numLeft;
-                    E result = this->parent->get( index );
+                    E result = this->parent->get(index);
                     this->lastPosition = index;
                     this->numLeft--;
 
                     return result;
-                } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
+                } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
                         __FILE__, __LINE__, "Next called without a next element to process." );
                 }
@@ -290,7 +290,7 @@ namespace util {
                     "AbstractList::Iterator::remove - Const Iterator." );
             }
 
-            virtual void add( const E& value DECAF_UNUSED ) {
+            virtual void add(const E& value DECAF_UNUSED) {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "AbstractList::ListIterator::radd - Const Iterator." );
@@ -306,7 +306,7 @@ namespace util {
 
             virtual E previous() {
 
-                if( this->expectedModCount != this->parent->modCount ) {
+                if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "Concurrent Modification detected." );
                 }
@@ -314,12 +314,12 @@ namespace util {
                 try {
 
                     int index = this->parent->size() - this->numLeft - 1;
-                    E result = this->parent->get( index );
+                    E result = this->parent->get(index);
                     this->numLeft++;
                     this->lastPosition = index;
 
                     return result;
-                } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
+                } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
                         __FILE__, __LINE__, "No previous element exists." );
                 }
@@ -329,7 +329,7 @@ namespace util {
                 return this->parent->size() - this->numLeft - 1;
             }
 
-            virtual void set( const E& value DECAF_UNUSED ) {
+            virtual void set(const E& value DECAF_UNUSED) {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
                     "AbstractList::ListIterator::set - Const Iterator." );
@@ -343,36 +343,36 @@ namespace util {
         virtual ~AbstractList() {}
 
         virtual Iterator<E>* iterator() {
-            return new SimpleListIterator( this, 0 );
+            return new SimpleListIterator(this, 0);
         }
         virtual Iterator<E>* iterator() const {
-            return new ConstSimpleListIterator( this, 0 );
+            return new ConstSimpleListIterator(this, 0);
         }
 
         virtual ListIterator<E>* listIterator() {
-            return new SimpleListIterator( this, 0 );
+            return new SimpleListIterator(this, 0);
         }
         virtual ListIterator<E>* listIterator() const {
-            return new ConstSimpleListIterator( this, 0 );
+            return new ConstSimpleListIterator(this, 0);
         }
 
-        virtual ListIterator<E>* listIterator( int index ) {
-            return new SimpleListIterator( this, index );
+        virtual ListIterator<E>* listIterator(int index) {
+            return new SimpleListIterator(this, index);
         }
-        virtual ListIterator<E>* listIterator( int index ) const {
-            return new ConstSimpleListIterator( this, index );
+        virtual ListIterator<E>* listIterator(int index) const {
+            return new ConstSimpleListIterator(this, index);
         }
 
         virtual void clear() {
-            this->removeRange( 0, this->size() );
+            this->removeRange(0, this->size());
         }
 
-        virtual bool add( const E& value ) {
-            this->add( this->size(), value );
+        virtual bool add(const E& value) {
+            this->add(this->size(), value);
             return true;
         }
 
-        virtual void add( int index DECAF_UNUSED, const E& element DECAF_UNUSED ) {
+        virtual void add(int index DECAF_UNUSED, const E& element DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "Abstract list does not implement the add method." );
         }
@@ -380,32 +380,31 @@ namespace util {
         // Use this method since our own addAll will hide the base class version.
         using AbstractCollection<E>::addAll;
 
-        virtual bool addAll( int index, const Collection<E>& source )  {
-            std::auto_ptr< decaf::util::Iterator<E> > iter( source.iterator() );
-            while( iter->hasNext() ) {
-                this->add( index++, iter->next() );
+        virtual bool addAll(int index, const Collection<E>& source) {
+            std::auto_ptr<decaf::util::Iterator<E> > iter(source.iterator());
+            while (iter->hasNext()) {
+                this->add(index++, iter->next());
             }
 
             return !source.isEmpty();
         }
 
-        virtual E removeAt( int index DECAF_UNUSED )  {
+        virtual E removeAt(int index DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "Abstract list does not implement the removeAt method." );
         }
 
-        virtual E set( int index DECAF_UNUSED, const E& element DECAF_UNUSED ) {
+        virtual E set(int index DECAF_UNUSED, const E& element DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "Abstract list does not implement the set method." );
         }
 
-        virtual int indexOf( const E& value ) const {
+        virtual int indexOf(const E& value) const {
 
-            std::auto_ptr< decaf::util::ListIterator<E> > iter( this->listIterator() );
+            std::auto_ptr<decaf::util::ListIterator<E> > iter(this->listIterator());
 
-            while( iter->hasNext() ) {
-
-                if( value == iter->next() ) {
+            while (iter->hasNext()) {
+                if (value == iter->next()) {
                     return iter->previousIndex();
                 }
             }
@@ -413,13 +412,12 @@ namespace util {
             return -1;
         }
 
-        virtual int lastIndexOf( const E& value ) const {
+        virtual int lastIndexOf(const E& value) const {
 
             std::auto_ptr< decaf::util::ListIterator<E> > iter( this->listIterator( this->size() ) );
 
-            while( iter->hasPrevious() ) {
-
-                if( value == iter->previous() ) {
+            while (iter->hasPrevious()) {
+                if (value == iter->previous()) {
                     return iter->nextIndex();
                 }
             }
@@ -429,9 +427,9 @@ namespace util {
 
     protected:
 
-        void removeRange( int start, int end ) {
-            std::auto_ptr< decaf::util::Iterator<E> > iter( this->listIterator( start ) );
-            for( int i = start; i < end; i++ ) {
+        void removeRange(int start, int end) {
+            std::auto_ptr<decaf::util::Iterator<E> > iter(this->listIterator(start));
+            for (int i = start; i < end; i++) {
                 iter->next();
                 iter->remove();
             }
