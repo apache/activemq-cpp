@@ -617,24 +617,25 @@ void ActiveMQBytesMessage::initializeReading() const {
 
     this->failIfWriteOnlyBody();
     try {
-        if( this->dataIn.get() == NULL ) {
-            InputStream* is = new ByteArrayInputStream( this->getContent() );
 
-            if( this->isCompressed() ) {
+        if (this->dataIn.get() == NULL) {
+            InputStream* is = new ByteArrayInputStream(this->getContent());
 
-                try{
-                    DataInputStream dis( is );
+            if (this->isCompressed()) {
+
+                try {
+                    DataInputStream dis(is);
                     this->length = dis.readInt();
-                } catch( IOException& ex ) {
-                    CMSExceptionSupport::create( ex );
+                } catch (IOException& ex) {
+                    throw CMSExceptionSupport::create(ex);
                 }
 
-                is = new InflaterInputStream( is, true );
+                is = new InflaterInputStream(is, true);
 
             } else {
-                this->length = (int)this->getContent().size();
+                this->length = (int) this->getContent().size();
             }
-            this->dataIn.reset( new DataInputStream( is, true ) );
+            this->dataIn.reset(new DataInputStream(is, true));
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

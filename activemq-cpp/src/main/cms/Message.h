@@ -27,7 +27,7 @@
 #include <cms/MessageFormatException.h>
 #include <cms/MessageNotWriteableException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Root of all messages.  As in JMS, a message is comprised of 3 parts:
@@ -102,6 +102,27 @@ namespace cms{
          * The Default Time to Live for a Message Producer is unlimited, the message will never expire.
          */
         static const long long DEFAULT_TIME_TO_LIVE;
+
+        /**
+         * Defines the Type Identifiers used to identify the type contained within a specific
+         * Message property or MapMessage keyed value.  CMS Providers can store other types in
+         * their internal representations, which should map to the UNKNOWN_TYPE from the CMS
+         * API.
+         */
+        enum ValueType {
+            NULL_TYPE = 0,
+            BOOLEAN_TYPE = 1,
+            BYTE_TYPE = 2,
+            CHAR_TYPE = 3,
+            SHORT_TYPE = 4,
+            INTEGER_TYPE = 5,
+            LONG_TYPE = 6,
+            DOUBLE_TYPE = 7,
+            FLOAT_TYPE = 8,
+            STRING_TYPE = 9,
+            BYTE_ARRAY_TYPE = 10,
+            UNKNOWN_TYPE = 11
+        };
 
     public:
 
@@ -182,6 +203,21 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          */
         virtual bool propertyExists(const std::string& name) const = 0;
+
+        /**
+         * Returns the value type for the given property key.  The CMS provider
+         * should translate all internal type identifiers into the CMS Value types
+         * returning UNKNOWN_TYPE for any specialized types not directly supported
+         * in the CMS API.
+         *
+         * @param name
+         *      The string property name key used to look up the value type.
+         *
+         * @returns The ValueType contained in the given property.
+         *
+         * @throws CMSException if no property exists that matches the requested key.
+         */
+        virtual ValueType getPropertyValueType(const std::string& name) const = 0;
 
         /**
          * Gets a boolean property.
@@ -290,7 +326,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setBooleanProperty( const std::string& name, bool value ) = 0;
+        virtual void setBooleanProperty(const std::string& name, bool value) = 0;
 
         /**
          * Sets a byte property.
@@ -303,7 +339,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setByteProperty( const std::string& name, unsigned char value ) = 0;
+        virtual void setByteProperty(const std::string& name, unsigned char value) = 0;
 
         /**
          * Sets a double property.
@@ -316,7 +352,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setDoubleProperty( const std::string& name, double value ) = 0;
+        virtual void setDoubleProperty(const std::string& name, double value) = 0;
 
         /**
          * Sets a float property.
@@ -328,7 +364,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setFloatProperty( const std::string& name, float value ) = 0;
+        virtual void setFloatProperty(const std::string& name, float value) = 0;
 
         /**
          * Sets a int property.
@@ -341,7 +377,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setIntProperty( const std::string& name, int value ) = 0;
+        virtual void setIntProperty(const std::string& name, int value) = 0;
 
         /**
          * Sets a long property.
@@ -354,7 +390,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setLongProperty( const std::string& name, long long value ) = 0;
+        virtual void setLongProperty(const std::string& name, long long value) = 0;
 
         /**
          * Sets a short property.
@@ -367,7 +403,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setShortProperty( const std::string& name, short value ) = 0;
+        virtual void setShortProperty(const std::string& name, short value) = 0;
 
         /**
          * Sets a string property.
@@ -380,7 +416,7 @@ namespace cms{
          * @throws CMSException - if the name is an empty string.
          * @throws MessageNotWriteableException - if properties are read-only
          */
-        virtual void setStringProperty( const std::string& name, const std::string& value ) = 0;
+        virtual void setStringProperty(const std::string& name, const std::string& value) = 0;
 
         /**
          * Gets the correlation ID for the message.
@@ -430,7 +466,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSCorrelationID( const std::string& correlationId ) = 0;
+        virtual void setCMSCorrelationID(const std::string& correlationId) = 0;
 
         /**
          * Gets the DeliveryMode for this message
@@ -452,7 +488,7 @@ namespace cms{
          *
          * @throws CMSException - if an internal error occurs.
          */
-        virtual void setCMSDeliveryMode( int mode ) = 0;
+        virtual void setCMSDeliveryMode(int mode) = 0;
 
         /**
          * Gets the Destination object for this message.

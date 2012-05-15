@@ -102,6 +102,11 @@ namespace commands{
         /**
          * {@inheritDoc}
          */
+        virtual cms::Message::ValueType getValueType(const std::string& key) const;
+
+        /**
+         * {@inheritDoc}
+         */
         virtual bool getBoolean( const std::string& name ) const;
 
         /**

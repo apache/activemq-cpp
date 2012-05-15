@@ -25,7 +25,7 @@
 #include <cms/MessageFormatException.h>
 #include <cms/MessageNotWriteableException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * A MapMessage object is used to send a set of name-value pairs. The
@@ -68,7 +68,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API MapMessage : public Message {
+    class CMS_API MapMessage: public Message {
     public:
 
         virtual ~MapMessage();
@@ -91,7 +91,7 @@ namespace cms{
          *
          * @throws CMSException - if the operation fails due to an internal error.
          */
-        virtual std::vector< std::string > getMapNames() const = 0;
+        virtual std::vector<std::string> getMapNames() const = 0;
 
         /**
          * Indicates whether an item exists in this MapMessage object.
@@ -102,7 +102,22 @@ namespace cms{
          *
          * @throws CMSException - if the operation fails due to an internal error.
          */
-        virtual bool itemExists( const std::string& name ) const = 0;
+        virtual bool itemExists(const std::string& name) const = 0;
+
+        /**
+         * Returns the value type for the given key mapping.  The CMS provider
+         * should translate all internal type identifiers into the CMS Value types
+         * returning UNKNOWN_TYPE for any specialized types not directly supported
+         * in the CMS API.
+         *
+         * @param key
+         *      The string key used to look up the value type mapping.
+         *
+         * @returns The ValueType contained in the given mapping.
+         *
+         * @throws CMSException if no mapping exists that matches the requested key.
+         */
+        virtual ValueType getValueType(const std::string& key) const = 0;
 
         /**
          * Returns the Boolean value of the Specified name
@@ -113,7 +128,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual bool getBoolean( const std::string& name ) const = 0;
+        virtual bool getBoolean(const std::string& name) const = 0;
 
         /**
          * Sets a boolean value with the specified name into the Map.
@@ -126,7 +141,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWritableException - if the Message is in Read-only Mode.
          */
-        virtual void setBoolean( const std::string& name, bool value ) = 0;
+        virtual void setBoolean(const std::string& name, bool value) = 0;
 
         /**
          * Returns the Byte value of the Specified name
@@ -137,7 +152,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual unsigned char getByte( const std::string& name ) const = 0;
+        virtual unsigned char getByte(const std::string& name) const = 0;
 
         /**
          * Sets a Byte value with the specified name into the Map.
@@ -150,7 +165,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setByte( const std::string& name, unsigned char value ) = 0;
+        virtual void setByte(const std::string& name, unsigned char value) = 0;
 
         /**
          * Returns the Bytes value of the Specified name
@@ -161,7 +176,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual std::vector<unsigned char> getBytes( const std::string& name ) const = 0;
+        virtual std::vector<unsigned char> getBytes(const std::string& name) const = 0;
 
         /**
          * Sets a Bytes value with the specified name into the Map.
@@ -174,8 +189,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setBytes( const std::string& name,
-                               const std::vector<unsigned char>& value ) = 0;
+        virtual void setBytes(const std::string& name, const std::vector<unsigned char>& value) = 0;
 
         /**
          * Returns the Char value of the Specified name
@@ -186,7 +200,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual char getChar( const std::string& name ) const = 0;
+        virtual char getChar(const std::string& name) const = 0;
 
         /**
          * Sets a Char value with the specified name into the Map.
@@ -199,7 +213,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setChar( const std::string& name, char value ) = 0;
+        virtual void setChar(const std::string& name, char value) = 0;
 
         /**
          * Returns the Double value of the Specified name
@@ -210,7 +224,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual double getDouble( const std::string& name ) const = 0;
+        virtual double getDouble(const std::string& name) const = 0;
 
         /**
          * Sets a Double value with the specified name into the Map.
@@ -223,7 +237,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setDouble( const std::string& name, double value ) = 0;
+        virtual void setDouble(const std::string& name, double value) = 0;
 
         /**
          * Returns the Float value of the Specified name
@@ -234,7 +248,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual float getFloat( const std::string& name ) const = 0;
+        virtual float getFloat(const std::string& name) const = 0;
 
         /**
          * Sets a Float value with the specified name into the Map.
@@ -247,7 +261,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setFloat( const std::string& name, float value ) = 0;
+        virtual void setFloat(const std::string& name, float value) = 0;
 
         /**
          * Returns the Int value of the Specified name
@@ -258,7 +272,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual int getInt( const std::string& name ) const = 0;
+        virtual int getInt(const std::string& name) const = 0;
 
         /**
          * Sets a Int value with the specified name into the Map.
@@ -271,7 +285,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setInt( const std::string& name, int value ) = 0;
+        virtual void setInt(const std::string& name, int value) = 0;
 
         /**
          * Returns the Long value of the Specified name
@@ -282,7 +296,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual long long getLong( const std::string& name ) const = 0;
+        virtual long long getLong(const std::string& name) const = 0;
 
         /**
          * Sets a Long value with the specified name into the Map.
@@ -295,7 +309,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setLong( const std::string& name, long long value ) = 0;
+        virtual void setLong(const std::string& name, long long value) = 0;
 
         /**
          * Returns the Short value of the Specified name
@@ -306,7 +320,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual short getShort( const std::string& name ) const = 0;
+        virtual short getShort(const std::string& name) const = 0;
 
         /**
          * Sets a Short value with the specified name into the Map.
@@ -319,7 +333,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setShort( const std::string& name, short value ) = 0;
+        virtual void setShort(const std::string& name, short value) = 0;
 
         /**
          * Returns the String value of the Specified name
@@ -330,7 +344,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageFormatException - if this type conversion is invalid.
          */
-        virtual std::string getString( const std::string& name ) const = 0;
+        virtual std::string getString(const std::string& name) const = 0;
 
         /**
          * Sets a String value with the specified name into the Map.
@@ -343,7 +357,7 @@ namespace cms{
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotWriteableException - if the Message is in Read-only Mode.
          */
-        virtual void setString( const std::string& name, const std::string& value ) = 0;
+        virtual void setString(const std::string& name, const std::string& value) = 0;
 
     };
 
