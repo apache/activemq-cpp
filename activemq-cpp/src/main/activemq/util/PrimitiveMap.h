@@ -27,8 +27,8 @@
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveValueConverter.h>
 
-namespace activemq{
-namespace util{
+namespace activemq {
+namespace util {
 
     /**
      * Map of named primitives.
@@ -53,7 +53,7 @@ namespace util{
          * @param source
          *      The Decaf Library Map instance whose elements will be copied into this Map.
          */
-        PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& source );
+        PrimitiveMap(const decaf::util::Map<std::string, PrimitiveValueNode>& source);
 
         /**
          * Copy Constructor
@@ -61,7 +61,7 @@ namespace util{
          * @param source
          *      The PrimitiveMap whose elements will be copied into this Map.
          */
-        PrimitiveMap( const PrimitiveMap& source );
+        PrimitiveMap(const PrimitiveMap& source);
 
         /**
          * Converts the contents into a formatted string that can be output
@@ -70,6 +70,12 @@ namespace util{
          * @returns formatted String of all elements in the map.
          */
         std::string toString() const;
+
+        /**
+         * @returns the numeric type value for the given key if it exists.
+         * @throws NoSuchElementException if the key is not present in the map.
+         */
+        virtual PrimitiveValueNode::PrimitiveType getValueType(const std::string& key) const;
 
         /**
          * Gets the Boolean value at the given key, if the key is not
@@ -82,7 +88,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual bool getBool( const std::string& key ) const;
+        virtual bool getBool(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -90,7 +96,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setBool( const std::string& key, bool value );
+        virtual void setBool(const std::string& key, bool value);
 
         /**
          * Gets the Byte value at the given key, if the key is not
@@ -103,7 +109,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual unsigned char getByte( const std::string& key ) const;
+        virtual unsigned char getByte(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -111,7 +117,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setByte( const std::string& key, unsigned char value );
+        virtual void setByte(const std::string& key, unsigned char value);
 
         /**
          * Gets the Character value at the given key, if the key is not
@@ -124,7 +130,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual char getChar( const std::string& key ) const;
+        virtual char getChar(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -132,7 +138,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setChar( const std::string& key, char value );
+        virtual void setChar(const std::string& key, char value);
 
         /**
          * Gets the Short value at the given key, if the key is not
@@ -145,7 +151,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual short getShort( const std::string& key ) const;
+        virtual short getShort(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -153,7 +159,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setShort( const std::string& key, short value );
+        virtual void setShort(const std::string& key, short value);
 
         /**
          * Gets the Integer value at the given key, if the key is not
@@ -166,7 +172,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual int getInt( const std::string& key ) const;
+        virtual int getInt(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -174,7 +180,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setInt( const std::string& key, int value );
+        virtual void setInt(const std::string& key, int value);
 
         /**
          * Gets the Long value at the given key, if the key is not
@@ -187,7 +193,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual long long getLong( const std::string& key ) const;
+        virtual long long getLong(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -195,7 +201,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setLong( const std::string& key, long long value );
+        virtual void setLong(const std::string& key, long long value);
 
         /**
          * Gets the Float value at the given key, if the key is not
@@ -208,7 +214,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual float getFloat( const std::string& key ) const;
+        virtual float getFloat(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -216,7 +222,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setFloat( const std::string& key, float value );
+        virtual void setFloat(const std::string& key, float value);
 
         /**
          * Gets the Double value at the given key, if the key is not
@@ -229,7 +235,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual double getDouble( const std::string& key ) const;
+        virtual double getDouble(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -237,7 +243,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setDouble( const std::string& key, double value );
+        virtual void setDouble(const std::string& key, double value);
 
         /**
          * Gets the String value at the given key, if the key is not
@@ -250,7 +256,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual std::string getString( const std::string& key ) const;
+        virtual std::string getString(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -258,7 +264,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setString( const std::string& key, const std::string& value );
+        virtual void setString(const std::string& key, const std::string& value);
 
         /**
          * Gets the Byte Array value at the given key, if the key is not
@@ -271,7 +277,7 @@ namespace util{
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
          */
-        virtual std::vector<unsigned char> getByteArray( const std::string& key ) const;
+        virtual std::vector<unsigned char> getByteArray(const std::string& key) const;
 
         /**
          * Sets the value at key to the specified type. Overwrites any data
@@ -279,7 +285,7 @@ namespace util{
          * @param key - the map key to set or insert.
          * @param value - the new value to set at the key location.
          */
-        virtual void setByteArray( const std::string& key, const std::vector<unsigned char>& value );
+        virtual void setByteArray(const std::string& key, const std::vector<unsigned char>& value);
 
     };
 
