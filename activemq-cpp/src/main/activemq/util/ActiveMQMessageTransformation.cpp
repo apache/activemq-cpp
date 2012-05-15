@@ -125,31 +125,66 @@ bool ActiveMQMessageTransformation::transformMessage(cms::Message* message, Acti
             } catch (cms::CMSException& e) {
             }
 
-//            *amqMessage = msg;
+            *amqMessage = msg;
         } else if (dynamic_cast<cms::MapMessage*>(message) != NULL) {
-//            cms::MapMessage* mapMsg = dynamic_cast<cms::MapMessage*>(message);
-//            ActiveMQMapMessage* msg = new ActiveMQMapMessage();
-//            msg->setConnection(connection);
-            // TODO Need type infos for map elements
-//            Enumeration iter = mapMsg->getMapNames();
-//
-//            while (iter.hasMoreElements()) {
-//                String name = iter.nextElement().toString();
-//                msg.setObject(name, mapMsg.getObject(name));
-//            }
-//
-//            *amqMessage = msg;
+            cms::MapMessage* mapMsg = dynamic_cast<cms::MapMessage*>(message);
+            ActiveMQMapMessage* msg = new ActiveMQMapMessage();
+            msg->setConnection(connection);
+
+            std::vector<std::string> elements = mapMsg->getMapNames();
+            std::vector<std::string>::iterator iter = elements.begin();
+            for(; iter != elements.end() ; ++iter) {
+                std::string key = *iter;
+                cms::Message::ValueType elementType = mapMsg->getValueType(key);
+
+                switch(elementType) {
+                    case cms::Message::BOOLEAN_TYPE:
+                        msg->setBoolean(key, mapMsg->getBoolean(key));
+                        break;
+                    case cms::Message::BYTE_TYPE:
+                        msg->setByte(key, mapMsg->getByte(key));
+                        break;
+                    case cms::Message::BYTE_ARRAY_TYPE:
+                        msg->setBytes(key, mapMsg->getBytes(key));
+                        break;
+                    case cms::Message::CHAR_TYPE:
+                        msg->setChar(key, mapMsg->getChar(key));
+                        break;
+                    case cms::Message::SHORT_TYPE:
+                        msg->setShort(key, mapMsg->getShort(key));
+                        break;
+                    case cms::Message::INTEGER_TYPE:
+                        msg->setInt(key, mapMsg->getInt(key));
+                        break;
+                    case cms::Message::LONG_TYPE:
+                        msg->setLong(key, mapMsg->getLong(key));
+                        break;
+                    case cms::Message::FLOAT_TYPE:
+                        msg->setFloat(key, mapMsg->getFloat(key));
+                        break;
+                    case cms::Message::DOUBLE_TYPE:
+                        msg->setDouble(key, mapMsg->getDouble(key));
+                        break;
+                    case cms::Message::STRING_TYPE:
+                        msg->setString(key, mapMsg->getString(key));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            *amqMessage = msg;
         } else if (dynamic_cast<cms::ObjectMessage*>(message) != NULL) {
-//            cms::ObjectMessage* objMsg = dynamic_cast<cms::ObjectMessage*>(message);
+            cms::ObjectMessage* objMsg = dynamic_cast<cms::ObjectMessage*>(message);
             ActiveMQObjectMessage* msg = new ActiveMQObjectMessage();
             msg->setConnection(connection);
-//            *amqMessage = msg;
+            msg->setObjectBytes(objMsg->getObjectBytes());
+            *amqMessage = msg;
         } else if (dynamic_cast<cms::StreamMessage*>(message) != NULL) {
-//            cms::StreamMessage* streamMessage = dynamic_cast<cms::StreamMessage*>(message);
-//            streamMessage->reset();
-//            ActiveMQStreamMessage* msg = new ActiveMQStreamMessage();
-//            msg->setConnection(connection);
-//            Object obj = NULL;
+            cms::StreamMessage* streamMessage = dynamic_cast<cms::StreamMessage*>(message);
+            streamMessage->reset();
+            ActiveMQStreamMessage* msg = new ActiveMQStreamMessage();
+            msg->setConnection(connection);
 
             // TODO Need element enumeration for StreamMessage
 //            try {
@@ -161,13 +196,13 @@ bool ActiveMQMessageTransformation::transformMessage(cms::Message* message, Acti
 //            } catch (JMSException e) {
 //            }
 
-//            *amqMessage = msg;
+            *amqMessage = msg;
         } else if (dynamic_cast<cms::TextMessage*>(message) != NULL) {
             cms::TextMessage* textMsg = dynamic_cast<cms::TextMessage*>(message);
             ActiveMQTextMessage* msg = new ActiveMQTextMessage();
             msg->setConnection(connection);
             msg->setText(textMsg->getText());
-//            *amqMessage = msg;
+            *amqMessage = msg;
         } else {
             *amqMessage = new ActiveMQMessage();
             (*amqMessage)->setConnection(connection);
@@ -190,24 +225,68 @@ void ActiveMQMessageTransformation::copyProperties(const cms::Message* fromMessa
         throw NullPointerException(__FILE__, __LINE__, "Provided destination cms::Message pointer was NULL");
     }
 
+    if (fromMessage->getCMSDestination() != NULL) {
+        const ActiveMQDestination* transformed = NULL;
+        if (transformDestination(fromMessage->getCMSDestination(), &transformed)) {
+            toMessage->setCMSDestination(dynamic_cast<const cms::Destination*>(transformed));
+            delete transformed;
+        } else {
+            toMessage->setCMSDestination(fromMessage->getCMSDestination());
+        }
+    }
+
+    if (fromMessage->getCMSReplyTo() != NULL) {
+        const ActiveMQDestination* transformed = NULL;
+        if (transformDestination(fromMessage->getCMSReplyTo(), &transformed)) {
+            toMessage->setCMSReplyTo(dynamic_cast<const cms::Destination*>(transformed));
+            delete transformed;
+        } else {
+            toMessage->setCMSReplyTo(fromMessage->getCMSReplyTo());
+        }
+    }
+
     toMessage->setCMSMessageID(fromMessage->getCMSMessageID());
     toMessage->setCMSCorrelationID(fromMessage->getCMSCorrelationID());
-//    toMessage->setCMSReplyTo(transformDestination(fromMessage->getCMSReplyTo()));
-//    toMessage->setCMSDestination(transformDestination(fromMessage->getCMSDestination()));
-//    toMessage->setCMSDeliveryMode(fromMessage->getCMSDeliveryMode());
-//    toMessage->setCMSRedelivered(fromMessage->getCMSRedelivered());
-//    toMessage->setCMSType(fromMessage->getCMSType());
-//    toMessage->setCMSExpiration(fromMessage->getCMSExpiration());
-//    toMessage->setCMSPriority(fromMessage->getCMSPriority());
-//    toMessage->setCMSTimestamp(fromMessage->getCMSTimestamp());
-//
-//    std::vector<std::string> propertyNames = fromMessage->getPropertyNames();
-//
-//    std::vector<std::string>::const_iterator iter = propertyNames.begin();
-//    for(; iter != propertyNames.end(); ++iter) {
-//        std::string name = *iter;
-        // TODO Need type values for properties
-//        Object obj = fromMessage.getObjectProperty(name);
-//        toMessage->setObjectProperty(name, obj);
-//    }
+    toMessage->setCMSDeliveryMode(fromMessage->getCMSDeliveryMode());
+    toMessage->setCMSRedelivered(fromMessage->getCMSRedelivered());
+    toMessage->setCMSType(fromMessage->getCMSType());
+    toMessage->setCMSExpiration(fromMessage->getCMSExpiration());
+    toMessage->setCMSPriority(fromMessage->getCMSPriority());
+    toMessage->setCMSTimestamp(fromMessage->getCMSTimestamp());
+
+    std::vector<std::string> propertyNames = fromMessage->getPropertyNames();
+    std::vector<std::string>::iterator iter = propertyNames.begin();
+    for(; iter != propertyNames.end() ; ++iter) {
+        std::string name = *iter;
+        cms::Message::ValueType propertyType = fromMessage->getPropertyValueType(name);
+
+        switch(propertyType) {
+            case cms::Message::BOOLEAN_TYPE:
+                toMessage->setBooleanProperty(name, fromMessage->getBooleanProperty(name));
+                break;
+            case cms::Message::BYTE_TYPE:
+                toMessage->setByteProperty(name, fromMessage->getByteProperty(name));
+                break;
+            case cms::Message::SHORT_TYPE:
+                toMessage->setShortProperty(name, fromMessage->getShortProperty(name));
+                break;
+            case cms::Message::INTEGER_TYPE:
+                toMessage->setIntProperty(name, fromMessage->getIntProperty(name));
+                break;
+            case cms::Message::LONG_TYPE:
+                toMessage->setLongProperty(name, fromMessage->getLongProperty(name));
+                break;
+            case cms::Message::FLOAT_TYPE:
+                toMessage->setFloatProperty(name, fromMessage->getFloatProperty(name));
+                break;
+            case cms::Message::DOUBLE_TYPE:
+                toMessage->setDoubleProperty(name, fromMessage->getDoubleProperty(name));
+                break;
+            case cms::Message::STRING_TYPE:
+                toMessage->setStringProperty(name, fromMessage->getStringProperty(name));
+                break;
+            default:
+                break;
+        }
+    }
 }
