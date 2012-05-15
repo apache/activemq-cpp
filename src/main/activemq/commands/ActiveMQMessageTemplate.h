@@ -118,8 +118,44 @@ namespace commands {
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
-        virtual bool getBooleanProperty(const std::string& name) const {
+        virtual cms::Message::ValueType getPropertyValueType(const std::string& name) const {
+            try {
+                util::PrimitiveValueNode::PrimitiveType type = this->getMessageProperties().getValueType(name);
 
+                // Just map the values that are actually allowed in Message Properties, the others
+                // all qualify as unknown.
+                switch(type) {
+                    case util::PrimitiveValueNode::NULL_TYPE:
+                        return cms::Message::NULL_TYPE;
+                    case util::PrimitiveValueNode::BOOLEAN_TYPE:
+                        return cms::Message::BOOLEAN_TYPE;
+                    case util::PrimitiveValueNode::BYTE_TYPE:
+                        return cms::Message::BYTE_TYPE;
+                    case util::PrimitiveValueNode::CHAR_TYPE:
+                        return cms::Message::CHAR_TYPE;
+                    case util::PrimitiveValueNode::SHORT_TYPE:
+                        return cms::Message::SHORT_TYPE;
+                    case util::PrimitiveValueNode::INTEGER_TYPE:
+                        return cms::Message::INTEGER_TYPE;
+                    case util::PrimitiveValueNode::LONG_TYPE:
+                        return cms::Message::LONG_TYPE;
+                    case util::PrimitiveValueNode::DOUBLE_TYPE:
+                        return cms::Message::DOUBLE_TYPE;
+                    case util::PrimitiveValueNode::FLOAT_TYPE:
+                        return cms::Message::FLOAT_TYPE;
+                    case util::PrimitiveValueNode::STRING_TYPE:
+                    case util::PrimitiveValueNode::BIG_STRING_TYPE:
+                        return cms::Message::STRING_TYPE;
+                    default:
+                        break;
+                }
+
+                return cms::Message::UNKNOWN_TYPE;
+            }
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+        }
+
+        virtual bool getBooleanProperty(const std::string& name) const {
             try {
                 return this->propertiesInterceptor->getBooleanProperty(name);
             } catch (decaf::lang::exceptions::UnsupportedOperationException& ex) {
@@ -129,7 +165,6 @@ namespace commands {
         }
 
         virtual unsigned char getByteProperty(const std::string& name) const {
-
             try {
                 return this->propertiesInterceptor->getByteProperty(name);
             } catch (decaf::lang::exceptions::UnsupportedOperationException& ex) {
