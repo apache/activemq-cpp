@@ -50,7 +50,7 @@ namespace util{
 
         TimerImpl(const std::string& name) : Thread(name), heap(), cancelled( false ) {}
 
-        ~TimerImpl() {
+        virtual ~TimerImpl() {
             try{
                 this->cancel();
                 this->join();
@@ -64,17 +64,17 @@ namespace util{
          */
         virtual void run() {
 
-            while( true ) {
+            while (true) {
 
                 Pointer<TimerTask> task;
 
-                synchronized( this ) {
+                synchronized(this) {
 
-                    if( cancelled ) {
+                    if (cancelled) {
                         return;
                     }
 
-                    if( heap.isEmpty()) {
+                    if (heap.isEmpty()) {
 
                         // no tasks scheduled -- sleep until any task appear
                         try {
@@ -88,8 +88,8 @@ namespace util{
                     task = heap.peek();
                     long long timeToSleep = 0LL;
 
-                    synchronized( &( task->lock ) ) {
-                        if( task->cancelled ) {
+                    synchronized(&(task->lock)) {
+                        if (task->cancelled) {
                             heap.remove( 0 );
                             continue;
                         }
@@ -98,12 +98,13 @@ namespace util{
                         timeToSleep = task->when - currentTime;
                     }
 
-                    if( timeToSleep > 0 ) {
+                    if (timeToSleep > 0) {
 
-                        task.reset( NULL );
+                        task.reset(NULL);
                         try {
                             this->wait( timeToSleep );
-                        } catch( InterruptedException& e ) {}
+                        } catch (InterruptedException& e) {
+                        }
                         continue;
                     }
 
@@ -111,29 +112,29 @@ namespace util{
                     // tasks where scheduled and caused this one to be moved someplace new on
                     // the heap and find it new location.. We also need to check that the task
                     // wasn't cancelled while we were sleeping.
-                    synchronized( &( task->lock ) ) {
+                    synchronized(&(task->lock)) {
                         std::size_t pos = 0;
 
-                        if( heap.peek()->when != task->when ) {
-                            pos = heap.find( task );
+                        if (heap.peek()->when != task->when) {
+                            pos = heap.find(task);
                         }
 
-                        if( task->cancelled ) {
-                            heap.remove( heap.find( task ) );
+                        if (task->cancelled) {
+                            heap.remove(heap.find(task));
                             continue;
                         }
 
                         // set time to schedule
-                        task->setScheduledTime( task->when );
+                        task->setScheduledTime(task->when);
 
                         // remove task from queue
-                        heap.remove( pos );
+                        heap.remove(pos);
 
                         // set when the next task should be launched
-                        if( task->period >= 0 ) {
+                        if (task->period >= 0) {
 
                             // this is a repeating task,
-                            if( task->fixedRate ) {
+                            if (task->fixedRate) {
                                 // task is scheduled at fixed rate
                                 task->when = task->when + task->period;
                             } else {
@@ -143,7 +144,7 @@ namespace util{
 
                             // insert this task into queue, it will be ordered by the heap for
                             // its next run time.
-                            insertTask( task );
+                            insertTask(task);
 
                         } else {
 
@@ -155,22 +156,23 @@ namespace util{
                 }
 
                 // run the task, suppress all exceptions, we can't deal with them.
-                if( task != NULL && !task->cancelled ) {
+                if (task != NULL && !task->cancelled) {
                     try {
                         task->run();
-                    } catch(...) {}
+                    } catch(...) {
+                    }
                 }
             }
         }
 
-        void insertTask( const Pointer<TimerTask>& task ) {
+        void insertTask(const Pointer<TimerTask>& task) {
             // callers are synchronized
-            heap.insert( task );
+            heap.insert(task);
             this->notify();
         }
 
         void cancel() {
-            synchronized( this ) {
+            synchronized(this) {
                 cancelled = true;
                 heap.reset();
                 this->notify();
@@ -178,11 +180,9 @@ namespace util{
         }
 
         int purge() {
-
             std::size_t result = 0;
-            synchronized( this ) {
-
-                if( heap.isEmpty() ) {
+            synchronized(this) {
+                if (heap.isEmpty()) {
                     return 0;
                 }
 
@@ -196,12 +196,12 @@ namespace util{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-Timer::Timer() : internal( new TimerImpl() ) {
+Timer::Timer() : internal(new TimerImpl()) {
     this->internal->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Timer::Timer(const std::string& name) : internal( new TimerImpl(name) ) {
+Timer::Timer(const std::string& name) : internal(new TimerImpl(name)) {
     this->internal->start();
 }
 
@@ -225,334 +225,304 @@ int Timer::purge() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, long long delay ) {
+void Timer::schedule(TimerTask* task, long long delay) {
 
-    if( delay < 0 ) {
+    if(delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative" );
     }
 
     Pointer<TimerTask> wrapper( task );
 
-    try{
-        scheduleTask( wrapper, delay, -1, false );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay, -1, false);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, long long delay ) {
+void Timer::schedule(const Pointer<TimerTask>& task, long long delay) {
 
-    if( delay < 0 ) {
+    if (delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
     }
 
-    scheduleTask( task, delay, -1, false );
+    scheduleTask(task, delay, -1, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, const Date& when ) {
+void Timer::schedule(TimerTask* task, const Date& when) {
 
-    if( when.getTime() < 0 ) {
+    if (when.getTime() < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
-    Pointer<TimerTask> wrapper( task );
+    Pointer<TimerTask> wrapper(task);
     long long delay = when.getTime() - System::currentTimeMillis();
 
-    try{
-        scheduleTask( wrapper, delay < 0 ? 0 : delay, -1, false );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay < 0 ? 0 : delay, -1, false);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, const Date& when ) {
+void Timer::schedule(const Pointer<TimerTask>& task, const Date& when) {
 
-    if( when.getTime() < 0 ) {
+    if (when.getTime() < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
     long long delay = when.getTime() - System::currentTimeMillis();
-    scheduleTask( task, delay < 0 ? 0 : delay, -1, false );
+    scheduleTask(task, delay < 0 ? 0 : delay, -1, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, long long delay, long long period ) {
+void Timer::schedule(TimerTask* task, long long delay, long long period) {
 
-    if( delay < 0 ) {
+    if (delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    Pointer<TimerTask> wrapper( task );
+    Pointer<TimerTask> wrapper(task);
 
-    try{
-        scheduleTask( wrapper, delay, period, false );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay, period, false);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, long long delay, long long period ) {
+void Timer::schedule(const Pointer<TimerTask>& task, long long delay, long long period) {
 
-    if( delay < 0 ) {
+    if (delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    scheduleTask( task, delay, period, false );
+    scheduleTask(task, delay, period, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( TimerTask* task, const Date& when, long long period ) {
+void Timer::schedule(TimerTask* task, const Date& when, long long period) {
 
-    if( when.getTime() < 0 ) {
+    if (when.getTime() < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    Pointer<TimerTask> wrapper( task );
+    Pointer<TimerTask> wrapper(task);
     long long delay = when.getTime() - System::currentTimeMillis();
 
-    try{
-        scheduleTask( wrapper, delay < 0 ? 0 : delay, period, false );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay < 0 ? 0 : delay, period, false);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::schedule( const Pointer<TimerTask>& task, const Date& when, long long period ) {
+void Timer::schedule(const Pointer<TimerTask>& task, const Date& when, long long period) {
 
-    if( when.getTime() < 0 ) {
+    if (when.getTime() < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
     long long delay = when.getTime() - System::currentTimeMillis();
-    scheduleTask( task, delay < 0 ? 0 : delay, period, false );
+    scheduleTask(task, delay < 0 ? 0 : delay, period, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( TimerTask* task, long long delay, long long period ) {
+void Timer::scheduleAtFixedRate(TimerTask* task, long long delay, long long period) {
 
-    if( delay < 0 ) {
+    if (delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    Pointer<TimerTask> wrapper( task );
+    Pointer<TimerTask> wrapper(task);
 
-    try{
-        scheduleTask( wrapper, delay, period, true );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay, period, true);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, long long delay, long long period ) {
+void Timer::scheduleAtFixedRate(const Pointer<TimerTask>& task, long long delay, long long period) {
 
-    if( delay < 0 ) {
+    if (delay < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future but delay was Negative" );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    scheduleTask( task, delay, period, true );
+    scheduleTask(task, delay, period, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( TimerTask* task, const Date& when, long long period ) {
+void Timer::scheduleAtFixedRate(TimerTask* task, const Date& when, long long period) {
 
-    if( when.getTime() < 0 ) {
+    if (when.getTime() < 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+            __FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
-    if( period <= 0 ) {
+    if (period <= 0) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+            __FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
-    Pointer<TimerTask> wrapper( task );
+    Pointer<TimerTask> wrapper(task);
     long long delay = when.getTime() - System::currentTimeMillis();
 
-    try{
-        scheduleTask( wrapper, delay < 0 ? 0 : delay, period, true );
-    } catch( NullPointerException& ex ) {
+    try {
+        scheduleTask(wrapper, delay < 0 ? 0 : delay, period, true);
+    } catch (NullPointerException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalArgumentException& ex ) {
+    } catch (IllegalArgumentException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( IllegalStateException& ex ) {
+    } catch (IllegalStateException& ex) {
         wrapper.release();
-        ex.setMark( __FILE__, __LINE__ );
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleAtFixedRate( const Pointer<TimerTask>& task, const Date& when, long long period ) {
+void Timer::scheduleAtFixedRate(const Pointer<TimerTask>& task, const Date& when, long long period) {
 
-    if( when.getTime() < 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled to start in the Future." );
+    if (when.getTime() < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Task must be scheduled to start in the Future.");
     }
 
-    if( period <= 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "Task must be scheduled non-negative or non-zero period." );
+    if (period <= 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Task must be scheduled non-negative or non-zero period.");
     }
 
     long long delay = when.getTime() - System::currentTimeMillis();
-    scheduleTask( task, delay < 0 ? 0 : delay, period, true );
+    scheduleTask(task, delay < 0 ? 0 : delay, period, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::scheduleTask( const Pointer<TimerTask>& task, long long delay, long long period, bool fixed ) {
+void Timer::scheduleTask(const Pointer<TimerTask>& task, long long delay, long long period, bool fixed) {
 
-    if( task == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Task pointer passed in was Null" );
+    if (task == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Task pointer passed in was Null");
     }
 
-    synchronized( this->internal ) {
+    synchronized(this->internal) {
 
-        if( this->internal->cancelled ) {
-            throw IllegalStateException(
-                __FILE__, __LINE__, "Timer was cancelled." );
+        if (this->internal->cancelled) {
+            throw IllegalStateException(__FILE__, __LINE__, "Timer was cancelled.");
         }
 
         long long when = delay + System::currentTimeMillis();
 
-        if( when < 0 ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__,
-                "Task must be scheduled to start in the Future but delay was Negative" );
+        if (when < 0) {
+            throw IllegalArgumentException(__FILE__, __LINE__, "Task must be scheduled to start in the Future but delay was Negative");
         }
 
-        synchronized( &( task->lock ) ) {
+        synchronized(&(task->lock)) {
 
-            if( task->isScheduled() ) {
-                throw IllegalStateException(
-                    __FILE__, __LINE__,
-                    "Task is already scheduled in a Timer, cannot add again." );
+            if (task->isScheduled()) {
+                throw IllegalStateException(__FILE__, __LINE__, "Task is already scheduled in a Timer, cannot add again.");
             }
 
-            if( task->cancelled ) {
-                throw IllegalStateException(
-                    __FILE__, __LINE__,
-                    "Task is already has been cancelled cannot be restarted." );
+            if (task->cancelled) {
+                throw IllegalStateException(__FILE__, __LINE__, "Task is already has been cancelled cannot be restarted.");
             }
 
             task->when = when;
@@ -561,6 +531,6 @@ void Timer::scheduleTask( const Pointer<TimerTask>& task, long long delay, long 
         }
 
         // insert the new Task into priority queue
-        this->internal->insertTask( task );
+        this->internal->insertTask(task);
     }
 }

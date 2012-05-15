@@ -24,16 +24,14 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-TimerTask::TimerTask() :
-    lock(), fixedRate(false), cancelled(false), scheduledTime(0), when(0), period(-1) {
-
+TimerTask::TimerTask() : lock(), fixedRate(false), cancelled(false), scheduledTime(0), when(0), period(-1) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool TimerTask::cancel() {
 
     bool result = false;
-    synchronized( &lock ) {
+    synchronized(&lock) {
         result = !cancelled && when > 0;
         cancelled = true;
     }
@@ -46,7 +44,7 @@ long long TimerTask::scheduledExecutionTime() const {
 
     long long result = 0;
 
-    synchronized( &lock ) {
+    synchronized(&lock) {
         result = this->scheduledTime;
     }
 
@@ -58,7 +56,7 @@ bool TimerTask::isScheduled() const {
 
     bool result = false;
 
-    synchronized( &lock ) {
+    synchronized(&lock) {
         result = when > 0 || scheduledTime > 0;
     }
 
@@ -66,8 +64,8 @@ bool TimerTask::isScheduled() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimerTask::setScheduledTime( long long time ) {
-    synchronized( &lock ) {
+void TimerTask::setScheduledTime(long long time) {
+    synchronized(&lock) {
         this->scheduledTime = time;
     }
 }
@@ -77,7 +75,7 @@ long long TimerTask::getWhen() const {
 
     long long result = 0;
 
-    synchronized( &lock ) {
+    synchronized(&lock) {
         result = this->when;
     }
 

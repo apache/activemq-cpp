@@ -60,8 +60,8 @@ namespace util {
 
     private:
 
-        Timer( const Timer& );
-        Timer operator= ( const Timer& );
+        Timer(const Timer&);
+        Timer operator=(const Timer&);
 
     public:
 
@@ -124,7 +124,7 @@ namespace util {
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
          * @throw IllegalStateException - if task was already scheduled or canceled, or timer was canceled.
          */
-        void schedule( TimerTask* task, long long delay );
+        void schedule(TimerTask* task, long long delay);
 
         /**
          * Schedules the specified task for execution after the specified delay.
@@ -136,7 +136,7 @@ namespace util {
          * @throw IllegalArgumentException - if delay is negative, or delay + System.currentTimeMillis() is negative.
          * @throw IllegalStateException - if task was already scheduled or canceled, or timer was canceled.
          */
-        void schedule( const decaf::lang::Pointer<TimerTask>& task, long long delay );
+        void schedule(const decaf::lang::Pointer<TimerTask>& task, long long delay);
 
         /**
          * Schedules the specified task for execution at the specified time. If the time is in the past, the
@@ -157,7 +157,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( TimerTask* task, const Date& time );
+        void schedule(TimerTask* task, const Date& time);
 
         /**
          * Schedules the specified task for execution at the specified time. If the time is in the past, the
@@ -171,7 +171,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( const decaf::lang::Pointer<TimerTask>& task, const Date& time );
+        void schedule(const decaf::lang::Pointer<TimerTask>& task, const Date& time);
 
         /**
          * Schedules the specified task for repeated fixed-delay execution, beginning after the specified delay.
@@ -205,7 +205,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( TimerTask* task, long long delay, long long period );
+        void schedule(TimerTask* task, long long delay, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-delay execution, beginning after the specified delay.
@@ -232,7 +232,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period );
+        void schedule(const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-delay execution, beginning at the specified time.
@@ -266,7 +266,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( TimerTask* task, const Date& firstTime, long long period );
+        void schedule(TimerTask* task, const Date& firstTime, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-delay execution, beginning at the specified time.
@@ -293,7 +293,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void schedule( const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period );
+        void schedule(const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-rate execution, beginning after the specified delay.
@@ -328,7 +328,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void scheduleAtFixedRate( TimerTask* task, long long delay, long long period );
+        void scheduleAtFixedRate(TimerTask* task, long long delay, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-rate execution, beginning after the specified delay.
@@ -356,7 +356,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void scheduleAtFixedRate( const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period );
+        void scheduleAtFixedRate(const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-rate execution, beginning at the specified time.
@@ -391,7 +391,7 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void scheduleAtFixedRate( TimerTask* task, const Date& firstTime, long long period );
+        void scheduleAtFixedRate(TimerTask* task, const Date& firstTime, long long period);
 
         /**
          * Schedules the specified task for repeated fixed-rate execution, beginning at the specified time.
@@ -419,11 +419,11 @@ namespace util {
          * @throw IllegalStateException - if task was already scheduled or canceled, timer was canceled, or
          *                                timer thread terminated.
          */
-        void scheduleAtFixedRate( const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period );
+        void scheduleAtFixedRate(const decaf::lang::Pointer<TimerTask>& task, const Date& firstTime, long long period);
 
     private:
 
-        void scheduleTask( const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period, bool fixed );
+        void scheduleTask(const decaf::lang::Pointer<TimerTask>& task, long long delay, long long period, bool fixed);
 
     };
 
