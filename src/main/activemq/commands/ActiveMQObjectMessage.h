@@ -40,30 +40,37 @@ namespace commands{
 
     private:
 
-        ActiveMQObjectMessage( const ActiveMQObjectMessage& );
-        ActiveMQObjectMessage& operator= ( const ActiveMQObjectMessage& );
+        ActiveMQObjectMessage(const ActiveMQObjectMessage&);
+        ActiveMQObjectMessage& operator=(const ActiveMQObjectMessage&);
 
     public:
 
         ActiveMQObjectMessage();
 
-        virtual ~ActiveMQObjectMessage() throw() {}
+        virtual ~ActiveMQObjectMessage() throw () {
+        }
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQObjectMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-    public:  // cms::Message
+    public: // cms::Message
 
         virtual cms::Message* clone() const {
-            return dynamic_cast<cms::Message*>( this->cloneDataStructure() );
+            return dynamic_cast<cms::Message*> (this->cloneDataStructure());
         }
+
+    public: // cms::ObjectMessage
+
+        virtual void setObjectBytes(const std::vector<unsigned char>& bytes);
+
+        virtual std::vector<unsigned char> getObjectBytes() const;
 
     };
 
