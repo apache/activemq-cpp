@@ -20,16 +20,17 @@
 
 #include <cms/Message.h>
 
-namespace activemq{
-namespace cmsutil{
+namespace activemq {
+namespace cmsutil {
 
-    class DummyMessage : public cms::Message
-    {
+    class DummyMessage: public cms::Message {
     public:
 
         virtual ~DummyMessage() {}
 
-        virtual Message* clone() const { return NULL; }
+        virtual Message* clone() const {
+            return NULL;
+        }
 
         virtual void acknowledge() const {}
 
@@ -37,107 +38,123 @@ namespace cmsutil{
 
         virtual void clearProperties() {}
 
-        virtual std::vector<std::string> getPropertyNames() const throw ( cms::CMSException ) {
+        virtual std::vector<std::string> getPropertyNames() const throw (cms::CMSException) {
             return std::vector<std::string>();
         }
 
-        virtual bool propertyExists( const std::string& name ) const throw ( cms::CMSException ) {
+        virtual bool propertyExists(const std::string& name) const throw (cms::CMSException) {
             return false;
         }
 
-        virtual bool getBooleanProperty( const std::string& name ) const {
+        virtual ValueType getPropertyValueType(const std::string& name) const {
+            return cms::Message::NULL_TYPE;
+        }
+
+        virtual bool getBooleanProperty(const std::string& name) const {
             return false;
         }
 
-        virtual unsigned char getByteProperty( const std::string& name ) const {
-            return (unsigned char)0;
+        virtual unsigned char getByteProperty(const std::string& name) const {
+            return (unsigned char) 0;
         }
-        virtual double getDoubleProperty( const std::string& name ) const {
+        virtual double getDoubleProperty(const std::string& name) const {
             return 0.0;
         }
 
-        virtual float getFloatProperty( const std::string& name ) const {
+        virtual float getFloatProperty(const std::string& name) const {
             return 0.0f;
         }
 
-        virtual int getIntProperty( const std::string& name ) const {
+        virtual int getIntProperty(const std::string& name) const {
             return 0;
         }
-        virtual long long getLongProperty( const std::string& name ) const {
+        virtual long long getLongProperty(const std::string& name) const {
             return 0LL;
         }
 
-        virtual short getShortProperty( const std::string& name ) const {
+        virtual short getShortProperty(const std::string& name) const {
             return 0;
         }
 
-        virtual std::string getStringProperty( const std::string& name ) const {
+        virtual std::string getStringProperty(const std::string& name) const {
             return "";
         }
 
-        virtual void setBooleanProperty( const std::string& name,
-            bool value ) {}
+        virtual void setBooleanProperty(const std::string& name, bool value) {}
 
-        virtual void setByteProperty( const std::string& name,
-            unsigned char value ) {}
+        virtual void setByteProperty(const std::string& name, unsigned char value) {}
 
-        virtual void setDoubleProperty( const std::string& name,
-            double value ) {}
+        virtual void setDoubleProperty(const std::string& name, double value) {}
 
-        virtual void setFloatProperty( const std::string& name,
-            float value ) {}
+        virtual void setFloatProperty(const std::string& name, float value) {}
 
-        virtual void setIntProperty( const std::string& name,
-            int value ) {}
+        virtual void setIntProperty(const std::string& name, int value) {}
 
-        virtual void setLongProperty( const std::string& name,
-            long long value ) {}
+        virtual void setLongProperty(const std::string& name, long long value) {}
 
-        virtual void setShortProperty( const std::string& name,
-            short value ) {}
+        virtual void setShortProperty(const std::string& name, short value) {}
 
-        virtual void setStringProperty( const std::string& name,
-            const std::string& value ) {}
+        virtual void setStringProperty(const std::string& name, const std::string& value) {}
 
-        virtual std::string getCMSCorrelationID() const {return "";}
+        virtual std::string getCMSCorrelationID() const {
+            return "";
+        }
 
-        virtual void setCMSCorrelationID( const std::string& correlationId ) {}
+        virtual void setCMSCorrelationID(const std::string& correlationId) {}
 
-        virtual int getCMSDeliveryMode() const { return 0; }
+        virtual int getCMSDeliveryMode() const {
+            return 0;
+        }
 
-        virtual void setCMSDeliveryMode( int mode ) {}
+        virtual void setCMSDeliveryMode(int mode) {}
 
-        virtual const cms::Destination* getCMSDestination() const { return NULL; }
+        virtual const cms::Destination* getCMSDestination() const {
+            return NULL;
+        }
 
-        virtual void setCMSDestination( const cms::Destination* destination ) {}
+        virtual void setCMSDestination(const cms::Destination* destination) {}
 
-        virtual long long getCMSExpiration() const { return 0LL; }
+        virtual long long getCMSExpiration() const {
+            return 0LL;
+        }
 
-        virtual void setCMSExpiration( long long expireTime ) {}
+        virtual void setCMSExpiration(long long expireTime) {}
 
-        virtual std::string getCMSMessageID() const { return ""; }
+        virtual std::string getCMSMessageID() const {
+            return "";
+        }
 
-        virtual void setCMSMessageID( const std::string& id ) {}
+        virtual void setCMSMessageID(const std::string& id) {}
 
-        virtual int getCMSPriority() const { return 0; }
+        virtual int getCMSPriority() const {
+            return 0;
+        }
 
-        virtual void setCMSPriority( int priority ) {}
+        virtual void setCMSPriority(int priority) {}
 
-        virtual bool getCMSRedelivered() const { return false; }
+        virtual bool getCMSRedelivered() const {
+            return false;
+        }
 
-        virtual void setCMSRedelivered( bool redelivered ) {}
+        virtual void setCMSRedelivered(bool redelivered) {}
 
-        virtual const cms::Destination* getCMSReplyTo() const { return NULL; }
+        virtual const cms::Destination* getCMSReplyTo() const {
+            return NULL;
+        }
 
-        virtual void setCMSReplyTo( const cms::Destination* destination ) {}
+        virtual void setCMSReplyTo(const cms::Destination* destination) {}
 
-        virtual long long getCMSTimestamp() const { return 0LL; }
+        virtual long long getCMSTimestamp() const {
+            return 0LL;
+        }
 
-        virtual void setCMSTimestamp( long long timeStamp ) {}
+        virtual void setCMSTimestamp(long long timeStamp) {}
 
-        virtual std::string getCMSType() const { return ""; }
+        virtual std::string getCMSType() const {
+            return "";
+        }
 
-        virtual void setCMSType( const std::string& type ) {}
+        virtual void setCMSType(const std::string& type) {}
 
     };
 }}
