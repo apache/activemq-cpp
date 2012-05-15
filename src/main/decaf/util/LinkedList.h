@@ -65,18 +65,16 @@ namespace util {
 
         private:
 
-            ListNode( const ListNode& );
-            ListNode& operator= ( const ListNode& );
+            ListNode(const ListNode&);
+            ListNode& operator=(const ListNode&);
 
         public:
 
-            ListNode() : value(), prev(NULL), next(NULL) {
-            }
+            ListNode() : value(), prev(NULL), next(NULL) {}
 
-            ListNode( const U& value ) : value(value), prev(NULL), next(NULL) {
-            }
+            ListNode(const U& value) : value(value), prev(NULL), next(NULL) {}
 
-            ListNode( ListNode<U>* prev, ListNode<U>* next, const U& value ) :
+            ListNode(ListNode<U>* prev, ListNode<U>* next, const U& value) :
                 value(value), prev(prev), next(next) {
             }
 
@@ -90,29 +88,26 @@ namespace util {
 
     public:
 
-        LinkedList() :
-            AbstractSequentialList<E>(), listSize(0), head(), tail() {
+        LinkedList() : AbstractSequentialList<E>(), listSize(0), head(), tail() {
 
             this->head.next = &this->tail;
             this->tail.prev = &this->head;
         }
 
-        LinkedList( const LinkedList<E>& list ) :
-            AbstractSequentialList<E>(), listSize(0), head(), tail() {
+        LinkedList(const LinkedList<E>& list) : AbstractSequentialList<E>(), listSize(0), head(), tail() {
 
             this->head.next = &this->tail;
             this->tail.prev = &this->head;
 
-            this->addAllAtLocation( 0, list );
+            this->addAllAtLocation(0, list);
         }
 
-        LinkedList( const Collection<E>& collection ) :
-            AbstractSequentialList<E>(), listSize(0), head(), tail() {
+        LinkedList(const Collection<E>& collection) : AbstractSequentialList<E>(), listSize(0), head(), tail() {
 
             this->head.next = &this->tail;
             this->tail.prev = &this->head;
 
-            this->addAllAtLocation( 0, collection );
+            this->addAllAtLocation(0, collection);
         }
 
         virtual ~LinkedList() {
@@ -123,37 +118,37 @@ namespace util {
 
     public:
 
-        LinkedList<E>& operator= ( const LinkedList<E>& list ) {
+        LinkedList<E>& operator=(const LinkedList<E>& list) {
             this->clear();
-            this->addAllAtLocation( 0, list );
+            this->addAllAtLocation(0, list);
             return *this;
         }
 
-        LinkedList<E>& operator= ( const Collection<E>& collection ) {
+        LinkedList<E>& operator=(const Collection<E>& collection) {
             this->clear();
-            this->addAllAtLocation( 0, collection );
+            this->addAllAtLocation(0, collection);
             return *this;
         }
 
     public:
 
-        virtual E get( int index ) const {
+        virtual E get(int index) const {
 
-            if( index < 0 || index >= this->listSize ) {
+            if (index < 0 || index >= this->listSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Index given is outside bounds of this list {%d}", index );
             }
 
             const ListNode<E>* location = NULL;
 
-            if( index < this->listSize / 2 ) {
+            if (index < this->listSize / 2) {
                 location = &this->head;
-                for( int i = 0; i <= index; ++i ) {
+                for (int i = 0; i <= index; ++i) {
                     location = location->next;
                 }
             } else {
                 location = &this->tail;
-                for( int i = this->listSize; i > index; --i ) {
+                for (int i = this->listSize; i > index; --i) {
                     location = location->prev;
                 }
             }
@@ -161,23 +156,23 @@ namespace util {
             return location->value;
         }
 
-        virtual E set( int index, const E& element ) {
+        virtual E set(int index, const E& element) {
 
-            if( index < 0 || index >= this->listSize ) {
+            if (index < 0 || index >= this->listSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Index given is outside bounds of this list {%d}", index );
             }
 
             ListNode<E>* location = NULL;
 
-            if( index < this->listSize / 2 ) {
+            if (index < this->listSize / 2) {
                 location = &this->head;
-                for( int i = 0; i <= index; ++i ) {
+                for (int i = 0; i <= index; ++i) {
                     location = location->next;
                 }
             } else {
                 location = &this->tail;
-                for( int i = this->listSize; i > index; --i ) {
+                for (int i = this->listSize; i > index; --i) {
                     location = location->prev;
                 }
             }
@@ -188,36 +183,36 @@ namespace util {
             return oldValue;
         }
 
-        virtual bool add( const E& value ) {
-            this->addToEnd( value );
+        virtual bool add(const E& value) {
+            this->addToEnd(value);
             return true;
         }
 
-        virtual void add( int index, const E& value ) {
+        virtual void add(int index, const E& value) {
 
-            if( index < 0 || index > this->listSize ) {
+            if (index < 0 || index > this->listSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Index given is outside bounds of this list {%d}", index );
             }
 
-            this->addAtLocation( index, value );
+            this->addAtLocation(index, value);
         }
 
-        virtual bool addAll( const Collection<E>& collection ) {
-            return this->addAllAtLocation( this->listSize, collection );
+        virtual bool addAll(const Collection<E>& collection) {
+            return this->addAllAtLocation(this->listSize, collection);
         }
 
-        virtual bool addAll( int index, const Collection<E>& collection ) {
-            return this->addAllAtLocation( index, collection );
+        virtual bool addAll(int index, const Collection<E>& collection) {
+            return this->addAllAtLocation(index, collection);
         }
 
-        virtual void copy( const Collection<E>& collection ) {
+        virtual void copy(const Collection<E>& collection) {
             this->clear();
-            this->addAllAtLocation( 0, collection );
+            this->addAllAtLocation(0, collection);
         }
 
-        virtual bool remove( const E& value ) {
-            return this->removeFirstOccurrence( value );
+        virtual bool remove(const E& value) {
+            return this->removeFirstOccurrence(value);
         }
 
         virtual bool isEmpty() const {
@@ -236,20 +231,20 @@ namespace util {
             AbstractList<E>::modCount++;
         }
 
-        virtual bool contains( const E& value ) const {
-            return this->indexOf( value ) != -1;
+        virtual bool contains(const E& value) const {
+            return this->indexOf(value) != -1;
         }
 
-        virtual int indexOf( const E& value ) const {
+        virtual int indexOf(const E& value) const {
 
-            if( this->listSize == 0 ) {
+            if (this->listSize == 0) {
                 return -1;
             }
 
             const ListNode<E>* location = this->head.next;
 
-            for( int i = 0; location != &this->tail; ++i, location = location->next ) {
-                if( location->value == value ) {
+            for (int i = 0; location != &this->tail; ++i, location = location->next) {
+                if (location->value == value) {
                     return i;
                 }
             }
@@ -257,16 +252,16 @@ namespace util {
             return -1;
         }
 
-        virtual int lastIndexOf( const E& value ) const {
+        virtual int lastIndexOf(const E& value) const {
 
-            if( this->listSize == 0 ) {
+            if (this->listSize == 0) {
                 return -1;
             }
 
             const ListNode<E>* location = this->tail.prev;
 
-            for( int i = this->listSize - 1; location != &this->head; --i, location = location->prev ) {
-                if( location->value == value ) {
+            for (int i = this->listSize - 1; location != &this->head; --i, location = location->prev) {
+                if (location->value == value) {
                     return i;
                 }
             }
@@ -277,12 +272,12 @@ namespace util {
         virtual std::vector<E> toArray() const {
 
             std::vector<E> result;
-            result.reserve( this->listSize );
+            result.reserve(this->listSize);
 
             const ListNode<E>* current = this->head.next;
 
-            while( current != &this->tail ) {
-                result.push_back( current->value );
+            while (current != &this->tail) {
+                result.push_back(current->value);
                 current = current->next;
             }
 
@@ -291,14 +286,14 @@ namespace util {
 
     public:  // Deque interface implementation.
 
-        virtual bool offer( const E& value ) {
-            this->addLast( value );
+        virtual bool offer(const E& value) {
+            this->addLast(value);
             return true;
         }
 
-        virtual bool poll( E& result ) {
+        virtual bool poll(E& result) {
 
-            if( this->listSize == 0 ) {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -311,9 +306,9 @@ namespace util {
             return this->removeAtFront();
         }
 
-        virtual bool peek( E& result ) const {
+        virtual bool peek(E& result) const {
 
-            if( this->listSize == 0 ) {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -322,65 +317,60 @@ namespace util {
         }
 
         virtual E element() const {
-            if( this->listSize == 0 ) {
-                throw decaf::util::NoSuchElementException(
-                    __FILE__, __LINE__, "The list is Empty" );
+            if (this->listSize == 0) {
+                throw decaf::util::NoSuchElementException(__FILE__, __LINE__, "The list is Empty");
             }
 
             return this->head.next->value;
         }
 
-        virtual void addFirst( const E& value ) {
-            this->addToFront( value );
+        virtual void addFirst(const E& value) {
+            this->addToFront(value);
         }
 
-        virtual void addLast( const E& value ) {
-            this->addToEnd( value );
+        virtual void addLast(const E& value) {
+            this->addToEnd(value);
         }
 
         virtual E& getFirst() {
-            if( this->listSize == 0 ) {
-                throw decaf::util::NoSuchElementException(
-                    __FILE__, __LINE__, "The list is Empty" );
+            if (this->listSize == 0) {
+                throw decaf::util::NoSuchElementException(__FILE__, __LINE__, "The list is Empty");
             }
 
             return this->head.next->value;
         }
 
         virtual const E& getFirst() const {
-            if( this->listSize == 0 ) {
-                throw decaf::util::NoSuchElementException(
-                    __FILE__, __LINE__, "The list is Empty" );
+            if (this->listSize == 0) {
+                throw decaf::util::NoSuchElementException(__FILE__, __LINE__, "The list is Empty");
             }
 
             return this->head.next->value;
         }
 
         virtual E& getLast() {
-            if( this->listSize == 0 ) {
-                throw decaf::util::NoSuchElementException(
-                    __FILE__, __LINE__, "The list is Empty" );
+            if (this->listSize == 0) {
+                throw decaf::util::NoSuchElementException(__FILE__, __LINE__, "The list is Empty");
             }
 
             return this->tail.prev->value;
         }
 
         virtual const E& getLast() const {
-            if( this->listSize == 0 ) {
-                throw decaf::util::NoSuchElementException(
-                    __FILE__, __LINE__, "The list is Empty" );
+            if (this->listSize == 0) {
+                throw decaf::util::NoSuchElementException(__FILE__, __LINE__, "The list is Empty");
             }
 
             return this->tail.prev->value;
         }
 
-        virtual bool offerFirst( const E& element ) {
-            this->addToFront( element );
+        virtual bool offerFirst(const E& element) {
+            this->addToFront(element);
             return true;
         }
 
-        virtual bool offerLast( const E& element ) {
-            this->addToEnd( element );
+        virtual bool offerLast(const E& element) {
+            this->addToEnd(element);
             return true;
         }
 
@@ -392,8 +382,8 @@ namespace util {
             return this->removeAtEnd();
         }
 
-        virtual bool pollFirst( E& result ) {
-            if( this->listSize == 0 ) {
+        virtual bool pollFirst(E& result) {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -402,8 +392,8 @@ namespace util {
             return true;
         }
 
-        virtual bool pollLast( E& result ) {
-            if( this->listSize == 0 ) {
+        virtual bool pollLast(E& result) {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -412,8 +402,8 @@ namespace util {
             return true;
         }
 
-        virtual bool peekFirst( E& result ) const {
-            if( this->listSize == 0 ) {
+        virtual bool peekFirst(E& result) const {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -421,8 +411,8 @@ namespace util {
             return true;
         }
 
-        virtual bool peekLast( E& result ) const {
-            if( this->listSize == 0 ) {
+        virtual bool peekLast(E& result) const {
+            if (this->listSize == 0) {
                 return false;
             }
 
@@ -434,14 +424,14 @@ namespace util {
             return this->removeAtFront();
         }
 
-        virtual void push( const E& element ) {
-            this->addToFront( element );
+        virtual void push(const E& element) {
+            this->addToFront(element);
         }
 
-        virtual bool removeFirstOccurrence( const E& value ) {
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( iter->next() == value ) {
+        virtual bool removeFirstOccurrence(const E& value) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                if (iter->next() == value) {
                     iter->remove();
                     return true;
                 }
@@ -449,10 +439,11 @@ namespace util {
 
             return false;
         }
-        virtual bool removeLastOccurrence( const E& value ) {
-            std::auto_ptr< Iterator<E> > iter( this->descendingIterator() );
-            while( iter->hasNext() ) {
-                if( iter->next() == value ) {
+
+        virtual bool removeLastOccurrence(const E& value) {
+            std::auto_ptr<Iterator<E> > iter(this->descendingIterator());
+            while (iter->hasNext()) {
+                if (iter->next() == value) {
                     iter->remove();
                     return true;
                 }
@@ -474,20 +465,20 @@ namespace util {
 
         private:
 
-            LinkedListIterator( const LinkedListIterator& );
-            LinkedListIterator operator= ( const LinkedListIterator& );
+            LinkedListIterator(const LinkedListIterator&);
+            LinkedListIterator operator=(const LinkedListIterator&);
 
         public:
 
-            LinkedListIterator( LinkedList<E>* list, int index ) :
+            LinkedListIterator(LinkedList<E>* list, int index) :
                 ListIterator<E>(), list(list), current(NULL), lastReturned(NULL), index(-1), expectedModCount(0) {
 
-                if( list == NULL ) {
+                if (list == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "Parent LinkedList pointer was Null." );
                 }
 
-                if( index < 0 || index > list->listSize ) {
+                if (index < 0 || index > list->listSize) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
                         __FILE__, __LINE__, "Given index {%d} is out of range.", index );
                 }
@@ -498,14 +489,14 @@ namespace util {
                 // list is empty.  We always want to start out one before so that the call
                 // to next moves us onto the element in question;
 
-                if( index < this->list->listSize / 2 ) {
+                if (index < this->list->listSize / 2) {
                     this->current = &this->list->head;
-                    for( this->index = -1; this->index + 1 < index; ++this->index ) {
+                    for (this->index = -1; this->index + 1 < index; ++this->index) {
                         this->current = this->current->next;
                     }
                 } else {
                     this->current = &this->list->tail;
-                    for( this->index = this->list->listSize; this->index >= index; --this->index ) {
+                    for (this->index = this->list->listSize; this->index >= index; --this->index) {
                         this->current = this->current->prev;
                     }
                 }
@@ -515,12 +506,12 @@ namespace util {
 
             virtual E next() {
 
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( this->current->next == &(this->list->tail) ) {
+                if (this->current->next == &(this->list->tail)) {
                     throw NoSuchElementException(
                         __FILE__, __LINE__, "No more elements to return from next()" );
                 }
@@ -533,17 +524,17 @@ namespace util {
             }
 
             virtual bool hasNext() const {
-                return ( this->current->next != &(this->list->tail) );
+                return (this->current->next != &this->list->tail);
             }
 
 
             virtual E previous() {
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( this->current == &(this->list->head) ) {
+                if (this->current == &(this->list->head)) {
                     throw decaf::lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
                         "No previous element, must call next() before calling previous()." );
@@ -557,16 +548,16 @@ namespace util {
             }
 
             virtual bool hasPrevious() const {
-                return ( this->current != &(this->list->head) );
+                return (this->current != &this->list->head);
             }
 
             virtual void remove() {
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( this->lastReturned == NULL ) {
+                if (this->lastReturned == NULL) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
                         "Invalid State to call remove, must call next() before remove()" );
@@ -579,7 +570,7 @@ namespace util {
                 previous->next = next;
 
                 // When iterating in reverse this would not be true
-                if( this->current == this->lastReturned ) {
+                if (this->current == this->lastReturned) {
                     this->index--;
                 }
                 this->current = previous;
@@ -593,8 +584,8 @@ namespace util {
                 this->expectedModCount++;
             }
 
-            virtual void add( const E& e ) {
-                if( this->expectedModCount != this->list->modCount ) {
+            virtual void add(const E& e) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
@@ -613,14 +604,14 @@ namespace util {
                 this->list->listSize++;
             }
 
-            virtual void set( const E& e ) {
+            virtual void set(const E& e) {
 
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( this->lastReturned != NULL ) {
+                if (this->lastReturned != NULL) {
                     this->lastReturned->value = e;
                 } else {
                     throw decaf::lang::exceptions::IllegalStateException(
@@ -647,20 +638,20 @@ namespace util {
 
         private:
 
-            ConstLinkedListIterator( const ConstLinkedListIterator& );
-            ConstLinkedListIterator operator= ( const ConstLinkedListIterator& );
+            ConstLinkedListIterator(const ConstLinkedListIterator&);
+            ConstLinkedListIterator operator=(const ConstLinkedListIterator&);
 
         public:
 
-            ConstLinkedListIterator( const LinkedList<E>* list, int index ) :
+            ConstLinkedListIterator(const LinkedList<E>* list, int index) :
                 ListIterator<E>(), list(list), current(NULL), lastReturned(NULL), index(-1) {
 
-                if( list == NULL ) {
+                if (list == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "Parent LinkedList pointer was Null." );
                 }
 
-                if( index < 0 || index > list->listSize ) {
+                if (index < 0 || index > list->listSize) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
                         __FILE__, __LINE__, "Given index {%d} is out of range.", index );
                 }
@@ -669,14 +660,14 @@ namespace util {
                 // list is empty.  We always want to start out one before so that the call
                 // to next moves us onto the element in question;
 
-                if( index < this->list->listSize / 2 ) {
+                if (index < this->list->listSize / 2) {
                     this->current = &this->list->head;
-                    for( this->index = -1; this->index + 1 < index; ++this->index ) {
+                    for (this->index = -1; this->index + 1 < index; ++this->index) {
                         this->current = this->current->next;
                     }
                 } else {
                     this->current = &this->list->tail;
-                    for( this->index = this->list->listSize; this->index >= index; --this->index ) {
+                    for (this->index = this->list->listSize; this->index >= index; --this->index) {
                         this->current = this->current->prev;
                     }
                 }
@@ -686,7 +677,7 @@ namespace util {
 
             virtual E next() {
 
-                if( this->current->next == &(this->list->tail) ) {
+                if (this->current->next == &(this->list->tail)) {
                     throw NoSuchElementException(
                         __FILE__, __LINE__, "No more elements to return from this ListIterator" );
                 }
@@ -699,12 +690,12 @@ namespace util {
             }
 
             virtual bool hasNext() const {
-                return ( this->current->next != &(this->list->tail) );
+                return (this->current->next != &(this->list->tail));
             }
 
             virtual E previous() {
 
-                if( this->current == &(this->list->head) ) {
+                if (this->current == &(this->list->head)) {
                     throw decaf::lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
                         "No previous element, must call next() before calling previous()." );
@@ -718,7 +709,7 @@ namespace util {
             }
 
             virtual bool hasPrevious() const {
-                return ( this->current != &(this->list->head) );
+                return (this->current != &(this->list->head));
             }
 
             virtual void remove() {
@@ -755,15 +746,15 @@ namespace util {
 
         private:
 
-            ReverseIterator( const ReverseIterator& );
-            ReverseIterator operator= ( const ReverseIterator& );
+            ReverseIterator(const ReverseIterator&);
+            ReverseIterator operator=(const ReverseIterator&);
 
         public:
 
-            ReverseIterator( LinkedList<E>* list ) :
-                Iterator<E>(), list( list ), current(NULL), expectedModCount(0), canRemove(false) {
+            ReverseIterator(LinkedList<E>* list) :
+                Iterator<E>(), list(list), current(NULL), expectedModCount(0), canRemove(false) {
 
-                if( list == NULL ) {
+                if (list == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "Parent LinkedList pointer was Null." );
                 }
@@ -780,12 +771,12 @@ namespace util {
 
             virtual E next() {
 
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( this->current->prev == &(this->list->head) ) {
+                if (this->current->prev == &(this->list->head)) {
                     throw NoSuchElementException(
                         __FILE__, __LINE__, "No more elements to return from next()" );
                 }
@@ -797,12 +788,12 @@ namespace util {
             }
 
             virtual void remove() {
-                if( this->expectedModCount != this->list->modCount ) {
+                if (this->expectedModCount != this->list->modCount) {
                     throw ConcurrentModificationException(
                         __FILE__, __LINE__, "List modified outside of this Iterator." );
                 }
 
-                if( !this->canRemove ) {
+                if (!this->canRemove) {
                     throw lang::exceptions::IllegalStateException(
                         __FILE__, __LINE__,
                         "Invalid State to call remove, must call next() before remove()" );
@@ -833,15 +824,14 @@ namespace util {
 
         private:
 
-            ConstReverseIterator( const ConstReverseIterator& );
-            ConstReverseIterator operator= ( const ConstReverseIterator& );
+            ConstReverseIterator(const ConstReverseIterator&);
+            ConstReverseIterator operator=(const ConstReverseIterator&);
 
         public:
 
-            ConstReverseIterator( const LinkedList<E>* list ) :
-                Iterator<E>(), list( list ), current(NULL) {
+            ConstReverseIterator(const LinkedList<E>* list) : Iterator<E>(), list(list), current(NULL) {
 
-                if( list == NULL ) {
+                if (list == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
                         __FILE__, __LINE__, "Parent LinkedList pointer was Null." );
                 }
@@ -857,7 +847,7 @@ namespace util {
 
             virtual E next() {
 
-                if( this->current->prev == &(this->list->head) ) {
+                if (this->current->prev == &(this->list->head)) {
                     throw NoSuchElementException(
                         __FILE__, __LINE__, "No more elements to return from next()" );
                 }
@@ -877,25 +867,25 @@ namespace util {
 
         using AbstractSequentialList<E>::listIterator;
 
-        virtual ListIterator<E>* listIterator( int index ) {
-            return new LinkedListIterator( this, index );
+        virtual ListIterator<E>* listIterator(int index) {
+            return new LinkedListIterator(this, index);
         }
-        virtual ListIterator<E>* listIterator( int index ) const {
-            return new ConstLinkedListIterator( this, index );
+        virtual ListIterator<E>* listIterator(int index) const {
+            return new ConstLinkedListIterator(this, index);
         }
 
         virtual Iterator<E>* descendingIterator() {
-            return new ReverseIterator( this );
+            return new ReverseIterator(this);
         }
         virtual Iterator<E>* descendingIterator() const {
-            return new ConstReverseIterator( this );
+            return new ConstReverseIterator(this);
         }
 
     private:
 
         E removeAtFront() {
 
-            if( this->head.next == &this->tail ) {
+            if (this->head.next == &this->tail) {
                 throw NoSuchElementException(
                     __FILE__, __LINE__, "The Collection is empty." );
             }
@@ -916,7 +906,7 @@ namespace util {
 
         E removeAtEnd() {
 
-            if( this->head.next == &this->tail ) {
+            if (this->head.next == &this->tail) {
                 throw NoSuchElementException(
                     __FILE__, __LINE__, "The Collection is empty." );
             }
@@ -935,9 +925,9 @@ namespace util {
             return result;
         }
 
-        void addToFront( const E& value ) {
+        void addToFront(const E& value) {
 
-            ListNode<E>* newHead = new ListNode<E>( &this->head, this->head.next, value );
+            ListNode<E>* newHead = new ListNode<E> (&this->head, this->head.next, value);
 
             (this->head.next)->prev = newHead;
             this->head.next = newHead;
@@ -946,9 +936,9 @@ namespace util {
             AbstractList<E>::modCount++;
         }
 
-        void addToEnd( const E& value ) {
+        void addToEnd(const E& value) {
 
-            ListNode<E>* newTail = new ListNode<E>( this->tail.prev, &this->tail, value );
+            ListNode<E>* newTail = new ListNode<E> (this->tail.prev, &this->tail, value);
 
             (this->tail.prev)->next = newTail;
             this->tail.prev = newTail;
@@ -957,23 +947,23 @@ namespace util {
             AbstractList<E>::modCount++;
         }
 
-        void addAtLocation( int index, const E& value ) {
+        void addAtLocation(int index, const E& value) {
 
             ListNode<E>* location = NULL;
 
-            if( index <= this->listSize / 2 ) {
+            if (index <= this->listSize / 2) {
                 location = this->head.next;
-                for( int i = 0; i < index; ++i ) {
+                for (int i = 0; i < index; ++i) {
                     location = location->next;
                 }
             } else {
                 location = &this->tail;
-                for( int i = this->listSize; i > index; --i ) {
+                for (int i = this->listSize; i > index; --i) {
                     location = location->prev;
                 }
             }
 
-            ListNode<E>* newNode = new ListNode<E>( location->prev, location, value );
+            ListNode<E>* newNode = new ListNode<E> (location->prev, location, value);
 
             (location->prev)->next = newNode;
             location->prev = newNode;
@@ -982,45 +972,45 @@ namespace util {
             AbstractList<E>::modCount++;
         }
 
-        bool addAllAtLocation( int index, const Collection<E>& collection ) {
+        bool addAllAtLocation(int index, const Collection<E>& collection) {
 
-            if( index < 0 || index > this->listSize ) {
+            if (index < 0 || index > this->listSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "Index for add is outside bounds of this LinkedList." );
             }
 
             int csize = collection.size();
-            if( csize == 0 ) {
+            if (csize == 0) {
                 return false;
             }
 
-            std::auto_ptr< ArrayList<E> > copy;
-            std::auto_ptr< Iterator<E> > iter;
+            std::auto_ptr<ArrayList<E> > copy;
+            std::auto_ptr<Iterator<E> > iter;
 
-            if( this == &collection ) {
-                copy.reset( new ArrayList<E>( collection ) );
-                iter.reset( copy->iterator() );
+            if (this == &collection) {
+                copy.reset(new ArrayList<E> (collection));
+                iter.reset(copy->iterator());
             } else {
-                iter.reset( collection.iterator() );
+                iter.reset(collection.iterator());
             }
 
             ListNode<E>* newNode = NULL;
             ListNode<E>* previous = NULL;
 
-            if( index < this->listSize / 2 ) {
+            if (index < this->listSize / 2) {
                 previous = &this->head;
-                for( int i = 0; i < index; ++i ) {
+                for (int i = 0; i < index; ++i) {
                     previous = previous->next;
                 }
             } else {
                 previous = &this->tail;
-                for( int i = this->listSize; i >= index; --i ) {
+                for (int i = this->listSize; i >= index; --i) {
                     previous = previous->prev;
                 }
             }
 
-            while( iter->hasNext() ) {
-                newNode = new ListNode<E>( previous, previous->next, iter->next() );
+            while (iter->hasNext()) {
+                newNode = new ListNode<E> (previous, previous->next, iter->next());
                 previous->next->prev = newNode;
                 previous->next = newNode;
                 previous = newNode;
@@ -1035,7 +1025,7 @@ namespace util {
         void purgeList() {
             ListNode<E>* current = this->head.next;
             ListNode<E>* temp = NULL;
-            while( current != &this->tail ) {
+            while (current != &this->tail) {
                 temp = current;
                 current = current->next;
                 delete temp;
