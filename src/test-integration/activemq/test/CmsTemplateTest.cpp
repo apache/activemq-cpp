@@ -49,24 +49,24 @@ namespace test {
 
     public:
 
-        TextMessageCreator( const std::string& text) {
+        TextMessageCreator(const std::string& text) {
             this->text = text;
         }
 
-        virtual ~TextMessageCreator() {}
+        virtual ~TextMessageCreator() {
+        }
 
         std::string getText() const {
             return text;
         }
 
-        virtual cms::Message* createMessage( cms::Session* session )
-            throw ( cms::CMSException ) {
+        virtual cms::Message* createMessage(cms::Session* session) throw (cms::CMSException) {
 
             return session->createTextMessage(text);
         }
     };
 
-    class Sender : public decaf::lang::Runnable {
+    class Sender: public decaf::lang::Runnable {
     private:
 
         activemq::core::ActiveMQConnectionFactory cf;
@@ -75,7 +75,7 @@ namespace test {
 
     public:
 
-        Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
+        Sender(const std::string& url, bool pubSub, const std::string& destName, int count) {
             cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
@@ -84,7 +84,7 @@ namespace test {
             this->count = count;
         }
 
-        virtual ~Sender(){
+        virtual ~Sender() {
         }
 
         virtual void run() {
@@ -92,17 +92,17 @@ namespace test {
 
                 // Send a batch of messages.
                 TextMessageCreator tmc("hello world");
-                for( int ix=0; ix<count; ++ix ) {
-                    cmsTemplate.send( &tmc );
+                for (int ix = 0; ix < count; ++ix) {
+                    cmsTemplate.send(&tmc);
                 }
 
-            } catch( cms::CMSException& ex) {
+            } catch (cms::CMSException& ex) {
                 ex.printStackTrace();
             }
         }
     };
 
-    class Receiver : public decaf::lang::Runnable {
+    class Receiver: public decaf::lang::Runnable {
     private:
 
         activemq::core::ActiveMQConnectionFactory cf;
@@ -113,8 +113,8 @@ namespace test {
 
     public:
 
-        Receiver( const std::string& url, bool pubSub, const std::string& destName, int count )
-            : ready(1) {
+        Receiver(const std::string& url, bool pubSub, const std::string& destName, int count) :
+            ready(1) {
 
             cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
@@ -142,13 +142,13 @@ namespace test {
 
                 ready.countDown();
                 // Receive a batch of messages.
-                for( int ix=0; ix<count; ++ix ) {
+                for (int ix = 0; ix < count; ++ix) {
                     cms::Message* message = cmsTemplate.receive();
                     numReceived++;
                     delete message;
                 }
 
-            } catch( cms::CMSException& ex) {
+            } catch (cms::CMSException& ex) {
                 ex.printStackTrace();
             }
         }
@@ -158,98 +158,77 @@ namespace test {
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testBasics() {
 
-    try {
+    const unsigned int NUM_MESSAGES = IntegrationCommon::defaultMsgCount;
 
-        const unsigned int NUM_MESSAGES = IntegrationCommon::defaultMsgCount;
+    Receiver receiver(this->getBrokerURL(), false, "testBasics1", NUM_MESSAGES);
+    Thread rt(&receiver);
+    rt.start();
 
-        Receiver receiver( this->getBrokerURL(), false, "testBasics1", NUM_MESSAGES);
-        Thread rt( &receiver );
-        rt.start();
+    // Wait for receiver thread to start.
+    receiver.waitUntilReady();
 
-        // Wait for receiver thread to start.
-        receiver.waitUntilReady();
+    Sender sender(this->getBrokerURL(), false, "testBasics1", NUM_MESSAGES);
+    Thread st(&sender);
+    st.start();
 
-        Sender sender( this->getBrokerURL(), false, "testBasics1", NUM_MESSAGES);
-        Thread st( &sender );
-        st.start();
+    st.join();
+    rt.join();
 
-        st.join();
-        rt.join();
-
-        unsigned int numReceived = receiver.getNumReceived();
-        CPPUNIT_ASSERT( numReceived == NUM_MESSAGES );
-
-    } catch ( ActiveMQException e ) {
-        e.printStackTrace();
-        throw e;
-    }
+    unsigned int numReceived = receiver.getNumReceived();
+    CPPUNIT_ASSERT( numReceived == NUM_MESSAGES );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testReceiveException() {
 
+    // First, try receiving from a bad url
+    activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666");
+    activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+    cmsTemplate.setDefaultDestinationName("testReceive1");
+
     try {
-
-        // First, try receiving from a bad url
-        activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666");
-        activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
-        cmsTemplate.setDefaultDestinationName("testReceive1");
-
-        try {
-            cmsTemplate.receive();
-            CPPUNIT_FAIL("failed to throw expected exception");
-        } catch( CMSException& ex ) {
-            // Expected.
-        }
-
-        // Now change to a good url and verify that we can reuse the same
-        // CmsTemplate successfully.
-        activemq::core::ActiveMQConnectionFactory cf2( this->getBrokerURL() );
-        cmsTemplate.setConnectionFactory(&cf2);
-
-        // Send 1 message.
-        Sender sender( this->getBrokerURL(), false, "testReceive1", 1);
-        Thread st( &sender );
-        st.start();
-        st.join();
-
-        // Receive the message.
-        cms::Message* message = cmsTemplate.receive();
-        CPPUNIT_ASSERT( message != NULL );
-        delete message;
-
-    } catch ( CMSException& e ) {
-        e.printStackTrace();
-        CPPUNIT_ASSERT( false );
+        cmsTemplate.receive();
+        CPPUNIT_FAIL("failed to throw expected exception");
+    } catch (CMSException& ex) {
+        // Expected.
     }
+
+    // Now change to a good url and verify that we can reuse the same
+    // CmsTemplate successfully.
+    activemq::core::ActiveMQConnectionFactory cf2(this->getBrokerURL());
+    cmsTemplate.setConnectionFactory(&cf2);
+
+    // Send 1 message.
+    Sender sender(this->getBrokerURL(), false, "testReceive1", 1);
+    Thread st(&sender);
+    st.start();
+    st.join();
+
+    // Receive the message.
+    cms::Message* message = cmsTemplate.receive();
+    CPPUNIT_ASSERT( message != NULL );
+    delete message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testSendException() {
 
+    // First, try sending to a bad url.
+    activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666");
+    activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+    cmsTemplate.setDefaultDestinationName("testSend1");
     try {
-
-        // First, try sending to a bad url.
-        activemq::core::ActiveMQConnectionFactory cf( "tcp://localhost:61666" );
-        activemq::cmsutil::CmsTemplate cmsTemplate( &cf );
-        cmsTemplate.setDefaultDestinationName( "testSend1" );
-        try {
-            TextMessageCreator msgCreator( "hello world" );
-            cmsTemplate.send( &msgCreator );
-            CPPUNIT_FAIL( "failed to throw expected exception" );
-        } catch( CMSException& ex ) {
-            // Expected.
-        }
-
-        // Now change to a good url and verify that we can reuse the same
-        // CmsTemplate successfully.
-        activemq::core::ActiveMQConnectionFactory cf2( this->getBrokerURL() );
-        cmsTemplate.setConnectionFactory( &cf2 );
-        TextMessageCreator msgCreator( "hello world" );
-        cmsTemplate.send( &msgCreator );
-
-    } catch ( CMSException& e ) {
-        e.printStackTrace();
-        throw e;
+        TextMessageCreator msgCreator("hello world");
+        cmsTemplate.send(&msgCreator);
+        CPPUNIT_FAIL( "failed to throw expected exception" );
+    } catch (CMSException& ex) {
+        // Expected.
     }
+
+    // Now change to a good url and verify that we can reuse the same
+    // CmsTemplate successfully.
+    activemq::core::ActiveMQConnectionFactory cf2(this->getBrokerURL());
+    cmsTemplate.setConnectionFactory(&cf2);
+    TextMessageCreator msgCreator("hello world");
+    cmsTemplate.send(&msgCreator);
 }
