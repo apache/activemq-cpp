@@ -106,7 +106,7 @@ namespace util {
     protected:
 
         bool isScheduled() const;
-        void setScheduledTime( long long time );
+        void setScheduledTime(long long time);
         long long getWhen() const;
 
     };
