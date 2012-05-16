@@ -389,7 +389,8 @@ void ActiveMQSessionKernel::commit() {
         this->checkClosed();
 
         if (!this->isTransacted()) {
-            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQSessionKernel::commit - This Session is not Transacted");
+            throw ActiveMQException(
+                __FILE__, __LINE__, "ActiveMQSessionKernel::commit - This Session is not Transacted");
         }
 
         // Commit the Transaction
@@ -406,7 +407,8 @@ void ActiveMQSessionKernel::rollback() {
         this->checkClosed();
 
         if (!this->isTransacted()) {
-            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQSessionKernel::rollback - This Session is not Transacted");
+            throw ActiveMQException(
+                __FILE__, __LINE__, "ActiveMQSessionKernel::rollback - This Session is not Transacted");
         }
 
         // Roll back the Transaction
