@@ -59,15 +59,12 @@ private:
 
 private:
 
-    HelloWorldProducer( const HelloWorldProducer& );
-    HelloWorldProducer& operator= ( const HelloWorldProducer& );
+    HelloWorldProducer(const HelloWorldProducer&);
+    HelloWorldProducer& operator=(const HelloWorldProducer&);
 
 public:
 
-    HelloWorldProducer( const std::string& brokerURI,
-                        int numMessages,
-                        bool useTopic = false,
-                        bool sessionTransacted = false ) :
+    HelloWorldProducer(const std::string& brokerURI, int numMessages, bool useTopic = false, bool sessionTransacted = false) :
         connection(NULL),
         session(NULL),
         destination(NULL),
@@ -89,51 +86,47 @@ public:
     virtual void run() {
 
         try {
+
             // Create a ConnectionFactory
             auto_ptr<ConnectionFactory> connectionFactory(
-                ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
+                ConnectionFactory::createCMSConnectionFactory(brokerURI));
 
             // Create a Connection
             connection = connectionFactory->createConnection();
             connection->start();
 
             // Create a Session
-            if( this->sessionTransacted ) {
-                session = connection->createSession( Session::SESSION_TRANSACTED );
+            if (this->sessionTransacted) {
+                session = connection->createSession(Session::SESSION_TRANSACTED);
             } else {
-                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+                session = connection->createSession(Session::AUTO_ACKNOWLEDGE);
             }
 
             // Create the destination (Topic or Queue)
-            if( useTopic ) {
-                destination = session->createTopic( "TEST.FOO" );
+            if (useTopic) {
+                destination = session->createTopic("TEST.FOO");
             } else {
-                destination = session->createQueue( "TEST.FOO" );
+                destination = session->createQueue("TEST.FOO");
             }
 
             // Create a MessageProducer from the Session to the Topic or Queue
-            producer = session->createProducer( destination );
-            producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+            producer = session->createProducer(destination);
+            producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
             // Create the Thread Id String
-            string threadIdStr = Long::toString( Thread::currentThread()->getId() );
+            string threadIdStr = Long::toString(Thread::currentThread()->getId());
 
             // Create a messages
-            string text = (string)"Hello world! from thread " + threadIdStr;
+            string text = (string) "Hello world! from thread " + threadIdStr;
 
-            for( int ix=0; ix<numMessages; ++ix ){
-                TextMessage* message = session->createTextMessage( text );
-
-                message->setIntProperty( "Integer", ix );
-
-                // Tell the producer to send the message
-                printf( "Sent message #%d from thread %s\n", ix+1, threadIdStr.c_str() );
-                producer->send( message );
-
-                delete message;
+            for (int ix = 0; ix < numMessages; ++ix) {
+                std::auto_ptr<TextMessage> message(session->createTextMessage(text));
+                message->setIntProperty("Integer", ix);
+                printf("Sent message #%d from thread %s\n", ix + 1, threadIdStr.c_str());
+                producer->send(message.get());
             }
 
-        }catch ( CMSException& e ) {
+        } catch (CMSException& e) {
             e.printStackTrace();
         }
     }
@@ -141,18 +134,28 @@ public:
 private:
 
     void cleanup() {
+
         if (connection != NULL) {
-            connection->close();
+            try {
+                connection->close();
+            } catch (cms::CMSException& ex) {
+                ex.printStackTrace();
+            }
         }
 
-        delete destination;
-        destination = NULL;
-        delete producer;
-        producer = NULL;
-        delete session;
-        session = NULL;
-        delete connection;
-        connection = NULL;
+        // Destroy resources.
+        try {
+            delete destination;
+            destination = NULL;
+            delete producer;
+            producer = NULL;
+            delete session;
+            session = NULL;
+            delete connection;
+            connection = NULL;
+        } catch (CMSException& e) {
+            e.printStackTrace();
+        }
     }
 };
 
@@ -175,16 +178,12 @@ private:
 
 private:
 
-    HelloWorldConsumer( const HelloWorldConsumer& );
-    HelloWorldConsumer& operator= ( const HelloWorldConsumer& );
+    HelloWorldConsumer(const HelloWorldConsumer&);
+    HelloWorldConsumer& operator=(const HelloWorldConsumer&);
 
 public:
 
-    HelloWorldConsumer( const std::string& brokerURI,
-                        int numMessages,
-                        bool useTopic = false,
-                        bool sessionTransacted = false,
-                        int waitMillis = 30000 ) :
+    HelloWorldConsumer(const std::string& brokerURI, int numMessages, bool useTopic = false, bool sessionTransacted = false, int waitMillis = 30000) :
         latch(1),
         doneLatch(numMessages),
         connection(NULL),
@@ -215,7 +214,7 @@ public:
 
             // Create a ConnectionFactory
             auto_ptr<ConnectionFactory> connectionFactory(
-                ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
+                ConnectionFactory::createCMSConnectionFactory(brokerURI));
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -223,23 +222,23 @@ public:
             connection->setExceptionListener(this);
 
             // Create a Session
-            if( this->sessionTransacted == true ) {
-                session = connection->createSession( Session::SESSION_TRANSACTED );
+            if (this->sessionTransacted == true) {
+                session = connection->createSession(Session::SESSION_TRANSACTED);
             } else {
-                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+                session = connection->createSession(Session::AUTO_ACKNOWLEDGE);
             }
 
             // Create the destination (Topic or Queue)
-            if( useTopic ) {
-                destination = session->createTopic( "TEST.FOO" );
+            if (useTopic) {
+                destination = session->createTopic("TEST.FOO");
             } else {
-                destination = session->createQueue( "TEST.FOO" );
+                destination = session->createQueue("TEST.FOO");
             }
 
             // Create a MessageConsumer from the Session to the Topic or Queue
-            consumer = session->createConsumer( destination );
+            consumer = session->createConsumer(destination);
 
-            consumer->setMessageListener( this );
+            consumer->setMessageListener(this);
 
             std::cout.flush();
             std::cerr.flush();
@@ -248,43 +247,39 @@ public:
             latch.countDown();
 
             // Wait while asynchronous messages come in.
-            doneLatch.await( waitMillis );
+            doneLatch.await(waitMillis);
 
-        } catch( CMSException& e ) {
-
+        } catch (CMSException& e) {
             // Indicate we are ready for messages.
             latch.countDown();
-
             e.printStackTrace();
         }
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ) {
+    virtual void onMessage(const Message* message) {
 
         static int count = 0;
 
-        try
-        {
+        try {
             count++;
-            const TextMessage* textMessage =
-                dynamic_cast< const TextMessage* >( message );
+            const TextMessage* textMessage = dynamic_cast<const TextMessage*> (message);
             string text = "";
 
-            if( textMessage != NULL ) {
+            if (textMessage != NULL) {
                 text = textMessage->getText();
             } else {
                 text = "NOT A TEXTMESSAGE!";
             }
 
-            printf( "Message #%d Received: %s\n", count, text.c_str() );
+            printf("Message #%d Received: %s\n", count, text.c_str());
 
         } catch (CMSException& e) {
             e.printStackTrace();
         }
 
         // Commit all messages.
-        if( this->sessionTransacted ) {
+        if (this->sessionTransacted) {
             session->commit();
         }
 
@@ -294,7 +289,7 @@ public:
 
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
+    virtual void onException(const CMSException& ex AMQCPP_UNUSED) {
         printf("CMS Exception occurred.  Shutting down client.\n");
         ex.printStackTrace();
         exit(1);
@@ -304,16 +299,26 @@ private:
 
     void cleanup() {
         if (connection != NULL) {
-            connection->close();
+            try {
+                connection->close();
+            } catch (cms::CMSException& ex) {
+                ex.printStackTrace();
+            }
         }
-        delete destination;
-        destination = NULL;
-        delete consumer;
-        consumer = NULL;
-        delete session;
-        session = NULL;
-        delete connection;
-        connection = NULL;
+
+        // Destroy resources.
+        try {
+            delete destination;
+            destination = NULL;
+            delete producer;
+            producer = NULL;
+            delete session;
+            session = NULL;
+            delete connection;
+            connection = NULL;
+        } catch (CMSException& e) {
+            e.printStackTrace();
+        }
     }
 };
 
@@ -380,18 +385,18 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     long long startTime = System::currentTimeMillis();
 
-    HelloWorldProducer producer( brokerURI, numMessages, useTopics );
-    HelloWorldConsumer consumer( brokerURI, numMessages, useTopics, sessionTransacted );
+    HelloWorldProducer producer(brokerURI, numMessages, useTopics);
+        HelloWorldConsumer consumer(brokerURI, numMessages, useTopics, sessionTransacted);
 
     // Start the consumer thread.
-    Thread consumerThread( &consumer );
+    Thread consumerThread(&consumer);
     consumerThread.start();
 
     // Wait for the consumer to indicate that its ready to go.
     consumer.waitUntilReady();
 
     // Start the producer thread.
-    Thread producerThread( &producer );
+    Thread producerThread(&producer);
     producerThread.start();
 
     // Wait for the threads to complete.
