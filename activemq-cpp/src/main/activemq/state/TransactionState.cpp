@@ -36,6 +36,7 @@ TransactionState::TransactionState( const Pointer<TransactionId>& id ) :
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
     this->commands.clear();
+    this->producers.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,7 @@ void TransactionState::checkShutdown() const {
 void TransactionState::addProducerState( const Pointer<ProducerState>& producerState ) {
 
     if( producerState != NULL ) {
+        producerState->getTransactionState().reset(NULL);
         producers.put( producerState->getInfo()->getProducerId(), producerState );
     }
 }

@@ -192,28 +192,30 @@ void ActiveMQTransactionContext::commit() {
                 "Cannot Commit a local transaction while an XA Transaction is in progress.");
         }
 
-        if( this->context->transactionId.get() == NULL ) {
-            throw InvalidStateException(
-                __FILE__, __LINE__,
-                "ActiveMQTransactionContext::commit - "
-                "Commit called before transaction was started.");
+        try {
+            this->beforeEnd();
+        } catch (std::exception& ex) {
+            rollback();
+            throw;
         }
 
-        this->beforeEnd();
+        if (isInTransaction()) {
+            Pointer<TransactionInfo> info(new TransactionInfo());
+            info->setConnectionId(this->connection->getConnectionInfo().getConnectionId());
+            info->setTransactionId(this->context->transactionId);
+            info->setType(ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE);
 
-        // Create and Populate the Info Command.
-        Pointer<TransactionInfo> info( new TransactionInfo() );
-        info->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
-        info->setTransactionId( this->context->transactionId );
-        info->setType( ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE );
+            // Before we send the command NULL the id in case of an exception.
+            this->context->transactionId.reset(NULL);
 
-        // Before we send the command NULL the id in case of an exception.
-        this->context->transactionId.reset( NULL );
-
-        // Commit the current Transaction
-        this->connection->syncRequest( info );
-
-        this->afterCommit();
+            try {
+                this->connection->syncRequest(info);
+                this->afterCommit();
+            } catch(cms::CMSException& ex) {
+                this->afterRollback();
+                throw;
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -230,28 +232,25 @@ void ActiveMQTransactionContext::rollback() {
                 "Cannot Rollback a local transaction while an XA Transaction is in progress.");
         }
 
-        if( this->context->transactionId == NULL ) {
-            throw InvalidStateException(
-                __FILE__, __LINE__,
-                "ActiveMQTransactionContext::rollback - "
-                "Rollback called before transaction was started.");
+        try {
+            this->beforeEnd();
+        } catch (ActiveMQTransactionContext& ex) {
+            // Ignore, can occur on failover if the last command was commit.
         }
 
-        this->beforeEnd();
+        if (isInTransaction()) {
 
-        // Create and Populate the Info Command.
-        Pointer<TransactionInfo> info( new TransactionInfo() );
-        info->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
-        info->setTransactionId( this->context->transactionId );
-        info->setType( ActiveMQConstants::TRANSACTION_STATE_ROLLBACK );
+            Pointer<TransactionInfo> info(new TransactionInfo());
+            info->setConnectionId(this->connection->getConnectionInfo().getConnectionId());
+            info->setTransactionId(this->context->transactionId);
+            info->setType(ActiveMQConstants::TRANSACTION_STATE_ROLLBACK);
 
-        // Before we send the command NULL the id in case of an exception.
-        this->context->transactionId.reset( NULL );
+            // Before we send the command NULL the id in case of an exception.
+            this->context->transactionId.reset(NULL);
 
-        // Roll back the current Transaction
-        this->connection->syncRequest( info );
-
-        this->afterRollback();
+            this->connection->syncRequest(info);
+            this->afterRollback();
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

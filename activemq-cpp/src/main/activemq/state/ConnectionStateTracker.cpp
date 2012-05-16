@@ -21,6 +21,7 @@
 #include <decaf/util/NoSuchElementException.h>
 
 #include <activemq/commands/ConsumerControl.h>
+#include <activemq/commands/ExceptionResponse.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/transport/TransportListener.h>
@@ -62,7 +63,7 @@ namespace state {
         virtual void run() {
             Pointer<ConnectionId> connectionId = info->getConnectionId();
             Pointer<ConnectionState> cs = stateTracker->connectionStates.get( connectionId );
-            cs->removeTransactionState( info->getTransactionId() );
+            cs->removeTransactionState(info->getTransactionId());
         }
     };
 
@@ -166,7 +167,7 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
     try{
 
-        std::vector< Pointer<Command> > toIgnore;
+        std::vector< Pointer<TransactionInfo> > toRollback;
 
         // Restore the session's transaction state
         std::vector< Pointer<TransactionState> > transactionStates =
@@ -174,18 +175,15 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
 
         std::vector< Pointer<TransactionState> >::const_iterator iter = transactionStates.begin();
 
-        for( ; iter != transactionStates.end(); ++iter ) {
-
-            // ignore any empty (ack) transaction
-            if( (*iter)->getCommands().size() == 2 ) {
-                Pointer<Command> lastCommand = (*iter)->getCommands().get(1);
-                if( lastCommand->isTransactionInfo() ) {
-                    Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
-
-                    if( transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE ) {
-                        toIgnore.push_back(lastCommand);
-                        continue;
-                    }
+        // For any completed transactions we don't know if the commit actually made it to the broker
+        // or was lost along the way, so they need to be rolled back.
+        for (; iter != transactionStates.end(); ++iter) {
+            Pointer<Command> lastCommand = (*iter)->getCommands().getLast();
+            if (lastCommand->isTransactionInfo()) {
+                Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
+                if (transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE) {
+                    toRollback.push_back(transactionInfo);
+                    continue;
                 }
             }
 
@@ -197,8 +195,7 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
                 transport->oneway( (*state)->getInfo() );
             }
 
-            std::auto_ptr< Iterator< Pointer<Command> > > commands(
-                (*iter)->getCommands().iterator() );
+            std::auto_ptr<Iterator<Pointer<Command> > > commands((*iter)->getCommands().iterator());
 
             while( commands->hasNext() ) {
                 transport->oneway( commands->next() );
@@ -210,12 +207,18 @@ void ConnectionStateTracker::doRestoreTransactions( const Pointer<transport::Tra
             }
         }
 
-        std::vector< Pointer<Command> >::const_iterator command = toIgnore.begin();
-        for( ; command != toIgnore.end(); ++command ) {
-            // respond to the outstanding commit
-            Pointer<Response> response( new Response() );
-            response->setCorrelationId( (*command)->getCommandId() );
-            transport->getTransportListener()->onCommand( response );
+        // Trigger failure of commit for all outstanding completed but in doubt transactions.
+        std::vector<Pointer<TransactionInfo> >::const_iterator command = toRollback.begin();
+        for (; command != toRollback.end(); ++command) {
+            Pointer<ExceptionResponse> response(new ExceptionResponse());
+            Pointer<BrokerError> exception(new BrokerError());
+            exception->setExceptionClass("TransactionRolledBackException");
+            exception->setMessage(
+                std::string("Transaction completion in doubt due to failover. Forcing rollback of ") +
+                (*command)->getTransactionId()->toString());
+            response->setException(exception);
+            response->setCorrelationId((*command)->getCommandId());
+            transport->getTransportListener()->onCommand(response);
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -230,7 +233,6 @@ void ConnectionStateTracker::doRestoreSessions( const Pointer<transport::Transpo
     try{
 
         std::vector< Pointer<SessionState> > sessionStates = connectionState->getSessionStates();
-
         std::vector< Pointer<SessionState> >::const_iterator iter = sessionStates.begin();
 
         // Restore the Session State
@@ -273,7 +275,6 @@ void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transp
             Pointer<wireformat::WireFormat> wireFormat = transport->getWireFormat();
 
             if( !connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0 && wireFormat->getVersion() > 5) {
-
                 infoToSend.reset( (*state)->getInfo()->cloneDataStructure() );
                 connectionState->getRecoveringPullConsumers().put( infoToSend->getConsumerId(), (*state)->getInfo() );
                 infoToSend->setPrefetchSize(0);
@@ -291,11 +292,9 @@ void ConnectionStateTracker::doRestoreConsumers( const Pointer<transport::Transp
 void ConnectionStateTracker::doRestoreProducers( const Pointer<transport::Transport>& transport,
                                                  const Pointer<SessionState>& sessionState ) {
 
-    try{
-
+    try {
         // Restore the session's producers
         std::vector< Pointer<ProducerState> > producerStates = sessionState->getProducerStates();
-
         std::vector< Pointer<ProducerState> >::const_iterator iter = producerStates.begin();
 
         for( ; iter != producerStates.end(); ++iter ) {
@@ -586,7 +585,7 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack ) {
+Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack AMQCPP_UNUSED) {
 	// Do nothing here, acks would be stale on connection restore.  Allow the rollback
 	// to deal with these as they are rolled back and redelivered.
     return Pointer<Response>();
@@ -662,8 +661,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( Trans
                     Pointer<TransactionState> transactionState =
                         cs->getTransactionState( info->getTransactionId() );
                     if( transactionState != NULL ) {
-                        Pointer<TransactionInfo> infoCopy =
-                            Pointer<TransactionInfo>( info->cloneDataStructure() );
+                        Pointer<TransactionInfo> infoCopy( info->cloneDataStructure() );
                         transactionState->addCommand( infoCopy );
                         return Pointer<Tracked>( new Tracked(
                             Pointer<Runnable>( new RemoveTransactionAction( this, infoCopy ) ) ) );
@@ -692,8 +690,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( Trans
                     Pointer<TransactionState> transactionState =
                         cs->getTransactionState( info->getTransactionId() );
                     if( transactionState != NULL ) {
-                        Pointer<TransactionInfo> infoCopy =
-                            Pointer<TransactionInfo>( info->cloneDataStructure() );
+                        Pointer<TransactionInfo> infoCopy( info->cloneDataStructure() );
                         transactionState->addCommand( infoCopy );
                         return Pointer<Tracked>( new Tracked(
                             Pointer<Runnable>( new RemoveTransactionAction( this, infoCopy ) ) ) );
@@ -722,8 +719,7 @@ Pointer<Command> ConnectionStateTracker::processRollbackTransaction( Transaction
                     Pointer<TransactionState> transactionState =
                         cs->getTransactionState( info->getTransactionId() );
                     if( transactionState != NULL ) {
-                        Pointer<TransactionInfo> infoCopy =
-                            Pointer<TransactionInfo>( info->cloneDataStructure() );
+                        Pointer<TransactionInfo> infoCopy( info->cloneDataStructure() );
                         transactionState->addCommand( infoCopy );
                         return Pointer<Tracked>( new Tracked(
                             Pointer<Runnable>( new RemoveTransactionAction( this, infoCopy ) ) ) );

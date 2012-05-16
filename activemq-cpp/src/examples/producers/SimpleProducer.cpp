@@ -126,53 +126,37 @@ public:
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
 
-            for( unsigned int ix=0; ix<numMessages; ++ix ){
-                TextMessage* message = session->createTextMessage( text );
+            for (unsigned int ix = 0; ix < numMessages; ++ix) {
+				std::auto_ptr<TextMessage> message(session->createTextMessage(text));
+				message->setIntProperty("Integer", ix);
+				printf("Sent message #%d from thread %s\n", ix + 1, threadIdStr.c_str());
+				producer->send(message.get());
+			}
 
-                message->setIntProperty( "Integer", ix );
-
-                // Tell the producer to send the message
-                printf( "Sent message #%d from thread %s\n", ix+1, threadIdStr.c_str() );
-                producer->send( message );
-
-                delete message;
-            }
-
-        }catch ( CMSException& e ) {
-            e.printStackTrace();
-        }
+		} catch (CMSException& e) {
+			e.printStackTrace();
+		}
     }
 
 private:
 
     void cleanup(){
 
-        // Destroy resources.
-        try{
-            if( destination != NULL ) delete destination;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-        destination = NULL;
+    	if (connection != NULL) {
+			try {
+				connection->close();
+			} catch (cms::CMSException& ex) {
+			}
+    	}
 
-        try{
-            if( producer != NULL ) delete producer;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-        producer = NULL;
-
-        // Close open resources.
-        try{
-            if( session != NULL ) session->close();
-            if( connection != NULL ) connection->close();
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-
-        try{
-            if( session != NULL ) delete session;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-        session = NULL;
-
-        try{
-            if( connection != NULL ) delete connection;
-        }catch ( CMSException& e ) { e.printStackTrace(); }
-        connection = NULL;
+    	delete destination;
+    	destination = NULL;
+    	delete producer;
+    	producer = NULL;
+    	delete session;
+    	session = NULL;
+    	delete connection;
+    	connection = NULL;
     }
 };
 
