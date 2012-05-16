@@ -67,13 +67,13 @@ namespace state {
 
     public:
 
-        ConnectionState( const Pointer<ConnectionInfo>& info );
+        ConnectionState(Pointer<ConnectionInfo> info);
 
         virtual ~ConnectionState();
 
         std::string toString() const;
 
-        const Pointer<commands::ConnectionInfo>& getInfo() const {
+        const Pointer<commands::ConnectionInfo> getInfo() const {
             return this->info;
         }
 
@@ -81,71 +81,68 @@ namespace state {
 
         void shutdown();
 
-        void reset( const Pointer<ConnectionInfo>& info );
+        void reset(Pointer<ConnectionInfo> info);
 
-        void addTempDestination( const Pointer<DestinationInfo>& info ) {
+        void addTempDestination(Pointer<DestinationInfo> info) {
             checkShutdown();
-            tempDestinations.add( info );
+            tempDestinations.add(info);
         }
 
-        void removeTempDestination( const Pointer<ActiveMQDestination>& destination ) {
+        void removeTempDestination(Pointer<ActiveMQDestination> destination) {
 
-            std::auto_ptr< decaf::util::Iterator< Pointer<DestinationInfo> > > iter(
-                tempDestinations.iterator() );
+            std::auto_ptr<decaf::util::Iterator<Pointer<DestinationInfo> > > iter(tempDestinations.iterator());
 
-            while( iter->hasNext() ) {
+            while (iter->hasNext()) {
                 Pointer<DestinationInfo> di = iter->next();
-                if( di->getDestination()->equals( destination.get() ) ) {
+                if (di->getDestination()->equals(destination.get())) {
                     iter->remove();
                 }
             }
         }
 
-        void addTransactionState( const Pointer<TransactionId>& id ) {
+        void addTransactionState(Pointer<TransactionId> id) {
             checkShutdown();
-            transactions.put( id.dynamicCast<LocalTransactionId>(),
-                              Pointer<TransactionState>( new TransactionState( id ) ) );
+            transactions.put(id.dynamicCast<LocalTransactionId>(), Pointer<TransactionState>(new TransactionState(id)));
         }
 
-        const Pointer<TransactionState>& getTransactionState( const Pointer<TransactionId>& id ) const {
-            return transactions.get( id.dynamicCast<LocalTransactionId>() );
+        const Pointer<TransactionState>& getTransactionState(Pointer<TransactionId> id) const {
+            return transactions.get(id.dynamicCast<LocalTransactionId>());
         }
 
-        std::vector< Pointer<TransactionState> > getTransactionStates() const {
+        std::vector<Pointer<TransactionState> > getTransactionStates() const {
             return transactions.values();
         }
 
-        Pointer<TransactionState> removeTransactionState( const Pointer<TransactionId>& id ) {
-            return transactions.remove( id.dynamicCast<LocalTransactionId>() );
+        Pointer<TransactionState> removeTransactionState(Pointer<TransactionId> id) {
+            return transactions.remove(id.dynamicCast<LocalTransactionId>());
         }
 
-        void addSession( const Pointer<SessionInfo>& info ) {
+        void addSession(Pointer<SessionInfo> info) {
             checkShutdown();
-            sessions.put(
-                info->getSessionId(), Pointer<SessionState>( new SessionState( info ) ) );
+            sessions.put(info->getSessionId(), Pointer<SessionState>(new SessionState(info)));
         }
 
-        Pointer<SessionState> removeSession( const Pointer<SessionId>& id ) {
-            return sessions.remove( id );
+        Pointer<SessionState> removeSession(Pointer<SessionId> id) {
+            return sessions.remove(id);
         }
 
-        const Pointer<SessionState>& getSessionState( const Pointer<SessionId>& id ) const {
-            return sessions.get( id );
+        const Pointer<SessionState> getSessionState(Pointer<SessionId> id) const {
+            return sessions.get(id);
         }
 
-        const LinkedList< Pointer<DestinationInfo> >& getTempDesinations() const {
+        const LinkedList<Pointer<DestinationInfo> >& getTempDesinations() const {
             return tempDestinations;
         }
 
-        std::vector< Pointer<SessionState> > getSessionStates() const {
+        std::vector<Pointer<SessionState> > getSessionStates() const {
             return sessions.values();
         }
 
-        StlMap< Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR >& getRecoveringPullConsumers() {
+        StlMap<Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR>& getRecoveringPullConsumers() {
             return recoveringPullConsumers;
         }
 
-        void setConnectionInterruptProcessingComplete( bool connectionInterruptProcessingComplete ) {
+        void setConnectionInterruptProcessingComplete(bool connectionInterruptProcessingComplete) {
             this->connectionInterruptProcessingComplete = connectionInterruptProcessingComplete;
         }
 

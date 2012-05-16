@@ -50,34 +50,41 @@ namespace state {
         AtomicBoolean disposed;
         bool prepared;
         int preparedResult;
-        ConcurrentStlMap< Pointer<ProducerId>, Pointer<ProducerState>,
-                          ProducerId::COMPARATOR > producers;
+        ConcurrentStlMap<Pointer<ProducerId>, Pointer<ProducerState>,
+                         ProducerId::COMPARATOR> producers;
+
+    private:
+
+        TransactionState(const TransactionState&);
+        TransactionState& operator=(const TransactionState&);
 
     public:
 
-        TransactionState( const Pointer<TransactionId>& id );
+        TransactionState(Pointer<TransactionId> id);
 
         virtual ~TransactionState();
 
         std::string toString() const;
 
-        void addCommand( const Pointer<Command>& operation );
+        void addCommand(Pointer<Command> operation);
 
         void checkShutdown() const;
 
         void shutdown() {
-            this->disposed.set( true );
+            this->disposed.set(true);
         }
 
-        const LinkedList< Pointer<Command> >& getCommands() const {
+        void clear();
+
+        const LinkedList<Pointer<Command> >& getCommands() const {
             return commands;
         }
 
-        const Pointer<TransactionId>& getId() const {
+        const Pointer<TransactionId> getId() const {
             return id;
         }
 
-        void setPrepared( bool prepared ) {
+        void setPrepared(bool prepared) {
             this->prepared = prepared;
         }
 
@@ -85,7 +92,7 @@ namespace state {
             return this->prepared;
         }
 
-        void setPreparedResult( int preparedResult ) {
+        void setPreparedResult(int preparedResult) {
             this->preparedResult = preparedResult;
         }
 
@@ -93,9 +100,9 @@ namespace state {
             return this->preparedResult;
         }
 
-        void addProducerState( const Pointer<ProducerState>& producerState );
+        void addProducerState(Pointer<ProducerState> producerState);
 
-        std::vector< Pointer<ProducerState> > getProducerStates();
+        std::vector<Pointer<ProducerState> > getProducerStates();
 
     };
 

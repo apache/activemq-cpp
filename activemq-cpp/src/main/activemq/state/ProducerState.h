@@ -40,19 +40,24 @@ namespace state {
         Pointer<ProducerInfo> info;
         Pointer<TransactionState> transactionState;
 
+    private:
+
+        ProducerState(const ProducerState&);
+        ProducerState& operator=(const ProducerState&);
+
     public:
 
-        ProducerState( const Pointer<ProducerInfo>& info );
+        ProducerState(Pointer<ProducerInfo> info);
 
         virtual ~ProducerState();
 
         std::string toString() const;
 
-        const Pointer<ProducerInfo>& getInfo() const {
+        const Pointer<ProducerInfo> getInfo() const {
             return this->info;
         }
 
-        void setTransactionState( const Pointer<TransactionState>& transactionState );
+        void setTransactionState(Pointer<TransactionState> transactionState);
 
         Pointer<TransactionState> getTransactionState() const;
 

@@ -44,19 +44,24 @@ namespace state {
 
         Pointer<SessionInfo> info;
 
-        ConcurrentStlMap< Pointer<ProducerId>,
-                          Pointer<ProducerState>,
-                          ProducerId::COMPARATOR > producers;
+        ConcurrentStlMap<Pointer<ProducerId>,
+                         Pointer<ProducerState>,
+                         ProducerId::COMPARATOR> producers;
 
-        ConcurrentStlMap< Pointer<ConsumerId>,
-                          Pointer<ConsumerState>,
-                          ConsumerId::COMPARATOR > consumers;
+        ConcurrentStlMap<Pointer<ConsumerId>,
+                         Pointer<ConsumerState>,
+                         ConsumerId::COMPARATOR> consumers;
 
         AtomicBoolean disposed;
 
+    private:
+
+        SessionState(const SessionState&);
+        SessionState& operator=(const SessionState&);
+
     public:
 
-        SessionState( const Pointer<SessionInfo>& info );
+        SessionState(Pointer<SessionInfo> info);
 
         virtual ~SessionState();
 
@@ -66,40 +71,39 @@ namespace state {
             return this->info;
         }
 
-        void addProducer( const Pointer<ProducerInfo>& info );
+        void addProducer(Pointer<ProducerInfo> info);
 
-        Pointer<ProducerState> removeProducer( const Pointer<ProducerId>& id );
+        Pointer<ProducerState> removeProducer(Pointer<ProducerId> id);
 
-        void addConsumer( const Pointer<ConsumerInfo>& info ) {
+        void addConsumer(const Pointer<ConsumerInfo>& info) {
             checkShutdown();
-            consumers.put( info->getConsumerId(),
-                Pointer<ConsumerState>( new ConsumerState( info ) ) );
+            consumers.put(info->getConsumerId(), Pointer<ConsumerState>(new ConsumerState(info)));
         }
 
-        Pointer<ConsumerState> removeConsumer( const Pointer<ConsumerId>& id ) {
-            return consumers.remove( id );
+        Pointer<ConsumerState> removeConsumer(Pointer<ConsumerId> id) {
+            return consumers.remove(id);
         }
 
-        std::vector< Pointer<ProducerState> > getProducerStates() const {
+        std::vector<Pointer<ProducerState> > getProducerStates() const {
             return producers.values();
         }
 
-        Pointer<ProducerState> getProducerState( const Pointer<ProducerId>& id ) {
-            return producers.get( id );
+        Pointer<ProducerState> getProducerState(Pointer<ProducerId> id) {
+            return producers.get(id);
         }
 
-        std::vector< Pointer<ConsumerState> > getConsumerStates() const {
+        std::vector<Pointer<ConsumerState> > getConsumerStates() const {
             return consumers.values();
         }
 
-        Pointer<ConsumerState> getConsumerState( const Pointer<ConsumerId>& id ) {
-            return consumers.get( id );
+        Pointer<ConsumerState> getConsumerState(Pointer<ConsumerId> id) {
+            return consumers.get(id);
         }
 
         void checkShutdown() const;
 
         void shutdown() {
-            this->disposed.set( true );
+            this->disposed.set(true);
         }
 
     };

@@ -37,15 +37,20 @@ namespace state {
 
         Pointer<ConsumerInfo> info;
 
+    private:
+
+        ConsumerState(const ConsumerState&);
+        ConsumerState& operator=(const ConsumerState&);
+
     public:
 
-        ConsumerState( const Pointer<ConsumerInfo>& info );
+        ConsumerState(Pointer<ConsumerInfo> info);
 
         virtual ~ConsumerState();
 
         std::string toString() const;
 
-        const Pointer<ConsumerInfo>& getInfo() const {
+        const Pointer<ConsumerInfo> getInfo() const {
             return this->info;
         }
 

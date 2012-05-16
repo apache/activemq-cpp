@@ -26,21 +26,19 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Tracked::Tracked() : runnable() {
+Tracked::Tracked() : commands::Response(), runnable() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Tracked::Tracked( const Pointer<Runnable>& runnable ) : runnable( runnable ) {
+Tracked::Tracked(Pointer<Runnable> runnable) : commands::Response(), runnable(runnable) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Tracked::onResponse() {
-
     try {
-
-        if( this->runnable != NULL ) {
+        if (this->runnable != NULL) {
             this->runnable->run();
-            this->runnable.reset( NULL );
+            this->runnable.reset(NULL);
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

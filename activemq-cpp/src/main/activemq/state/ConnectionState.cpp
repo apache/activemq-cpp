@@ -27,7 +27,7 @@ using namespace activemq::state;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) :
+ConnectionState::ConnectionState(Pointer<ConnectionInfo> info) :
     info(info),
     transactions(),
     sessions(),
@@ -51,7 +51,7 @@ ConnectionState::~ConnectionState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ConnectionState::toString() const {
 
-    if( this->info.get() != NULL ) {
+    if (this->info.get() != NULL) {
         return this->info->toString();
     }
 
@@ -59,24 +59,23 @@ std::string ConnectionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionState::reset( const Pointer<ConnectionInfo>& info ) {
-
+void ConnectionState::reset(Pointer<ConnectionInfo> info) {
     this->info = info;
     transactions.clear();
     sessions.clear();
     tempDestinations.clear();
-    disposed.set( false );
+    disposed.set(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionState::shutdown() {
 
-    if( this->disposed.compareAndSet( false, true ) ) {
+    if (this->disposed.compareAndSet(false, true)) {
 
-        std::vector< Pointer<SessionState> > values = this->sessions.values();
-        std::vector< Pointer<SessionState> >::iterator iter = values.begin();
+        std::vector<Pointer<SessionState> > values = this->sessions.values();
+        std::vector<Pointer<SessionState> >::iterator iter = values.begin();
 
-        for( ; iter != values.end(); ++iter ) {
+        for (; iter != values.end(); ++iter) {
             (*iter)->shutdown();
         }
     }
@@ -85,8 +84,8 @@ void ConnectionState::shutdown() {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionState::checkShutdown() const {
 
-    if( this->disposed.get() ) {
+    if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
-            __FILE__, __LINE__, "Connection already Disposed" );
+            __FILE__, __LINE__, "Connection already Disposed");
     }
 }

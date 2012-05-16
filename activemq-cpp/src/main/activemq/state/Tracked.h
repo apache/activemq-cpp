@@ -26,17 +26,15 @@
 namespace activemq {
 namespace state {
 
-    using decaf::lang::Pointer;
-
     class AMQCPP_API Tracked : public commands::Response {
     private:
 
-        Pointer<decaf::lang::Runnable> runnable;
+        decaf::lang::Pointer<decaf::lang::Runnable> runnable;
 
     public:
 
         Tracked();
-        Tracked( const Pointer<decaf::lang::Runnable>& runnable );
+        Tracked(decaf::lang::Pointer<decaf::lang::Runnable> runnable);
 
         virtual ~Tracked() {}
 
@@ -45,7 +43,6 @@ namespace state {
         bool isWaitingForResponse() const {
             return runnable != NULL;
         }
-
     };
 
 }}
