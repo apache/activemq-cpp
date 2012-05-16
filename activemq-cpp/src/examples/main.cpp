@@ -310,8 +310,8 @@ private:
         try {
             delete destination;
             destination = NULL;
-            delete producer;
-            producer = NULL;
+            delete consumer;
+            consumer = NULL;
             delete session;
             session = NULL;
             delete connection;
