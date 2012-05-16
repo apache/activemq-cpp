@@ -587,30 +587,9 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack ) {
-
-    try{
-
-        if( trackTransactions && ack != NULL && ack->getTransactionId() != NULL) {
-            Pointer<ConnectionId> connectionId;// =
-                ack->getConsumerId()->getParentId()->getParentId();
-            if( connectionId != NULL ) {
-                Pointer<ConnectionState> cs = connectionStates.get( connectionId );
-                if( cs != NULL ) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState( ack->getTransactionId() );
-                    if( transactionState != NULL ) {
-                        transactionState->addCommand(
-                            Pointer<Command>( ack->cloneDataStructure() ) );
-                    }
-                }
-            }
-            return TRACKED_RESPONSE_MARKER;
-        }
-        return Pointer<Response>();
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+	// Do nothing here, acks would be stale on connection restore.  Allow the rollback
+	// to deal with these as they are rolled back and redelivered.
+    return Pointer<Response>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
