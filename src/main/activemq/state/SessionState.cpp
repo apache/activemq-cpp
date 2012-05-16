@@ -28,7 +28,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionState::SessionState( const Pointer<SessionInfo>& info ) :
+SessionState::SessionState(Pointer<SessionInfo> info) :
     info(info), producers(), consumers(), disposed(false) {
 }
 
@@ -39,7 +39,7 @@ SessionState::~SessionState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string SessionState::toString() const {
 
-    if( this->info.get() != NULL ) {
+    if (this->info.get() != NULL) {
         return this->info->toString();
     }
 
@@ -49,27 +49,29 @@ std::string SessionState::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 void SessionState::checkShutdown() const {
 
-    if( this->disposed.get() ) {
+    if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
-            __FILE__, __LINE__, "Session already Disposed" );
+            __FILE__, __LINE__, "Session already Disposed");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SessionState::addProducer( const Pointer<ProducerInfo>& info ) {
+void SessionState::addProducer(Pointer<ProducerInfo> info) {
     checkShutdown();
-    producers.put( info->getProducerId(),
-        Pointer<ProducerState>( new ProducerState( info ) ) );
+    producers.put(info->getProducerId(), Pointer<ProducerState>(new ProducerState(info)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ProducerState> SessionState::removeProducer( const Pointer<ProducerId>& id ) {
+Pointer<ProducerState> SessionState::removeProducer(Pointer<ProducerId> id) {
 
-    Pointer<ProducerState> producerState = producers.remove( id );
-    if( producerState != NULL ) {
-        if( producerState->getTransactionState() != NULL ) {
-            // allow the transaction to recreate dependent producer on recovery
-            producerState->getTransactionState()->addProducerState( producerState );
+    Pointer<ProducerState> producerState = producers.remove(id);
+    if (producerState != NULL) {
+        if (producerState->getTransactionState() != NULL) {
+            // allow the transaction to recreate dependent producer on recovery, we
+            // hand off the producer state to the Transaction and NULL the producer's
+            // reference to avoid a circular link to it.
+            producerState->getTransactionState()->addProducerState(producerState);
+            producerState->getTransactionState().reset(NULL);
         }
     }
 

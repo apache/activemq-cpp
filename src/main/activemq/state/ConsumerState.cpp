@@ -23,7 +23,7 @@ using namespace activemq::commands;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerState::ConsumerState( const Pointer<ConsumerInfo>& info ) : info( info ) {
+ConsumerState::ConsumerState(Pointer<ConsumerInfo> info) : info(info) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ ConsumerState::~ConsumerState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ConsumerState::toString() const {
 
-    if( this->info != NULL ) {
+    if (this->info != NULL) {
         return this->info->toString();
     }
 

@@ -29,19 +29,19 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionState::TransactionState( const Pointer<TransactionId>& id ) :
+TransactionState::TransactionState(Pointer<TransactionId> id) :
     commands(), id(id), disposed(false), prepared(false), preparedResult(0), producers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
-    this->commands.clear();
+    clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string TransactionState::toString() const {
 
-    if( this->id != NULL ) {
+    if (this->id != NULL) {
         return this->id->toString();
     }
 
@@ -49,30 +49,39 @@ std::string TransactionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionState::addCommand( const Pointer<Command>& operation ) {
+void TransactionState::clear() {
+    this->commands.clear();
+    this->producers.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionState::addCommand(Pointer<Command> operation) {
 
     checkShutdown();
-    commands.add( operation );
+    commands.add(operation);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionState::checkShutdown() const {
 
-    if( this->disposed.get() ) {
+    if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
-            __FILE__, __LINE__, "Transaction already Disposed" );
+            __FILE__, __LINE__, "Transaction already Disposed");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionState::addProducerState( const Pointer<ProducerState>& producerState ) {
+void TransactionState::addProducerState(Pointer<ProducerState> producerState) {
 
-    if( producerState != NULL ) {
-        producers.put( producerState->getInfo()->getProducerId(), producerState );
+    if (producerState != NULL) {
+        // Ensure the producer doesn't hold a link to this TX state to avoid a
+        // circular reference that could lead to memory leaks.
+        producerState->getTransactionState().reset(NULL);
+        producers.put(producerState->getInfo()->getProducerId(), producerState);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< Pointer<ProducerState> > TransactionState::getProducerStates() {
+std::vector<Pointer<ProducerState> > TransactionState::getProducerStates() {
     return this->producers.values();
 }
