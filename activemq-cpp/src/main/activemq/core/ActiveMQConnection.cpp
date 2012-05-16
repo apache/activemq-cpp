@@ -1037,6 +1037,7 @@ Pointer<Response> ActiveMQConnection::syncRequest(Pointer<Command> command, unsi
 
         return response;
     }
+    AMQ_CATCH_RETHROW( cms::CMSException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException )
