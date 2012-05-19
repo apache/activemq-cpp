@@ -21,77 +21,121 @@
 #include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/lang/ArrayPointer.h>
+#include <decaf/util/concurrent/locks/ReentrantLock.h>
 #include <decaf/lang/System.h>
+#include <decaf/lang/Math.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/List.h>
 
 namespace decaf {
 namespace util {
 namespace concurrent {
 
-    using decaf::lang::ArrayPointer;
-    using decaf::lang::System;
-
     template< typename E >
     class CopyOnWriteArrayList : public List<E> {
     private:
 
-        Mutex mutex;
-        ArrayPointer<E> array;
+        struct Array {
+
+            int size;
+            int capacity;
+            E* elements;
+
+            Array() : size(0), capacity(0), elements(NULL) {
+            }
+
+            Array(int capacity) : size(0), capacity(0), elements(NULL) {
+                reserve(capacity);
+            }
+
+            Array(const Array& src, int capacity) : size(0), capacity(0), elements(NULL) {
+                reserve(decaf::lang::Math::max(src.size, capacity));
+                if (src.size > 0) {
+                    decaf::lang::System::arraycopy<E>(src.elements, 0, this->elements, 0, src.size);
+                }
+                this->size = src.size;
+            }
+
+            ~Array() {
+                delete [] elements;
+            }
+
+            void reserve(int requested) {
+                if (capacity < requested) {
+                    // growth as a factor of 1.5
+                    int newlen = decaf::lang::Math::max((int)(capacity*1.5), requested);
+                    E* newbuf = newlen ? new E[newlen] : NULL;
+
+                    if (this->elements != NULL) {
+                        decaf::lang::System::arraycopy<E>(this->elements, 0, newbuf, 0, size);
+                    }
+
+                    delete[] this->elements;
+                    this->elements = newbuf;
+                    capacity = newlen;
+                }
+            }
+        };
+
+    private:
+
+        mutable decaf::util::concurrent::locks::ReentrantLock writeLock;
+        decaf::lang::Pointer<decaf::util::concurrent::locks::Condition> condition;
+        decaf::lang::Pointer<Array> array;
 
     public:
 
         class ArrayListIterator : public ListIterator<E> {
         private:
 
-            ArrayPointer<E> array;
+            decaf::lang::Pointer<Array> array;
             int position;
 
         private:
 
-            ArrayListIterator( const ArrayListIterator& );
-            ArrayListIterator& operator= ( const ArrayListIterator& );
+            ArrayListIterator(const ArrayListIterator&);
+            ArrayListIterator& operator=(const ArrayListIterator&);
 
         public:
 
-            ArrayListIterator( const ArrayPointer<E>& array, int index ) :
-                ListIterator<E>(), array( array ), position( index ) {
+            ArrayListIterator(decaf::lang::Pointer<Array> array, int index) :
+                ListIterator<E> (), array(array), position(index) {
 
-                if( position < 0 || position > array.length() ) {
+                if (position < 0 || position > array->size) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__, "Iterator created with invalid index." );
+                        __FILE__, __LINE__, "Iterator created with invalid index.");
                 }
             }
 
-            virtual ~ArrayListIterator() {};
+            virtual ~ArrayListIterator() {
+                this->array.reset(NULL);
+            };
 
             virtual E next() {
-
-                if( position >= array.length() ) {
+                if (position >= array->size) {
                     throw NoSuchElementException();
                 }
 
-                return this->array[position++];
+                return this->array->elements[position++];
             }
 
             virtual bool hasNext() const {
-                return this->position < array.length();
+                return this->position < array->size;
             }
 
             virtual void remove() {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot remove elements." );
+                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot remove elements.");
             }
 
-            virtual void add( const E& e DECAF_UNUSED ) {
+            virtual void add(const E& e DECAF_UNUSED ) {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot add elements." );
+                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot add elements.");
             }
 
-            virtual void set( const E& e DECAF_UNUSED ) {
+            virtual void set(const E& e DECAF_UNUSED ) {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot add elements." );
+                    __FILE__, __LINE__, "CopyOnWriteArrayList Iterator cannot add elements.");
             }
 
             virtual bool hasPrevious() const {
@@ -99,11 +143,11 @@ namespace concurrent {
             }
 
             virtual E previous() {
-                if( position <= 0 ) {
+                if (position <= 0) {
                     throw NoSuchElementException();
                 }
 
-                return this->array[position--];
+                return this->array->elements[position--];
             }
 
             virtual int nextIndex() const {
@@ -118,108 +162,140 @@ namespace concurrent {
 
     public:
 
-        CopyOnWriteArrayList() : List<E>(), mutex(), array() {
+        CopyOnWriteArrayList() : List<E>(), writeLock(), condition(), array(new Array()) {
+            this->condition.reset(writeLock.newCondition());
         }
 
-        CopyOnWriteArrayList( const Collection<E>& collection ) : List<E>(), mutex(), array() {
-            this->doCopyCollection( collection );
+        CopyOnWriteArrayList(const Collection<E>& collection) : List<E>(), writeLock(), condition(), array(new Array()) {
+            this->condition.reset(writeLock.newCondition());
+            this->doCopyCollection(collection);
         }
 
-        CopyOnWriteArrayList( const CopyOnWriteArrayList<E>& collection ) : List<E>(), mutex(), array() {
-            this->doCopyCollection( collection );
+        CopyOnWriteArrayList(const CopyOnWriteArrayList<E>& collection) : List<E>(), writeLock(), condition(), array(new Array()) {
+            this->condition.reset(writeLock.newCondition());
+            this->doCopyCollection(collection);
         }
 
-        CopyOnWriteArrayList( const E* array, int size ) : List<E>(), mutex(), array() {
-
-            E* elements = new E[size];
-            for( int i = 0; i < size; ++i ) {
-                elements[i] = array[i];
+        CopyOnWriteArrayList(const E* array, int size) : List<E>(), writeLock(), condition(), array(new Array()) {
+            this->condition.reset(writeLock.newCondition());
+            decaf::lang::Pointer<Array> temp(new Array(size));
+            for (int i = 0; i < size; ++i) {
+                temp->elements[i] = array[i];
+                temp->size++;
             }
-
-            this->array.reset( elements, size );
+            this->array.swap(temp);
         }
 
-        virtual ~CopyOnWriteArrayList() {}
+        virtual ~CopyOnWriteArrayList() {
+            this->array.reset(NULL);
+        }
 
     public:
 
-        CopyOnWriteArrayList<E>& operator= ( const CopyOnWriteArrayList<E>& list ) {
-            synchronized( &mutex ) {
+        CopyOnWriteArrayList<E>& operator=(const CopyOnWriteArrayList<E>& list) {
+            this->writeLock.lock();
+            try {
                 this->clear();
-                this->doCopyCollection( list );
+                this->doCopyCollection(list);
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
+
+            this->writeLock.unlock();
             return *this;
         }
 
-        CopyOnWriteArrayList<E>& operator= ( const Collection<E>& list ) {
-            synchronized( &mutex ) {
+        CopyOnWriteArrayList<E>& operator=(const Collection<E>& list) {
+            this->writeLock.lock();
+            try {
                 this->clear();
-                this->doCopyCollection( list );
+                this->doCopyCollection(list);
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
+
+            this->writeLock.unlock();
             return *this;
         }
 
     public:  // Collections API
 
-        virtual void copy( const Collection<E>& collection ) {
-            this->doCopyCollection( collection );
+        virtual void copy(const Collection<E>& collection) {
+            this->writeLock.lock();
+            try {
+                this->clear();
+                this->doCopyCollection(collection);
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
         }
 
-        virtual bool add( const E& value ) {
-
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> oldData = this->array;
-                int size = oldData.length();
-                E* elements = new E[size + 1];
-                if( size > 0 ) {
-                    System::arraycopy( oldData.get(), 0, elements, 0, size );
-                }
-                elements[size] = value;
-                this->array.reset( elements, size + 1 );
-
+        virtual bool add(const E& value) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                decaf::lang::Pointer<Array> newArray(new Array(*oldArray, size + 1));
+                newArray->elements[size] = value;
+                newArray->size++;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return true;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return false;
         }
 
-        virtual bool addAll( const Collection<E>& collection ) {
-
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> oldData = this->array;
-                int size = oldData.length();
-                E* elements = new E[size + collection.size()];
-
-                if( size > 0 ) {
-                    System::arraycopy( oldData.get(), 0, elements, 0, size );
+        virtual bool addAll(const Collection<E>& collection) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                decaf::lang::Pointer<Array> newArray(new Array(*oldArray, size + collection.size()));
+                std::auto_ptr<Iterator<E> > iter(collection.iterator());
+                while (iter->hasNext()) {
+                    newArray->elements[newArray->size++] = iter->next();
                 }
-
-                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-                while( iter->hasNext() ) {
-                    elements[size++] = iter->next();
-                }
-
-                this->array.reset( elements, size );
-
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return true;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return false;
         }
 
         virtual void clear() {
-            synchronized( &this->mutex ) {
-                this->array.reset( NULL );
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> newArray(new Array());
+                this->array.swap(newArray);
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
+
+            this->writeLock.unlock();
         }
 
-        virtual bool contains( const E& value ) const {
+        virtual bool contains(const E& value) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
 
-            ArrayPointer<E> elements = this->array;
-            for( int i = 0; i < elements.length(); ++i ) {
-                if( elements[i] == value ) {
+            for (int i = 0; i < current->size; ++i) {
+                if (current->elements[i] == value) {
                     return true;
                 }
             }
@@ -227,13 +303,11 @@ namespace concurrent {
             return false;
         }
 
-        virtual bool containsAll( const Collection<E>& collection ) const {
-
-            ArrayPointer<E> elements = this->array;
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
+        virtual bool containsAll(const Collection<E>& collection) const {
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
                 E next = iter->next();
-                if( !this->contains( next ) ) {
+                if (!this->contains(next)) {
                     return false;
                 }
             }
@@ -241,38 +315,38 @@ namespace concurrent {
             return true;
         }
 
-        virtual bool equals( const Collection<E>& collection ) const {
+        virtual bool equals(const Collection<E>& collection) const {
 
-            if( (void*)this == &collection ) {
+            if ((void*) this == &collection) {
                 return true;
             }
 
-            const List<E>* asList = dynamic_cast<const List<E>*>( &collection );
-            if( asList == NULL ) {
+            const List<E>* asList = dynamic_cast<const List<E>*> (&collection);
+            if (asList == NULL) {
                 return false;
             }
 
-            if( this->size() != asList->size() ) {
+            if (this->size() != asList->size()) {
                 return false;
             }
 
-            std::auto_ptr< Iterator<E> > thisIter( this->iterator() );
-            std::auto_ptr< Iterator<E> > otherIter( asList->iterator() );
+            std::auto_ptr<Iterator<E> > thisIter(this->iterator());
+            std::auto_ptr<Iterator<E> > otherIter(asList->iterator());
 
-            while( thisIter->hasNext() ) {
-                if( !otherIter->hasNext() ) {
+            while (thisIter->hasNext()) {
+                if (!otherIter->hasNext()) {
                     return false;
                 }
 
                 E myNext = thisIter->next();
                 E otherNext = otherIter->next();
 
-                if( myNext != otherNext ) {
+                if (myNext != otherNext) {
                     return false;
                 }
             }
 
-            if( otherIter->hasNext() ) {
+            if (otherIter->hasNext()) {
                 return false;
             }
 
@@ -280,117 +354,138 @@ namespace concurrent {
         }
 
         virtual bool isEmpty() const {
-            return this->getArray().length() == 0;
-        }
-
-        virtual bool remove( const E& value ) {
-
-            synchronized( &this->mutex ) {
-
-                int index = this->indexOf( value );
-                if( index == -1 ) {
-                    return false;
-                }
-
-                this->removeAt( index );
-
-                return true;
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
 
-            return false;
+            return current->size == 0;
         }
 
-        virtual bool removeAll( const Collection<E>& collection ) {
+        virtual bool remove(const E& value) {
+            this->writeLock.lock();
+            try {
+                int index = this->indexOf(value);
+                if (index == -1) {
+                    this->writeLock.unlock();
+                    return false;
+                }
+                this->removeAt(index);
+                this->writeLock.unlock();
+                return true;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+        }
 
-            if( collection.isEmpty() ) {
+        virtual bool removeAll(const Collection<E>& collection) {
+            if (collection.isEmpty()) {
                 return false;
             }
 
-            synchronized( &this->mutex ) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
 
-                ArrayPointer<E> oldData = this->array;
-                int size = oldData.length();
-
-                if( size == 0 ) {
+                if (size == 0) {
+                    this->writeLock.unlock();
                     return false;
                 }
 
-                ArrayPointer<E> elements( size );
+                decaf::lang::Pointer<Array> buffer(new Array(size));
                 int count = 0;
-
-                for( int i = 0; i < size; ++i ) {
-                    E value = oldData[i];
-                    if( !collection.contains( value ) ) {
-                        elements[count++] = value;
+                for (int i = 0; i < size; ++i) {
+                    E value = oldArray->elements[i];
+                    if (!collection.contains(value)) {
+                        buffer->elements[count++] = value;
+                        buffer->size++;
                     }
                 }
 
-                if( count == 0 ) {
-                    this->array.reset( NULL );
+                if (count == 0) {
+                    this->array.reset(new Array());
                 } else {
-                    E* newArray = new E[count];
-                    System::arraycopy( elements.get(), 0, newArray, 0, count );
-                    this->array.reset( newArray, count );
+                    decaf::lang::Pointer<Array> newArray(new Array(*buffer, count));
+                    this->array.swap(newArray);
                 }
 
+                this->writeLock.unlock();
                 return true;
-
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return false;
         }
 
-        virtual bool retainAll( const Collection<E>& collection ) {
+        virtual bool retainAll(const Collection<E>& collection) {
+            this->writeLock.lock();
+            try {
 
-            synchronized( &this->mutex ) {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
 
-                ArrayPointer<E> oldData = this->array;
-                int size = oldData.length();
-
-                if( size == 0 ) {
+                if (size == 0) {
+                    this->writeLock.unlock();
                     return false;
                 }
 
-                if( collection.isEmpty() ) {
-                    this->array.reset( NULL );
+                if (collection.isEmpty()) {
+                    this->array.reset(new Array());
+                    this->writeLock.unlock();
                     return true;
                 }
 
-                ArrayPointer<E> elements( size );
+                decaf::lang::Pointer<Array> buffer(new Array(size));
                 int count = 0;
 
-                for( int i = 0; i < size; ++i ) {
-                    E value = oldData[i];
-                    if( collection.contains( value ) ) {
-                        elements[count++] = value;
+                for (int i = 0; i < size; ++i) {
+                    E value = oldArray->elements[i];
+                    if (collection.contains(value)) {
+                        buffer->elements[count++] = value;
+                        buffer->size++;
                     }
                 }
 
-                if( count == 0 ) {
-                    this->array.reset( NULL );
+                if (count == 0) {
+                    this->array.reset(new Array());
                 } else {
-                    E* newArray = new E[count];
-                    System::arraycopy( elements.get(), 0, newArray, 0, count );
-                    this->array.reset( newArray, count );
+                    this->array.swap(buffer);
                 }
 
+                this->writeLock.unlock();
                 return true;
-
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return false;
         }
 
         virtual int size() const {
-            return this->getArray().length();
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return current->size;
         }
 
         virtual std::vector<E> toArray() const {
-
-            ArrayPointer<E> data = this->getArray();
-            std::vector<E> result( data.length() );
-            for( int i = 0; i < data.length(); ++i ) {
-                result[i] = data[i];
+            decaf::lang::Pointer<Array> current = this->array;
+            std::vector<E> result( current->size );
+            for( int i = 0; i < current->size; ++i ) {
+                result[i] = current->elements[i];
             }
 
             return result;
@@ -399,33 +494,101 @@ namespace concurrent {
     public:  // Iterable API
 
         virtual decaf::util::Iterator<E>* iterator() {
-            return new ArrayListIterator( this->getArray(), 0 );
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(current, 0);
         }
         virtual decaf::util::Iterator<E>* iterator() const {
-            return new ArrayListIterator( this->getArray(), 0 );
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(current, 0);
         }
 
     public:  // List API
 
         virtual ListIterator<E>* listIterator()  {
-            return new ArrayListIterator( this->getArray(), 0 );
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(current, 0);
         }
         virtual ListIterator<E>* listIterator() const  {
-            return new ArrayListIterator( this->getArray(), 0 );
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(current, 0);
         }
 
-        virtual ListIterator<E>* listIterator( int index )  {
-            return new ArrayListIterator( this->getArray(), index );
+        virtual ListIterator<E>* listIterator(int index) {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(current, index);
         }
-        virtual ListIterator<E>* listIterator( int index ) const  {
-            return new ArrayListIterator( this->getArray(), index );
+        virtual ListIterator<E>* listIterator(int index) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            return new ArrayListIterator(this->array, index);
         }
 
-        virtual int indexOf( const E& value ) const {
+        virtual int indexOf(const E& value) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
 
-            ArrayPointer<E> elements = this->array;
-            for( int i = 0; i < elements.length(); ++i ) {
-                if( elements[i] == value ) {
+            for (int i = 0; i < current->size; ++i) {
+                if (current->elements[i] == value) {
                     return i;
                 }
             }
@@ -433,11 +596,19 @@ namespace concurrent {
             return -1;
         }
 
-        virtual int lastIndexOf( const E& value ) const {
+        virtual int lastIndexOf(const E& value) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
 
-            ArrayPointer<E> elements = this->array;
-            for( int i = elements.length() - 1; i >= 0; --i ) {
-                if( elements[i] == value ) {
+            for (int i = current->size - 1; i >= 0; --i) {
+                if (current->elements[i] == value) {
                     return i;
                 }
             }
@@ -445,123 +616,145 @@ namespace concurrent {
             return -1;
         }
 
-        virtual E get( int index ) const {
-            ArrayPointer<E> array = this->getArray();
-            checkIndexExclusive( index, array.length() );
-            return array[index];
+        virtual E get(int index) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+
+            checkIndexExclusive(index, current->size);
+            return current->elements[index];
         }
 
-        virtual E set( int index, const E& element ) {
-
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-                this->checkIndexExclusive( index, size );
-                E* newArray = new E[size];
-                System::arraycopy( previous.get(), 0, newArray, 0, size );
-                E old = newArray[index];
-                newArray[index] = element;
-                this->array.reset( newArray, size );
-
+        virtual E set(int index, const E& element) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                this->checkIndexExclusive(index, size);
+                decaf::lang::Pointer<Array> newArray(new Array(*oldArray, size));
+                E old = newArray->elements[index];
+                newArray->elements[index] = element;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return old;
-            }
-
-            return E();
-        }
-
-        virtual void add( int index, const E& element ) {
-
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-                checkIndexInclusive( index, size );
-                E* newArray = new E[size+1];
-
-                if( size > 0 ) {
-                    System::arraycopy( previous.get(), 0, newArray, 0, index);
-                }
-
-                if( size > index ) {
-                    System::arraycopy( previous.get(), index, newArray, index + 1, size - index );
-                }
-
-                newArray[index] = element;
-
-                this->array.reset( newArray, size+1 );
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
         }
 
-        virtual bool addAll( int index, const Collection<E>& collection ) {
+        virtual void add(int index, const E& element) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                this->checkIndexInclusive(index, size);
+                decaf::lang::Pointer<Array> newArray(new Array(size + 1));
 
-            synchronized( &this->mutex ) {
+                if (size > 0) {
+                    decaf::lang::System::arraycopy<E>(oldArray->elements, 0, newArray->elements, 0, index);
+                }
 
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-                checkIndexInclusive( index, size );
+                if (size > index) {
+                    decaf::lang::System::arraycopy<E>(oldArray->elements, index, newArray->elements, index + 1, size - index);
+                }
+
+                newArray->elements[index] = element;
+                newArray->size = size + 1;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
+        }
+
+        virtual bool addAll(int index, const Collection<E>& collection) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                this->checkIndexInclusive(index, size);
                 int csize = collection.size();
 
-                if( csize == 0 ) {
+                if (csize == 0) {
+                    this->writeLock.unlock();
                     return false;
                 }
 
-                E* newArray = new E[size+csize];
-
-                if( size > 0 ) {
-                    System::arraycopy( previous.get(), 0, newArray, 0, index);
+                decaf::lang::Pointer<Array> newArray(new Array(size + csize));
+                if (size > 0) {
+                    decaf::lang::System::arraycopy(oldArray->elements, 0, newArray->elements, 0, index);
                 }
 
-                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
+                std::auto_ptr<Iterator<E> > iter(collection.iterator());
                 int pos = index;
-                while( iter->hasNext() ) {
-                    newArray[pos++] = iter->next();
+                while (iter->hasNext()) {
+                    newArray->elements[pos++] = iter->next();
                 }
 
-                if( size > index ) {
-                    System::arraycopy( previous.get(), index, newArray, index + csize, size - index );
+                if (size > index) {
+                    decaf::lang::System::arraycopy(oldArray->elements, index, newArray->elements, index + csize, size - index);
                 }
-
-                this->array.reset( newArray, size+csize );
+                newArray->size = size + csize;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
+                return true;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return true;
         }
 
-        virtual E removeAt( int index ) {
+        virtual E removeAt(int index) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                this->checkIndexExclusive(index, size);
+                E old = oldArray->elements[index];
 
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-                this->checkIndexExclusive( index, size );
-                E old = previous[index];
-
-                if( size == 1 ) {
-                    this->array.reset( NULL );
+                if (size == 1) {
+                    this->array.reset(new Array());
+                    this->writeLock.unlock();
                     return old;
                 }
 
-                E* newArray = new E[size-1];
-                System::arraycopy( previous.get(), 0, newArray, 0, index );
+                decaf::lang::Pointer<Array> newArray(new Array(size - 1));
+                decaf::lang::System::arraycopy<E>(oldArray->elements, 0, newArray->elements, 0, index);
 
-                if( size > index ) {
-                    System::arraycopy( previous.get(), index + 1, newArray, index, size - index - 1 );
+                if (size > index) {
+                    decaf::lang::System::arraycopy<E>(oldArray->elements, index + 1, newArray->elements, index, size - index - 1);
                 }
 
-                this->array.reset( newArray, size - 1 );
-
+                newArray->size = size - 1;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return old;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return E();
         }
 
         virtual std::string toString() const {
-            ArrayPointer<E> current = this->getArray();
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
+            }
 
             std::string result;
-
             return result;
         }
 
@@ -576,31 +769,29 @@ namespace concurrent {
          *
          * @returns true if the element is added to this List.
          */
-        bool addIfAbsent( const E& value ) {
+        bool addIfAbsent(const E& value) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
 
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-
-                if( size != 0 ) {
-                    if( this->indexOf( value ) != -1 ) {
+                if (size != 0) {
+                    if (this->indexOf(value) != -1) {
+                        this->writeLock.unlock();
                         return false;
                     }
                 }
 
-                E* newArray = new E[size+1];
-                if( size > 0 ) {
-                    System::arraycopy( previous.get(), 0, newArray, 0, size );
-                }
-                newArray[size] = value;
-
-                this->array.reset( newArray, size+1 );
-
+                decaf::lang::Pointer<Array> newArray(new Array(*oldArray, size + 1));
+                newArray->elements[size] = value;
+                newArray->size++;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return true;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return false;
         }
 
         /**
@@ -613,38 +804,38 @@ namespace concurrent {
          *
          * @returns the number of elements that are added to this List.
          */
-        int addAllAbsent( const Collection<E>& collection ) {
+        int addAllAbsent(const Collection<E>& collection) {
 
-            if( collection.size() == 0 ) {
+            if (collection.size() == 0) {
                 return 0;
             }
 
-            synchronized( &this->mutex ) {
-
-                ArrayPointer<E> previous = this->getArray();
-                int size = previous.length();
-
-                ArrayPointer<E> add( collection.size() );
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
+                decaf::lang::Pointer<Array> buffer(new Array(collection.size()));
                 int count = 0;
 
-                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-                while( iter->hasNext() ) {
+                std::auto_ptr<Iterator<E> > iter(collection.iterator());
+                while (iter->hasNext()) {
                     E value = iter->next();
-                    if( this->indexOf( value ) == -1 ) {
-                        add[count++] = value;
+                    if (this->indexOf(value) == -1) {
+                        buffer->elements[count++] = value;
+                        buffer->size++;
                     }
                 }
 
-                E* newArray = new E[size+count];
-                System::arraycopy( previous.get(), 0, newArray, 0, size );
-                System::arraycopy( add.get(), 0, newArray, size, count );
-
-                this->array.reset( newArray, size+count );
-
+                decaf::lang::Pointer<Array> newArray(new Array(*oldArray, size + count));
+                decaf::lang::System::arraycopy(buffer->elements, 0, newArray->elements, size, count);
+                newArray->size = size + count;
+                this->array.swap(newArray);
+                this->writeLock.unlock();
                 return count;
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
-
-            return 0;
         }
 
         /**
@@ -660,17 +851,25 @@ namespace concurrent {
          *
          * @throws IndexOutOfBoundsException if the given index is greater than or equal to the List size.
          */
-        int lastIndexOf( const E& value, int index ) {
-
-            ArrayPointer<E> elements = this->array;
-
-            if( index >= elements.length() ) {
-                throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__, "Index given %d, actual size %d", index, elements.length() );
+        int lastIndexOf(const E& value, int index) {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
 
-            for( int i = index - 1; i >= 0; --i ) {
-                if( elements[i] == value ) {
+
+            if (index >= current->size) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "Index given %d, actual size %d", index, current->size);
+            }
+
+            for (int i = index - 1; i >= 0; --i) {
+                if (current->elements[i] == value) {
                     return i;
                 }
             }
@@ -691,17 +890,25 @@ namespace concurrent {
          *
          * @throws IndexOutOfBoundsException if the given index is negative.
          */
-        int indexOf( const E& value, int index ) const {
-
-            ArrayPointer<E> elements = this->array;
-
-            if( index < 0 ) {
-                throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__, "Index given %d, actual size %d", index, elements.length() );
+        int indexOf(const E& value, int index) const {
+            decaf::lang::Pointer<Array> current;
+            this->writeLock.lock();
+            try {
+                current = this->array;
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
 
-            for( int i = index; i < elements.length(); ++i ) {
-                if( elements[i] == value ) {
+
+            if (index < 0) {
+                throw decaf::lang::exceptions::IndexOutOfBoundsException(
+                    __FILE__, __LINE__, "Index given %d, actual size %d", index, current->size);
+            }
+
+            for (int i = index; i < current->size; ++i) {
+                if (current->elements[i] == value) {
                     return i;
                 }
             }
@@ -712,78 +919,78 @@ namespace concurrent {
     public:  // Synchronizable
 
         virtual void lock() {
-            mutex.lock();
+            this->writeLock.lock();
         }
 
         virtual bool tryLock() {
-            return mutex.tryLock();
+            return this->writeLock.tryLock();
         }
 
         virtual void unlock() {
-            mutex.unlock();
+            this->writeLock.unlock();
         }
 
         virtual void wait()  {
-            mutex.wait();
+            this->condition->await();
         }
 
-        virtual void wait( long long millisecs ) {
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            this->condition->await(millisecs, decaf::util::concurrent::TimeUnit::MILLISECONDS);
         }
 
         virtual void wait( long long millisecs, int nanos ) {
-            mutex.wait( millisecs, nanos );
+            long long timeout = decaf::util::concurrent::TimeUnit::MILLISECONDS.toNanos(millisecs) + nanos;
+            this->condition->awaitNanos(timeout);
         }
 
         virtual void notify() {
-            mutex.notify();
+            this->condition->signal();
         }
 
         virtual void notifyAll() {
-            mutex.notifyAll();
+            this->condition->signalAll();
         }
 
     private:
 
-        template<typename T>
-        friend class CopyOnWriteArraySet;
+        void doCopyCollection(const Collection<E>& collection) {
 
-        void doCopyCollection( const Collection<E>& collection ) {
-
-            if( (void*)this == &collection ) {
+            if ((void*) this == &collection || collection.isEmpty()) {
                 return;
             }
 
-            synchronized( &this->mutex ) {
+            this->writeLock.lock();
+            try {
+                decaf::lang::Pointer<Array> oldArray = this->array;
+                int size = oldArray->size;
 
-                ArrayPointer<E> data( collection.size() );
-
-                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
+                decaf::lang::Pointer<Array> buffer(new Array(*oldArray, size + collection.size()));
+                std::auto_ptr<Iterator<E> > iter(collection.iterator());
                 int index = 0;
-
-                while( iter->hasNext() ) {
-                    data[index++] = iter->next();
+                while (iter->hasNext()) {
+                    buffer->elements[size + index++] = iter->next();
+                    buffer->size++;
                 }
 
-                this->array = data;
+                this->array.swap(buffer);
+                this->writeLock.unlock();
+            } catch (decaf::lang::Exception& ex) {
+                this->writeLock.unlock();
+                throw;
             }
         }
 
-        ArrayPointer<E> getArray() const {
-            return this->array;
-        }
-
-        static void checkIndexInclusive( int index, int size ) {
-            if( index < 0 || index > size ) {
+        static void checkIndexInclusive(int index, int size) {
+            if (index < 0 || index > size) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__, "Index is %d, size is %d", index, size );
+                    __FILE__, __LINE__, "Index is %d, size is %d", index, size);
             }
         }
 
-        static void checkIndexExclusive( int index, int size ) {
-            if( index < 0 || index >= size ) {
+        static void checkIndexExclusive(int index, int size) {
+            if (index < 0 || index >= size) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__, "Index is %d, size is %d", index, size );
+                    __FILE__, __LINE__, "Index is %d, size is %d", index, size);
             }
         }
 

@@ -18,6 +18,9 @@
 #ifndef _DECAF_UTIL_CONCURRENT_LOCKS_READWRITELOCK_H_
 #define _DECAF_UTIL_CONCURRENT_LOCKS_READWRITELOCK_H_
 
+#include <decaf/util/Config.h>
+#include <decaf/util/concurrent/locks/Lock.h>
+
 namespace decaf {
 namespace util {
 namespace concurrent {
@@ -84,7 +87,7 @@ namespace locks {
      *
      * @since 1.0
      */
-    class ReadWriteLock {
+    class DECAF_API ReadWriteLock {
     public:
 
         virtual ~ReadWriteLock() {}

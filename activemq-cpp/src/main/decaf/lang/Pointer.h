@@ -49,8 +49,8 @@ namespace lang {
      *
      * @since 1.0
      */
-    template< typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter >
-    class Pointer : public REFCOUNTER {
+    template<typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter>
+    class Pointer: public REFCOUNTER {
     private:
 
         typedef void (*deletionFuncPtr)(T* p);
@@ -59,14 +59,14 @@ namespace lang {
 
         T* value;
 
-        // Pointer to our internal delete function, allows incompletes.
+        // Pointer to our internal delete function.
         deletionFuncPtr onDelete;
 
     public:
 
-        typedef T* PointerType;          // type returned by operator->
-        typedef T& ReferenceType;        // type returned by operator*
-        typedef REFCOUNTER CounterType;  // Type of the Reference Counter
+        typedef T* PointerType;         // type returned by operator->
+        typedef T& ReferenceType;       // type returned by operator*
+        typedef REFCOUNTER CounterType; // Type of the Reference Counter
 
     public:
 
@@ -76,43 +76,47 @@ namespace lang {
          * Initialized the contained pointer to NULL, using the -> operator
          * results in an exception unless reset to contain a real value.
          */
-        Pointer() : REFCOUNTER(), value( NULL ), onDelete( onDeleteFunc ) {}
+        Pointer() : REFCOUNTER(), value(NULL), onDelete(onDeleteFunc) {}
 
         /**
          * Explicit Constructor, creates a Pointer that contains value with a
          * single reference.  This object now has ownership until a call to release.
          *
-         * @param value - instance of the type we are containing here.
+         * @param value -
+         *      The instance of the type we are containing here.
          */
-        explicit Pointer( const PointerType value ) : REFCOUNTER(), value( value ), onDelete( onDeleteFunc ) {
-        }
+        explicit Pointer(const PointerType value) : REFCOUNTER(), value(value), onDelete(onDeleteFunc) {}
 
         /**
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
+         *
+         * @param value
+         *      Another instance of a Pointer<T> that this Pointer will copy.
          */
-        Pointer( const Pointer& value ) :
-            REFCOUNTER( value ), value( value.value ), onDelete( onDeleteFunc ) {}
+        Pointer(const Pointer& value) : REFCOUNTER(value), value(value.value), onDelete(onDeleteFunc) {}
 
         /**
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
+         *
+         * @param value
+         *      A different but compatible Pointer instance that this Pointer will copy.
          */
-        template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value ) :
-            REFCOUNTER( value ), value( value.get() ), onDelete( onDeleteFunc ) {}
+        template<typename T1, typename R1>
+        Pointer(const Pointer<T1, R1>& value) : REFCOUNTER(value), value(value.get()), onDelete(onDeleteFunc) {}
 
         /**
          * Static Cast constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter performing a static cast on the
          * value contained in the source Pointer object.
          *
-         * @param value - Pointer instance to cast to this type.
+         * @param value
+         *      Pointer instance to cast to this type using a static_cast.
          */
-        template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) :
-            REFCOUNTER( value ), value( static_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
-        }
+        template<typename T1, typename R1>
+        Pointer(const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN&) :
+            REFCOUNTER(value), value(static_cast<T*> (value.get())), onDelete(onDeleteFunc) {}
 
         /**
          * Dynamic Cast constructor. Copies the value contained in the pointer to the new
@@ -120,29 +124,28 @@ namespace lang {
          * value contained in the source Pointer object.  If the cast fails and return NULL
          * then this method throws a ClassCastException.
          *
-         * @param value - Pointer instance to cast to this type.
+         * @param value
+         *      Pointer instance to cast to this type using a dynamic_cast.
          *
          * @throw ClassCastException if the dynamic cast returns NULL
          */
-        template< typename T1, typename R1 >
-        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& ) :
-                REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ), onDelete( onDeleteFunc ) {
+        template<typename T1, typename R1>
+        Pointer(const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN&) :
+            REFCOUNTER(value), value(dynamic_cast<T*> (value.get())), onDelete(onDeleteFunc) {
 
-            if( this->value == NULL ) {
-
+            if (this->value == NULL) {
                 // Remove the reference we took in the Reference Counter's ctor since we
                 // didn't actually create one as the dynamic cast failed.
                 REFCOUNTER::release();
                 throw decaf::lang::exceptions::ClassCastException(
-                    __FILE__, __LINE__,
-                    "Failed to cast source pointer of type %s to this type: %s.",
-                    typeid( T1 ).name(), typeid( T ).name() );
+                    __FILE__, __LINE__, "Failed to cast source pointer of type %s to this type: %s.",
+                    typeid(T1).name(), typeid(T).name());
             }
         }
 
         virtual ~Pointer() {
-            if( REFCOUNTER::release() == true ) {
-                onDelete( this->value );
+            if (REFCOUNTER::release() == true) {
+                onDelete(this->value);
             }
         }
 
@@ -152,18 +155,17 @@ namespace lang {
          * Call reset with a value of NULL is supported and acts to set this Pointer
          * to a NULL pointer.
          *
-         * @param value - The new value to contain.
+         * @param value
+         *      The new value to contain or NULL to empty the pointer (default NULL if not set).
          */
-        void reset( T* value ) {
-            Pointer( value ).swap( *this );
+        void reset(T* value = NULL) {
+            Pointer(value).swap(*this);
         }
 
         /**
          * Releases the Pointer held and resets the internal pointer value to Null.  This method
          * is not guaranteed to be safe if the Pointer is held by more than one object or this
          * method is called from more than one thread.
-         *
-         * @param value - The new value to contain.
          *
          * @returns The pointer instance that was held by this Pointer object, the pointer is
          *          no longer owned by this Pointer and won't be freed when this Pointer goes
@@ -189,34 +191,36 @@ namespace lang {
 
         /**
          * Exception Safe Swap Function
-         * @param value - the value to swap with this.
+         *
+         * @param value
+         *      The value to swap with this Pointer.
          */
-        void swap( Pointer& value ) {
-            std::swap( this->value, value.value );
-            REFCOUNTER::swap( value );
+        void swap(Pointer& value) {
+            std::swap(this->value, value.value);
+            REFCOUNTER::swap(value);
         }
 
         /**
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
-        Pointer& operator= ( const Pointer& right ) {
-            if( this == (void*)&right ) {
+        Pointer& operator=(const Pointer& right) {
+            if (this == (void*) &right) {
                 return *this;
             }
 
-            Pointer temp( right );
-            temp.swap( *this );
+            Pointer temp(right);
+            temp.swap(*this);
             return *this;
         }
-        template< typename T1, typename R1>
-        Pointer& operator= ( const Pointer<T1, R1>& right ) {
-            if( this == (void*)&right ) {
+        template<typename T1, typename R1>
+        Pointer& operator=(const Pointer<T1, R1>& right) {
+            if (this == (void*) &right) {
                 return *this;
             }
 
-            Pointer temp( right );
-            temp.swap( *this );
+            Pointer temp(right);
+            temp.swap(*this);
             return *this;
         }
 
@@ -228,20 +232,20 @@ namespace lang {
          * @throws NullPointerException if the contained value is Null
          */
         ReferenceType operator*() {
-            if( this->value == NULL ) {
+            if (this->value == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Pointer operator& - Pointee is NULL." );
+                    __FILE__, __LINE__, "Pointer operator& - Pointee is NULL.");
             }
 
-            return *( this->value );
+            return *(this->value);
         }
         ReferenceType operator*() const {
-            if( this->value == NULL ) {
+            if (this->value == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Pointer operator& - Pointee is NULL." );
+                    __FILE__, __LINE__, "Pointer operator& - Pointee is NULL.");
             }
 
-            return *( this->value );
+            return *(this->value);
         }
 
         /**
@@ -252,16 +256,16 @@ namespace lang {
          * @throws NullPointerException if the contained value is Null
          */
         PointerType operator->() {
-            if( this->value == NULL ) {
+            if (this->value == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Pointer operator-> - Pointee is NULL." );
+                    __FILE__, __LINE__, "Pointer operator-> - Pointee is NULL.");
             }
             return this->value;
         }
         PointerType operator->() const {
-            if( this->value == NULL ) {
+            if (this->value == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Pointer operator-> - Pointee is NULL." );
+                    __FILE__, __LINE__, "Pointer operator-> - Pointee is NULL.");
             }
             return this->value;
         }
@@ -270,40 +274,40 @@ namespace lang {
             return this->value == NULL;
         }
 
-        inline friend bool operator==( const Pointer& left, const T* right ) {
+        inline friend bool operator==(const Pointer& left, const T* right) {
             return left.get() == right;
         }
 
-        inline friend bool operator==( const T* left, const Pointer& right ) {
+        inline friend bool operator==(const T* left, const Pointer& right) {
             return left == right.get();
         }
 
-        inline friend bool operator!=( const Pointer& left, const T* right ) {
+        inline friend bool operator!=(const Pointer& left, const T* right) {
             return left.get() != right;
         }
 
-        inline friend bool operator!=( const T* left, const Pointer& right ) {
+        inline friend bool operator!=(const T* left, const Pointer& right) {
             return left != right.get();
         }
 
-        template< typename T1, typename R1 >
-        bool operator==( const Pointer<T1, R1>& right ) const {
+        template<typename T1, typename R1>
+        bool operator==(const Pointer<T1, R1>& right) const {
             return this->value == right.get();
         }
 
-        template< typename T1, typename R1 >
-        bool operator!=( const Pointer<T1, R1>& right ) const {
-            return !( this->value == right.get() );
+        template<typename T1, typename R1>
+        bool operator!=(const Pointer<T1, R1>& right) const {
+            return !(this->value == right.get());
         }
 
-        template< typename T1 >
+        template<typename T1>
         Pointer<T1, CounterType> dynamicCast() const {
-            return Pointer<T1, CounterType>( *this, DYNAMIC_CAST_TOKEN() );
+            return Pointer<T1, CounterType> (*this, DYNAMIC_CAST_TOKEN());
         }
 
-        template< typename T1 >
+        template<typename T1>
         Pointer<T1, CounterType> staticCast() const {
-            return Pointer<T1, CounterType>( *this, STATIC_CAST_TOKEN() );
+            return Pointer<T1, CounterType> (*this, STATIC_CAST_TOKEN());
         }
 
     private:
@@ -316,32 +320,32 @@ namespace lang {
     };
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator==( const Pointer<T, R>& left, const U* right ) {
+    template<typename T, typename R, typename U>
+    inline bool operator==(const Pointer<T, R>& left, const U* right) {
         return left.get() == right;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator==( const U* left, const Pointer<T, R>& right ) {
+    template<typename T, typename R, typename U>
+    inline bool operator==(const U* left, const Pointer<T, R>& right) {
         return right.get() == left;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator!=( const Pointer<T, R>& left, const U* right ) {
-        return !( left.get() == right );
+    template<typename T, typename R, typename U>
+    inline bool operator!=(const Pointer<T, R>& left, const U* right) {
+        return !(left.get() == right);
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R, typename U >
-    inline bool operator!=( const U* left, const Pointer<T, R>& right ) {
+    template<typename T, typename R, typename U>
+    inline bool operator!=(const U* left, const Pointer<T, R>& right) {
         return right.get() != left;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template< typename T, typename R>
-    std::ostream& operator<<(std::ostream &out, const Pointer<T,R>& pointer){
+    template<typename T, typename R>
+    std::ostream& operator<<(std::ostream &out, const Pointer<T, R>& pointer) {
         out << pointer.get();
         return out;
     }
@@ -358,20 +362,20 @@ namespace lang {
      * to be compared based on the comparison of the object itself and not just the value of
      * the pointer.
      */
-    template< typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter >
-    class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
+    template<typename T, typename R = decaf::util::concurrent::atomic::AtomicRefCounter>
+    class PointerComparator: public decaf::util::Comparator<Pointer<T, R> > {
     public:
 
         virtual ~PointerComparator() {}
 
         // Allows for operator less on types that implement Comparable or provide
         // a workable operator <
-        virtual bool operator() (const Pointer<T,R>& left, const Pointer<T,R>& right) const {
+        virtual bool operator()(const Pointer<T, R>& left, const Pointer<T, R>& right) const {
             return *left < *right;
         }
 
         // Requires that the type in the pointer is an instance of a Comparable.
-        virtual int compare(const Pointer<T,R>& left, const Pointer<T,R>& right) const {
+        virtual int compare(const Pointer<T, R>& left, const Pointer<T, R>& right) const {
             return *left < *right ? -1 : *right < *left ? 1 : 0;
         }
 
@@ -380,21 +384,16 @@ namespace lang {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace std{
+namespace std {
 
     /**
      * An override of the less function object so that the Pointer objects
      * can be stored in STL Maps, etc.
      */
-    template< typename T >
-    struct less< decaf::lang::Pointer<T> > :
-        public binary_function< decaf::lang::Pointer<T>,
-                                decaf::lang::Pointer<T>, bool>
-    {
-        bool operator()( const decaf::lang::Pointer<T>& left,
-                         const decaf::lang::Pointer<T>& right ) const
-        {
-            return less<T*>()( left.get(), right.get() );
+    template<typename T>
+    struct less<decaf::lang::Pointer<T> > : public binary_function<decaf::lang::Pointer<T>, decaf::lang::Pointer<T>, bool> {
+        bool operator()(const decaf::lang::Pointer<T>& left, const decaf::lang::Pointer<T>& right) const {
+            return less<T*> ()(left.get(), right.get());
         }
     };
 }

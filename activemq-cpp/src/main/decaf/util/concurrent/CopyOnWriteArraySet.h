@@ -21,6 +21,7 @@
 #include <decaf/util/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/lang/ArrayPointer.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Set.h>
@@ -30,8 +31,6 @@
 namespace decaf {
 namespace util {
 namespace concurrent {
-
-    using decaf::lang::ArrayPointer;
 
     /**
      * Since the CopyOnWriteArraySet and the CopyOnWriteArrayList share much of the same
@@ -54,26 +53,26 @@ namespace concurrent {
 
     public:
 
-        CopyOnWriteArraySet() : AbstractSet<E>(), array() {
+        CopyOnWriteArraySet() : AbstractSet<E> (), array() {
         }
 
-        CopyOnWriteArraySet( const Collection<E>& collection ) : AbstractSet<E>(), array() {
-            this->copy( collection );
+        CopyOnWriteArraySet(const Collection<E>& collection) : AbstractSet<E> (), array() {
+            this->copy(collection);
         }
 
-        CopyOnWriteArraySet( const E* array, int size ) : AbstractSet<E>(), array() {
-
-            for( int i = 0; i < size; ++i ) {
-                this->array.addIfAbsent( array[i] );
+        CopyOnWriteArraySet(const E* array, int size) : AbstractSet<E> (), array() {
+            for (int i = 0; i < size; ++i) {
+                this->array.addIfAbsent(array[i]);
             }
         }
 
-        virtual ~CopyOnWriteArraySet() {}
+        virtual ~CopyOnWriteArraySet() {
+        }
 
     public:
 
-        virtual void copy( const Collection<E>& collection ) {
-            this->array.copy( collection );
+        virtual void copy(const Collection<E>& collection) {
+            this->array.copy(collection);
         }
 
         virtual decaf::util::Iterator<E>* iterator() {
@@ -92,78 +91,74 @@ namespace concurrent {
             return this->array.isEmpty();
         }
 
-        virtual bool add( const E& value ) {
-            return this->array.addIfAbsent( value );
+        virtual bool add(const E& value) {
+            return this->array.addIfAbsent(value);
         }
 
-        virtual bool addAll( const Collection<E>& collection ) {
-            return this->array.addAllAbsent( collection ) > 0 ? true : false;
+        virtual bool addAll(const Collection<E>& collection) {
+            return this->array.addAllAbsent(collection) > 0 ? true : false;
         }
 
         virtual void clear() {
             this->array.clear();
         }
 
-        virtual bool contains( const E& value ) const {
-            return this->array.contains( value );
+        virtual bool contains(const E& value) const {
+            return this->array.contains(value);
         }
 
-        virtual bool containsAll( const Collection<E>& collection ) const {
-            return this->array.containsAll( collection );
+        virtual bool containsAll(const Collection<E>& collection) const {
+            return this->array.containsAll(collection);
         }
 
-        virtual bool remove( const E& value ) {
-            return this->array.remove( value );
+        virtual bool remove(const E& value) {
+            return this->array.remove(value);
         }
 
-        virtual bool removeAll( const Collection<E>& collection ) {
-            return this->array.removeAll( collection );
+        virtual bool removeAll(const Collection<E>& collection) {
+            return this->array.removeAll(collection);
         }
 
-        virtual bool retainAll( const Collection<E>& collection ) {
-            return this->array.retainAll( collection );
+        virtual bool retainAll(const Collection<E>& collection) {
+            return this->array.retainAll(collection);
         }
 
         virtual std::vector<E> toArray() const {
             return this->array.toArray();
         }
 
-        virtual bool equals( const Collection<E>& collection ) const {
+        virtual bool equals(const Collection<E>& collection) const {
 
-            if( (void*)this == &collection ) {
+            if ((void*) this == &collection) {
                 return true;
             }
 
-            const Set<E>* asSet = dynamic_cast<const Set<E>*>( &collection );
-            if( asSet == NULL ) {
+            const Set<E>* asSet = dynamic_cast<const Set<E>*> (&collection);
+            if (asSet == NULL) {
                 return false;
             }
 
-            if( this->size() != asSet->size() ) {
+            if (this->size() != asSet->size()) {
                 return false;
             }
 
-            std::auto_ptr< Iterator<E> > setIter( asSet->iterator() );
+            std::auto_ptr<Iterator<E> > setIter(asSet->iterator());
 
-            //  Use a single snapshot of underlying array
-            ArrayPointer<E> elements = this->array.getArray();
-            int length = elements.length();
+            // Use a single snapshot of underlying array
+            CopyOnWriteArrayList<E> array(this->array);
+            int length = array.size();
+            decaf::lang::ArrayPointer<bool> matched(length, false);
 
-            ArrayPointer<bool> matched( length, false );
-
-            while( setIter->hasNext() ) {
-
+            while (setIter->hasNext()) {
                 E value = setIter->next();
-                for( int i = 0; i < length; ++i ) {
-                    if( !matched[i] && value == elements[i] ) {
-                        matched[i] = true;
-                        break;
-                    }
+                int matchedAt = array.indexOf(value);
+                if (matchedAt >= 0) {
+                    matched[matchedAt] = true;
                 }
             }
 
-            for( int i = 0; i < length; ++i ) {
-                if( matched[i] == false ) {
+            for (int i = 0; i < length; ++i) {
+                if (matched[i] == false) {
                     return false;
                 }
             }
