@@ -983,11 +983,11 @@ namespace {
     private:
 
         Random rand;
-        CopyOnWriteArrayList<Target*>* list;
+        CopyOnWriteArrayList<Pointer<Target> >* list;
 
     public:
 
-        AddRemoveItemRunnable(CopyOnWriteArrayList<Target*>* list) :
+        AddRemoveItemRunnable(CopyOnWriteArrayList<Pointer<Target> >* list) :
             Runnable(), rand(), list(list) {
         }
 
@@ -995,11 +995,10 @@ namespace {
 
         virtual void run() {
             TimeUnit::MILLISECONDS.sleep(rand.nextInt(10));
-            Target* target = new Target();
+            Pointer<Target> target(new Target());
             list->add(target);
             TimeUnit::MILLISECONDS.sleep(rand.nextInt(10));
             list->remove(target);
-            delete target;
         }
     };
 
@@ -1007,11 +1006,11 @@ namespace {
     private:
 
         Random rand;
-        CopyOnWriteArrayList<Target*>* list;
+        CopyOnWriteArrayList<Pointer<Target> >* list;
 
     public:
 
-        IterateAndExecuteMethodRunnable(CopyOnWriteArrayList<Target*>* list) :
+        IterateAndExecuteMethodRunnable(CopyOnWriteArrayList<Pointer<Target> >* list) :
             Runnable(), rand(), list(list) {
         }
 
@@ -1019,7 +1018,7 @@ namespace {
 
         virtual void run() {
             TimeUnit::MILLISECONDS.sleep(rand.nextInt(15));
-            Pointer< Iterator<Target*> > iter(list->iterator());
+            Pointer< Iterator<Pointer<Target> > > iter(list->iterator());
             while(iter->hasNext()) {
                 iter->next()->increment();
             }
@@ -1032,7 +1031,7 @@ namespace {
 void CopyOnWriteArrayListTest::testConcurrentRandomAddRemoveAndIterate() {
 
     ThreadPoolExecutor executor(50, Integer::MAX_VALUE, 60LL, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
-    CopyOnWriteArrayList<Target*> list;
+    CopyOnWriteArrayList<Pointer<Target> > list;
 
     Random rand;
 
