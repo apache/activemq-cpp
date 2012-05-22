@@ -54,7 +54,8 @@ void ConnectionState::reset( const Pointer<ConnectionInfo>& info ) {
     transactions.clear();
     sessions.clear();
     tempDestinations.clear();
-    disposed.set( false );
+    disposed.set(false);
+    recoveringPullConsumers.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
