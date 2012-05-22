@@ -34,6 +34,10 @@ SessionState::SessionState(Pointer<SessionInfo> info) :
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionState::~SessionState() {
+    try {
+        this->shutdown();
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,8 +51,14 @@ std::string SessionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SessionState::checkShutdown() const {
+void SessionState::shutdown() {
+    this->disposed.set(true);
+    this->producers.clear();
+    this->consumers.clear();
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void SessionState::checkShutdown() const {
     if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
             __FILE__, __LINE__, "Session already Disposed");
@@ -63,7 +73,6 @@ void SessionState::addProducer(Pointer<ProducerInfo> info) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ProducerState> SessionState::removeProducer(Pointer<ProducerId> id) {
-
     Pointer<ProducerState> producerState = producers.remove(id);
     if (producerState != NULL) {
         if (producerState->getTransactionState() != NULL) {
@@ -76,4 +85,15 @@ Pointer<ProducerState> SessionState::removeProducer(Pointer<ProducerId> id) {
     }
 
     return producerState;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SessionState::addConsumer(Pointer<ConsumerInfo> info) {
+    checkShutdown();
+    consumers.put(info->getConsumerId(), Pointer<ConsumerState>(new ConsumerState(info)));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ConsumerState> SessionState::removeConsumer(Pointer<ConsumerId> id) {
+    return consumers.remove(id);
 }

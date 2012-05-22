@@ -75,14 +75,9 @@ namespace state {
 
         Pointer<ProducerState> removeProducer(Pointer<ProducerId> id);
 
-        void addConsumer(const Pointer<ConsumerInfo>& info) {
-            checkShutdown();
-            consumers.put(info->getConsumerId(), Pointer<ConsumerState>(new ConsumerState(info)));
-        }
+        void addConsumer(Pointer<ConsumerInfo> info);
 
-        Pointer<ConsumerState> removeConsumer(Pointer<ConsumerId> id) {
-            return consumers.remove(id);
-        }
+        Pointer<ConsumerState> removeConsumer(Pointer<ConsumerId> id);
 
         std::vector<Pointer<ProducerState> > getProducerStates() const {
             return producers.values();
@@ -102,9 +97,7 @@ namespace state {
 
         void checkShutdown() const;
 
-        void shutdown() {
-            this->disposed.set(true);
-        }
+        void shutdown();
 
     };
 
