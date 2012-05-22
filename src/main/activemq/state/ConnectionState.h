@@ -88,17 +88,7 @@ namespace state {
             tempDestinations.add(info);
         }
 
-        void removeTempDestination(Pointer<ActiveMQDestination> destination) {
-
-            std::auto_ptr<decaf::util::Iterator<Pointer<DestinationInfo> > > iter(tempDestinations.iterator());
-
-            while (iter->hasNext()) {
-                Pointer<DestinationInfo> di = iter->next();
-                if (di->getDestination()->equals(destination.get())) {
-                    iter->remove();
-                }
-            }
-        }
+        void removeTempDestination(Pointer<ActiveMQDestination> destination);
 
         void addTransactionState(Pointer<TransactionId> id) {
             checkShutdown();

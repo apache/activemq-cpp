@@ -70,9 +70,7 @@ namespace state {
 
         void checkShutdown() const;
 
-        void shutdown() {
-            this->disposed.set(true);
-        }
+        void shutdown();
 
         void clear();
 

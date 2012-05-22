@@ -28,13 +28,8 @@ using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionState::ConnectionState(Pointer<ConnectionInfo> info) :
-    info(info),
-    transactions(),
-    sessions(),
-    tempDestinations(),
-    disposed(false),
-    connectionInterruptProcessingComplete(true),
-    recoveringPullConsumers() {
+    info(info), transactions(), sessions(), tempDestinations(), disposed(false),
+    connectionInterruptProcessingComplete(true), recoveringPullConsumers() {
 
     Pointer<SessionId> sessionId(new SessionId(info->getConnectionId().get(), -1));
     Pointer<SessionInfo> session(new SessionInfo());
@@ -46,6 +41,9 @@ ConnectionState::ConnectionState(Pointer<ConnectionInfo> info) :
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionState::~ConnectionState() {
+    transactions.clear();
+    sessions.clear();
+    tempDestinations.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,9 +81,21 @@ void ConnectionState::shutdown() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionState::checkShutdown() const {
-
     if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
             __FILE__, __LINE__, "Connection already Disposed");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionState::removeTempDestination(Pointer<ActiveMQDestination> destination) {
+
+    std::auto_ptr<decaf::util::Iterator<Pointer<DestinationInfo> > > iter(tempDestinations.iterator());
+
+    while (iter->hasNext()) {
+        Pointer<DestinationInfo> di = iter->next();
+        if (di->getDestination()->equals(destination.get())) {
+            iter->remove();
+        }
     }
 }

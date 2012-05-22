@@ -35,7 +35,10 @@ TransactionState::TransactionState(Pointer<TransactionId> id) :
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
-    clear();
+    try {
+        clear();
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +52,12 @@ std::string TransactionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void TransactionState::shutdown() {
+    this->disposed.set(true);
+    this->clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void TransactionState::clear() {
     this->commands.clear();
     this->producers.clear();
@@ -56,14 +65,12 @@ void TransactionState::clear() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionState::addCommand(Pointer<Command> operation) {
-
     checkShutdown();
     commands.add(operation);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionState::checkShutdown() const {
-
     if (this->disposed.get()) {
         throw decaf::lang::exceptions::IllegalStateException(
             __FILE__, __LINE__, "Transaction already Disposed");
@@ -72,7 +79,6 @@ void TransactionState::checkShutdown() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionState::addProducerState(Pointer<ProducerState> producerState) {
-
     if (producerState != NULL) {
         // Ensure the producer doesn't hold a link to this TX state to avoid a
         // circular reference that could lead to memory leaks.
