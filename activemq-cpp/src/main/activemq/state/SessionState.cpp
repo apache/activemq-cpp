@@ -67,14 +67,15 @@ void SessionState::addProducer( const Pointer<ProducerInfo>& info ) {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ProducerState> SessionState::removeProducer( const Pointer<ProducerId>& id ) {
 
-    Pointer<ProducerState> producerState = producers.remove( id );
-    if( producerState != NULL ) {
-        if( producerState->getTransactionState() != NULL ) {
-            // allow the transaction to recreate dependent producer on recovery
-            producerState->getTransactionState()->addProducerState( producerState );
-            producerState->getTransactionState().reset(NULL);
-        }
-    }
+    Pointer<ProducerState> producerState = producers.remove(id);
+	if (producerState != NULL) {
+		Pointer<TransactionState> txState = producerState->getTransactionState();
+		if (txState != NULL) {
+			producerState->setTransactionState(Pointer<TransactionState>());
+			// allow the transaction to recreate dependent producer on recovery
+			producerState->getTransactionState()->addProducerState(producerState);
+		}
+	}
 
     return producerState;
 }
