@@ -119,32 +119,29 @@ void TcpTransport::connect( const decaf::net::URI& uri,
         int outputBufferSize = Integer::parseInt(
             properties.getProperty( "outputBufferSize", "8192" ) );
 
-        InputStream* inputStream = socket->getInputStream();
-        OutputStream* outputStream = socket->getOutputStream();
+        Pointer<InputStream> inputStream(socket->getInputStream());
+		Pointer<OutputStream> outputStream(socket->getOutputStream());
 
         // If tcp tracing was enabled, wrap the iostreams with logging streams
-        if( properties.getProperty( "transport.tcpTracingEnabled", "false" ) == "true" ) {
-
+        if (properties.getProperty("transport.tcpTracingEnabled", "false") == "true") {
             // Wrap with logging stream, we don't own the wrapped streams
-            inputStream = new LoggingInputStream( inputStream );
-            outputStream = new LoggingOutputStream( outputStream );
+            inputStream.reset(new LoggingInputStream(inputStream.release()));
+            outputStream.reset(new LoggingOutputStream(outputStream.release()));
 
             // Now wrap with the Buffered streams, we own the source streams
-            inputStream = new BufferedInputStream( inputStream, inputBufferSize, true );
-            outputStream = new BufferedOutputStream( outputStream, outputBufferSize, true );
-
+            inputStream.reset(new BufferedInputStream(inputStream.release(), inputBufferSize, true));
+            outputStream.reset(new BufferedOutputStream(outputStream.release(), outputBufferSize, true));
         } else {
-
             // Wrap with the Buffered streams, we don't own the source streams
-            inputStream = new BufferedInputStream( inputStream, inputBufferSize );
-            outputStream = new BufferedOutputStream( outputStream, outputBufferSize );
+            inputStream.reset(new BufferedInputStream(inputStream.release(), inputBufferSize));
+            outputStream.reset(new BufferedOutputStream(outputStream.release(), outputBufferSize));
         }
 
         // Now wrap the Buffered Streams with DataInput based streams.  We own
         // the Source streams, all the streams in the chain that we own are
         // destroyed when these are.
-        this->dataInputStream.reset( new DataInputStream( inputStream, true ) );
-        this->dataOutputStream.reset( new DataOutputStream( outputStream, true ) );
+        this->dataInputStream.reset(new DataInputStream(inputStream.release(), true));
+		this->dataOutputStream.reset(new DataOutputStream(outputStream.release(), true));
 
         // Give the IOTransport the streams.
         ioTransport->setInputStream( dataInputStream.get() );
