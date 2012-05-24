@@ -75,12 +75,13 @@ void SessionState::addProducer(Pointer<ProducerInfo> info) {
 Pointer<ProducerState> SessionState::removeProducer(Pointer<ProducerId> id) {
     Pointer<ProducerState> producerState = producers.remove(id);
     if (producerState != NULL) {
-        if (producerState->getTransactionState() != NULL) {
+        Pointer<TransactionState> transactionState = producerState->getTransactionState();
+        if (transactionState != NULL) {
             // allow the transaction to recreate dependent producer on recovery, we
             // hand off the producer state to the Transaction and NULL the producer's
             // reference to avoid a circular link to it.
-            producerState->getTransactionState()->addProducerState(producerState);
-            producerState->getTransactionState().reset(NULL);
+            producerState->setTransactionState(Pointer<TransactionState>());
+            transactionState->addProducerState(producerState);
         }
     }
 
