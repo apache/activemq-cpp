@@ -173,6 +173,7 @@ cc_sources = \
     decaf/lang/ShortTest.cpp \
     decaf/lang/StringTest.cpp \
     decaf/lang/SystemTest.cpp \
+    decaf/lang/ThreadLocalTest.cpp \
     decaf/lang/ThreadTest.cpp \
     decaf/net/Inet4AddressTest.cpp \
     decaf/net/Inet6AddressTest.cpp \
@@ -225,6 +226,7 @@ cc_sources = \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizerTest.cpp \
     decaf/util/concurrent/locks/LockSupportTest.cpp \
     decaf/util/concurrent/locks/ReentrantLockTest.cpp \
+    decaf/util/concurrent/locks/ReentrantReadWriteLockTest.cpp \
     decaf/util/zip/Adler32Test.cpp \
     decaf/util/zip/CRC32Test.cpp \
     decaf/util/zip/CheckedInputStreamTest.cpp \
@@ -404,6 +406,7 @@ h_sources = \
     decaf/lang/ShortTest.h \
     decaf/lang/StringTest.h \
     decaf/lang/SystemTest.h \
+    decaf/lang/ThreadLocalTest.h \
     decaf/lang/ThreadTest.h \
     decaf/net/Inet4AddressTest.h \
     decaf/net/Inet6AddressTest.h \
@@ -456,6 +459,7 @@ h_sources = \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizerTest.h \
     decaf/util/concurrent/locks/LockSupportTest.h \
     decaf/util/concurrent/locks/ReentrantLockTest.h \
+    decaf/util/concurrent/locks/ReentrantReadWriteLockTest.h \
     decaf/util/zip/Adler32Test.h \
     decaf/util/zip/CRC32Test.h \
     decaf/util/zip/CheckedInputStreamTest.h \

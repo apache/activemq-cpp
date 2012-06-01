@@ -23,10 +23,14 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/Executors.h>
 
+#include <decaf/internal/util/concurrent/ThreadLocalImpl.h>
 #include <decaf/internal/util/concurrent/ThreadingTypes.h>
 #include <decaf/internal/util/concurrent/PlatformThread.h>
 #include <decaf/internal/util/concurrent/Atomics.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
+
+#include <vector>
+#include <list>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -106,18 +110,22 @@ namespace {
         decaf_tls_key selfKey;
         decaf_mutex_t globalLock;
         decaf_mutex_t tlsLock;
+        std::vector<ThreadLocalImpl*> tlsSlots;
         std::vector<Thread*> osThreads;
         decaf_thread_t mainThread;
+        std::list<ThreadHandle*> activeThreads;
         std::vector<int> priorityMapping;
         AtomicInteger osThreadId;
         MonitorPool* monitors;
     };
 
+    #define MAX_TLS_SLOTS 128
     #define MONITOR_POOL_BLOCK_SIZE 64
 
     ThreadingLibrary* library = NULL;
 
     // ------------------------ Forward Declare All Utility Methds ----------------------- //
+    void threadExitTlsCleanup(ThreadHandle* thread);
     void unblockThreads(ThreadHandle* monitor);
     void createThreadInstance(ThreadHandle* thread, long long stackSize, int priority,
                               bool suspended, threadingTask threadMain, void* threadArg);
@@ -159,7 +167,12 @@ namespace {
         PlatformThread::setTlsValue(library->threadKey, NULL);
         PlatformThread::setTlsValue(library->selfKey, NULL);
 
-        // TODO tls_finalize (self);
+        // Ensure all of this thread's local values are purged.
+        threadExitTlsCleanup(self);
+
+        // Remove from the set of active threads under global lock, threads that
+        // are iterating on global state need a stable list.
+        library->activeThreads.remove(self);
 
         PlatformThread::unlockMutex(self->mutex);
         PlatformThread::unlockMutex(library->globalLock);
@@ -197,6 +210,10 @@ namespace {
             threadExit(thread);
             PLATFORM_THREAD_RETURN()
         }
+
+        PlatformThread::lockMutex(library->globalLock);
+        library->activeThreads.push_back(thread);
+        PlatformThread::unlockMutex(library->globalLock);
 
         thread->state = Thread::RUNNABLE;
 
@@ -386,6 +403,24 @@ namespace {
         //    }
 
         return result;
+    }
+
+    void threadExitTlsCleanup(ThreadHandle* thread) {
+        for (int index = 0; index < MAX_TLS_SLOTS; ++index) {
+            if (thread->tls[index] != NULL) {
+                ThreadLocalImpl* handler = NULL;
+                void *value = NULL;
+
+                PlatformThread::lockMutex(library->tlsLock);
+                value = thread->tls[index];
+                handler = library->tlsSlots[index];
+                PlatformThread::unlockMutex(library->tlsLock);
+
+                if (value != NULL) {
+                    handler->doDelete(value);
+                }
+            }
+        }
     }
 
     void unblockThreads(ThreadHandle* queueHead) {
@@ -740,6 +775,8 @@ void Threading::initialize() {
     library->monitors->head = batchAllocateMonitors();
     library->monitors->count = MONITOR_POOL_BLOCK_SIZE;
 
+    library->tlsSlots.resize(MAX_TLS_SLOTS);
+
     // We mark the thread where Decaf's Init routine is called from as our Main Thread.
     library->mainThread = PlatformThread::getCurrentThread();
 
@@ -838,7 +875,9 @@ ThreadHandle* Threading::attachToCurrentThread() {
 
     // Store the Thread that wraps this OS thread for later deletion since
     // no other owners exist.
+    PlatformThread::lockMutex(library->globalLock);
     library->osThreads.push_back(osThread.release());
+    PlatformThread::unlockMutex(library->globalLock);
 
     return thread.release();
 }
@@ -1443,4 +1482,78 @@ bool Threading::monitorTryEnterUsingThreadId(MonitorHandle* monitor, ThreadHandl
     }
 
     return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Threading::createThreadLocalSlot(ThreadLocalImpl* threadLocal) {
+
+    if (threadLocal == NULL) {
+        throw NullPointerException(
+            __FILE__, __LINE__, "Null ThreadLocalImpl Pointer Passed." );
+    }
+
+    int index;
+
+    PlatformThread::lockMutex(library->tlsLock);
+
+    for (index = 0; index < MAX_TLS_SLOTS; index++) {
+        if (library->tlsSlots[index] == NULL) {
+            library->tlsSlots[index] = threadLocal;
+            break;
+        }
+    }
+
+    PlatformThread::unlockMutex(library->tlsLock);
+
+    return index < MAX_TLS_SLOTS ? index : -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void* Threading::getThreadLocalValue(int slot) {
+    ThreadHandle* thisThread = getCurrentThreadHandle();
+    return thisThread->tls[slot];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Threading::setThreadLocalValue(int slot, void* value) {
+    ThreadHandle* thisThread = getCurrentThreadHandle();
+    thisThread->tls[slot] = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Threading::destoryThreadLocalSlot(int slot) {
+
+    ThreadHandle* current = NULL;
+    ThreadLocalImpl* local = library->tlsSlots[slot];
+
+    // Must lock globally so that no thread can terminate and call its own
+    // tls cleanup and our list of thread remains stable.
+    PlatformThread::lockMutex(library->globalLock);
+
+    std::list<ThreadHandle*>::const_iterator iter = library->activeThreads.begin();
+    while (iter != library->activeThreads.end()) {
+        current = *(iter++);
+        void* value = current->tls[slot];
+        if (value != NULL) {
+            local->doDelete(value);
+            current->tls[slot] = NULL;
+        }
+    }
+
+    std::vector<decaf::lang::Thread*>::const_iterator osIter = library->osThreads.begin();
+    while (osIter != library->osThreads.end()) {
+        current = (*(osIter++))->getHandle();
+        void* value = current->tls[slot];
+        if (value != NULL) {
+            local->doDelete(value);
+            current->tls[slot] = NULL;
+        }
+    }
+
+    PlatformThread::unlockMutex(library->globalLock);
+
+    // Return the slot to the pool under lock so that a taker waits.
+    PlatformThread::lockMutex(library->tlsLock);
+    library->tlsSlots[slot] = NULL;
+    PlatformThread::unlockMutex(library->tlsLock);
 }

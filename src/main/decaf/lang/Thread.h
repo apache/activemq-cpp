@@ -154,7 +154,7 @@ namespace lang
          * @param task the Runnable that this thread manages, if the task is NULL the Thread's
          *        run method is used instead.
          */
-        Thread( Runnable* task );
+        Thread(Runnable* task);
 
         /**
          * Constructs a new Thread with the given name. This constructor has the same effect
@@ -164,7 +164,7 @@ namespace lang
          *
          * @param name the name to assign to this Thread.
          */
-        Thread( const std::string& name );
+        Thread(const std::string& name);
 
         /**
          * Constructs a new Thread with the given target Runnable task and name. This constructor
@@ -176,7 +176,7 @@ namespace lang
          *        run method is used instead.
          * @param name the name to assign to this Thread.
          */
-        Thread( Runnable* task, const std::string& name );
+        Thread(Runnable* task, const std::string& name);
 
         /**
          * Constructs a new Thread with the given target Runnable task and name. This constructor
@@ -197,7 +197,7 @@ namespace lang
          * @param stackSize
          *      The size of the newly allocated thread's stack.
          */
-        Thread( Runnable* task, const std::string& name, long long stackSize );
+        Thread(Runnable* task, const std::string& name, long long stackSize);
 
         virtual ~Thread();
 
@@ -230,7 +230,7 @@ namespace lang
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs );
+        virtual void join(long long millisecs);
 
         /**
          * Forces the Current Thread to wait until the thread exits.
@@ -244,7 +244,7 @@ namespace lang
          *         The interrupted status of the current thread is cleared when this
          *         exception is thrown.
          */
-        virtual void join( long long millisecs, int nanos );
+        virtual void join(long long millisecs, int nanos);
 
         /**
          * Default implementation of the run method - does nothing.
@@ -270,7 +270,7 @@ namespace lang
          *
          * @paran name the new name of the Thread.
          */
-        void setName( const std::string& name );
+        void setName(const std::string& name);
 
         /**
          * Gets the currently set priority for this Thread.
@@ -287,7 +287,7 @@ namespace lang
          *
          * @throws IllegalArgumentException if the value is out of range.
          */
-        void setPriority( int value );
+        void setPriority(int value);
 
         /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
@@ -302,7 +302,7 @@ namespace lang
          * @param handler the UncaightExceptionHandler to invoke when the Thread terminates due
          *                to an uncaught exception.
          */
-        void setUncaughtExceptionHandler( UncaughtExceptionHandler* handler );
+        void setUncaughtExceptionHandler(UncaughtExceptionHandler* handler);
 
         /**
          * Returns a string that describes the Thread.
@@ -361,7 +361,7 @@ namespace lang
          * @throws IllegalArgumentException if the milliseconds parameter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs );
+        static void sleep(long long millisecs);
 
         /**
          * Causes the currently executing thread to halt execution for the specified number of
@@ -378,7 +378,7 @@ namespace lang
          *         or the milliseconds paramter is negative.
          * @throws InterruptedException if the Thread was interrupted while sleeping.
          */
-        static void sleep( long long millisecs, int nanos );
+        static void sleep(long long millisecs, int nanos);
 
         /**
          * Causes the currently executing thread object to temporarily pause
@@ -426,7 +426,7 @@ namespace lang
     private:
 
         // Initialize the Threads internal state
-        void initializeSelf( Runnable* task, const std::string& name, long long stackSize );
+        void initializeSelf(Runnable* task, const std::string& name, long long stackSize);
 
         // Creates a Thread instance for a ThreadProperties pointer, used for
         // wrapping OS threads
@@ -439,6 +439,7 @@ namespace lang
 
         // Allow some Decaf Classes greater access to the Thread class.
         friend class decaf::internal::util::concurrent::Threading;
+        friend class ThreadGroup;
 
     };
 

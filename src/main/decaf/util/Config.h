@@ -17,6 +17,8 @@
 #ifndef _DECAF_UTIL_CONFIG_H_
 #define _DECAF_UTIL_CONFIG_H_
 
+#include <stddef.h>
+
 #ifdef DECAF_DLL
 #ifdef DECAF_EXPORTS
 #define DECAF_API __declspec(dllexport)
