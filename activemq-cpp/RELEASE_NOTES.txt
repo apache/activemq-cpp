@@ -1,4 +1,14 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.3                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-402] - Fix ConnectionStateTracker processMessageAck
+    [AMQCPP-403] - Possible for memory to leak when using transacted producer with failover
+    [AMQCPP-406] - TcpTransport can leak memory if the connect method fails midway through
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.4.2                               ==
 =========================================================================
 

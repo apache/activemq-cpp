@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.activemq-cpp</groupId>
+    <artifactId>activemq-cpp-pom</artifactId>
+    <version>3.4.3-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>activemq-cpp-library</artifactId>
+  <packaging>pom</packaging>
+  <name>ActiveMQ-CPP Library</name>
+  <description>The ActiveMQ-CPP Library</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.activemq-cpp</groupId>
+      <artifactId>activemq-cpp-openwire-generator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.activemq-cpp</groupId>
+        <artifactId>maven-cpptools-plugin</artifactId>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <id>Benchmarks-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-benchmarks/</outputDirectory>
+              <template>${basedir}/src/test-benchmarks/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-benchmarks/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Integration-Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test-integration/</outputDirectory>
+              <template>${basedir}/src/test-integration/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test-integration/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test/</outputDirectory>
+              <template>${basedir}/src/test/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+                </excludes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+                </excludes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Main-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/</outputDirectory>
+              <template>${basedir}/src/main/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/main/</directory>
+                <includes>
+                  <includes>**\*.cpp</includes>
+                  <includes>**\*.c</includes>
+                </includes>
+                <excludes>
+                  <exclude>**/decaf/internal/**/windows/**\*.cpp</exclude>
+                </excludes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/main/</directory>
+                <includes>
+                  <includes>**\*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly/source.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>openwire-generate</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.activemq-cpp</groupId>
+          <artifactId>activemq-cpp-openwire-generator</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <tasks>
+                    <echo>Running OpenWire Generator</echo>
+                    <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask" classpathref="maven.compile.classpath" />
+                    <generate maxVersion="6" source="${activemq-core-dir}" target="${basedir}" />
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>Unix Make</id>
+      <activation>
+        <os>
+          <family>Unix</family>
+        </os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>Configure</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>configure</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Compile</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>compile</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>test</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>Clean</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>${basedir}/build.sh</executable>
+              <workingDirectory>${basedir}</workingDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>Windows Make</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>nmake</executable>
+              <workingDirectory>${basedir}/build</workingDirectory>
+              <arguments>
+                <argument>-f Makefile.win</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
