@@ -21,9 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/lang/Thread.h>
-#include <time.h>
-
 namespace decaf{
 namespace lang{
 

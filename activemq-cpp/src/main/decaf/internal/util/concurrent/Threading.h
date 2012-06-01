@@ -29,6 +29,7 @@ namespace concurrent {
 
     using decaf::lang::Thread;
 
+    class ThreadLocalImpl;
     struct ThreadHandle;
     struct MonitorHandle;
 
@@ -239,19 +240,87 @@ namespace concurrent {
 
         static void destroyThread(ThreadHandle* thread);
 
+        /**
+         * Creates and returns a ThreadHandle that references the currently running thread.
+         *
+         * This method is called to obtain a ThreadHandle that references an thread that was
+         * not created using the Decaf Thread class.  A parent Thread instance is passed to
+         * associate with the target thread so that a call to getCurrentThread can return a
+         * Decaf Thread as it would for any thread created using Thread.
+         *
+         * @param parent
+         *      The Decaf thread instace to associate with this thread handle.
+         * @param name
+         *      The name to assign to the returned ThreadHandle.
+         *
+         * @returns a new ThreadHandle instance for the parent Decaf Thread.
+         */
         static ThreadHandle* createThreadWrapper(decaf::lang::Thread* parent, const char* name);
 
+        /**
+         * @returns the Decaf Thread pointer instance for the currently running thread.
+         */
         static Thread* getCurrentThread();
+
+        /**
+         * @returns the ThreadHandle instance for the currently running thread.
+         */
         static ThreadHandle* getCurrentThreadHandle();
 
-        // Remove the given thread from scheduling
+        /**
+         * Removes the given thread from scheduling unless a call to unpark has already
+         * reset the park token in which case this method simple consumes the unpark
+         * token and returned.
+         *
+         * @param thread
+         *      The target thread to park.
+         */
         static void park(Thread* thread);
 
-        // Remove the given thread from scheduling for the given time
+        /**
+         * Removes the given thread from scheduling unless a call to unpark has already
+         * reset the park token in which case this method simple consumes the unpark
+         * token and returned.
+         *
+         * @param thread
+         *      The target thread to park.
+         * @param mills
+         *      The time in milliseconds to park the target thread.
+         * @param nanos
+         *      The additional time in nanoseconds to park the target thread.
+         */
         static bool park(Thread* thread, long long mills, int nanos);
 
-        // Makes the given thread available for scheduling once again.
+        /**
+         * If the target thread is not currently parked then this method sets the un-park
+         * token for the thread and returns.  If the thread is parked than this method
+         * places the thread back in a state where it can be scheduled once more.
+         *
+         * @param thread
+         *      The thread to unpark.
+         */
         static void unpark(Thread* thread);
+
+    public:  // Thread local storage
+
+        /**
+         * Allocates a slot in the library for a new ThreadLocalImpl to store its values
+         * for each thread.  The parent ThreadLocalImpl is stored so that the library can
+         * call each ThreadLocalImpl to cleanup its resources if there are active objects
+         * at the time the library is shutdown or the Thread terminates.
+         *
+         * @param threadLocal
+         *      The ThreadLocalImpl to assign a storage slot.
+         *
+         * @returns a new storage slot Id for the given ThreadLocalImpl's value to be assigned.
+         */
+        static int createThreadLocalSlot(ThreadLocalImpl* threadLocal);
+
+        static void* getThreadLocalValue(int slot);
+
+        static void setThreadLocalValue(int slot, void* value);
+
+        static void destoryThreadLocalSlot(int slot);
 
     private:
 
@@ -260,7 +329,6 @@ namespace concurrent {
         static void monitorEnterUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
         static bool monitorTryEnterUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
         static void monitorExitUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
-
     };
 
 }}}}

@@ -329,6 +329,7 @@ cc_sources = \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/ExecutorsSupport.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
+    decaf/internal/util/concurrent/ThreadLocalImpl.cpp \
     decaf/internal/util/concurrent/Threading.cpp \
     decaf/internal/util/concurrent/unix/Atomics.cpp \
     decaf/internal/util/concurrent/unix/PlatformThread.cpp \
@@ -377,6 +378,8 @@ cc_sources = \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
+    decaf/lang/ThreadLocal.cpp \
+    decaf/lang/Types.cpp \
     decaf/net/DatagramPacket.cpp \
     decaf/net/Inet4Address.cpp \
     decaf/net/Inet6Address.cpp \
@@ -475,6 +478,7 @@ cc_sources = \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizer.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
+    decaf/util/concurrent/locks/ReentrantReadWriteLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
     decaf/util/logging/ErrorManager.cpp \
     decaf/util/logging/Formatter.cpp \
@@ -860,6 +864,7 @@ h_sources = \
     decaf/internal/util/concurrent/ExecutorsSupport.h \
     decaf/internal/util/concurrent/PlatformThread.h \
     decaf/internal/util/concurrent/SynchronizableImpl.h \
+    decaf/internal/util/concurrent/ThreadLocalImpl.h \
     decaf/internal/util/concurrent/Threading.h \
     decaf/internal/util/concurrent/ThreadingTypes.h \
     decaf/internal/util/concurrent/TransferQueue.h \
@@ -928,7 +933,9 @@ h_sources = \
     decaf/lang/System.h \
     decaf/lang/Thread.h \
     decaf/lang/ThreadGroup.h \
+    decaf/lang/ThreadLocal.h \
     decaf/lang/Throwable.h \
+    decaf/lang/Types.h \
     decaf/lang/exceptions/ClassCastException.h \
     decaf/lang/exceptions/ExceptionDefines.h \
     decaf/lang/exceptions/IllegalArgumentException.h \
@@ -1087,6 +1094,7 @@ h_sources = \
     decaf/util/concurrent/locks/LockSupport.h \
     decaf/util/concurrent/locks/ReadWriteLock.h \
     decaf/util/concurrent/locks/ReentrantLock.h \
+    decaf/util/concurrent/locks/ReentrantReadWriteLock.h \
     decaf/util/logging/ConsoleHandler.h \
     decaf/util/logging/ErrorManager.h \
     decaf/util/logging/Filter.h \
