@@ -62,12 +62,12 @@ namespace locks {
         /**
          * {@inheritDoc}
          */
-        virtual Lock& readLock();
+        virtual decaf::util::concurrent::locks::Lock& readLock();
 
         /**
          * {@inheritDoc}
          */
-        virtual Lock& writeLock();
+        virtual decaf::util::concurrent::locks::Lock& writeLock();
 
         /**
          * Returns true if this lock has fairness set true.
@@ -160,21 +160,6 @@ namespace locks {
          */
         std::string toString() const;
 
-    protected:
-
-        /**
-         * Creates and returns a new Collection object that contains all the threads that may be waiting
-         * on the given Condition object instance at the time this method is called.
-         *
-         * @returns a Collection pointer that contains waiting threads on given Condition object.
-         *          The caller owns the returned pointer.
-         *
-         * @throws NullPointerException if the ConditionObject pointer is NULL.
-         * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
-         * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
-         */
-        decaf::util::Collection<decaf::lang::Thread*>* getWaitingThreads(Condition* condition) const;
-
         /**
          * Queries whether any threads are waiting to acquire the read or write lock.
          * Note that because cancellations may occur at any time, a true return does
@@ -212,6 +197,19 @@ namespace locks {
         int getQueueLength() const;
 
     protected:
+
+        /**
+         * Creates and returns a new Collection object that contains all the threads that may be waiting
+         * on the given Condition object instance at the time this method is called.
+         *
+         * @returns a Collection pointer that contains waiting threads on given Condition object.
+         *          The caller owns the returned pointer.
+         *
+         * @throws NullPointerException if the ConditionObject pointer is NULL.
+         * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
+         * @throws IllegalMonitorStateException if the caller does not hold exclusive synchronization.
+         */
+        decaf::util::Collection<decaf::lang::Thread*>* getWaitingThreads(Condition* condition) const;
 
         /**
          * Returns a collection containing threads that may be waiting to acquire either

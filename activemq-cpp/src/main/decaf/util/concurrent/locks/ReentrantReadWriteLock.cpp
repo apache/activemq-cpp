@@ -488,7 +488,7 @@ namespace {
         }
     };
 
-    class ReadLock : public Lock {
+    class ReadLock : public decaf::util::concurrent::locks::Lock {
     public:
 
         Sync* sync;
@@ -656,11 +656,11 @@ namespace {
          */
         virtual std::string toString() const {
             int r = sync->getReadLockCount();
-            return std::string("[Read locks = ") + Integer::toString(r) + "]";
+            return std::string("ReadLock ") + "[Read locks = " + Integer::toString(r) + "]";
         }
     };
 
-    class WriteLock : public Lock {
+    class WriteLock : public decaf::util::concurrent::locks::Lock {
     public:
 
         Sync* sync;
@@ -886,8 +886,8 @@ namespace {
          */
         virtual std::string toString() const {
             Thread* o = sync->getOwner();
-            return std::string("Lock") + ((o == NULL) ? "[Unlocked]" :
-                                                        "[Locked by thread " + o->getName() + "]");
+            return std::string("WriteLock ") + ((o == NULL) ?
+                "[Unlocked]" : "[Locked by thread " + o->getName() + "]");
         }
 
         /**
@@ -923,8 +923,8 @@ namespace locks {
     class ReentrantReadWriteLockImpl {
     public:
 
-        Lock* readLock;
-        Lock* writeLock;
+        decaf::util::concurrent::locks::Lock* readLock;
+        decaf::util::concurrent::locks::Lock* writeLock;
         Sync* sync;
 
         ReentrantReadWriteLockImpl(bool fair) : readLock(NULL), writeLock(NULL), sync(NULL) {
@@ -965,13 +965,13 @@ ReentrantReadWriteLock::~ReentrantReadWriteLock() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Lock& ReentrantReadWriteLock::readLock() {
-    throw "";
+decaf::util::concurrent::locks::Lock& ReentrantReadWriteLock::readLock() {
+    return *(this->impl->readLock);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Lock& ReentrantReadWriteLock::writeLock() {
-    throw "";
+decaf::util::concurrent::locks::Lock& ReentrantReadWriteLock::writeLock() {
+    return *(this->impl->writeLock);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
