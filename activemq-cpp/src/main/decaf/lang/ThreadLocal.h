@@ -61,7 +61,7 @@ namespace lang {
          *
          * @returns the current thread's value for this thread local.
          */
-        E get() {
+        E& get() {
             void* bytes = getRawValue();
             if (bytes == NULL) {
                 E* value = new E();
