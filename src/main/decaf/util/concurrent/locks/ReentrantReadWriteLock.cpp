@@ -74,7 +74,7 @@ namespace {
 
         /** Returns the number of shared holds represented in count  */
         static int sharedCount(int c) {
-            return c >> SHARED_SHIFT;
+            return ((unsigned int)c >> SHARED_SHIFT);
         }
 
         /** Returns the number of exclusive holds represented in count  */
@@ -199,6 +199,8 @@ namespace {
                     }
                 }
                 --rh.count;
+                readHolds.set(rh);
+                cachedHoldCounter = rh;
             }
 
             for (;;) {
@@ -247,6 +249,8 @@ namespace {
                     }
 
                     rh.count++;
+                    readHolds.set(rh);
+                    cachedHoldCounter = rh;
                 }
                 return 1;
             }
@@ -308,6 +312,7 @@ namespace {
                             readHolds.set(rh);
                         }
                         rh.count++;
+                        readHolds.set(rh);
                         cachedHoldCounter = rh; // cache for release
                     }
                     return 1;
@@ -369,6 +374,8 @@ namespace {
                             readHolds.set(rh);
                         }
                         rh.count++;
+                        readHolds.set(rh);
+                        cachedHoldCounter = rh;
                     }
                     return true;
                 }
