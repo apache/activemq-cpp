@@ -518,7 +518,7 @@ void ReentrantReadWriteLockTest::testWriteAfterMultipleReadLocks() {
     try {
         t1.start();
         t2.start();
-        Thread::sleep( SHORT_DELAY_MS);
+        Thread::sleep(SHORT_DELAY_MS);
         lock.readLock().unlock();
         t1.join(MEDIUM_DELAY_MS);
         t2.join(MEDIUM_DELAY_MS);

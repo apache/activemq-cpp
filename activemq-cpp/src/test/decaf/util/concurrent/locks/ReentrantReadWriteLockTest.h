@@ -70,7 +70,7 @@ namespace locks {
         CPPUNIT_TEST( testReadHoldingWriteLockFair3 );
         CPPUNIT_TEST( testWriteHoldingWriteLockFair4 );
         CPPUNIT_TEST( testTryLockWhenReadLocked );
-//        CPPUNIT_TEST( testWriteAfterMultipleReadLocks );
+        CPPUNIT_TEST( testWriteAfterMultipleReadLocks );
         CPPUNIT_TEST( testTryLockWhenReadLockedFair );
         CPPUNIT_TEST( testWriteTryLockWhenReadLockedFair );
         CPPUNIT_TEST( testWriteTryLockTimeout );
