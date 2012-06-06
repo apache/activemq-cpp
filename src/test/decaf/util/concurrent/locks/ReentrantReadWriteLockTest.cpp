@@ -17,10 +17,74 @@
 
 #include "ReentrantReadWriteLockTest.h"
 
+#include <decaf/util/Date.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/locks/Lock.h>
+#include <decaf/util/concurrent/locks/ReentrantReadWriteLock.h>
+
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::locks;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    const int SIZE = 256;
+
+    class InterruptibleLockRunnable : public Runnable {
+    public:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+        InterruptibleLockRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~InterruptibleLockRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lockInterruptibly();
+            } catch (InterruptedException& success){
+            }
+        }
+    };
+
+    class InterruptedLockRunnable : public Runnable {
+    public:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+        InterruptedLockRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~InterruptedLockRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lockInterruptibly();
+                test->threadShouldThrow();
+            } catch (InterruptedException& success){
+            }
+        }
+    };
+
+    class PublicReentrantReadWriteLock : public ReentrantReadWriteLock {
+    public:
+
+        PublicReentrantReadWriteLock() : ReentrantReadWriteLock() {}
+
+        Collection<Thread*>* getQueuedThreadsPublic() const {
+            return getQueuedThreads();
+        }
+
+        Collection<Thread*>* getWaitingThreadsPublic(Condition* c) const {
+            return getWaitingThreads(c);
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ReentrantReadWriteLockTest::ReentrantReadWriteLockTest() {
@@ -32,1641 +96,2007 @@ ReentrantReadWriteLockTest::~ReentrantReadWriteLockTest() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantReadWriteLockTest::testConstructor() {
+
+    ReentrantReadWriteLock rl;
+    CPPUNIT_ASSERT(!rl.isFair());
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+
+    ReentrantReadWriteLock r2(true);
+    CPPUNIT_ASSERT(r2.isFair());
+    CPPUNIT_ASSERT(!r2.isWriteLocked());
+    CPPUNIT_ASSERT_EQUAL(0, r2.getReadLockCount());
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testLock() {
 
-///**
-// * A runnable calling lockInterruptibly
-// */
-//class InterruptibleLockRunnable implements Runnable {
-//    final ReentrantReadWriteLock lock;
-//    InterruptibleLockRunnable(ReentrantReadWriteLock l) { lock = l; }
-//    public void run() {
-//        try {
-//            lock.writeLock().lockInterruptibly();
-//        } catch(InterruptedException success){}
-//    }
-//}
-//
-///**
-// * A runnable calling lockInterruptibly that expects to be
-// * interrupted
-// */
-//class InterruptedLockRunnable implements Runnable {
-//    final ReentrantReadWriteLock lock;
-//    InterruptedLockRunnable(ReentrantReadWriteLock l) { lock = l; }
-//    public void run() {
-//        try {
-//            lock.writeLock().lockInterruptibly();
-//            threadShouldThrow();
-//        } catch(InterruptedException success){}
-//    }
-//}
-//
-///**
-// * Subclass to expose protected methods
-// */
-//static class PublicReentrantReadWriteLock extends ReentrantReadWriteLock {
-//    PublicReentrantReadWriteLock() { super(); }
-//    public Collection<Thread> getQueuedThreads() {
-//        return super.getQueuedThreads();
-//    }
-//    public Collection<Thread> getWaitingThreads(Condition c) {
-//        return super.getWaitingThreads(c);
-//    }
-//}
-//
-///**
-// * Constructor sets given fairness, and is in unlocked state
-// */
-//public void testConstructor() {
-//ReentrantReadWriteLock rl = new ReentrantReadWriteLock();
-//    assertFalse(rl.isFair());
-//    assertFalse(rl.isWriteLocked());
-//    assertEquals(0, rl.getReadLockCount());
-//ReentrantReadWriteLock r2 = new ReentrantReadWriteLock(true);
-//    assertTrue(r2.isFair());
-//    assertFalse(r2.isWriteLocked());
-//    assertEquals(0, r2.getReadLockCount());
-//}
-//
-///**
-// * write-locking and read-locking an unlocked lock succeed
-// */
-//public void testLock() {
-//ReentrantReadWriteLock rl = new ReentrantReadWriteLock();
-//    rl.writeLock().lock();
-//    assertTrue(rl.isWriteLocked());
-//    assertTrue(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//    rl.writeLock().unlock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//    rl.readLock().lock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(1, rl.getReadLockCount());
-//    rl.readLock().unlock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//}
-//
-//
-///**
-// * locking an unlocked fair lock succeeds
-// */
-//public void testFairLock() {
-//ReentrantReadWriteLock rl = new ReentrantReadWriteLock(true);
-//    rl.writeLock().lock();
-//    assertTrue(rl.isWriteLocked());
-//    assertTrue(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//    rl.writeLock().unlock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//    rl.readLock().lock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(1, rl.getReadLockCount());
-//    rl.readLock().unlock();
-//    assertFalse(rl.isWriteLocked());
-//    assertFalse(rl.isWriteLockedByCurrentThread());
-//    assertEquals(0, rl.getReadLockCount());
-//}
-//
-///**
-// * getWriteHoldCount returns number of recursive holds
-// */
-//public void testGetWriteHoldCount() {
-//ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//for(int i = 1; i <= SIZE; i++) {
-//    lock.writeLock().lock();
-//    assertEquals(i,lock.getWriteHoldCount());
-//}
-//for(int i = SIZE; i > 0; i--) {
-//    lock.writeLock().unlock();
-//    assertEquals(i-1,lock.getWriteHoldCount());
-//}
-//}
-//
-//
-///**
-// * write-unlocking an unlocked lock throws IllegalMonitorStateException
-// */
-//public void testUnlock_IllegalMonitorStateException() {
-//ReentrantReadWriteLock rl = new ReentrantReadWriteLock();
-//try {
-//    rl.writeLock().unlock();
-//    shouldThrow();
-//} catch(IllegalMonitorStateException success){}
-//}
-//
-//
-///**
-// * write-lockInterruptibly is interruptible
-// */
-//public void testWriteLockInterruptibly_Interrupted() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//        lock.writeLock().lockInterruptibly();
-//                    lock.writeLock().unlock();
-//        lock.writeLock().lockInterruptibly();
-//                    lock.writeLock().unlock();
-//        } catch(InterruptedException success){}
-//    }
-//    });
-//    try {
-//        lock.writeLock().lock();
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().unlock();
-//        t.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * timed write-tryLock is interruptible
-// */
-//public void testWriteTryLock_Interrupted() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//        lock.writeLock().tryLock(1000,TimeUnit.MILLISECONDS);
-//        } catch(InterruptedException success){}
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.interrupt();
-//        lock.writeLock().unlock();
-//        t.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * read-lockInterruptibly is interruptible
-// */
-//public void testReadLockInterruptibly_Interrupted() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//        lock.readLock().lockInterruptibly();
-//        } catch(InterruptedException success){}
-//    }
-//    });
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().unlock();
-//        t.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * timed read-tryLock is interruptible
-// */
-//public void testReadTryLock_Interrupted() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//        lock.readLock().tryLock(1000,TimeUnit.MILLISECONDS);
-//        threadShouldThrow();
-//        } catch(InterruptedException success){}
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.interrupt();
-//        t.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * write-tryLock fails if locked
-// */
-//public void testWriteTryLockWhenLocked() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertFalse(lock.writeLock().tryLock());
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * read-tryLock fails if locked
-// */
-//public void testReadTryLockWhenLocked() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertFalse(lock.readLock().tryLock());
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * Multiple threads can hold a read lock when not write-locked
-// */
-//public void testMultipleReadLocks() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.readLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertTrue(lock.readLock().tryLock());
-//                lock.readLock().unlock();
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.readLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * A writelock succeeds after reading threads unlock
-// */
-//public void testWriteAfterMultipleReadLocks() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.readLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.readLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * Readlocks succeed after a writing thread unlocks
-// */
-//public void testReadAfterWriteLock() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * Read trylock succeeds if write locked by current thread
-// */
-//public void testReadHoldingWriteLock() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//    assertTrue(lock.readLock().tryLock());
-//    lock.readLock().unlock();
-//    lock.writeLock().unlock();
-//}
-//
-///**
-// * Read lock succeeds if write locked by current thread even if
-// * other threads are waiting for readlock
-// */
-//public void testReadHoldingWriteLock2() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// *  Read lock succeeds if write locked by current thread even if
-// * other threads are waiting for writelock
-// */
-//public void testReadHoldingWriteLock3() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// *  Write lock succeeds if write locked by current thread even if
-// * other threads are waiting for writelock
-// */
-//public void testWriteHoldingWriteLock4() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        lock.writeLock().lock();
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        lock.writeLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * Fair Read trylock succeeds if write locked by current thread
-// */
-//public void testReadHoldingWriteLockFair() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.writeLock().lock();
-//    assertTrue(lock.readLock().tryLock());
-//    lock.readLock().unlock();
-//    lock.writeLock().unlock();
-//}
-//
-///**
-// * Fair Read lock succeeds if write locked by current thread even if
-// * other threads are waiting for readlock
-// */
-//public void testReadHoldingWriteLockFair2() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.readLock().lock();
-//                lock.readLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * Fair Read lock succeeds if write locked by current thread even if
-// * other threads are waiting for writelock
-// */
-//public void testReadHoldingWriteLockFair3() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.readLock().lock();
-//        lock.readLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * Fair Write lock succeeds if write locked by current thread even if
-// * other threads are waiting for writelock
-// */
-//public void testWriteHoldingWriteLockFair4() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.writeLock().lock();
-//Thread t1 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//Thread t2 = new Thread(new Runnable() {
-//            public void run() {
-//                lock.writeLock().lock();
-//                lock.writeLock().unlock();
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.isWriteLockedByCurrentThread());
-//        assertTrue(lock.getWriteHoldCount() == 1);
-//        lock.writeLock().lock();
-//        assertTrue(lock.getWriteHoldCount() == 2);
-//        lock.writeLock().unlock();
-//        lock.writeLock().lock();
-//        lock.writeLock().unlock();
-//        lock.writeLock().unlock();
-//        t1.join(MEDIUM_DELAY_MS);
-//        t2.join(MEDIUM_DELAY_MS);
-//        assertTrue(!t1.isAlive());
-//        assertTrue(!t2.isAlive());
-//
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * Read tryLock succeeds if readlocked but not writelocked
-// */
-//public void testTryLockWhenReadLocked() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.readLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertTrue(lock.readLock().tryLock());
-//                lock.readLock().unlock();
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.readLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-//
-///**
-// * write tryLock fails when readlocked
-// */
-//public void testWriteTryLockWhenReadLocked() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.readLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertFalse(lock.writeLock().tryLock());
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.readLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * Fair Read tryLock succeeds if readlocked but not writelocked
-// */
-//public void testTryLockWhenReadLockedFair() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.readLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertTrue(lock.readLock().tryLock());
-//                lock.readLock().unlock();
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.readLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-//
-///**
-// * Fair write tryLock fails when readlocked
-// */
-//public void testWriteTryLockWhenReadLockedFair() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-//lock.readLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//                threadAssertFalse(lock.writeLock().tryLock());
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.readLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-//
-///**
-// * write timed tryLock times out if locked
-// */
-//public void testWriteTryLock_Timeout() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//        try {
-//                    threadAssertFalse(lock.writeLock().tryLock(1, TimeUnit.MILLISECONDS));
-//                } catch (Exception ex) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * read timed tryLock times out if write-locked
-// */
-//public void testReadTryLock_Timeout() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//lock.writeLock().lock();
-//Thread t = new Thread(new Runnable() {
-//            public void run() {
-//        try {
-//                    threadAssertFalse(lock.readLock().tryLock(1, TimeUnit.MILLISECONDS));
-//                } catch (Exception ex) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//    try {
-//        t.start();
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * write lockInterruptibly succeeds if lock free else is interruptible
-// */
-//public void testWriteLockInterruptibly() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//try {
-//        lock.writeLock().lockInterruptibly();
-//    } catch(Exception e) {
-//        unexpectedException();
-//    }
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lockInterruptibly();
-//        threadShouldThrow();
-//        }
-//        catch(InterruptedException success) {
-//                }
-//    }
-//    });
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// *  read lockInterruptibly succeeds if lock free else is interruptible
-// */
-//public void testReadLockInterruptibly() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//try {
-//        lock.writeLock().lockInterruptibly();
-//    } catch(Exception e) {
-//        unexpectedException();
-//    }
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.readLock().lockInterruptibly();
-//        threadShouldThrow();
-//        }
-//        catch(InterruptedException success) {
-//                }
-//    }
-//    });
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        t.join();
-//        lock.writeLock().unlock();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * Calling await without holding lock throws IllegalMonitorStateException
-// */
-//public void testAwait_IllegalMonitor() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    try {
-//        c.await();
-//        shouldThrow();
-//    }
-//    catch (IllegalMonitorStateException success) {
-//    }
-//    catch (Exception ex) {
-//        shouldThrow();
-//    }
-//}
-//
-///**
-// * Calling signal without holding lock throws IllegalMonitorStateException
-// */
-//public void testSignal_IllegalMonitor() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    try {
-//        c.signal();
-//        shouldThrow();
-//    }
-//    catch (IllegalMonitorStateException success) {
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * awaitNanos without a signal times out
-// */
-//public void testAwaitNanos_Timeout() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    try {
-//        lock.writeLock().lock();
-//        long t = c.awaitNanos(100);
-//        assertTrue(t <= 0);
-//        lock.writeLock().unlock();
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// *  timed await without a signal times out
-// */
-//public void testAwait_Timeout() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    try {
-//        lock.writeLock().lock();
-//        lock.writeLock().unlock();
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * awaitUntil without a signal times out
-// */
-//public void testAwaitUntil_Timeout() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    try {
-//        lock.writeLock().lock();
-//        java.util.Date d = new java.util.Date();
-//        lock.writeLock().unlock();
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * await returns when signalled
-// */
-//public void testAwait() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        c.signal();
-//        lock.writeLock().unlock();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///** A helper class for uninterruptible wait tests */
-//class UninterruptableThread extends Thread {
-//    private Lock lock;
-//    private Condition c;
-//
-//    public volatile boolean canAwake = false;
-//    public volatile boolean interrupted = false;
-//    public volatile boolean lockStarted = false;
-//
-//    public UninterruptableThread(Lock lock, Condition c) {
-//        this.lock = lock;
-//        this.c = c;
-//    }
-//
-//    public synchronized void run() {
-//        lock.lock();
-//        lockStarted = true;
-//
-//        while (!canAwake) {
-//            c.awaitUninterruptibly();
-//        }
-//
-//        interrupted = isInterrupted();
-//        lock.unlock();
-//    }
-//}
-//
-///**
-// * awaitUninterruptibly doesn't abort on interrupt
-// */
-//public void testAwaitUninterruptibly() {
-//    final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//    UninterruptableThread thread = new UninterruptableThread(lock.writeLock(), c);
-//
-//    try {
-//        thread.start();
-//
-//        while (!thread.lockStarted) {
-//            Thread.sleep(100);
-//        }
-//
-//        lock.writeLock().lock();
-//        try {
-//            thread.interrupt();
-//            thread.canAwake = true;
-//            c.signal();
-//        } finally {
-//            lock.writeLock().unlock();
-//        }
-//
-//        thread.join();
-//        assertTrue(thread.interrupted);
-//        assertFalse(thread.isAlive());
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * await is interruptible
-// */
-//public void testAwait_Interrupt() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    c.await();
-//                    lock.writeLock().unlock();
-//                    threadShouldThrow();
-//        }
-//        catch(InterruptedException success) {
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * awaitNanos is interruptible
-// */
-//public void testAwaitNanos_Interrupt() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    c.awaitNanos(SHORT_DELAY_MS * 2 * 1000000);
-//                    lock.writeLock().unlock();
-//                    threadShouldThrow();
-//        }
-//        catch(InterruptedException success) {
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * awaitUntil is interruptible
-// */
-//public void testAwaitUntil_Interrupt() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    java.util.Date d = new java.util.Date();
-//                    c.awaitUntil(new java.util.Date(d.getTime() + 10000));
-//                    lock.writeLock().unlock();
-//                    threadShouldThrow();
-//        }
-//        catch(InterruptedException success) {
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t.interrupt();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * signalAll wakes up all threads
-// */
-//public void testSignalAll() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t1 = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//Thread t2 = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//    try {
-//        t1.start();
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        c.signalAll();
-//        lock.writeLock().unlock();
-//        t1.join(SHORT_DELAY_MS);
-//        t2.join(SHORT_DELAY_MS);
-//        assertFalse(t1.isAlive());
-//        assertFalse(t2.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * A serialized lock deserializes as unlocked
-// */
-//public void testSerialization() {
-//    ReentrantReadWriteLock l = new ReentrantReadWriteLock();
-//    l.readLock().lock();
-//    l.readLock().unlock();
-//
-//    try {
-//        ByteArrayOutputStream bout = new ByteArrayOutputStream(10000);
-//        ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(bout));
-//        out.writeObject(l);
-//        out.close();
-//
-//        ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-//        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(bin));
-//        ReentrantReadWriteLock r = (ReentrantReadWriteLock) in.readObject();
-//        r.readLock().lock();
-//        r.readLock().unlock();
-//    } catch(Exception e){
-//        e.printStackTrace();
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * hasQueuedThreads reports whether there are waiting threads
-// */
-//public void testhasQueuedThreads() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    Thread t1 = new Thread(new InterruptedLockRunnable(lock));
-//    Thread t2 = new Thread(new InterruptibleLockRunnable(lock));
-//    try {
-//        assertFalse(lock.hasQueuedThreads());
-//        lock.writeLock().lock();
-//        t1.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.hasQueuedThreads());
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.hasQueuedThreads());
-//        t1.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.hasQueuedThreads());
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertFalse(lock.hasQueuedThreads());
-//        t1.join();
-//        t2.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * hasQueuedThread(null) throws NPE
-// */
-//public void testHasQueuedThreadNPE() {
-//final ReentrantReadWriteLock sync = new ReentrantReadWriteLock();
-//    try {
-//        sync.hasQueuedThread(null);
-//        shouldThrow();
-//    } catch (NullPointerException success) {
-//    }
-//}
-//
-///**
-// * hasQueuedThread reports whether a thread is queued.
-// */
-//public void testHasQueuedThread() {
-//final ReentrantReadWriteLock sync = new ReentrantReadWriteLock();
-//    Thread t1 = new Thread(new InterruptedLockRunnable(sync));
-//    Thread t2 = new Thread(new InterruptibleLockRunnable(sync));
-//    try {
-//        assertFalse(sync.hasQueuedThread(t1));
-//        assertFalse(sync.hasQueuedThread(t2));
-//        sync.writeLock().lock();
-//        t1.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(sync.hasQueuedThread(t1));
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(sync.hasQueuedThread(t1));
-//        assertTrue(sync.hasQueuedThread(t2));
-//        t1.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertFalse(sync.hasQueuedThread(t1));
-//        assertTrue(sync.hasQueuedThread(t2));
-//        sync.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertFalse(sync.hasQueuedThread(t1));
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertFalse(sync.hasQueuedThread(t2));
-//        t1.join();
-//        t2.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * getQueueLength reports number of waiting threads
-// */
-//public void testGetQueueLength() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    Thread t1 = new Thread(new InterruptedLockRunnable(lock));
-//    Thread t2 = new Thread(new InterruptibleLockRunnable(lock));
-//    try {
-//        assertEquals(0, lock.getQueueLength());
-//        lock.writeLock().lock();
-//        t1.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertEquals(1, lock.getQueueLength());
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertEquals(2, lock.getQueueLength());
-//        t1.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertEquals(1, lock.getQueueLength());
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertEquals(0, lock.getQueueLength());
-//        t1.join();
-//        t2.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * getQueuedThreads includes waiting threads
-// */
-//public void testGetQueuedThreads() {
-//final PublicReentrantReadWriteLock lock = new PublicReentrantReadWriteLock();
-//    Thread t1 = new Thread(new InterruptedLockRunnable(lock));
-//    Thread t2 = new Thread(new InterruptibleLockRunnable(lock));
-//    try {
-//        assertTrue(lock.getQueuedThreads().isEmpty());
-//        lock.writeLock().lock();
-//        assertTrue(lock.getQueuedThreads().isEmpty());
-//        t1.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.getQueuedThreads().contains(t1));
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.getQueuedThreads().contains(t1));
-//        assertTrue(lock.getQueuedThreads().contains(t2));
-//        t1.interrupt();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertFalse(lock.getQueuedThreads().contains(t1));
-//        assertTrue(lock.getQueuedThreads().contains(t2));
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        assertTrue(lock.getQueuedThreads().isEmpty());
-//        t1.join();
-//        t2.join();
-//    } catch(Exception e){
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * hasWaiters throws NPE if null
-// */
-//public void testHasWaitersNPE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    try {
-//        lock.hasWaiters(null);
-//        shouldThrow();
-//    } catch (NullPointerException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * getWaitQueueLength throws NPE if null
-// */
-//public void testGetWaitQueueLengthNPE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    try {
-//        lock.getWaitQueueLength(null);
-//        shouldThrow();
-//    } catch (NullPointerException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * getWaitingThreads throws NPE if null
-// */
-//public void testGetWaitingThreadsNPE() {
-//final PublicReentrantReadWriteLock lock = new PublicReentrantReadWriteLock();
-//    try {
-//        lock.getWaitingThreads(null);
-//        shouldThrow();
-//    } catch (NullPointerException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * hasWaiters throws IAE if not owned
-// */
-//public void testHasWaitersIAE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//final ReentrantReadWriteLock lock2 = new ReentrantReadWriteLock();
-//    try {
-//        lock2.hasWaiters(c);
-//        shouldThrow();
-//    } catch (IllegalArgumentException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * hasWaiters throws IMSE if not locked
-// */
-//public void testHasWaitersIMSE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//    try {
-//        lock.hasWaiters(c);
-//        shouldThrow();
-//    } catch (IllegalMonitorStateException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * getWaitQueueLength throws IAE if not owned
-// */
-//public void testGetWaitQueueLengthIAE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//final ReentrantReadWriteLock lock2 = new ReentrantReadWriteLock();
-//    try {
-//        lock2.getWaitQueueLength(c);
-//        shouldThrow();
-//    } catch (IllegalArgumentException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * getWaitQueueLength throws IMSE if not locked
-// */
-//public void testGetWaitQueueLengthIMSE() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//    try {
-//        lock.getWaitQueueLength(c);
-//        shouldThrow();
-//    } catch (IllegalMonitorStateException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * getWaitingThreads throws IAE if not owned
-// */
-//public void testGetWaitingThreadsIAE() {
-//final PublicReentrantReadWriteLock lock = new PublicReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//final PublicReentrantReadWriteLock lock2 = new PublicReentrantReadWriteLock();
-//    try {
-//        lock2.getWaitingThreads(c);
-//        shouldThrow();
-//    } catch (IllegalArgumentException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * getWaitingThreads throws IMSE if not locked
-// */
-//public void testGetWaitingThreadsIMSE() {
-//final PublicReentrantReadWriteLock lock = new PublicReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//    try {
-//        lock.getWaitingThreads(c);
-//        shouldThrow();
-//    } catch (IllegalMonitorStateException success) {
-//    } catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * hasWaiters returns true when a thread is waiting, else false
-// */
-//public void testHasWaiters() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    threadAssertFalse(lock.hasWaiters(c));
-//                    threadAssertEquals(0, lock.getWaitQueueLength(c));
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertTrue(lock.hasWaiters(c));
-//        assertEquals(1, lock.getWaitQueueLength(c));
-//        c.signal();
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertFalse(lock.hasWaiters(c));
-//        assertEquals(0, lock.getWaitQueueLength(c));
-//        lock.writeLock().unlock();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * getWaitQueueLength returns number of waiting threads
-// */
-//public void testGetWaitQueueLength() {
-//final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    final Condition c = (lock.writeLock().newCondition());
-//Thread t = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    threadAssertFalse(lock.hasWaiters(c));
-//                    threadAssertEquals(0, lock.getWaitQueueLength(c));
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//    try {
-//        t.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertTrue(lock.hasWaiters(c));
-//        assertEquals(1, lock.getWaitQueueLength(c));
-//        c.signal();
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertFalse(lock.hasWaiters(c));
-//        assertEquals(0, lock.getWaitQueueLength(c));
-//        lock.writeLock().unlock();
-//        t.join(SHORT_DELAY_MS);
-//        assertFalse(t.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-//
-///**
-// * getWaitingThreads returns only and all waiting threads
-// */
-//public void testGetWaitingThreads() {
-//final PublicReentrantReadWriteLock lock = new PublicReentrantReadWriteLock();
-//    final Condition c = lock.writeLock().newCondition();
-//Thread t1 = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    threadAssertTrue(lock.getWaitingThreads(c).isEmpty());
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//Thread t2 = new Thread(new Runnable() {
-//    public void run() {
-//        try {
-//        lock.writeLock().lock();
-//                    threadAssertFalse(lock.getWaitingThreads(c).isEmpty());
-//                    c.await();
-//                    lock.writeLock().unlock();
-//        }
-//        catch(InterruptedException e) {
-//                    threadUnexpectedException();
-//                }
-//    }
-//    });
-//
-//    try {
-//        lock.writeLock().lock();
-//        assertTrue(lock.getWaitingThreads(c).isEmpty());
-//        lock.writeLock().unlock();
-//        t1.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        t2.start();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertTrue(lock.hasWaiters(c));
-//        assertTrue(lock.getWaitingThreads(c).contains(t1));
-//        assertTrue(lock.getWaitingThreads(c).contains(t2));
-//        c.signalAll();
-//        lock.writeLock().unlock();
-//        Thread.sleep(SHORT_DELAY_MS);
-//        lock.writeLock().lock();
-//        assertFalse(lock.hasWaiters(c));
-//        assertTrue(lock.getWaitingThreads(c).isEmpty());
-//        lock.writeLock().unlock();
-//        t1.join(SHORT_DELAY_MS);
-//        t2.join(SHORT_DELAY_MS);
-//        assertFalse(t1.isAlive());
-//        assertFalse(t2.isAlive());
-//    }
-//    catch (Exception ex) {
-//        unexpectedException();
-//    }
-//}
-//
-///**
-// * toString indicates current lock state
-// */
-//public void testToString() {
-//    ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    String us = lock.toString();
-//    assertTrue(us.indexOf("Write locks = 0") >= 0);
-//    assertTrue(us.indexOf("Read locks = 0") >= 0);
-//    lock.writeLock().lock();
-//    String ws = lock.toString();
-//    assertTrue(ws.indexOf("Write locks = 1") >= 0);
-//    assertTrue(ws.indexOf("Read locks = 0") >= 0);
-//    lock.writeLock().unlock();
-//    lock.readLock().lock();
-//    lock.readLock().lock();
-//    String rs = lock.toString();
-//    assertTrue(rs.indexOf("Write locks = 0") >= 0);
-//    assertTrue(rs.indexOf("Read locks = 2") >= 0);
-//}
-//
-///**
-// * readLock.toString indicates current lock state
-// */
-//public void testReadLockToString() {
-//    ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    String us = lock.readLock().toString();
-//    assertTrue(us.indexOf("Read locks = 0") >= 0);
-//    lock.readLock().lock();
-//    lock.readLock().lock();
-//    String rs = lock.readLock().toString();
-//    assertTrue(rs.indexOf("Read locks = 2") >= 0);
-//}
-//
-///**
-// * writeLock.toString indicates current lock state
-// */
-//public void testWriteLockToString() {
-//    ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-//    String us = lock.writeLock().toString();
-//    assertTrue(us.indexOf("Unlocked") >= 0);
-//    lock.writeLock().lock();
-//    String ls = lock.writeLock().toString();
-//    assertTrue(ls.indexOf("Locked") >= 0);
-//}
+    ReentrantReadWriteLock rl;
+    rl.writeLock().lock();
+    CPPUNIT_ASSERT(rl.isWriteLocked());
+    CPPUNIT_ASSERT(rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+    rl.writeLock().unlock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+    rl.readLock().lock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(1, rl.getReadLockCount());
+    rl.readLock().unlock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testFairLock() {
+
+    ReentrantReadWriteLock rl(true);
+    rl.writeLock().lock();
+    CPPUNIT_ASSERT(rl.isWriteLocked());
+    CPPUNIT_ASSERT(rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+    rl.writeLock().unlock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+    rl.readLock().lock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(1, rl.getReadLockCount());
+    rl.readLock().unlock();
+    CPPUNIT_ASSERT(!rl.isWriteLocked());
+    CPPUNIT_ASSERT(!rl.isWriteLockedByCurrentThread());
+    CPPUNIT_ASSERT_EQUAL(0, rl.getReadLockCount());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWriteHoldCount() {
+    ReentrantReadWriteLock lock;
+    for (int i = 1; i <= SIZE; i++) {
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT_EQUAL(i,lock.getWriteHoldCount());
+    }
+    for (int i = SIZE; i > 0; i--) {
+        lock.writeLock().unlock();
+        CPPUNIT_ASSERT_EQUAL(i-1,lock.getWriteHoldCount());
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testUnlockIllegalMonitorStateException() {
+
+    ReentrantReadWriteLock rl;
+    try {
+        rl.writeLock().unlock();
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteLockInterruptiblyInterruptedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteLockInterruptiblyInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteLockInterruptiblyInterruptedRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lockInterruptibly();
+                lock->writeLock().unlock();
+                lock->writeLock().lockInterruptibly();
+                lock->writeLock().unlock();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteLockInterruptiblyInterrupted() {
+    ReentrantReadWriteLock lock;
+    TestWriteLockInterruptiblyInterruptedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    try {
+        lock.writeLock().lock();
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().unlock();
+        t.join();
+    } catch(Exception& e){
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteTryLockInterruptedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteTryLockInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteTryLockInterruptedRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().tryLock(1000, TimeUnit::MILLISECONDS);
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteTryLockInterrupted() {
+    ReentrantReadWriteLock lock;
+    TestWriteTryLockInterruptedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.interrupt();
+        lock.writeLock().unlock();
+        t.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadLockInterruptiblyInterruptedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadLockInterruptiblyInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadLockInterruptiblyInterruptedRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->readLock().lockInterruptibly();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadLockInterruptiblyInterrupted() {
+    ReentrantReadWriteLock lock;
+    TestReadLockInterruptiblyInterruptedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        t.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().unlock();
+        t.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadTryLockInterruptedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadTryLockInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadTryLockInterruptedRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->readLock().tryLock(1000, TimeUnit::MILLISECONDS);
+                test->threadShouldThrow();
+            } catch (InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadTryLockInterrupted() {
+    ReentrantReadWriteLock lock;
+    TestReadTryLockInterruptedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.interrupt();
+        t.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteTryLockWhenLockedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteTryLockWhenLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteTryLockWhenLockedRunnable() {}
+
+        virtual void run() {
+            test->threadAssertFalse(lock->writeLock().tryLock());
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteTryLockWhenLocked() {
+
+    ReentrantReadWriteLock lock;
+    TestWriteTryLockWhenLockedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadTryLockWhenLockedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadTryLockWhenLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadTryLockWhenLockedRunnable() {}
+
+        virtual void run() {
+            test->threadAssertFalse(lock->readLock().tryLock());
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadTryLockWhenLocked() {
+    ReentrantReadWriteLock lock;
+    TestReadTryLockWhenLockedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestMultipleReadLocksRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestMultipleReadLocksRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestMultipleReadLocksRunnable() {}
+
+        virtual void run() {
+            test->threadAssertTrue(lock->readLock().tryLock());
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testMultipleReadLocks() {
+    ReentrantReadWriteLock lock;
+    TestMultipleReadLocksRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.readLock().lock();
+    try {
+        t.start();
+        t.join();
+        lock.readLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteAfterMultipleReadLocksRunnable1 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteAfterMultipleReadLocksRunnable1(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteAfterMultipleReadLocksRunnable1() {}
+
+        virtual void run() {
+            lock->readLock().lock();
+            lock->readLock().unlock();
+        }
+    };
+
+    class TestWriteAfterMultipleReadLocksRunnable2 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteAfterMultipleReadLocksRunnable2(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteAfterMultipleReadLocksRunnable2() {}
+
+        virtual void run() {
+            lock->writeLock().lock();
+            lock->writeLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteAfterMultipleReadLocks() {
+
+    ReentrantReadWriteLock lock;
+    TestWriteAfterMultipleReadLocksRunnable1 runnable1(this, &lock);
+    TestWriteAfterMultipleReadLocksRunnable2 runnable2(this, &lock);
+    Thread t1(&runnable1);
+    Thread t2(&runnable2);
+
+    lock.readLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.readLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadAfterWriteLockRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadAfterWriteLockRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadAfterWriteLockRunnable() {}
+
+        virtual void run() {
+            lock->readLock().lock();
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadAfterWriteLock() {
+    ReentrantReadWriteLock lock;
+    TestReadAfterWriteLockRunnable runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLock() {
+
+    ReentrantReadWriteLock lock;
+    lock.writeLock().lock();
+    CPPUNIT_ASSERT(lock.readLock().tryLock());
+    lock.readLock().unlock();
+    lock.writeLock().unlock();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadHoldingWriteLockRunnable2 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadHoldingWriteLockRunnable2(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadHoldingWriteLockRunnable2() {}
+
+        virtual void run() {
+            lock->readLock().lock();
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLock2() {
+    ReentrantReadWriteLock lock;
+    TestReadHoldingWriteLockRunnable2 runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadHoldingWriteLockRunnable3 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadHoldingWriteLockRunnable3(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadHoldingWriteLockRunnable3() {}
+
+        virtual void run() {
+            lock->writeLock().lock();
+            lock->writeLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLock3() {
+    ReentrantReadWriteLock lock;
+    TestReadHoldingWriteLockRunnable3 runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteHoldingWriteLock4Runnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteHoldingWriteLock4Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteHoldingWriteLock4Runnable() {}
+
+        virtual void run() {
+            lock->writeLock().lock();
+            lock->writeLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteHoldingWriteLock4() {
+    ReentrantReadWriteLock lock;
+    TestWriteHoldingWriteLock4Runnable runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        lock.writeLock().lock();
+        lock.writeLock().unlock();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        lock.writeLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLockFair() {
+
+    ReentrantReadWriteLock lock(true);
+    lock.writeLock().lock();
+    CPPUNIT_ASSERT(lock.readLock().tryLock());
+    lock.readLock().unlock();
+    lock.writeLock().unlock();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadHoldingWriteLockFair2Runnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadHoldingWriteLockFair2Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadHoldingWriteLockFair2Runnable() {}
+
+        virtual void run() {
+            lock->readLock().lock();
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLockFair2() {
+    ReentrantReadWriteLock lock(true);
+    TestReadHoldingWriteLockFair2Runnable runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadHoldingWriteLockFair3Runnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadHoldingWriteLockFair3Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadHoldingWriteLockFair3Runnable() {}
+
+        virtual void run() {
+            lock->writeLock().lock();
+            lock->writeLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadHoldingWriteLockFair3() {
+    ReentrantReadWriteLock lock(true);
+    TestReadHoldingWriteLockFair3Runnable runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.readLock().lock();
+        lock.readLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteHoldingWriteLockFair4Runnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteHoldingWriteLockFair4Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteHoldingWriteLockFair4Runnable() {}
+
+        virtual void run() {
+            lock->writeLock().lock();
+            lock->writeLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteHoldingWriteLockFair4() {
+    ReentrantReadWriteLock lock(true);
+    TestWriteHoldingWriteLockFair4Runnable runnable(this, &lock);
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+    lock.writeLock().lock();
+
+    try {
+        t1.start();
+        t2.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(lock.isWriteLockedByCurrentThread());
+        CPPUNIT_ASSERT(lock.getWriteHoldCount() == 1);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(lock.getWriteHoldCount() == 2);
+        lock.writeLock().unlock();
+        lock.writeLock().lock();
+        lock.writeLock().unlock();
+        lock.writeLock().unlock();
+        t1.join(MEDIUM_DELAY_MS);
+        t2.join(MEDIUM_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestTryLockWhenReadLockedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestTryLockWhenReadLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestTryLockWhenReadLockedRunnable() {}
+
+        virtual void run() {
+            test->threadAssertTrue(lock->readLock().tryLock());
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testTryLockWhenReadLocked() {
+    ReentrantReadWriteLock lock;
+    TestTryLockWhenReadLockedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    lock.readLock().lock();
+    try {
+        t.start();
+        t.join();
+        lock.readLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteTryLockWhenReadLockedRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteTryLockWhenReadLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteTryLockWhenReadLockedRunnable() {}
+
+        virtual void run() {
+            test->threadAssertFalse(lock->writeLock().tryLock());
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteTryLockWhenReadLocked() {
+    ReentrantReadWriteLock lock;
+    TestWriteTryLockWhenReadLockedRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.readLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.readLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestTryLockWhenReadLockedFairRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestTryLockWhenReadLockedFairRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestTryLockWhenReadLockedFairRunnable() {}
+
+        virtual void run() {
+            test->threadAssertTrue(lock->readLock().tryLock());
+            lock->readLock().unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testTryLockWhenReadLockedFair() {
+    ReentrantReadWriteLock lock(true);
+    TestTryLockWhenReadLockedFairRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.readLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.readLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteTryLockWhenReadLockedFairRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteTryLockWhenReadLockedFairRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteTryLockWhenReadLockedFairRunnable() {}
+
+        virtual void run() {
+            test->threadAssertFalse(lock->writeLock().tryLock());
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteTryLockWhenReadLockedFair() {
+    ReentrantReadWriteLock lock(true);
+    TestWriteTryLockWhenReadLockedFairRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.readLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.readLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteTryLockTimeoutRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteTryLockTimeoutRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteTryLockTimeoutRunnable() {}
+
+        virtual void run() {
+            try {
+                test->threadAssertFalse(lock->writeLock().tryLock(1, TimeUnit::MILLISECONDS));
+            } catch (Exception& ex) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteTryLockTimeout() {
+    ReentrantReadWriteLock lock;
+    TestWriteTryLockTimeoutRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadTryLockTimeoutRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadTryLockTimeoutRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadTryLockTimeoutRunnable() {}
+
+        virtual void run() {
+            try {
+                test->threadAssertFalse(lock->readLock().tryLock(1, TimeUnit::MILLISECONDS));
+            } catch (Exception& ex) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadTryLockTimeout() {
+    ReentrantReadWriteLock lock;
+    TestReadTryLockTimeoutRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    lock.writeLock().lock();
+
+    try {
+        t.start();
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestWriteLockInterruptiblyRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestWriteLockInterruptiblyRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestWriteLockInterruptiblyRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lockInterruptibly();
+                test->threadShouldThrow();
+            } catch(InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteLockInterruptibly() {
+    ReentrantReadWriteLock lock;
+    TestWriteLockInterruptiblyRunnable runnable(this, &lock);
+    Thread t(&runnable);
+    try {
+        lock.writeLock().lockInterruptibly();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestReadLockInterruptiblyRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    public:
+
+        TestReadLockInterruptiblyRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestReadLockInterruptiblyRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->readLock().lockInterruptibly();
+                test->threadShouldThrow();
+            } catch(InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadLockInterruptibly() {
+    ReentrantReadWriteLock lock;
+    TestReadLockInterruptiblyRunnable runnable(this, &lock);
+    Thread t(&runnable);
+
+    try {
+        lock.writeLock().lockInterruptibly();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join();
+        lock.writeLock().unlock();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitIllegalMonitor() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        c->await();
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    } catch (Exception& ex) {
+        shouldThrow();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testSignalIllegalMonitor() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        c->signal();
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitNanosTimeout() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+
+    try {
+        lock.writeLock().lock();
+        long long t = c->awaitNanos(100);
+        CPPUNIT_ASSERT(t <= 0);
+        lock.writeLock().unlock();
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitTimeout() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(!c->await(SHORT_DELAY_MS, TimeUnit::MILLISECONDS));
+        lock.writeLock().unlock();
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitUntilTimeout() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        lock.writeLock().lock();
+        Date d;
+        CPPUNIT_ASSERT(!c->awaitUntil(Date(d.getTime() + SHORT_DELAY_MS)));
+        lock.writeLock().unlock();
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestAwaitRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestAwaitRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestAwaitRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwait() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestAwaitRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        c->signal();
+        lock.writeLock().unlock();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class UninterruptableThread : public Thread {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        decaf::util::concurrent::locks::Lock& lock;
+        Condition* cond;
+
+    public:
+
+        volatile bool canAwake;
+        volatile bool interrupted;
+        volatile bool lockStarted;
+
+    public:
+
+        UninterruptableThread(ReentrantReadWriteLockTest* test, decaf::util::concurrent::locks::Lock& lock, Condition* cond) :
+            Thread(), test(test), lock(lock), cond(cond), canAwake(false), interrupted(false), lockStarted(false) {}
+        virtual ~UninterruptableThread() {}
+
+        virtual void run() {
+            lock.lock();
+            lockStarted = true;
+
+            while (!canAwake) {
+                cond->awaitUninterruptibly();
+            }
+
+            interrupted = isInterrupted();
+            lock.unlock();
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitUninterruptibly() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    UninterruptableThread thread(this, lock.writeLock(), c.get());
+
+    try {
+
+        thread.start();
+
+        while (!thread.lockStarted) {
+            Thread::sleep(100);
+        }
+
+        lock.writeLock().lock();
+        try {
+            thread.interrupt();
+            thread.canAwake = true;
+            c->signal();
+            lock.writeLock().unlock();
+        } catch(...) {
+            lock.writeLock().unlock();
+        }
+
+        thread.join();
+        CPPUNIT_ASSERT(thread.interrupted);
+        CPPUNIT_ASSERT(!thread.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestAwaitInterruptRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestAwaitInterruptRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestAwaitInterruptRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                cond->await();
+                lock->writeLock().unlock();
+                test->threadShouldThrow();
+            } catch(InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitInterrupt() {
+
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestAwaitInterruptRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestAwaitNanosInterruptRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestAwaitNanosInterruptRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestAwaitNanosInterruptRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                cond->awaitNanos(ReentrantReadWriteLockTest::SHORT_DELAY_MS * 2 * 1000000);
+                lock->writeLock().unlock();
+                test->threadShouldThrow();
+            } catch(InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitNanosInterrupt() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestAwaitNanosInterruptRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestAwaitUntilInterruptRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestAwaitUntilInterruptRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestAwaitUntilInterruptRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                decaf::util::Date d;
+                cond->awaitUntil(decaf::util::Date(d.getTime() + 10000));
+                lock->writeLock().unlock();
+                test->threadShouldThrow();
+            } catch(InterruptedException& success) {
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testAwaitUntilInterrupt() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestAwaitUntilInterruptRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        t.interrupt();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestSignalAllRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestSignalAllRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestSignalAllRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testSignalAll() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestSignalAllRunnable runnable(this, &lock, c.get());
+    Thread t1(&runnable);
+    Thread t2(&runnable);
+
+    try {
+        t1.start();
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        c->signalAll();
+        lock.writeLock().unlock();
+        t1.join(SHORT_DELAY_MS);
+        t2.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasQueuedThreads() {
+    ReentrantReadWriteLock lock;
+    InterruptedLockRunnable interrupted(this, &lock);
+    InterruptibleLockRunnable interruptable(this, &lock);
+    Thread t1(&interrupted);
+    Thread t2(&interruptable);
+
+    try {
+        CPPUNIT_ASSERT(!lock.hasQueuedThreads());
+        lock.writeLock().lock();
+        t1.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(lock.hasQueuedThreads());
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(lock.hasQueuedThreads());
+        t1.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(lock.hasQueuedThreads());
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!lock.hasQueuedThreads());
+        t1.join();
+        t2.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasQueuedThreadNPE() {
+    ReentrantReadWriteLock sync;
+    try {
+        sync.hasQueuedThread(NULL);
+        shouldThrow();
+    } catch (NullPointerException& success) {
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasQueuedThread() {
+    ReentrantReadWriteLock sync;
+    InterruptedLockRunnable interrupted(this, &sync);
+    InterruptibleLockRunnable interruptable(this, &sync);
+    Thread t1(&interrupted);
+    Thread t2(&interruptable);
+
+    try {
+        CPPUNIT_ASSERT(!sync.hasQueuedThread(&t1));
+        CPPUNIT_ASSERT(!sync.hasQueuedThread(&t2));
+        sync.writeLock().lock();
+        t1.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(sync.hasQueuedThread(&t1));
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(sync.hasQueuedThread(&t1));
+        CPPUNIT_ASSERT(sync.hasQueuedThread(&t2));
+        t1.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!sync.hasQueuedThread(&t1));
+        CPPUNIT_ASSERT(sync.hasQueuedThread(&t2));
+        sync.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!sync.hasQueuedThread(&t1));
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!sync.hasQueuedThread(&t2));
+        t1.join();
+        t2.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetQueueLength() {
+    ReentrantReadWriteLock lock;
+    InterruptedLockRunnable interrupted(this, &lock);
+    InterruptibleLockRunnable interruptable(this, &lock);
+    Thread t1(&interrupted);
+    Thread t2(&interruptable);
+
+    try {
+        CPPUNIT_ASSERT_EQUAL(0, lock.getQueueLength());
+        lock.writeLock().lock();
+        t1.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(1, lock.getQueueLength());
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(2, lock.getQueueLength());
+        t1.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(1, lock.getQueueLength());
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT_EQUAL(0, lock.getQueueLength());
+        t1.join();
+        t2.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetQueuedThreads() {
+    PublicReentrantReadWriteLock lock;
+    InterruptedLockRunnable interrupted(this, &lock);
+    InterruptibleLockRunnable interruptable(this, &lock);
+    Thread t1(&interrupted);
+    Thread t2(&interruptable);
+
+    try {
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->isEmpty());
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->isEmpty());
+        t1.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->contains(&t1));
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->contains(&t1));
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->contains(&t2));
+        t1.interrupt();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->contains(&t1));
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->contains(&t2));
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getQueuedThreadsPublic())->isEmpty());
+        t1.join();
+        t2.join();
+    } catch (Exception& e) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasWaitersNPE() {
+    ReentrantReadWriteLock lock;
+    try {
+        lock.hasWaiters(NULL);
+        shouldThrow();
+    } catch (NullPointerException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitQueueLengthNPE() {
+ReentrantReadWriteLock lock;
+    try {
+        lock.getWaitQueueLength(NULL);
+        shouldThrow();
+    } catch (NullPointerException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitingThreadsNPE() {
+    PublicReentrantReadWriteLock lock;
+    try {
+        lock.getWaitingThreadsPublic(NULL);
+        shouldThrow();
+    } catch (NullPointerException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasWaitersIAE() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    ReentrantReadWriteLock lock2;
+    try {
+        lock2.hasWaiters(c.get());
+        shouldThrow();
+    } catch (IllegalArgumentException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasWaitersIMSE() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        lock.hasWaiters(c.get());
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitQueueLengthIAE() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    ReentrantReadWriteLock lock2;
+    try {
+        lock2.getWaitQueueLength(c.get());
+        shouldThrow();
+    } catch (IllegalArgumentException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitQueueLengthIMSE() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        lock.getWaitQueueLength(c.get());
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitingThreadsIAE() {
+    PublicReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    PublicReentrantReadWriteLock lock2;
+    try {
+        lock2.getWaitingThreadsPublic(c.get());
+        shouldThrow();
+    } catch (IllegalArgumentException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitingThreadsIMSE() {
+    PublicReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    try {
+        lock.getWaitingThreadsPublic(c.get());
+        shouldThrow();
+    } catch (IllegalMonitorStateException& success) {
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestHasWaitersRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestHasWaitersRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestHasWaitersRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                test->threadAssertFalse(lock->hasWaiters(cond));
+                test->threadAssertEquals(0, lock->getWaitQueueLength(cond));
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testHasWaiters() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestHasWaitersRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT_EQUAL(1, lock.getWaitQueueLength(c.get()));
+        c->signal();
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(!lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT_EQUAL(0, lock.getWaitQueueLength(c.get()));
+        lock.writeLock().unlock();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestGetWaitQueueLengthRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestGetWaitQueueLengthRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestGetWaitQueueLengthRunnable() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                test->threadAssertFalse(lock->hasWaiters(cond));
+                test->threadAssertEquals(0, lock->getWaitQueueLength(cond));
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitQueueLength() {
+    ReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestGetWaitQueueLengthRunnable runnable(this, &lock, c.get());
+    Thread t(&runnable);
+
+    try {
+        t.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT_EQUAL(1, lock.getWaitQueueLength(c.get()));
+        c->signal();
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(!lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT_EQUAL(0, lock.getWaitQueueLength(c.get()));
+        lock.writeLock().unlock();
+        t.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestGetWaitingThreadsRunnable1 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        PublicReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestGetWaitingThreadsRunnable1(ReentrantReadWriteLockTest* test, PublicReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestGetWaitingThreadsRunnable1() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                test->threadAssertTrue(
+                    Pointer<Collection<Thread*> >(lock->getWaitingThreadsPublic(cond))->isEmpty());
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+
+    class TestGetWaitingThreadsRunnable2 : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        PublicReentrantReadWriteLock* lock;
+        Condition* cond;
+
+    public:
+
+        TestGetWaitingThreadsRunnable2(ReentrantReadWriteLockTest* test, PublicReentrantReadWriteLock* lock, Condition* cond) :
+            Runnable(), test(test), lock(lock), cond(cond) {}
+        virtual ~TestGetWaitingThreadsRunnable2() {}
+
+        virtual void run() {
+            try {
+                lock->writeLock().lock();
+                test->threadAssertFalse(
+                    Pointer<Collection<Thread*> >(lock->getWaitingThreadsPublic(cond))->isEmpty());
+                cond->await();
+                lock->writeLock().unlock();
+            } catch(InterruptedException& e) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testGetWaitingThreads() {
+    PublicReentrantReadWriteLock lock;
+    Pointer<Condition> c(lock.writeLock().newCondition());
+    TestGetWaitingThreadsRunnable1 runnable1(this, &lock, c.get());
+    TestGetWaitingThreadsRunnable2 runnable2(this, &lock, c.get());
+    Thread t1(&runnable1);
+    Thread t2(&runnable2);
+
+    try {
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getWaitingThreadsPublic(c.get()))->isEmpty());
+        lock.writeLock().unlock();
+        t1.start();
+        Thread::sleep( SHORT_DELAY_MS);
+        t2.start();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getWaitingThreadsPublic(c.get()))->contains(&t1));
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getWaitingThreadsPublic(c.get()))->contains(&t2));
+        c->signalAll();
+        lock.writeLock().unlock();
+        Thread::sleep(SHORT_DELAY_MS);
+        lock.writeLock().lock();
+        CPPUNIT_ASSERT(!lock.hasWaiters(c.get()));
+        CPPUNIT_ASSERT(Pointer<Collection<Thread*> >(lock.getWaitingThreadsPublic(c.get()))->isEmpty());
+        lock.writeLock().unlock();
+        t1.join(SHORT_DELAY_MS);
+        t2.join(SHORT_DELAY_MS);
+        CPPUNIT_ASSERT(!t1.isAlive());
+        CPPUNIT_ASSERT(!t2.isAlive());
+    } catch (Exception& ex) {
+        unexpectedException();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testToString() {
+    ReentrantReadWriteLock lock;
+    std::string us = lock.toString();
+    CPPUNIT_ASSERT(us.find_first_of("Write locks = 0") != std::string::npos);
+    CPPUNIT_ASSERT(us.find_first_of("Read locks = 0") != std::string::npos);
+    lock.writeLock().lock();
+    std::string ws = lock.toString();
+    CPPUNIT_ASSERT(ws.find_first_of("Write locks = 1") != std::string::npos);
+    CPPUNIT_ASSERT(ws.find_first_of("Read locks = 0") != std::string::npos);
+    lock.writeLock().unlock();
+    lock.readLock().lock();
+    lock.readLock().lock();
+    std::string rs = lock.toString();
+    CPPUNIT_ASSERT(rs.find_first_of("Write locks = 0") != std::string::npos);
+    CPPUNIT_ASSERT(rs.find_first_of("Read locks = 2") != std::string::npos);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testReadLockToString() {
+    ReentrantReadWriteLock lock;
+    std::string us = lock.readLock().toString();
+    CPPUNIT_ASSERT(us.find_first_of("Read locks = 0") != std::string::npos);
+    lock.readLock().lock();
+    lock.readLock().lock();
+    std::string rs = lock.readLock().toString();
+    CPPUNIT_ASSERT(rs.find_first_of("Read locks = 2") != std::string::npos);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testWriteLockToString() {
+    ReentrantReadWriteLock lock;
+    std::string us = lock.writeLock().toString();
+    CPPUNIT_ASSERT(us.find_first_of("Unlocked") != std::string::npos);
+    lock.writeLock().lock();
+    std::string ls = lock.writeLock().toString();
+    CPPUNIT_ASSERT(ls.find_first_of("Locked") != std::string::npos);
+}

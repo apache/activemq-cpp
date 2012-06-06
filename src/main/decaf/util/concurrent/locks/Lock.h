@@ -281,6 +281,10 @@ namespace locks {
          */
         virtual Condition* newCondition() = 0;
 
+        /**
+         * @returns a string representation of the Lock useful for debugging purposes.
+         */
+        virtual std::string toString() const = 0;
     };
 
 }}}}
