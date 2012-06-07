@@ -50,7 +50,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned char OpenWireFormat::NULL_TYPE = 0;
 const int OpenWireFormat::DEFAULT_VERSION = 1;
-const int OpenWireFormat::MAX_SUPPORTED_VERSION = 6;
+const int OpenWireFormat::MAX_SUPPORTED_VERSION = 9;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) :
