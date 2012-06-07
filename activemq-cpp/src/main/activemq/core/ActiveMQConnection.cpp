@@ -516,20 +516,36 @@ void ActiveMQConnection::close() {
             return;
         }
 
+        Exception ex;
+        bool hasException = false;
+
         // If we are running lets stop first.
         if (!this->transportFailed.get()) {
-            this->stop();
+            try {
+                this->stop();
+            } catch (cms::CMSException& error) {
+                if (!hasException) {
+                    ex = Exception(&error);
+                    ex.setMark(__FILE__, __LINE__);
+                    hasException = true;
+                }
+            }
         }
 
         // Indicates we are on the way out to suppress any exceptions getting
         // passed on from the transport as it goes down.
-        this->closing.set( true );
+        this->closing.set(true);
 
         if (this->config->scheduler != NULL) {
             try {
                 this->config->scheduler->stop();
+            } catch (Exception& error) {
+                if (!hasException) {
+                    ex = error;
+                    ex.setMark(__FILE__, __LINE__);
+                    hasException = true;
+                }
             }
-            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         // Get the complete list of active sessions.
@@ -540,39 +556,67 @@ void ActiveMQConnection::close() {
         // Dispose of all the Session resources we know are still open.
         while (iter->hasNext()) {
             Pointer<ActiveMQSessionKernel> session = iter->next();
-            try{
+            try {
                 session->dispose();
-                lastDeliveredSequenceId =
-                    Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
+                lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
             } catch( cms::CMSException& ex ){
-                /* Absorb */
             }
         }
 
-        // As TemporaryQueue and TemporaryTopic instances are bound
-        // to a connection we should just delete them after the connection
-        // is closed to free up memory
+        // As TemporaryQueue and TemporaryTopic instances are bound to a connection
+        // we should just delete them after the connection is closed to free up memory
         std::vector< Pointer<ActiveMQTempDestination> > values = this->config->activeTempDestinations.values();
         std::vector< Pointer<ActiveMQTempDestination> >::iterator iterator = values.begin();
-        for(; iterator != values.end(); ++iterator) {
-            Pointer<ActiveMQTempDestination> dest = *iterator;
-            dest->close();
+        try {
+            for(; iterator != values.end(); ++iterator) {
+                Pointer<ActiveMQTempDestination> dest = *iterator;
+                dest->close();
+            }
+        } catch (cms::CMSException& error) {
+            if (!hasException) {
+                ex = Exception(&error);
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
+        } catch (std::exception& stdex) {
+            if (!hasException) {
+                ex = Exception(&stdex);
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
         }
 
         try {
             if (this->config->executor != NULL) {
                 this->config->executor->shutdown();
             }
-        } catch(Exception& ex) {
+        } catch (Exception& error) {
+            if (!hasException) {
+                ex = error;
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
         }
 
         // Now inform the Broker we are shutting down.
-        this->disconnect(lastDeliveredSequenceId);
+        try {
+            this->disconnect(lastDeliveredSequenceId);
+        } catch (Exception& error) {
+            if (!hasException) {
+                ex = error;
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
+        }
 
         // Once current deliveries are done this stops the delivery
         // of any new messages.
         this->started.set(false);
         this->closed.set(true);
+
+        if (hasException) {
+            throw ex;
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -713,15 +757,7 @@ void ActiveMQConnection::disconnect(long long lastDeliveredSequenceId) {
                 }
             }
 
-            try {
-                this->config->transport.reset(NULL);
-            } catch (exceptions::ActiveMQException& ex) {
-                if (!hasException) {
-                    hasException = true;
-                    ex.setMark(__FILE__, __LINE__);
-                    e = ex;
-                }
-            }
+            this->config->transport.reset(NULL);
         }
 
         // If we encountered an exception - throw the first one we encountered.

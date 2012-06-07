@@ -181,39 +181,54 @@ void IOTransport::stop() {
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::close() {
 
-    try{
+    class Finalizer {
+    private:
 
-        if( closed ){
+        Pointer<Thread> target;
+
+    public:
+
+        Finalizer(Pointer<Thread> target) : target(target) {}
+        ~Finalizer() {
+            try {
+                target->join();
+                target.reset(NULL);
+            }
+            DECAF_CATCHALL_NOTHROW()
+        }
+    };
+
+    try {
+
+        if (closed) {
             return;
         }
+
 
         // Mark this transport as closed.
         closed = true;
 
-        // We have to close the input stream before
-        // we stop the thread.  this will force us to
-        // wake up the thread if it's stuck in a read
-        // (which is likely).  Otherwise, the join that
-        // follows will block forever.
-        if( inputStream != NULL ){
+        Finalizer finalize(thread);
+
+        // No need to fire anymore async events now.
+        this->listener = NULL;
+
+        // We have to close the input stream before we stop the thread.  this will
+        // force us to wake up the thread if it's stuck in a read (which is likely).
+        // Otherwise, the join that follows will block forever.
+        if (inputStream != NULL) {
             inputStream->close();
             inputStream = NULL;
         }
 
-        // Wait for the thread to die.
-        if( thread != NULL ){
-            thread->join();
-            thread.reset( NULL );
-        }
-
         // Close the output stream.
-        if( outputStream != NULL ){
+        if (outputStream != NULL) {
             outputStream->close();
             outputStream = NULL;
         }
 
         // Clear the WireFormat so we can't use it anymore
-        this->wireFormat.reset( NULL );
+        this->wireFormat.reset(NULL);
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )

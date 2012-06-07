@@ -108,6 +108,8 @@ void TransportFilter::close() {
         next->close();
         next.reset( NULL );
     }
+
+    listener = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
