@@ -181,40 +181,55 @@ void IOTransport::stop() {
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::close() {
 
-    try{
+	class Finalizer {
+	private:
 
-        if( closed ){
-            return;
-        }
+		Pointer<Thread> target;
 
-        // Mark this transport as closed.
-        closed = true;
+	public:
 
-        // We have to close the input stream before
-        // we stop the thread.  this will force us to
-        // wake up the thread if it's stuck in a read
-        // (which is likely).  Otherwise, the join that
-        // follows will block forever.
-        if( inputStream != NULL ){
-            inputStream->close();
-            inputStream = NULL;
-        }
+		Finalizer(Pointer<Thread> target) : target(target) {}
+		~Finalizer() {
+			try {
+				target->join();
+				target.reset(NULL);
+			}
+			DECAF_CATCHALL_NOTHROW()
+		}
+	};
 
-        // Wait for the thread to die.
-        if( thread != NULL ){
-            thread->join();
-            thread.reset( NULL );
-        }
+    try {
 
-        // Close the output stream.
-        if( outputStream != NULL ){
-            outputStream->close();
-            outputStream = NULL;
-        }
+		if (closed) {
+			return;
+		}
 
-        // Clear the WireFormat so we can't use it anymore
-        this->wireFormat.reset( NULL );
-    }
+
+		// Mark this transport as closed.
+		closed = true;
+
+		Finalizer finalize(thread);
+
+		// No need to fire anymore async events now.
+		this->listener = NULL;
+
+		// We have to close the input stream before we stop the thread.  this will
+		// force us to wake up the thread if it's stuck in a read (which is likely).
+		// Otherwise, the join that follows will block forever.
+		if (inputStream != NULL) {
+			inputStream->close();
+			inputStream = NULL;
+		}
+
+		// Close the output stream.
+		if (outputStream != NULL) {
+			outputStream->close();
+			outputStream = NULL;
+		}
+
+		// Clear the WireFormat so we can't use it anymore
+		this->wireFormat.reset(NULL);
+	}
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )

@@ -106,6 +106,9 @@ void TransportFilter::close() {
         next->close();
         next.reset( NULL );
     }
+
+    // No need to fire any more async events.
+    this->listener = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
