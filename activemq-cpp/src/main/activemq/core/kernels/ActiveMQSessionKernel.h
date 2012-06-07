@@ -40,10 +40,8 @@
 #include <activemq/threads/Scheduler.h>
 
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 
 #include <string>
 #include <memory>
@@ -66,10 +64,6 @@ namespace kernels {
     class AMQCPP_API ActiveMQSessionKernel : public virtual cms::Session, public Dispatcher {
     private:
 
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     Pointer<activemq::core::kernels::ActiveMQConsumerKernel>,
-                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
-
         friend class activemq::core::ActiveMQSessionExecutor;
 
     protected:
@@ -90,11 +84,6 @@ namespace kernels {
          * Connection
          */
         ActiveMQConnection* connection;
-
-        /**
-         * Map of consumers.
-         */
-        ConsumersMap consumers;
 
         /**
          * Indicates that this connection has been closed, it is no longer
@@ -398,7 +387,7 @@ namespace kernels {
          * the session is closed.
          *
          * @param consumer
-         *      The ActiveMQConsumer instance to add to this session.
+         *      The ActiveMQConsumerKernel instance to add to this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
@@ -408,12 +397,12 @@ namespace kernels {
          * Dispose of a MessageConsumer from this session.  Removes it from the Connection
          * and clean up any resources associated with it.
          *
-         * @param consumerId
-         *      The ConsumerId of the MessageConsumer to remove from this Session.
+         * @param consumer
+         *      The ActiveMQConsumerKernel instance to remove from this session.
          *
          * @throw ActiveMQException if an internal error occurs.
          */
-        void removeConsumer(Pointer<commands::ConsumerId> consumerId);
+        void removeConsumer(Pointer<ActiveMQConsumerKernel> consumer);
 
         /**
          * Adds a MessageProducer to this session registering it with the Connection and store
@@ -542,6 +531,16 @@ namespace kernels {
          * @returns a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
          */
         Pointer<ActiveMQConsumerKernel> lookupConsumerKernel(Pointer<commands::ConsumerId> id);
+
+        /**
+         * Gives each consumer a chance to dispatch messages that have been enqueued by calling
+         * each consumers iterate method.  Returns true if this method needs to be called again
+         * because a consumer requires further processing time to complete its dispatching.  Once
+         * all consumers are done this method returns false.
+         *
+         * @returns true if more iterations are needed false otherwise.
+         */
+        bool iterateConsumers();
 
    private:
 

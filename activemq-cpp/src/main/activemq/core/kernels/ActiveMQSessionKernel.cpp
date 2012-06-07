@@ -57,6 +57,7 @@
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -83,12 +84,6 @@ namespace kernels{
     class CloseSynhcronization;
 
     class SessionConfig {
-    public:
-
-        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
-                                     Pointer<ActiveMQConsumerKernel>,
-                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
-
     private:
 
         SessionConfig(const SessionConfig&);
@@ -98,17 +93,17 @@ namespace kernels{
 
         AtomicBoolean synchronizationRegistered;
         decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
+        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQConsumerKernel> > consumers;
         Pointer<Scheduler> scheduler;
         Pointer<CloseSynhcronization> closeSync;
-        ConsumersMap consumers;
         Mutex sendMutex;
         cms::MessageTransformer* transformer;
 
     public:
 
         SessionConfig() : synchronizationRegistered(false),
-                          producers(), scheduler(), closeSync(),
-                          consumers(), sendMutex(), transformer(NULL) {}
+                          producers(), consumers(), scheduler(), closeSync(),
+                          sendMutex(), transformer(NULL) {}
         ~SessionConfig() {}
     };
 
@@ -198,7 +193,6 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
                                                                              sessionInfo(),
                                                                              transaction(),
                                                                              connection(connection),
-                                                                             consumers(),
                                                                              closed(false),
                                                                              executor(),
                                                                              ackMode(ackMode),
@@ -345,21 +339,19 @@ void ActiveMQSessionKernel::dispose() {
         }
 
         // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
-        synchronized(&this->consumers) {
-
-            std::vector< Pointer<ActiveMQConsumerKernel> > closables = this->consumers.values();
-
-            for (std::size_t i = 0; i < closables.size(); ++i) {
-                try{
-                    closables[i]->setFailureError(this->connection->getFirstFailureError());
-                    closables[i]->dispose();
-                    this->lastDeliveredSequenceId =
-                        Math::max(this->lastDeliveredSequenceId, closables[i]->getLastDeliveredSequenceId());
-                } catch( cms::CMSException& ex ){
-                    /* Absorb */
-                }
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > consumerIter(this->config->consumers.iterator());
+        while (consumerIter->hasNext()) {
+            try{
+                Pointer<ActiveMQConsumerKernel> consumer = consumerIter->next();
+                consumer->setFailureError(this->connection->getFirstFailureError());
+                consumer->dispose();
+                this->lastDeliveredSequenceId =
+                    Math::max(this->lastDeliveredSequenceId, consumer->getLastDeliveredSequenceId());
+            } catch (cms::CMSException& ex) {
+                /* Absorb */
             }
         }
+        this->config->consumers.clear();
 
         // Dispose of all Producers, the dispose method skips the RemoveInfo command.
         std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
@@ -371,6 +363,7 @@ void ActiveMQSessionKernel::dispose() {
                 /* Absorb */
             }
         }
+        this->config->producers.clear();
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
@@ -424,13 +417,10 @@ void ActiveMQSessionKernel::recover() {
             throw cms::IllegalStateException("This session is transacted");
         }
 
-        synchronized( &this->consumers ) {
-            std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
-
-            std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-            for( ; iter != consumers.end(); ++iter ) {
-                (*iter)->rollback();
-            }
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->rollback();
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -443,42 +433,32 @@ void ActiveMQSessionKernel::clearMessagesInProgress() {
         this->executor->clearMessagesInProgress();
     }
 
-    synchronized(&this->consumers) {
-        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
-
-        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for (; iter != consumers.end(); ++iter) {
-            (*iter)->inProgressClearRequired();
-
-            this->connection->getScheduler()->executeAfterDelay(
-                new ClearConsumerTask(*iter), 0LL);
-        }
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        consumer->inProgressClearRequired();
+        this->connection->getScheduler()->executeAfterDelay(
+            new ClearConsumerTask(consumer), 0LL);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::acknowledge() {
 
-    synchronized(&this->consumers) {
-        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
-
-        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for (; iter != consumers.end(); ++iter) {
-            (*iter)->acknowledge();
-        }
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        consumer->acknowledge();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::deliverAcks() {
 
-    synchronized(&this->consumers) {
-        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
-
-        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for (; iter != consumers.end(); ++iter) {
-            (*iter)->deliverAcks();
-        }
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        consumer->deliverAcks();
     }
 }
 
@@ -538,7 +518,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destinati
             this->addConsumer(consumer);
             this->connection->syncRequest(consumer->getConsumerInfo());
         } catch (Exception& ex) {
-            this->removeConsumer(consumer->getConsumerId());
+            this->removeConsumer(consumer);
             throw ex;
         }
 
@@ -582,7 +562,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer(const cms::To
             this->addConsumer(consumer);
             this->connection->syncRequest(consumer->getConsumerInfo());
         } catch (Exception& ex) {
-            this->removeConsumer(consumer->getConsumerId());
+            this->removeConsumer(consumer);
             throw ex;
         }
 
@@ -1008,13 +988,11 @@ void ActiveMQSessionKernel::redispatch(MessageDispatchChannel& unconsumedMessage
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::start() {
 
-    synchronized(&this->consumers) {
-        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for (; iter != consumers.end(); ++iter) {
-            (*iter)->start();
-        }
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        consumer->start();
     }
 
     if (this->executor.get() != NULL) {
@@ -1065,14 +1043,12 @@ void ActiveMQSessionKernel::createTemporaryDestination(commands::ActiveMQTempDes
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSessionKernel::isInUse(Pointer<ActiveMQDestination> destination) {
 
-    synchronized(&this->consumers) {
-        std::vector< Pointer<ActiveMQConsumerKernel> > consumers = this->consumers.values();
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-        std::vector< Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-        for (; iter != consumers.end(); ++iter) {
-            if ((*iter)->isInUse(destination)) {
-                return true;
-            }
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        if (consumer->isInUse(destination)) {
+            return true;
         }
     }
 
@@ -1147,11 +1123,7 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
     try {
 
         this->checkClosed();
-
-        // Add the consumer to the map.
-        synchronized(&this->consumers) {
-            this->consumers.put(consumer->getConsumerInfo()->getConsumerId(), consumer);
-        }
+        this->config->consumers.add(consumer);
 
         // Register this as a message dispatcher for the consumer.
         this->connection->addDispatcher(consumer->getConsumerInfo()->getConsumerId(), this);
@@ -1162,18 +1134,11 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::removeConsumer(Pointer<ConsumerId> consumerId) {
+void ActiveMQSessionKernel::removeConsumer(Pointer<ActiveMQConsumerKernel> consumer) {
 
     try {
-
-        synchronized(&this->consumers) {
-            if (this->consumers.containsKey(consumerId)) {
-                // Remove this Id both from the Sessions Map of Consumers and from the Connection.
-                // If the kernels parent is destroyed then it will get cleaned up now.
-                this->connection->removeDispatcher(consumerId);
-                this->consumers.remove(consumerId);
-            }
-        }
+        this->connection->removeDispatcher(consumer->getConsumerId());
+        this->config->consumers.remove(consumer);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1223,9 +1188,12 @@ Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Poin
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Pointer<ConsumerId> id) {
 
-    synchronized(&this->consumers) {
-        if (this->consumers.containsKey(id)) {
-            return this->consumers.get(id);
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        if (consumer->getConsumerId()->equals(*id)) {
+            return consumer;
         }
     }
 
@@ -1233,11 +1201,28 @@ Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Poin
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQSessionKernel::iterateConsumers() {
+
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        if (consumer->iterate()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::setPrefetchSize(Pointer<ConsumerId> id, int prefetch) {
 
-    synchronized(&this->consumers) {
-        if (this->consumers.containsKey(id)) {
-            Pointer<ActiveMQConsumerKernel> consumer = this->consumers.get(id);
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        if (consumer->getConsumerId()->equals(*id)) {
             consumer->setPrefetchSize(prefetch);
         }
     }
@@ -1246,10 +1231,11 @@ void ActiveMQSessionKernel::setPrefetchSize(Pointer<ConsumerId> id, int prefetch
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::close(Pointer<ConsumerId> id) {
 
-    synchronized(&this->consumers) {
-        if (this->consumers.containsKey(id)) {
-            Pointer<ActiveMQConsumerKernel> consumer = this->consumers.get(id);
+    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
+    while (iter->hasNext()) {
+        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+        if (consumer->getConsumerId()->equals(*id)) {
             try {
                 consumer->close();
             } catch (cms::CMSException& e) {

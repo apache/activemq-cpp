@@ -265,7 +265,7 @@ Pointer<ActiveMQConsumerKernel> ActiveMQQueueBrowser::createConsumer() {
         this->session->addConsumer(consumer);
         this->session->syncRequest(consumer->getConsumerInfo());
     } catch (Exception& ex) {
-        this->session->removeConsumer(consumer->getConsumerId());
+        this->session->removeConsumer(consumer);
         throw ex;
     }
 

@@ -124,13 +124,8 @@ void ActiveMQSessionExecutor::dispatch(const Pointer<MessageDispatch>& dispatch)
 
     try {
 
-        Pointer<ActiveMQConsumerKernel> consumer;
-
-        synchronized(&( this->session->consumers)) {
-            if (this->session->consumers.containsKey(dispatch->getConsumerId())) {
-                consumer = this->session->consumers.get(dispatch->getConsumerId());
-            }
-        }
+        Pointer<ActiveMQConsumerKernel> consumer =
+            this->session->lookupConsumerKernel(dispatch->getConsumerId());
 
         // If the consumer is not available, just ignore the message.
         // Otherwise, dispatch the message to the consumer.
@@ -152,16 +147,8 @@ bool ActiveMQSessionExecutor::iterate() {
 
     try {
 
-        synchronized(&(this->session->consumers)) {
-            std::vector<Pointer<ActiveMQConsumerKernel> > consumers = this->session->consumers.values();
-            std::vector<Pointer<ActiveMQConsumerKernel> >::iterator iter = consumers.begin();
-
-            // Deliver any messages queued on the consumer to their listeners.
-            for (; iter != consumers.end(); ++iter) {
-                if ((*iter)->iterate()) {
-                    return true;
-                }
-            }
+        if (this->session->iterateConsumers()) {
+            return true;
         }
 
         // No messages left queued on the listeners.. so now dispatch messages
