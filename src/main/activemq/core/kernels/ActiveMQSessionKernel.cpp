@@ -56,7 +56,6 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
-#include <decaf/util/LinkedList.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
@@ -98,7 +97,7 @@ namespace kernels{
     public:
 
         AtomicBoolean synchronizationRegistered;
-        decaf::util::LinkedList< Pointer<ActiveMQProducerKernel> > producers;
+        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
         Pointer<Scheduler> scheduler;
         Pointer<CloseSynhcronization> closeSync;
         ConsumersMap consumers;
@@ -363,16 +362,13 @@ void ActiveMQSessionKernel::dispose() {
         }
 
         // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-        synchronized(&this->config->producers) {
-            std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
 
-            while (producerIter->hasNext()) {
-                Pointer<ActiveMQProducerKernel> producer = producerIter->next();
-                producerIter->remove();
-                try {
-                    producer->dispose();
-                } catch (cms::CMSException& ex) {
-                }
+        while (producerIter->hasNext()) {
+            try{
+                producerIter->next()->dispose();
+            } catch (cms::CMSException& ex) {
+                /* Absorb */
             }
         }
     }
@@ -1189,9 +1185,7 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 
     try {
         this->checkClosed();
-        synchronized(&this->config->producers) {
-            this->config->producers.add(producer);
-        }
+        this->config->producers.add(producer);
         this->connection->addProducer(producer);
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -1204,9 +1198,7 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 
     try {
         this->connection->removeProducer(producer->getProducerId());
-        synchronized(&this->config->producers) {
-            this->config->producers.remove(producer);
-        }
+        this->config->producers.remove(producer);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1216,13 +1208,12 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Pointer<ProducerId> id) {
 
-    synchronized(&this->config->producers) {
-        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
-        while (producerIter->hasNext()) {
-            Pointer<ActiveMQProducerKernel> producer = producerIter->next();
-            if (producer->getProducerId()->equals(*id)) {
-                return producer;
-            }
+    std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+
+    while (producerIter->hasNext()) {
+        Pointer<ActiveMQProducerKernel> producer = producerIter->next();
+        if (producer->getProducerId()->equals(*id)) {
+            return producer;
         }
     }
 
