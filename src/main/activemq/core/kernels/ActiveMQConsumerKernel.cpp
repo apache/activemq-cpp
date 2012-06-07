@@ -505,7 +505,14 @@ void ActiveMQConsumerKernel::dispose() {
             }
 
             // Remove this Consumer from the Connections set of Dispatchers
-            this->session->removeConsumer(this->consumerInfo->getConsumerId());
+            Pointer<ActiveMQConsumerKernel> consumer(this);
+            try {
+                this->session->removeConsumer(consumer);
+            } catch(Exception& e) {
+                consumer.release();
+                throw;
+            }
+            consumer.release();
 
             // If we encountered an error, propagate it.
             if (haveException) {
@@ -1336,13 +1343,11 @@ cms::MessageTransformer* ActiveMQConsumerKernel::getMessageTransformer() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 const Pointer<commands::ConsumerInfo>& ActiveMQConsumerKernel::getConsumerInfo() const {
-    this->checkClosed();
     return this->consumerInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 const Pointer<commands::ConsumerId>& ActiveMQConsumerKernel::getConsumerId() const {
-    this->checkClosed();
     return this->consumerInfo->getConsumerId();
 }
 
