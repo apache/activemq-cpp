@@ -373,6 +373,10 @@ ActiveMQConsumer::ActiveMQConsumer( ActiveMQSession* session,
     }
 
     applyDestinationOptions(this->consumerInfo);
+
+    if (this->consumerInfo->getPrefetchSize() < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1278,74 +1282,54 @@ void ActiveMQConsumer::applyDestinationOptions( const Pointer<ConsumerInfo>& inf
 
     decaf::lang::Pointer<commands::ActiveMQDestination> amqDestination = info->getDestination();
 
-    // Get any options specified in the destination and apply them to the
-    // ConsumerInfo object.
-    const ActiveMQProperties& options = amqDestination->getOptions();
+	// Get any options specified in the destination and apply them to the
+	// ConsumerInfo object.
+	const ActiveMQProperties& options = amqDestination->getOptions();
 
-    std::string noLocalStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_NOLOCAL );
-    if( options.hasProperty( noLocalStr ) ) {
-        info->setNoLocal( Boolean::parseBoolean(
-            options.getProperty( noLocalStr ) ) );
-    }
+	std::string noLocalStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_NOLOCAL);
+	if (options.hasProperty(noLocalStr)) {
+		info->setNoLocal(Boolean::parseBoolean(options.getProperty(noLocalStr)));
+	}
 
-    std::string selectorStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_SELECTOR );
-    if( options.hasProperty( selectorStr ) ) {
-        info->setSelector( options.getProperty( selectorStr ) );
-    }
+	std::string selectorStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_SELECTOR);
+	if (options.hasProperty(selectorStr)) {
+		info->setSelector(options.getProperty(selectorStr));
+	}
 
-    std::string priorityStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_PRIORITY );
-    if( options.hasProperty( priorityStr ) ) {
-        info->setPriority( (unsigned char)Integer::parseInt( options.getProperty( priorityStr ) ) );
-    }
+	std::string priorityStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_PRIORITY);
+	if (options.hasProperty(priorityStr)) {
+		info->setPriority((unsigned char) Integer::parseInt(options.getProperty(priorityStr)));
+	}
 
-    std::string dispatchAsyncStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_DISPATCHASYNC );
-    if( options.hasProperty( dispatchAsyncStr ) ) {
-        info->setDispatchAsync(
-            Boolean::parseBoolean( options.getProperty( dispatchAsyncStr ) ) );
-    }
+	std::string dispatchAsyncStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_DISPATCHASYNC);
+	if (options.hasProperty(dispatchAsyncStr)) {
+		info->setDispatchAsync(Boolean::parseBoolean(options.getProperty(dispatchAsyncStr)));
+	}
 
-    std::string exclusiveStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_EXCLUSIVE );
-    if( options.hasProperty( exclusiveStr ) ) {
-        info->setExclusive(
-            Boolean::parseBoolean( options.getProperty( exclusiveStr ) ) );
-    }
+	std::string exclusiveStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_EXCLUSIVE);
+	if (options.hasProperty(exclusiveStr)) {
+		info->setExclusive(Boolean::parseBoolean(options.getProperty(exclusiveStr)));
+	}
 
-    std::string maxPendingMsgLimitStr =
-        core::ActiveMQConstants::toString(
-            core::ActiveMQConstants::CUNSUMER_MAXPENDINGMSGLIMIT );
+	std::string maxPendingMsgLimitStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CUNSUMER_MAXPENDINGMSGLIMIT);
+	if (options.hasProperty(maxPendingMsgLimitStr)) {
+		info->setMaximumPendingMessageLimit(Integer::parseInt(options.getProperty(maxPendingMsgLimitStr)));
+	}
 
-    if( options.hasProperty( maxPendingMsgLimitStr ) ) {
-        info->setMaximumPendingMessageLimit(
-            Integer::parseInt(
-                options.getProperty( maxPendingMsgLimitStr ) ) );
-    }
+	std::string prefetchSizeStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_PREFECTCHSIZE);
+	if (options.hasProperty(prefetchSizeStr)) {
+		info->setPrefetchSize(Integer::parseInt(options.getProperty(prefetchSizeStr, "1000")));
+	}
 
-    std::string prefetchSizeStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_PREFECTCHSIZE );
-    if( info->getPrefetchSize() <= 0 || options.hasProperty( prefetchSizeStr )  ) {
-        info->setPrefetchSize(
-            Integer::parseInt( options.getProperty( prefetchSizeStr, "1000" ) ) );
-    }
+	std::string retroactiveStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_RETROACTIVE);
+	if (options.hasProperty(retroactiveStr)) {
+		info->setRetroactive(Boolean::parseBoolean(options.getProperty(retroactiveStr)));
+	}
 
-    std::string retroactiveStr =
-        core::ActiveMQConstants::toString( core::ActiveMQConstants::CONSUMER_RETROACTIVE );
-    if( options.hasProperty( retroactiveStr ) ) {
-        info->setRetroactive(
-            Boolean::parseBoolean( options.getProperty( retroactiveStr ) ) );
-    }
-
-    std::string networkSubscriptionStr = "consumer.networkSubscription";
-
-    if( options.hasProperty( networkSubscriptionStr ) ) {
-        info->setNetworkSubscription(
-            Boolean::parseBoolean(
-                options.getProperty( networkSubscriptionStr ) ) );
-    }
+	std::string networkSubscriptionStr = "consumer.networkSubscription";
+	if (options.hasProperty(networkSubscriptionStr)) {
+		info->setNetworkSubscription(Boolean::parseBoolean(options.getProperty(networkSubscriptionStr)));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
