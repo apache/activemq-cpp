@@ -337,10 +337,6 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
         }
     }
 
-    if (prefetch < 0) {
-        throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
-    }
-
     this->internal = new ActiveMQConsumerKernelConfig();
 
     Pointer<ConsumerInfo> consumerInfo(new ConsumerInfo());
@@ -380,6 +376,10 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
     }
 
     applyDestinationOptions(this->consumerInfo);
+
+    if (this->consumerInfo->getPrefetchSize() < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1298,7 +1298,7 @@ void ActiveMQConsumerKernel::applyDestinationOptions(const Pointer<ConsumerInfo>
     }
 
     std::string prefetchSizeStr = core::ActiveMQConstants::toString(core::ActiveMQConstants::CONSUMER_PREFECTCHSIZE);
-    if (info->getPrefetchSize() <= 0 || options.hasProperty(prefetchSizeStr)) {
+    if (options.hasProperty(prefetchSizeStr)) {
         info->setPrefetchSize(Integer::parseInt(options.getProperty(prefetchSizeStr, "1000")));
     }
 
