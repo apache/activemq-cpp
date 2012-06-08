@@ -19,6 +19,7 @@
 
 #include <activemq/util/CMSListener.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/core/PrefetchPolicy.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/util/UUID.h>
@@ -67,12 +68,61 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testWithZeroConsumerPrefetch2() {
+
+    cmsProvider->setTopic( false );
+    ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(cmsProvider->getConnection());
+    amqConnection->getPrefetchPolicy()->setQueuePrefetch(0);
+    amqConnection->getPrefetchPolicy()->setTopicPrefetch(0);
+    cmsProvider->reconnectSession();
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+
+    // Send some text messages
+    producer->send( txtMessage.get() );
+
+    auto_ptr<cms::Message> message( consumer->receive( 1000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenwireSimpleTest::testWithZeroConsumerPrefetchAndNoMessage() {
 
     cmsProvider->setTopic( false );
     cmsProvider->setDestinationName(
         UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
 
+    cmsProvider->reconnectSession();
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+
+    // Should be no message and no exceptions
+    auto_ptr<cms::Message> message( consumer->receiveNoWait() );
+    CPPUNIT_ASSERT( message.get() == NULL );
+
+    // Should be no message and no exceptions
+    message.reset( consumer->receive(1000) );
+    CPPUNIT_ASSERT( message.get() == NULL );
+
+    consumer->close();
+    session->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testWithZeroConsumerPrefetchAndNoMessage2() {
+
+    cmsProvider->setTopic( false );
+    ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(cmsProvider->getConnection());
+    amqConnection->getPrefetchPolicy()->setQueuePrefetch(0);
+    amqConnection->getPrefetchPolicy()->setTopicPrefetch(0);
     cmsProvider->reconnectSession();
 
     // Create CMS Object for Comms
