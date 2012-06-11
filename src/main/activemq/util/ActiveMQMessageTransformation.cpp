@@ -186,15 +186,54 @@ bool ActiveMQMessageTransformation::transformMessage(cms::Message* message, Acti
             ActiveMQStreamMessage* msg = new ActiveMQStreamMessage();
             msg->setConnection(connection);
 
-            // TODO Need element enumeration for StreamMessage
-//            try {
-//                while ((obj = streamMessage->readObject()) != NULL) {
-//                    msg->writeObject(obj);
-//                }
-//            } catch (MessageEOFException e) {
-//                // if an end of message stream as expected
-//            } catch (JMSException e) {
-//            }
+            try {
+                while(true) {
+                    cms::Message::ValueType elementType = streamMessage->getNextValueType();
+                    int result = -1;
+                    std::vector<unsigned char> buffer(255);
+
+                    switch(elementType) {
+                        case cms::Message::BOOLEAN_TYPE:
+                            msg->writeBoolean(streamMessage->readBoolean());
+                            break;
+                        case cms::Message::BYTE_TYPE:
+                            msg->writeBoolean(streamMessage->readBoolean());
+                            break;
+                        case cms::Message::BYTE_ARRAY_TYPE:
+                            while ((result = streamMessage->readBytes(buffer)) != -1) {
+                                msg->writeBytes(&buffer[0], 0, result);
+                                buffer.clear();
+                            }
+                            break;
+                        case cms::Message::CHAR_TYPE:
+                            msg->writeChar(streamMessage->readChar());
+                            break;
+                        case cms::Message::SHORT_TYPE:
+                            msg->writeShort(streamMessage->readShort());
+                            break;
+                        case cms::Message::INTEGER_TYPE:
+                            msg->writeInt(streamMessage->readInt());
+                            break;
+                        case cms::Message::LONG_TYPE:
+                            msg->writeLong(streamMessage->readLong());
+                            break;
+                        case cms::Message::FLOAT_TYPE:
+                            msg->writeFloat(streamMessage->readFloat());
+                            break;
+                        case cms::Message::DOUBLE_TYPE:
+                            msg->writeDouble(streamMessage->readDouble());
+                            break;
+                        case cms::Message::STRING_TYPE:
+                            msg->writeString(streamMessage->readString());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } catch (cms::MessageEOFException& e) {
+                // if an end of message stream as expected
+            } catch (cms::CMSException& e) {
+            }
 
             *amqMessage = msg;
         } else if (dynamic_cast<cms::TextMessage*>(message) != NULL) {

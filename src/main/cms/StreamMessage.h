@@ -64,6 +64,22 @@ namespace cms {
         virtual ~StreamMessage();
 
         /**
+         * Returns the value type for the element in the StreamMessage.  The CMS provider
+         * should translate all internal type identifiers into the CMS Value types returning
+         * UNKNOWN_TYPE for any specialized types not directly supported in the CMS API.
+         * The call can fail if the StreamMessage is currently in the middle of a ready of
+         * a Byte array.
+         *
+         * @returns The ValueType contained in the next message element.
+         *
+         * @throws CMSException if no property exists that matches the requested key.
+         * @throw MessageEOFException - if unexpected end of message stream has been reached.
+         * @throw MessageFormatException - if the message contains invalid data.
+         * @throw MessageNotReadableException - if the message is in write-only mode.
+         */
+        virtual ValueType getNextValueType() const = 0;
+
+        /**
          * Reads a Boolean from the Stream message stream
          * @returns boolean value from stream
          *

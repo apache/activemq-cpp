@@ -77,14 +77,23 @@ void ActiveMQStreamMessageTest::testSetAndGet() {
 
     myMessage.reset();
 
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( myMessage.readBoolean() == false );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::BYTE_TYPE );
     CPPUNIT_ASSERT( myMessage.readByte() == 127 );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::CHAR_TYPE );
     CPPUNIT_ASSERT( myMessage.readChar() == 'a' );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::SHORT_TYPE );
     CPPUNIT_ASSERT( myMessage.readShort() == 32000 );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::INTEGER_TYPE );
     CPPUNIT_ASSERT( myMessage.readInt() == 6789999 );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::LONG_TYPE );
     CPPUNIT_ASSERT( myMessage.readLong() == 0xFFFAAA33345LL );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::FLOAT_TYPE );
     CPPUNIT_ASSERT( myMessage.readFloat() == 0.000012f );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::DOUBLE_TYPE );
     CPPUNIT_ASSERT( myMessage.readDouble() == 64.54654 );
+    CPPUNIT_ASSERT( myMessage.getNextValueType() == cms::Message::BYTE_ARRAY_TYPE );
     CPPUNIT_ASSERT( myMessage.readBytes( readData ) == (int)data.size() );
 }
 
@@ -896,6 +905,11 @@ void ActiveMQStreamMessageTest::testWriteOnlyBody() {
         message.writeString( "string" );
     } catch( MessageNotWriteableException& mnwe ) {
         CPPUNIT_FAIL("Should be writeable");
+    }
+    try {
+        message.getNextValueType();
+        CPPUNIT_FAIL("Should have thrown exception");
+    } catch( MessageNotReadableException& mnwe ) {
     }
     try {
         message.readBoolean();

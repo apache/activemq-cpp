@@ -146,6 +146,8 @@ namespace commands {
                     case util::PrimitiveValueNode::STRING_TYPE:
                     case util::PrimitiveValueNode::BIG_STRING_TYPE:
                         return cms::Message::STRING_TYPE;
+                    case util::PrimitiveValueNode::BYTE_ARRAY_TYPE:
+                        return cms::Message::BYTE_ARRAY_TYPE;
                     default:
                         break;
                 }
