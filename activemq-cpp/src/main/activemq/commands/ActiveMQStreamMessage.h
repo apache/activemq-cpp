@@ -34,22 +34,21 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
-#include <decaf/io/ByteArrayOutputStream.h>
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQStreamMessage :
-        public ActiveMQMessageTemplate< cms::StreamMessage > {
+    class ActiveMQStreamMessageImpl;
+
+    class AMQCPP_API ActiveMQStreamMessage: public ActiveMQMessageTemplate<cms::StreamMessage> {
     private:
 
-        decaf::io::ByteArrayOutputStream* bytesOut;
+        ActiveMQStreamMessageImpl* impl;
+
         mutable std::auto_ptr<decaf::io::DataInputStream> dataIn;
         mutable std::auto_ptr<decaf::io::DataOutputStream> dataOut;
-
-        mutable int remainingBytes;
 
     public:
 
@@ -57,85 +56,87 @@ namespace commands{
 
     private:
 
-        ActiveMQStreamMessage( const ActiveMQStreamMessage& );
-        ActiveMQStreamMessage& operator= ( const ActiveMQStreamMessage& );
+        ActiveMQStreamMessage(const ActiveMQStreamMessage&);
+        ActiveMQStreamMessage& operator=(const ActiveMQStreamMessage&);
 
     public:
 
         ActiveMQStreamMessage();
-        virtual ~ActiveMQStreamMessage() throw();
+        virtual ~ActiveMQStreamMessage() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQStreamMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual void onSend();
 
-    public:   // CMS Message
+    public: // CMS Message
 
         virtual cms::StreamMessage* clone() const {
-            return dynamic_cast<cms::StreamMessage*>( this->cloneDataStructure() );
+            return dynamic_cast<cms::StreamMessage*> (this->cloneDataStructure());
         }
 
         virtual void clearBody();
 
     public: // CMS Stream Message
 
+        virtual ValueType getNextValueType() const;
+
         virtual void reset();
 
         virtual bool readBoolean() const;
 
-        virtual void writeBoolean( bool value );
+        virtual void writeBoolean(bool value);
 
         virtual unsigned char readByte() const;
 
-        virtual void writeByte( unsigned char value );
+        virtual void writeByte(unsigned char value);
 
-        virtual int readBytes( std::vector<unsigned char>& value ) const;
+        virtual int readBytes(std::vector<unsigned char>& value) const;
 
-        virtual void writeBytes( const std::vector<unsigned char>& value );
+        virtual void writeBytes(const std::vector<unsigned char>& value);
 
-        virtual int readBytes( unsigned char* buffer, int length ) const;
+        virtual int readBytes(unsigned char* buffer, int length) const;
 
-        virtual void writeBytes( const unsigned char* value, int offset, int length );
+        virtual void writeBytes(const unsigned char* value, int offset, int length);
 
         virtual char readChar() const;
 
-        virtual void writeChar( char value );
+        virtual void writeChar(char value);
 
         virtual float readFloat() const;
 
-        virtual void writeFloat( float value );
+        virtual void writeFloat(float value);
 
         virtual double readDouble() const;
 
-        virtual void writeDouble( double value );
+        virtual void writeDouble(double value);
 
         virtual short readShort() const;
 
-        virtual void writeShort( short value );
+        virtual void writeShort(short value);
 
         virtual unsigned short readUnsignedShort() const;
 
-        virtual void writeUnsignedShort( unsigned short value );
+        virtual void writeUnsignedShort(unsigned short value);
 
         virtual int readInt() const;
 
-        virtual void writeInt( int value );
+        virtual void writeInt(int value);
 
         virtual long long readLong() const;
 
-        virtual void writeLong( long long value );
+        virtual void writeLong(long long value);
 
         virtual std::string readString() const;
 
-        virtual void writeString( const std::string& value );
+        virtual void writeString(const std::string& value);
 
     private:
 
