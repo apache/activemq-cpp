@@ -24,7 +24,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
@@ -111,7 +111,7 @@
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
@@ -198,7 +198,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
@@ -285,7 +285,7 @@
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
@@ -373,7 +373,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
@@ -459,7 +459,7 @@
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
@@ -546,7 +546,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
@@ -633,7 +633,7 @@
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
