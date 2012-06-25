@@ -1,5 +1,5 @@
 Name:           activemq-cpp
-Version:        3.4.1
+Version:        3.4.4
 Release:        1%{?dist}
 Summary:        C++ Implementation of a JMS style Messaging Client
 

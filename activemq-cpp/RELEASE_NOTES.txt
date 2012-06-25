@@ -1,4 +1,15 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.4                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-404] - compilation errors on Windows because of Unicode set in project file
+    [AMQCPP-407] - Application crashes after stopping message broker
+    [AMQCPP-408] - CMS opens a large number of threads
+    [AMQCPP-410] - prefetchSize=0 is ignored when set via PrefetchPolicy
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.4.3                               ==
 =========================================================================
 
