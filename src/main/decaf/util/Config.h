@@ -29,6 +29,10 @@
 #define DECAF_API
 #endif
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 //
 // The purpose of this header is to try to detect the supported headers
 // of the platform when the ./configure script is not being used to generate

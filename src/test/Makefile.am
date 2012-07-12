@@ -193,6 +193,7 @@ cc_sources = \
     decaf/util/AbstractSequentialListTest.cpp \
     decaf/util/ArrayListTest.cpp \
     decaf/util/ArraysTest.cpp \
+    decaf/util/BitSetTest.cpp \
     decaf/util/DateTest.cpp \
     decaf/util/Endian.cpp \
     decaf/util/LinkedListTest.cpp \
@@ -426,6 +427,7 @@ h_sources = \
     decaf/util/AbstractSequentialListTest.h \
     decaf/util/ArrayListTest.h \
     decaf/util/ArraysTest.h \
+    decaf/util/BitSetTest.h \
     decaf/util/DateTest.h \
     decaf/util/Endian.h \
     decaf/util/LinkedListTest.h \
