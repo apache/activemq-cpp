@@ -316,6 +316,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractListTest );
 #include <decaf/util/AbstractSequentialListTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractSequentialListTest );
+#include <decaf/util/BitSetTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::BitSetTest );
 #include <decaf/util/DateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 #include <decaf/util/UUIDTest.h>

@@ -421,6 +421,7 @@ cc_sources = \
     decaf/util/AbstractSet.cpp \
     decaf/util/ArrayList.cpp \
     decaf/util/Arrays.cpp \
+    decaf/util/BitSet.cpp \
     decaf/util/Collection.cpp \
     decaf/util/Comparator.cpp \
     decaf/util/ConcurrentModificationException.cpp \
@@ -945,8 +946,10 @@ h_sources = \
     decaf/lang/exceptions/IndexOutOfBoundsException.h \
     decaf/lang/exceptions/InterruptedException.h \
     decaf/lang/exceptions/InvalidStateException.h \
+    decaf/lang/exceptions/NegativeArraySizeException.h \
     decaf/lang/exceptions/NullPointerException.h \
     decaf/lang/exceptions/NumberFormatException.h \
+    decaf/lang/exceptions/OutOfMemoryError.h \
     decaf/lang/exceptions/RuntimeException.h \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
@@ -1026,6 +1029,7 @@ h_sources = \
     decaf/util/AbstractSet.h \
     decaf/util/ArrayList.h \
     decaf/util/Arrays.h \
+    decaf/util/BitSet.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
     decaf/util/ConcurrentModificationException.h \
