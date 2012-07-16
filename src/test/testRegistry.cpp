@@ -293,6 +293,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::SemaphoreTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::FutureTaskTest );
 #include <decaf/util/concurrent/AbstractExecutorServiceTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::AbstractExecutorServiceTest );
+#include <decaf/util/concurrent/ConcurrentHashMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentHashMapTest );
 
 #include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );
@@ -310,6 +312,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantLockTe
 #include <decaf/util/concurrent/locks/ReentrantReadWriteLockTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantReadWriteLockTest );
 
+#include <decaf/util/HashCodeTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashCodeTest );
+#include <decaf/util/HashMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashMapTest );
 #include <decaf/util/AbstractCollectionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );
 #include <decaf/util/AbstractListTest.h>

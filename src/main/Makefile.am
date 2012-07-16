@@ -427,7 +427,10 @@ cc_sources = \
     decaf/util/ConcurrentModificationException.cpp \
     decaf/util/Date.cpp \
     decaf/util/Deque.cpp \
+    decaf/util/HashCode.cpp \
+    decaf/util/HashMap.cpp \
     decaf/util/Iterator.cpp \
+    decaf/util/LRUCache.cpp \
     decaf/util/LinkedList.cpp \
     decaf/util/List.cpp \
     decaf/util/ListIterator.cpp \
@@ -450,6 +453,7 @@ cc_sources = \
     decaf/util/concurrent/BlockingQueue.cpp \
     decaf/util/concurrent/BrokenBarrierException.cpp \
     decaf/util/concurrent/Callable.cpp \
+    decaf/util/concurrent/ConcurrentHashMap.cpp \
     decaf/util/concurrent/ConcurrentMap.cpp \
     decaf/util/concurrent/ConcurrentStlMap.cpp \
     decaf/util/concurrent/CopyOnWriteArrayList.cpp \
@@ -1036,7 +1040,10 @@ h_sources = \
     decaf/util/Config.h \
     decaf/util/Date.h \
     decaf/util/Deque.h \
+    decaf/util/HashCode.h \
+    decaf/util/HashMap.h \
     decaf/util/Iterator.h \
+    decaf/util/LRUCache.h \
     decaf/util/LinkedList.h \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
@@ -1062,6 +1069,7 @@ h_sources = \
     decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/CancellationException.h \
     decaf/util/concurrent/Concurrent.h \
+    decaf/util/concurrent/ConcurrentHashMap.h \
     decaf/util/concurrent/ConcurrentMap.h \
     decaf/util/concurrent/ConcurrentStlMap.h \
     decaf/util/concurrent/CopyOnWriteArrayList.h \
