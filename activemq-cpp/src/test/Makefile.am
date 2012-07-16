@@ -196,6 +196,9 @@ cc_sources = \
     decaf/util/BitSetTest.cpp \
     decaf/util/DateTest.cpp \
     decaf/util/Endian.cpp \
+    decaf/util/HashCodeTest.cpp \
+    decaf/util/HashMapTest.cpp \
+    decaf/util/LRUCacheTest.cpp \
     decaf/util/LinkedListTest.cpp \
     decaf/util/ListTest.cpp \
     decaf/util/PriorityQueueTest.cpp \
@@ -208,6 +211,7 @@ cc_sources = \
     decaf/util/TimerTest.cpp \
     decaf/util/UUIDTest.cpp \
     decaf/util/concurrent/AbstractExecutorServiceTest.cpp \
+    decaf/util/concurrent/ConcurrentHashMapTest.cpp \
     decaf/util/concurrent/ConcurrentStlMapTest.cpp \
     decaf/util/concurrent/CopyOnWriteArrayListTest.cpp \
     decaf/util/concurrent/CopyOnWriteArraySetTest.cpp \
@@ -430,6 +434,9 @@ h_sources = \
     decaf/util/BitSetTest.h \
     decaf/util/DateTest.h \
     decaf/util/Endian.h \
+    decaf/util/HashCodeTest.h \
+    decaf/util/HashMapTest.h \
+    decaf/util/LRUCacheTest.h \
     decaf/util/LinkedListTest.h \
     decaf/util/ListTest.h \
     decaf/util/PriorityQueueTest.h \
@@ -442,6 +449,7 @@ h_sources = \
     decaf/util/TimerTest.h \
     decaf/util/UUIDTest.h \
     decaf/util/concurrent/AbstractExecutorServiceTest.h \
+    decaf/util/concurrent/ConcurrentHashMapTest.h \
     decaf/util/concurrent/ConcurrentStlMapTest.h \
     decaf/util/concurrent/CopyOnWriteArrayListTest.h \
     decaf/util/concurrent/CopyOnWriteArraySetTest.h \
