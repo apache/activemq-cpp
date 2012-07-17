@@ -35,8 +35,8 @@ namespace concurrent {
      *
      * @since 1.0
      */
-    template<typename K, typename V, typename COMPARATOR>
-    class ConcurrentMap : public Map<K, V, COMPARATOR>{
+    template<typename K, typename V>
+    class ConcurrentMap : public Map<K, V>{
     public:
 
         virtual ~ConcurrentMap() {}

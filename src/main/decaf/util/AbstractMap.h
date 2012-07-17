@@ -53,8 +53,8 @@ namespace util {
      *
      * @since 1.0
      */
-    template< typename K, typename V, typename COMPARATOR>
-    class AbstractMap : public decaf::util::Map<K, V, COMPARATOR> {
+    template< typename K, typename V>
+    class AbstractMap : public decaf::util::Map<K, V> {
     public:
 
         virtual ~AbstractMap() {}

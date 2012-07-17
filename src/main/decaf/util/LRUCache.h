@@ -32,7 +32,7 @@ namespace util {
      * @since 1.0
      */
     template<typename K, typename V, typename COMPARATOR = std::less<K> >
-    class LRUCache : decaf::util::AbstractMap<K, V, COMPARATOR> {
+    class LRUCache : decaf::util::AbstractMap<K, V> {
     protected:
 
         int maxCacheSize;
