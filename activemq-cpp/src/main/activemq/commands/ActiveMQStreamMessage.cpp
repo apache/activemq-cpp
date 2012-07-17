@@ -895,6 +895,8 @@ cms::Message::ValueType ActiveMQStreamMessage::getNextValueType() const {
                 return cms::Message::BOOLEAN_TYPE;
             case util::PrimitiveValueNode::BYTE_TYPE:
                 return cms::Message::BYTE_TYPE;
+            case util::PrimitiveValueNode::BYTE_ARRAY_TYPE:
+                return cms::Message::BYTE_ARRAY_TYPE;
             case util::PrimitiveValueNode::CHAR_TYPE:
                 return cms::Message::CHAR_TYPE;
             case util::PrimitiveValueNode::SHORT_TYPE:
