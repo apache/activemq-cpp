@@ -43,7 +43,7 @@ namespace concurrent{
      * @since 1.0
      */
     template <typename K, typename V, typename COMPARATOR = std::less<K> >
-    class ConcurrentStlMap : public ConcurrentMap<K, V, COMPARATOR> {
+    class ConcurrentStlMap : public ConcurrentMap<K, V> {
     private:
 
         std::map<K,V,COMPARATOR> valueMap;
@@ -54,7 +54,7 @@ namespace concurrent{
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {}
+        ConcurrentStlMap() : ConcurrentMap<K,V>(), valueMap(), mutex() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
@@ -62,7 +62,7 @@ namespace concurrent{
          * @param source The source map.
          */
         ConcurrentStlMap( const ConcurrentStlMap& source ) :
-            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
+            ConcurrentMap<K,V>(), valueMap(), mutex() {
 
             copy( source );
         }
@@ -72,8 +72,8 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) :
-            ConcurrentMap<K,V,COMPARATOR>(), valueMap(), mutex() {
+        ConcurrentStlMap( const Map<K,V>& source ) :
+            ConcurrentMap<K,V>(), valueMap(), mutex() {
 
             copy( source );
         }
@@ -91,7 +91,7 @@ namespace concurrent{
             return false;
         }
 
-        virtual bool equals( const Map<K,V,COMPARATOR>& source ) const {
+        virtual bool equals( const Map<K,V>& source ) const {
 
             synchronized( &mutex ) {
                 std::vector<K> keys = source.keySet();
@@ -121,7 +121,7 @@ namespace concurrent{
             }
         }
 
-        virtual void copy( const Map<K,V,COMPARATOR>& source ) {
+        virtual void copy( const Map<K,V>& source ) {
             synchronized( &mutex ) {
                 this->clear();
                 this->putAll( source );
@@ -254,7 +254,7 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const Map<K,V>& other ) {
 
             synchronized( &mutex ) {
                 std::vector<K> keys = other.keySet();
@@ -447,6 +447,10 @@ namespace concurrent{
 
             throw NoSuchElementException(
                 __FILE__, __LINE__, "Value to Replace was not in the Map." );
+        }
+
+        virtual Set< MapEntry<K, V> >* entrySet() {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
         }
 
     public:

@@ -25,7 +25,7 @@ using namespace decaf;
 using namespace decaf::util;
 
 template <typename K, typename V, typename COMPARATOR = std::less<K> >
-class StlTestMap : public Map<K, V, COMPARATOR> {
+class StlTestMap : public Map<K, V> {
 private:
 
     std::map<K,V,COMPARATOR> valueMap;
@@ -36,14 +36,14 @@ public:
     /**
      * Default constructor - does nothing.
      */
-    StlTestMap() : Map<K,V,COMPARATOR>() {}
+    StlTestMap() : Map<K,V>() {}
 
     /**
      * Copy constructor - copies the content of the given map into this
      * one.
      * @param source The source map.
      */
-    StlTestMap( const StlTestMap& source ) : Map<K,V,COMPARATOR>() {
+    StlTestMap( const StlTestMap& source ) : Map<K,V>() {
         copy( source );
     }
 
@@ -52,7 +52,7 @@ public:
      * one.
      * @param source The source map.
      */
-    StlTestMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>() {
+    StlTestMap( const Map<K,V>& source ) : Map<K,V>() {
         copy( source );
     }
 
@@ -65,7 +65,7 @@ public:
         return this->valueMap == source.valueMap;
     }
 
-    virtual bool equals( const Map<K,V,COMPARATOR>& source ) const {
+    virtual bool equals( const Map<K,V>& source ) const {
         std::vector<K> keys = source.keySet();
 
         typename std::vector<K>::const_iterator iter = keys.begin();
@@ -90,7 +90,7 @@ public:
         this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
     }
 
-    virtual void copy( const Map<K,V,COMPARATOR>& source ) {
+    virtual void copy( const Map<K,V>& source ) {
         this->clear();
         this->putAll( source );
     }
@@ -185,7 +185,7 @@ public:
 
         this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
     }
-    virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
+    virtual void putAll( const Map<K,V>& other ) {
 
         std::vector<K> keys = other.keySet();
 
@@ -240,6 +240,10 @@ public:
         }
 
         return values;
+    }
+
+    virtual Set< MapEntry<K, V> >* entrySet() {
+        throw decaf::lang::exceptions::UnsupportedOperationException();
     }
 
 public:

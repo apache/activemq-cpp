@@ -36,7 +36,7 @@ namespace util{
      * @since 1.0
      */
     template <typename K, typename V, typename COMPARATOR = std::less<K> >
-    class StlMap : public Map<K, V, COMPARATOR> {
+    class StlMap : public Map<K, V> {
     private:
 
         std::map<K,V,COMPARATOR> valueMap;
@@ -47,14 +47,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlMap() : Map<K,V,COMPARATOR>(), valueMap(), mutex() {}
+        StlMap() : Map<K,V>(), valueMap(), mutex() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
+        StlMap( const StlMap& source ) : Map<K,V>(), valueMap(), mutex() {
             copy( source );
         }
 
@@ -63,7 +63,7 @@ namespace util{
          * one.
          * @param source The source map.
          */
-        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>(), valueMap(), mutex() {
+        StlMap( const Map<K,V>& source ) : Map<K,V>(), valueMap(), mutex() {
             copy( source );
         }
 
@@ -79,7 +79,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const Map<K,V,COMPARATOR>& source ) const {
+        virtual bool equals( const Map<K,V>& source ) const {
             std::vector<K> keys = source.keySet();
 
             typename std::vector<K>::const_iterator iter = keys.begin();
@@ -107,7 +107,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const Map<K,V,COMPARATOR>& source ) {
+        virtual void copy( const Map<K,V>& source ) {
             this->clear();
             this->putAll( source );
         }
@@ -208,7 +208,7 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const Map<K,V>& other ) {
 
             std::vector<K> keys = other.keySet();
 
@@ -263,6 +263,10 @@ namespace util{
             }
 
             return values;
+        }
+
+        virtual Set< MapEntry<K, V> >* entrySet() {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
         }
 
     public:
