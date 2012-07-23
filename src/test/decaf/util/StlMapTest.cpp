@@ -246,6 +246,10 @@ public:
         throw decaf::lang::exceptions::UnsupportedOperationException();
     }
 
+    virtual Set< MapEntry<K, V> >* entrySet() const {
+        throw decaf::lang::exceptions::UnsupportedOperationException();
+    }
+
 public:
 
     virtual void lock() {

@@ -22,6 +22,8 @@
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/Set.h>
@@ -55,9 +57,56 @@ namespace util {
      */
     template< typename K, typename V>
     class AbstractMap : public decaf::util::Map<K, V> {
+    protected:
+
+        mutable util::concurrent::Mutex mutex;
+
     public:
 
+        AbstractMap() : Map<K, V>(), mutex() {
+        }
+
+        AbstractMap(const Map<K, V>& map) : Map<K, V>(), mutex() {
+        }
+
+        AbstractMap(const AbstractMap<K, V>& map) : Map<K, V>(), mutex() {
+        }
+
         virtual ~AbstractMap() {}
+
+    public:
+
+        virtual void lock() {
+            mutex.lock();
+        }
+
+        virtual bool tryLock() {
+            return mutex.tryLock();
+        }
+
+        virtual void unlock() {
+            mutex.unlock();
+        }
+
+        virtual void wait()  {
+            mutex.wait();
+        }
+
+        virtual void wait( long long millisecs ) {
+            mutex.wait( millisecs );
+        }
+
+        virtual void wait( long long millisecs, int nanos ) {
+            mutex.wait( millisecs, nanos );
+        }
+
+        virtual void notify() {
+            mutex.notify();
+        }
+
+        virtual void notifyAll() {
+            mutex.notifyAll();
+        }
 
     };
 

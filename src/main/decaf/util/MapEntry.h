@@ -32,23 +32,32 @@ namespace util {
 
     public:
 
-        MapEntry();
+        MapEntry() : key(), value() {
+        }
 
-        virtual ~MapEntry();
+        virtual ~MapEntry() {};
 
         virtual void setKey(K key) {
             this->key = key;
         }
 
-        virtual K getKey() const {
+        virtual K& getKey() {
             return this->key;
         }
 
-        virtual void setValue(V value) {
+        virtual const K& getKey() const {
+            return this->key;
+        }
+
+        virtual void setValue(const V& value) {
             this->value = value;
         }
 
-        virtual V getValue() const {
+        virtual V& getValue() {
+            return this->value;
+        }
+
+        virtual const V& getValue() const {
             return this->value;
         }
 
@@ -57,17 +66,20 @@ namespace util {
                 return true;
             }
 
-            if (this->key != entry.getKey()) {
+            if (!(this->key == entry.getKey())) {
                 return false;
             }
 
-            if (this->value != entry.getValue()) {
+            if (!(this->value != entry.getValue())) {
                 return false;
             }
 
             return true;
         }
 
+        virtual bool operator==(const MapEntry<K, V>& other) const {
+            return this->equals(other);
+        }
     };
 
 }}
