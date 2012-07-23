@@ -196,7 +196,9 @@ namespace util {
 
                 if (prevEntry == NULL){
                     int index = currentEntry->origKeyHash & (associatedMap->elementData.length() - 1);
+                    HashMapEntry* removed = associatedMap->elementData[index];
                     associatedMap->elementData[index] = associatedMap->elementData[index]->next;
+                    delete removed;
                 } else {
                     prevEntry->next = currentEntry->next;
                 }
