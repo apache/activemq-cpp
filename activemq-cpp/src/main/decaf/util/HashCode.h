@@ -39,103 +39,103 @@ namespace util {
     template<typename T>
     struct HashCode : public std::unary_function<T, int> {
     public:
-        int operator()(T arg);
+        int operator()(T arg) const;
     };
 
     template<typename T>
     struct HashCode<T*> : public std::unary_function<T*, int> {
-        int operator()(T* arg) {
+        int operator()(T* arg)  const {
             return reinterpret_cast<int>(arg);
         }
     };
 
     template<typename T>
     struct HashCode<const T&> : public std::unary_function<const T&, int> {
-        int operator()(const T& arg) {
+        int operator()(const T& arg) const {
             return HashCode<const T*>(&arg);
         }
     };
 
     template<>
     struct HashCode<bool> : public std::unary_function<bool, int> {
-        int operator()(bool arg) {
+        int operator()(bool arg) const {
             return arg ? 1231 : 1237;
         }
     };
 
     template<>
     struct HashCode<unsigned char> : public std::unary_function<unsigned char, int> {
-        int operator()(unsigned char arg) {
+        int operator()(unsigned char arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<char> : public std::unary_function<char, int> {
-        int operator()(char arg) {
+        int operator()(char arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<wchar_t> : public std::unary_function<wchar_t, int> {
-        int operator()(wchar_t arg) {
+        int operator()(wchar_t arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<unsigned short> : public std::unary_function<unsigned short, int> {
-        int operator()(unsigned short arg) {
+        int operator()(unsigned short arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<short> : public std::unary_function<short, int> {
-        int operator()(short arg) {
+        int operator()(short arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<unsigned int> : public std::unary_function<unsigned int, int> {
-        int operator()(unsigned int arg) {
+        int operator()(unsigned int arg) const {
             return (int) arg;
         }
     };
 
     template<>
     struct HashCode<int> : public std::unary_function<int, int> {
-        int operator()(int arg) {
+        int operator()(int arg) const {
             return arg;
         }
     };
 
     template<>
     struct HashCode<unsigned long long> : public std::unary_function<unsigned long long, int> {
-        int operator()(unsigned long long arg) {
+        int operator()(unsigned long long arg) const {
             return (int) (arg ^ (arg >> 32));
         }
     };
 
     template<>
     struct HashCode<long long> : public std::unary_function<long long, int> {
-        int operator()(long long arg) {
+        int operator()(long long arg) const {
             return (int) (arg ^ ((unsigned long long) arg >> 32));
         }
     };
 
     template<>
     struct HashCode<float> : public std::unary_function<float, int> {
-        int operator()(float arg) {
+        int operator()(float arg) const {
             return decaf::lang::Float::floatToIntBits(arg);
         }
     };
 
     template<>
     struct HashCode<double> : public std::unary_function<double, int> {
-        int operator()(double arg) {
+        int operator()(double arg) const {
             long long value = decaf::lang::Double::doubleToLongBits(arg);
             return (int) (value ^ ((unsigned long long) value >> 32));
         }
@@ -143,7 +143,7 @@ namespace util {
 
     template<>
     struct HashCode<std::string> : public std::unary_function<const std::string&, int> {
-        int operator()(const std::string& arg) {
+        int operator()(const std::string& arg) const {
             int h = 0;
             if (h == 0 && arg.length() > 0) {
                 std::string::const_iterator iter = arg.begin();
@@ -157,7 +157,7 @@ namespace util {
 
     template<typename T>
     struct HashCode< decaf::lang::Pointer<T> > : public std::unary_function<decaf::lang::Pointer<T>, int> {
-        int operator()(decaf::lang::Pointer<T> arg) {
+        int operator()(decaf::lang::Pointer<T> arg) const {
             if (arg != NULL) {
                 return HashCode<T>()(*arg);
             }

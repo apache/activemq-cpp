@@ -118,6 +118,7 @@ namespace lang {
             try {
                 T* value = new T[size];
                 this->array = new ArrayData(value, size);
+                decaf::util::Arrays::fill(value, size, 0, size, T());
             } catch (std::exception& ex) {
                 throw ex;
             } catch (...) {

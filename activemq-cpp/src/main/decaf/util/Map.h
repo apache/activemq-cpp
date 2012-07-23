@@ -131,7 +131,7 @@ namespace util{
          * @param value The Value to look up.
          * @return true if this map contains the value, otherwise false.
          */
-        virtual bool containsValue( const V& value ) const = 0;
+        virtual bool containsValue(const V& value) const = 0;
 
         /**
          * @return if the Map contains any element or not, TRUE or FALSE
@@ -213,6 +213,7 @@ namespace util{
          *          pointer is owned by the caller.
          */
         virtual Set< MapEntry<K,V> >* entrySet() = 0;
+        virtual Set< MapEntry<K,V> >* entrySet() const = 0;
 
         /**
          * @return the entire set of keys in this map as a std::vector.

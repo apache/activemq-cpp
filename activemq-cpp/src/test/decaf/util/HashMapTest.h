@@ -28,6 +28,23 @@ namespace util {
 
         CPPUNIT_TEST_SUITE( HashMapTest );
         CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testConstructorI );
+        CPPUNIT_TEST( testConstructorIF );
+        CPPUNIT_TEST( testConstructorMap );
+        CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testContainsKey );
+        CPPUNIT_TEST( testContainsValue );
+        CPPUNIT_TEST( testEntrySet );
+        CPPUNIT_TEST( testGet );
+        CPPUNIT_TEST( testPut );
+        CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testIsEmpty );
+        CPPUNIT_TEST( testKeySet );
+        CPPUNIT_TEST( testPutAll );
+        CPPUNIT_TEST( testRehash );
+        CPPUNIT_TEST( testSize );
+        CPPUNIT_TEST( testValues );
+        CPPUNIT_TEST( testToString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +52,26 @@ namespace util {
         HashMapTest();
         virtual ~HashMapTest();
 
+        virtual void setUp();
+
         void testConstructor();
+        void testConstructorI();
+        void testConstructorIF();
+        void testConstructorMap();
+        void testClear();
+        void testContainsKey();
+        void testContainsValue();
+        void testEntrySet();
+        void testGet();
+        void testPut();
+        void testRemove();
+        void testIsEmpty();
+        void testKeySet();
+        void testPutAll();
+        void testRehash();
+        void testSize();
+        void testValues();
+        void testToString();
 
     };
 
