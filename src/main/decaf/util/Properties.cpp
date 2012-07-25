@@ -22,6 +22,7 @@
 #include <decaf/util/Date.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/StlMap.h>
+#include <decaf/util/Collections.h>
 #include <decaf/io/BufferedInputStream.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Integer.h>
@@ -104,6 +105,7 @@ namespace {
                         }
                         buffer << hex;
                     }
+                    break;
             }
         }
     }
@@ -241,12 +243,11 @@ std::vector< std::pair< std::string, std::string > > Properties::toArray() const
     std::vector< std::pair<std::string, std::string> > result;
 
     synchronized( &( internal->properties ) ) {
-        std::vector<std::string> keys = this->internal->properties.keySet();
-        std::vector<std::string>::const_iterator iter = keys.begin();
-
-        for( ; iter != keys.end(); ++iter ) {
-            result.push_back(
-                std::make_pair( *iter, this->internal->properties.get( *iter ) ) );
+        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+                this->internal->properties.entrySet().iterator());
+        while (entries->hasNext()) {
+            MapEntry<std::string, std::string> entry = entries->next();
+            result.push_back(std::make_pair(entry.getKey(), entry.getValue()));
         }
     }
 
@@ -302,12 +303,11 @@ std::string Properties::toString() const {
     stream << "Begin Class decaf::util::Properties:" << std::endl;
 
     synchronized( &( internal->properties ) ) {
-        std::vector<std::string> keys = this->internal->properties.keySet();
-        std::vector<std::string>::const_iterator iter = keys.begin();
-
-        for( iter = keys.begin(); iter != keys.end(); ++iter ){
-            stream << " property[" << *iter << "] = "
-                   << this->internal->properties.get( *iter ) << std::endl;
+        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+                this->internal->properties.entrySet().iterator());
+        while (entries->hasNext()) {
+            MapEntry<std::string, std::string> entry = entries->next();
+            stream << " property[" << entry.getKey() << "] = " << entry.getValue() << std::endl;
         }
     }
 
@@ -318,12 +318,9 @@ std::string Properties::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> Properties::propertyNames() const {
-
     StlMap<std::string, std::string> selectedProperties;
-
     this->selectProperties( selectedProperties );
-
-    return selectedProperties.keySet();
+    return Collections::toStlVector<std::string>(selectedProperties.keySet());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -333,11 +330,11 @@ void Properties::selectProperties( StlMap<std::string, std::string>& selectPrope
         this->defaults->selectProperties( selectProperties );
     }
 
-    std::vector<std::string> keys = this->internal->properties.keySet();
-    std::vector<std::string>::const_iterator key = keys.begin();
-
-    for( ; key != keys.end(); ++key ) {
-        selectProperties.put( *key, this->internal->properties.get( *key ) );
+    Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+            this->internal->properties.entrySet().iterator());
+    while (entries->hasNext()) {
+        MapEntry<std::string, std::string> entry = entries->next();
+        selectProperties.put(entry.getKey(), entry.getValue());
     }
 }
 
@@ -549,14 +546,14 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
         writer << Date().toString();
         writer << std::endl;
 
-        std::vector<std::string> keys = this->internal->properties.keySet();
-        std::vector<std::string>::const_iterator key = keys.begin();
+        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+                this->internal->properties.entrySet().iterator());
+        while (entries->hasNext()) {
+            MapEntry<std::string, std::string> entry = entries->next();
 
-        for( ; key != keys.end(); ++key ) {
-
-            dumpString( buffer, *key, true );
+            dumpString( buffer, entry.getKey(), true );
             buffer << "=";
-            dumpString( buffer, this->internal->properties.get( *key ), false );
+            dumpString( buffer, entry.getValue(), false );
             buffer << std::endl;
 
             writer << buffer.str();

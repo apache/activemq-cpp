@@ -57,14 +57,15 @@ void MapBenchmark::run() {
         intMap.put( 100 + i, 100 + i );
     }
 
-    std::vector<std::string> stringVec;
-    std::vector<int> intVec;
-
     for( int i = 0; i < numRuns / 2; ++i ) {
-        stringVec = stringMap.keySet();
-        stringVec = stringMap.values();
-        intVec = intMap.keySet();
-        intVec = intMap.values();
+        Set<std::string>& stringSet = stringMap.keySet();
+        stringSet.size();
+        Collection<std::string>& stringCol = stringMap.values();
+        stringCol.size();
+        Set<int>& intSet = intMap.keySet();
+        intSet.size();
+        Collection<int>& intCol = intMap.values();
+        intCol.size();
     }
 
     for( int i = 0; i < numRuns / 2; ++i ) {

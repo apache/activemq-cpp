@@ -25,6 +25,9 @@
 #include <decaf/util/concurrent/ConcurrentMap.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Map.h>
+#include <decaf/util/Collection.h>
+#include <decaf/util/Set.h>
+#include <decaf/util/Iterator.h>
 
 namespace decaf{
 namespace util{
@@ -61,10 +64,8 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const ConcurrentStlMap& source ) :
-            ConcurrentMap<K,V>(), valueMap(), mutex() {
-
-            copy( source );
+        ConcurrentStlMap(const ConcurrentStlMap& source) : ConcurrentMap<K, V>(), valueMap(), mutex() {
+            copy(source);
         }
 
         /**
@@ -72,10 +73,8 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap( const Map<K,V>& source ) :
-            ConcurrentMap<K,V>(), valueMap(), mutex() {
-
-            copy( source );
+        ConcurrentStlMap(const Map<K, V>& source) : ConcurrentMap<K, V>(), valueMap(), mutex() {
+            copy(source);
         }
 
         virtual ~ConcurrentStlMap() {}
@@ -83,26 +82,25 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const ConcurrentStlMap& source ) const {
-            synchronized( &mutex ) {
+        virtual bool equals(const ConcurrentStlMap& source) const {
+            synchronized(&mutex) {
                 return this->valueMap == source.valueMap;
             }
 
             return false;
         }
 
-        virtual bool equals( const Map<K,V>& source ) const {
+        virtual bool equals(const Map<K, V>& source) const {
 
-            synchronized( &mutex ) {
-                std::vector<K> keys = source.keySet();
-
-                typename std::vector<K>::const_iterator iter = keys.begin();
-                for( ; iter != keys.end(); ++iter ) {
-                    if( !this->containsKey( *iter ) ) {
+            synchronized(&mutex) {
+                typename std::auto_ptr< Iterator<K> > iterator(this->keySet().iterator());
+                while (iterator->hasNext()) {
+                    K key = iterator->next();
+                    if (!this->containsKey(key)) {
                         return false;
                     }
 
-                    if( !( this->get( *iter ) == source.get( *iter ) ) ) {
+                    if (!(this->get(key) == source.get(key))) {
                         return false;
                     }
                 }
@@ -114,17 +112,17 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const ConcurrentStlMap& source ) {
-            synchronized( &mutex ) {
+        virtual void copy(const ConcurrentStlMap& source) {
+            synchronized(&mutex) {
                 this->valueMap.clear();
-                this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
+                this->valueMap.insert(source.valueMap.begin(), source.valueMap.end());
             }
         }
 
-        virtual void copy( const Map<K,V>& source ) {
+        virtual void copy(const Map<K, V>& source) {
             synchronized( &mutex ) {
                 this->clear();
-                this->putAll( source );
+                this->putAll(source);
             }
         }
 
@@ -132,7 +130,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual void clear() {
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 valueMap.clear();
             }
         }
@@ -140,10 +138,10 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual bool containsKey( const K& key ) const {
-            typename std::map<K,V,COMPARATOR>::const_iterator iter;
+        virtual bool containsKey(const K& key) const {
+            typename std::map<K, V, COMPARATOR>::const_iterator iter;
 
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 iter = valueMap.find(key);
                 return iter != valueMap.end();
             }
@@ -154,17 +152,17 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual bool containsValue( const V& value ) const {
+        virtual bool containsValue(const V& value) const {
 
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
 
-                if( valueMap.empty() ){
+                if (valueMap.empty()) {
                     return false;
                 }
 
-                typename std::map<K,V,COMPARATOR>::const_iterator iter = valueMap.begin();
-                for( ; iter != valueMap.end(); ++iter ){
-                    if( (*iter).second == value ) {
+                typename std::map<K, V, COMPARATOR>::const_iterator iter = valueMap.begin();
+                for (; iter != valueMap.end(); ++iter) {
+                    if ((*iter).second == value) {
                         return true;
                     }
                 }
@@ -177,7 +175,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual bool isEmpty() const {
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 return valueMap.empty();
             }
 
@@ -188,7 +186,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual int size() const {
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 return (int)valueMap.size();
             }
 
@@ -198,70 +196,86 @@ namespace concurrent{
         /**
          * {@inheritDoc}
          */
-        virtual V& get( const K& key ) {
+        virtual V& get(const K& key) {
 
             typename std::map<K,V,COMPARATOR>::iterator iter;
 
             synchronized( &mutex ) {
-                iter = valueMap.find( key );
-                if( iter != valueMap.end() ){
+                iter = valueMap.find(key);
+                if (iter != valueMap.end()) {
                     return iter->second;
                 }
             }
 
             throw NoSuchElementException(
-                __FILE__, __LINE__, "Key does not exist in map" );
+                __FILE__, __LINE__, "Key does not exist in map");
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual const V& get( const K& key ) const {
+        virtual const V& get(const K& key) const {
 
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
 
-            synchronized( &mutex ) {
-                iter = valueMap.find( key );
-                if( iter != valueMap.end() ){
+            synchronized(&mutex) {
+                iter = valueMap.find(key);
+                if (iter != valueMap.end()) {
                     return iter->second;
                 }
             }
 
             throw NoSuchElementException(
-                __FILE__, __LINE__, "Key does not exist in map" );
+                __FILE__, __LINE__, "Key does not exist in map");
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void put( const K& key, const V& value ) {
-
-            synchronized( &mutex ) {
+        virtual bool put(const K& key, const V& value) {
+            bool result = false;
+            synchronized(&mutex) {
+                if (this->containsKey(key)) {
+                    result = true;
+                }
                 valueMap[key] = value;
             }
+            return result;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other ) {
+        virtual bool put(const K& key, const V& value, V& oldValue) {
+            bool result = false;
+            synchronized(&mutex) {
+                if (this->containsKey(key)) {
+                    result = true;
+                    oldValue = valueMap[key];
+                }
+                valueMap[key] = value;
+            }
+            return result;
+        }
 
-            synchronized( &mutex ) {
-                this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
+        /**
+         * {@inheritDoc}
+         */
+        virtual void putAll(const ConcurrentStlMap<K, V, COMPARATOR>& other) {
+            synchronized(&mutex) {
+                this->valueMap.insert(other.valueMap.begin(), other.valueMap.end());
             }
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual void putAll( const Map<K,V>& other ) {
-
-            synchronized( &mutex ) {
-                std::vector<K> keys = other.keySet();
-
-                typename std::vector<K>::const_iterator iter = keys.begin();
-                for( ; iter != keys.end(); ++iter ) {
-                    this->put( *iter, other.get( *iter ) );
+        virtual void putAll(const Map<K, V>& other) {
+            synchronized(&mutex) {
+                typename std::auto_ptr< Iterator<K> > iterator(this->keySet().iterator());
+                while (iterator->hasNext()) {
+                    K key = iterator->next();
+                    this->put(key, other.get(key));
                 }
             }
         }
@@ -270,9 +284,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual V remove(const K& key) {
-
             V result = V();
-
             synchronized(&mutex) {
                 typename std::map<K, V, COMPARATOR>::iterator iter = valueMap.find(key);
                 if (iter == valueMap.end()) {
@@ -285,41 +297,40 @@ namespace concurrent{
             return result;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector<K> keySet() const {
-
-            std::vector<K> keys( valueMap.size() );
-            synchronized( &mutex ) {
-
-                typename std::map<K,V,COMPARATOR>::const_iterator iter;
-                iter=valueMap.begin();
-                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-                    keys[ix] = iter->first;
-                }
-            }
-
-            return keys;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector<V> values() const {
-
-            std::vector<V> values( valueMap.size() );
-            synchronized( &mutex ) {
-
-                typename std::map<K,V,COMPARATOR>::const_iterator iter;
-                iter=valueMap.begin();
-                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-                    values[ix] = iter->second;
-                }
-
-            }
-            return values;
-        }
+//        /**
+//         * {@inheritDoc}
+//         */
+//        virtual std::vector<K> keySet() const {
+//            std::vector<K> keys( valueMap.size() );
+//            synchronized( &mutex ) {
+//
+//                typename std::map<K,V,COMPARATOR>::const_iterator iter;
+//                iter=valueMap.begin();
+//                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
+//                    keys[ix] = iter->first;
+//                }
+//            }
+//
+//            return keys;
+//        }
+//
+//        /**
+//         * {@inheritDoc}
+//         */
+//        virtual std::vector<V> values() const {
+//
+//            std::vector<V> values( valueMap.size() );
+//            synchronized( &mutex ) {
+//
+//                typename std::map<K,V,COMPARATOR>::const_iterator iter;
+//                iter=valueMap.begin();
+//                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
+//                    values[ix] = iter->second;
+//                }
+//
+//            }
+//            return values;
+//        }
 
         /**
          * If the specified key is not already associated with a value, associate it with
@@ -449,11 +460,24 @@ namespace concurrent{
                 __FILE__, __LINE__, "Value to Replace was not in the Map." );
         }
 
-        virtual Set< MapEntry<K, V> >* entrySet() {
+        virtual Set< MapEntry<K, V> >& entrySet() {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
+        }
+        virtual const Set< MapEntry<K, V> >& entrySet() const {
             throw decaf::lang::exceptions::UnsupportedOperationException();
         }
 
-        virtual Set< MapEntry<K, V> >* entrySet() const {
+        virtual Set<K>& keySet() {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
+        }
+        virtual const Set<K>& keySet() const {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
+        }
+
+        virtual Collection<V>& values() {
+            throw decaf::lang::exceptions::UnsupportedOperationException();
+        }
+        virtual const Collection<V>& values() const {
             throw decaf::lang::exceptions::UnsupportedOperationException();
         }
 

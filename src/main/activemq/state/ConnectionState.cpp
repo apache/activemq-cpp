@@ -69,12 +69,9 @@ void ConnectionState::reset(Pointer<ConnectionInfo> info) {
 void ConnectionState::shutdown() {
 
     if (this->disposed.compareAndSet(false, true)) {
-
-        std::vector<Pointer<SessionState> > values = this->sessions.values();
-        std::vector<Pointer<SessionState> >::iterator iter = values.begin();
-
-        for (; iter != values.end(); ++iter) {
-            (*iter)->shutdown();
+        Pointer< Iterator< Pointer<SessionState> > > iterator(this->sessions.values().iterator());
+        while (iterator->hasNext()) {
+            iterator->next()->shutdown();
         }
     }
 }

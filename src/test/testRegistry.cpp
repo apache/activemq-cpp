@@ -336,8 +336,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashMapTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ArrayListTest );
 //#include <decaf/util/ArraysTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ArraysTest );
-//#include <decaf/util/StlMapTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
+#include <decaf/util/StlMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
 //#include <decaf/util/PropertiesTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::PropertiesTest );
 //#include <decaf/util/QueueTest.h>

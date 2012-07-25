@@ -88,6 +88,6 @@ void TransactionState::addProducerState(Pointer<ProducerState> producerState) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<Pointer<ProducerState> > TransactionState::getProducerStates() {
+const decaf::util::Collection<Pointer<ProducerState> >& TransactionState::getProducerStates() {
     return this->producers.values();
 }

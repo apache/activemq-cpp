@@ -17,6 +17,8 @@
 
 #include "TransportRegistry.h"
 
+#include <decaf/util/Collections.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
@@ -54,37 +56,35 @@ TransportFactory* TransportRegistry::findFactory( const std::string& name ) cons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory ) {
+void TransportRegistry::registerFactory(const std::string& name, TransportFactory* factory) {
 
-    if( name == "" ) {
+    if (name == "") {
         throw IllegalArgumentException( __FILE__, __LINE__,
             "TransportFactory name cannot be the empty string" );
     }
 
-    if( factory == NULL ) {
+    if (factory == NULL) {
         throw NullPointerException( __FILE__, __LINE__,
             "Supplied TransportFactory pointer was NULL" );
     }
 
-    this->registry.put( name, factory );
+    this->registry.put(name, factory);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportRegistry::unregisterFactory( const std::string& name ) {
-    if( this->registry.containsKey( name ) ) {
-        delete this->registry.get( name );
-        this->registry.remove( name );
+void TransportRegistry::unregisterFactory(const std::string& name) {
+    if (this->registry.containsKey(name)) {
+        delete this->registry.get(name);
+        this->registry.remove(name);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportRegistry::unregisterAllFactories() {
 
-    std::vector<TransportFactory*> factories = this->registry.values();
-    std::vector<TransportFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
+    Pointer< Iterator<TransportFactory*> > iterator(this->registry.values().iterator());
+    while (iterator->hasNext()) {
+        delete iterator->next();
     }
 
     this->registry.clear();
@@ -92,7 +92,7 @@ void TransportRegistry::unregisterAllFactories() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> TransportRegistry::getTransportNames() const {
-    return this->registry.keySet();
+    return Collections::toStlVector<std::string>(this->registry.keySet());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -100,7 +100,7 @@ namespace state {
 
         void addProducerState(Pointer<ProducerState> producerState);
 
-        std::vector<Pointer<ProducerState> > getProducerStates();
+        const decaf::util::Collection<Pointer<ProducerState> >& getProducerStates();
 
     };
 

@@ -17,6 +17,8 @@
 
 #include "WireFormatRegistry.h"
 
+#include <decaf/util/Collections.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
@@ -80,11 +82,9 @@ void WireFormatRegistry::unregisterFactory( const std::string& name ) {
 ////////////////////////////////////////////////////////////////////////////////
 void WireFormatRegistry::unregisterAllFactories() {
 
-    std::vector<WireFormatFactory*> factories = this->registry.values();
-    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
-
-    for( ; iter != factories.end(); ++iter ) {
-        delete *iter;
+    Pointer< Iterator<WireFormatFactory*> > iterator(this->registry.values().iterator());
+    while (iterator->hasNext()) {
+        delete iterator->next();
     }
 
     this->registry.clear();
@@ -92,7 +92,7 @@ void WireFormatRegistry::unregisterAllFactories() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> WireFormatRegistry::getWireFormatNames() const {
-    return this->registry.keySet();
+    return Collections::toStlVector<std::string>(this->registry.keySet());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

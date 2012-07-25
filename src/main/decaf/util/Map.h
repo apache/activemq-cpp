@@ -23,8 +23,8 @@
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Set.h>
+#include <decaf/util/Collection.h>
 #include <decaf/util/MapEntry.h>
 
 namespace decaf{
@@ -91,45 +91,63 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        Map() {}
+        Map() : concurrent::Synchronizable() {}
 
         virtual ~Map() {}
 
         /**
-         * Comparison, equality is dependent on the method of determining
-         * if the element are equal.
-         * @param source - Map to compare to this one.
+         * Compares the specified object with this map for equality. Returns true if the two
+         * maps represent the same mappings. More formally, two maps m1 and m2 represent the
+         * same mappings if m1.entrySet().equals(m2.entrySet()). This ensures that the equals
+         * method works properly across different implementations of the Map interface.
+         *
+         * @param source
+         *      Map to compare to this one.
+         *
          * @returns true if the Map passed is equal in value to this one.
          */
         virtual bool equals(const Map& source) const = 0;
 
         /**
-         * Copies the content of the source map into this map.  Erases
-         * all existing data in this map.
-         * @param source The source object to copy from.
+         * Copies the content of the source map into this map.  Erases all existing mappings
+         * in this map.  The copy is performed by using the entrySet of the source Map and
+         * iterating over those entries, inserting each into the target.
+         *
+         * @param source
+         *      The source object to copy from.
          */
         virtual void copy(const Map& source) = 0;
 
         /**
-         * Removes all keys and values from this map.
-         * @throw UnsupportedOperationException if this map is unmodifiable.
+         * Removes all of the mappings from this map (optional operation). The map will
+         * be empty after this call returns.
+         *
+         * @throw UnsupportedOperationException if the clear operation is not supported by this map.
          */
         virtual void clear() = 0;
 
         /**
-         * Indicates whether or this map contains a value for the
-         * given key.
-         * @param key The key to look up.
-         * @return true if this map contains the value, otherwise false.
+         * Returns true if this map contains a mapping for the specified key. More formally,
+         * returns true if and only if this map contains a mapping for a key k such that
+         * (key == k). (There can be at most one such mapping.)
+         *
+         * @param key
+         *      The key to look up.
+         *
+         * @return true if this map contains the key mapping, otherwise false.
          */
         virtual bool containsKey(const K& key) const = 0;
 
         /**
-         * Indicates whether or this map contains a value for the
-         * given value, i.e. they are equal, this is done by operator==
-         * so the types must pass equivalence testing in this manner.
-         * @param value The Value to look up.
-         * @return true if this map contains the value, otherwise false.
+         * Returns true if this map maps one or more keys to the specified value. More
+         * formally, returns true if and only if this map contains at least one mapping to
+         * a value v such that (value==v). This operation will probably require time linear
+         * in the map size for most implementations of the Map interface.
+         *
+         * @param value
+         *      The Value to look up in this Map.
+         *
+         * @return true if this map contains at least one mapping for the value, otherwise false.
          */
         virtual bool containsValue(const V& value) const = 0;
 
@@ -148,8 +166,10 @@ namespace util{
          * element in the map whose key is equivalent to the key provided then a
          * NoSuchElementException is thrown.
          *
-         * @param key The search key.
-         * @return A reference to the value for the given key.
+         * @param key
+         *      The search key whose value should be returned if present.
+         *
+         * @return A reference to the value for the given key if present in the Map.
          *
          * @throws NoSuchElementException if the key requests doesn't exist in the Map.
          */
@@ -160,24 +180,68 @@ namespace util{
          * element in the map whose key is equivalent to the key provided then a
          * NoSuchElementException is thrown.
          *
-         * @param key The search key.
-         * @return A {const} reference to the value for the given key.
+         * @param key
+         *      The search key whose value should be returned if present.
+         *
+         * @return A const reference to the value for the given key if present in the Map.
          *
          * @throws NoSuchElementException if the key requests doesn't exist in the Map.
          */
         virtual const V& get(const K& key) const = 0;
 
         /**
-         * Sets the value for the specified key.
-         * @param key The target key.
-         * @param value The value to be set.
+         * Associates the specified value with the specified key in this map (optional
+         * operation). If the map previously contained a mapping for the key, the old value
+         * is replaced by the specified value. (A map m is said to contain a mapping for a
+         * key k if and only if m.containsKey(k) would return true.)
          *
-         * @throw UnsupportedOperationException if this map is unmodifiable.
+         * @param key
+         *      The target key.
+         * @param value
+         *      The value to be set.
+         *
+         * @returns true if the put operation replaced a value that was associated with
+         *          an existing mapping to the given key or false otherwise.
+         *
+         * @throws UnsupportedOperationException if this map is unmodifiable.
+         * @throws IllegalArgumentException if some property of the specified key or value
+         *                                  prevents it from being stored in this map
          */
-        virtual void put(const K& key, const V& value) = 0;
+        virtual bool put(const K& key, const V& value) = 0;
 
         /**
-         * Stores a copy of the Mappings contained in the other Map in this one.
+         * Associates the specified value with the specified key in this map (optional
+         * operation). If the map previously contained a mapping for the key, the old value
+         * is replaced by the specified value. (A map m is said to contain a mapping for a
+         * key k if and only if m.containsKey(k) would return true.)
+         *
+         * This method accepts a reference to a value which will be assigned the previous
+         * value for the given key (if any).  If there was no previous mapping for the
+         * given key the out value is not written to.  A return of true indicates that a
+         * value was replaced by this put operation.
+         *
+         * @param key
+         *      The target key.
+         * @param value
+         *      The value to be set.
+         * @param oldValue (out)
+         *      The value previously held in the mapping for this key.  .
+         *
+         * @returns true if the put operation replaced a value that was associated with
+         *          an existing mapping to the given key or false otherwise.
+         *
+         * @throws UnsupportedOperationException if this map is unmodifiable.
+         * @throws IllegalArgumentException if some property of the specified key or value
+         *                                  prevents it from being stored in this map
+         */
+        virtual bool put(const K& key, const V& value, V& oldValue) = 0;
+
+        /**
+         * Copies all of the mappings from the specified map to this map (optional operation).
+         * The effect of this call is equivalent to that of calling put(k, v) on this map once
+         * for each mapping from key k to value v in the specified map. The behavior of this
+         * operation is undefined if the specified map is modified while the operation is in
+         * progress.
          *
          * @param other
          *      A Map instance whose elements are to all be inserted in this Map.
@@ -188,11 +252,14 @@ namespace util{
         virtual void putAll(const Map<K, V>& other) = 0;
 
         /**
-         * Removes the value (key/value pair) for the specified key from
-         * the map, returns a copy of the value that was mapped to the key.
+         * Removes the value (key/value pair) for the specified key from the map, returns
+         * a copy of the value that was mapped to the key.  Care must be taken when using this
+         * operation as it will throw an exception if there is no mapping for the given key.
          *
-         * @param key The search key.
-         * @return a copy of the element that was previously mapped to the given key
+         * @param key
+         *      The search key whose mapping is to be removed.
+         *
+         * @return a copy of the element that was previously mapped to the given key.
          *
          * @throw NoSuchElementException if this key is not in the Map.
          * @throw UnsupportedOperationException if this map is unmodifiable.
@@ -209,21 +276,39 @@ namespace util{
          * Iterator.remove, Set.remove, removeAll, retainAll and clear operations. It does not
          * support the add or addAll operations.
          *
-         * @returns a new pointer to a Set<MapEntry<K,V>> that is backed by this Map, the returned
-         *          pointer is owned by the caller.
+         * @returns a reference  to a Set<MapEntry<K,V>> that is backed by this Map.
          */
-        virtual Set< MapEntry<K,V> >* entrySet() = 0;
-        virtual Set< MapEntry<K,V> >* entrySet() const = 0;
+        virtual Set< MapEntry<K,V> >& entrySet() = 0;
+        virtual const Set< MapEntry<K,V> >& entrySet() const = 0;
 
         /**
-         * @return the entire set of keys in this map as a std::vector.
+         * Returns a Set view of the keys contained in this map. The set is backed by the map,
+         * so changes to the map are reflected in the set, and vice-versa. If the map is modified
+         * while an iteration over the set is in progress (except through the iterator's own
+         * remove operation), the results of the iteration are undefined. The set supports element
+         * removal, which removes the corresponding mapping from the map, via the Iterator.remove,
+         * Set.remove, removeAll, retainAll, and clear operations. It does not support the add or
+         * addAll operations.
+         *
+         * @return a set view of the keys contained in this map,
          */
-        virtual std::vector<K> keySet() const = 0;
+        virtual Set<K>& keySet() = 0;
+        virtual const Set<K>& keySet() const = 0;
 
         /**
-         * @return the entire set of values in this map as a std::vector.
+         * Returns a Collection view of the values contained in this map. The collection is backed
+         * by the map, so changes to the map are reflected in the collection, and vice-versa. If
+         * the map is modified while an iteration over the collection is in progress (except
+         * through the iterator's own remove operation), the results of the iteration are
+         * undefined. The collection supports element removal, which removes the corresponding
+         * mapping from the map, via the Iterator.remove, Collection.remove, removeAll, retainAll
+         * and clear operations. It does not support the add or addAll operations.  For the const
+         * version of this method the Collection can only be used as a view into the Map.
+         *
+         * @return a collection view of the values contained in this map.
          */
-        virtual std::vector<V> values() const = 0;
+        virtual Collection<V>& values() = 0;
+        virtual const Collection<V>& values() const = 0;
 
     };
 

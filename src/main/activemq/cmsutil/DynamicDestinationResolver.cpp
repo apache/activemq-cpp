@@ -84,11 +84,10 @@ DynamicDestinationResolver::~DynamicDestinationResolver() {
 void DynamicDestinationResolver::destroy() {
 
     // Destroy the session resolvers.
-    vector<SessionResolver*> r = sessionResolverMap.values();
-    for( size_t ix=0; ix<r.size(); ++ix ) {
-        delete r[ix];
+    std::auto_ptr< Iterator<SessionResolver*> > sessionResolvers(sessionResolverMap.values().iterator());
+    while (sessionResolvers->hasNext()) {
+        delete sessionResolvers->next();
     }
-    sessionResolverMap.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

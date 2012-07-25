@@ -37,6 +37,8 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/util/Set.h>
+#include <decaf/util/Collection.h>
 #include <decaf/util/LinkedList.h>
 #include <decaf/util/UUID.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -565,11 +567,12 @@ void ActiveMQConnection::close() {
 
         // As TemporaryQueue and TemporaryTopic instances are bound to a connection
         // we should just delete them after the connection is closed to free up memory
-        std::vector< Pointer<ActiveMQTempDestination> > values = this->config->activeTempDestinations.values();
-        std::vector< Pointer<ActiveMQTempDestination> >::iterator iterator = values.begin();
+        Pointer< Iterator< Pointer< ActiveMQTempDestination> > > iterator(
+            this->config->activeTempDestinations.values().iterator());
+
         try {
-            for(; iterator != values.end(); ++iterator) {
-                Pointer<ActiveMQTempDestination> dest = *iterator;
+            while (iterator->hasNext()) {
+                Pointer<ActiveMQTempDestination> dest = iterator->next();
                 dest->close();
             }
         } catch (cms::CMSException& error) {
@@ -1520,10 +1523,10 @@ void ActiveMQConnection::cleanUpTempDestinations() {
         return;
     }
 
-    std::vector< Pointer<ActiveMQTempDestination> > values = this->config->activeTempDestinations.values();
-    std::vector< Pointer<ActiveMQTempDestination> >::iterator iterator = values.begin();
-    for(; iterator != values.end(); ++iterator) {
-        Pointer<ActiveMQTempDestination> dest = *iterator;
+    Pointer< Iterator< Pointer< ActiveMQTempDestination> > > iterator(
+        this->config->activeTempDestinations.values().iterator());
+    while (iterator->hasNext()) {
+        Pointer<ActiveMQTempDestination> dest = iterator->next();
 
         try {
 

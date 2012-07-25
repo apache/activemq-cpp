@@ -454,14 +454,15 @@ void FailoverTransport::restoreTransport( const Pointer<Transport>& transport ) 
         transport->oneway( cc );
 
         stateTracker.restore( transport );
-        std::vector< Pointer<Command> > commands;
-        synchronized( &requestMap ) {
-            commands = requestMap.values();
+
+        decaf::util::StlMap<int, Pointer<Command> > commands;
+        synchronized(&requestMap) {
+            commands.copy(requestMap);
         }
 
-        std::vector< Pointer<Command> >::const_iterator iter = commands.begin();
-        for( ; iter != commands.end(); ++iter ) {
-            transport->oneway( *iter );
+        Pointer< Iterator<Pointer<Command> > > iter(commands.values().iterator());
+        while (iter->hasNext()) {
+            transport->oneway(iter->next());
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -554,14 +555,14 @@ void FailoverTransport::processNewTransports( bool rebalance, std::string newTra
                 try {
                     URI uri( str );
                     list.add( uri );
-                } catch( Exception e ) {
+                } catch( Exception& e ) {
                 }
             }
 
             if( !list.isEmpty() ) {
                 try {
                     updateURIs( rebalance, list );
-                } catch( IOException e ) {
+                } catch( IOException& e ) {
                 }
             }
         }
@@ -923,8 +924,8 @@ void FailoverTransport::processResponse(const Pointer<Response>& response) {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<wireformat::WireFormat> FailoverTransport::getWireFormat() const {
 
-	Pointer<wireformat::WireFormat> result;
-	Pointer<Transport> transport = this->connectedTransport;
+    Pointer<wireformat::WireFormat> result;
+    Pointer<Transport> transport = this->connectedTransport;
 
     if( transport != NULL ) {
         result = transport->getWireFormat();

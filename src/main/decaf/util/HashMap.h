@@ -196,14 +196,14 @@ namespace util {
 
                 if (prevEntry == NULL){
                     int index = currentEntry->origKeyHash & (associatedMap->elementData.length() - 1);
-                    HashMapEntry* removed = associatedMap->elementData[index];
                     associatedMap->elementData[index] = associatedMap->elementData[index]->next;
-                    delete removed;
                 } else {
                     prevEntry->next = currentEntry->next;
                 }
 
+                delete currentEntry;
                 currentEntry = NULL;
+
                 expectedModCount++;
                 associatedMap->modCount++;
                 associatedMap->elementCount--;
@@ -291,156 +291,156 @@ namespace util {
             }
         };
 
-        private:
+    private:
 
-            class ConstAbstractMapIterator {
-            protected:
+        class ConstAbstractMapIterator {
+        protected:
 
-                mutable int position;
-                int expectedModCount;
-                const HashMapEntry* futureEntry;
-                const HashMapEntry* currentEntry;
-                const HashMapEntry* prevEntry;
+            mutable int position;
+            int expectedModCount;
+            const HashMapEntry* futureEntry;
+            const HashMapEntry* currentEntry;
+            const HashMapEntry* prevEntry;
 
-                const HashMap* associatedMap;
+            const HashMap* associatedMap;
 
-            public:
+        public:
 
-                ConstAbstractMapIterator(const HashMap* parent) : position(0),
-                                                                  expectedModCount(parent->modCount),
-                                                                  futureEntry(NULL),
-                                                                  currentEntry(NULL),
-                                                                  prevEntry(NULL),
-                                                                  associatedMap(parent) {
+            ConstAbstractMapIterator(const HashMap* parent) : position(0),
+                                                              expectedModCount(parent->modCount),
+                                                              futureEntry(NULL),
+                                                              currentEntry(NULL),
+                                                              prevEntry(NULL),
+                                                              associatedMap(parent) {
+            }
+
+            virtual ~ConstAbstractMapIterator() {}
+
+            virtual bool checkHasNext() const {
+                if (futureEntry != NULL) {
+                    return true;
                 }
-
-                virtual ~ConstAbstractMapIterator() {}
-
-                virtual bool checkHasNext() const {
-                    if (futureEntry != NULL) {
+                while (position < associatedMap->elementData.length()) {
+                    if (associatedMap->elementData[position] == NULL) {
+                        position++;
+                    } else {
                         return true;
                     }
-                    while (position < associatedMap->elementData.length()) {
-                        if (associatedMap->elementData[position] == NULL) {
-                            position++;
-                        } else {
-                            return true;
-                        }
+                }
+                return false;
+            }
+
+            void checkConcurrentMod() const {
+                if (expectedModCount != associatedMap->modCount) {
+                    throw ConcurrentModificationException(
+                        __FILE__, __LINE__, "HashMap modified outside this iterator");
+                }
+            }
+
+            void makeNext() {
+                checkConcurrentMod();
+
+                if (!checkHasNext()) {
+                    throw NoSuchElementException(__FILE__, __LINE__, "No next element");
+                }
+
+                if (futureEntry == NULL) {
+                    currentEntry = associatedMap->elementData[position++];
+                    futureEntry = currentEntry->next;
+                    prevEntry = NULL;
+                } else {
+                    if (currentEntry != NULL){
+                        prevEntry = currentEntry;
                     }
-                    return false;
+                    currentEntry = futureEntry;
+                    futureEntry = futureEntry->next;
                 }
+            }
+        };
 
-                void checkConcurrentMod() const {
-                    if (expectedModCount != associatedMap->modCount) {
-                        throw ConcurrentModificationException(
-                            __FILE__, __LINE__, "HashMap modified outside this iterator");
-                    }
-                }
+        class ConstEntryIterator : public Iterator< MapEntry<K,V> >, public ConstAbstractMapIterator {
+        private:
 
-                void makeNext() {
-                    checkConcurrentMod();
+            ConstEntryIterator(const ConstEntryIterator&);
+            ConstEntryIterator& operator= (const ConstEntryIterator&);
 
-                    if (!checkHasNext()) {
-                        throw NoSuchElementException(__FILE__, __LINE__, "No next element");
-                    }
+        public:
 
-                    if (futureEntry == NULL) {
-                        currentEntry = associatedMap->elementData[position++];
-                        futureEntry = currentEntry->next;
-                        prevEntry = NULL;
-                    } else {
-                        if (currentEntry != NULL){
-                            prevEntry = currentEntry;
-                        }
-                        currentEntry = futureEntry;
-                        futureEntry = futureEntry->next;
-                    }
-                }
-            };
+            ConstEntryIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
+            }
 
-            class ConstEntryIterator : public Iterator< MapEntry<K,V> >, public ConstAbstractMapIterator {
-            private:
+            virtual ~ConstEntryIterator() {}
 
-                ConstEntryIterator(const ConstEntryIterator&);
-                ConstEntryIterator& operator= (const ConstEntryIterator&);
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
 
-            public:
+            virtual MapEntry<K, V> next() {
+                this->makeNext();
+                return *(this->currentEntry);
+            }
 
-                ConstEntryIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
-                }
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
 
-                virtual ~ConstEntryIterator() {}
+        class ConstKeyIterator : public Iterator<K>, public ConstAbstractMapIterator {
+        private:
 
-                virtual bool hasNext() const {
-                    return this->checkHasNext();
-                }
+            ConstKeyIterator(const ConstKeyIterator&);
+            ConstKeyIterator& operator= (const ConstKeyIterator&);
 
-                virtual MapEntry<K, V> next() {
-                    this->makeNext();
-                    return *(this->currentEntry);
-                }
+        public:
 
-                virtual void remove() {
-                    throw lang::exceptions::UnsupportedOperationException(
-                        __FILE__, __LINE__, "Cannot write to a const Iterator." );
-                }
-            };
+            ConstKeyIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
+            }
 
-            class ConstKeyIterator : public Iterator<K>, public ConstAbstractMapIterator {
-            private:
+            virtual ~ConstKeyIterator() {}
 
-                ConstKeyIterator(const ConstKeyIterator&);
-                ConstKeyIterator& operator= (const ConstKeyIterator&);
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
 
-            public:
+            virtual K next() {
+                this->makeNext();
+                return this->currentEntry->getKey();
+            }
 
-                ConstKeyIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
-                }
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
 
-                virtual ~ConstKeyIterator() {}
+        class ConstValueIterator : public Iterator<V>, public ConstAbstractMapIterator {
+        private:
 
-                virtual bool hasNext() const {
-                    return this->checkHasNext();
-                }
+            ConstValueIterator(const ConstValueIterator&);
+            ConstValueIterator& operator= (const ConstValueIterator&);
 
-                virtual K next() {
-                    this->makeNext();
-                    return this->currentEntry->getKey();
-                }
+        public:
 
-                virtual void remove() {
-                    throw lang::exceptions::UnsupportedOperationException(
-                        __FILE__, __LINE__, "Cannot write to a const Iterator." );
-                }
-            };
+            ConstValueIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
+            }
 
-            class ConstValueIterator : public Iterator<V>, public ConstAbstractMapIterator {
-            private:
+            virtual ~ConstValueIterator() {}
 
-                ConstValueIterator(const ConstValueIterator&);
-                ConstValueIterator& operator= (const ConstValueIterator&);
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
 
-            public:
+            virtual V next() {
+                this->makeNext();
+                return this->currentEntry->getValue();
+            }
 
-                ConstValueIterator(const HashMap* parent) : ConstAbstractMapIterator(parent) {
-                }
-
-                virtual ~ConstValueIterator() {}
-
-                virtual bool hasNext() const {
-                    return this->checkHasNext();
-                }
-
-                virtual V next() {
-                    this->makeNext();
-                    return this->currentEntry->getValue();
-                }
-
-                virtual void remove() {
-                    throw lang::exceptions::UnsupportedOperationException(
-                        __FILE__, __LINE__, "Cannot write to a const Iterator." );
-                }
-            };
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
 
     private:
 
@@ -461,10 +461,6 @@ namespace util {
             }
 
             virtual ~HashMapEntrySet() {}
-
-            HashMap* hashMap() {
-                return this->associatedMap;
-            }
 
             virtual int size() const {
                 return associatedMap->elementCount;
@@ -519,10 +515,6 @@ namespace util {
 
             virtual ~ConstHashMapEntrySet() {}
 
-            HashMap* hashMap() {
-                return this->associatedMap;
-            }
-
             virtual int size() const {
                 return associatedMap->elementCount;
             }
@@ -546,7 +538,8 @@ namespace util {
             }
 
             virtual Iterator< MapEntry<K, V> >* iterator() {
-                return new ConstEntryIterator(associatedMap);
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
             }
 
             virtual Iterator< MapEntry<K, V> >* iterator() const {
@@ -603,45 +596,130 @@ namespace util {
             }
         };
 
+        class ConstHashMapKeySet : public AbstractSet<K> {
         private:
 
-            class HashMapValueCollection : public AbstractCollection<V> {
-            private:
+            const HashMap* associatedMap;
 
-                HashMap* associatedMap;
+        private:
 
-            private:
+            ConstHashMapKeySet(const ConstHashMapKeySet&);
+            ConstHashMapKeySet& operator= (const ConstHashMapKeySet&);
 
-                HashMapValueCollection(const HashMapValueCollection&);
-                HashMapValueCollection& operator= (const HashMapValueCollection&);
+        public:
 
-            public:
+            ConstHashMapKeySet(const HashMap* parent) : AbstractSet<K>(), associatedMap(parent) {
+            }
 
-                HashMapValueCollection(HashMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
-                }
+            virtual ~ConstHashMapKeySet() {}
 
-                virtual ~HashMapValueCollection() {}
+            virtual bool contains(const K& key) const {
+                return this->associatedMap->containsKey(key);
+            }
 
-                virtual bool contains(const V& value) const {
-                    return this->associatedMap->containsValue(value);
-                }
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
 
-                virtual int size() const {
-                    return this->associatedMap->size();
-                }
+            virtual void clear() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
 
-                virtual void clear() {
-                    this->associatedMap->clear();
-                }
+            virtual bool remove(const K& key) {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
 
-                virtual Iterator<V>* iterator() {
-                    return new ValueIterator(this->associatedMap);
-                }
+            virtual Iterator<K>* iterator() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
+            }
 
-                virtual Iterator<V>* iterator() const {
-                    return new ConstValueIterator(this->associatedMap);
-                }
-            };
+            virtual Iterator<K>* iterator() const {
+                return new ConstKeyIterator(this->associatedMap);
+            }
+        };
+
+    private:
+
+        class HashMapValueCollection : public AbstractCollection<V> {
+        private:
+
+            HashMap* associatedMap;
+
+        private:
+
+            HashMapValueCollection(const HashMapValueCollection&);
+            HashMapValueCollection& operator= (const HashMapValueCollection&);
+
+        public:
+
+            HashMapValueCollection(HashMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
+            }
+
+            virtual ~HashMapValueCollection() {}
+
+            virtual bool contains(const V& value) const {
+                return this->associatedMap->containsValue(value);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                this->associatedMap->clear();
+            }
+
+            virtual Iterator<V>* iterator() {
+                return new ValueIterator(this->associatedMap);
+            }
+
+            virtual Iterator<V>* iterator() const {
+                return new ConstValueIterator(this->associatedMap);
+            }
+        };
+
+        class ConstHashMapValueCollection : public AbstractCollection<V> {
+        private:
+
+            const HashMap* associatedMap;
+
+        private:
+
+            ConstHashMapValueCollection(const ConstHashMapValueCollection&);
+            ConstHashMapValueCollection& operator= (const ConstHashMapValueCollection&);
+
+        public:
+
+            ConstHashMapValueCollection(const HashMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
+            }
+
+            virtual ~ConstHashMapValueCollection() {}
+
+            virtual bool contains(const V& value) const {
+                return this->associatedMap->containsValue(value);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
+
+            virtual Iterator<V>* iterator() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
+            }
+
+            virtual Iterator<V>* iterator() const {
+                return new ConstValueIterator(this->associatedMap);
+            }
+        };
 
     private:
 
@@ -675,6 +753,16 @@ namespace util {
          * maximum number of elements that can be put in this map before having to rehash
          */
         int threshold;
+
+        // Cached values that are only initialized once a request for them is made.
+        decaf::lang::Pointer<HashMapEntrySet> cachedEntrySet;
+        decaf::lang::Pointer<HashMapKeySet> cachedKeySet;
+        decaf::lang::Pointer<HashMapValueCollection> cachedValueCollection;
+
+        // Cached values that are only initialized once a request for them is made.
+        mutable decaf::lang::Pointer<ConstHashMapEntrySet> cachedConstEntrySet;
+        mutable decaf::lang::Pointer<ConstHashMapKeySet> cachedConstKeySet;
+        mutable decaf::lang::Pointer<ConstHashMapValueCollection> cachedConstValueCollection;
 
     private:
 
@@ -859,8 +947,12 @@ namespace util {
                     __FILE__, __LINE__, "The specified key is not present in the Map");
         }
 
-        virtual void put(const K& key, const V& value) {
-            this->putImpl(key, value);
+        virtual bool put(const K& key, const V& value) {
+            return this->putImpl(key, value);
+        }
+
+        virtual bool put(const K& key, const V& value, V& oldValue) {
+            return this->putImpl(key, value, oldValue);
         }
 
         virtual void putAll(const Map<K, V>& map) {
@@ -881,28 +973,46 @@ namespace util {
                 __FILE__, __LINE__, "Specified key not present in the Map.");
         }
 
-        virtual Set< MapEntry<K,V> >* entrySet() {
-            return new HashMapEntrySet(this);
+        virtual Set< MapEntry<K,V> >& entrySet() {
+            if (this->cachedEntrySet == NULL) {
+                this->cachedEntrySet.reset(new HashMapEntrySet(this));
+            }
+            return *(this->cachedEntrySet);
         }
 
-        virtual Set< MapEntry<K,V> >* entrySet() const {
-            return new ConstHashMapEntrySet(this);
+        virtual const Set< MapEntry<K,V> >& entrySet() const {
+            if (this->cachedConstEntrySet == NULL) {
+                this->cachedConstEntrySet.reset(new ConstHashMapEntrySet(this));
+            }
+            return *(this->cachedConstEntrySet);
         }
 
-        virtual std::vector<K> keySet() const {
-            return std::vector<K>();
+        virtual Set<K>& keySet() {
+            if (this->cachedKeySet == NULL) {
+                this->cachedKeySet.reset(new HashMapKeySet(this));
+            }
+            return *(this->cachedKeySet);
         }
 
-        virtual Set<K>* keySet() {
-            return new HashMapKeySet(this);
+        virtual const Set<K>& keySet() const {
+            if (this->cachedConstKeySet == NULL) {
+                this->cachedConstKeySet.reset(new ConstHashMapKeySet(this));
+            }
+            return *(this->cachedConstKeySet);
         }
 
-        virtual Collection<V>* values() {
-            return new HashMapValueCollection(this);
+        virtual Collection<V>& values() {
+            if (this->cachedValueCollection == NULL) {
+                this->cachedValueCollection.reset(new HashMapValueCollection(this));
+            }
+            return *(this->cachedValueCollection);
         }
 
-        virtual std::vector<V> values() const {
-            return std::vector<V>();
+        virtual const Collection<V>& values() const {
+            if (this->cachedConstValueCollection == NULL) {
+                this->cachedConstValueCollection.reset(new ConstHashMapValueCollection(this));
+            }
+            return *(this->cachedConstValueCollection);
         }
 
         virtual bool equals(const Map<K, V>& source) const {
@@ -935,8 +1045,8 @@ namespace util {
             return result;
         }
 
-        void putImpl(const K& key, const V& value) {
-
+        bool putImpl(const K& key, const V& value, V& oldValue) {
+            bool replaced = true;
             HashMapEntry* entry = NULL;
 
             int hash = hashFunc(key);
@@ -950,9 +1060,38 @@ namespace util {
                 if (++elementCount > threshold) {
                     rehash();
                 }
+                replaced = false;
+            } else {
+                oldValue = entry->getValue();
             }
 
             entry->setValue(value);
+
+            return replaced;
+        }
+
+        bool putImpl(const K& key, const V& value) {
+
+            bool replaced = true;
+            HashMapEntry* entry = NULL;
+
+            int hash = hashFunc(key);
+            int index = hash & (elementData.length() - 1);
+
+            entry = findKeyEntry(key, index, hash);
+
+            if (entry == NULL) {
+                modCount++;
+                entry = createHashedEntry(key, index, hash);
+                if (++elementCount > threshold) {
+                    rehash();
+                }
+                replaced = false;
+            }
+
+            entry->setValue(value);
+
+            return replaced;
         }
 
         void putAllImpl(const Map<K, V>& map) {
@@ -961,8 +1100,7 @@ namespace util {
                 rehash(capacity);
             }
 
-            decaf::lang::Pointer<Set< MapEntry<K,V> > > entries(map.entrySet());
-            decaf::lang::Pointer<Iterator< MapEntry<K,V> > > iterator(entries->iterator());
+            decaf::lang::Pointer<Iterator< MapEntry<K,V> > > iterator(map.entrySet().iterator());
             while (iterator->hasNext()) {
                 MapEntry<K, V> entry = iterator->next();
                 this->putImpl(entry.getKey(), entry.getValue());
