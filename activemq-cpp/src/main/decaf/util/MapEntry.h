@@ -35,6 +35,9 @@ namespace util {
         MapEntry() : key(), value() {
         }
 
+        MapEntry(const K& key, const V& value) : key(key), value(value) {
+        }
+
         virtual ~MapEntry() {};
 
         virtual void setKey(K key) {
@@ -70,7 +73,7 @@ namespace util {
                 return false;
             }
 
-            if (!(this->value != entry.getValue())) {
+            if (!(this->value == entry.getValue())) {
                 return false;
             }
 

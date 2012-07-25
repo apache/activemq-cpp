@@ -38,6 +38,9 @@ namespace util {
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testContiansValue );
         CPPUNIT_TEST( testIsEmpty );
+        CPPUNIT_TEST( testEntrySet );
+        CPPUNIT_TEST( testKeySet );
+        CPPUNIT_TEST( testValues );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -56,6 +59,9 @@ namespace util {
         void testRemove();
         void testContiansValue();
         void testIsEmpty();
+        void testEntrySet();
+        void testKeySet();
+        void testValues();
 
     };
 

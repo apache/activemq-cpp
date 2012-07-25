@@ -36,6 +36,7 @@ using namespace activemq::wireformat::openwire::marshal;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::util;
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveTypesMarshaller::marshal( const PrimitiveMap* map, std::vector<unsigned char>& buffer ) {
@@ -190,14 +191,12 @@ void PrimitiveTypesMarshaller::marshalPrimitiveMap(
 
         dataOut.writeInt( (int)map.size() );
 
-        std::vector<std::string> keys = map.keySet();
-        std::vector<std::string>::const_iterator iter = keys.begin();
-
-        for(; iter != keys.end(); ++iter ) {
-
-            dataOut.writeUTF( *iter );
-            PrimitiveValueNode value = map.get( *iter );
-            marshalPrimitive( dataOut, value );
+        Pointer< Iterator<std::string> > keys(map.keySet().iterator());
+        while (keys->hasNext()) {
+            std::string key = keys->next();
+            dataOut.writeUTF(key);
+            PrimitiveValueNode value = map.get(key);
+            marshalPrimitive(dataOut, value);
         }
     }
     AMQ_CATCH_RETHROW( io::IOException )

@@ -122,20 +122,6 @@ void HashMapTest::testConstructorMap() {
         CPPUNIT_ASSERT_MESSAGE("Failed to construct correct HashMap",
             myMap.get(counter) == hashMap.get(counter));
     }
-
-//    try {
-//        Map mockMap = new MockMap();
-//        hm = new HashMap(mockMap);
-//        fail("Should throw NullPointerException");
-//    } catch (NullPointerException e) {
-//        //empty
-//    }
-//
-//    HashMap map = new HashMap();
-//    map.put("a", "a");
-//    SubMap map2 = new SubMap(map);
-//    assertTrue(map2.containsKey("a"));
-//    assertTrue(map2.containsValue("a"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,19 +192,19 @@ void HashMapTest::testEntrySet() {
         hashMap.put(i, Integer::toString(i));
     }
 
-    Pointer< Set<MapEntry<int, std::string> > > set(hashMap.entrySet());
-    Pointer< Iterator<MapEntry<int, std::string> > > iterator(set->iterator());
+    Set<MapEntry<int, std::string> >& set = hashMap.entrySet();
+    Pointer< Iterator<MapEntry<int, std::string> > > iterator(set.iterator());
 
-    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size", hashMap.size() == set->size());
+    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size", hashMap.size() == set.size());
     while (iterator->hasNext()) {
         MapEntry<int, std::string> entry = iterator->next();
         CPPUNIT_ASSERT_MESSAGE("Returned incorrect entry set",
                                hashMap.containsKey(entry.getKey()) && hashMap.containsValue(entry.getValue()));
     }
 
-    iterator.reset(set->iterator());
-    set->remove(iterator->next());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Remove on set didn't take", 49, set->size());
+    iterator.reset(set.iterator());
+    set.remove(iterator->next());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Remove on set didn't take", 49, set.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,17 +238,17 @@ void HashMapTest::testKeySet() {
 
     HashMap<int, std::string> hashMap;
     populateMap(hashMap);
-    Pointer< Set<int> > set(hashMap.keySet());
-    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size()", set->size() == hashMap.size());
+    Set<int>& set = hashMap.keySet();
+    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size()", set.size() == hashMap.size());
     for (int i = 0; i < MAP_SIZE; i++) {
-        CPPUNIT_ASSERT_MESSAGE("Returned set does not contain all keys", set->contains(i));
+        CPPUNIT_ASSERT_MESSAGE("Returned set does not contain all keys", set.contains(i));
     }
 
     {
         HashMap<int, std::string> localMap;
         localMap.put(0, "test");
-        Pointer< Set<int> > intSet(localMap.keySet());
-        CPPUNIT_ASSERT_MESSAGE("Failed with zero key", intSet->contains(0));
+        Set<int>& intSet = localMap.keySet();
+        CPPUNIT_ASSERT_MESSAGE("Failed with zero key", intSet.contains(0));
     }
     {
         HashMap<int, std::string> localMap;
@@ -270,8 +256,8 @@ void HashMapTest::testKeySet() {
         localMap.put(102, "102");
         localMap.put(203, "203");
 
-        Pointer< Set<int> > intSet(localMap.keySet());
-        Pointer< Iterator<int> > it(intSet->iterator());
+        Set<int>& intSet = localMap.keySet();
+        Pointer< Iterator<int> > it(intSet.iterator());
         int remove1 = it->next();
         it->hasNext();
         it->remove();
@@ -288,7 +274,7 @@ void HashMapTest::testKeySet() {
 
         CPPUNIT_ASSERT_MESSAGE("Wrong result", it->next() == list.get(0));
         CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong size", 1, localMap.size());
-        it.reset(intSet->iterator());
+        it.reset(intSet.iterator());
         CPPUNIT_ASSERT_MESSAGE("Wrong contents", it->next() == list.get(0));
     }
     {
@@ -296,8 +282,8 @@ void HashMapTest::testKeySet() {
         map2.put(1, "1");
         map2.put(4, "4");
 
-        Pointer< Set<int> > intSet(map2.keySet());
-        Pointer< Iterator<int> > it2(intSet->iterator());
+        Set<int>& intSet = map2.keySet();
+        Pointer< Iterator<int> > it2(intSet.iterator());
 
         int remove3 = it2->next();
         int next;
@@ -311,7 +297,7 @@ void HashMapTest::testKeySet() {
         it2->remove();
         CPPUNIT_ASSERT_MESSAGE("Wrong result 2", it2->next() == next);
         CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong size 2", 1, map2.size());
-        it2.reset(intSet->iterator());
+        it2.reset(intSet.iterator());
         CPPUNIT_ASSERT_MESSAGE("Wrong contents 2", it2->next() == next);
     }
 }
@@ -384,8 +370,8 @@ void HashMapTest::testPut() {
         CPPUNIT_ASSERT(map.containsKey(myKey));
         CPPUNIT_ASSERT_EQUAL(std::string("myValue"), map.get(myKey));
         bool found = false;
-        Pointer< Set<int> > intSet(map.keySet());
-        Pointer< Iterator<int> > itr(intSet->iterator());
+        Set<int>& intSet = map.keySet();
+        Pointer< Iterator<int> > itr(intSet.iterator());
         while (itr->hasNext()) {
             int key = itr->next();
             if ((found = key) == myKey) {
@@ -399,7 +385,7 @@ void HashMapTest::testPut() {
         map.put(myKey, "myValue");
         CPPUNIT_ASSERT(map.containsKey(myKey));
         CPPUNIT_ASSERT_EQUAL(std::string("myValue"), map.get(myKey));
-        itr.reset(intSet->iterator());
+        itr.reset(intSet.iterator());
         while (itr->hasNext()) {
             int key = itr->next();
             if ((found = (key == myKey))) {
@@ -518,8 +504,8 @@ void HashMapTest::testRehash() {
     }
 
     // Check expected ordering (inverse of adding order)
-    Pointer< Set<MyKey> > keySet(hashMap.keySet());
-    std::vector<MyKey> returnedKeys = keySet->toArray();
+    Set<MyKey>& keySet = hashMap.keySet();
+    std::vector<MyKey> returnedKeys = keySet.toArray();
     for (int i = 0; i < 8; i++) {
         CPPUNIT_ASSERT_EQUAL(keyOrder[i], returnedKeys[7 - i]);
     }
@@ -527,7 +513,7 @@ void HashMapTest::testRehash() {
     // The next put causes a rehash
     hashMap.put(keyOrder[8], 8);
     // Check expected new ordering (adding order)
-    returnedKeys = keySet->toArray();
+    returnedKeys = keySet.toArray();
     for (int i = 0; i < 9; i++) {
         CPPUNIT_ASSERT_EQUAL(keyOrder[i], returnedKeys[i]);
     }
@@ -547,14 +533,14 @@ void HashMapTest::testValues() {
     HashMap<int, std::string> hashMap;
     populateMap(hashMap);
 
-    Pointer< Collection<std::string> > c(hashMap.values());
-    CPPUNIT_ASSERT_MESSAGE("Returned collection of incorrect size()", c->size() == hashMap.size());
+    Collection<std::string>& c = hashMap.values();
+    CPPUNIT_ASSERT_MESSAGE("Returned collection of incorrect size()", c.size() == hashMap.size());
     for (int i = 0; i < MAP_SIZE; i++) {
         CPPUNIT_ASSERT_MESSAGE("Returned collection does not contain all keys",
-                               c->contains(Integer::toString(i)));
+                               c.contains(Integer::toString(i)));
     }
 
-    c->remove("10");
+    c.remove("10");
     CPPUNIT_ASSERT_MESSAGE("Removing from collection should alter Map",
                            !hashMap.containsKey(10));
 }

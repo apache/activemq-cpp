@@ -280,7 +280,7 @@ void PrimitiveMapTest::testGetKeys(){
     pmap.setInt("int", 5 );
     pmap.setFloat( "float", 5.5f );
     pmap.setInt("int2", 6 );
-    std::vector<std::string> keys = pmap.keySet();
+    std::vector<std::string> keys = pmap.keySet().toArray();
 
     CPPUNIT_ASSERT( keys.size() == 3 );
     CPPUNIT_ASSERT( keys[0] == "int" || keys[0] == "float" || keys[0] == "int2" );

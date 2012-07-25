@@ -18,278 +18,28 @@
 #include "StlMapTest.h"
 
 #include <string>
+#include <decaf/util/HashMap.h>
 #include <decaf/util/StlMap.h>
+#include <decaf/util/ArrayList.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 
-template <typename K, typename V, typename COMPARATOR = std::less<K> >
-class StlTestMap : public Map<K, V> {
-private:
+////////////////////////////////////////////////////////////////////////////////
+namespace {
 
-    std::map<K,V,COMPARATOR> valueMap;
-    concurrent::Mutex mutex;
+    const int MAP_SIZE = 1000;
 
-public:
-
-    /**
-     * Default constructor - does nothing.
-     */
-    StlTestMap() : Map<K,V>() {}
-
-    /**
-     * Copy constructor - copies the content of the given map into this
-     * one.
-     * @param source The source map.
-     */
-    StlTestMap( const StlTestMap& source ) : Map<K,V>() {
-        copy( source );
-    }
-
-    /**
-     * Copy constructor - copies the content of the given map into this
-     * one.
-     * @param source The source map.
-     */
-    StlTestMap( const Map<K,V>& source ) : Map<K,V>() {
-        copy( source );
-    }
-
-    virtual ~StlTestMap() {}
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual bool equals( const StlTestMap& source ) const {
-        return this->valueMap == source.valueMap;
-    }
-
-    virtual bool equals( const Map<K,V>& source ) const {
-        std::vector<K> keys = source.keySet();
-
-        typename std::vector<K>::const_iterator iter = keys.begin();
-        for( ; iter != keys.end(); ++iter ) {
-            if( !this->containsKey( *iter ) ) {
-                return false;
-            }
-
-            if( !( this->get( *iter ) == source.get( *iter ) ) ) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual void copy( const StlTestMap& source ) {
-        this->valueMap.clear();
-        this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
-    }
-
-    virtual void copy( const Map<K,V>& source ) {
-        this->clear();
-        this->putAll( source );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual void clear() {
-        valueMap.clear();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual bool containsKey( const K& key ) const {
-        typename std::map<K,V,COMPARATOR>::const_iterator iter;
-        iter = valueMap.find(key);
-        return iter != valueMap.end();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual bool containsValue( const V& value ) const {
-
-        if( valueMap.empty() ){
-            return false;
-        }
-
-        typename std::map<K,V,COMPARATOR>::const_iterator iter = valueMap.begin();
-        for( ; iter != valueMap.end(); ++iter ){
-            if( (*iter).second == value ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual bool isEmpty() const {
-        return valueMap.empty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual int size() const {
-        return (int)valueMap.size();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual V& get( const K& key ) {
-
-        typename std::map<K,V,COMPARATOR>::iterator iter;
-        iter = valueMap.find( key );
-        if( iter == valueMap.end() ){
-            throw util::NoSuchElementException(
-                __FILE__, __LINE__, "Key does not exist in map" );
-        }
-
-        return iter->second;
-    }
-    virtual const V& get( const K& key ) const {
-
-        typename std::map<K,V,COMPARATOR>::const_iterator iter;
-        iter = valueMap.find( key );
-        if( iter == valueMap.end() ){
-            throw util::NoSuchElementException(
-                __FILE__, __LINE__, "Key does not exist in map" );
-        }
-
-        return iter->second;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual void put( const K& key, const V& value ) {
-
-        valueMap[key] = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual void putAll( const StlTestMap<K,V,COMPARATOR>& other ) {
-
-        this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
-    }
-    virtual void putAll( const Map<K,V>& other ) {
-
-        std::vector<K> keys = other.keySet();
-
-        typename std::vector<K>::const_iterator iter = keys.begin();
-        for( ; iter != keys.end(); ++iter ) {
-
-            this->put( *iter, other.get( *iter ) );
+    void populateMap(StlMap<int, std::string>& map) {
+        for (int i = 0; i < MAP_SIZE; ++i) {
+            map.put(i, Integer::toString(i));
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual V remove( const K& key ) {
-
-        typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
-        if( iter == valueMap.end() ) {
-            throw decaf::util::NoSuchElementException(
-                __FILE__, __LINE__, "Key is not present in this Map." );
-        }
-
-        V result = iter->second;
-        valueMap.erase( iter );
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual std::vector<K> keySet() const{
-        std::vector<K> keys( valueMap.size() );
-
-        typename std::map<K,V,COMPARATOR>::const_iterator iter;
-        iter=valueMap.begin();
-        for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-            keys[ix] = iter->first;
-        }
-
-        return keys;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    virtual std::vector<V> values() const {
-        std::vector<V> values( valueMap.size() );
-
-        typename std::map<K,V,COMPARATOR>::const_iterator iter;
-        iter=valueMap.begin();
-        for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-            values[ix] = iter->second;
-        }
-
-        return values;
-    }
-
-    virtual Set< MapEntry<K, V> >* entrySet() {
-        throw decaf::lang::exceptions::UnsupportedOperationException();
-    }
-
-    virtual Set< MapEntry<K, V> >* entrySet() const {
-        throw decaf::lang::exceptions::UnsupportedOperationException();
-    }
-
-public:
-
-    virtual void lock() {
-        mutex.lock();
-    }
-
-    virtual bool tryLock() {
-        return mutex.tryLock();
-    }
-
-    virtual void unlock() {
-        mutex.unlock();
-    }
-
-    virtual void wait() {
-
-        mutex.wait();
-    }
-
-    virtual void wait( long long millisecs ) {
-
-        mutex.wait( millisecs );
-    }
-
-    virtual void wait( long long millisecs, int nanos ) {
-
-        mutex.wait( millisecs, nanos );
-    }
-
-    virtual void notify() {
-
-        mutex.notify();
-    }
-
-    virtual void notifyAll() {
-
-        mutex.notifyAll();
-    }
-
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void StlMapTest::testConstructor() {
@@ -303,7 +53,7 @@ void StlMapTest::testConstructor() {
         map1.get( "TEST" ),
         decaf::util::NoSuchElementException );
 
-    StlTestMap<string, int> srcMap;
+    HashMap<string, int> srcMap;
     srcMap.put( "A", 1 );
     srcMap.put( "B", 1 );
     srcMap.put( "C", 1 );
@@ -339,7 +89,6 @@ void StlMapTest::testContiansValue() {
     CPPUNIT_ASSERT( boolMap.containsValue(true) == false );
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 void StlMapTest::testClear() {
 
@@ -356,7 +105,7 @@ void StlMapTest::testClear() {
 void StlMapTest::testCopy() {
 
     StlMap<string, int> destMap;
-    StlTestMap<string, int> srcMap;
+    HashMap<string, int> srcMap;
     StlMap<string, int> srcMap2;
 
     CPPUNIT_ASSERT( destMap.size() == 0 );
@@ -454,8 +203,8 @@ void StlMapTest::testPut() {
 void StlMapTest::testPutAll() {
 
     StlMap<string, int> destMap;
-    StlTestMap<string, int> srcMap;
-    StlTestMap<string, int> srcMap2;
+    HashMap<string, int> srcMap;
+    HashMap<string, int> srcMap2;
 
     srcMap.put( "A", 1 );
     srcMap.put( "B", 1 );
@@ -489,3 +238,113 @@ void StlMapTest::testRemove() {
         decaf::util::NoSuchElementException );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void StlMapTest::testEntrySet() {
+
+    StlMap<int, std::string> map;
+
+    for (int i = 0; i < 50; i++) {
+        map.put(i, Integer::toString(i));
+    }
+
+    Set<MapEntry<int, std::string> >& set = map.entrySet();
+    Pointer< Iterator<MapEntry<int, std::string> > > iterator(set.iterator());
+
+    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size", map.size() == set.size());
+    while (iterator->hasNext()) {
+        MapEntry<int, std::string> entry = iterator->next();
+        CPPUNIT_ASSERT_MESSAGE("Returned incorrect entry set",
+                               map.containsKey(entry.getKey()) && map.containsValue(entry.getValue()));
+    }
+
+    iterator.reset(set.iterator());
+    set.remove(iterator->next());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Remove on set didn't take", 49, set.size());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StlMapTest::testKeySet() {
+
+    StlMap<int, std::string> map;
+    populateMap(map);
+    Set<int>& set = map.keySet();
+    CPPUNIT_ASSERT_MESSAGE("Returned set of incorrect size()", set.size() == map.size());
+    for (int i = 0; i < MAP_SIZE; i++) {
+        CPPUNIT_ASSERT_MESSAGE("Returned set does not contain all keys", set.contains(i));
+    }
+
+    {
+        StlMap<int, std::string> localMap;
+        localMap.put(0, "test");
+        Set<int>& intSet = localMap.keySet();
+        CPPUNIT_ASSERT_MESSAGE("Failed with zero key", intSet.contains(0));
+    }
+    {
+        StlMap<int, std::string> localMap;
+        localMap.put(1, "1");
+        localMap.put(102, "102");
+        localMap.put(203, "203");
+
+        Set<int>& intSet = localMap.keySet();
+        Pointer< Iterator<int> > it(intSet.iterator());
+        int remove1 = it->next();
+        it->hasNext();
+        it->remove();
+        int remove2 = it->next();
+        it->remove();
+
+        ArrayList<int> list;
+        list.add(1);
+        list.add(102);
+        list.add(203);
+
+        list.remove(remove1);
+        list.remove(remove2);
+
+        CPPUNIT_ASSERT_MESSAGE("Wrong result", it->next() == list.get(0));
+        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong size", 1, localMap.size());
+        it.reset(intSet.iterator());
+        CPPUNIT_ASSERT_MESSAGE("Wrong contents", it->next() == list.get(0));
+    }
+    {
+        StlMap<int, std::string> map2;
+        map2.put(1, "1");
+        map2.put(4, "4");
+
+        Set<int>& intSet = map2.keySet();
+        Pointer< Iterator<int> > it2(intSet.iterator());
+
+        int remove3 = it2->next();
+        int next;
+
+        if (remove3 == 1) {
+            next = 4;
+        } else {
+            next = 1;
+        }
+        it2->hasNext();
+        it2->remove();
+        CPPUNIT_ASSERT_MESSAGE("Wrong result 2", it2->next() == next);
+        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong size 2", 1, map2.size());
+        it2.reset(intSet.iterator());
+        CPPUNIT_ASSERT_MESSAGE("Wrong contents 2", it2->next() == next);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StlMapTest::testValues() {
+
+    StlMap<int, std::string> map;
+    populateMap(map);
+
+    Collection<std::string>& c = map.values();
+    CPPUNIT_ASSERT_MESSAGE("Returned collection of incorrect size()", c.size() == map.size());
+    for (int i = 0; i < MAP_SIZE; i++) {
+        CPPUNIT_ASSERT_MESSAGE("Returned collection does not contain all keys",
+                               c.contains(Integer::toString(i)));
+    }
+
+    c.remove("10");
+    CPPUNIT_ASSERT_MESSAGE("Removing from collection should alter Map",
+                           !map.containsKey(10));
+}

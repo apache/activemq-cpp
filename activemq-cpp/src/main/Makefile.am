@@ -423,6 +423,7 @@ cc_sources = \
     decaf/util/Arrays.cpp \
     decaf/util/BitSet.cpp \
     decaf/util/Collection.cpp \
+    decaf/util/Collections.cpp \
     decaf/util/Comparator.cpp \
     decaf/util/ConcurrentModificationException.cpp \
     decaf/util/Date.cpp \
@@ -435,6 +436,7 @@ cc_sources = \
     decaf/util/List.cpp \
     decaf/util/ListIterator.cpp \
     decaf/util/Map.cpp \
+    decaf/util/MapEntry.cpp \
     decaf/util/NoSuchElementException.cpp \
     decaf/util/PriorityQueue.cpp \
     decaf/util/Properties.cpp \
@@ -1035,6 +1037,7 @@ h_sources = \
     decaf/util/Arrays.h \
     decaf/util/BitSet.h \
     decaf/util/Collection.h \
+    decaf/util/Collections.h \
     decaf/util/Comparator.h \
     decaf/util/ConcurrentModificationException.h \
     decaf/util/Config.h \
@@ -1048,6 +1051,7 @@ h_sources = \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
     decaf/util/Map.h \
+    decaf/util/MapEntry.h \
     decaf/util/NoSuchElementException.h \
     decaf/util/PriorityQueue.h \
     decaf/util/Properties.h \

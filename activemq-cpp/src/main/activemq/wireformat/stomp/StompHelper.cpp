@@ -161,11 +161,10 @@ void StompHelper::convertProperties( const Pointer<Message>& message,
         frame->setProperty( "JMSXGroupID", message->getGroupID() );
     }
 
-    std::vector<std::string> keys = message->getMessageProperties().keySet();
-    std::vector<std::string>::const_iterator iter = keys.begin();
-
-    for( ; iter != keys.end(); ++iter ) {
-        frame->setProperty( *iter, message->getMessageProperties().getString( *iter ) );
+    Pointer< Iterator<std::string> > keys(message->getMessageProperties().keySet().iterator());
+    while (keys->hasNext()) {
+        std::string key = keys->next();
+        frame->setProperty(key, message->getMessageProperties().getString(key) );
     }
 }
 

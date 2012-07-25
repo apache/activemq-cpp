@@ -137,11 +137,9 @@ void ConnectionStateTracker::restore(Pointer<transport::Transport> transport) {
 
     try{
 
-        std::vector< Pointer<ConnectionState> > connectionStates = this->connectionStates.values();
-        std::vector< Pointer<ConnectionState> >::const_iterator iter = connectionStates.begin();
-
-        for (; iter != connectionStates.end(); ++iter) {
-            Pointer<ConnectionState> state = *iter;
+        Pointer< Iterator< Pointer<ConnectionState> > > iterator(this->connectionStates.values().iterator());
+        while (iterator->hasNext()) {
+            Pointer<ConnectionState> state = iterator->next();
 
             Pointer<ConnectionInfo> info = state->getInfo();
             info->setFailoverReconnect(true);
@@ -159,18 +157,14 @@ void ConnectionStateTracker::restore(Pointer<transport::Transport> transport) {
         }
 
         // Now we flush messages
-        std::vector<Pointer<Command> > messages = messageCache.values();
-        std::vector<Pointer<Command> >::const_iterator messageIter = messages.begin();
-
-        for (; messageIter != messages.end(); ++messageIter) {
-            transport->oneway(*messageIter);
+        Pointer< Iterator< Pointer<Command> > > messages(this->messageCache.values().iterator());
+        while (messages->hasNext()) {
+            transport->oneway(messages->next());
         }
 
-        std::vector<Pointer<Command> > messagePulls = messagePullCache.values();
-        std::vector<Pointer<Command> >::const_iterator messagePullIter = messagePulls.begin();
-
-        for (; messagePullIter != messagePulls.end(); ++messagePullIter) {
-            transport->oneway(*messagePullIter);
+        Pointer< Iterator< Pointer<Command> > > messagePullIter(this->messagePullCache.values().iterator());
+        while (messagePullIter->hasNext()) {
+            transport->oneway(messagePullIter->next());
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -186,14 +180,13 @@ void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport>
 
         std::vector<Pointer<TransactionInfo> > toRollback;
 
-        // Restore the session's transaction state
-        std::vector<Pointer<TransactionState> > transactionStates = connectionState->getTransactionStates();
-        std::vector<Pointer<TransactionState> >::const_iterator iter = transactionStates.begin();
-
         // For any completed transactions we don't know if the commit actually made it to the broker
         // or was lost along the way, so they need to be rolled back.
-        for (; iter != transactionStates.end(); ++iter) {
-            Pointer<Command> lastCommand = (*iter)->getCommands().getLast();
+        Pointer< Iterator< Pointer<TransactionState> > > iter(connectionState->getTransactionStates().iterator());
+        while (iter->hasNext()) {
+
+            Pointer<TransactionState> txState = iter->next();
+            Pointer<Command> lastCommand = txState->getCommands().getLast();
             if (lastCommand->isTransactionInfo()) {
                 Pointer<TransactionInfo> transactionInfo = lastCommand.dynamicCast<TransactionInfo>();
                 if (transactionInfo->getType() == ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE) {
@@ -203,22 +196,20 @@ void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport>
             }
 
             // replay short lived producers that may have been involved in the transaction
-            std::vector<Pointer<ProducerState> > producerStates = (*iter)->getProducerStates();
-            std::vector<Pointer<ProducerState> >::const_iterator state = producerStates.begin();
-
-            for (; state != producerStates.end(); ++state) {
-                transport->oneway((*state)->getInfo());
+            Pointer< Iterator< Pointer<ProducerState> > > state(txState->getProducerStates().iterator());
+            while (state->hasNext()) {
+                transport->oneway(state->next()->getInfo());
             }
 
-            std::auto_ptr<Iterator<Pointer<Command> > > commands((*iter)->getCommands().iterator());
+            std::auto_ptr<Iterator<Pointer<Command> > > commands(txState->getCommands().iterator());
 
             while (commands->hasNext()) {
                 transport->oneway(commands->next());
             }
 
-            state = producerStates.begin();
-            for (; state != producerStates.end(); ++state) {
-                transport->oneway((*state)->getInfo()->createRemoveCommand());
+            state.reset(txState->getProducerStates().iterator());
+            while (state->hasNext()) {
+                transport->oneway(state->next()->getInfo()->createRemoveCommand());
             }
         }
 
@@ -247,12 +238,9 @@ void ConnectionStateTracker::doRestoreSessions(Pointer<transport::Transport> tra
 
     try {
 
-        std::vector<Pointer<SessionState> > sessionStates = connectionState->getSessionStates();
-        std::vector<Pointer<SessionState> >::const_iterator iter = sessionStates.begin();
-
-        // Restore the Session State
-        for (; iter != sessionStates.end(); ++iter) {
-            Pointer<SessionState> state = *iter;
+        Pointer< Iterator< Pointer<SessionState> > > iter(connectionState->getSessionStates().iterator());
+        while (iter->hasNext()) {
+            Pointer<SessionState> state = iter->next();
             transport->oneway(state->getInfo());
 
             if (restoreProducers) {
@@ -280,20 +268,19 @@ void ConnectionStateTracker::doRestoreConsumers(Pointer<transport::Transport> tr
         bool connectionInterruptionProcessingComplete =
             connectionState->isConnectionInterruptProcessingComplete();
 
-        std::vector<Pointer<ConsumerState> > consumerStates = sessionState->getConsumerStates();
-        std::vector<Pointer<ConsumerState> >::const_iterator state = consumerStates.begin();
+        Pointer< Iterator< Pointer<ConsumerState> > > state(sessionState->getConsumerStates().iterator());
+        while (state->hasNext()) {
 
-        for (; state != consumerStates.end(); ++state) {
-
-            Pointer<ConsumerInfo> infoToSend = (*state)->getInfo();
+            Pointer<ConsumerInfo> infoToSend = state->next()->getInfo();
             Pointer<wireformat::WireFormat> wireFormat = transport->getWireFormat();
 
             if (!connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0 &&
                 wireFormat->getVersion() > 5) {
 
-                infoToSend.reset((*state)->getInfo()->cloneDataStructure());
+                Pointer<ConsumerInfo> oldInfoToSend = infoToSend;
+                infoToSend.reset(oldInfoToSend->cloneDataStructure());
                 connectionState->getRecoveringPullConsumers().put(
-                    infoToSend->getConsumerId(), (*state)->getInfo());
+                    infoToSend->getConsumerId(), oldInfoToSend);
                 infoToSend->setPrefetchSize(0);
             }
 
@@ -311,11 +298,9 @@ void ConnectionStateTracker::doRestoreProducers(Pointer<transport::Transport> tr
     try {
 
         // Restore the session's producers
-        std::vector<Pointer<ProducerState> > producerStates = sessionState->getProducerStates();
-        std::vector<Pointer<ProducerState> >::const_iterator iter = producerStates.begin();
-
-        for (; iter != producerStates.end(); ++iter) {
-            Pointer<ProducerState> state = *iter;
+        Pointer< Iterator< Pointer<ProducerState> > > iter(sessionState->getProducerStates().iterator());
+        while (iter->hasNext()) {
+            Pointer<ProducerState> state = iter->next();
             transport->oneway(state->getInfo());
         }
     }
@@ -792,15 +777,15 @@ void ConnectionStateTracker::connectionInterruptProcessingComplete(
         StlMap<Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR> stalledConsumers =
             connectionState->getRecoveringPullConsumers();
 
-        std::vector<Pointer<ConsumerId> > keySet = stalledConsumers.keySet();
-        std::vector<Pointer<ConsumerId> >::const_iterator key = keySet.begin();
-
-        for (; key != keySet.end(); ++key) {
+        Pointer< Iterator< Pointer<ConsumerId> > > key(stalledConsumers.keySet().iterator());
+        while (key->hasNext()) {
             Pointer<ConsumerControl> control(new ConsumerControl());
 
-            control->setConsumerId(*key);
-            control->setPrefetch(stalledConsumers.get(*key)->getPrefetchSize());
-            control->setDestination(stalledConsumers.get(*key)->getDestination());
+            Pointer<ConsumerId> theKey = key->next();
+
+            control->setConsumerId(theKey);
+            control->setPrefetch(stalledConsumers.get(theKey)->getPrefetchSize());
+            control->setDestination(stalledConsumers.get(theKey)->getDestination());
 
             try {
                 transport->oneway(control);
@@ -815,10 +800,8 @@ void ConnectionStateTracker::connectionInterruptProcessingComplete(
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::transportInterrupted() {
 
-    std::vector<Pointer<ConnectionState> > connectionStatesVec = this->connectionStates.values();
-    std::vector<Pointer<ConnectionState> >::const_iterator state = connectionStatesVec.begin();
-
-    for (; state != connectionStatesVec.end(); ++state) {
-        (*state)->setConnectionInterruptProcessingComplete(false);
+    Pointer< Iterator< Pointer<ConnectionState> > > state(this->connectionStates.values().iterator());
+    while (state->hasNext()) {
+        state->next()->setConnectionInterruptProcessingComplete(false);
     }
 }

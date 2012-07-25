@@ -29,7 +29,6 @@
 #include <decaf/util/concurrent/ConcurrentStlMap.h>
 
 #include <string>
-#include <memory>
 
 namespace activemq {
 namespace state {
@@ -79,7 +78,7 @@ namespace state {
 
         Pointer<ConsumerState> removeConsumer(Pointer<ConsumerId> id);
 
-        std::vector<Pointer<ProducerState> > getProducerStates() const {
+        const decaf::util::Collection<Pointer<ProducerState> >& getProducerStates() const {
             return producers.values();
         }
 
@@ -87,7 +86,7 @@ namespace state {
             return producers.get(id);
         }
 
-        std::vector<Pointer<ConsumerState> > getConsumerStates() const {
+        const decaf::util::Collection<Pointer<ConsumerState> >& getConsumerStates() const {
             return consumers.values();
         }
 

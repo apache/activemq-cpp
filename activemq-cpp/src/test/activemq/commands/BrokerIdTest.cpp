@@ -72,9 +72,11 @@ void BrokerIdTest::test() {
     testMap.put( &myCommand3, 0 );
     testMap.put( &myCommand2, 0 );
 
-    CPPUNIT_ASSERT( testMap.keySet().at( 0 )->getValue() == "A" );
-    CPPUNIT_ASSERT( testMap.keySet().at( 1 )->getValue() == "B" );
-    CPPUNIT_ASSERT( testMap.keySet().at( 2 )->getValue() == "C" );
+    std::vector<BrokerId*> keys = testMap.keySet().toArray();
+
+    CPPUNIT_ASSERT( keys.at( 0 )->getValue() == "A" );
+    CPPUNIT_ASSERT( keys.at( 1 )->getValue() == "B" );
+    CPPUNIT_ASSERT( keys.at( 2 )->getValue() == "C" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +104,8 @@ void BrokerIdTest::test2() {
     testMap.put( myCommand2, 0 );
     CPPUNIT_ASSERT( testMap.size() == 2 );
 
-    CPPUNIT_ASSERT( testMap.keySet().at( 0 )->getValue() == "A" );
-    CPPUNIT_ASSERT( testMap.keySet().at( 1 )->getValue() == "C" );
+    std::vector< Pointer<BrokerId> > keys = testMap.keySet().toArray();
+
+    CPPUNIT_ASSERT( keys.at( 0 )->getValue() == "A" );
+    CPPUNIT_ASSERT( keys.at( 1 )->getValue() == "C" );
 }

@@ -21,10 +21,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <decaf/lang/Pointer.h>
+#include <decaf/util/Set.h>
+
 using namespace activemq;
 using namespace activemq::util;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +52,15 @@ PrimitiveMap::PrimitiveMap(const PrimitiveMap& src) :
 ////////////////////////////////////////////////////////////////////////////////
 std::string PrimitiveMap::toString() const {
 
-    std::vector<std::string> keys = this->keySet();
     ostringstream stream;
 
     stream << "Begin Class PrimitiveMap:" << std::endl;
 
-    for (std::size_t i = 0; i < keys.size(); ++i) {
-        stream << "map[" << keys[i] << "] = " << this->get(keys[i]).toString() << std::endl;
+    Pointer< Iterator<MapEntry<std::string, PrimitiveValueNode> > > entries(this->entrySet().iterator());
+    while (entries->hasNext()) {
+        MapEntry<std::string, PrimitiveValueNode> entry = entries->next();
+        stream << "map[" << entry.getKey() << "] = " << entry.getValue().toString() << std::endl;
+
     }
 
     stream << "End Class PrimitiveMap:" << std::endl;

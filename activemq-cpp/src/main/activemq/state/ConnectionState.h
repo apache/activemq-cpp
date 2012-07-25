@@ -38,7 +38,6 @@
 #include <decaf/lang/Pointer.h>
 
 #include <string>
-#include <memory>
 
 namespace activemq {
 namespace state {
@@ -99,7 +98,7 @@ namespace state {
             return transactions.get(id.dynamicCast<LocalTransactionId>());
         }
 
-        std::vector<Pointer<TransactionState> > getTransactionStates() const {
+        const decaf::util::Collection<Pointer<TransactionState> >& getTransactionStates() const {
             return transactions.values();
         }
 
@@ -124,7 +123,7 @@ namespace state {
             return tempDestinations;
         }
 
-        std::vector<Pointer<SessionState> > getSessionStates() const {
+        const decaf::util::Collection<Pointer<SessionState> >& getSessionStates() const {
             return sessions.values();
         }
 

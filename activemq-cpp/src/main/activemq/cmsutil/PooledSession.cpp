@@ -20,7 +20,13 @@
 #include "ResourceLifecycleManager.h"
 #include <cms/CMSException.h>
 
+#include <decaf/util/Set.h>
+#include <decaf/util/Iterator.h>
+
+#include <memory>
+
 using namespace cms;
+using namespace decaf::util;
 using namespace activemq::cmsutil;
 
 /**
@@ -42,18 +48,16 @@ PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
 PooledSession::~PooledSession() {
 
     // Destroy cached producers.
-    std::vector<CachedProducer*> cachedProducers = producerCache.values();
-    for( std::size_t ix = 0; ix < cachedProducers.size(); ++ix ) {
-        delete cachedProducers[ix];
+    std::auto_ptr< Iterator<CachedProducer*> > producers(producerCache.values().iterator());
+    while (producers->hasNext()) {
+        delete producers->next();
     }
-    cachedProducers.clear();
 
     // Destroy cached consumers.
-    std::vector<CachedConsumer*> cachedConsumers = consumerCache.values();
-    for( std::size_t ix = 0; ix < cachedConsumers.size(); ++ix ) {
-        delete cachedConsumers[ix];
+    std::auto_ptr< Iterator<CachedConsumer*> > consumers(consumerCache.values().iterator());
+    while (consumers->hasNext()) {
+        delete consumers->next();
     }
-    cachedConsumers.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
