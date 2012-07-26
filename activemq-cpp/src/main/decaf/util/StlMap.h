@@ -625,7 +625,7 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlMap() : Map<K,V>(), valueMap(), mutex() {}
+        StlMap() : Map<K,V>(), valueMap(), mutex(), modCount(0) {}
 
         /**
          * Copy constructor - copies the content of the given map into this one.
@@ -633,7 +633,7 @@ namespace util{
          * @param source
          *      The source StlMap whose entries are copied into this Map.
          */
-        StlMap(const StlMap& source ) : Map<K,V>(), valueMap(), mutex() {
+        StlMap(const StlMap& source ) : Map<K,V>(), valueMap(), mutex(), modCount(0) {
             copy(source);
         }
 
@@ -643,7 +643,7 @@ namespace util{
          * @param source
          *      The source ma whose entries are copied into this Map..
          */
-        StlMap(const Map<K,V>& source) : Map<K,V>(), valueMap(), mutex() {
+        StlMap(const Map<K,V>& source) : Map<K,V>(), valueMap(), mutex(), modCount(0) {
             copy(source);
         }
 
@@ -660,7 +660,6 @@ namespace util{
          * {@inheritDoc}
          */
         virtual bool equals(const Map<K,V>& source) const {
-
             typename std::auto_ptr< Iterator<K> > iterator(this->keySet().iterator());
             while (iterator->hasNext()) {
                 K key = iterator->next();
@@ -703,7 +702,6 @@ namespace util{
          * {@inheritDoc}
          */
         virtual bool containsKey(const K& key) const {
-
             if (valueMap.empty()) {
                 return false;
             }
@@ -717,7 +715,6 @@ namespace util{
          * {@inheritDoc}
          */
         virtual bool containsValue(const V& value) const {
-
             if (valueMap.empty()) {
                 return false;
             }
@@ -750,7 +747,6 @@ namespace util{
          * {@inheritDoc}
          */
         virtual V& get(const K& key) {
-
             typename std::map<K, V, COMPARATOR>::iterator iter;
             iter = valueMap.find(key);
             if (iter == valueMap.end()) {
@@ -764,7 +760,6 @@ namespace util{
          * {@inheritDoc}
          */
         virtual const V& get(const K& key) const {
-
             typename std::map<K, V, COMPARATOR>::const_iterator iter;
             iter = valueMap.find(key);
             if (iter == valueMap.end()) {
@@ -783,6 +778,7 @@ namespace util{
                 result = true;
             }
             valueMap[key] = value;
+            modCount++;
             return result;
         }
 
@@ -796,6 +792,7 @@ namespace util{
                 oldValue = valueMap[key];
             }
             valueMap[key] = value;
+            modCount++;
             return result;
         }
 
@@ -804,6 +801,7 @@ namespace util{
          */
         virtual void putAll(const StlMap<K, V, COMPARATOR>& other) {
             this->valueMap.insert(other.valueMap.begin(), other.valueMap.end());
+            this->modCount++;
         }
 
         /**
@@ -830,6 +828,7 @@ namespace util{
 
             V result = iter->second;
             valueMap.erase(iter);
+            modCount++;
             return result;
         }
 

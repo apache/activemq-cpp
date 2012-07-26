@@ -24,10 +24,12 @@
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/ConcurrentMap.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/ConcurrentModificationException.h>
 #include <decaf/util/Map.h>
-#include <decaf/util/Collection.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/AbstractCollection.h>
+#include <decaf/util/AbstractSet.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/lang/Pointer.h>
 
 namespace decaf{
 namespace util{
@@ -51,20 +53,633 @@ namespace concurrent{
 
         std::map<K,V,COMPARATOR> valueMap;
         mutable concurrent::Mutex mutex;
+        int modCount;
+
+    private:
+
+        class AbstractMapIterator {
+        protected:
+
+            mutable int position;
+            int expectedModCount;
+            typename std::map<K,V,COMPARATOR>::iterator futureEntry;
+            typename std::map<K,V,COMPARATOR>::iterator currentEntry;
+
+            ConcurrentStlMap* associatedMap;
+
+        public:
+
+            AbstractMapIterator(ConcurrentStlMap* parent) : position(0),
+                                                            expectedModCount(parent->modCount),
+                                                            futureEntry(parent->valueMap.begin()),
+                                                            currentEntry(parent->valueMap.end()),
+                                                            associatedMap(parent) {
+            }
+
+            virtual ~AbstractMapIterator() {}
+
+            virtual bool checkHasNext() const {
+                synchronized(&this->associatedMap->mutex) {
+                    if (futureEntry != this->associatedMap->valueMap.end()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            void checkConcurrentMod() const {
+                if (expectedModCount != this->associatedMap->modCount) {
+                    throw ConcurrentModificationException(
+                        __FILE__, __LINE__, "StlMap modified outside this iterator");
+                }
+            }
+
+            void makeNext() {
+                synchronized(&this->associatedMap->mutex) {
+                    checkConcurrentMod();
+
+                    if (!checkHasNext()) {
+                        throw NoSuchElementException(__FILE__, __LINE__, "No next element");
+                    }
+
+                    currentEntry = futureEntry;
+                    futureEntry++;
+                }
+            }
+
+            virtual void doRemove() {
+                synchronized(&this->associatedMap->mutex) {
+                    checkConcurrentMod();
+
+                    if (currentEntry == this->associatedMap->valueMap.end()) {
+                        throw decaf::lang::exceptions::IllegalStateException(
+                            __FILE__, __LINE__, "Remove called before call to next()");
+                    }
+
+                    this->associatedMap->valueMap.erase(currentEntry);
+                    currentEntry = this->associatedMap->valueMap.end();
+
+                    expectedModCount++;
+                    associatedMap->modCount++;
+                }
+            }
+        };
+
+        class EntryIterator : public Iterator< MapEntry<K,V> >, public AbstractMapIterator {
+        private:
+
+            EntryIterator(const EntryIterator&);
+            EntryIterator& operator= (const EntryIterator&);
+
+        public:
+
+            EntryIterator(ConcurrentStlMap* parent) : AbstractMapIterator(parent) {
+            }
+
+            virtual ~EntryIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual MapEntry<K, V> next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return MapEntry<K, V>(this->currentEntry->first, this->currentEntry->second);
+                }
+
+                return MapEntry<K, V>();
+            }
+
+            virtual void remove() {
+                this->doRemove();
+            }
+        };
+
+        class KeyIterator : public Iterator<K>, public AbstractMapIterator {
+        private:
+
+            KeyIterator(const KeyIterator&);
+            KeyIterator& operator= (const KeyIterator&);
+
+        public:
+
+            KeyIterator(ConcurrentStlMap* parent) : AbstractMapIterator(parent) {
+            }
+
+            virtual ~KeyIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual K next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return this->currentEntry->first;
+                }
+
+                return K();
+            }
+
+            virtual void remove() {
+                this->doRemove();
+            }
+        };
+
+        class ValueIterator : public Iterator<V>, public AbstractMapIterator {
+        private:
+
+            ValueIterator(const ValueIterator&);
+            ValueIterator& operator= (const ValueIterator&);
+
+        public:
+
+            ValueIterator(ConcurrentStlMap* parent) : AbstractMapIterator(parent) {
+            }
+
+            virtual ~ValueIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual V next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return this->currentEntry->second;
+                }
+
+                return V();
+            }
+
+            virtual void remove() {
+                this->doRemove();
+            }
+        };
+
+    private:
+
+        class ConstAbstractMapIterator {
+        protected:
+
+            mutable int position;
+            int expectedModCount;
+            typename std::map<K,V,COMPARATOR>::const_iterator futureEntry;
+            typename std::map<K,V,COMPARATOR>::const_iterator currentEntry;
+
+            const ConcurrentStlMap* associatedMap;
+
+        public:
+
+            ConstAbstractMapIterator(const ConcurrentStlMap* parent) : position(0),
+                                                                       expectedModCount(parent->modCount),
+                                                                       futureEntry(parent->valueMap.begin()),
+                                                                       currentEntry(parent->valueMap.end()),
+                                                                       associatedMap(parent) {
+            }
+
+            virtual ~ConstAbstractMapIterator() {}
+
+            virtual bool checkHasNext() const {
+                synchronized(&this->associatedMap->mutex) {
+                    if (futureEntry != this->associatedMap->valueMap.end()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            void checkConcurrentMod() const {
+                synchronized(&this->associatedMap->mutex) {
+                    if (expectedModCount != this->associatedMap->modCount) {
+                        throw ConcurrentModificationException(
+                            __FILE__, __LINE__, "StlMap modified outside this iterator");
+                    }
+                }
+            }
+
+            void makeNext() {
+                synchronized(&this->associatedMap->mutex) {
+                    checkConcurrentMod();
+
+                    if (!checkHasNext()) {
+                        throw NoSuchElementException(__FILE__, __LINE__, "No next element");
+                    }
+
+                    currentEntry = futureEntry;
+                    futureEntry++;
+                }
+            }
+        };
+
+        class ConstEntryIterator : public Iterator< MapEntry<K,V> >, public ConstAbstractMapIterator {
+        private:
+
+            ConstEntryIterator(const ConstEntryIterator&);
+            ConstEntryIterator& operator= (const ConstEntryIterator&);
+
+        public:
+
+            ConstEntryIterator(const ConcurrentStlMap* parent) : ConstAbstractMapIterator(parent) {
+            }
+
+            virtual ~ConstEntryIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual MapEntry<K, V> next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return MapEntry<K, V>(this->currentEntry->first, this->currentEntry->second);
+                }
+
+                return MapEntry<K, V>();
+            }
+
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
+
+        class ConstKeyIterator : public Iterator<K>, public ConstAbstractMapIterator {
+        private:
+
+            ConstKeyIterator(const ConstKeyIterator&);
+            ConstKeyIterator& operator= (const ConstKeyIterator&);
+
+        public:
+
+            ConstKeyIterator(const ConcurrentStlMap* parent) : ConstAbstractMapIterator(parent) {
+            }
+
+            virtual ~ConstKeyIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual K next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return this->currentEntry->first;
+                }
+
+                return K();
+            }
+
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
+
+        class ConstValueIterator : public Iterator<V>, public ConstAbstractMapIterator {
+        private:
+
+            ConstValueIterator(const ConstValueIterator&);
+            ConstValueIterator& operator= (const ConstValueIterator&);
+
+        public:
+
+            ConstValueIterator(const ConcurrentStlMap* parent) : ConstAbstractMapIterator(parent) {
+            }
+
+            virtual ~ConstValueIterator() {}
+
+            virtual bool hasNext() const {
+                return this->checkHasNext();
+            }
+
+            virtual V next() {
+                synchronized(&this->associatedMap->mutex) {
+                    this->makeNext();
+                    return this->currentEntry->second;
+                }
+
+                return V();
+            }
+
+            virtual void remove() {
+                throw lang::exceptions::UnsupportedOperationException(
+                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+            }
+        };
+
+    private:
+
+        // Special Set implementation that is backed by this HashMap
+        class StlMapEntrySet : public AbstractSet< MapEntry<K, V> > {
+        private:
+
+            ConcurrentStlMap* associatedMap;
+
+        private:
+
+            StlMapEntrySet(const StlMapEntrySet&);
+            StlMapEntrySet& operator= (const StlMapEntrySet&);
+
+        public:
+
+            StlMapEntrySet(ConcurrentStlMap* parent) : AbstractSet< MapEntry<K,V> >(), associatedMap(parent) {
+            }
+
+            virtual ~StlMapEntrySet() {}
+
+            virtual int size() const {
+                return associatedMap->size();
+            }
+
+            virtual void clear() {
+                associatedMap->clear();
+            }
+
+            virtual bool remove(const MapEntry<K,V>& entry) {
+                synchronized(&this->associatedMap->mutex) {
+                    if (this->associatedMap->containsKey(entry.getKey()) &&
+                        this->associatedMap->get(entry.getKey()) == entry.getValue()) {
+                        associatedMap->remove(entry.getKey());
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            virtual bool contains(const MapEntry<K,V>& entry) {
+                synchronized(&this->associatedMap->mutex) {
+                    if (this->associatedMap->containsKey(entry.getKey()) &&
+                        this->associatedMap->get(entry.getKey()) == entry.getValue()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            virtual Iterator< MapEntry<K, V> >* iterator() {
+                return new EntryIterator(associatedMap);
+            }
+
+            virtual Iterator< MapEntry<K, V> >* iterator() const {
+                return new ConstEntryIterator(associatedMap);
+            }
+        };
+
+        // Special Set implementation that is backed by this HashMap
+        class ConstStlMapEntrySet : public AbstractSet< MapEntry<K, V> > {
+        private:
+
+            const ConcurrentStlMap* associatedMap;
+
+        private:
+
+            ConstStlMapEntrySet(const ConstStlMapEntrySet&);
+            ConstStlMapEntrySet& operator= (const ConstStlMapEntrySet&);
+
+        public:
+
+            ConstStlMapEntrySet(const ConcurrentStlMap* parent) : AbstractSet< MapEntry<K,V> >(), associatedMap(parent) {
+            }
+
+            virtual ~ConstStlMapEntrySet() {}
+
+            virtual int size() const {
+                return associatedMap->size();
+            }
+
+            virtual void clear() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't clear a const collection");
+            }
+
+            virtual bool remove(const MapEntry<K,V>& entry DECAF_UNUSED) {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't remove from const collection");
+            }
+
+            virtual bool contains(const MapEntry<K,V>& entry) {
+                synchronized(&this->associatedMap->mutex) {
+                    if (this->associatedMap->containsKey(entry.getKey()) &&
+                        this->associatedMap->get(entry.getKey()) == entry.getValue()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            virtual Iterator< MapEntry<K, V> >* iterator() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
+            }
+
+            virtual Iterator< MapEntry<K, V> >* iterator() const {
+                return new ConstEntryIterator(associatedMap);
+            }
+        };
+
+    private:
+
+        class StlMapKeySet : public AbstractSet<K> {
+        private:
+
+            ConcurrentStlMap* associatedMap;
+
+        private:
+
+            StlMapKeySet(const StlMapKeySet&);
+            StlMapKeySet& operator= (const StlMapKeySet&);
+
+        public:
+
+            StlMapKeySet(ConcurrentStlMap* parent) : AbstractSet<K>(), associatedMap(parent) {
+            }
+
+            virtual ~StlMapKeySet() {}
+
+            virtual bool contains(const K& key) const {
+                return this->associatedMap->containsKey(key);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                this->associatedMap->clear();
+            }
+
+            virtual bool remove(const K& key) {
+                synchronized(&this->associatedMap->mutex) {
+                    if (this->associatedMap->containsKey(key)) {
+                        associatedMap->remove(key);
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            virtual Iterator<K>* iterator() {
+                return new KeyIterator(this->associatedMap);
+            }
+
+            virtual Iterator<K>* iterator() const {
+                return new ConstKeyIterator(this->associatedMap);
+            }
+        };
+
+        class ConstStlMapKeySet : public AbstractSet<K> {
+        private:
+
+            const ConcurrentStlMap* associatedMap;
+
+        private:
+
+            ConstStlMapKeySet(const ConstStlMapKeySet&);
+            ConstStlMapKeySet& operator= (const ConstStlMapKeySet&);
+
+        public:
+
+            ConstStlMapKeySet(const ConcurrentStlMap* parent) : AbstractSet<K>(), associatedMap(parent) {
+            }
+
+            virtual ~ConstStlMapKeySet() {}
+
+            virtual bool contains(const K& key) const {
+                return this->associatedMap->containsKey(key);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
+
+            virtual bool remove(const K& key DECAF_UNUSED) {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
+
+            virtual Iterator<K>* iterator() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
+            }
+
+            virtual Iterator<K>* iterator() const {
+                return new ConstKeyIterator(this->associatedMap);
+            }
+        };
+
+    private:
+
+        class StlMapValueCollection : public AbstractCollection<V> {
+        private:
+
+            ConcurrentStlMap* associatedMap;
+
+        private:
+
+            StlMapValueCollection(const StlMapValueCollection&);
+            StlMapValueCollection& operator= (const StlMapValueCollection&);
+
+        public:
+
+            StlMapValueCollection(ConcurrentStlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
+            }
+
+            virtual ~StlMapValueCollection() {}
+
+            virtual bool contains(const V& value) const {
+                return this->associatedMap->containsValue(value);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                this->associatedMap->clear();
+            }
+
+            virtual Iterator<V>* iterator() {
+                return new ValueIterator(this->associatedMap);
+            }
+
+            virtual Iterator<V>* iterator() const {
+                return new ConstValueIterator(this->associatedMap);
+            }
+        };
+
+        class ConstStlMapValueCollection : public AbstractCollection<V> {
+        private:
+
+            const ConcurrentStlMap* associatedMap;
+
+        private:
+
+            ConstStlMapValueCollection(const ConstStlMapValueCollection&);
+            ConstStlMapValueCollection& operator= (const ConstStlMapValueCollection&);
+
+        public:
+
+            ConstStlMapValueCollection(const ConcurrentStlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
+            }
+
+            virtual ~ConstStlMapValueCollection() {}
+
+            virtual bool contains(const V& value) const {
+                return this->associatedMap->containsValue(value);
+            }
+
+            virtual int size() const {
+                return this->associatedMap->size();
+            }
+
+            virtual void clear() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't modify a const collection");
+            }
+
+            virtual Iterator<V>* iterator() {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                        __FILE__, __LINE__, "Can't return a non-const iterator for a const collection");
+            }
+
+            virtual Iterator<V>* iterator() const {
+                return new ConstValueIterator(this->associatedMap);
+            }
+        };
+
+    private:
+
+        // Cached values that are only initialized once a request for them is made.
+        decaf::lang::Pointer<StlMapEntrySet> cachedEntrySet;
+        decaf::lang::Pointer<StlMapKeySet> cachedKeySet;
+        decaf::lang::Pointer<StlMapValueCollection> cachedValueCollection;
+
+        // Cached values that are only initialized once a request for them is made.
+        mutable decaf::lang::Pointer<ConstStlMapEntrySet> cachedConstEntrySet;
+        mutable decaf::lang::Pointer<ConstStlMapKeySet> cachedConstKeySet;
+        mutable decaf::lang::Pointer<ConstStlMapValueCollection> cachedConstValueCollection;
 
     public:
 
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentStlMap() : ConcurrentMap<K,V>(), valueMap(), mutex() {}
+        ConcurrentStlMap() : ConcurrentMap<K,V>(), valueMap(), mutex(), modCount(0) {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap(const ConcurrentStlMap& source) : ConcurrentMap<K, V>(), valueMap(), mutex() {
+        ConcurrentStlMap(const ConcurrentStlMap& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0) {
             copy(source);
         }
 
@@ -73,7 +688,7 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap(const Map<K, V>& source) : ConcurrentMap<K, V>(), valueMap(), mutex() {
+        ConcurrentStlMap(const Map<K, V>& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0) {
             copy(source);
         }
 
@@ -91,7 +706,6 @@ namespace concurrent{
         }
 
         virtual bool equals(const Map<K, V>& source) const {
-
             synchronized(&mutex) {
                 typename std::auto_ptr< Iterator<K> > iterator(this->keySet().iterator());
                 while (iterator->hasNext()) {
@@ -153,9 +767,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual bool containsValue(const V& value) const {
-
             synchronized(&mutex) {
-
                 if (valueMap.empty()) {
                     return false;
                 }
@@ -197,10 +809,8 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual V& get(const K& key) {
-
             typename std::map<K,V,COMPARATOR>::iterator iter;
-
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 iter = valueMap.find(key);
                 if (iter != valueMap.end()) {
                     return iter->second;
@@ -215,9 +825,7 @@ namespace concurrent{
          * {@inheritDoc}
          */
         virtual const V& get(const K& key) const {
-
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
-
             synchronized(&mutex) {
                 iter = valueMap.find(key);
                 if (iter != valueMap.end()) {
@@ -238,6 +846,7 @@ namespace concurrent{
                 if (this->containsKey(key)) {
                     result = true;
                 }
+                modCount++;
                 valueMap[key] = value;
             }
             return result;
@@ -253,6 +862,7 @@ namespace concurrent{
                     result = true;
                     oldValue = valueMap[key];
                 }
+                modCount++;
                 valueMap[key] = value;
             }
             return result;
@@ -264,6 +874,7 @@ namespace concurrent{
         virtual void putAll(const ConcurrentStlMap<K, V, COMPARATOR>& other) {
             synchronized(&mutex) {
                 this->valueMap.insert(other.valueMap.begin(), other.valueMap.end());
+                this->modCount++;
             }
         }
 
@@ -272,11 +883,12 @@ namespace concurrent{
          */
         virtual void putAll(const Map<K, V>& other) {
             synchronized(&mutex) {
-                typename std::auto_ptr< Iterator<K> > iterator(this->keySet().iterator());
+                typename std::auto_ptr< Iterator<K> > iterator(other.keySet().iterator());
                 while (iterator->hasNext()) {
                     K key = iterator->next();
                     this->put(key, other.get(key));
                 }
+                modCount++;
             }
         }
 
@@ -292,45 +904,11 @@ namespace concurrent{
                 }
                 result = iter->second;
                 valueMap.erase(iter);
+                modCount++;
             }
 
             return result;
         }
-
-//        /**
-//         * {@inheritDoc}
-//         */
-//        virtual std::vector<K> keySet() const {
-//            std::vector<K> keys( valueMap.size() );
-//            synchronized( &mutex ) {
-//
-//                typename std::map<K,V,COMPARATOR>::const_iterator iter;
-//                iter=valueMap.begin();
-//                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-//                    keys[ix] = iter->first;
-//                }
-//            }
-//
-//            return keys;
-//        }
-//
-//        /**
-//         * {@inheritDoc}
-//         */
-//        virtual std::vector<V> values() const {
-//
-//            std::vector<V> values( valueMap.size() );
-//            synchronized( &mutex ) {
-//
-//                typename std::map<K,V,COMPARATOR>::const_iterator iter;
-//                iter=valueMap.begin();
-//                for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-//                    values[ix] = iter->second;
-//                }
-//
-//            }
-//            return values;
-//        }
 
         /**
          * If the specified key is not already associated with a value, associate it with
@@ -355,11 +933,10 @@ namespace concurrent{
          * @throw UnsupportedOperationException
          *        if the put operation is not supported by this map
          */
-        bool putIfAbsent( const K& key, const V& value ) {
-
-            synchronized( &mutex ) {
-                if( !this->containsKey( key ) ) {
-                    this->put( key, value );
+        bool putIfAbsent(const K& key, const V& value) {
+            synchronized(&mutex) {
+                if (!this->containsKey(key)) {
+                    this->put(key, value);
                     return true;
                 }
             }
@@ -385,10 +962,10 @@ namespace concurrent{
          *
          * @return true if the value was removed, false otherwise
          */
-        bool remove( const K& key, const V& value ) {
-            synchronized( &mutex ) {
+        bool remove(const K& key, const V& value) {
+            synchronized(&mutex) {
                 if( this->containsKey( key ) && ( this->get( key ) == value ) ) {
-                    this->remove( key );
+                    this->remove(key);
                     return true;
                 }
             }
@@ -415,10 +992,10 @@ namespace concurrent{
          *
          * @return true if the value was replaced
          */
-        bool replace( const K& key, const V& oldValue, const V& newValue ) {
-            synchronized( &mutex ) {
-                if( this->containsKey( key ) && ( this->get( key ) == oldValue ) ) {
-                    this->put( key, newValue );
+        bool replace(const K& key, const V& oldValue, const V& newValue) {
+            synchronized(&mutex) {
+                if (this->containsKey(key) && (this->get(key) == oldValue)) {
+                    this->put(key, newValue);
                     return true;
                 }
             }
@@ -446,12 +1023,11 @@ namespace concurrent{
          *
          * @throws NoSuchElementException if there was no previous mapping.
          */
-        V replace( const K& key, const V& value ) {
-
-            synchronized( &mutex ) {
-                if( this->containsKey( key ) ) {
-                    V result = this->get( key );
-                    this->put( key, value );
+        V replace(const K& key, const V& value) {
+            synchronized(&mutex) {
+                if (this->containsKey(key)) {
+                    V result = this->get(key);
+                    this->put(key, value);
                     return result;
                 }
             }
@@ -461,24 +1037,56 @@ namespace concurrent{
         }
 
         virtual Set< MapEntry<K, V> >& entrySet() {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedEntrySet == NULL) {
+                    this->cachedEntrySet.reset(new StlMapEntrySet(this));
+                }
+            }
+            return *(this->cachedEntrySet);
         }
         virtual const Set< MapEntry<K, V> >& entrySet() const {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedConstEntrySet == NULL) {
+                    this->cachedConstEntrySet.reset(new ConstStlMapEntrySet(this));
+                }
+            }
+            return *(this->cachedConstEntrySet);
         }
 
         virtual Set<K>& keySet() {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedKeySet == NULL) {
+                    this->cachedKeySet.reset(new StlMapKeySet(this));
+                }
+            }
+            return *(this->cachedKeySet);
         }
+
         virtual const Set<K>& keySet() const {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedConstKeySet == NULL) {
+                    this->cachedConstKeySet.reset(new ConstStlMapKeySet(this));
+                }
+            }
+            return *(this->cachedConstKeySet);
         }
 
         virtual Collection<V>& values() {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedValueCollection == NULL) {
+                    this->cachedValueCollection.reset(new StlMapValueCollection(this));
+                }
+            }
+            return *(this->cachedValueCollection);
         }
+
         virtual const Collection<V>& values() const {
-            throw decaf::lang::exceptions::UnsupportedOperationException();
+            synchronized(&mutex) {
+                if (this->cachedConstValueCollection == NULL) {
+                    this->cachedConstValueCollection.reset(new ConstStlMapValueCollection(this));
+                }
+            }
+            return *(this->cachedConstValueCollection);
         }
 
     public:
