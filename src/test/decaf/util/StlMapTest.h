@@ -41,6 +41,9 @@ namespace util {
         CPPUNIT_TEST( testEntrySet );
         CPPUNIT_TEST( testKeySet );
         CPPUNIT_TEST( testValues );
+        CPPUNIT_TEST( testEntrySetIterator );
+        CPPUNIT_TEST( testKeySetIterator );
+        CPPUNIT_TEST( testValuesIterator );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -62,6 +65,9 @@ namespace util {
         void testEntrySet();
         void testKeySet();
         void testValues();
+        void testEntrySetIterator();
+        void testKeySetIterator();
+        void testValuesIterator();
 
     };
 

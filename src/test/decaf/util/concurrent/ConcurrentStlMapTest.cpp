@@ -23,12 +23,14 @@
 #include <decaf/util/ArrayList.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
@@ -418,4 +420,113 @@ void ConcurrentStlMapTest::testValues() {
     c.remove("10");
     CPPUNIT_ASSERT_MESSAGE("Removing from collection should alter Map",
                            !map.containsKey(10));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConcurrentStlMapTest::testEntrySetIterator() {
+
+    ConcurrentStlMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<MapEntry<int, std::string> > > iterator(map.entrySet().iterator());
+    while (iterator->hasNext()) {
+        MapEntry<int, std::string> entry = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(count, entry.getKey());
+        CPPUNIT_ASSERT_EQUAL(Integer::toString(count), entry.getValue());
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.entrySet().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConcurrentStlMapTest::testKeySetIterator() {
+
+    ConcurrentStlMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<int> > iterator(map.keySet().iterator());
+    while (iterator->hasNext()) {
+        int key = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(count, key);
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.keySet().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConcurrentStlMapTest::testValuesIterator() {
+
+    ConcurrentStlMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<std::string> > iterator(map.values().iterator());
+    while (iterator->hasNext()) {
+        std::string value = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(Integer::toString(count), value);
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.values().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
 }
