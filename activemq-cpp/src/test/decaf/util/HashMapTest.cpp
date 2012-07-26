@@ -553,3 +553,112 @@ void HashMapTest::testToString() {
     std::string result = hashMap.toString();
     CPPUNIT_ASSERT_MESSAGE("should return something", result != "");
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void HashMapTest::testEntrySetIterator() {
+
+    HashMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<MapEntry<int, std::string> > > iterator(map.entrySet().iterator());
+    while (iterator->hasNext()) {
+        MapEntry<int, std::string> entry = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(count, entry.getKey());
+        CPPUNIT_ASSERT_EQUAL(Integer::toString(count), entry.getValue());
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.entrySet().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void HashMapTest::testKeySetIterator() {
+
+    HashMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<int> > iterator(map.keySet().iterator());
+    while (iterator->hasNext()) {
+        int key = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(count, key);
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.keySet().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void HashMapTest::testValuesIterator() {
+
+    HashMap<int, std::string> map;
+    populateMap(map);
+
+    int count = 0;
+    Pointer< Iterator<std::string> > iterator(map.values().iterator());
+    while (iterator->hasNext()) {
+        std::string value = iterator->next();
+        CPPUNIT_ASSERT_EQUAL(Integer::toString(count), value);
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't cover the expected range", count++ == MAP_SIZE);
+
+    iterator.reset(map.values().iterator());
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+
+    count = 0;
+    while (iterator->hasNext()) {
+        iterator->next();
+        iterator->remove();
+        count++;
+    }
+
+    CPPUNIT_ASSERT_MESSAGE("Iterator didn't remove the expected range", count++ == MAP_SIZE);
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalStateException",
+        iterator->remove(),
+        IllegalStateException);
+}

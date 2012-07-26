@@ -34,7 +34,6 @@ namespace util {
         CPPUNIT_TEST( testClear );
         CPPUNIT_TEST( testContainsKey );
         CPPUNIT_TEST( testContainsValue );
-        CPPUNIT_TEST( testEntrySet );
         CPPUNIT_TEST( testGet );
         CPPUNIT_TEST( testPut );
         CPPUNIT_TEST( testRemove );
@@ -43,7 +42,12 @@ namespace util {
         CPPUNIT_TEST( testPutAll );
         CPPUNIT_TEST( testRehash );
         CPPUNIT_TEST( testSize );
+        CPPUNIT_TEST( testEntrySet );
         CPPUNIT_TEST( testValues );
+        CPPUNIT_TEST( testToString );
+        CPPUNIT_TEST( testEntrySetIterator );
+        CPPUNIT_TEST( testKeySetIterator );
+        CPPUNIT_TEST( testValuesIterator );
         CPPUNIT_TEST( testToString );
         CPPUNIT_TEST_SUITE_END();
 
@@ -61,17 +65,20 @@ namespace util {
         void testClear();
         void testContainsKey();
         void testContainsValue();
-        void testEntrySet();
         void testGet();
         void testPut();
         void testRemove();
         void testIsEmpty();
-        void testKeySet();
         void testPutAll();
         void testRehash();
-        void testSize();
-        void testValues();
         void testToString();
+        void testSize();
+        void testEntrySet();
+        void testKeySet();
+        void testValues();
+        void testEntrySetIterator();
+        void testKeySetIterator();
+        void testValuesIterator();
 
     };
 
