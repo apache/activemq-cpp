@@ -88,6 +88,8 @@ void DynamicDestinationResolver::destroy() {
     while (sessionResolvers->hasNext()) {
         delete sessionResolvers->next();
     }
+
+    sessionResolverMap.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
