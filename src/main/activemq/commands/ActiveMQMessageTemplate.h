@@ -28,7 +28,6 @@
 #include <activemq/util/CMSExceptionSupport.h>
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/util/Collections.h>
 
 #include <cms/IllegalStateException.h>
 #include <cms/MessageFormatException.h>
@@ -107,7 +106,7 @@ namespace commands {
 
         virtual std::vector<std::string> getPropertyNames() const {
             try {
-                return decaf::util::Collections::toStlVector<std::string>(getMessageProperties().keySet());
+                return getMessageProperties().keySet().toArray();
             }
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }

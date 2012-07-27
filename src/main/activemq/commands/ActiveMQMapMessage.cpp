@@ -25,7 +25,6 @@
 #include <decaf/io/BufferedInputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
-#include <decaf/util/Collections.h>
 #include <decaf/util/zip/DeflaterOutputStream.h>
 #include <decaf/util/zip/InflaterInputStream.h>
 
@@ -205,7 +204,7 @@ bool ActiveMQMapMessage::isEmpty() const {
 std::vector<std::string> ActiveMQMapMessage::getMapNames() const {
 
     try{
-        return decaf::util::Collections::toStlVector<std::string>(getMap().keySet());
+        return getMap().keySet().toArray();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

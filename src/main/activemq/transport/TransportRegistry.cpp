@@ -17,8 +17,6 @@
 
 #include "TransportRegistry.h"
 
-#include <decaf/util/Collections.h>
-
 using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
@@ -92,7 +90,7 @@ void TransportRegistry::unregisterAllFactories() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> TransportRegistry::getTransportNames() const {
-    return Collections::toStlVector<std::string>(this->registry.keySet());
+    return this->registry.keySet().toArray();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

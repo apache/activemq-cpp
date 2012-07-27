@@ -17,8 +17,6 @@
 
 #include "WireFormatRegistry.h"
 
-#include <decaf/util/Collections.h>
-
 using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
@@ -92,7 +90,7 @@ void WireFormatRegistry::unregisterAllFactories() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> WireFormatRegistry::getWireFormatNames() const {
-    return Collections::toStlVector<std::string>(this->registry.keySet());
+    return this->registry.keySet().toArray();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

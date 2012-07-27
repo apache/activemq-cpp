@@ -22,7 +22,6 @@
 #include <decaf/util/Date.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/StlMap.h>
-#include <decaf/util/Collections.h>
 #include <decaf/io/BufferedInputStream.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Integer.h>
@@ -320,7 +319,7 @@ std::string Properties::toString() const {
 std::vector<std::string> Properties::propertyNames() const {
     StlMap<std::string, std::string> selectedProperties;
     this->selectProperties( selectedProperties );
-    return Collections::toStlVector<std::string>(selectedProperties.keySet());
+    return selectedProperties.keySet().toArray();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -38,28 +38,6 @@ namespace util {
 
     public:
 
-        /**
-         * Creates and returns a new STL vector instance that contains a copy of each
-         * element in the supplied collection instance.  If the Collection is empty the
-         * returned vector will also be empty.
-         *
-         * @param collection
-         *      The collection whose elements are to be copied to a std::vector.
-         *
-         * @returns a new std::vector containing a copy of each element in the Collection.
-         */
-        template<typename E>
-        static std::vector<E> toStlVector(const Collection<E>& collection) {
-
-            std::vector<E> result(collection.size());
-
-            typename std::auto_ptr< Iterator<E> > iterator(collection.iterator());
-            while (iterator->hasNext()) {
-                result.push_back(iterator->next());
-            }
-
-            return result;
-        }
     };
 
 }}

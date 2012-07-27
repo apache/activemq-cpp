@@ -308,7 +308,7 @@ void ActiveMQMapMessageTest::testGetMapNames() {
 
     std::vector<std::string> mapNamesList = msg2.getMapNames();
 
-    CPPUNIT_ASSERT_EQUAL( mapNamesList.size(), (std::size_t)11 );
+    CPPUNIT_ASSERT_EQUAL( (std::size_t)11, mapNamesList.size() );
     CPPUNIT_ASSERT( std::find( mapNamesList.begin(), mapNamesList.end(), "boolean" ) != mapNamesList.end() );
     CPPUNIT_ASSERT( std::find( mapNamesList.begin(), mapNamesList.end(), "byte" ) != mapNamesList.end() );
     CPPUNIT_ASSERT( std::find( mapNamesList.begin(), mapNamesList.end(), "bytes1" ) != mapNamesList.end() );
@@ -385,7 +385,7 @@ void ActiveMQMapMessageTest::testReadOnlyBody() {
         msg.getLong( "long" );
         msg.getShort( "short" );
         msg.getString( "string" );
-    } catch( MessageNotReadableException mnre ) {
+    } catch( MessageNotReadableException& mnre ) {
         CPPUNIT_FAIL( "should be readable" );
     }
     try {
