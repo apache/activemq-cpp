@@ -851,6 +851,22 @@
 				Name="util"
 				>
 				<File
+					RelativePath="..\src\test\activemq\util\ActiveMQMessageTransformationTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\ActiveMQMessageTransformationTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\AdvisorySupportTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\AdvisorySupportTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\util\IdGeneratorTest.cpp"
 					>
 				</File>
@@ -2083,6 +2099,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\decaf\lang\ThreadLocalTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ThreadLocalTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\lang\ThreadTest.cpp"
 					>
 				</File>
@@ -2247,6 +2271,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\decaf\util\BitSetTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\BitSetTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\util\DateTest.cpp"
 					>
 				</File>
@@ -2263,6 +2295,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\decaf\util\HashCodeTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\HashCodeTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\HashMapTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\HashMapTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\util\LinkedListTest.cpp"
 					>
 				</File>
@@ -2276,6 +2324,14 @@
 				</File>
 				<File
 					RelativePath="..\src\test\decaf\util\ListTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LRUCacheTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LRUCacheTest.h"
 					>
 				</File>
 				<File
@@ -2359,6 +2415,14 @@
 					</File>
 					<File
 						RelativePath="..\src\test\decaf\util\concurrent\AbstractExecutorServiceTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ConcurrentHashMapTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ConcurrentHashMapTest.h"
 						>
 					</File>
 					<File
@@ -2518,6 +2582,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test\decaf\util\concurrent\locks\ReentrantLockTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\ReentrantReadWriteLockTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\locks\ReentrantReadWriteLockTest.h"
 							>
 						</File>
 					</Filter>

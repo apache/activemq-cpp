@@ -1590,6 +1590,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageTransformer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\MessageTransformer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\ObjectMessage.cpp"
 				>
 			</File>
@@ -1917,11 +1925,27 @@
 				Name="util"
 				>
 				<File
+					RelativePath="..\src\main\activemq\util\ActiveMQMessageTransformation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\ActiveMQMessageTransformation.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\ActiveMQProperties.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\util\ActiveMQProperties.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\AdvisorySupport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\AdvisorySupport.h"
 					>
 				</File>
 				<File
@@ -2678,6 +2702,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQXASession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\AdvisoryConsumer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\AdvisoryConsumer.h"
 					>
 				</File>
 				<File
@@ -4447,6 +4479,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ThreadLocalImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\util\concurrent\ThreadLocalImpl.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\internal\util\concurrent\Transferer.h"
 							>
 						</File>
@@ -4729,6 +4769,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\Readable.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Runnable.h"
 					>
 				</File>
@@ -4769,7 +4813,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\ThreadGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\ThreadGroup.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\ThreadLocal.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\ThreadLocal.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Throwable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\Types.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\Types.h"
 					>
 				</File>
 				<Filter
@@ -4796,6 +4864,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IllegalThreadStateException.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.h"
 						>
 					</File>
@@ -4808,11 +4880,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\NegativeArraySizeException.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\NullPointerException.h"
 						>
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\NumberFormatException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\OutOfMemoryError.h"
 						>
 					</File>
 					<File
@@ -5497,11 +5577,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\BitSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\BitSet.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Collection.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\util\Collection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Collections.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\Collections.h"
 					>
 				</File>
 				<File
@@ -5541,6 +5637,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\HashCode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\HashCode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\HashMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\HashMap.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Iterator.cpp"
 					>
 				</File>
@@ -5573,11 +5685,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\LRUCache.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LRUCache.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Map.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\util\Map.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\MapEntry.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\MapEntry.h"
 					>
 				</File>
 				<File
@@ -5733,6 +5861,14 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Concurrent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentHashMap.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ConcurrentHashMap.h"
 						>
 					</File>
 					<File
@@ -6000,6 +6136,14 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\ReentrantLock.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReentrantReadWriteLock.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReentrantReadWriteLock.h"
 							>
 						</File>
 					</Filter>

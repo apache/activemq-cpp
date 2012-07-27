@@ -541,7 +541,7 @@ int BitSet::length() const {
         return 0;
     }
     int i = ELM_SIZE - 1;
-    long val = bits[idx];
+    unsigned long long val = bits[idx];
     while ((val & (TWO_N_ARRAY[i])) == 0 && i > 0) {
         i--;
     }

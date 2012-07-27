@@ -374,7 +374,7 @@ void HashMapTest::testPut() {
         Pointer< Iterator<int> > itr(intSet.iterator());
         while (itr->hasNext()) {
             int key = itr->next();
-            if ((found = key) == myKey) {
+            if (found = (key == myKey)) {
                 break;
             }
         }

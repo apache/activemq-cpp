@@ -32,7 +32,7 @@ using namespace decaf::util::concurrent::locks;
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
 
-    const int SIZE = 256;
+    const int SIZEVAL = 256;
 
     class InterruptibleLockRunnable : public Runnable {
     public:
@@ -155,11 +155,11 @@ void ReentrantReadWriteLockTest::testFairLock() {
 ////////////////////////////////////////////////////////////////////////////////
 void ReentrantReadWriteLockTest::testGetWriteHoldCount() {
     ReentrantReadWriteLock lock;
-    for (int i = 1; i <= SIZE; i++) {
+    for (int i = 1; i <= SIZEVAL; i++) {
         lock.writeLock().lock();
         CPPUNIT_ASSERT_EQUAL(i,lock.getWriteHoldCount());
     }
-    for (int i = SIZE; i > 0; i--) {
+    for (int i = SIZEVAL; i > 0; i--) {
         lock.writeLock().unlock();
         CPPUNIT_ASSERT_EQUAL(i-1,lock.getWriteHoldCount());
     }
