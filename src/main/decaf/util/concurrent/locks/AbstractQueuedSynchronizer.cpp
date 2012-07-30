@@ -123,6 +123,11 @@ namespace {
          */
         Node* nextWaiter;
 
+    private:
+
+        Node(const Node&);
+        Node& operator= (const Node&);
+
     public:
 
         Node() : waitStatus(0), prev(NULL), next(NULL), thread(NULL), nextWaiter(NULL) {
@@ -837,6 +842,8 @@ namespace locks {
 
                 t = t->prev;
             }
+
+            return false;
         }
 
         /**
