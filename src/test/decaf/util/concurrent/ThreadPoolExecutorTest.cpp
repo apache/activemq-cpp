@@ -314,6 +314,9 @@ void ThreadPoolExecutorTest::testMoreTasksThanMaxPoolSize() {
     // Wait for them to finish, if it takes longer than 30 seconds
     // something is not right.
     CPPUNIT_ASSERT( startedLatch2.await( 30000 ) );
+
+    pool.shutdown();
+    joinPool(&pool);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
