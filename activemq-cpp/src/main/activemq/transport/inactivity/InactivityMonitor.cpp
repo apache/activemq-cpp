@@ -212,12 +212,12 @@ InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next, const Poin
 :   TransportFilter( next ), members( new InactivityMonitorData() ) {
 
     this->members->wireFormat = wireFormat;
-    this->members->monitorStarted = false;
-    this->members->commandSent = false;
-    this->members->commandReceived = true;
-    this->members->failed = false;
-    this->members->inRead = false;
-    this->members->inWrite = false;
+    this->members->monitorStarted.set(false);
+    this->members->commandSent.set(false);
+    this->members->commandReceived.set(true);
+    this->members->failed.set(false);
+    this->members->inRead.set(false);
+    this->members->inWrite.set(false);
     this->members->readCheckTime = 0;
     this->members->writeCheckTime = 0;
     this->members->initialDelayTime = 0;
@@ -231,12 +231,12 @@ InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next,
 :   TransportFilter( next ), members( new InactivityMonitorData() ) {
 
     this->members->wireFormat = wireFormat;
-    this->members->monitorStarted = false;
-    this->members->commandSent = false;
-    this->members->commandReceived = true;
-    this->members->failed = false;
-    this->members->inRead = false;
-    this->members->inWrite = false;
+    this->members->monitorStarted.set(false);
+    this->members->commandSent.set(false);
+    this->members->commandReceived.set(true);
+    this->members->failed.set(false);
+    this->members->inRead.set(false);
+    this->members->inWrite.set(false);
     this->members->readCheckTime = 0;
     this->members->writeCheckTime = 0;
     this->members->initialDelayTime = 0;

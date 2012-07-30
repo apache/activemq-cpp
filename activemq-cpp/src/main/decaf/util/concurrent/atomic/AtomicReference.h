@@ -32,13 +32,19 @@ namespace atomic {
      */
     template< typename T >
     class AtomicReference {
+    private:
 
         volatile void* value;
+
+    private:
+
+        AtomicReference(const AtomicReference&);
+        AtomicReference& operator= (const AtomicReference&);
 
     public:
 
         AtomicReference() : value( NULL ) {}
-        AtomicReference( T* value ) : value( (void*)value ) {}
+        AtomicReference(T* valu ) : value((void*)value) {}
 
         virtual ~AtomicReference() {}
 

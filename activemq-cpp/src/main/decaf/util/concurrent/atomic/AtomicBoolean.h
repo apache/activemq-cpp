@@ -36,6 +36,11 @@ namespace atomic {
 
         volatile int value;
 
+    private:
+
+        AtomicBoolean(const AtomicBoolean&);
+        AtomicBoolean& operator= (const AtomicBoolean&);
+
     public:
 
         /**

@@ -39,6 +39,11 @@ namespace atomic {
 
         volatile int value;
 
+    private:
+
+        AtomicInteger(const AtomicInteger&);
+        AtomicInteger& operator= (const AtomicInteger&);
+
     public:
 
         /**
