@@ -44,10 +44,11 @@ namespace {
     private:
 
         std::string name;
+        activemq::util::ActiveMQProperties props;
 
     public:
 
-        CustomCmsTopic() : cms::Topic(), name("TEST-CMS-TOPIC") {
+        CustomCmsTopic() : cms::Topic(), name("TEST-CMS-TOPIC"), props() {
 
         }
 
@@ -76,7 +77,7 @@ namespace {
         }
 
         virtual const cms::CMSProperties& getCMSProperties() const {
-            return activemq::util::ActiveMQProperties();
+            return props;
         }
 
     };
