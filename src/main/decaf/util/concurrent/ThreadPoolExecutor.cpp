@@ -413,12 +413,12 @@ namespace concurrent{
             try {
                 // Remove rare and surprising possibility of
                 // isTerminated() && getPoolSize() > 0
+                mainLock.unlock();
                 return runStateAtLeast(ctl.get(), TIDYING) ? 0 : workers.size();
             } catch(Exception& ex) {
                 mainLock.unlock();
                 throw;
             }
-            mainLock.unlock();
         }
 
         int getActiveCount() {
@@ -432,23 +432,23 @@ namespace concurrent{
                         ++n;
                     }
                 }
+                mainLock.unlock();
                 return n;
             } catch(Exception& ex) {
                 mainLock.unlock();
                 throw;
             }
-            mainLock.unlock();
         }
 
         int getLargestPoolSize() {
             mainLock.lock();
             try {
+                mainLock.unlock();
                 return largestPoolSize;
             } catch(Exception& ex) {
                 mainLock.unlock();
                 throw;
             }
-            mainLock.unlock();
         }
 
         long long getTaskCount() {
@@ -463,12 +463,13 @@ namespace concurrent{
                         ++n;
                     }
                 }
+
+                mainLock.unlock();
                 return n + workQueue->size();
             } catch(Exception& ex) {
                 mainLock.unlock();
                 throw;
             }
-            mainLock.unlock();
         }
 
         long long getCompletedTaskCount() {
@@ -480,12 +481,13 @@ namespace concurrent{
                     Worker* worker = iter->next();
                     n += worker->completedTasks;
                 }
+
+                mainLock.unlock();
                 return n;
             } catch(Exception& ex) {
                 mainLock.unlock();
                 throw;
             }
-            mainLock.unlock();
         }
 
         /**
@@ -843,6 +845,7 @@ namespace concurrent{
                 throw;
             }
             mainLock.unlock();
+            return false;
         }
 
         bool awaitTermination(long long timeout, const TimeUnit& unit) {
@@ -870,6 +873,7 @@ namespace concurrent{
                 throw;
             }
             mainLock.unlock();
+            return false;
         }
 
         void setCorePoolSize(int corePoolSize) {
@@ -1114,6 +1118,7 @@ namespace concurrent{
                 if (t == NULL || (rs >= SHUTDOWN && !(rs == SHUTDOWN && firstTask == NULL))) {
                     decrementWorkerCount();
                     tryTerminate();
+                    mainLock.unlock();
                     return false;
                 }
 
@@ -1255,6 +1260,8 @@ namespace concurrent{
                     timedOut = false;
                 }
             }
+
+            return NULL;
         }
 
         /**
@@ -1305,7 +1312,7 @@ ThreadPoolExecutor::ThreadPoolExecutor(int corePoolSize, int maxPoolSize,
 
     try{
 
-        if(workQueue == NULL) {
+        if (workQueue == NULL) {
             throw NullPointerException(__FILE__, __LINE__, "The BlockingQueue pointer cannot be NULL.");
         }
 
