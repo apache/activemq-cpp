@@ -1016,7 +1016,9 @@ namespace locks {
             if (impl->acquireQueued(node, savedState) && interruptMode != THROW_IE) {
                 interruptMode = REINTERRUPT;
             }
-            if (node->nextWaiter != NULL) { // clean up if canceled
+            if (node->nextWaiter != NULL && interruptMode == 0) {
+                // clean up if canceled but only if we own the lock otherwise another
+                // thread could already be changing the list.
                 unlinkCancelledWaiters();
             }
             if (interruptMode != 0) {
@@ -1068,7 +1070,9 @@ namespace locks {
             if (impl->acquireQueued(node, savedState) && interruptMode != THROW_IE) {
                 interruptMode = REINTERRUPT;
             }
-            if (node->nextWaiter != NULL) {
+            if (node->nextWaiter != NULL && interruptMode == 0) {
+                // clean up if canceled but only if we own the lock otherwise another
+                // thread could already be changing the list.
                 unlinkCancelledWaiters();
             }
             if (interruptMode != 0) {
@@ -1108,7 +1112,9 @@ namespace locks {
             if (impl->acquireQueued(node, savedState) && interruptMode != THROW_IE) {
                 interruptMode = REINTERRUPT;
             }
-            if (node->nextWaiter != NULL) {
+            if (node->nextWaiter != NULL && interruptMode == 0) {
+                // clean up if canceled but only if we own the lock otherwise another
+                // thread could already be changing the list.
                 unlinkCancelledWaiters();
             }
             if (interruptMode != 0) {
@@ -1142,7 +1148,9 @@ namespace locks {
             if (impl->acquireQueued(node, savedState) && interruptMode != THROW_IE) {
                 interruptMode = REINTERRUPT;
             }
-            if (node->nextWaiter != NULL) {
+            if (node->nextWaiter != NULL && interruptMode == 0) {
+                // clean up if canceled but only if we own the lock otherwise another
+                // thread could already be changing the list.
                 unlinkCancelledWaiters();
             }
             if (interruptMode != 0) {
