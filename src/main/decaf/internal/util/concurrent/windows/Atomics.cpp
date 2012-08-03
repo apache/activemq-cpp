@@ -31,51 +31,51 @@ void Atomics::shutdown() {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Atomics::compareAndSet32(volatile int* target, int expect, int update ) {
-	return ::InterlockedCompareExchange((volatile LONG*)target, update, expect) == (unsigned int)expect;
+    return ::InterlockedCompareExchange((volatile LONG*)target, update, expect) == (unsigned int)expect;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Atomics::compareAndSet(volatile void** target, void* expect, void* update) {
-	return ::InterlockedCompareExchangePointer((volatile PVOID*)target, (void*)update, (void*)expect ) == (void*)expect;
+    return ::InterlockedCompareExchangePointer((volatile PVOID*)target, (void*)update, (void*)expect ) == (void*)expect;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndSet(volatile int* target, int newValue) {
-	return ::InterlockedExchange((volatile LONG*)target, newValue);
+    return ::InterlockedExchange((volatile LONG*)target, newValue);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void* Atomics::getAndSet(volatile void** target, void* newValue) {
-	return InterlockedExchangePointer((volatile PVOID*)target, newValue);
+    return InterlockedExchangePointer((volatile PVOID*)target, newValue);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndIncrement(volatile int* target) {
-	return ::InterlockedIncrement((volatile LONG*)target) - 1;
+    return ::InterlockedIncrement((volatile LONG*)target) - 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndDecrement(volatile int* target) {
-	return ::InterlockedExchangeAdd((volatile LONG*)target, 0xFFFFFFFF);
+    return ::InterlockedExchangeAdd((volatile LONG*)target, 0xFFFFFFFF);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::getAndAdd(volatile int* target, int delta) {
-	return ::InterlockedExchangeAdd((volatile LONG*)target, delta);
+    return ::InterlockedExchangeAdd((volatile LONG*)target, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::addAndGet(volatile int* target, int delta) {
-	return ::InterlockedExchangeAdd((volatile LONG*)target, delta) + delta;
+    return ::InterlockedExchangeAdd((volatile LONG*)target, delta) + delta;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::incrementAndGet(volatile int* target) {
-	return ::InterlockedIncrement((volatile LONG*)target) + 1;
+    return ::InterlockedIncrement((volatile LONG*)target);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Atomics::decrementAndGet(volatile int* target) {
-	return ::InterlockedExchangeAdd((volatile LONG*)target, 0xFFFFFFFF) - 1;
+    return ::InterlockedExchangeAdd((volatile LONG*)target, 0xFFFFFFFF) - 1;
 }
 
