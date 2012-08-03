@@ -44,7 +44,7 @@ namespace atomic {
     public:
 
         AtomicReference() : value( NULL ) {}
-        AtomicReference(T* valu ) : value((void*)value) {}
+        AtomicReference(T* value) : value((void*)value) {}
 
         virtual ~AtomicReference() {}
 
