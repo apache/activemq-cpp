@@ -499,18 +499,20 @@ namespace concurrent{
          * termination possible -- reducing worker count or removing tasks
          * from the queue during shutdown. The method is non-private to
          * allow access from ScheduledThreadPoolExecutor.
+         *
+         * @returns true if the termination succeeded.
          */
-        void tryTerminate() {
+        bool tryTerminate() {
             for (;;) {
                 int c = ctl.get();
                 if (isRunning(c) || runStateAtLeast(c, TIDYING) ||
                     (runStateOf(c) == SHUTDOWN && !workQueue->isEmpty())) {
-                    return;
+                    return false;
                 }
 
                 if (workerCountOf(c) != 0) { // Eligible to terminate
                     interruptIdleWorkers(ONLY_ONE);
-                    return;
+                    return false;
                 }
 
                 mainLock.lock();
@@ -528,7 +530,7 @@ namespace concurrent{
                         ctl.set(ctlOf(TERMINATED, 0));
                         termination->signalAll();
                         mainLock.unlock();
-                        return;
+                        return true;
                     }
                 } catch(Exception& ex) {
                     mainLock.unlock();
@@ -537,6 +539,8 @@ namespace concurrent{
                 mainLock.unlock();
                 // else retry on failed CAS
             }
+
+            return false;
         }
 
         /**
@@ -1133,6 +1137,7 @@ namespace concurrent{
                 mainLock.unlock();
                 throw;
             }
+
             mainLock.unlock();
 
             t->start();
@@ -1151,7 +1156,7 @@ namespace concurrent{
         /**
          * Performs cleanup and bookkeeping for a dying worker. Called only from
          * worker threads. Unless completedAbruptly is set, assumes that workerCount
-         * has already been adjusted to account for exit.  This method removes
+         * has not already been adjusted to account for exit.  This method removes
          * thread from worker set, and possibly terminates the pool or replaces the
          * worker if either it exited due to user task exception or if fewer than
          * corePoolSize workers are running or queue is non-empty but there are no
@@ -1162,11 +1167,7 @@ namespace concurrent{
          * @param completedAbruptly
          *      Indicates if the worker died due to user exception.
          */
-        void processWorkerExit(Worker* w, bool completedAbruptly) {
-
-            if (completedAbruptly) { // If abrupt, then workerCount wasn't adjusted
-                decrementWorkerCount();
-            }
+        void processWorkerExit(Worker* w, bool completedAbruptly DECAF_UNUSED) {
 
             mainLock.lock();
             try {
@@ -1175,9 +1176,12 @@ namespace concurrent{
                 this->deadWorkers.add(w);
             } catch(...) {
             }
+            decrementWorkerCount();
             mainLock.unlock();
 
-            tryTerminate();
+            if (tryTerminate()) {
+                return;
+            }
 
             int c = ctl.get();
             if (runStateLessThan(c, STOP)) {
@@ -1208,7 +1212,7 @@ namespace concurrent{
          *     both before and after the timed wait.
          *
          * @return task, or NULL if the worker must exit, in which case
-         *         workerCount is decremented
+         *         workerCount is decremented when the task completes.
          */
         Runnable* getTask() {
             bool timedOut = false; // Did the last poll() time out?
@@ -1220,7 +1224,6 @@ namespace concurrent{
 
                 // Check if queue empty only if necessary.
                 if (rs >= SHUTDOWN && (rs >= STOP || workQueue->isEmpty())) {
-                    decrementWorkerCount();
                     return NULL;
                 }
 
