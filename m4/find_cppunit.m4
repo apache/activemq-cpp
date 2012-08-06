@@ -21,9 +21,9 @@ dnl
 AC_DEFUN([AMQ_FIND_CPPUNIT],
 [
 
-AC_ARG_WITH(cppunit-prefix,[  --with-cppunit=PFX      Prefix where CppUnit is installed (optional)],
+AC_ARG_WITH(cppunit,[  --with-cppunit=PFX      Prefix where CppUnit is installed (optional)],
             cppunit_config_prefix="$withval", cppunit_config_prefix="")
-AC_ARG_WITH(cppunit-exec-prefix,[  --with-cppunit-exec=PFX Exec prefix where CppUnit is installed (optional)],
+AC_ARG_WITH(cppunit-exec,[  --with-cppunit-exec=PFX Exec prefix where CppUnit is installed (optional)],
             cppunit_config_exec_prefix="$withval", cppunit_config_exec_prefix="")
 
   if test x$cppunit_config_exec_prefix != x ; then
