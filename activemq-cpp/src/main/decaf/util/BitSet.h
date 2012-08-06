@@ -39,9 +39,6 @@ namespace util {
      * bit set, so it may change with implementation. The length of a bit set relates to
      * logical length of a bit set and is defined independently of implementation.
      *
-     * Unless otherwise noted, passing a null parameter to any of the methods in a
-     * BitSet will result in a NullPointerException.
-     *
      * A BitSet is not safe for multi-threaded use without external synchronization.
      *
      * @since 1.0
