@@ -416,9 +416,9 @@ void ArrayPointerTest::testSTLContainers() {
 
     std::map< ArrayPointer<TestClassA>, std::string > testMap;
 
-    testMap.insert( std::make_pair( pointer1, "Bob" ) );
-    testMap.insert( std::make_pair( pointer2, "Steve" ) );
-    testMap.insert( std::make_pair( pointer3, "Steve" ) );
+    testMap.insert( std::make_pair( pointer1, std::string("Bob") ) );
+    testMap.insert( std::make_pair( pointer2, std::string("Steve") ) );
+    testMap.insert( std::make_pair( pointer3, std::string("Steve") ) );
 
     // Two and Three should be equivalent (not equal) but in this case
     // equivalent is what matters.  So pointer2 should be bumped out of the map.
