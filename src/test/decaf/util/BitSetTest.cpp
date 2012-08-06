@@ -62,7 +62,7 @@ BitSetTest::~BitSetTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void BitSetTest::setUp() {
 
-	eightbs = BitSet(1);
+    eightbs = BitSet(1);
 
     for (int i = 0; i < 8; i++) {
         eightbs.set(i);
@@ -450,6 +450,11 @@ void BitSetTest::testGetI() {
     bs3.get(70);
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Test3: Wrong length,", 0, bs3.length());
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Test3: Wrong size,", 0, bs3.size());
+
+    bs3.set(70);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Test3: Wrong length,", 71, bs3.length());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Test3: Wrong size,", 128, bs3.size());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Test3: Wrong value,", true, bs3.get(70));
 
     BitSet bs4;
     try {
@@ -893,17 +898,17 @@ void BitSetTest::testSetII() {
     bitset.set(29, 29);
 
     {
-        // Test for method void java.util.BitSet.set(int, int)
         // pos1 and pos2 are in the same bitset element
         BitSet bs(16);
         bs.set(5);
         bs.set(15);
         bs.set(7, 11);
         for (int i = 0; i < 7; i++) {
-            if (i == 5)
+            if (i == 5) {
                 CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + Integer::toString(i), bs.get(i));
-            else
+            } else {
                 CPPUNIT_ASSERT_MESSAGE("Shouldn't have set bit " + Integer::toString(i), !bs.get(i));
+            }
         }
         for (int i = 7; i < 11; i++) {
             CPPUNIT_ASSERT_MESSAGE("Failed to set bit " + Integer::toString(i), bs.get(i));

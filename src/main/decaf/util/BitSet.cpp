@@ -189,7 +189,7 @@ void BitSet::AND(const BitSet& set) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void BitSet::andNot(const BitSet& set) {
-	unsigned long long* bsBits = set.bits;
+    unsigned long long* bsBits = set.bits;
 
     if (!needClear) {
         return;
@@ -275,7 +275,8 @@ void BitSet::clear(int fromIndex, int toIndex) {
     int idx1 = fromIndex >> OFFSET;
     int idx2 = (toIndex - 1) >> OFFSET;
     unsigned long long factor1 = (~0ULL) << (fromIndex & RIGHT_BITS);
-    unsigned long long factor2 = (~0ULL) >> (ELM_SIZE - (toIndex & RIGHT_BITS));
+    int shift = (ELM_SIZE - (toIndex & RIGHT_BITS));
+    unsigned long long factor2 = shift < 64 ? (~0ULL) >> shift : (~0ULL);
 
     if (idx1 == idx2) {
         bits[idx1] &= ~(factor1 & factor2);
@@ -396,7 +397,8 @@ void BitSet::flip(int fromIndex, int toIndex) {
     int idx1 = fromIndex >> OFFSET;
     int idx2 = (toIndex - 1) >> OFFSET;
     unsigned long long factor1 = (~0ULL) << (fromIndex & RIGHT_BITS);
-    unsigned long long factor2 = (~0ULL) >> (ELM_SIZE - (toIndex & RIGHT_BITS));
+    int shift = (ELM_SIZE - (toIndex & RIGHT_BITS));
+    unsigned long long factor2 = shift < 64 ? (~0ULL) >> shift : (~0ULL);
 
     if (idx1 == idx2) {
         bits[idx1] ^= (factor1 & factor2);
@@ -445,7 +447,8 @@ BitSet BitSet::get(int fromIndex, int toIndex) const {
     int idx1 = fromIndex >> OFFSET;
     int idx2 = (toIndex - 1) >> OFFSET;
     unsigned long long factor1 = (~0ULL) << (fromIndex & RIGHT_BITS);
-    unsigned long long factor2 = (~0ULL) >> (ELM_SIZE - (toIndex & RIGHT_BITS));
+    int shift = (ELM_SIZE - (toIndex & RIGHT_BITS));
+    unsigned long long factor2 = shift < 64 ? (~0ULL) >> shift : (~0ULL);
 
     if (idx1 == idx2) {
         unsigned long long result = (bits[idx1] & (factor1 & factor2)) >> (fromIndex % ELM_SIZE);
@@ -494,7 +497,7 @@ BitSet BitSet::get(int fromIndex, int toIndex) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool BitSet::intersects(const BitSet& set) const {
-	unsigned long long* bsBits = set.bits;
+    unsigned long long* bsBits = set.bits;
     int length1 = actualArrayLength;
     int length2 = set.actualArrayLength;
 
@@ -675,7 +678,8 @@ void BitSet::set(int fromIndex, int toIndex) {
     int idx1 = fromIndex >> OFFSET;
     int idx2 = (toIndex - 1) >> OFFSET;
     unsigned long long factor1 = (~0ULL) << (fromIndex & RIGHT_BITS);
-    unsigned long long factor2 = (~0ULL) >> (ELM_SIZE - (toIndex & RIGHT_BITS));
+    int shift = (ELM_SIZE - (toIndex & RIGHT_BITS));
+    unsigned long long factor2 = shift < 64 ? (~0ULL) >> shift : (~0ULL);
 
     if (idx1 == idx2) {
         bits[idx1] |= (factor1 & factor2);
@@ -740,7 +744,7 @@ std::string BitSet::toString() const {
 void BitSet::XOR(const BitSet& set) {
     int setActualLength = set.getActualArrayLength();
     if (setActualLength > bitsSize) {
-    	unsigned long long* tempBits = new unsigned long long[setActualLength];
+        unsigned long long* tempBits = new unsigned long long[setActualLength];
         System::arraycopy(set.bits, 0, tempBits, 0, set.actualArrayLength);
         for (int i = 0; i < actualArrayLength; i++) {
             tempBits[i] ^= bits[i];
@@ -750,7 +754,7 @@ void BitSet::XOR(const BitSet& set) {
         actualArrayLength = setActualLength;
         isLengthActual = !((actualArrayLength > 0) && (bits[actualArrayLength - 1] == 0));
     } else {
-    	unsigned long long* bsBits = set.bits;
+        unsigned long long* bsBits = set.bits;
         for (int i = 0; i < setActualLength; i++) {
             bits[i] ^= bsBits[i];
         }
