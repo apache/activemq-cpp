@@ -374,11 +374,12 @@ void HashMapTest::testPut() {
         Pointer< Iterator<int> > itr(intSet.iterator());
         while (itr->hasNext()) {
             int key = itr->next();
-            if (found = (key == myKey)) {
+            found = (key == myKey);
+            if (found) {
                 break;
             }
         }
-        CPPUNIT_ASSERT_MESSAGE("Should not find new key instance in hashashMap", !found);
+        CPPUNIT_ASSERT_MESSAGE("Should find new key instance in hashashMap", found);
 
         // Add a new key instance and check it is returned
         CPPUNIT_ASSERT_NO_THROW(map.remove(myKey));
@@ -388,7 +389,8 @@ void HashMapTest::testPut() {
         itr.reset(intSet.iterator());
         while (itr->hasNext()) {
             int key = itr->next();
-            if ((found = (key == myKey))) {
+            found = (key == myKey);
+            if (found) {
                 break;
             }
         }
