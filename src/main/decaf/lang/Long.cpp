@@ -424,7 +424,7 @@ std::string Long::toOctalString( long long value ) {
     char* buffer = new char[length + 1];
 
     do {
-        buffer[--count] = (char)( (value & 7) + '0' );
+        buffer[--count] = (char)( (uvalue & 7) + '0' );
         uvalue >>= 3;
     } while( count > 0 );
 
