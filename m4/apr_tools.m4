@@ -121,13 +121,18 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     AC_MSG_ERROR([apu-config --link-libtool --libs failed])
   fi
 
+  APR_PKGCONFIG="`echo $apr_config | sed 's,\(.*/\)\?apr\(-\?.*\)-config$,apr\2,'`"
+  APU_PKGCONFIG="`echo $apu_config | sed 's,\(.*/\)\?apu\(-\?.*\)-config$,apr-util\2,'`"
+
   AC_SUBST([APR_LIBS])
   AC_SUBST([APR_LDFLAGS])
   AC_SUBST([APR_CPPFLAGS])
   AC_SUBST([APR_INCLUDES])
+  AC_SUBST([APR_PKGCONFIG])
   AC_SUBST([APU_LIBS])
   AC_SUBST([APU_LDFLAGS])
   AC_SUBST([APU_INCLUDES])
+  AC_SUBST([APU_PKGCONFIG])
 
 ])
 
