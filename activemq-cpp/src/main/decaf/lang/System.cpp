@@ -51,6 +51,9 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+#if defined(__HP_aCC)
+#include <sys/mpctl.h>
+#endif
 
 #include <cstdlib>
 
@@ -511,6 +514,8 @@ int System::availableProcessors() {
     len = sizeof(numCpus);
     sysctl(mib, 2, &numCpus, &len, NULL, 0);
 
+#elif defined(__HP_aCC)
+    numCpus = (int)mpctl(MPC_GETNUMSPUS, NULL, NULL);
 #else
 
     // returns number of online(_SC_NPROCESSORS_ONLN) processors, number configured(_SC_NPROCESSORS_CONF)
