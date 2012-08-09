@@ -51,7 +51,7 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#if defined(__HP_aCC)
+#if defined(_HP_NAMESPACE_STD)
 #include <sys/mpctl.h>
 #endif
 
@@ -514,7 +514,7 @@ int System::availableProcessors() {
     len = sizeof(numCpus);
     sysctl(mib, 2, &numCpus, &len, NULL, 0);
 
-#elif defined(__HP_aCC)
+#elif defined(_HP_NAMESPACE_STD)
     numCpus = (int)mpctl(MPC_GETNUMSPUS, NULL, NULL);
 #else
 
