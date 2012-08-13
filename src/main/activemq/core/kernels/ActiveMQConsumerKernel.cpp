@@ -116,6 +116,11 @@ namespace kernels {
         }
     };
 
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
     /**
      * Class used to deal with consumers in an active transaction.  This
      * class calls back into the consumer when the transaction is Committed or
@@ -296,7 +301,7 @@ namespace kernels {
         }
     };
 
-}}}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
