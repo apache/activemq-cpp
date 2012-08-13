@@ -56,9 +56,10 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Math.h>
 #include <decaf/util/Queue.h>
+#include <decaf/util/LinkedList.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/concurrent/CopyOnWriteArrayList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/locks/ReentrantReadWriteLock.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -92,8 +93,10 @@ namespace kernels{
     public:
 
         AtomicBoolean synchronizationRegistered;
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQProducerKernel> > producers;
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQConsumerKernel> > consumers;
+        decaf::util::concurrent::locks::ReentrantReadWriteLock producerLock;
+        decaf::util::LinkedList< Pointer<ActiveMQProducerKernel> > producers;
+        decaf::util::concurrent::locks::ReentrantReadWriteLock consumerLock;
+        decaf::util::LinkedList< Pointer<ActiveMQConsumerKernel> > consumers;
         Pointer<Scheduler> scheduler;
         Pointer<CloseSynhcronization> closeSync;
         Mutex sendMutex;
@@ -102,8 +105,8 @@ namespace kernels{
     public:
 
         SessionConfig() : synchronizationRegistered(false),
-                          producers(), consumers(), scheduler(), closeSync(),
-                          sendMutex(), transformer(NULL) {}
+                          producerLock(), producers(), consumerLock(), consumers(),
+                          scheduler(), closeSync(), sendMutex(), transformer(NULL) {}
         ~SessionConfig() {}
     };
 
@@ -339,31 +342,45 @@ void ActiveMQSessionKernel::dispose() {
         }
 
         // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
-        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > consumerIter(this->config->consumers.iterator());
-        while (consumerIter->hasNext()) {
-            try{
-                Pointer<ActiveMQConsumerKernel> consumer = consumerIter->next();
-                consumer->setFailureError(this->connection->getFirstFailureError());
-                consumer->dispose();
-                this->lastDeliveredSequenceId =
-                    Math::max(this->lastDeliveredSequenceId, consumer->getLastDeliveredSequenceId());
-            } catch (cms::CMSException& ex) {
-                /* Absorb */
+        this->config->consumerLock.writeLock().lock();
+        try {
+            Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > consumerIter(this->config->consumers.iterator());
+            while (consumerIter->hasNext()) {
+                try{
+                    Pointer<ActiveMQConsumerKernel> consumer = consumerIter->next();
+                    consumer->setFailureError(this->connection->getFirstFailureError());
+                    consumer->dispose();
+                    this->lastDeliveredSequenceId =
+                        Math::max(this->lastDeliveredSequenceId, consumer->getLastDeliveredSequenceId());
+                } catch (cms::CMSException& ex) {
+                    /* Absorb */
+                }
             }
+            this->config->consumers.clear();
+            this->config->consumerLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->consumerLock.writeLock().unlock();
+            throw;
         }
-        this->config->consumers.clear();
 
-        // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+        this->config->producerLock.writeLock().lock();
+        try {
+            // Dispose of all Producers, the dispose method skips the RemoveInfo command.
+            std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
 
-        while (producerIter->hasNext()) {
-            try{
-                producerIter->next()->dispose();
-            } catch (cms::CMSException& ex) {
-                /* Absorb */
+            while (producerIter->hasNext()) {
+                try{
+                    producerIter->next()->dispose();
+                } catch (cms::CMSException& ex) {
+                    /* Absorb */
+                }
             }
+            this->config->producers.clear();
+            this->config->producerLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->producerLock.writeLock().unlock();
+            throw;
         }
-        this->config->producers.clear();
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
@@ -417,10 +434,17 @@ void ActiveMQSessionKernel::recover() {
             throw cms::IllegalStateException("This session is transacted");
         }
 
-        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
-        while (iter->hasNext()) {
-            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-            consumer->rollback();
+        this->config->consumerLock.readLock().lock();
+        try {
+            Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+            while (iter->hasNext()) {
+                Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+                consumer->rollback();
+            }
+            this->config->consumerLock.readLock().unlock();
+        } catch (Exception& ex) {
+            this->config->consumerLock.readLock().unlock();
+            throw;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -433,32 +457,53 @@ void ActiveMQSessionKernel::clearMessagesInProgress() {
         this->executor->clearMessagesInProgress();
     }
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        consumer->inProgressClearRequired();
-        this->connection->getScheduler()->executeAfterDelay(
-            new ClearConsumerTask(consumer), 0LL);
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->inProgressClearRequired();
+            this->connection->getScheduler()->executeAfterDelay(
+                new ClearConsumerTask(consumer), 0LL);
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::acknowledge() {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        consumer->acknowledge();
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->acknowledge();
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::deliverAcks() {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        consumer->deliverAcks();
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->deliverAcks();
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 }
 
@@ -988,11 +1033,18 @@ void ActiveMQSessionKernel::redispatch(MessageDispatchChannel& unconsumedMessage
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::start() {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        consumer->start();
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->start();
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 
     if (this->executor.get() != NULL) {
@@ -1043,13 +1095,21 @@ void ActiveMQSessionKernel::createTemporaryDestination(commands::ActiveMQTempDes
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSessionKernel::isInUse(Pointer<ActiveMQDestination> destination) {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        if (consumer->isInUse(destination)) {
-            return true;
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->isInUse(destination)) {
+                this->config->consumerLock.readLock().unlock();
+                return true;
+            }
         }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 
     return false;
@@ -1123,7 +1183,15 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
     try {
 
         this->checkClosed();
-        this->config->consumers.add(consumer);
+
+        this->config->consumerLock.writeLock().lock();
+        try {
+            this->config->consumers.add(consumer);
+            this->config->consumerLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->consumerLock.writeLock().unlock();
+            throw;
+        }
 
         // Register this as a message dispatcher for the consumer.
         this->connection->addDispatcher(consumer->getConsumerInfo()->getConsumerId(), this);
@@ -1138,7 +1206,14 @@ void ActiveMQSessionKernel::removeConsumer(Pointer<ActiveMQConsumerKernel> consu
 
     try {
         this->connection->removeDispatcher(consumer->getConsumerId());
-        this->config->consumers.remove(consumer);
+        this->config->consumerLock.writeLock().lock();
+        try {
+            this->config->consumers.remove(consumer);
+            this->config->consumerLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->consumerLock.writeLock().unlock();
+            throw;
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1150,7 +1225,16 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 
     try {
         this->checkClosed();
-        this->config->producers.add(producer);
+
+        this->config->producerLock.writeLock().lock();
+        try {
+            this->config->producers.add(producer);
+            this->config->producerLock.writeLock().unlock();
+        } catch(Exception& ex) {
+            this->config->producerLock.writeLock().unlock();
+            throw;
+        }
+
         this->connection->addProducer(producer);
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -1163,7 +1247,14 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 
     try {
         this->connection->removeProducer(producer->getProducerId());
-        this->config->producers.remove(producer);
+        this->config->producerLock.writeLock().lock();
+        try {
+            this->config->producers.remove(producer);
+            this->config->producerLock.writeLock().unlock();
+        } catch(Exception& ex) {
+            this->config->producerLock.writeLock().unlock();
+            throw;
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -1173,13 +1264,23 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Pointer<ProducerId> id) {
 
-    std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+    this->config->producerLock.readLock().lock();
+    try {
 
-    while (producerIter->hasNext()) {
-        Pointer<ActiveMQProducerKernel> producer = producerIter->next();
-        if (producer->getProducerId()->equals(*id)) {
-            return producer;
+        std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+
+        while (producerIter->hasNext()) {
+            Pointer<ActiveMQProducerKernel> producer = producerIter->next();
+            if (producer->getProducerId()->equals(*id)) {
+                this->config->producerLock.readLock().unlock();
+                return producer;
+            }
         }
+
+        this->config->producerLock.readLock().unlock();
+    } catch(Exception& ex) {
+        this->config->producerLock.readLock().unlock();
+        throw;
     }
 
     return Pointer<ActiveMQProducerKernel>();
@@ -1188,13 +1289,21 @@ Pointer<ActiveMQProducerKernel> ActiveMQSessionKernel::lookupProducerKernel(Poin
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Pointer<ConsumerId> id) {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        if (consumer->getConsumerId()->equals(*id)) {
-            return consumer;
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->getConsumerId()->equals(*id)) {
+                this->config->consumerLock.readLock().unlock();
+                return consumer;
+            }
         }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 
     return Pointer<ActiveMQConsumerKernel>();
@@ -1203,13 +1312,21 @@ Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Poin
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSessionKernel::iterateConsumers() {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        if (consumer->iterate()) {
-            return true;
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->iterate()) {
+                this->config->consumerLock.readLock().unlock();
+                return true;
+            }
         }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 
     return false;
@@ -1218,29 +1335,43 @@ bool ActiveMQSessionKernel::iterateConsumers() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::setPrefetchSize(Pointer<ConsumerId> id, int prefetch) {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        if (consumer->getConsumerId()->equals(*id)) {
-            consumer->setPrefetchSize(prefetch);
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->getConsumerId()->equals(*id)) {
+                consumer->setPrefetchSize(prefetch);
+            }
         }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::close(Pointer<ConsumerId> id) {
 
-    Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQConsumerKernel> consumer = iter->next();
-        if (consumer->getConsumerId()->equals(*id)) {
-            try {
-                consumer->close();
-            } catch (cms::CMSException& e) {
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->getConsumerId()->equals(*id)) {
+                try {
+                    consumer->close();
+                } catch (cms::CMSException& e) {
+                }
             }
         }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
     }
 }
 

@@ -163,7 +163,8 @@ namespace core{
         DispatcherMap dispatchers;
         ProducerMap activeProducers;
 
-        decaf::util::concurrent::CopyOnWriteArrayList< Pointer<ActiveMQSessionKernel> > activeSessions;
+        decaf::util::concurrent::locks::ReentrantReadWriteLock sessionsLock;
+        decaf::util::LinkedList< Pointer<ActiveMQSessionKernel> > activeSessions;
         decaf::util::LinkedList<transport::TransportListener*> transportListeners;
 
         TempDestinationMap activeTempDestinations;
@@ -205,6 +206,7 @@ namespace core{
                              firstFailureError(),
                              dispatchers(),
                              activeProducers(),
+                             sessionsLock(),
                              activeSessions(),
                              transportListeners(),
                              activeTempDestinations() {
@@ -430,8 +432,13 @@ Pointer<SessionId> ActiveMQConnection::getNextSessionId() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addSession(Pointer<ActiveMQSessionKernel> session) {
     try {
-        synchronized(&this->config->activeSessions) {
+        this->config->sessionsLock.writeLock().lock();
+        try {
             this->config->activeSessions.add(session);
+            this->config->sessionsLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->sessionsLock.writeLock().unlock();
+            throw;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -440,8 +447,13 @@ void ActiveMQConnection::addSession(Pointer<ActiveMQSessionKernel> session) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::removeSession(Pointer<ActiveMQSessionKernel> session) {
     try {
-        synchronized(&this->config->activeSessions) {
+        this->config->sessionsLock.writeLock().lock();
+        try {
             this->config->activeSessions.remove(session);
+            this->config->sessionsLock.writeLock().unlock();
+        } catch (Exception& ex) {
+            this->config->sessionsLock.writeLock().unlock();
+            throw;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -629,17 +641,24 @@ void ActiveMQConnection::cleanup() {
 
     try {
 
-        // Get the complete list of active sessions.
-        std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+        this->config->sessionsLock.readLock().lock();
+        try {
+            // Get the complete list of active sessions.
+            std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
 
-        // Dispose of all the Session resources we know are still open.
-        while (iter->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iter->next();
-            try{
-                session->dispose();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
+            // Dispose of all the Session resources we know are still open.
+            while (iter->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iter->next();
+                try{
+                    session->dispose();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
             }
+            this->config->sessionsLock.readLock().unlock();
+        } catch (Exception& ex) {
+            this->config->sessionsLock.readLock().unlock();
+            throw;
         }
 
         if (this->config->isConnectionInfoSentToBroker) {
@@ -668,19 +687,24 @@ void ActiveMQConnection::start() {
         checkClosedOrFailed();
         ensureConnectionInfoSent();
 
-        // This starts or restarts the delivery of all incoming messages
-        // messages delivered while this connection is stopped are dropped
-        // and not acknowledged.
-        if (this->started.compareAndSet(false, true)) {
-
-            synchronized(&this->config->activeSessions) {
+        try {
+            // This starts or restarts the delivery of all incoming messages
+            // messages delivered while this connection is stopped are dropped
+            // and not acknowledged.
+            if (this->started.compareAndSet(false, true)) {
+                this->config->sessionsLock.readLock().lock();
 
                 // Start all the sessions.
                 std::auto_ptr<Iterator< Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
                 while (iter->hasNext()) {
                     iter->next()->start();
                 }
+
+                this->config->sessionsLock.readLock().unlock();
             }
+        } catch (Exception& ex) {
+            this->config->sessionsLock.readLock().unlock();
+            throw;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -693,16 +717,21 @@ void ActiveMQConnection::stop() {
 
         checkClosedOrFailed();
 
-        // Once current deliveries are done this stops the delivery of any
-        // new messages.
-        if (this->started.compareAndSet(true, false)) {
-            synchronized(&this->config->activeSessions) {
+        try {
+            // Once current deliveries are done this stops the delivery of any
+            // new messages.
+            if (this->started.compareAndSet(true, false)) {
+                this->config->sessionsLock.readLock().lock();
                 std::auto_ptr<Iterator< Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
 
                 while (iter->hasNext()) {
                     iter->next()->stop();
                 }
+                this->config->sessionsLock.readLock().unlock();
             }
+        } catch (Exception& ex) {
+            this->config->sessionsLock.readLock().unlock();
+            throw;
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -942,16 +971,23 @@ void ActiveMQConnection::onConsumerControl(Pointer<commands::Command> command) {
 
     Pointer<ConsumerControl> consumerControl = command.dynamicCast<ConsumerControl>();
 
-    // Get the complete list of active sessions.
-    std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+    this->config->sessionsLock.readLock().lock();
+    try {
+        // Get the complete list of active sessions.
+        std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
 
-    while (iter->hasNext()) {
-        Pointer<ActiveMQSessionKernel> session = iter->next();
-        if (consumerControl->isClose()) {
-            session->close(consumerControl->getConsumerId());
-        } else {
-            session->setPrefetchSize(consumerControl->getConsumerId(), consumerControl->getPrefetch());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQSessionKernel> session = iter->next();
+            if (consumerControl->isClose()) {
+                session->close(consumerControl->getConsumerId());
+            } else {
+                session->setPrefetchSize(consumerControl->getConsumerId(), consumerControl->getPrefetch());
+            }
         }
+        this->config->sessionsLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->sessionsLock.readLock().unlock();
+        throw;
     }
 }
 
@@ -1001,11 +1037,16 @@ void ActiveMQConnection::transportInterrupted() {
     this->config->transportInterruptionProcessingComplete.reset(
         new CountDownLatch( (int)this->config->dispatchers.size() ) );
 
-    synchronized(&this->config->activeSessions) {
+    this->config->sessionsLock.readLock().lock();
+    try {
         std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > sessions(this->config->activeSessions.iterator());
         while (sessions->hasNext()) {
             sessions->next()->clearMessagesInProgress();
         }
+        this->config->sessionsLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->sessionsLock.readLock().unlock();
+        throw;
     }
 
     synchronized(&this->config->transportListeners) {
@@ -1490,12 +1531,20 @@ void ActiveMQConnection::deleteTempDestination(Pointer<ActiveMQTempDestination> 
         checkClosedOrFailed();
         ensureConnectionInfoSent();
 
-        Pointer< Iterator< Pointer<ActiveMQSessionKernel> > > iterator(this->config->activeSessions.iterator());
-        while (iterator->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iterator->next();
-            if (session->isInUse(destination)) {
-                throw ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+        this->config->sessionsLock.readLock().lock();
+        try {
+            Pointer< Iterator< Pointer<ActiveMQSessionKernel> > > iterator(this->config->activeSessions.iterator());
+            while (iterator->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iterator->next();
+                if (session->isInUse(destination)) {
+                    this->config->sessionsLock.readLock().unlock();
+                    throw ActiveMQException(__FILE__, __LINE__, "A consumer is consuming from the temporary destination");
+                }
             }
+            this->config->sessionsLock.readLock().unlock();
+        } catch (Exception& ex) {
+            this->config->sessionsLock.readLock().unlock();
+            throw;
         }
 
         this->config->activeTempDestinations.remove(destination);
