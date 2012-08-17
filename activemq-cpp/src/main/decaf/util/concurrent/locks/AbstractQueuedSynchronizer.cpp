@@ -328,26 +328,6 @@ namespace locks {
             PlatformThread::unlockRWMutex(rwLock);
 
             return pred;
-
-//            for (;;) {
-//                Node* t = tail.get();
-//                if (t == NULL) { // Must initialize
-//                    Node* newHead = new Node();
-//                    if (compareAndSetHead(newHead)) {
-//                        tail.set(head.get());
-//                    } else {
-//                        delete newHead;
-//                    }
-//                } else {
-//                    node->prev = t;
-//                    if (compareAndSetTail(t, node)) {
-//                        t->next = node;
-//                        return t;
-//                    }
-//                }
-//            }
-
-            return NULL;
         }
 
         /**
@@ -364,19 +344,6 @@ namespace locks {
             Node* node = new Node(Thread::currentThread(), mode);
             enqueue(node);
             return node;
-
-//            Node* node = new Node(Thread::currentThread(), mode);
-//            Node* pred = tail.get();
-//            if (pred != NULL) {
-//                node->prev = pred;
-//                if (compareAndSetTail(pred, node)) {
-//                    pred->next = node;
-//                    return node;
-//                }
-//            }
-//
-//            enqueue(node);
-//            return node;
         }
 
         /**
@@ -396,10 +363,6 @@ namespace locks {
             node->prev = NULL;
             PlatformThread::unlockRWMutex(this->rwLock);
             return oldHead;
-
-//            head.set(node);
-//            node->thread = NULL;
-//            node->prev = NULL;
         }
 
         /**
@@ -467,7 +430,11 @@ namespace locks {
                         if (!compareAndSetWaitStatus(h, Node::SIGNAL, 0)) {
                             continue;            // loop to recheck cases
                         }
+
+                        // Platform level lock may not be reentrant.
+                        PlatformThread::unlockRWMutex(this->rwLock);
                         unparkSuccessor(h);
+                        PlatformThread::readerLockMutex(this->rwLock);
                     } else if (ws == 0 && !compareAndSetWaitStatus(h, 0, Node::PROPAGATE)) {
                         continue;                // loop on failed CAS
                     }
@@ -511,11 +478,14 @@ namespace locks {
             if (propagate > 0 || head == NULL || head->waitStatus < 0) {
                 Node* successor = node->next;
                 if (successor == NULL || successor->isShared()) {
+                    PlatformThread::unlockRWMutex(this->rwLock);
                     doReleaseShared();
+                } else {
+                    PlatformThread::unlockRWMutex(this->rwLock);
                 }
+            } else {
+                PlatformThread::unlockRWMutex(this->rwLock);
             }
-
-            PlatformThread::unlockRWMutex(this->rwLock);
 
             return head;
         }
@@ -567,49 +537,6 @@ namespace locks {
             }
 
             delete node;
-
-//            node->thread = NULL;
-//
-//            // Can use unconditional write instead of CAS here.  After this atomic
-//            // step, other Nodes can skip past us. Before, we are free of interference
-//            // from other threads.
-//            node->waitStatus = Node::CANCELLED;
-//
-//            // If we are the tail, remove ourselves.
-//            if (node == tail.get() && compareAndSetTail(node, node->prev)) {
-//                // Attempt to set next on tail, this can fail if another thread can in
-//                // and replaced the old tail but that's ok since that means next is up
-//                // to date in that case.
-//                Atomics::compareAndSwap<Node>(tail.get()->next, node, NULL);
-//                delete node;
-//            } else {
-//                // If successor needs signal, try to set pred's next-link
-//                // so it will get one. Otherwise wake it up to propagate.
-//                int ws;
-//
-//                PlatformThread::writerLockMutex(this->rwLock);
-//
-//                // Did we become the tail.
-//                if (node == tail.get() && compareAndSetTail(node, node->prev)) {
-//                    Atomics::compareAndSwap<Node>(tail.get()->next, node, NULL);
-//                } else {
-//                    node->prev->next = node->next;
-//                    node->next->prev = node->prev;
-//                }
-//
-//                if (node->prev != head.get() &&
-//                    ((ws = node->prev->waitStatus) == Node::SIGNAL ||
-//                     (ws <= 0 && compareAndSetWaitStatus(node->prev, ws, Node::SIGNAL))) &&
-//                     node->prev->thread != NULL) {
-//
-//                    PlatformThread::unlockRWMutex(this->rwLock);
-//                } else {
-//                    PlatformThread::unlockRWMutex(this->rwLock);
-//                    unparkSuccessor(node);
-//                }
-//
-//                delete node;
-//            }
         }
 
         /**
