@@ -26,7 +26,8 @@ cc_sources = \
     decaf/lang/BooleanBenchmark.cpp \
     decaf/lang/ThreadBenchmark.cpp \
     decaf/util/LinkedListBenchmark.cpp \
-    decaf/util/MapBenchmark.cpp \
+    decaf/util/StlMapBenchmark.cpp \
+    decaf/util/HashMapBenchmark.cpp \
     decaf/util/PropertiesBenchmark.cpp \
     decaf/util/QueueBenchmark.cpp \
     decaf/util/SetBenchmark.cpp \
@@ -47,7 +48,8 @@ h_sources = \
     decaf/lang/BooleanBenchmark.h \
     decaf/lang/ThreadBenchmark.h \
     decaf/util/LinkedListBenchmark.h \
-    decaf/util/MapBenchmark.h \
+    decaf/util/StlMapBenchmark.h \
+    decaf/util/HashMapBenchmark.h \
     decaf/util/PropertiesBenchmark.h \
     decaf/util/QueueBenchmark.h \
     decaf/util/SetBenchmark.h \

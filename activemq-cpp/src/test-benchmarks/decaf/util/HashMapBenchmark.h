@@ -15,32 +15,31 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_UTIL_MAPBENCHMARK_H_
-#define _DECAF_UTIL_MAPBENCHMARK_H_
+#ifndef _DECAF_UTIL_HASHMAPBENCHMARK_H_
+#define _DECAF_UTIL_HASHMAPBENCHMARK_H_
 
 #include <benchmark/BenchmarkBase.h>
-#include <decaf/util/StlMap.h>
+#include <decaf/util/HashMap.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
-    class MapBenchmark :
-        public benchmark::BenchmarkBase<
-            decaf::util::MapBenchmark, Map<int, int> >
-    {
+    class HashMapBenchmark :
+        public benchmark::BenchmarkBase<decaf::util::HashMapBenchmark, HashMap<int, int> > {
     private:
 
-        StlMap< std::string, std::string> stringMap;
-        StlMap<int, int> intMap;
+        HashMap<std::string, std::string> stringMap;
+        HashMap<int, int> intMap;
 
     public:
 
-        MapBenchmark();
-        virtual ~MapBenchmark() {}
+        HashMapBenchmark();
+        virtual ~HashMapBenchmark();
 
         virtual void run();
+
     };
 
 }}
 
-#endif /*_DECAF_UTIL_MAPBENCHMARK_H_*/
+#endif /* _DECAF_UTIL_HASHMAPBENCHMARK_H_ */
