@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-#include "MapBenchmark.h"
+#include "HashMapBenchmark.h"
+
 #include <decaf/lang/Integer.h>
 #include <decaf/util/StlMap.h>
 
@@ -24,11 +25,15 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-MapBenchmark::MapBenchmark() : stringMap(), intMap() {
+HashMapBenchmark::HashMapBenchmark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MapBenchmark::run() {
+HashMapBenchmark::~HashMapBenchmark() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void HashMapBenchmark::run() {
 
     int numRuns = 500;
     std::string test = "test";
