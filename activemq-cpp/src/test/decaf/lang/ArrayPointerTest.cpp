@@ -459,19 +459,19 @@ namespace {
     class Gate {
     private:
 
-        CountDownLatch * enter_latch;
-        CountDownLatch * leave_latch;
+        CountDownLatch* enterLatch;
+        CountDownLatch* leaveLatch;
         Mutex mutex;
         bool closed;
 
     public:
 
-        Gate() : closed( true ) {}
+        Gate() : enterLatch(NULL), leaveLatch(NULL), mutex(), closed(true) {}
         virtual ~Gate() {}
 
-        void open( int count ) {
-            leave_latch = new CountDownLatch( count );
-            enter_latch = new CountDownLatch( count );
+        void open(int count) {
+            leaveLatch = new CountDownLatch(count);
+            enterLatch = new CountDownLatch(count);
             mutex.lock();
             closed = false;
             mutex.notifyAll();
@@ -480,46 +480,47 @@ namespace {
 
         void enter() {
             mutex.lock();
-            while( closed )
+            while (closed) {
                 mutex.wait();
-            enter_latch->countDown();
-            if( enter_latch->await( 0 ) ) {
+            }
+            enterLatch->countDown();
+            if (enterLatch->getCount() == 0) {
                 closed = true;
             }
             mutex.unlock();
         }
 
         void leave() {
-            leave_latch->countDown();
+            leaveLatch->countDown();
         }
 
         void close() {
-            leave_latch->await();
-            delete leave_latch;
-            delete enter_latch;
+            leaveLatch->await();
+            delete leaveLatch;
+            delete enterLatch;
         }
     };
 
     class ArrayPointerTestThread: public Thread {
     private:
 
-        Gate *_gate;
-        ArrayPointer<std::string> _s;
+        Gate* gate;
+        ArrayPointer<std::string> s;
 
     public:
 
-        ArrayPointerTestThread( Gate *gate ) : _gate( gate ) {}
+        ArrayPointerTestThread(Gate *gate) : gate(gate) {}
         virtual ~ArrayPointerTestThread() {}
 
-        void setString( ArrayPointer<std::string> s ) {
-            _s = s;
+        void setString(ArrayPointer<std::string> s) {
+            this->s = s;
         }
 
         virtual void run() {
-            for( int j = 0; j < 1000; j++ ) {
-                _gate->enter();
-                _s.reset( NULL );
-                _gate->leave();
+            for (int j = 0; j < 1000; j++) {
+                gate->enter();
+                s.reset(NULL);
+                gate->leave();
             }
         }
     };
@@ -529,33 +530,33 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////
 void ArrayPointerTest::testThreadSafety() {
 
-    const int NUM_THREADS = 50;
+    const int NUM_THREADS = 1;
     const int ITERATIONS = 1000;
 
-    ArrayPointer<ArrayPointerTestThread*> thread( NUM_THREADS );
+    ArrayPointer<ArrayPointerTestThread*> thread(NUM_THREADS);
     Gate gate;
 
-    for( int i = 0; i < NUM_THREADS; i++ ) {
-        thread[i] = new ArrayPointerTestThread( &gate );
+    for (int i = 0; i < NUM_THREADS; i++) {
+        thread[i] = new ArrayPointerTestThread(&gate);
         thread[i]->start();
     }
 
-    for( int j = 0; j < ITERATIONS; j++ ) {
+    for (int j = 0; j < ITERATIONS; j++) {
         // Put this in its own scope so that the main thread frees the string
         // before the threads.
         {
-            ArrayPointer<std::string> s( 1 );
-            for( int i = 0; i < NUM_THREADS; i++ ) {
-                thread[i]->setString( s );
+            ArrayPointer<std::string> s(1);
+            for (int i = 0; i < NUM_THREADS; i++) {
+                thread[i]->setString(s);
             }
         }
 
         // Signal the threads to free the string.
-        gate.open( NUM_THREADS );
+        gate.open(NUM_THREADS);
         gate.close();
     }
 
-    for( int i = 0; i < NUM_THREADS; i++ ) {
+    for (int i = 0; i < NUM_THREADS; i++) {
         thread[i]->join();
         delete thread[i];
     }
