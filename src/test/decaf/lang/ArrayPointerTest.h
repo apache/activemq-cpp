@@ -27,17 +27,17 @@ namespace lang {
     class ArrayPointerTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( ArrayPointerTest );
-        CPPUNIT_TEST( testBasics );
-        CPPUNIT_TEST( testConstructor1 );
-        CPPUNIT_TEST( testConstructor2 );
-        CPPUNIT_TEST( testClone );
-        CPPUNIT_TEST( testAssignment );
-        CPPUNIT_TEST( testComparisons );
-        CPPUNIT_TEST( testThreaded1 );
-        CPPUNIT_TEST( testThreaded2 );
-        CPPUNIT_TEST( testOperators );
-        CPPUNIT_TEST( testSTLContainers );
-        CPPUNIT_TEST( testReturnByValue );
+//        CPPUNIT_TEST( testBasics );
+//        CPPUNIT_TEST( testConstructor1 );
+//        CPPUNIT_TEST( testConstructor2 );
+//        CPPUNIT_TEST( testClone );
+//        CPPUNIT_TEST( testAssignment );
+//        CPPUNIT_TEST( testComparisons );
+//        CPPUNIT_TEST( testThreaded1 );
+//        CPPUNIT_TEST( testThreaded2 );
+//        CPPUNIT_TEST( testOperators );
+//        CPPUNIT_TEST( testSTLContainers );
+//        CPPUNIT_TEST( testReturnByValue );
         CPPUNIT_TEST( testThreadSafety );
         CPPUNIT_TEST_SUITE_END();
 
