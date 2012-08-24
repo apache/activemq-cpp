@@ -68,6 +68,7 @@ AdvisoryConsumer::AdvisoryConsumer(ActiveMQConnection* connection, Pointer<comma
     this->config->info->setDestination(destination);
     this->config->info->setPrefetchSize(1000);
     this->config->info->setNoLocal(true);
+    this->config->info->setDispatchAsync(true);
 
     this->connection->addDispatcher(this->config->info->getConsumerId(), this);
     this->connection->syncRequest(this->config->info);
