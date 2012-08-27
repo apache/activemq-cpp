@@ -44,10 +44,8 @@
 #include <activemq/commands/ActiveMQStreamMessage.h>
 #include <activemq/commands/ActiveMQTempTopic.h>
 #include <activemq/commands/ActiveMQTempQueue.h>
-#include <activemq/commands/MessagePull.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/commands/ProducerInfo.h>
-#include <activemq/commands/TransactionInfo.h>
 #include <activemq/commands/RemoveSubscriptionInfo.h>
 
 #include <decaf/lang/Boolean.h>
