@@ -38,7 +38,6 @@
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/FifoMessageDispatchChannel.h>

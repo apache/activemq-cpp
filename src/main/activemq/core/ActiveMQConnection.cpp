@@ -20,10 +20,10 @@
 #include <cms/Session.h>
 
 #include <activemq/core/ActiveMQSession.h>
-#include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/core/AdvisoryConsumer.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
+#include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -46,6 +46,7 @@
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/ThreadPoolExecutor.h>
 #include <decaf/util/concurrent/LinkedBlockingQueue.h>
+#include <decaf/util/concurrent/locks/ReentrantReadWriteLock.h>
 
 #include <activemq/commands/Command.h>
 #include <activemq/commands/ActiveMQMessage.h>
@@ -54,7 +55,6 @@
 #include <activemq/commands/ConnectionId.h>
 #include <activemq/commands/DestinationInfo.h>
 #include <activemq/commands/ExceptionResponse.h>
-#include <activemq/commands/KeepAliveInfo.h>
 #include <activemq/commands/Message.h>
 #include <activemq/commands/MessagePull.h>
 #include <activemq/commands/MessageAck.h>
@@ -65,7 +65,6 @@
 #include <activemq/commands/ShutdownInfo.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/WireFormatInfo.h>
-#include <activemq/commands/RemoveSubscriptionInfo.h>
 
 using namespace std;
 using namespace cms;
