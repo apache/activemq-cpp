@@ -70,7 +70,10 @@ namespace commands{
     public:   // CMS Message
 
         virtual cms::TextMessage* clone() const {
-            return dynamic_cast<cms::TextMessage*>( this->cloneDataStructure() );
+            ActiveMQTextMessage* clone = this->cloneDataStructure();
+            clone->setReadOnlyBody(false);
+            clone->setReadOnlyProperties(false);
+            return dynamic_cast<cms::TextMessage*>(clone);
         }
 
     public:   // cms::TextMessage

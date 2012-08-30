@@ -79,7 +79,10 @@ namespace commands{
     public:   // CMS Message
 
         virtual cms::MapMessage* clone() const {
-            return dynamic_cast<cms::MapMessage*>( this->cloneDataStructure() );
+            ActiveMQMapMessage* clone = this->cloneDataStructure();
+            clone->setReadOnlyBody(false);
+            clone->setReadOnlyProperties(false);
+            return dynamic_cast<cms::MapMessage*>(clone);
         }
 
     public:   // CMS MapMessage

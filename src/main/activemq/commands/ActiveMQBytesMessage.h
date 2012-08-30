@@ -89,7 +89,10 @@ namespace commands{
     public:   // CMS Message
 
         virtual cms::BytesMessage* clone() const {
-            return dynamic_cast<cms::BytesMessage*>( this->cloneDataStructure() );
+            ActiveMQBytesMessage* clone = this->cloneDataStructure();
+            clone->setReadOnlyBody(false);
+            clone->setReadOnlyProperties(false);
+            return dynamic_cast<cms::BytesMessage*>(clone);
         }
 
         virtual void clearBody();
