@@ -143,18 +143,17 @@ void ActiveMQMessageTest::testSetReadOnly() {
 
     ActiveMQMessage msg;
     msg.setReadOnlyProperties( true );
-    bool test = false;
 
-    try {
-        msg.setIntProperty( "test", 1 );
-    } catch( MessageNotWriteableException& me ) {
-        test = true;
-    } catch( CMSException& e ) {
-        e.printStackTrace();
-        test = false;
-    }
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a MessageNotWriteableException",
+        msg.setIntProperty( "test", 1 ),
+        MessageNotWriteableException);
 
-    CPPUNIT_ASSERT( test );
+    msg.setReadOnlyProperties( false );
+
+    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+        "Should have thrown a MessageNotWriteableException",
+        msg.setIntProperty( "test", 1 ));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
