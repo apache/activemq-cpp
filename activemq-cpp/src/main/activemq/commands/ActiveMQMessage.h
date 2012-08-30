@@ -61,7 +61,10 @@ namespace commands{
     public:  // cms::Message
 
         virtual cms::Message* clone() const {
-            return dynamic_cast<cms::Message*>( this->cloneDataStructure() );
+            ActiveMQMessage* clone = this->cloneDataStructure();
+            clone->setReadOnlyBody(false);
+            clone->setReadOnlyProperties(false);
+            return dynamic_cast<cms::Message*>(clone);
         }
 
     };

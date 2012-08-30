@@ -79,7 +79,10 @@ namespace commands {
     public: // CMS Message
 
         virtual cms::StreamMessage* clone() const {
-            return dynamic_cast<cms::StreamMessage*> (this->cloneDataStructure());
+            ActiveMQStreamMessage* clone = this->cloneDataStructure();
+            clone->setReadOnlyBody(false);
+            clone->setReadOnlyProperties(false);
+            return dynamic_cast<cms::StreamMessage*>(clone);
         }
 
         virtual void clearBody();
