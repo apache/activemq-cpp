@@ -315,8 +315,8 @@ void ActiveMQConnection::addSession( ActiveMQSession* session ) {
     try {
 
         synchronized( &this->config->activeSessions ) {
-        	// Remove this session from the set of active sessions.
-        	this->config->activeSessions.add( session );
+            // Remove this session from the set of active sessions.
+            this->config->activeSessions.add( session );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -328,8 +328,8 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session ) {
     try {
 
         synchronized( &this->config->activeSessions ) {
-        	// Remove this session from the set of active sessions.
-        	this->config->activeSessions.remove( session );
+            // Remove this session from the set of active sessions.
+            this->config->activeSessions.remove( session );
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -392,7 +392,11 @@ void ActiveMQConnection::setClientID( const std::string& clientID ) {
 
     this->config->connectionInfo->setClientId( clientID );
     this->config->userSpecifiedClientID = true;
-    ensureConnectionInfoSent();
+
+    try {
+        ensureConnectionInfoSent();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -415,15 +419,15 @@ void ActiveMQConnection::close() {
 
         // If we are running lets stop first.
         if (!this->transportFailed.get()) {
-        	try {
-            	this->stop();
-        	} catch (cms::CMSException& error) {
-        		if (!hasException) {
-					ex = Exception(&error);
-					ex.setMark(__FILE__, __LINE__);
-					hasException = true;
-        		}
-        	}
+            try {
+                this->stop();
+            } catch (cms::CMSException& error) {
+                if (!hasException) {
+                    ex = Exception(&error);
+                    ex.setMark(__FILE__, __LINE__);
+                    hasException = true;
+                }
+            }
         }
 
         // Indicates we are on the way out to suppress any exceptions getting
@@ -433,51 +437,51 @@ void ActiveMQConnection::close() {
         if (this->config->scheduler != NULL) {
             try {
                 this->config->scheduler->stop();
-        	} catch (Exception& error) {
-        		if (!hasException) {
-					ex = error;
-					ex.setMark(__FILE__, __LINE__);
-					hasException = true;
-        		}
-        	}
+            } catch (Exception& error) {
+                if (!hasException) {
+                    ex = error;
+                    ex.setMark(__FILE__, __LINE__);
+                    hasException = true;
+                }
+            }
         }
 
-		long long lastDeliveredSequenceId = 0;
+        long long lastDeliveredSequenceId = 0;
 
         synchronized( &this->config->activeSessions ) {
-			// Get the complete list of active sessions.
-			std::auto_ptr<Iterator<ActiveMQSession*> > iter(this->config->activeSessions.iterator());
+            // Get the complete list of active sessions.
+            std::auto_ptr<Iterator<ActiveMQSession*> > iter(this->config->activeSessions.iterator());
 
-			// Dispose of all the Session resources we know are still open.
-			while (iter->hasNext()) {
-				ActiveMQSession* session = iter->next();
-				try {
-					session->dispose();
-					lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
-				} catch(cms::CMSException& ex){
-				}
-			}
+            // Dispose of all the Session resources we know are still open.
+            while (iter->hasNext()) {
+                ActiveMQSession* session = iter->next();
+                try {
+                    session->dispose();
+                    lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
+                } catch(cms::CMSException& ex){
+                }
+            }
         }
 
         // Now inform the Broker we are shutting down.
         try {
             this->disconnect(lastDeliveredSequenceId);
-    	} catch (Exception& error) {
-    		if (!hasException) {
-				ex = error;
-				ex.setMark(__FILE__, __LINE__);
-				hasException = true;
-    		}
-    	}
+        } catch (Exception& error) {
+            if (!hasException) {
+                ex = error;
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
+        }
 
         // Once current deliveries are done this stops the delivery
         // of any new messages.
         this->started.set(false);
-		this->closed.set(true);
+        this->closed.set(true);
 
-		if (hasException) {
-			throw ex;
-		}
+        if (hasException) {
+            throw ex;
+        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -489,18 +493,18 @@ void ActiveMQConnection::cleanup() {
 
         synchronized( &this->config->activeSessions ) {
 
-			// Get the complete list of active sessions.
-			std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
+            // Get the complete list of active sessions.
+            std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->config->activeSessions.iterator() );
 
-			// Dispose of all the Session resources we know are still open.
-			while( iter->hasNext() ) {
-				ActiveMQSession* session = iter->next();
-				try{
-					session->dispose();
-				} catch( cms::CMSException& ex ){
-					/* Absorb */
-				}
-			}
+            // Dispose of all the Session resources we know are still open.
+            while( iter->hasNext() ) {
+                ActiveMQSession* session = iter->next();
+                try{
+                    session->dispose();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
+            }
         }
 
         if( this->config->isConnectionInfoSentToBroker ) {
@@ -582,50 +586,50 @@ void ActiveMQConnection::disconnect( long long lastDeliveredSequenceId ) {
 
             // Remove our ConnectionId from the Broker
             try {
-				Pointer<RemoveInfo> command(this->config->connectionInfo->createRemoveCommand());
-				command->setLastDeliveredSequenceId(lastDeliveredSequenceId);
-				this->syncRequest(command, this->config->closeTimeout);
-			} catch (Exception& ex) {
-				if (!hasException) {
-					hasException = true;
-					ex.setMark(__FILE__, __LINE__);
-					e = ex;
-				}
-			}
+                Pointer<RemoveInfo> command(this->config->connectionInfo->createRemoveCommand());
+                command->setLastDeliveredSequenceId(lastDeliveredSequenceId);
+                this->syncRequest(command, this->config->closeTimeout);
+            } catch (Exception& ex) {
+                if (!hasException) {
+                    hasException = true;
+                    ex.setMark(__FILE__, __LINE__);
+                    e = ex;
+                }
+            }
 
             // Send the disconnect command to the broker.
             try {
-				Pointer<ShutdownInfo> shutdown(new ShutdownInfo());
-				oneway(shutdown);
-			} catch (Exception& ex) {
-				if (!hasException) {
-					hasException = true;
-					ex.setMark(__FILE__, __LINE__);
-					e = ex;
-				}
-			}
+                Pointer<ShutdownInfo> shutdown(new ShutdownInfo());
+                oneway(shutdown);
+            } catch (Exception& ex) {
+                if (!hasException) {
+                    hasException = true;
+                    ex.setMark(__FILE__, __LINE__);
+                    e = ex;
+                }
+            }
         }
 
         if (this->config->transport != NULL) {
 
-			try {
-				this->config->transport->close();
-			} catch (Exception& ex) {
-				if (!hasException) {
-					hasException = true;
-					ex.setMark(__FILE__, __LINE__);
-					e = ex;
-				}
-			}
+            try {
+                this->config->transport->close();
+            } catch (Exception& ex) {
+                if (!hasException) {
+                    hasException = true;
+                    ex.setMark(__FILE__, __LINE__);
+                    e = ex;
+                }
+            }
 
-			this->config->transport.reset(NULL);
-		}
+            this->config->transport.reset(NULL);
+        }
 
         // If we encountered an exception - throw the first one we encountered.
         // This will preserve the stack trace for logging purposes.
         if (hasException) {
-			throw e;
-		}
+            throw e;
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
