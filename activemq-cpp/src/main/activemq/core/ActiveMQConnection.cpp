@@ -510,7 +510,11 @@ void ActiveMQConnection::setClientID( const std::string& clientID ) {
 
     this->config->connectionInfo->setClientId(clientID);
     this->config->userSpecifiedClientID = true;
-    ensureConnectionInfoSent();
+
+    try {
+    	ensureConnectionInfoSent();
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
