@@ -25,13 +25,13 @@ cc_sources = \
     decaf/io/DataOutputStreamBenchmark.cpp \
     decaf/lang/BooleanBenchmark.cpp \
     decaf/lang/ThreadBenchmark.cpp \
-    decaf/util/LinkedListBenchmark.cpp \
-    decaf/util/StlMapBenchmark.cpp \
     decaf/util/HashMapBenchmark.cpp \
+    decaf/util/LinkedListBenchmark.cpp \
     decaf/util/PropertiesBenchmark.cpp \
     decaf/util/QueueBenchmark.cpp \
     decaf/util/SetBenchmark.cpp \
     decaf/util/StlListBenchmark.cpp \
+    decaf/util/StlMapBenchmark.cpp \
     main.cpp \
     testRegistry.cpp
 
@@ -47,13 +47,13 @@ h_sources = \
     decaf/io/DataOutputStreamBenchmark.h \
     decaf/lang/BooleanBenchmark.h \
     decaf/lang/ThreadBenchmark.h \
-    decaf/util/LinkedListBenchmark.h \
-    decaf/util/StlMapBenchmark.h \
     decaf/util/HashMapBenchmark.h \
+    decaf/util/LinkedListBenchmark.h \
     decaf/util/PropertiesBenchmark.h \
     decaf/util/QueueBenchmark.h \
     decaf/util/SetBenchmark.h \
-    decaf/util/StlListBenchmark.h
+    decaf/util/StlListBenchmark.h \
+    decaf/util/StlMapBenchmark.h
 
 
 ## Compile this as part of make check
