@@ -512,7 +512,7 @@ void ActiveMQConnection::setClientID( const std::string& clientID ) {
     this->config->userSpecifiedClientID = true;
 
     try {
-    	ensureConnectionInfoSent();
+        ensureConnectionInfoSent();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -643,7 +643,7 @@ void ActiveMQConnection::cleanup() {
 
     try {
 
-        this->config->sessionsLock.readLock().lock();
+        this->config->sessionsLock.writeLock().lock();
         try {
             // Get the complete list of active sessions.
             std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
@@ -657,9 +657,9 @@ void ActiveMQConnection::cleanup() {
                     /* Absorb */
                 }
             }
-            this->config->sessionsLock.readLock().unlock();
+            this->config->sessionsLock.writeLock().unlock();
         } catch (Exception& ex) {
-            this->config->sessionsLock.readLock().unlock();
+            this->config->sessionsLock.writeLock().unlock();
             throw;
         }
 
