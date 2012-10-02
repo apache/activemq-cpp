@@ -59,9 +59,7 @@ namespace lang{
 
         Runnable* task;
         ThreadHandle* handle;
-
         Thread::UncaughtExceptionHandler* exHandler;
-
         static unsigned int id;
         static Thread::UncaughtExceptionHandler* defaultHandler;
 
@@ -86,31 +84,31 @@ Thread::Thread(ThreadHandle* handle) : Runnable(), properties(NULL) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::Thread() : Runnable(), properties(NULL) {
-    this->initializeSelf( NULL, "", -1 );
+    this->initializeSelf(NULL, "", -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task ) : Runnable(), properties(NULL) {
-    this->initializeSelf( task, "", -1 );
+Thread::Thread(Runnable* task) : Runnable(), properties(NULL) {
+    this->initializeSelf(task, "", -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( const std::string& name ) : Runnable(), properties(NULL) {
-    this->initializeSelf( NULL, name, -1 );
+Thread::Thread(const std::string& name) : Runnable(), properties(NULL) {
+    this->initializeSelf(NULL, name, -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task, const std::string& name ) : Runnable(), properties( NULL ) {
-    this->initializeSelf( task, name, -1 );
+Thread::Thread(Runnable* task, const std::string& name) : Runnable(), properties( NULL ) {
+    this->initializeSelf(task, name, -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task, const std::string& name, long long stackSize ) : Runnable(), properties( NULL ) {
-    this->initializeSelf( task, name, stackSize );
+Thread::Thread(Runnable* task, const std::string& name, long long stackSize) : Runnable(), properties( NULL ) {
+    this->initializeSelf(task, name, stackSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::initializeSelf( Runnable* task, const std::string& name, long long stackSize ) {
+void Thread::initializeSelf(Runnable* task, const std::string& name, long long stackSize) {
 
     std::string threadName = name;
 
@@ -128,7 +126,7 @@ void Thread::initializeSelf( Runnable* task, const std::string& name, long long 
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::~Thread() {
-    try{
+    try {
         Threading::destroyThread(this->properties->handle);
         delete this->properties;
     }
@@ -233,7 +231,7 @@ long long Thread::getId() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setName( const std::string& name ) {
+void Thread::setName(const std::string& name) {
     Threading::setThreadName(this->properties->handle, name.c_str());
 }
 
@@ -243,9 +241,9 @@ std::string Thread::getName() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setPriority( int value ) {
+void Thread::setPriority(int value) {
 
-    if( value < Thread::MIN_PRIORITY || value > Thread::MAX_PRIORITY ) {
+    if (value < Thread::MIN_PRIORITY || value > Thread::MAX_PRIORITY) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::setPriority - Specified value {%d} is out of range", value );
@@ -260,7 +258,7 @@ int Thread::getPriority() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setUncaughtExceptionHandler( UncaughtExceptionHandler* handler ) {
+void Thread::setUncaughtExceptionHandler(UncaughtExceptionHandler* handler) {
     this->properties->exHandler = handler;
 }
 
@@ -275,7 +273,7 @@ Thread::UncaughtExceptionHandler* Thread::getDefaultUncaughtExceptionHandler() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::setDefaultUncaughtExceptionHandler( Thread::UncaughtExceptionHandler* handler ) {
+void Thread::setDefaultUncaughtExceptionHandler(Thread::UncaughtExceptionHandler* handler) {
     ThreadProperties::defaultHandler = handler;
 }
 

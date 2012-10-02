@@ -66,7 +66,7 @@ namespace concurrent {
          * @returns constructed thread, or NULL if the request to create a thread is rejected
          *          the caller owns the returned pointer.
          */
-        virtual decaf::lang::Thread* newThread( decaf::lang::Runnable* r ) = 0;
+        virtual decaf::lang::Thread* newThread(decaf::lang::Runnable* r) = 0;
 
     };
 
