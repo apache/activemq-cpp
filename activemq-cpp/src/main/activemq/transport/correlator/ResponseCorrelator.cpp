@@ -65,8 +65,11 @@ ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next ) :
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::~ResponseCorrelator(){
 
-    // Close the transport and destroy it.
-    close();
+	try {
+		// Close the transport and destroy it.
+		close();
+	}
+	AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +106,11 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
         Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
+        	if (!closed) {
+        		requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
+        	} else {
+        		throw IOException(__FILE__, __LINE__, "Transport is closed");
+        	}
         }
 
         // The finalizer will cleanup the map even if an exception is thrown.
@@ -147,7 +154,11 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
         Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
+        	if (!closed) {
+        		requestMap.insert( make_pair( (unsigned int)command->getCommandId(), futureResponse ) );
+        	} else {
+        		throw IOException(__FILE__, __LINE__, "Transport is closed");
+        	}
         }
 
         // The finalizer will cleanup the map even if an exception is thrown.
@@ -200,11 +211,6 @@ void ResponseCorrelator::onCommand( const Pointer<Command>& command ) {
         std::map< unsigned int, Pointer<FutureResponse> >::iterator iter =
             requestMap.find( response->getCorrelationId() );
         if( iter == requestMap.end() ){
-
-            // This is not terrible - just log it.
-            //printf( "ResponseCorrelator::onCommand() - "
-            //        "received unknown response for request: %d\n",
-            //        response->getCorrelationId() );
             return;
         }
 
