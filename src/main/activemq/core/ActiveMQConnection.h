@@ -106,8 +106,8 @@ namespace core{
          * @param properties
          *        The Properties that were defined for this connection
          */
-        ActiveMQConnection(const Pointer<transport::Transport>& transport,
-                           const Pointer<decaf::util::Properties>& properties);
+        ActiveMQConnection(const Pointer<transport::Transport> transport,
+                           const Pointer<decaf::util::Properties> properties);
 
         virtual ~ActiveMQConnection();
 

@@ -88,6 +88,29 @@ using namespace decaf::lang::exceptions;
 namespace activemq{
 namespace core{
 
+    class ConnectionThreadFactory : public ThreadFactory {
+    private:
+
+        Pointer<Transport> transport;
+
+    public:
+
+        ConnectionThreadFactory(Pointer<Transport> transport) : transport(transport) {
+            if (transport == NULL) {
+                throw NullPointerException(__FILE__, __LINE__, "Transport cannot be null");
+            }
+        }
+
+        virtual ~ConnectionThreadFactory() {}
+
+        virtual Thread* newThread(decaf::lang::Runnable* runnable) {
+            Thread* thread = new Thread(runnable,
+                    std::string("ActiveMQ Connection Executor: ") + transport->getRemoteAddress());
+            return thread;
+        }
+
+    };
+
     class ConnectionConfig {
     private:
 
@@ -167,8 +190,10 @@ namespace core{
 
         TempDestinationMap activeTempDestinations;
 
-        ConnectionConfig() : properties(),
-                             transport(),
+        ConnectionConfig(const Pointer<transport::Transport> transport,
+                         const Pointer<decaf::util::Properties> properties) :
+                             properties(properties),
+                             transport(transport),
                              clientIdGenerator(),
                              scheduler(),
                              sessionIds(),
@@ -216,7 +241,8 @@ namespace core{
             this->brokerInfoReceived.reset(new CountDownLatch(1));
 
             this->executor.reset(
-                new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>()));
+                new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS,
+                    new LinkedBlockingQueue<Runnable*>(), new ConnectionThreadFactory(transport)));
 
             // Generate a connectionId
             std::string uniqueId = CONNECTION_ID_GENERATOR.generateId();
@@ -326,8 +352,8 @@ namespace core{
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport>& transport,
-                                       const Pointer<decaf::util::Properties>& properties) :
+ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport> transport,
+                                       const Pointer<decaf::util::Properties> properties) :
     config(NULL),
     connectionMetaData(new ActiveMQConnectionMetaData()),
     started(false),
@@ -335,7 +361,8 @@ ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport>& tran
     closing(false),
     transportFailed(false) {
 
-    Pointer<ConnectionConfig> configuration(new ConnectionConfig);
+    Pointer<ConnectionConfig> configuration(
+            new ConnectionConfig(transport, properties));
 
     // Register for messages and exceptions from the connector.
     transport->setTransportListener(this);
@@ -343,10 +370,6 @@ ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport>& tran
     // Set the initial state of the ConnectionInfo
     configuration->connectionInfo->setManageable(true);
     configuration->connectionInfo->setFaultTolerant(transport->isFaultTolerant());
-
-    // Store of the transport and properties, the Connection now owns them.
-    configuration->properties = properties;
-    configuration->transport = transport;
 
     this->config = configuration.release();
 }
