@@ -297,9 +297,12 @@ namespace core{
                 // Mark this Connection as having a Failed transport.
                 this->connection->setFirstFailureError(ex);
 
-                try{
-                    this->config->transport->stop();
-                } catch(...) {
+                Pointer<Transport> transport = this->config->transport;
+                if (transport != NULL) {
+                    try {
+                        transport->stop();
+                    } catch(...) {
+                    }
                 }
 
                 this->config->brokerInfoReceived->countDown();
@@ -310,7 +313,7 @@ namespace core{
                 synchronized(&this->config->transportListeners) {
                     Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
-                    while( iter->hasNext() ) {
+                    while (iter->hasNext()) {
                         try{
                             iter->next()->onException(ex);
                         } catch(...) {}
