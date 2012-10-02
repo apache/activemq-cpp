@@ -406,44 +406,38 @@ void ResponseCorrelatorTest::testOneway(){
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testTransportException(){
 
-    try{
+    MyListener listener;
+    Pointer<MyBrokenTransport> transport( new MyBrokenTransport() );
+    ResponseCorrelator correlator( transport );
+    correlator.setTransportListener( &listener );
+    CPPUNIT_ASSERT( transport->listener == &correlator );
 
-        MyListener listener;
-        Pointer<MyBrokenTransport> transport( new MyBrokenTransport() );
-        ResponseCorrelator correlator( transport );
-        correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport->listener == &correlator );
+    // Give the thread a little time to get up and running.
+    synchronized( &(transport->startedMutex) ) {
+        // Start the transport.
+        correlator.start();
 
-        // Give the thread a little time to get up and running.
-        synchronized( &(transport->startedMutex) ) {
-            // Start the transport.
-            correlator.start();
-
-            transport->startedMutex.wait();
-        }
-
-        // Send one request.
-        Pointer<MyCommand> cmd( new MyCommand );
-        try{
-            correlator.request( cmd, 500 );
-            CPPUNIT_ASSERT(false);
-        }catch( IOException& ex ){
-            // Expected.
-        }
-
-        // Wait to make sure we get the asynchronous message back.
-        decaf::lang::Thread::sleep( 200 );
-
-        // Since our transport relays our original command back at us as a
-        // non-response message, check to make sure we received it and that
-        // it is the original command.
-        CPPUNIT_ASSERT( listener.commands.size() == 0 );
-        CPPUNIT_ASSERT( listener.exCount == 1 );
-
-        correlator.close();
+        transport->startedMutex.wait();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    // Send one request.
+    Pointer<MyCommand> cmd( new MyCommand );
+    try{
+        correlator.request( cmd, 1000 );
+    }catch( IOException& ex ){
+        CPPUNIT_ASSERT(false);
+    }
+
+    // Wait to make sure we get the asynchronous message back.
+    decaf::lang::Thread::sleep( 200 );
+
+    // Since our transport relays our original command back at us as a
+    // non-response message, check to make sure we received it and that
+    // it is the original command.
+    CPPUNIT_ASSERT( listener.commands.size() == 0 );
+    CPPUNIT_ASSERT( listener.exCount == 1 );
+
+    correlator.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
