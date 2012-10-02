@@ -336,10 +336,17 @@ void ResponseCorrelator::dispose(const Pointer<Exception> error) {
     }
 
     if (!requests.isEmpty()) {
+        Pointer<commands::BrokerError> exception(new commands::BrokerError);
+        exception->setExceptionClass("java.io.IOException");
+        exception->setMessage(error->getMessage());
+
+        Pointer<commands::ExceptionResponse> errorResponse(new commands::ExceptionResponse);
+        errorResponse->setException(exception);
+
         Pointer<Iterator<Pointer<FutureResponse> > > iter(requests.iterator());
         while (iter->hasNext()) {
             Pointer<FutureResponse> response = iter->next();
-            response->setResponse(Pointer<commands::Response>(new commands::ExceptionResponse));
+            response->setResponse(errorResponse);
         }
     }
 }
