@@ -89,14 +89,13 @@ ActiveMQProducerKernel::~ActiveMQProducerKernel() {
     try {
         close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducerKernel::close() {
 
-    try{
+    try {
 
         if (!this->isClosed()) {
 
