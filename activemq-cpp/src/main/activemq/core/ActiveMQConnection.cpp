@@ -591,6 +591,7 @@ void ActiveMQConnection::close() {
         }
 
         // Get the complete list of active sessions.
+        this->config->sessionsLock.writeLock().lock();
         std::auto_ptr< Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
 
         long long lastDeliveredSequenceId = 0;
@@ -601,9 +602,10 @@ void ActiveMQConnection::close() {
             try {
                 session->dispose();
                 lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
-            } catch( cms::CMSException& ex ){
+            } catch (cms::CMSException& ex) {
             }
         }
+        this->config->sessionsLock.writeLock().unlock();
 
         // As TemporaryQueue and TemporaryTopic instances are bound to a connection
         // we should just delete them after the connection is closed to free up memory
