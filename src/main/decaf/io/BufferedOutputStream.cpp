@@ -27,46 +27,40 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
-: FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
+BufferedOutputStream::BufferedOutputStream(OutputStream* stream, bool own) :
+    FilterOutputStream(stream, own), buffer(NULL), bufferSize(0), head(0), tail(0) {
 
     // Default to 1k buffer.
-    init( 8192 );
+    init(8192);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, bool own ) :
-    FilterOutputStream( stream, own ), buffer(NULL), bufferSize(0), head(0), tail(0) {
+BufferedOutputStream::BufferedOutputStream(OutputStream* stream, int bufSize, bool own) :
+    FilterOutputStream(stream, own), buffer(NULL), bufferSize(0), head(0), tail(0) {
 
     try {
-        this->init( bufSize );
+        this->init(bufSize);
     }
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCHALL_THROW( IllegalArgumentException )
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::~BufferedOutputStream() {
 
-    try{
+    try {
         this->close();
-
-        // Destroy the buffer.
-        if( buffer != NULL ){
-            delete [] buffer;
-            buffer = NULL;
-        }
     }
-    DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
+
+    delete [] buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::init( int bufSize ) {
+void BufferedOutputStream::init(int bufSize) {
 
-    if( bufSize < 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__, "Size of Buffer cannot be negative." );
+    if (bufSize < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Size of Buffer cannot be negative.");
     }
 
     this->bufferSize = bufSize;
@@ -78,16 +72,18 @@ void BufferedOutputStream::init( int bufSize ) {
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStream::emptyBuffer() {
 
-    if( this->outputStream == NULL ) {
-        throw IOException(
-            __FILE__, __LINE__,
-            "BufferedOutputStream::emptyBuffer - OutputStream is closed" );
+    if (this->outputStream == NULL) {
+        throw IOException(__FILE__, __LINE__, "BufferedOutputStream::emptyBuffer - OutputStream is closed");
     }
 
-    if( this->head != this->tail ){
-        this->outputStream->write( this->buffer + this->head, this->tail -this->head );
+    try {
+        if (this->head != this->tail) {
+            this->outputStream->write(this->buffer + this->head, this->tail - this->head);
+        }
+        this->head = this->tail = 0;
     }
-    this->head = this->tail = 0;
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,10 +91,8 @@ void BufferedOutputStream::flush() {
 
     try {
 
-        if( isClosed() ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedOutputStream::write - Stream is clsoed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "BufferedOutputStream::write - Stream is clsoed");
         }
 
         // Empty the contents of the buffer to the output stream.
@@ -107,100 +101,88 @@ void BufferedOutputStream::flush() {
         // Flush the output stream.
         outputStream->flush();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteByte( const unsigned char c ) {
+void BufferedOutputStream::doWriteByte(const unsigned char c) {
 
-    try{
+    try {
 
-        if( isClosed() ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedOutputStream::write - Stream is clsoed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "BufferedOutputStream::write - Stream is clsoed");
         }
 
-        if( tail >= bufferSize ){
+        if (tail >= bufferSize) {
             emptyBuffer();
         }
 
         buffer[tail++] = c;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
+void BufferedOutputStream::doWriteArray(const unsigned char* buffer, int size) {
 
-    try{
+    try {
 
-        if( size == 0 ) {
+        if (size == 0) {
             return;
         }
 
-        if( isClosed() ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedOutputStream::write - Stream is clsoed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "BufferedOutputStream::write - Stream is clsoed");
         }
 
-        this->doWriteArrayBounded( buffer, size, 0, size );
+        this->doWriteArrayBounded(buffer, size, 0, size);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                int offset, int length ) {
+void BufferedOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( length == 0 ) {
+        if (length == 0) {
             return;
         }
 
-        if( isClosed() ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "BufferedOutputStream::write - Stream is clsoed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "BufferedOutputStream::write - Stream is clsoed");
         }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "BufferedOutputStream::write - Buffer passed is Null.");
+        if (buffer == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "BufferedOutputStream::write - Buffer passed is Null.");
         }
 
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        if (size < 0) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        if (offset > size || offset < 0) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        if (length < 0 || length > size - offset) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
         // Iterate until all the data is written.
-        for( int pos = 0; pos < length; ){
+        for (int pos = 0; pos < length;) {
 
-            if( tail >= bufferSize ){
+            if (tail >= bufferSize) {
                 emptyBuffer();
             }
 
             // Get the number of bytes left to write.
-            int bytesToWrite = Math::min( bufferSize - tail, length - pos );
+            int bytesToWrite = Math::min(bufferSize - tail, length - pos);
 
-            System::arraycopy( buffer, offset + pos, this->buffer, this->tail, bytesToWrite );
+            System::arraycopy(buffer, offset + pos, this->buffer, this->tail, bytesToWrite);
 
             // Increase the tail position.
             tail += bytesToWrite;
@@ -209,8 +191,8 @@ void BufferedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int
             pos += bytesToWrite;
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
