@@ -666,6 +666,24 @@ void ActiveMQConnection::close() {
             }
         }
 
+        // Ensure that interruption processing completes in case any consumers were
+        // still in the process when we closed them.
+        try {
+            Pointer<CountDownLatch> latch = this->config->transportInterruptionProcessingComplete;
+            if (latch != NULL) {
+                int count = latch->getCount();
+                for (; count > 0; count--) {
+                    latch->countDown();
+                }
+            }
+        } catch (Exception& error) {
+            if (!hasException) {
+                ex = error;
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
+        }
+
         // Now inform the Broker we are shutting down.
         try {
             this->disconnect(lastDeliveredSequenceId);
