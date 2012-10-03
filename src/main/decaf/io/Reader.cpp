@@ -38,11 +38,8 @@ Reader::~Reader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Reader::mark( int readAheadLimit DECAF_UNUSED ) {
-
-    throw IOException(
-        __FILE__, __LINE__,
-        "Default implementation of Reader, mark not supported." );
+void Reader::mark(int readAheadLimit DECAF_UNUSED) {
+    throw IOException(__FILE__, __LINE__, "Default implementation of Reader, mark not supported.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,175 +49,171 @@ bool Reader::ready() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Reader::reset() {
-
-    throw IOException(
-        __FILE__, __LINE__,
-        "Default implementation of Reader, reset not supported." );
+    throw IOException(__FILE__, __LINE__, "Default implementation of Reader, reset not supported.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Reader::skip( long long count ) {
+long long Reader::skip(long long count) {
 
-    try{
+    try {
 
         long long skipped = 0;
-        int toRead = count < 512 ? (int)count : 512;
+        int toRead = count < 512 ? (int) count : 512;
 
-        std::vector<char> charsSkipped( toRead );
+        std::vector<char> charsSkipped(toRead);
 
-        while( skipped < count ) {
+        while (skipped < count) {
 
-            int read = this->doReadArrayBounded( &charsSkipped[0], (int)charsSkipped.size(), 0, toRead );
+            int read = this->doReadArrayBounded(&charsSkipped[0], (int) charsSkipped.size(), 0, toRead);
 
-            if( read == -1 ) {
+            if (read == -1) {
                 return skipped;
             }
 
             skipped += read;
 
-            if( read < toRead ) {
+            if (read < toRead) {
                 return skipped;
             }
 
-            if( count - skipped < (long long)toRead ) {
-                toRead = (int)( count - skipped );
+            if (count - skipped < (long long) toRead) {
+                toRead = (int) (count - skipped);
             }
         }
 
         return skipped;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( std::vector<char>& buffer ) {
+int Reader::read(std::vector<char>& buffer) {
 
-    try{
-        return this->doReadVector( buffer );
+    try {
+        return this->doReadVector(buffer);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, int length ) {
+int Reader::read(char* buffer, int length) {
 
-    try{
-        return this->doReadArray( buffer, length );
+    try {
+        return this->doReadArray(buffer, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( char* buffer, int size, int offset, int length ) {
+int Reader::read(char* buffer, int size, int offset, int length) {
 
-    try{
-        return this->doReadArrayBounded( buffer, size, offset, length );
+    try {
+        return this->doReadArrayBounded(buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Reader::read() {
 
-    try{
+    try {
         return this->doReadChar();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::read( decaf::nio::CharBuffer* charBuffer ) {
+int Reader::read(decaf::nio::CharBuffer* charBuffer) {
 
-    try{
+    try {
         // Error checking is done in the Impl.
-        return this->doReadCharBuffer( charBuffer );
+        return this->doReadCharBuffer(charBuffer);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( ReadOnlyBufferException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(ReadOnlyBufferException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadVector( std::vector<char>& buffer ) {
+int Reader::doReadVector(std::vector<char>& buffer) {
 
-    try{
+    try {
 
-        if( buffer.size() == 0 ) {
+        if (buffer.size() == 0) {
             return -1;
         }
 
-        return this->doReadArrayBounded( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+        return this->doReadArrayBounded(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadArray( char* buffer, int length ) {
+int Reader::doReadArray(char* buffer, int length) {
 
-    try{
+    try {
 
-        if( length == 0 ) {
+        if (length == 0) {
             return 0;
         }
 
-        return this->doReadArrayBounded( buffer, length, 0, length );
+        return this->doReadArrayBounded(buffer, length, 0, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Reader::doReadChar() {
 
-    try{
+    try {
 
         char buffer;
 
-        if( this->doReadArrayBounded( &buffer, 1, 0, 1 ) == -1 ) {
+        if (this->doReadArrayBounded(&buffer, 1, 0, 1) == -1) {
             return -1;
         }
 
         return buffer;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Reader::doReadCharBuffer( decaf::nio::CharBuffer* charBuffer ) {
+int Reader::doReadCharBuffer(decaf::nio::CharBuffer* charBuffer) {
 
-    try{
+    if (charBuffer == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Pointer to CharBuffer cannot be NULL.");
+    }
 
-        if( charBuffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__, "Pointer to CharBuffer cannot be NULL." );
-        }
+    try {
 
-        if( charBuffer->length() == 0 ) {
+        if (charBuffer->length() == 0) {
             return 0;
         }
 
-        int length = (int)charBuffer->length();
+        int length = (int) charBuffer->length();
 
-        std::vector<char> buffer( length );
+        std::vector<char> buffer(length);
 
-        length = Math::min( length, this->doReadVector( buffer ) );
+        length = Math::min(length, this->doReadVector(buffer));
 
-        if( length > 0 ) {
-            charBuffer->put( &buffer[0], (int)buffer.size() , 0, length );
+        if (length > 0) {
+            charBuffer->put(&buffer[0], (int) buffer.size(), 0, length);
         }
 
         return length;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( ReadOnlyBufferException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(ReadOnlyBufferException)
+    DECAF_CATCHALL_THROW(IOException)
 }

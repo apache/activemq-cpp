@@ -51,7 +51,8 @@ namespace io {
     class DECAF_API DataInput {
     public:
 
-        virtual ~DataInput() {}
+        virtual ~DataInput() {
+        }
 
         /**
          * Reads in one byte and returns true if that byte is nonzero, false if that
@@ -266,7 +267,7 @@ namespace io {
          * @throws EOFException if the end of input is reached.
          * @throws IndexOutOfBoundsException if the size value is negative.
          */
-        virtual void readFully( unsigned char* buffer, int size ) = 0;
+        virtual void readFully(unsigned char* buffer, int size) = 0;
 
         /**
          * Reads length bytes from an input stream.
@@ -299,7 +300,7 @@ namespace io {
          * @throws NullPointerException if the buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length > size, or an int param is negative.
          */
-        virtual void readFully( unsigned char* buffer, int size, int offset, int length ) = 0;
+        virtual void readFully(unsigned char* buffer, int size, int offset, int length) = 0;
 
         /**
          * Makes an attempt to skip over n bytes of data from the input stream,
@@ -316,7 +317,7 @@ namespace io {
          *
          * @throws IOException if an I/O Error occurs.
          */
-        virtual long long skipBytes( long long num ) = 0;
+        virtual long long skipBytes(long long num) = 0;
 
     };
 

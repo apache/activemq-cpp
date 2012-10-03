@@ -33,7 +33,7 @@ namespace io {
      *
      * @since 1.0
      */
-    class DECAF_API OutputStreamWriter : public Writer {
+    class DECAF_API OutputStreamWriter: public Writer {
     private:
 
         // Pointer to the Stream this Writer writes its data to.
@@ -47,8 +47,8 @@ namespace io {
 
     private:
 
-        OutputStreamWriter( const OutputStreamWriter& );
-        OutputStreamWriter& operator= ( const OutputStreamWriter& );
+        OutputStreamWriter(const OutputStreamWriter&);
+        OutputStreamWriter& operator=(const OutputStreamWriter&);
 
     public:
 
@@ -63,7 +63,7 @@ namespace io {
          *
          * @throws NullPointerException if the stream is NULL.
          */
-        OutputStreamWriter( OutputStream* stream, bool own = false );
+        OutputStreamWriter(OutputStream* stream, bool own = false);
 
         virtual ~OutputStreamWriter();
 
@@ -73,7 +73,7 @@ namespace io {
 
     protected:
 
-        virtual void doWriteArrayBounded( const char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const char* buffer, int size, int offset, int length);
 
         // Used to check state and throw error when closed.
         virtual void checkClosed() const;

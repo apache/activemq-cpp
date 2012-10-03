@@ -28,7 +28,7 @@
 namespace decaf{
 namespace io{
 
-    class DECAF_API ByteArrayOutputStream : public OutputStream {
+    class DECAF_API ByteArrayOutputStream: public OutputStream {
     private:
 
         /**
@@ -48,8 +48,8 @@ namespace io{
 
     private:
 
-        ByteArrayOutputStream( const ByteArrayOutputStream& );
-        ByteArrayOutputStream& operator= ( const ByteArrayOutputStream& );
+        ByteArrayOutputStream(const ByteArrayOutputStream&);
+        ByteArrayOutputStream& operator=(const ByteArrayOutputStream&);
 
     public:
 
@@ -68,7 +68,7 @@ namespace io{
          *
          * @throw IllegalArgumentException if the size is less than or equal to zero.
          */
-        ByteArrayOutputStream( int bufferSize );
+        ByteArrayOutputStream(int bufferSize);
 
         virtual ~ByteArrayOutputStream();
 
@@ -106,18 +106,18 @@ namespace io{
          * specified output stream argument, as if by calling the output
          * stream's write method using out.write( buf, 0, count ).
          */
-        void writeTo( OutputStream* out ) const;
+        void writeTo(OutputStream* out) const;
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte(unsigned char value);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     private:
 
         // Expands the buffer if there's not enough room for the needed length.
-        void checkExpandSize( int needed );
+        void checkExpandSize(int needed);
 
     };
 

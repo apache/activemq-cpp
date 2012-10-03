@@ -30,7 +30,7 @@ FileDescriptor::FileDescriptor() : descriptor( -1 ), readonly( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FileDescriptor::FileDescriptor( long value, bool readonly ) : descriptor( value ), readonly( readonly ) {
+FileDescriptor::FileDescriptor(long value, bool readonly) : descriptor(value), readonly(readonly) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ FileDescriptor::~FileDescriptor() {
 ////////////////////////////////////////////////////////////////////////////////
 void FileDescriptor::sync() {
 
-    if( !this->readonly ) {
+    if (!this->readonly) {
         // TODO - Implement a Sync method for each OS.
     }
 }

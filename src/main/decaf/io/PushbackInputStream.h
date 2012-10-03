@@ -39,7 +39,7 @@ namespace io {
      *
      * @since 1.0
      */
-    class PushbackInputStream : public FilterInputStream {
+    class PushbackInputStream: public FilterInputStream {
     private:
 
         unsigned char* buffer;
@@ -48,8 +48,8 @@ namespace io {
 
     private:
 
-        PushbackInputStream( const PushbackInputStream& );
-        PushbackInputStream& operator= ( const PushbackInputStream& );
+        PushbackInputStream(const PushbackInputStream&);
+        PushbackInputStream& operator=(const PushbackInputStream&);
 
     public:
 
@@ -62,7 +62,7 @@ namespace io {
          * @param
          *      Boolean value indicating if this FilterInputStream owns the wrapped stream.
          */
-        PushbackInputStream( InputStream* stream, bool own = false );
+        PushbackInputStream(InputStream* stream, bool own = false);
 
         /**
          * Creates a PushbackInputStream  and saves its argument, the input stream in, for later
@@ -77,7 +77,7 @@ namespace io {
          *
          * @throws IllegalArgumentException if the bufSize argument is < zero.
          */
-        PushbackInputStream( InputStream* stream, int bufSize, bool own = false );
+        PushbackInputStream(InputStream* stream, int bufSize, bool own = false);
 
         virtual ~PushbackInputStream();
 
@@ -91,7 +91,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( unsigned char value );
+        void unread(unsigned char value);
 
         /**
          * Pushes back the given array of bytes, the bytes are copied to the front of the pushback
@@ -107,7 +107,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, int size );
+        void unread(const unsigned char* buffer, int size);
 
         /**
          * Pushes back the given array of bytes, the bytes are copied to the front of the pushback
@@ -127,7 +127,7 @@ namespace io {
          * @throws IOException if there is not enough space in the pushback buffer or this stream
          *         has already been closed.
          */
-        void unread( const unsigned char* buffer, int size, int offset, int length );
+        void unread(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * {@inheritDoc}
@@ -144,14 +144,14 @@ namespace io {
          * complete the request by calling the underlying stream skip method with the remainder
          * of bytes that needs to be skipped.
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * Does nothing except throw an IOException.
          *
          * {@inheritDoc}
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * Does nothing except throw an IOException.
@@ -173,7 +173,7 @@ namespace io {
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

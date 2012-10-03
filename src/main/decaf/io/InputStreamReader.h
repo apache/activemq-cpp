@@ -39,7 +39,7 @@ namespace io {
      *
      * @since 1.0
      */
-    class DECAF_API InputStreamReader : public Reader {
+    class DECAF_API InputStreamReader: public Reader {
     private:
 
         // The target InputStream
@@ -53,8 +53,8 @@ namespace io {
 
     private:
 
-        InputStreamReader( const InputStreamReader& );
-        InputStreamReader& operator= ( const InputStreamReader& );
+        InputStreamReader(const InputStreamReader&);
+        InputStreamReader& operator=(const InputStreamReader&);
 
     public:
 
@@ -68,7 +68,7 @@ namespace io {
          *
          * @throw NullPointerException if the passed InputStream is NULL.
          */
-        InputStreamReader( InputStream* stream, bool own = false );
+        InputStreamReader(InputStream* stream, bool own = false);
 
         virtual ~InputStreamReader();
 
@@ -78,7 +78,7 @@ namespace io {
 
     protected:
 
-        virtual int doReadArrayBounded( char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(char* buffer, int size, int offset, int length);
 
         virtual void checkClosed() const;
 

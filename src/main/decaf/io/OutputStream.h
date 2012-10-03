@@ -36,10 +36,7 @@ namespace io{
      *
      * @since 1.0
      */
-    class DECAF_API OutputStream : public Closeable,
-                                   public Flushable,
-                                   public util::concurrent::Synchronizable
-    {
+    class DECAF_API OutputStream: public Closeable, public Flushable, public util::concurrent::Synchronizable {
     private:
 
         // Synchronization object.
@@ -47,8 +44,8 @@ namespace io{
 
     private:
 
-        OutputStream( const OutputStream& );
-        OutputStream& operator= ( const OutputStream& );
+        OutputStream(const OutputStream&);
+        OutputStream& operator=(const OutputStream&);
 
     public:
 
@@ -81,7 +78,7 @@ namespace io{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void write( unsigned char c );
+        virtual void write(unsigned char c);
 
         /**
          * Writes an array of bytes to the output stream.  The entire contents of
@@ -101,7 +98,7 @@ namespace io{
          * @throws NullPointerException thrown if buffer is Null.
          * @throws IndexOutOfBoundsException if size value is negative.
          */
-        virtual void write( const unsigned char* buffer, int size );
+        virtual void write(const unsigned char* buffer, int size);
 
         /**
          * Writes an array of bytes to the output stream in order starting at buffer[offset]
@@ -127,7 +124,7 @@ namespace io{
          * @throws IndexOutOfBoundsException if the offset + length > size. or one of the
          *         parameters is negative.
          */
-        virtual void write( const unsigned char* buffer, int size, int offset, int length );
+        virtual void write(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Output a String representation of this object.
@@ -140,13 +137,13 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char value ) = 0;
+        virtual void doWriteByte(unsigned char value) = 0;
 
-        virtual void doWriteArray( const unsigned char* buffer, int size );
+        virtual void doWriteArray(const unsigned char* buffer, int size);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
-    public:  // Synchronizable
+    public:
 
         virtual void lock() {
             mutex.lock();
@@ -164,12 +161,12 @@ namespace io{
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            mutex.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
-            mutex.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            mutex.wait(millisecs, nanos);
         }
 
         virtual void notify() {

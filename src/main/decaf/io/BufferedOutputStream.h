@@ -28,7 +28,7 @@ namespace io{
      * Wrapper around another output stream that buffers
      * output before writing to the target output stream.
      */
-    class DECAF_API BufferedOutputStream : public FilterOutputStream {
+    class DECAF_API BufferedOutputStream: public FilterOutputStream {
     private:
 
         /**
@@ -53,8 +53,8 @@ namespace io{
 
     private:
 
-        BufferedOutputStream( const BufferedOutputStream& );
-        BufferedOutputStream& operator= ( const BufferedOutputStream& );
+        BufferedOutputStream(const BufferedOutputStream&);
+        BufferedOutputStream& operator=(const BufferedOutputStream&);
 
     public:
 
@@ -66,7 +66,7 @@ namespace io{
          * @param own
          *      Indicates if this class owns the stream pointer.
          */
-        BufferedOutputStream( OutputStream* stream, bool own = false );
+        BufferedOutputStream(OutputStream* stream, bool own = false);
 
         /**
          * Constructor.
@@ -80,7 +80,7 @@ namespace io{
          *
          * @throws IllegalArgumentException if the bufferSize given is negative.
          */
-        BufferedOutputStream( OutputStream* stream, int bufferSize, bool own = false );
+        BufferedOutputStream(OutputStream* stream, int bufferSize, bool own = false);
 
         virtual ~BufferedOutputStream();
 
@@ -91,11 +91,11 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char c );
+        virtual void doWriteByte(unsigned char c);
 
-        virtual void doWriteArray( const unsigned char* buffer, int size );
+        virtual void doWriteArray(const unsigned char* buffer, int size);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     private:
 
@@ -105,14 +105,14 @@ namespace io{
          * @param bufferSize
          *      How large to make the initial buffer when creating it.
          */
-        void init( int bufferSize );
+        void init(int bufferSize);
 
         /**
          * Writes the contents of the buffer to the output stream.
          */
         void emptyBuffer();
 
-   };
+    };
 
 }}
 
