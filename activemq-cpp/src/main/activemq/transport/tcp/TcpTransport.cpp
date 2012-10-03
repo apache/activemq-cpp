@@ -109,22 +109,26 @@ void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Proper
         // Get the write buffer size.
         int outputBufferSize = Integer::parseInt(properties.getProperty("outputBufferSize", "8192"));
 
-        Pointer<InputStream> inputStream(socket->getInputStream());
-        Pointer<OutputStream> outputStream(socket->getOutputStream());
+        // We don't own these ever, socket object owns.
+        InputStream* socketIStream = socket->getInputStream();
+        OutputStream* sokcetOStream = socket->getOutputStream();
 
-        // If tcp tracing was enabled, wrap the iostreams with logging streams
+        Pointer<InputStream> inputStream;
+        Pointer<OutputStream> outputStream;
+
+        // If tcp tracing was enabled, wrap the input / output streams with logging streams
         if (properties.getProperty("transport.tcpTracingEnabled", "false") == "true") {
             // Wrap with logging stream, we don't own the wrapped streams
-            inputStream.reset(new LoggingInputStream(inputStream.release()));
-            outputStream.reset(new LoggingOutputStream(outputStream.release()));
+            inputStream.reset(new LoggingInputStream(socketIStream));
+            outputStream.reset(new LoggingOutputStream(sokcetOStream));
 
             // Now wrap with the Buffered streams, we own the source streams
             inputStream.reset(new BufferedInputStream(inputStream.release(), inputBufferSize, true));
             outputStream.reset(new BufferedOutputStream(outputStream.release(), outputBufferSize, true));
         } else {
             // Wrap with the Buffered streams, we don't own the source streams
-            inputStream.reset(new BufferedInputStream(inputStream.release(), inputBufferSize));
-            outputStream.reset(new BufferedOutputStream(outputStream.release(), outputBufferSize));
+            inputStream.reset(new BufferedInputStream(socketIStream, inputBufferSize));
+            outputStream.reset(new BufferedOutputStream(sokcetOStream, outputBufferSize));
         }
 
         // Now wrap the Buffered Streams with DataInput based streams.  We own

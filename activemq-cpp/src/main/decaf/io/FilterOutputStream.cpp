@@ -28,139 +28,128 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ) :
-    OutputStream(), outputStream( outputStream ), own( own ), closed( outputStream == NULL ? true : false ) {
+FilterOutputStream::FilterOutputStream(OutputStream* outputStream, bool own) :
+    OutputStream(), outputStream(outputStream), own(own), closed(outputStream == NULL ? true : false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 FilterOutputStream::~FilterOutputStream() {
     try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW()
 
-        if( own ) {
+    try {
+        if (own) {
             delete outputStream;
         }
         outputStream = NULL;
     }
-    DECAF_CATCH_NOTHROW( IOException )
-    DECAF_CATCHALL_NOTHROW( )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteByte( unsigned char c ) {
+void FilterOutputStream::doWriteByte(unsigned char c) {
     try {
 
-        if( isClosed()  ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::write - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterOutputStream::write - Stream is closed");
         }
 
-        this->outputStream->write( c );
+        this->outputStream->write(c);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArray( const unsigned char* buffer, int size ) {
+void FilterOutputStream::doWriteArray(const unsigned char* buffer, int size) {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::write - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterOutputStream::write - Stream is closed");
         }
 
-        this->doWriteArrayBounded( buffer, size, 0, size );
+        this->doWriteArrayBounded(buffer, size, 0, size);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
+void FilterOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::write - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterOutputStream::write - Stream is closed");
         }
 
-        if( buffer == NULL ) {
-            throw decaf::lang::exceptions::NullPointerException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::write - Buffer passed is Null.");
+        if (buffer == NULL) {
+            throw decaf::lang::exceptions::NullPointerException(__FILE__, __LINE__, "FilterOutputStream::write - Buffer passed is Null.");
         }
 
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+        if (size < 0) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+        if (offset > size || offset < 0) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+        if (length < 0 || length > size - offset) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
         // Calls the doWriteByte method since subclasses may over override that method.
-        for( int ix = offset; ix < offset + length; ++ix ) {
-            this->doWriteByte( buffer[ix] );
+        for (int ix = offset; ix < offset + length; ++ix) {
+            this->doWriteByte(buffer[ix]);
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FilterOutputStream::flush() {
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterOutputStream::flush - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterOutputStream::flush - Stream is closed");
         }
 
         this->outputStream->flush();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FilterOutputStream::close() {
     try {
-        if( !this->closed && this->outputStream != NULL ) {
+        if (!this->closed && this->outputStream != NULL) {
             this->outputStream->flush();
             this->outputStream->close();
         }
         this->closed = true;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string FilterOutputStream::toString() const {
 
-    if( this->outputStream != NULL ) {
+    if (this->outputStream != NULL) {
         return this->outputStream->toString();
     }
 
-    return typeid( this ).name();
+    return typeid(this).name();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
