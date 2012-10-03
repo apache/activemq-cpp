@@ -37,12 +37,11 @@ namespace io{
      *
      * @since 1.0
      */
-    class DECAF_API Reader : public virtual decaf::io::Closeable,
-                             public virtual decaf::lang::Readable {
+    class DECAF_API Reader: public virtual decaf::io::Closeable, public virtual decaf::lang::Readable {
     private:
 
-        Reader( const Reader& );
-        Reader& operator= ( const Reader& );
+        Reader(const Reader&);
+        Reader& operator=(const Reader&);
 
     protected:
 
@@ -63,7 +62,7 @@ namespace io{
          *
          * @throw IOException if an I/O error occurs, or the stream does not support mark.
          */
-        virtual void mark( int readAheadLimit );
+        virtual void mark(int readAheadLimit);
 
         /**
          * Tells whether this stream supports the mark() operation. The default implementation
@@ -107,7 +106,7 @@ namespace io{
          *
          * @throw IOException if an I/O error occurs.
          */
-        virtual long long skip( long long count );
+        virtual long long skip(long long count);
 
         /**
          * Reads characters into an array. This method will block until some input is available,
@@ -120,7 +119,7 @@ namespace io{
          *
          * @throws IOException thrown if an I/O error occurs.
          */
-        virtual int read( std::vector<char>& buffer );
+        virtual int read(std::vector<char>& buffer);
 
         /**
          * Reads characters into an array, the method will attempt to read as much data as the size
@@ -137,7 +136,7 @@ namespace io{
          * @throws IOException thrown if an I/O error occurs.
          * @throws NullPointerException if buffer is NULL.
          */
-        virtual int read( char* buffer, int size );
+        virtual int read(char* buffer, int size);
 
         /**
          * Reads characters into a portion of an array. This method will block until some input
@@ -158,7 +157,7 @@ namespace io{
          * @throws NullPointerException if buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length is greater than the array size.
          */
-        virtual int read( char* buffer, int size, int offset, int length );
+        virtual int read(char* buffer, int size, int offset, int length);
 
         /**
          * Reads a single character. This method will block until a character is available,
@@ -174,7 +173,7 @@ namespace io{
          */
         virtual int read();
 
-        virtual int read( decaf::nio::CharBuffer* charBuffer );
+        virtual int read(decaf::nio::CharBuffer* charBuffer);
 
     protected:
 
@@ -185,7 +184,7 @@ namespace io{
          * All subclasses must override this method to provide the basic Reader
          * functionality.
          */
-        virtual int doReadArrayBounded( char* buffer, int size, int offset, int length ) = 0;
+        virtual int doReadArrayBounded(char* buffer, int size, int offset, int length) = 0;
 
     protected:
 
@@ -193,13 +192,13 @@ namespace io{
          * Override this method to customize the functionality of the method
          * read( std::vector<char>& buffer ).
          */
-        virtual int doReadVector( std::vector<char>& buffer );
+        virtual int doReadVector(std::vector<char>& buffer);
 
         /**
          * Override this method to customize the functionality of the method
          * read( char* buffer, std::size_t length ).
          */
-        virtual int doReadArray( char* buffer, int length );
+        virtual int doReadArray(char* buffer, int length);
 
         /**
          * Override this method to customize the functionality of the method
@@ -211,7 +210,7 @@ namespace io{
          * Override this method to customize the functionality of the method
          * read( CharBuffer* charBuffer ).
          */
-        virtual int doReadCharBuffer( decaf::nio::CharBuffer* charBuffer );
+        virtual int doReadCharBuffer(decaf::nio::CharBuffer* charBuffer);
 
     };
 

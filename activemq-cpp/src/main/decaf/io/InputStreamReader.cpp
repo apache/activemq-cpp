@@ -26,82 +26,81 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStreamReader::InputStreamReader( InputStream* stream, bool own ) :
+InputStreamReader::InputStreamReader(InputStream* stream, bool own) :
     Reader(), stream(stream), own(own), closed(false) {
 
-    if( stream == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "The passed InputStream cannot be NULL." );
+    if (stream == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "The passed InputStream cannot be NULL.");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InputStreamReader::~InputStreamReader() {
 
-    try{
-
+    try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW()
 
-        if( this->own ) {
+    try {
+        if (this->own) {
             delete this->stream;
         }
 
         this->stream = NULL;
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InputStreamReader::close() {
 
-    try{
-
-        if( !closed ) {
+    try {
+        if (!closed) {
             this->stream->close();
             this->closed = true;
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool InputStreamReader::ready() const {
 
-    try{
+    try {
         checkClosed();
-        try{
+        try {
             return this->stream->available() != 0;
-        } catch( IOException& ex ) {
+        } catch (IOException& ex) {
             return false;
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int InputStreamReader::doReadArrayBounded( char* buffer, int size, int offset, int length ) {
+int InputStreamReader::doReadArrayBounded(char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
         checkClosed();
 
-        if( length == 0 ) {
+        if (length == 0) {
             return 0;
         }
 
-        return this->stream->read( (unsigned char*)buffer, size, offset, length );
+        return this->stream->read((unsigned char*) buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InputStreamReader::checkClosed() const {
-    if( closed ) {
-        throw IOException( __FILE__, __LINE__, "This Reader is Closed" );
+    if (closed) {
+        throw IOException(__FILE__, __LINE__, "This Reader is Closed");
     }
 }

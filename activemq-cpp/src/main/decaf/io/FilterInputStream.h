@@ -35,7 +35,7 @@ namespace io{
      * FilterInputStream  may further override some of these methods and may
      * also provide additional methods and fields.
      */
-    class DECAF_API FilterInputStream : public InputStream {
+    class DECAF_API FilterInputStream: public InputStream {
     protected:
 
         // The input stream to wrap
@@ -49,8 +49,8 @@ namespace io{
 
     private:
 
-        FilterInputStream( const FilterInputStream& );
-        FilterInputStream& operator= ( const FilterInputStream& );
+        FilterInputStream(const FilterInputStream&);
+        FilterInputStream& operator=(const FilterInputStream&);
 
     public:
 
@@ -62,7 +62,7 @@ namespace io{
          * @param own
          *      Indicates if we own the stream object, defaults to false.
          */
-        FilterInputStream( InputStream* inputStream, bool own = false );
+        FilterInputStream(InputStream* inputStream, bool own = false);
 
         virtual ~FilterInputStream();
 
@@ -79,12 +79,12 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * {@inheritDoc}
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * {@inheritDoc}
@@ -100,9 +100,9 @@ namespace io{
 
         virtual int doReadByte();
 
-        virtual int doReadArray( unsigned char* buffer, int size );
+        virtual int doReadArray(unsigned char* buffer, int size);
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * @returns true if this stream has been closed.

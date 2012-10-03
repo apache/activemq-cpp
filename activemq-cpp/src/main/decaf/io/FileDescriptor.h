@@ -57,7 +57,7 @@ namespace io {
 
     protected:
 
-        FileDescriptor( long value, bool readonly );
+        FileDescriptor(long value, bool readonly);
 
     public:
 

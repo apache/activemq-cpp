@@ -31,7 +31,7 @@ namespace io{
      * types to an output stream in a portable way. An application can then
      * use a data input stream to read the data back in.
      */
-    class DECAF_API DataOutputStream : public FilterOutputStream {
+    class DECAF_API DataOutputStream: public FilterOutputStream {
     protected:
 
         // The number of bytes written to the data output stream so far.
@@ -42,8 +42,8 @@ namespace io{
 
     private:
 
-        DataOutputStream( const DataOutputStream& );
-        DataOutputStream& operator= ( const DataOutputStream& );
+        DataOutputStream(const DataOutputStream&);
+        DataOutputStream& operator=(const DataOutputStream&);
 
     public:
 
@@ -53,7 +53,7 @@ namespace io{
          * @param outputStream a stream to wrap with this one.
          * @param own true if this objects owns the stream that it wraps.
          */
-        DataOutputStream( OutputStream* outputStream, bool own = false );
+        DataOutputStream(OutputStream* outputStream, bool own = false);
 
         virtual ~DataOutputStream();
 
@@ -71,73 +71,73 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual void writeBoolean( bool value );
+        virtual void writeBoolean(bool value);
 
         /**
          * {@inheritDoc}
          */
-       virtual void writeByte( unsigned char value );
+        virtual void writeByte(unsigned char value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeShort( short value );
+        virtual void writeShort(short value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeUnsignedShort( unsigned short value );
+        virtual void writeUnsignedShort(unsigned short value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeChar( char value );
+        virtual void writeChar(char value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeInt( int value );
+        virtual void writeInt(int value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeLong( long long value );
+        virtual void writeLong(long long value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeFloat( float value );
+        virtual void writeFloat(float value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeDouble( double value );
+        virtual void writeDouble(double value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeBytes( const std::string& value );
+        virtual void writeBytes(const std::string& value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeChars( const std::string& value );
+        virtual void writeChars(const std::string& value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void writeUTF( const std::string& value );
+        virtual void writeUTF(const std::string& value);
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte(unsigned char value);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     private:
 
         // Determine the encoded length of a string when written as modified UTF-8
-        unsigned int countUTFLength( const std::string& value );
+        unsigned int countUTFLength(const std::string& value);
 
     };
 

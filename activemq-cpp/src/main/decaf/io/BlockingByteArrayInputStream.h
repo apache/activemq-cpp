@@ -50,8 +50,8 @@ namespace io{
 
     private:
 
-        BlockingByteArrayInputStream( const BlockingByteArrayInputStream& );
-        BlockingByteArrayInputStream& operator= ( const BlockingByteArrayInputStream& );
+        BlockingByteArrayInputStream(const BlockingByteArrayInputStream&);
+        BlockingByteArrayInputStream& operator=(const BlockingByteArrayInputStream&);
 
     public:
 
@@ -64,14 +64,14 @@ namespace io{
          * Constructor that initializes the internal buffer.
          * @see setByteArray.
          */
-        BlockingByteArrayInputStream( const unsigned char* buffer, int bufferSize );
+        BlockingByteArrayInputStream(const unsigned char* buffer, int bufferSize);
 
         virtual ~BlockingByteArrayInputStream();
 
         /**
          * {@inheritDoc}
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize );
+        virtual void setByteArray(const unsigned char* buffer, int bufferSize);
 
         /**
          * {@inheritDoc}
@@ -86,13 +86,13 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
     protected:
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

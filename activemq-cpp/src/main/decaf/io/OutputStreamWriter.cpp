@@ -26,79 +26,77 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : stream(stream),
-                                                                           own(own),
-                                                                           closed(false) {
+OutputStreamWriter::OutputStreamWriter(OutputStream* stream, bool own) :
+    stream(stream), own(own), closed(false) {
 
-    if( stream == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "OutputStream pointer cannot be NULL" );
+    if (stream == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "OutputStream pointer cannot be NULL");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OutputStreamWriter::~OutputStreamWriter() {
 
-    try{
-
+    try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW()
 
-        if( this->own ) {
+    try {
+        if (this->own) {
             delete this->stream;
         }
 
         this->stream = NULL;
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OutputStreamWriter::close() {
 
-    try{
+    try {
 
-        if( !closed ) {
+        if (!closed) {
             this->stream->close();
             this->closed = true;
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OutputStreamWriter::flush() {
 
-    try{
+    try {
         checkClosed();
         this->stream->flush();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OutputStreamWriter::doWriteArrayBounded( const char* buffer, int size, int offset, int length ) {
+void OutputStreamWriter::doWriteArrayBounded(const char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
         checkClosed();
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__, "Given buffer was NULL." );
+        if (buffer == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "Given buffer was NULL.");
         }
 
-        this->stream->write( (const unsigned char*)buffer, size, offset, length );
+        this->stream->write((const unsigned char*) buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OutputStreamWriter::checkClosed() const {
-    if( closed ) {
-        throw IOException( __FILE__, __LINE__, "This Writer is Closed" );
+    if (closed) {
+        throw IOException(__FILE__, __LINE__, "This Writer is Closed");
     }
 }

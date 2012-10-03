@@ -36,8 +36,7 @@ namespace io{
      *
      * @since 1.0
      */
-    class DECAF_API InputStream : public Closeable,
-                                  virtual public util::concurrent::Synchronizable {
+    class DECAF_API InputStream: public Closeable, virtual public util::concurrent::Synchronizable {
     private:
 
         // Synchronization object.
@@ -45,8 +44,8 @@ namespace io{
 
     private:
 
-        InputStream( const InputStream& );
-        InputStream& operator= ( const InputStream& );
+        InputStream(const InputStream&);
+        InputStream& operator=(const InputStream&);
 
     public:
 
@@ -80,7 +79,7 @@ namespace io{
          * @param readLimit
          *      The max bytes read before marked position is invalid.
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * Repositions this stream to the position at the time the mark method was
@@ -184,7 +183,7 @@ namespace io{
          * @throws IOException if an I/O error occurs.
          * @throws NullPointerException if buffer passed is NULL.
          */
-        virtual int read( unsigned char* buffer, int size );
+        virtual int read(unsigned char* buffer, int size);
 
         /**
          * Reads up to length bytes of data from the input stream into an array of bytes. An
@@ -231,7 +230,7 @@ namespace io{
          * @throws NullPointerException if buffer passed is NULL.
          * @throws IndexOutOfBoundsException if length > size - offset.
          */
-        virtual int read( unsigned char* buffer, int size, int offset, int length );
+        virtual int read(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Skips over and discards n bytes of data from this input stream. The skip
@@ -254,7 +253,7 @@ namespace io{
          * @throws UnsupportedOperationException if the concrete stream class does
          *         not support skipping bytes.
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * Output a String representation of this object.
@@ -265,15 +264,15 @@ namespace io{
          */
         virtual std::string toString() const;
 
-    protected:  // Virtual doRead methods that can be overridden to customize subclasses.
+    protected: // Virtual doRead methods that can be overridden to customize subclasses.
 
         virtual int doReadByte() = 0;
 
-        virtual int doReadArray( unsigned char* buffer, int size );
+        virtual int doReadArray(unsigned char* buffer, int size);
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
-    public:  // Synchronizable
+    public: // Synchronizable
 
         virtual void lock() {
             mutex.lock();
@@ -291,12 +290,12 @@ namespace io{
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            mutex.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
-            mutex.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            mutex.wait(millisecs, nanos);
         }
 
         virtual void notify() {

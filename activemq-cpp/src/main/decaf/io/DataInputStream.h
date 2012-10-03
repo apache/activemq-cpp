@@ -43,7 +43,7 @@ namespace io{
      *
      *  @since 1.0
      */
-    class DECAF_API DataInputStream : public FilterInputStream {
+    class DECAF_API DataInputStream: public FilterInputStream {
     private:
 
         // Buffer used to store bytes read from the stream while reconstructed into
@@ -52,8 +52,8 @@ namespace io{
 
     private:
 
-        DataInputStream( const DataInputStream& );
-        DataInputStream& operator= ( const DataInputStream& );
+        DataInputStream(const DataInputStream&);
+        DataInputStream& operator=(const DataInputStream&);
 
     public:
 
@@ -64,11 +64,12 @@ namespace io{
          * @param own indicates if this class owns the wrapped string
          * defaults to false.
          */
-        DataInputStream( InputStream* inputStream, bool own = false );
+        DataInputStream(InputStream* inputStream, bool own = false);
 
         virtual ~DataInputStream();
 
-    public:  // DataInput
+    public:
+        // DataInput
 
         /**
          * Reads in one byte and returns true if that byte is nonzero, false if that
@@ -283,7 +284,7 @@ namespace io{
          * @throws EOFException if the end of input is reached.
          * @throws IndexOutOfBoundsException if the size value is negative.
          */
-        virtual void readFully( unsigned char* buffer, int size );
+        virtual void readFully(unsigned char* buffer, int size);
 
         /**
          * Reads length bytes from an input stream.
@@ -316,7 +317,7 @@ namespace io{
          * @throws NullPointerException if the buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length > size.
          */
-        virtual void readFully( unsigned char* buffer, int size, int offset, int length );
+        virtual void readFully(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Makes an attempt to skip over n bytes of data from the input stream,
@@ -333,12 +334,12 @@ namespace io{
          *
          * @throws IOException if an I/O Error occurs.
          */
-        virtual long long skipBytes( long long num );
+        virtual long long skipBytes(long long num);
 
     private:
 
         // Used internally to reliably get data from the underlying stream
-        void readAllData( unsigned char* buffer, int length );
+        void readAllData(unsigned char* buffer, int length);
 
     };
 

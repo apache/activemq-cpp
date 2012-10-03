@@ -39,7 +39,7 @@ namespace io{
      *
      * @since 1.0
      */
-    class DECAF_API ByteArrayInputStream : public InputStream {
+    class DECAF_API ByteArrayInputStream: public InputStream {
     private:
 
         /**
@@ -87,8 +87,8 @@ namespace io{
 
     private:
 
-        ByteArrayInputStream( const ByteArrayInputStream& );
-        ByteArrayInputStream& operator= ( const ByteArrayInputStream& );
+        ByteArrayInputStream(const ByteArrayInputStream&);
+        ByteArrayInputStream& operator=(const ByteArrayInputStream&);
 
     public:
 
@@ -105,7 +105,7 @@ namespace io{
          * @param buffer
          *      The buffer to be used.
          */
-        ByteArrayInputStream( const std::vector<unsigned char>& buffer );
+        ByteArrayInputStream(const std::vector<unsigned char>& buffer);
 
         /**
          * Create an instance of the ByteArrayInputStream with the given buffer as
@@ -121,7 +121,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, bool own = false );
+        ByteArrayInputStream(const unsigned char* buffer, int bufferSize, bool own = false);
 
         /**
          * Create an instance of the ByteArrayInputStream with the given buffer as
@@ -141,7 +141,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        ByteArrayInputStream( const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false );
+        ByteArrayInputStream(const unsigned char* buffer, int bufferSize, int offset, int length, bool own = false);
 
         virtual ~ByteArrayInputStream();
 
@@ -156,7 +156,7 @@ namespace io{
          * @param buffer
          *      The buffer to be used.
          */
-        virtual void setByteArray( const std::vector<unsigned char>& buffer );
+        virtual void setByteArray(const std::vector<unsigned char>& buffer);
 
         /**
          * Sets the data that this reader uses, replaces any existing
@@ -170,7 +170,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize );
+        virtual void setByteArray(const unsigned char* buffer, int bufferSize);
 
         /**
          * Sets the data that this reader uses, replaces any existing
@@ -188,7 +188,7 @@ namespace io{
          * @throws NullPointerException if the buffer is Null.
          * @throws IllegalArguementException if the bufferSize is negative.
          */
-        virtual void setByteArray( const unsigned char* buffer, int bufferSize, int offset, int length );
+        virtual void setByteArray(const unsigned char* buffer, int bufferSize, int offset, int length);
 
         /**
          * {@inheritDoc}
@@ -198,12 +198,12 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * {@inheritDoc}
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * {@inheritDoc}
@@ -213,13 +213,15 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual bool markSupported() const{ return true; }
+        virtual bool markSupported() const {
+            return true;
+        }
 
     protected:
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

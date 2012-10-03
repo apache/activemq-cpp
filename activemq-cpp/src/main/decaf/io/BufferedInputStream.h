@@ -47,8 +47,8 @@ namespace io{
 
     private:
 
-        BufferedInputStream( const BufferedInputStream& );
-        BufferedInputStream& operator= ( const BufferedInputStream& );
+        BufferedInputStream(const BufferedInputStream&);
+        BufferedInputStream& operator=(const BufferedInputStream&);
 
     public:
 
@@ -60,7 +60,7 @@ namespace io{
          * @param own
          *      Indicates if we own the stream object, defaults to false.
          */
-        BufferedInputStream( InputStream* stream, bool own = false );
+        BufferedInputStream(InputStream* stream, bool own = false);
 
         /**
          * Constructor
@@ -74,7 +74,7 @@ namespace io{
          *
          * @throws IllegalArgumentException is the size is zero or negative.
          */
-        BufferedInputStream( InputStream* stream, int bufferSize, bool own = false );
+        BufferedInputStream(InputStream* stream, int bufferSize, bool own = false);
 
         virtual ~BufferedInputStream();
 
@@ -91,12 +91,12 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * {@inheritDoc}
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * {@inheritDoc}
@@ -106,17 +106,19 @@ namespace io{
         /**
          * {@inheritDoc}
          */
-        virtual bool markSupported() const{ return true; }
+        virtual bool markSupported() const {
+            return true;
+        }
 
     protected:
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     private:
 
-        int bufferData( InputStream* stream, unsigned char*& buffer );
+        int bufferData(InputStream* stream, unsigned char*& buffer);
 
     };
 

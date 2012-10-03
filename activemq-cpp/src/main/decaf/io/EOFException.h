@@ -26,8 +26,7 @@ namespace io{
     /*
      * Signals that an End of File exception has occurred.
      */
-    class DECAF_API EOFException : public io::IOException
-    {
+    class DECAF_API EOFException: public io::IOException {
     public:
 
         /**
@@ -39,18 +38,16 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        EOFException( const lang::Exception& ex )
-        : IOException() {
-            *(lang::Exception*)this = ex;
+        EOFException(const lang::Exception& ex) : IOException() {
+            *(lang::Exception*) this = ex;
         }
 
         /**
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        EOFException( const EOFException& ex )
-        : IOException() {
-            *(lang::Exception*)this = ex;
+        EOFException(const EOFException& ex) : IOException() {
+            *(lang::Exception*) this = ex;
         }
 
         /**
@@ -63,16 +60,13 @@ namespace io{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        EOFException( const char* file, const int lineNumber,
-                      const std::exception* cause,
-                      const char* msg, ... ) : IOException( cause )
-        {
+        EOFException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...) : IOException(cause) {
             va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
+            va_start(vargs, msg);
+            buildMessage(msg, vargs);
 
             // Set the first mark for this exception.
-            setMark( file, lineNumber );
+            setMark(file, lineNumber);
         }
 
         /**
@@ -80,7 +74,8 @@ namespace io{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        EOFException( const std::exception* cause ) : IOException( cause ) {}
+        EOFException(const std::exception* cause) : IOException(cause) {
+        }
 
         /**
          * Constructor
@@ -90,16 +85,13 @@ namespace io{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        EOFException( const char* file, const int lineNumber,
-                      const char* msg, ... )
-        : IOException()
-        {
+        EOFException(const char* file, const int lineNumber, const char* msg, ...) : IOException() {
             va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
+            va_start(vargs, msg);
+            buildMessage(msg, vargs);
 
             // Set the first mark for this exception.
-            setMark( file, lineNumber );
+            setMark(file, lineNumber);
         }
 
         /**
@@ -109,11 +101,11 @@ namespace io{
          *
          * @return a new instance of an Exception that is a copy of this one.
          */
-        virtual EOFException* clone() const{
-            return new EOFException( *this );
+        virtual EOFException* clone() const {
+            return new EOFException(*this);
         }
 
-        virtual ~EOFException() throw(){}
+        virtual ~EOFException() throw () {}
 
     };
 

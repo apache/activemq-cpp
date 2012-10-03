@@ -46,7 +46,7 @@ namespace io{
      *
      *  DataOutputStream os = new DataOutputStream( new OutputStream(), true )
      */
-    class DECAF_API FilterOutputStream : public OutputStream {
+    class DECAF_API FilterOutputStream: public OutputStream {
     protected:
 
         // The output Stream to wrap
@@ -60,8 +60,8 @@ namespace io{
 
     private:
 
-        FilterOutputStream( const FilterOutputStream& );
-        FilterOutputStream& operator= ( const FilterOutputStream& );
+        FilterOutputStream(const FilterOutputStream&);
+        FilterOutputStream& operator=(const FilterOutputStream&);
 
     public:
 
@@ -71,7 +71,7 @@ namespace io{
          * @param own If true, this object will control the lifetime of the
          * output stream that it encapsulates.
          */
-        FilterOutputStream( OutputStream* outputStream, bool own = false );
+        FilterOutputStream(OutputStream* outputStream, bool own = false);
 
         virtual ~FilterOutputStream();
 
@@ -101,11 +101,11 @@ namespace io{
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte(unsigned char value);
 
-        virtual void doWriteArray( const unsigned char* buffer, int size );
+        virtual void doWriteArray(const unsigned char* buffer, int size);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     protected:
 

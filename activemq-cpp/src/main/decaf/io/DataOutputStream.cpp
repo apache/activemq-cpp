@@ -27,8 +27,8 @@ using namespace decaf::util;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-DataOutputStream::DataOutputStream( OutputStream* outputStream, bool own )
- : FilterOutputStream( outputStream, own ), written(0) {
+DataOutputStream::DataOutputStream(OutputStream* outputStream, bool own) :
+    FilterOutputStream(outputStream, own), written(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,325 +36,299 @@ DataOutputStream::~DataOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::doWriteByte( const unsigned char c ) {
+void DataOutputStream::doWriteByte(const unsigned char c) {
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        outputStream->write( c );
+        outputStream->write(c);
         written++;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
+void DataOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
+
+    if (length == 0) {
+        return;
+    }
+
+    if (isClosed()) {
+        throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
+    }
+
+    if (buffer == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "DataOutputStream::write - passed buffer is Null");
+    }
+
+    if (size < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
+    }
+
+    if (offset > size || offset < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
+    }
+
+    if (length < 0 || length > size - offset) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
+    }
 
     try {
-
-        if( length == 0 ) {
-            return;
-        }
-
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
-        }
-
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - passed buffer is Null" );
-        }
-
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
-        }
-
-        if( offset > size || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
-        }
-
-        if( length < 0 || length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
-        }
-
-        outputStream->write( buffer, size, offset, length );
+        outputStream->write(buffer, size, offset, length);
         written += length;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeBoolean( bool value ) {
+void DataOutputStream::writeBoolean(bool value) {
     try {
 
         value == true ? buffer[0] = 1 : buffer[0] = 0;
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        outputStream->write( buffer[0] );
+        outputStream->write(buffer[0]);
         written++;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeByte( unsigned char value ) {
+void DataOutputStream::writeByte(unsigned char value) {
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        outputStream->write( value );
+        outputStream->write(value);
         written++;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChar( char value ) {
+void DataOutputStream::writeChar(char value) {
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        outputStream->write( value );
+        outputStream->write(value);
         written++;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeShort( short value ) {
+void DataOutputStream::writeShort(short value) {
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
-        buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
+        buffer[0] = (unsigned char) ((value & 0xFF00) >> 8);
+        buffer[1] = (unsigned char) ((value & 0x00FF) >> 0);
 
-        outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
-        written += sizeof( value );
+        outputStream->write(buffer, sizeof(value), 0, sizeof(value));
+        written += sizeof(value);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUnsignedShort( unsigned short value ) {
+void DataOutputStream::writeUnsignedShort(unsigned short value) {
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (unsigned char)((value & 0xFF00) >> 8);
-        buffer[1] = (unsigned char)((value & 0x00FF) >> 0);
+        buffer[0] = (unsigned char) ((value & 0xFF00) >> 8);
+        buffer[1] = (unsigned char) ((value & 0x00FF) >> 0);
 
-        outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
-        written += sizeof( value );
+        outputStream->write(buffer, sizeof(value), 0, sizeof(value));
+        written += sizeof(value);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeInt( int value ) {
+void DataOutputStream::writeInt(int value) {
 
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (unsigned char)((value & 0xFF000000) >> 24);
-        buffer[1] = (unsigned char)((value & 0x00FF0000) >> 16);
-        buffer[2] = (unsigned char)((value & 0x0000FF00) >> 8);
-        buffer[3] = (unsigned char)((value & 0x000000FF) >> 0);
+        buffer[0] = (unsigned char) ((value & 0xFF000000) >> 24);
+        buffer[1] = (unsigned char) ((value & 0x00FF0000) >> 16);
+        buffer[2] = (unsigned char) ((value & 0x0000FF00) >> 8);
+        buffer[3] = (unsigned char) ((value & 0x000000FF) >> 0);
 
-        outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
-        written += sizeof( value );
+        outputStream->write(buffer, sizeof(value), 0, sizeof(value));
+        written += sizeof(value);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeLong( long long value ) {
+void DataOutputStream::writeLong(long long value) {
 
     try {
 
-        if( outputStream == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - Base stream is Null");
+        if (outputStream == NULL) {
+            throw IOException(__FILE__, __LINE__, "DataOutputStream::write - Base stream is Null");
         }
 
-        buffer[0] = (unsigned char)((value & 0xFF00000000000000ULL) >> 56);
-        buffer[1] = (unsigned char)((value & 0x00FF000000000000ULL) >> 48);
-        buffer[2] = (unsigned char)((value & 0x0000FF0000000000ULL) >> 40);
-        buffer[3] = (unsigned char)((value & 0x000000FF00000000ULL) >> 32);
-        buffer[4] = (unsigned char)((value & 0x00000000FF000000ULL) >> 24);
-        buffer[5] = (unsigned char)((value & 0x0000000000FF0000ULL) >> 16);
-        buffer[6] = (unsigned char)((value & 0x000000000000FF00ULL) >> 8);
-        buffer[7] = (unsigned char)((value & 0x00000000000000FFULL) >> 0);
+        buffer[0] = (unsigned char) ((value & 0xFF00000000000000ULL) >> 56);
+        buffer[1] = (unsigned char) ((value & 0x00FF000000000000ULL) >> 48);
+        buffer[2] = (unsigned char) ((value & 0x0000FF0000000000ULL) >> 40);
+        buffer[3] = (unsigned char) ((value & 0x000000FF00000000ULL) >> 32);
+        buffer[4] = (unsigned char) ((value & 0x00000000FF000000ULL) >> 24);
+        buffer[5] = (unsigned char) ((value & 0x0000000000FF0000ULL) >> 16);
+        buffer[6] = (unsigned char) ((value & 0x000000000000FF00ULL) >> 8);
+        buffer[7] = (unsigned char) ((value & 0x00000000000000FFULL) >> 0);
 
-        outputStream->write( buffer, sizeof(value), 0, sizeof(value) );
-        written += sizeof( value );
+        outputStream->write(buffer, sizeof(value), 0, sizeof(value));
+        written += sizeof(value);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeFloat( float value ) {
+void DataOutputStream::writeFloat(float value) {
     try {
         unsigned int lvalue = 0;
-        memcpy( &lvalue, &value, sizeof( float ) );
-        this->writeInt( lvalue );
+        memcpy(&lvalue, &value, sizeof(float));
+        this->writeInt(lvalue);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeDouble( double value ) {
+void DataOutputStream::writeDouble(double value) {
     try {
         unsigned long long lvalue = 0;
-        memcpy( &lvalue, &value, sizeof( double ) );
-        this->writeLong( lvalue );
+        memcpy(&lvalue, &value, sizeof(double));
+        this->writeLong(lvalue);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeBytes( const std::string& value ) {
+void DataOutputStream::writeBytes(const std::string& value) {
     try {
 
-        if( value.length() == 0 ) {
+        if (value.length() == 0) {
             return;
         }
 
         // do not add one so that we don't write the NULL
-        this->write( (const unsigned char*)value.c_str(), (int)value.length(), 0, (int)value.length() );
+        this->write((const unsigned char*) value.c_str(), (int) value.length(), 0, (int) value.length());
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChars( const std::string& value ) {
+void DataOutputStream::writeChars(const std::string& value) {
     try {
 
-        if( value.length() == 0 ) {
+        if (value.length() == 0) {
             return;
         }
 
         // add one so that we write the NULL
-        this->write( (const unsigned char*)value.c_str(), (int)value.length() + 1, 0, (int)value.length() + 1 );
+        this->write((const unsigned char*) value.c_str(), (int) value.length() + 1, 0, (int) value.length() + 1);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUTF( const std::string& value ) {
+void DataOutputStream::writeUTF(const std::string& value) {
 
     try {
 
-        unsigned int utfLength = this->countUTFLength( value );
+        unsigned int utfLength = this->countUTFLength(value);
 
-        if( utfLength > 65535 ) {
-            throw UTFDataFormatException(
-                __FILE__, __LINE__,
-                "Attempted to write a string as UTF-8 whose length is longer "
-                "than the supported 65535 bytes" );
+        if (utfLength > 65535) {
+            throw UTFDataFormatException(__FILE__, __LINE__, "Attempted to write a string as UTF-8 whose length is longer "
+                    "than the supported 65535 bytes");
         }
 
         std::size_t length = value.length();
-        std::vector<unsigned char> utfBytes( (std::size_t)utfLength );
+        std::vector<unsigned char> utfBytes((std::size_t) utfLength);
         unsigned int utfIndex = 0;
 
-        for( std::size_t i = 0; i < length; i++ ) {
+        for (std::size_t i = 0; i < length; i++) {
 
-            unsigned int charValue = (unsigned char)value.at( i );
+            unsigned int charValue = (unsigned char) value.at(i);
 
             // Written to allow for expansion to wide character strings at some
             // point, as it stands now the value can never be > 255 since the
             // string class returns a single byte char.
-            if( charValue > 0 && charValue <= 127 ) {
-                utfBytes[utfIndex++] = (unsigned char)charValue;
-            } else if( charValue <= 2047 ) {
-                utfBytes[utfIndex++] = (unsigned char)(0xc0 | (0x1f & (charValue >> 6)));
-                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
+            if (charValue > 0 && charValue <= 127) {
+                utfBytes[utfIndex++] = (unsigned char) charValue;
+            } else if (charValue <= 2047) {
+                utfBytes[utfIndex++] = (unsigned char) (0xc0 | (0x1f & (charValue >> 6)));
+                utfBytes[utfIndex++] = (unsigned char) (0x80 | (0x3f & charValue));
             } else {
-                utfBytes[utfIndex++] = (unsigned char)(0xe0 | (0x0f & (charValue >> 12)));
-                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & (charValue >> 6)));
-                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
+                utfBytes[utfIndex++] = (unsigned char) (0xe0 | (0x0f & (charValue >> 12)));
+                utfBytes[utfIndex++] = (unsigned char) (0x80 | (0x3f & (charValue >> 6)));
+                utfBytes[utfIndex++] = (unsigned char) (0x80 | (0x3f & charValue));
             }
         }
 
-        this->writeUnsignedShort( (unsigned short)utfLength );
-        if( utfLength > 0 ) {
-            this->write( &utfBytes[0], utfIndex, 0, utfIndex );
+        this->writeUnsignedShort((unsigned short) utfLength);
+        if (utfLength > 0) {
+            this->write(&utfBytes[0], utfIndex, 0, utfIndex);
         }
     }
-    DECAF_CATCH_RETHROW( UTFDataFormatException )
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(UTFDataFormatException)
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int DataOutputStream::countUTFLength( const std::string& value ) {
+unsigned int DataOutputStream::countUTFLength(const std::string& value) {
 
     unsigned int utfCount = 0;
     std::size_t length = value.length();
 
-    for( std::size_t i = 0; i < length; ++i ) {
+    for (std::size_t i = 0; i < length; ++i) {
 
-        unsigned int charValue = (unsigned char)value.at( i );
+        unsigned int charValue = (unsigned char) value.at(i);
 
         // Written to allow for expansion to wide character strings at some
         // point, as it stands now the value can never be > 255 since the
         // string class returns a single byte char.
-        if( charValue > 0 && charValue <= 127 ) {
+        if (charValue > 0 && charValue <= 127) {
             utfCount++;
-        } else if( charValue <= 2047 ) {
+        } else if (charValue <= 2047) {
             utfCount += 2;
         } else {
             utfCount += 3;

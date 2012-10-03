@@ -25,18 +25,16 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-PushbackInputStream::PushbackInputStream( InputStream* stream, bool own )
- :  FilterInputStream( stream, own ), buffer( new unsigned char[1] ), bufferSize( 1 ), pos( 1 ) {
-
+PushbackInputStream::PushbackInputStream(InputStream* stream, bool own) :
+    FilterInputStream(stream, own), buffer(new unsigned char[1]), bufferSize(1), pos(1) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool own )
- :  FilterInputStream( stream, own ), buffer( NULL ), bufferSize( bufSize ), pos( bufSize ) {
+PushbackInputStream::PushbackInputStream(InputStream* stream, int bufSize, bool own) :
+    FilterInputStream(stream, own), buffer(NULL), bufferSize(bufSize), pos(bufSize) {
 
-    if( bufSize < 0 ) {
-        throw IllegalArgumentException(
-            __FILE__, __LINE__, "Size of Push Back buffer cannot be negative." );
+    if (bufSize < 0) {
+        throw IllegalArgumentException(__FILE__, __LINE__, "Size of Push Back buffer cannot be negative.");
     }
 
     this->buffer = new unsigned char[bufSize];
@@ -44,198 +42,178 @@ PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool
 
 ////////////////////////////////////////////////////////////////////////////////
 PushbackInputStream::~PushbackInputStream() {
-    try{
-
+    try {
         close();
-        delete [] this->buffer;
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
+
+    try {
+        delete[] this->buffer;
+    }
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int PushbackInputStream::available() const {
-
-    try{
-        return ( this->bufferSize - this->pos ) + inputStream->available();
+    try {
+        return (this->bufferSize - this->pos) + inputStream->available();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PushbackInputStream::skip( long long num ) {
+long long PushbackInputStream::skip(long long num) {
 
-    try{
+    if (num <= 0) {
+        return 0;
+    }
 
-        if( num <= 0 ) {
-            return 0;
-        }
+    if (isClosed()) {
+        throw IOException(__FILE__, __LINE__, "Stream is closed");
+    }
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__, "Stream is closed" );
-        }
+    try {
 
         long long unread = bufferSize - pos;
         long long numSkipped = 0;
 
-        if( unread != 0 ) {
-            numSkipped += ( num < unread ) ? num : unread;
-            pos += (int)numSkipped;
+        if (unread != 0) {
+            numSkipped += (num < unread) ? num : unread;
+            pos += (int) numSkipped;
         }
 
-        if( numSkipped < num ) {
-            numSkipped += inputStream->skip( num - numSkipped );
+        if (numSkipped < num) {
+            numSkipped += inputStream->skip(num - numSkipped);
         }
 
         return numSkipped;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::mark( int readLimit DECAF_UNUSED ) {
-    // Nothing to do here.
+void PushbackInputStream::mark(int readLimit DECAF_UNUSED) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PushbackInputStream::reset() {
-    throw IOException(
-        __FILE__, __LINE__, "Reset is not Supported by the PushbackInputStream." );
+    throw IOException(__FILE__, __LINE__, "Reset is not Supported by the PushbackInputStream.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( unsigned char value ) {
+void PushbackInputStream::unread(unsigned char value) {
 
-    try{
+    if (pos == 0) {
+        throw IOException(__FILE__, __LINE__, "No Space left in the unread buffer.");
+    }
 
-        if( pos == 0 ) {
-            throw IOException(
-                __FILE__, __LINE__, "No Space left in the unread buffer." );
-        }
-
+    try {
         buffer[--pos] = value;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, int size ) {
+void PushbackInputStream::unread(const unsigned char* buffer, int size) {
 
-    try{
-
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Given size of the buffer was negatiev." );
-        }
-
-        this->unread( buffer, size, 0, size );
+    if (size < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "Given size of the buffer was negatiev.");
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+
+    try {
+        this->unread(buffer, size, 0, size);
+    }
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PushbackInputStream::unread( const unsigned char* buffer, int size, int offset, int length ) {
+void PushbackInputStream::unread(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    if (length > pos) {
+        throw IOException(__FILE__, __LINE__, "No Space left in the unread buffer.");
+    }
 
-        if( length > pos ) {
-            throw IOException(
-                __FILE__, __LINE__, "No Space left in the unread buffer." );
-        }
+    if (size < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
+    }
 
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
-        }
+    if (offset > size || offset < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
+    }
 
-        if( offset > size || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
-        }
+    if (length < 0 || length > size - offset) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
+    }
 
-        if( length < 0 || length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
-        }
+    if (buffer == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Buffer pointer passed was NULL.");
+    }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__, "Buffer pointer passed was NULL." );
-        }
-
-        System::arraycopy( buffer, offset, this->buffer, pos - length, length );
+    try {
+        System::arraycopy(buffer, offset, this->buffer, pos - length, length);
         pos = pos - length;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int PushbackInputStream::doReadByte() {
 
-    try{
+    if (isClosed()) {
+        throw IOException(__FILE__, __LINE__, "Stream is closed");
+    }
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__, "Stream is closed" );
-        }
-
-        if( pos < bufferSize ) {
+    try {
+        if (pos < bufferSize) {
             return buffer[pos++];
         }
 
         return inputStream->read();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int PushbackInputStream::doReadArrayBounded(unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    if (isClosed()) {
+        throw IOException(__FILE__, __LINE__, "Stream is closed");
+    }
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__, "Stream is closed" );
-        }
+    if (buffer == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Buffer pointer passed was NULL.");
+    }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__, "Buffer pointer passed was NULL." );
-        }
+    if (size < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
+    }
 
-        if( size < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
-        }
+    if (offset > size || offset < 0) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
+    }
 
-        if( offset > size || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
-        }
+    if (length < 0 || length > size - offset) {
+        throw IndexOutOfBoundsException(__FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
+    }
 
-        if( length < 0 || length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
-        }
-
+    try {
         int copiedBytes = 0;
         int copyLength = 0;
         int newOffset = offset;
 
         // Are there pushback bytes available?
-        if( pos < bufferSize ) {
-            copyLength = ( bufferSize - pos >= length ) ? length : bufferSize - pos;
-            System::arraycopy( this->buffer, pos, buffer, newOffset, copyLength );
+        if (pos < bufferSize) {
+            copyLength = (bufferSize - pos >= length) ? length : bufferSize - pos;
+            System::arraycopy(this->buffer, pos, buffer, newOffset, copyLength);
             newOffset += copyLength;
             copiedBytes += copyLength;
             // Use up the bytes in the local buffer
@@ -243,23 +221,23 @@ int PushbackInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
         }
 
         // Have we copied enough?
-        if( copyLength == length ) {
+        if (copyLength == length) {
             return length;
         }
 
-        int inCopied = inputStream->read( buffer, size, newOffset, length - copiedBytes );
-        if( inCopied > 0 ) {
+        int inCopied = inputStream->read(buffer, size, newOffset, length - copiedBytes);
+        if (inCopied > 0) {
             return inCopied + copiedBytes;
         }
 
-        if( copiedBytes == 0 ) {
+        if (copiedBytes == 0) {
             return inCopied;
         }
 
         return copiedBytes;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }
