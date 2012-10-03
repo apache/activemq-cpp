@@ -26,8 +26,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FilterInputStream::FilterInputStream( InputStream* inputStream, bool own ) :
-    InputStream(), inputStream( inputStream ), own( own ), closed( inputStream == NULL ? true : false ) {
+FilterInputStream::FilterInputStream(InputStream* inputStream, bool own) :
+    InputStream(), inputStream(inputStream), own(own), closed(inputStream == NULL ? true : false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,14 +35,16 @@ FilterInputStream::~FilterInputStream() {
 
     try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW()
 
-        if( own ) {
+    try {
+        if (own) {
             delete inputStream;
         }
         inputStream = NULL;
     }
-    DECAF_CATCH_NOTHROW( IOException )
-    DECAF_CATCHALL_NOTHROW( )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,37 +52,34 @@ int FilterInputStream::available() const {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::available - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::available - Stream is closed");
         }
 
         return inputStream->available();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FilterInputStream::close() {
 
     try {
-        if( !closed && inputStream != NULL ) {
+        if (!closed && inputStream != NULL) {
             inputStream->close();
         }
         this->closed = true;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FilterInputStream::mark( int readLimit ) {
+void FilterInputStream::mark(int readLimit) {
     try {
-
-        if( !isClosed() ) {
-            inputStream->mark( readLimit );
+        if (!isClosed()) {
+            inputStream->mark(readLimit);
         }
     }
     DECAF_CATCHALL_NOTHROW()
@@ -88,26 +87,21 @@ void FilterInputStream::mark( int readLimit ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void FilterInputStream::reset() {
-
     try {
-
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::reset - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::reset - Stream is closed");
         }
 
         return inputStream->reset();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool FilterInputStream::markSupported() const {
-
     try {
-        if( !isClosed() ) {
+        if (!isClosed()) {
             return inputStream->markSupported();
         }
     }
@@ -116,21 +110,19 @@ bool FilterInputStream::markSupported() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long FilterInputStream::skip( long long num ) {
+long long FilterInputStream::skip(long long num) {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::skip - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::skip - Stream is closed");
         }
 
-        return inputStream->skip( num );
+        return inputStream->skip(num);
     }
-    DECAF_CATCH_RETHROW( UnsupportedOperationException )
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(UnsupportedOperationException)
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,53 +130,47 @@ int FilterInputStream::doReadByte() {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::doReadByte - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::doReadByte - Stream is closed");
         }
 
         return inputStream->read();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::doReadArray( unsigned char* buffer, int size ) {
+int FilterInputStream::doReadArray(unsigned char* buffer, int size) {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::doReadArray - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::doReadArray - Stream is closed");
         }
 
-        return doReadArrayBounded( buffer, size, 0, size );
+        return doReadArrayBounded(buffer, size, 0, size);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int FilterInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int FilterInputStream::doReadArrayBounded(unsigned char* buffer, int size, int offset, int length) {
 
     try {
 
-        if( isClosed() ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "FilterInputStream::doReadArrayBounded - Stream is closed" );
+        if (isClosed()) {
+            throw IOException(__FILE__, __LINE__, "FilterInputStream::doReadArrayBounded - Stream is closed");
         }
 
-        return inputStream->read( buffer, size, offset, length );
+        return inputStream->read(buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
