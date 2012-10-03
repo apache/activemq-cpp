@@ -590,22 +590,36 @@ void ActiveMQConnection::close() {
             }
         }
 
-        // Get the complete list of active sessions.
-        this->config->sessionsLock.writeLock().lock();
-        std::auto_ptr< Iterator<Pointer<ActiveMQSessionKernel> > > iter(this->config->activeSessions.iterator());
-
         long long lastDeliveredSequenceId = 0;
 
-        // Dispose of all the Session resources we know are still open.
-        while (iter->hasNext()) {
-            Pointer<ActiveMQSessionKernel> session = iter->next();
-            try {
-                session->dispose();
-                lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
-            } catch (cms::CMSException& ex) {
+        // Get the complete list of active sessions.
+        try {
+            this->config->sessionsLock.writeLock().lock();
+
+            // We need to use a copy since we aren't able to use CopyOnWriteArrayList
+            ArrayList<Pointer<ActiveMQSessionKernel> > sessions(this->config->activeSessions);
+            std::auto_ptr<Iterator<Pointer<ActiveMQSessionKernel> > > iter(sessions.iterator());
+
+            // Dispose of all the Session resources we know are still open.
+            while (iter->hasNext()) {
+                Pointer<ActiveMQSessionKernel> session = iter->next();
+                try {
+                    session->dispose();
+                    lastDeliveredSequenceId = Math::max(lastDeliveredSequenceId, session->getLastDeliveredSequenceId());
+                } catch (cms::CMSException& ex) {
+                }
+            }
+
+            this->config->activeSessions.clear();
+            this->config->sessionsLock.writeLock().unlock();
+        } catch(Exception& error) {
+            this->config->sessionsLock.writeLock().unlock();
+            if (!hasException) {
+                ex = error;
+                ex.setMark(__FILE__, __LINE__);
+                hasException = true;
             }
         }
-        this->config->sessionsLock.writeLock().unlock();
 
         // As TemporaryQueue and TemporaryTopic instances are bound to a connection
         // we should just delete them after the connection is closed to free up memory

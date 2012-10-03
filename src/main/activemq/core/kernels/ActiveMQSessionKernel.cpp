@@ -342,7 +342,10 @@ void ActiveMQSessionKernel::dispose() {
         // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
         this->config->consumerLock.writeLock().lock();
         try {
-            Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > consumerIter(this->config->consumers.iterator());
+            // We have to copy all the consumers to another list since we aren't using a
+            // CopyOnWriteArrayList right now.
+            ArrayList<Pointer<ActiveMQConsumerKernel> > consumers(this->config->consumers);
+            Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > consumerIter(consumers.iterator());
             while (consumerIter->hasNext()) {
                 try{
                     Pointer<ActiveMQConsumerKernel> consumer = consumerIter->next();
@@ -361,10 +364,13 @@ void ActiveMQSessionKernel::dispose() {
             throw;
         }
 
+        // Dispose of all Producers, the dispose method skips the RemoveInfo command.
         this->config->producerLock.writeLock().lock();
         try {
-            // Dispose of all Producers, the dispose method skips the RemoveInfo command.
-            std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(this->config->producers.iterator());
+            // We have to copy all the producers to another list since we aren't using a
+            // CopyOnWriteArrayList right now.
+            ArrayList<Pointer<ActiveMQProducerKernel> > producers(this->config->producers);
+            std::auto_ptr<Iterator<Pointer<ActiveMQProducerKernel> > > producerIter(producers.iterator());
 
             while (producerIter->hasNext()) {
                 try{
