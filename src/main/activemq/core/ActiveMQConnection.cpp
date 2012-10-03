@@ -253,6 +253,15 @@ namespace core{
             this->scheduler->start();
         }
 
+        ~ConnectionConfig() {
+            try {
+                this->scheduler->shutdown();
+                this->executor->shutdown();
+                this->executor->awaitTermination(1, TimeUnit::MINUTES);
+            }
+            AMQ_CATCHALL_NOTHROW()
+        }
+
         void waitForBrokerInfo() {
             this->brokerInfoReceived->await();
         }
@@ -687,8 +696,9 @@ void ActiveMQConnection::cleanup() {
 
         this->config->sessionsLock.writeLock().lock();
         try {
-            // Get the complete list of active sessions.
-            std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter( this->config->activeSessions.iterator() );
+            // We need to use a copy since we aren't able to use CopyOnWriteArrayList
+            ArrayList<Pointer<ActiveMQSessionKernel> > sessions(this->config->activeSessions);
+            std::auto_ptr< Iterator< Pointer<ActiveMQSessionKernel> > > iter(sessions.iterator());
 
             // Dispose of all the Session resources we know are still open.
             while (iter->hasNext()) {
@@ -699,6 +709,7 @@ void ActiveMQConnection::cleanup() {
                     /* Absorb */
                 }
             }
+            this->config->activeSessions.clear();
             this->config->sessionsLock.writeLock().unlock();
         } catch (Exception& ex) {
             this->config->sessionsLock.writeLock().unlock();
