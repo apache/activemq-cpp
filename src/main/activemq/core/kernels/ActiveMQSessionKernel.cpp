@@ -235,13 +235,14 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSessionKernel::~ActiveMQSessionKernel() {
     try {
-        // Destroy this session's resources
         close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 
-    delete this->config;
+    try {
+        delete this->config;
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

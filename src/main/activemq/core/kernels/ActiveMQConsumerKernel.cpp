@@ -390,15 +390,14 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
 ActiveMQConsumerKernel::~ActiveMQConsumerKernel() {
 
     try {
+        this->close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 
-        try {
-            this->close();
-        } catch(...) {}
-
+    try {
         delete this->internal;
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
