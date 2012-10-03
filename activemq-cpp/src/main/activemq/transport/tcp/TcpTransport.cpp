@@ -42,19 +42,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const Pointer<Transport>& next ) :
+TcpTransport::TcpTransport(const Pointer<Transport>& next) :
     TransportFilter(next), connectTimeout(0), closed(false), socket(), dataInputStream(), dataOutputStream() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::~TcpTransport() {
-
     try {
         close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCH_NOTHROW( Exception )
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -66,58 +62,52 @@ void TcpTransport::close() {
         this->closed = true;
 
         // Close the socket.
-        if( socket.get() != NULL ) {
+        if (socket.get() != NULL) {
             socket->close();
         }
 
         // Invoke the paren't close first.
         TransportFilter::close();
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW( IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
+    AMQ_CATCHALL_THROW( IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::connect( const decaf::net::URI& uri,
-                            const decaf::util::Properties& properties ) {
+void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Properties& properties) {
 
     try {
 
-        socket.reset( this->createSocket() );
+        socket.reset(this->createSocket());
 
         // Set all Socket Options from the URI options.
-        this->configureSocket( socket.get(), properties );
+        this->configureSocket(socket.get(), properties);
 
         // Ensure something is actually passed in for the URI
-        if( uri.getAuthority() == "" ) {
-            throw SocketException( __FILE__, __LINE__,
-                "Connection URI was not provided or is invalid: %s", uri.toString().c_str() );
+        if (uri.getAuthority() == "") {
+            throw SocketException(__FILE__, __LINE__, "Connection URI was not provided or is invalid: %s", uri.toString().c_str());
         }
 
         // Connect the socket.
         string host = uri.getHost();
         int port = uri.getPort();
 
-        socket->connect( host, port, connectTimeout );
+        socket->connect(host, port, connectTimeout);
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
-        IOTransport* ioTransport = dynamic_cast<IOTransport*>( next.get() );
-        if( ioTransport == NULL ){
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "TcpTransport::TcpTransport - "
-                "transport must be of type IOTransport");
+        IOTransport* ioTransport = dynamic_cast<IOTransport*>(next.get());
+        if (ioTransport == NULL) {
+            throw ActiveMQException(__FILE__, __LINE__, "TcpTransport::TcpTransport - "
+                    "transport must be of type IOTransport");
         }
 
         // Get the read buffer size.
-        int inputBufferSize = Integer::parseInt(
-            properties.getProperty( "inputBufferSize", "8192" ) );
+        int inputBufferSize = Integer::parseInt(properties.getProperty("inputBufferSize", "8192"));
 
         // Get the write buffer size.
-        int outputBufferSize = Integer::parseInt(
-            properties.getProperty( "outputBufferSize", "8192" ) );
+        int outputBufferSize = Integer::parseInt(properties.getProperty("outputBufferSize", "8192"));
 
         Pointer<InputStream> inputStream(socket->getInputStream());
         Pointer<OutputStream> outputStream(socket->getOutputStream());
@@ -144,12 +134,12 @@ void TcpTransport::connect( const decaf::net::URI& uri,
         this->dataOutputStream.reset(new DataOutputStream(outputStream.release(), true));
 
         // Give the IOTransport the streams.
-        ioTransport->setInputStream( dataInputStream.get() );
-        ioTransport->setOutputStream( dataOutputStream.get() );
+        ioTransport->setInputStream(dataInputStream.get());
+        ioTransport->setOutputStream(dataOutputStream.get());
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW( ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,59 +149,53 @@ Socket* TcpTransport::createSocket() {
         SocketFactory* factory = SocketFactory::getDefault();
         return factory->createSocket();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException)
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException)
+    DECAF_CATCHALL_THROW( IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::configureSocket( Socket* socket, const Properties& properties ) {
+void TcpTransport::configureSocket(Socket* socket, const Properties& properties) {
 
     try {
 
         // Get the linger flag.
-        int soLinger = Integer::parseInt(
-            properties.getProperty( "soLinger", "-1" ) );
+        int soLinger = Integer::parseInt(properties.getProperty("soLinger", "-1"));
 
         // Get the keepAlive flag.
-        bool soKeepAlive = Boolean::parseBoolean(
-            properties.getProperty( "soKeepAlive", "false" ) );
+        bool soKeepAlive = Boolean::parseBoolean(properties.getProperty("soKeepAlive", "false"));
 
         // Get the socket receive buffer size.
-        int soReceiveBufferSize = Integer::parseInt(
-            properties.getProperty( "soReceiveBufferSize", "-1" ) );
+        int soReceiveBufferSize = Integer::parseInt(properties.getProperty("soReceiveBufferSize", "-1"));
 
         // Get the socket send buffer size.
-        int soSendBufferSize = Integer::parseInt(
-            properties.getProperty( "soSendBufferSize", "-1" ) );
+        int soSendBufferSize = Integer::parseInt(properties.getProperty("soSendBufferSize", "-1"));
 
         // Get the socket TCP_NODELAY flag.
-        bool tcpNoDelay = Boolean::parseBoolean(
-            properties.getProperty( "tcpNoDelay", "true" ) );
+        bool tcpNoDelay = Boolean::parseBoolean(properties.getProperty("tcpNoDelay", "true"));
 
         // Get the socket connect timeout in microseconds. (default to infinite wait).
-        this->connectTimeout = Integer::parseInt(
-            properties.getProperty( "soConnectTimeout", "0" ) );
+        this->connectTimeout = Integer::parseInt(properties.getProperty("soConnectTimeout", "0"));
 
         // Set the socket options.
-        socket->setKeepAlive( soKeepAlive );
-        socket->setTcpNoDelay( tcpNoDelay );
+        socket->setKeepAlive(soKeepAlive);
+        socket->setTcpNoDelay(tcpNoDelay);
 
-        if( soLinger > 0 ) {
-            socket->setSoLinger( true, soLinger );
+        if (soLinger > 0) {
+            socket->setSoLinger(true, soLinger);
         }
 
-        if( soReceiveBufferSize > 0 ){
-            socket->setReceiveBufferSize( soReceiveBufferSize );
+        if (soReceiveBufferSize > 0) {
+            socket->setReceiveBufferSize(soReceiveBufferSize);
         }
 
-        if( soSendBufferSize > 0 ){
-            socket->setSendBufferSize( soSendBufferSize );
+        if (soSendBufferSize > 0) {
+            socket->setSendBufferSize(soSendBufferSize);
         }
     }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( NullPointerException)
+    DECAF_CATCH_RETHROW( IllegalArgumentException)
+    DECAF_CATCH_RETHROW( SocketException)
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException)
+    DECAF_CATCHALL_THROW( SocketException)
 }
