@@ -33,8 +33,8 @@
 #include <decaf/util/logging/LoggerDefines.h>
 #include <memory>
 
-namespace activemq{
-namespace transport{
+namespace activemq {
+namespace transport {
 
     using decaf::lang::Pointer;
     using activemq::commands::Command;
@@ -55,7 +55,7 @@ namespace transport{
     class AMQCPP_API IOTransport : public Transport,
                                    public decaf::lang::Runnable {
 
-        LOGDECAF_DECLARE( logger )
+        LOGDECAF_DECLARE(logger)
 
     private:
 
@@ -91,8 +91,8 @@ namespace transport{
 
     private:
 
-        IOTransport( const IOTransport& );
-        IOTransport& operator= ( const IOTransport& );
+        IOTransport(const IOTransport&);
+        IOTransport& operator=(const IOTransport&);
 
     private:
 
@@ -100,13 +100,13 @@ namespace transport{
          * Notify the exception listener
          * @param ex the exception to send
          */
-        void fire( decaf::lang::Exception& ex );
+        void fire(decaf::lang::Exception& ex);
 
         /**
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire( const Pointer<Command>& command );
+        void fire(const Pointer<Command>& command);
 
     public:
 
@@ -122,7 +122,7 @@ namespace transport{
          * @param wireFormat
          *        Data encoder / decoder to use when reading and writing.
          */
-        IOTransport( const Pointer<wireformat::WireFormat>& wireFormat );
+        IOTransport(const Pointer<wireformat::WireFormat>& wireFormat);
 
         virtual ~IOTransport();
 
@@ -132,7 +132,7 @@ namespace transport{
          * @param is
          *      The InputStream that will be read from by this object.
          */
-        virtual void setInputStream( decaf::io::DataInputStream* is ) {
+        virtual void setInputStream(decaf::io::DataInputStream* is) {
             this->inputStream = is;
         }
 
@@ -142,37 +142,37 @@ namespace transport{
          * @param os
          *      The OuputStream that will be written to by this object.
          */
-        virtual void setOutputStream( decaf::io::DataOutputStream* os ) {
+        virtual void setOutputStream(decaf::io::DataOutputStream* os) {
             this->outputStream = os;
         }
 
-    public:  //Transport methods
+    public:  // Transport methods
 
-        virtual void oneway( const Pointer<Command>& command );
-
-        /**
-         * {@inheritDoc}
-         *
-         * This method always thrown an UnsupportedOperationException.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command );
+        virtual void oneway(const Pointer<Command>& command);
 
         /**
          * {@inheritDoc}
          *
          * This method always thrown an UnsupportedOperationException.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+        virtual Pointer<Response> request(const Pointer<Command>& command);
+
+        /**
+         * {@inheritDoc}
+         *
+         * This method always thrown an UnsupportedOperationException.
+         */
+        virtual Pointer<Response> request(const Pointer<Command>& command, unsigned int timeout);
 
         virtual Pointer<wireformat::WireFormat> getWireFormat() const {
-        	return this->wireFormat;
+            return this->wireFormat;
         }
 
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ){
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat>& wireFormat) {
             this->wireFormat = wireFormat;
         }
 
-        virtual void setTransportListener( TransportListener* listener ){
+        virtual void setTransportListener(TransportListener* listener) {
             this->listener = listener;
         }
 
@@ -186,8 +186,8 @@ namespace transport{
 
         virtual void close();
 
-        virtual Transport* narrow( const std::type_info& typeId ) {
-            if( typeid( *this ) == typeId ) {
+        virtual Transport* narrow(const std::type_info& typeId) {
+            if (typeid(*this) == typeId) {
                 return this;
             }
 
@@ -218,8 +218,7 @@ namespace transport{
             return false;
         }
 
-        virtual void updateURIs( bool rebalance AMQCPP_UNUSED,
-                                 const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED ) {
+        virtual void updateURIs(bool rebalance AMQCPP_UNUSED, const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED) {
             throw decaf::io::IOException();
         }
 
@@ -228,7 +227,7 @@ namespace transport{
          *
          * This method does nothing in this subclass.
          */
-        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED ) {}
+        virtual void reconnect(const decaf::net::URI& uri AMQCPP_UNUSED) {}
 
     public:  // Runnable methods.
 
