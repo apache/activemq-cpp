@@ -53,29 +53,19 @@ const int OpenWireFormat::DEFAULT_VERSION = 1;
 const int OpenWireFormat::MAX_SUPPORTED_VERSION = 9;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) :
-    properties(properties),
-    preferedWireFormatInfo(),
-    dataMarshallers(256),
-    id(UUID::randomUUID().toString()),
-    receiving(),
-    version(0),
-    stackTraceEnabled(true),
-    tcpNoDelayEnabled(true),
-    cacheEnabled(true),
-    cacheSize(1024),
-    tightEncodingEnabled(false),
-    sizePrefixDisabled(false),
-    maxInactivityDuration(30000),
-    maxInactivityDurationInitialDelay(10000) {
+OpenWireFormat::OpenWireFormat(const decaf::util::Properties& properties) :
+    properties(properties), preferedWireFormatInfo(), dataMarshallers(256),
+    id(UUID::randomUUID().toString()), receiving(), version(0), stackTraceEnabled(true),
+    tcpNoDelayEnabled(true), cacheEnabled(true), cacheSize(1024), tightEncodingEnabled(false),
+    sizePrefixDisabled(false), maxInactivityDuration(30000), maxInactivityDurationInitialDelay(10000) {
 
     // initialize the universal marshalers, don't need to reset them again
     // after this so its safe to do this here.
-    generated::MarshallerFactory().configure( this );
+    generated::MarshallerFactory().configure(this);
 
     // Set to Default as lowest common denominator, then we will try
     // and move up to the preferred when the wireformat is negotiated.
-    this->setVersion( DEFAULT_VERSION );
+    this->setVersion(DEFAULT_VERSION);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,176 +73,165 @@ OpenWireFormat::~OpenWireFormat() {
     try {
         this->destroyMarshalers();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport ) {
+Pointer<Transport> OpenWireFormat::createNegotiator(const Pointer<Transport>& transport) {
 
-    try{
-        return Pointer<Transport>( new OpenWireFormatNegotiator( this, transport ) );
+    try {
+        return Pointer<Transport>(new OpenWireFormatNegotiator(this, transport));
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCHALL_THROW( UnsupportedOperationException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCHALL_THROW(UnsupportedOperationException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::destroyMarshalers() {
 
     try {
-        for( size_t i = 0; i < dataMarshallers.size(); ++i ) {
+        for (size_t i = 0; i < dataMarshallers.size(); ++i) {
             delete dataMarshallers[i];
             dataMarshallers[i] = NULL;
         }
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_NOTHROW(ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setVersion( int version ) {
+void OpenWireFormat::setVersion(int version) {
 
-    try{
+    try {
 
-        if( version == this->getVersion() ){
+        if (version == this->getVersion()) {
             return;
         }
 
-        if( version > MAX_SUPPORTED_VERSION ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__,
-                "OpenWireFormat::setVersion - "
-                "Given Version: %d , is not yet supported", version );
+        if (version > MAX_SUPPORTED_VERSION) {
+            throw IllegalArgumentException(__FILE__, __LINE__, "OpenWireFormat::setVersion - "
+                    "Given Version: %d , is not yet supported", version);
         }
 
         // Clear old marshalers in preparation for the new set.
         this->version = version;
     }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
+    AMQ_CATCH_RETHROW(IllegalArgumentException)
+    AMQ_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
+void OpenWireFormat::addMarshaller(DataStreamMarshaller* marshaller) {
     unsigned char type = marshaller->getDataStructureType();
     dataMarshallers[type & 0xFF] = marshaller;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info ) {
+void OpenWireFormat::setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo>& info) {
     this->preferedWireFormatInfo = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
-                              const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* dataOut ) {
+void OpenWireFormat::marshal(const Pointer<commands::Command>& command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* dataOut) {
+
+    if (transport == NULL) {
+        throw decaf::io::IOException(__FILE__, __LINE__, "Transport passed is NULL");
+    }
+
+    if (dataOut == NULL) {
+        throw decaf::io::IOException(__FILE__, __LINE__, "DataOutputStream passed is NULL");
+    }
 
     try {
 
-        if( transport == NULL ) {
-            throw decaf::io::IOException(
-                __FILE__, __LINE__, "Transport passed is NULL" );
-        }
-
-        if( dataOut == NULL ) {
-            throw decaf::io::IOException(
-                __FILE__, __LINE__, "DataOutputStream passed is NULL" );
-        }
-
         int size = 1;
 
-        if( command != NULL ) {
+        if (command != NULL) {
 
-            DataStructure* dataStructure =
-                dynamic_cast< DataStructure* >( command.get() );
+            DataStructure* dataStructure = dynamic_cast<DataStructure*>(command.get());
 
             unsigned char type = dataStructure->getDataStructureType();
 
             DataStreamMarshaller* dsm = dataMarshallers[type & 0xFF];
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( type ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(type)).c_str());
             }
 
-            if( tightEncodingEnabled ) {
+            if (tightEncodingEnabled) {
                 BooleanStream bs;
-                size += dsm->tightMarshal1( this, dataStructure, &bs );
+                size += dsm->tightMarshal1(this, dataStructure, &bs);
                 size += bs.marshalledSize();
 
-                if( !sizePrefixDisabled ) {
-                    dataOut->writeInt( size );
+                if (!sizePrefixDisabled) {
+                    dataOut->writeInt(size);
                 }
 
-                dataOut->writeByte( type );
-                bs.marshal( dataOut );
-                dsm->tightMarshal2( this, dataStructure, dataOut, &bs );
+                dataOut->writeByte(type);
+                bs.marshal(dataOut);
+                dsm->tightMarshal2(this, dataStructure, dataOut, &bs);
 
             } else {
-                DataOutputStream* looseOut = dataOut;
-                ByteArrayOutputStream* baos = NULL;
 
-                if( !sizePrefixDisabled ) {
-                    baos = new ByteArrayOutputStream();
-                    looseOut = new DataOutputStream( baos );
-                }
+                if (sizePrefixDisabled) {
+                    dataOut->writeByte(type);
+                    dsm->looseMarshal(this, dataStructure, dataOut);
+                } else {
 
-                looseOut->writeByte( type );
-                dsm->looseMarshal( this, dataStructure, looseOut );
+                    ByteArrayOutputStream* baos = new ByteArrayOutputStream();
+                    std::auto_ptr<DataOutputStream> looseOut(new DataOutputStream(baos, true));
 
-                if( !sizePrefixDisabled ) {
+                    looseOut->writeByte(type);
+                    dsm->looseMarshal(this, dataStructure, looseOut.get());
                     looseOut->close();
-                    dataOut->writeInt( (int)baos->size() );
 
-                    if( baos->size() > 0 ) {
+                    // Now the data goes to the transport from out byte buffer.
+                    dataOut->writeInt((int) baos->size());
+
+                    if (baos->size() > 0) {
                         std::pair<unsigned char*, int> array = baos->toByteArray();
-                        dataOut->write( array.first, array.second );
-                        delete [] array.first;
-                    }
 
-                    // Delete allocated resource
-                    delete baos;
-                    delete looseOut;
+                        try {
+                            dataOut->write(array.first, array.second);
+                        } catch (Exception& ex) {
+                            delete[] array.first;
+                            throw;
+                        }
+
+                        delete[] array.first;
+                    }
                 }
             }
         } else {
-            dataOut->writeInt( size );
-            dataOut->writeByte( NULL_TYPE );
+            dataOut->writeInt(size);
+            dataOut->writeByte(NULL_TYPE);
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
-                                                      decaf::io::DataInputStream* dis ) {
+Pointer<commands::Command> OpenWireFormat::unmarshal(const activemq::transport::Transport* transport AMQCPP_UNUSED, decaf::io::DataInputStream* dis) {
 
     try {
 
-        if( dis == NULL ) {
-            throw decaf::io::IOException(
-                __FILE__, __LINE__, "DataInputStream passed is NULL" );
+        if (dis == NULL) {
+            throw decaf::io::IOException(__FILE__, __LINE__, "DataInputStream passed is NULL");
         }
 
-        if( !sizePrefixDisabled ) {
+        if (!sizePrefixDisabled) {
             dis->readInt();
         }
 
         // Get the unmarshalled DataStructure
-        Pointer<DataStructure> data( doUnmarshal( dis ) );
+        Pointer<DataStructure> data(doUnmarshal(dis));
 
-        if( data == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "OpenWireFormat::doUnmarshal - "
-                "Failed to unmarshal an Object" );
+        if (data == NULL) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormat::doUnmarshal - "
+                    "Failed to unmarshal an Object");
         }
 
         // Now all unmarshals from this level should result in an object
@@ -262,14 +241,14 @@ Pointer<commands::Command> OpenWireFormat::unmarshal( const activemq::transport:
 
         return command;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
+commands::DataStructure* OpenWireFormat::doUnmarshal(DataInputStream* dis) {
 
     try {
 
@@ -280,111 +259,99 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
 
         private:
 
-            Finally( const Finally& );
-            Finally& operator= ( const Finally& );
+            Finally(const Finally&);
+            Finally& operator=(const Finally&);
 
         public:
 
-            Finally( decaf::util::concurrent::atomic::AtomicBoolean* state ) : state( state ) {
-                state->set( true );
+            Finally(decaf::util::concurrent::atomic::AtomicBoolean* state) : state(state) {
+                state->set(true);
             }
 
             ~Finally() {
-                state->set( false );
+                state->set(false);
             }
-        } finalizer( &( this->receiving ) );
+        }
+
+        finalizer(&(this->receiving));
 
         unsigned char dataType = dis->readByte();
 
-        if( dataType != NULL_TYPE ) {
+        if (dataType != NULL_TYPE) {
 
-            DataStreamMarshaller* dsm =
-                dynamic_cast< DataStreamMarshaller* >(
-                    dataMarshallers[dataType & 0xFF] );
+            DataStreamMarshaller* dsm = dynamic_cast<DataStreamMarshaller*>(dataMarshallers[dataType & 0xFF]);
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( dataType ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(dataType)).c_str());
             }
 
             // Ask the DataStreamMarshaller to create a new instance of its
             // command so that we can fill in its data.
-            DataStructure* data = dsm->createObject();
+            std::auto_ptr<DataStructure> data(dsm->createObject());
 
-            if( this->tightEncodingEnabled ) {
+            if (this->tightEncodingEnabled) {
                 BooleanStream bs;
-                bs.unmarshal( dis );
-                dsm->tightUnmarshal( this, data, dis, &bs );
+                bs.unmarshal(dis);
+                dsm->tightUnmarshal(this, data.get(), dis, &bs);
             } else {
-                dsm->looseUnmarshal( this, data, dis );
+                dsm->looseUnmarshal(this, data.get(), dis);
             }
 
-            return data;
+            return data.release();
         }
 
         return NULL;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
-                                               utils::BooleanStream* bs ) {
+int OpenWireFormat::tightMarshalNestedObject1(commands::DataStructure* object, utils::BooleanStream* bs) {
 
     try {
 
-        bs->writeBoolean( object != NULL );
-        if( object == NULL ) {
+        bs->writeBoolean(object != NULL);
+        if (object == NULL) {
             return 0;
         }
 
-        if( object->isMarshalAware() ) {
+        if (object->isMarshalAware()) {
 
-            std::vector<unsigned char> sequence =
-                object->getMarshaledForm(this);
-            bs->writeBoolean( !sequence.empty() );
-            if( !sequence.empty() ) {
-                return (int)(1 + sequence.size());
+            std::vector<unsigned char> sequence = object->getMarshaledForm(this);
+            bs->writeBoolean(!sequence.empty());
+            if (!sequence.empty()) {
+                return (int) (1 + sequence.size());
             }
         }
 
         unsigned char type = object->getDataStructureType();
-        if( type == 0 ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "No valid data structure type for object of this type");
+        if (type == 0) {
+            throw IOException(__FILE__, __LINE__, "No valid data structure type for object of this type");
         }
 
         DataStreamMarshaller* dsm = dataMarshallers[type & 0xFF];
 
-        if( dsm == NULL ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                Integer::toString( type ) ).c_str() );
+        if (dsm == NULL) {
+            throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(type)).c_str());
         }
 
-        return 1 + dsm->tightMarshal1( this, object, bs );
+        return 1 + dsm->tightMarshal1(this, object, bs);
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
-                                                DataOutputStream* ds,
-                                                BooleanStream* bs ) {
+void OpenWireFormat::tightMarshalNestedObject2(DataStructure* o, DataOutputStream* ds, BooleanStream* bs) {
 
     try {
 
-        if( !bs->readBoolean() ) {
+        if (!bs->readBoolean()) {
             return;
         }
 
@@ -392,166 +359,139 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
         ds->writeByte(type);
 
-        if( o->isMarshalAware() && bs->readBoolean() ) {
+        if (o->isMarshalAware() && bs->readBoolean()) {
 
-            MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
-            vector<unsigned char> sequence = ma->getMarshaledForm( this );
-            ds->write( &sequence[0], (int)sequence.size() );
+            MarshalAware* ma = dynamic_cast<MarshalAware*>(o);
+            vector<unsigned char> sequence = ma->getMarshaledForm(this);
+            ds->write(&sequence[0], (int) sequence.size());
 
         } else {
 
             DataStreamMarshaller* dsm = dataMarshallers[type & 0xFF];
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( type ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(type)).c_str());
             }
 
-            dsm->tightMarshal2( this, o, ds, bs );
+            dsm->tightMarshal2(this, o, ds, bs);
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
-                                                           BooleanStream* bs ) {
+DataStructure* OpenWireFormat::tightUnmarshalNestedObject(DataInputStream* dis, BooleanStream* bs) {
 
     try {
 
-        if( bs->readBoolean() ) {
+        if (bs->readBoolean()) {
 
             const unsigned char dataType = dis->readByte();
 
             DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( dataType ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(dataType)).c_str());
             }
 
-            DataStructure* data = dsm->createObject();
+            std::auto_ptr<DataStructure> data(dsm->createObject());
 
-            if( data->isMarshalAware() && bs->readBoolean() ) {
+            if (data->isMarshalAware() && bs->readBoolean()) {
 
                 dis->readInt();
                 dis->readByte();
 
                 BooleanStream bs2;
-                bs2.unmarshal( dis );
-                dsm->tightUnmarshal( this, data, dis, &bs2 );
-
+                bs2.unmarshal(dis);
+                dsm->tightUnmarshal(this, data.get(), dis, &bs2);
             } else {
-                dsm->tightUnmarshal( this, data, dis, bs );
+                dsm->tightUnmarshal(this, data.get(), dis, bs);
             }
 
-            return data;
+            return data.release();
         } else {
             return NULL;
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis ) {
+DataStructure* OpenWireFormat::looseUnmarshalNestedObject(decaf::io::DataInputStream* dis) {
 
-    try{
+    try {
 
-        if( dis->readBoolean() ) {
+        if (dis->readBoolean()) {
 
             unsigned char dataType = dis->readByte();
 
             DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( dataType ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(dataType)).c_str());
             }
 
-            DataStructure* data = dsm->createObject();
-            dsm->looseUnmarshal( this, data, dis );
-
-            return data;
-
+            std::auto_ptr<DataStructure> data(dsm->createObject());
+            dsm->looseUnmarshal(this, data.get(), dis);
+            return data.release();
         } else {
             return NULL;
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
-                                               decaf::io::DataOutputStream* dataOut ) {
+void OpenWireFormat::looseMarshalNestedObject(commands::DataStructure* o, decaf::io::DataOutputStream* dataOut) {
 
-    try{
+    try {
 
-        dataOut->writeBoolean( o != NULL );
-        if( o != NULL ) {
+        dataOut->writeBoolean(o != NULL);
+        if (o != NULL) {
 
             unsigned char dataType = o->getDataStructureType();
 
-            dataOut->writeByte( dataType );
+            dataOut->writeByte(dataType);
 
             DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
-            if( dsm == NULL ) {
-                throw IOException(
-                    __FILE__, __LINE__,
-                    ( string( "OpenWireFormat::marshal - Unknown data type: " ) +
-                    Integer::toString( dataType ) ).c_str() );
+            if (dsm == NULL) {
+                throw IOException(__FILE__, __LINE__, (string("OpenWireFormat::marshal - Unknown data type: ") + Integer::toString(dataType)).c_str());
             }
 
-            dsm->looseMarshal( this, o, dataOut );
+            dsm->looseMarshal(this, o, dataOut);
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info ) {
+void OpenWireFormat::renegotiateWireFormat(const WireFormatInfo& info) {
 
-    if( preferedWireFormatInfo == NULL ) {
-        throw IllegalStateException(
-            __FILE__, __LINE__,
-            "OpenWireFormat::renegotiateWireFormat - "
-            "Wireformat cannot not be renegotiated." );
+    if (preferedWireFormatInfo == NULL) {
+        throw IllegalStateException(__FILE__, __LINE__,
+            "OpenWireFormat::renegotiateWireFormat - Wireformat cannot not be renegotiated.");
     }
 
-    this->setVersion( Math::min( preferedWireFormatInfo->getVersion(),
-                                 info.getVersion() ) );
-    this->stackTraceEnabled = info.isStackTraceEnabled() &&
-                              preferedWireFormatInfo->isStackTraceEnabled();
-    this->tcpNoDelayEnabled = info.isTcpNoDelayEnabled() &&
-                              preferedWireFormatInfo->isTcpNoDelayEnabled();
-    this->cacheEnabled = info.isCacheEnabled() &&
-                         preferedWireFormatInfo->isCacheEnabled();
-    this->tightEncodingEnabled = info.isTightEncodingEnabled() &&
-                                 preferedWireFormatInfo->isTightEncodingEnabled();
-    this->sizePrefixDisabled = info.isSizePrefixDisabled() &&
-                               preferedWireFormatInfo->isSizePrefixDisabled();
-    this->cacheSize = min( info.getCacheSize(), preferedWireFormatInfo->getCacheSize() );
-    this->maxInactivityDuration = min( info.getMaxInactivityDuration(),
-                                       preferedWireFormatInfo->getMaxInactivityDuration() );
-    this->maxInactivityDurationInitialDelay = min( info.getMaxInactivityDurationInitalDelay(),
-                                                   preferedWireFormatInfo->getMaxInactivityDurationInitalDelay() );
+    this->setVersion(Math::min(preferedWireFormatInfo->getVersion(), info.getVersion()));
+    this->stackTraceEnabled = info.isStackTraceEnabled() && preferedWireFormatInfo->isStackTraceEnabled();
+    this->tcpNoDelayEnabled = info.isTcpNoDelayEnabled() && preferedWireFormatInfo->isTcpNoDelayEnabled();
+    this->cacheEnabled = info.isCacheEnabled() && preferedWireFormatInfo->isCacheEnabled();
+    this->tightEncodingEnabled = info.isTightEncodingEnabled() && preferedWireFormatInfo->isTightEncodingEnabled();
+    this->sizePrefixDisabled = info.isSizePrefixDisabled() && preferedWireFormatInfo->isSizePrefixDisabled();
+    this->cacheSize = min(info.getCacheSize(), preferedWireFormatInfo->getCacheSize());
+    this->maxInactivityDuration = min(info.getMaxInactivityDuration(), preferedWireFormatInfo->getMaxInactivityDuration());
+    this->maxInactivityDurationInitialDelay = min(info.getMaxInactivityDurationInitalDelay(), preferedWireFormatInfo->getMaxInactivityDurationInitalDelay());
 }
