@@ -83,7 +83,6 @@ OpenWireFormat::~OpenWireFormat() {
     try {
         this->destroyMarshalers();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -193,30 +192,34 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                 dsm->tightMarshal2( this, dataStructure, dataOut, &bs );
 
             } else {
-                DataOutputStream* looseOut = dataOut;
-                ByteArrayOutputStream* baos = NULL;
 
-                if( !sizePrefixDisabled ) {
-                    baos = new ByteArrayOutputStream();
-                    looseOut = new DataOutputStream( baos );
-                }
+                if (sizePrefixDisabled) {
+                    dataOut->writeByte(type);
+                    dsm->looseMarshal(this, dataStructure, dataOut);
+                } else {
 
-                looseOut->writeByte( type );
-                dsm->looseMarshal( this, dataStructure, looseOut );
+                    ByteArrayOutputStream* baos = new ByteArrayOutputStream();
+                    std::auto_ptr<DataOutputStream> looseOut(new DataOutputStream(baos, true));
 
-                if( !sizePrefixDisabled ) {
+                    looseOut->writeByte(type);
+                    dsm->looseMarshal(this, dataStructure, looseOut.get());
                     looseOut->close();
-                    dataOut->writeInt( (int)baos->size() );
 
-                    if( baos->size() > 0 ) {
+                    // Now the data goes to the transport from out byte buffer.
+                    dataOut->writeInt((int) baos->size());
+
+                    if (baos->size() > 0) {
                         std::pair<unsigned char*, int> array = baos->toByteArray();
-                        dataOut->write( array.first, array.second );
-                        delete [] array.first;
-                    }
 
-                    // Delete allocated resource
-                    delete baos;
-                    delete looseOut;
+                        try {
+                            dataOut->write(array.first, array.second);
+                        } catch (Exception& ex) {
+                            delete[] array.first;
+                            throw;
+                        }
+
+                        delete[] array.first;
+                    }
                 }
             }
         } else {
@@ -311,17 +314,17 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis ) {
 
             // Ask the DataStreamMarshaller to create a new instance of its
             // command so that we can fill in its data.
-            DataStructure* data = dsm->createObject();
+            std::auto_ptr<DataStructure> data(dsm->createObject());
 
             if( this->tightEncodingEnabled ) {
                 BooleanStream bs;
                 bs.unmarshal( dis );
-                dsm->tightUnmarshal( this, data, dis, &bs );
+                dsm->tightUnmarshal( this, data.get(), dis, &bs );
             } else {
-                dsm->looseUnmarshal( this, data, dis );
+                dsm->looseUnmarshal( this, data.get(), dis );
             }
 
-            return data;
+            return data.release();
         }
 
         return NULL;
@@ -437,22 +440,20 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
                     Integer::toString( dataType ) ).c_str() );
             }
 
-            DataStructure* data = dsm->createObject();
+            std::auto_ptr<DataStructure> data(dsm->createObject());
 
             if( data->isMarshalAware() && bs->readBoolean() ) {
-
                 dis->readInt();
                 dis->readByte();
 
                 BooleanStream bs2;
                 bs2.unmarshal( dis );
-                dsm->tightUnmarshal( this, data, dis, &bs2 );
-
+                dsm->tightUnmarshal( this, data.get(), dis, &bs2 );
             } else {
-                dsm->tightUnmarshal( this, data, dis, bs );
+                dsm->tightUnmarshal( this, data.get(), dis, bs );
             }
 
-            return data;
+            return data.release();
         } else {
             return NULL;
         }
@@ -481,10 +482,9 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputS
                     Integer::toString( dataType ) ).c_str() );
             }
 
-            DataStructure* data = dsm->createObject();
-            dsm->looseUnmarshal( this, data, dis );
-
-            return data;
+            std::auto_ptr<DataStructure> data(dsm->createObject());
+            dsm->looseUnmarshal( this, data.get(), dis );
+            return data.release();
 
         } else {
             return NULL;

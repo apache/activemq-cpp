@@ -447,7 +447,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
 
         if( bs->readBoolean() ) {
 
-            BrokerError* answer = new BrokerError();
+            std::auto_ptr<BrokerError> answer(new BrokerError());
 
             answer->setExceptionClass( tightUnmarshalString( dataIn, bs ) );
             answer->setMessage( tightUnmarshalString( dataIn, bs ) );
@@ -473,7 +473,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
                     tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) ) );
             }
 
-            return answer;
+            return answer.release();
 
         } else {
             return NULL;
@@ -581,7 +581,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
 
         if( dataIn->readBoolean() ) {
 
-            BrokerError* answer = new BrokerError();
+            std::auto_ptr<BrokerError> answer(new BrokerError());
 
             answer->setExceptionClass( looseUnmarshalString( dataIn ) );
             answer->setMessage( looseUnmarshalString( dataIn ) );
@@ -608,7 +608,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
                     looseUnmarshalBrokerError( wireFormat, dataIn ) ) ) );
             }
 
-            return answer;
+            return answer.release();
 
         } else {
             return NULL;
