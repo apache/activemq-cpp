@@ -53,10 +53,10 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, int bufferSize, b
 BufferedInputStream::~BufferedInputStream() {
     try{
         this->close();
-        delete [] this->buff;
     }
-    DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
+
+    delete [] this->buff;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -85,7 +85,6 @@ ActiveMQProducer::~ActiveMQProducer() throw() {
     try {
         close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 

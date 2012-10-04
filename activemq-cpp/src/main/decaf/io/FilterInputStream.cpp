@@ -35,13 +35,14 @@ FilterInputStream::~FilterInputStream() {
 
     try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW( )
 
+    try {
         if( own ) {
             delete inputStream;
         }
-        inputStream = NULL;
     }
-    DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW( )
 }
 

@@ -248,6 +248,10 @@ InactivityMonitor::InactivityMonitor( const Pointer<Transport>& next,
 InactivityMonitor::~InactivityMonitor() {
     try{
         this->stopMonitorThreads();
+    }
+    AMQ_CATCHALL_NOTHROW()
+
+    try{
         delete this->members;
     }
     AMQ_CATCHALL_NOTHROW()

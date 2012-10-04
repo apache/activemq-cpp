@@ -49,7 +49,6 @@ ByteArrayOutputStream::~ByteArrayOutputStream() {
     try{
         delete [] buffer;
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
 }
 

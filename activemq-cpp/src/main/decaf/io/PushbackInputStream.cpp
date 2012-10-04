@@ -44,13 +44,12 @@ PushbackInputStream::PushbackInputStream( InputStream* stream, int bufSize, bool
 
 ////////////////////////////////////////////////////////////////////////////////
 PushbackInputStream::~PushbackInputStream() {
-    try{
-
+    try {
         close();
-        delete [] this->buffer;
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
+
+    delete [] this->buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

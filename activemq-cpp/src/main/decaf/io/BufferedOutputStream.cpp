@@ -48,17 +48,16 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, int bufSize, b
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::~BufferedOutputStream() {
 
-    try{
+    try {
         this->close();
-
-        // Destroy the buffer.
-        if( buffer != NULL ){
-            delete [] buffer;
-            buffer = NULL;
-        }
     }
-    DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
+
+    // Destroy the buffer.
+    if( buffer != NULL ){
+        delete [] buffer;
+        buffer = NULL;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

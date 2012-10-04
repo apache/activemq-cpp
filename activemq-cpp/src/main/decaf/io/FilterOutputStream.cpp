@@ -36,13 +36,14 @@ FilterOutputStream::FilterOutputStream( OutputStream* outputStream, bool own ) :
 FilterOutputStream::~FilterOutputStream() {
     try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW( )
 
+    try {
         if( own ) {
             delete outputStream;
         }
-        outputStream = NULL;
     }
-    DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW( )
 }
 

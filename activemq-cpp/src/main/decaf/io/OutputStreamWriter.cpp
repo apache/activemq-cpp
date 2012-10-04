@@ -39,17 +39,16 @@ OutputStreamWriter::OutputStreamWriter( OutputStream* stream, bool own ) : strea
 ////////////////////////////////////////////////////////////////////////////////
 OutputStreamWriter::~OutputStreamWriter() {
 
-    try{
-
+    try {
         this->close();
+    }
+    DECAF_CATCHALL_NOTHROW()
 
+    try {
         if( this->own ) {
             delete this->stream;
         }
-
-        this->stream = NULL;
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
 }
 
