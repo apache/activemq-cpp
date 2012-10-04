@@ -30,9 +30,9 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <memory>
 
-namespace activemq{
-namespace wireformat{
-namespace openwire{
+namespace activemq {
+namespace wireformat {
+namespace openwire {
 
 namespace marshal {
     class DataStreamMarshaller;
@@ -86,7 +86,7 @@ namespace marshal {
          * Constructs a new OpenWireFormat object
          * @param properties - can contain optional config params.
          */
-        OpenWireFormat( const decaf::util::Properties& properties );
+        OpenWireFormat(const decaf::util::Properties& properties);
 
         virtual ~OpenWireFormat();
 
@@ -100,28 +100,24 @@ namespace marshal {
         /**
          * {@inheritDoc}
          */
-        virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport );
+        virtual Pointer<transport::Transport> createNegotiator(const Pointer<transport::Transport>& transport);
 
         /**
          * Allows an external source to add marshalers to this object for
-         * types that may be marshaled or unmarhsaled.
+         * types that may be marshaled or unmarshaled.
          * @param marshaler - the Marshaler to add to the collection.
          */
-        void addMarshaller( marshal::DataStreamMarshaller* marshaler );
+        void addMarshaller(marshal::DataStreamMarshaller* marshaler);
 
         /**
          * {@inheritDoc}
          */
-        virtual void marshal( const Pointer<commands::Command>& command,
-                              const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out );
+        virtual void marshal(const Pointer<commands::Command>& command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* out);
 
         /**
          * {@inheritDoc}
          */
-        virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in );
+        virtual Pointer<commands::Command> unmarshal(const activemq::transport::Transport* transport, decaf::io::DataInputStream* in);
 
     public:
 
@@ -132,8 +128,7 @@ namespace marshal {
          * @param bs - the BooleanStream to write to
          * @returns size of the data returned.
          */
-        virtual int tightMarshalNestedObject1( commands::DataStructure* object,
-                                               utils::BooleanStream* bs );
+        virtual int tightMarshalNestedObject1(commands::DataStructure* object, utils::BooleanStream* bs);
 
         /**
          * Utility method that will Tight marshal some internally nested object
@@ -144,9 +139,7 @@ namespace marshal {
          * @param bs - BooleanStream
          * @throws IOException if an error occurs.
          */
-        void tightMarshalNestedObject2( commands::DataStructure* o,
-                                        decaf::io::DataOutputStream* ds,
-                                        utils::BooleanStream* bs );
+        void tightMarshalNestedObject2(commands::DataStructure* o, decaf::io::DataOutputStream* ds, utils::BooleanStream* bs);
 
         /**
          * Utility method used to Unmarshal a Nested DataStructure type object
@@ -157,8 +150,7 @@ namespace marshal {
          * @returns Newly allocated DataStructure Object
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* tightUnmarshalNestedObject( decaf::io::DataInputStream* dis,
-                                                             utils::BooleanStream* bs );
+        commands::DataStructure* tightUnmarshalNestedObject(decaf::io::DataInputStream* dis, utils::BooleanStream* bs);
 
         /**
          * Utility method to unmarshal an DataStructure object from an
@@ -169,7 +161,7 @@ namespace marshal {
          * @returns a new DataStructure derived Object pointer
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* looseUnmarshalNestedObject( decaf::io::DataInputStream* dis );
+        commands::DataStructure* looseUnmarshalNestedObject(decaf::io::DataInputStream* dis);
 
         /**
          * Utility method to loosely Marshal an object that is derived from the
@@ -179,8 +171,7 @@ namespace marshal {
          * @param dataOut - DataOutputStream to write the data to
          * @throw IOException if an error occurs.
          */
-        void looseMarshalNestedObject( commands::DataStructure* o,
-                                       decaf::io::DataOutputStream* dataOut );
+        void looseMarshalNestedObject(commands::DataStructure* o, decaf::io::DataOutputStream* dataOut);
 
         /**
          * Called to re-negotiate the settings for the WireFormatInfo, these
@@ -191,7 +182,7 @@ namespace marshal {
          *
          * @throws IllegalStateException is wire format can't be negotiated.
          */
-        void renegotiateWireFormat( const commands::WireFormatInfo& info );
+        void renegotiateWireFormat(const commands::WireFormatInfo& info);
 
         /**
          * Configures this object using the provided WireformatInfo object
@@ -201,7 +192,7 @@ namespace marshal {
          *
          * @throws IllegalStateException if the WireFormat object has not been initialized.
          */
-        void setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info );
+        void setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo>& info);
 
         /**
          * Gets the Preferred WireFormatInfo object that this class holds
@@ -223,7 +214,7 @@ namespace marshal {
          * Sets if the stackTraceEnabled flag is on
          * @param stackTraceEnabled - true to turn flag is on
          */
-        void setStackTraceEnabled( bool stackTraceEnabled ) {
+        void setStackTraceEnabled(bool stackTraceEnabled) {
             this->stackTraceEnabled = stackTraceEnabled;
         }
 
@@ -239,7 +230,7 @@ namespace marshal {
          * Sets if the tcpNoDelayEnabled flag is on
          * @param tcpNoDelayEnabled - true to turn flag is on
          */
-        void setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
+        void setTcpNoDelayEnabled(bool tcpNoDelayEnabled) {
             this->tcpNoDelayEnabled = tcpNoDelayEnabled;
         }
 
@@ -259,7 +250,7 @@ namespace marshal {
          *
          * @throws IllegalArgumentException if the version given is not supported.
          */
-        void setVersion( int version );
+        void setVersion(int version);
 
         /**
          * Is there a Message being unmarshaled?
@@ -282,7 +273,7 @@ namespace marshal {
          * Sets if the cacheEnabled flag is on
          * @param cacheEnabled - true to turn flag is on
          */
-        void setCacheEnabled( bool cacheEnabled ) {
+        void setCacheEnabled(bool cacheEnabled) {
             this->cacheEnabled = cacheEnabled;
         }
 
@@ -298,7 +289,7 @@ namespace marshal {
          * Sets the current Cache size.
          * @param value - the value to send as the broker's cache size.
          */
-        void setCacheSize( int value ) {
+        void setCacheSize(int value) {
             this->cacheSize = value;
         }
 
@@ -314,7 +305,7 @@ namespace marshal {
          * Sets if the tightEncodingEnabled flag is on
          * @param tightEncodingEnabled - true to turn flag is on
          */
-        void setTightEncodingEnabled( bool tightEncodingEnabled ) {
+        void setTightEncodingEnabled(bool tightEncodingEnabled) {
             this->tightEncodingEnabled = tightEncodingEnabled;
         }
 
@@ -330,7 +321,7 @@ namespace marshal {
          * Sets if the sizePrefixDisabled flag is on
          * @param sizePrefixDisabled - true to turn flag is on
          */
-        void setSizePrefixDisabled( bool sizePrefixDisabled ) {
+        void setSizePrefixDisabled(bool sizePrefixDisabled) {
             this->sizePrefixDisabled = sizePrefixDisabled;
         }
 
@@ -346,7 +337,7 @@ namespace marshal {
          * Sets the MaxInactivityDuration setting.
          * @param value - the Max inactivity duration value in milliseconds.
          */
-        void setMaxInactivityDuration( long long value ) {
+        void setMaxInactivityDuration(long long value) {
             this->maxInactivityDuration = value;
         }
 
@@ -362,7 +353,7 @@ namespace marshal {
          * Sets the MaxInactivityDurationInitialDelay setting.
          * @param value - the Max inactivity Initial Delay duration value in milliseconds.
          */
-        void setMaxInactivityDurationInitialDelay( long long value ) {
+        void setMaxInactivityDurationInitialDelay(long long value) {
             this->maxInactivityDurationInitialDelay = value;
         }
 
@@ -381,7 +372,7 @@ namespace marshal {
          *
          * @throws IOException if an error occurs during the unmarshal.
          */
-        commands::DataStructure* doUnmarshal( decaf::io::DataInputStream* dis );
+        commands::DataStructure* doUnmarshal(decaf::io::DataInputStream* dis);
 
         /**
          * Cleans up all registered Marshallers and empties the dataMarshallers

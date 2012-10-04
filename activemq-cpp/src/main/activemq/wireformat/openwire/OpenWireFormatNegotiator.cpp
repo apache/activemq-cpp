@@ -38,8 +38,7 @@ using namespace decaf::lang::exceptions;
 const int OpenWireFormatNegotiator::negotiationTimeout = 15000;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
-                                                    const Pointer<Transport>& next ) :
+OpenWireFormatNegotiator::OpenWireFormatNegotiator(OpenWireFormat* wireFormat, const Pointer<Transport>& next ) :
     WireFormatNegotiator( next ),
     firstTime(true),
     wireInfoSentDownLatch(1),
@@ -49,188 +48,154 @@ OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
-{
-    // Close the transport and destroy it.
-    close();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::oneway( const Pointer<Command>& command )
-    throw( IOException, UnsupportedOperationException ) {
-
-    try{
-
-        if( closed || next == NULL ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "OpenWireFormatNegotiator::oneway - transport already closed" );
-        }
-
-        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw IOException(
-                __FILE__,
-                __LINE__,
-                "OpenWireFormatNegotiator::oneway"
-                "Wire format negotiation timeout: peer did not "
-                "send his wire format." );
-        }
-
-        next->oneway( command );
+OpenWireFormatNegotiator::~OpenWireFormatNegotiator() {
+    try {
+        close();
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireFormatNegotiator::request( const Pointer<Command>& command )
-    throw( IOException, UnsupportedOperationException ) {
+void OpenWireFormatNegotiator::oneway(const Pointer<Command>& command) throw (IOException, UnsupportedOperationException) {
 
-    try{
+    try {
 
-        if( closed || next == NULL ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "OpenWireFormatNegotiator::request - transport already closed" );
+        if (closed || next == NULL) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::oneway - transport already closed");
         }
 
-        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw IOException(
-                __FILE__,
-                __LINE__,
-                "OpenWireFormatNegotiator::request"
-                "Wire format negotiation timeout: peer did not "
-                "send his wire format." );
+        if (!readyCountDownLatch.await(negotiationTimeout)) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::oneway"
+                    "Wire format negotiation timeout: peer did not "
+                    "send his wire format.");
         }
 
-        return next->request( command );
+        next->oneway(command);
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireFormatNegotiator::request(
-    const Pointer<Command>& command, unsigned int timeout )
-        throw( IOException, UnsupportedOperationException ) {
+Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& command) throw (IOException, UnsupportedOperationException) {
 
-    try{
+    try {
 
-        if( closed || next == NULL ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "OpenWireFormatNegotiator::request - transport already closed" );
+        if (closed || next == NULL) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request - transport already closed");
         }
 
-        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw IOException(
-                __FILE__,
-                __LINE__,
-                "OpenWireFormatNegotiator::request"
-                "Wire format negotiation timeout: peer did not "
-                "send his wire format." );
+        if (!readyCountDownLatch.await(negotiationTimeout)) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request"
+                    "Wire format negotiation timeout: peer did not "
+                    "send his wire format.");
         }
 
-        return next->request( command, timeout );
+        return next->request(command);
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onCommand( const Pointer<Command>& command ) {
+Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& command, unsigned int timeout) throw (IOException, UnsupportedOperationException) {
 
-    if( command->isWireFormatInfo() ) {
+    try {
 
-        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( command.get() );
+        if (closed || next == NULL) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request - transport already closed");
+        }
+
+        if (!readyCountDownLatch.await(negotiationTimeout)) {
+            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request"
+                    "Wire format negotiation timeout: peer did not "
+                    "send his wire format.");
+        }
+
+        return next->request(command, timeout);
+    }
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireFormatNegotiator::onCommand(const Pointer<Command>& command) {
+
+    if (command->isWireFormatInfo()) {
+
+        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>(command.get());
 
         try {
 
-            if( !info->isValid() ) {
-                throw IOException(
-                    __FILE__,
-                    __LINE__,
-                    "OpenWireFormatNegotiator::onCommand"
-                    "Remote wire format magic is invalid" );
+            if (!info->isValid()) {
+                throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::onCommand"
+                        "Remote wire format magic is invalid");
             }
 
-            wireInfoSentDownLatch.await( negotiationTimeout );
-            openWireFormat->renegotiateWireFormat( *info );
-
+            wireInfoSentDownLatch.await(negotiationTimeout);
+            openWireFormat->renegotiateWireFormat(*info);
             readyCountDownLatch.countDown();
-
-        } catch( exceptions::ActiveMQException& ex ) {
-
+        } catch (exceptions::ActiveMQException& ex) {
             readyCountDownLatch.countDown();
-            fire( ex );
+            fire(ex);
         }
     }
 
     // Send along to the next interested party.
-    fire( command );
+    fire(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onTransportException(
-    Transport* source AMQCPP_UNUSED,
-    const decaf::lang::Exception& ex ) {
-
+void OpenWireFormatNegotiator::onTransportException(Transport* source AMQCPP_UNUSED, const decaf::lang::Exception& ex) {
     readyCountDownLatch.countDown();
-    fire( ex );
+    fire(ex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::start() throw( IOException ){
+void OpenWireFormatNegotiator::start() throw (IOException) {
 
     /**
      * We're already started.
      */
-    if( !closed ){
+    if (!closed) {
         return;
     }
 
-    if( listener == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - TransportListener is invalid" );
+    if (listener == NULL) {
+        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - TransportListener is invalid");
     }
 
-    if( next == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - next transport is NULL" );
+    if (next == NULL) {
+        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - next transport is NULL");
     }
 
-    if( openWireFormat == NULL ){
-        throw IOException(
-            __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - openWireFormat is NULL" );
+    if (openWireFormat == NULL) {
+        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - openWireFormat is NULL");
     }
 
     // Start the delegate transport object.
     next->start();
 
-    if( firstTime.compareAndSet( true, false ) ) {
+    if (firstTime.compareAndSet(true, false)) {
 
         try {
 
             // We first send the WireFormat that we'd prefer.
-            this->next->oneway( openWireFormat->getPreferedWireFormatInfo() );
+            this->next->oneway(openWireFormat->getPreferedWireFormatInfo());
 
             // Mark the latch
             wireInfoSentDownLatch.countDown();
 
-        } catch( decaf::lang::Exception& ex ) {
-
+        } catch (decaf::lang::Exception& ex) {
             // Mark the latch
             wireInfoSentDownLatch.countDown();
-            ex.setMark( __FILE__, __LINE__ );
+            ex.setMark(__FILE__, __LINE__);
             throw;
         }
     }
@@ -240,18 +205,17 @@ void OpenWireFormatNegotiator::start() throw( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::close() throw( IOException ){
+void OpenWireFormatNegotiator::close() throw (IOException) {
 
-    try{
+    try {
 
-        if( !closed && next != NULL ){
+        if (!closed && next != NULL) {
             next->close();
         }
 
         closed = true;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
-
