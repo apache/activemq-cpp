@@ -32,18 +32,16 @@ namespace openwire{
     /**
      * Used to allow a MockTransport to generate response commands to OpenWire Commands.
      */
-    class AMQCPP_API OpenWireResponseBuilder : public transport::mock::ResponseBuilder {
+    class AMQCPP_API OpenWireResponseBuilder: public transport::mock::ResponseBuilder {
     public:
 
         OpenWireResponseBuilder() {}
         virtual ~OpenWireResponseBuilder() {}
 
-        virtual Pointer<commands::Response> buildResponse(
-            const Pointer<commands::Command>& command );
+        virtual Pointer<commands::Response> buildResponse(const Pointer<commands::Command>& command);
 
-        virtual void buildIncomingCommands(
-            const Pointer<commands::Command>& command,
-            decaf::util::LinkedList< Pointer<commands::Command> >& queue );
+        virtual void buildIncomingCommands(const Pointer<commands::Command>& command,
+                                           decaf::util::LinkedList<Pointer<commands::Command> >& queue);
 
     };
 

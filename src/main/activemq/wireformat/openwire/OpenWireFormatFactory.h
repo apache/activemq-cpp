@@ -53,8 +53,7 @@ namespace openwire{
 
         virtual ~OpenWireFormatFactory() {}
 
-        virtual Pointer<wireformat::WireFormat> createWireFormat(
-            const decaf::util::Properties& properties );
+        virtual Pointer<wireformat::WireFormat> createWireFormat(const decaf::util::Properties& properties);
 
     };
 

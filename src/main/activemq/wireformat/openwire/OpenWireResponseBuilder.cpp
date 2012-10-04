@@ -46,14 +46,12 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireResponseBuilder::buildResponse(
-    const Pointer<Command>& command ){
+Pointer<Response> OpenWireResponseBuilder::buildResponse(const Pointer<Command>& command) {
 
-    if( command->isResponseRequired() ) {
-
+    if (command->isResponseRequired()) {
         // These Commands just require a response that matches their command IDs
-        Pointer<Response> response( new commands::Response() );
-        response->setCorrelationId( command->getCommandId() );
+        Pointer<Response> response(new commands::Response());
+        response->setCorrelationId(command->getCommandId());
         return response;
     }
 
@@ -61,19 +59,16 @@ Pointer<Response> OpenWireResponseBuilder::buildResponse(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireResponseBuilder::buildIncomingCommands(
-    const Pointer<Command>& command, decaf::util::LinkedList< Pointer<Command> >& queue ){
+void OpenWireResponseBuilder::buildIncomingCommands(const Pointer<Command>& command, decaf::util::LinkedList<Pointer<Command> >& queue) {
 
     // Delegate this to buildResponse
-    if( command->isResponseRequired() ) {
-        queue.push( buildResponse( command ) );
+    if (command->isResponseRequired()) {
+        queue.push(buildResponse(command));
     }
 
-    if( command->isWireFormatInfo() ) {
-
+    if (command->isWireFormatInfo()) {
         // Return a copy of the callers own requested WireFormatInfo
         // so they get exactly the settings they asked for.
-        queue.push( Pointer<Command>(
-            dynamic_cast<WireFormatInfo*>( command->cloneDataStructure() ) ) );
+        queue.push(Pointer<Command>(dynamic_cast<WireFormatInfo*>(command->cloneDataStructure())));
     }
 }
