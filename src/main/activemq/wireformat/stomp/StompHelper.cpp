@@ -55,7 +55,10 @@ void StompHelper::convertProperties( const Pointer<StompFrame>& frame,
     message->setMessageId( convertMessageId( messageId ) );
 
     // the standard JMS headers
-    message->setCorrelationId( StompCommandConstants::HEADER_CORRELATIONID );
+    if( frame->hasProperty( StompCommandConstants::HEADER_CORRELATIONID ) ) {
+        message->setCorrelationId(
+            frame->removeProperty( StompCommandConstants::HEADER_CORRELATIONID ) );
+    }
 
     if( frame->hasProperty( StompCommandConstants::HEADER_EXPIRES ) ) {
         message->setExpiration( Long::parseLong(
