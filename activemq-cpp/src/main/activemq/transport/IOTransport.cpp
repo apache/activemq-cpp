@@ -213,22 +213,43 @@ void IOTransport::close() {
 		// No need to fire anymore async events now.
 		this->listener = NULL;
 
-		// We have to close the input stream before we stop the thread.  this will
-		// force us to wake up the thread if it's stuck in a read (which is likely).
-		// Otherwise, the join that follows will block forever.
-		if (inputStream != NULL) {
-			inputStream->close();
-			inputStream = NULL;
-		}
+        IOException error;
+        bool hasException = false;
 
-		// Close the output stream.
-		if (outputStream != NULL) {
-			outputStream->close();
-			outputStream = NULL;
-		}
+        // We have to close the input stream before we stop the thread.  this will
+        // force us to wake up the thread if it's stuck in a read (which is likely).
+        // Otherwise, the join that follows will block forever.
+        try {
+            if (inputStream != NULL) {
+                inputStream->close();
+                inputStream = NULL;
+            }
+        } catch (IOException& ex) {
+            error = ex;
+            error.setMark(__FILE__, __LINE__);
+            hasException = true;
+        }
 
-		// Clear the WireFormat so we can't use it anymore
-		this->wireFormat.reset(NULL);
+        try {
+            // Close the output stream.
+            if (outputStream != NULL) {
+                outputStream->close();
+                outputStream = NULL;
+            }
+        } catch (IOException& ex) {
+            if (!hasException) {
+                error = ex;
+                error.setMark(__FILE__, __LINE__);
+                hasException = true;
+            }
+        }
+
+        // Clear the WireFormat so we can't use it anymore
+        this->wireFormat.reset(NULL);
+
+        if (hasException) {
+            throw error;
+        }
 	}
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
