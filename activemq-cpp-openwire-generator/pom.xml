@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.4.5</version>
+    <version>3.4.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>activemq-cpp-openwire-generator</artifactId>
