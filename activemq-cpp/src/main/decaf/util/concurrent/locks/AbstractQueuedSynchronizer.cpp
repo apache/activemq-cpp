@@ -245,25 +245,14 @@ namespace {
 
         Node head;
         Node* tail;
+        int size;
         decaf_mutex_t lock;
 
     public:
 
-        NodePool() : head(), tail(NULL), lock() {
+        NodePool() : head(), tail(NULL), size(0), lock() {
             PlatformThread::createMutex(&lock);
 
-            for (int i = 0; i < 100; ++i) {
-                Node* node = new Node();
-                Node* t = tail;
-
-                if (t != NULL) {
-                    t->nextFree = node;
-                    tail = node;
-                } else {
-                    tail = node;
-                    head.nextFree = tail;
-                }
-            }
         }
 
         ~NodePool() {
@@ -294,37 +283,7 @@ namespace {
         }
 
         Node* takeNode(Thread* thread, int waitStatus, Node* nextWaiter) {
-
-            Node* result = NULL;
-
-            if (head.nextFree != NULL) {
-                PlatformThread::lockMutex(lock);
-
-                if (head.nextFree != NULL) {
-                    result = head.nextFree;
-                    head.nextFree = result->nextFree;
-
-                    if (result == tail) {
-                        tail = NULL;
-                    }
-                }
-
-                PlatformThread::unlockMutex(lock);
-            }
-
-            if (result == NULL) {
-                result = new Node(thread, waitStatus, nextWaiter);
-            } else {
-                // Reset to the new state.
-                result->thread = thread;
-                result->waitStatus = waitStatus;
-                result->nextWaiter = nextWaiter;
-                result->prev = NULL;
-                result->next = NULL;
-                result->nextFree = NULL;
-            }
-
-            return result;
+            return new Node(thread, waitStatus, nextWaiter);
         }
 
         void returnNode(Node* node) {
@@ -336,6 +295,7 @@ namespace {
             PlatformThread::lockMutex(lock);
 
             Node* t = tail;
+            size++;
 
             if (t != NULL) {
                 t->nextFree = node;
@@ -344,6 +304,13 @@ namespace {
             } else {
                 tail = node;
                 head.nextFree = tail;
+            }
+
+            if (size == 50) {
+                Node* toDelete = head.nextFree;
+                head.nextFree = toDelete->nextFree;
+                delete toDelete;
+                size--;
             }
 
             PlatformThread::unlockMutex(lock);
