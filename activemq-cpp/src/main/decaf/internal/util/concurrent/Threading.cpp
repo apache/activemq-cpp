@@ -162,6 +162,8 @@ namespace {
 
         PlatformThread::notifyAll(self->condition);
 
+        decaf_thread_t handle = self->handle;
+
         unblockThreads(self->joiners);
 
         PlatformThread::setTlsValue(library->threadKey, NULL);
@@ -176,8 +178,6 @@ namespace {
 
         PlatformThread::unlockMutex(self->mutex);
         PlatformThread::unlockMutex(library->globalLock);
-
-        decaf_thread_t handle = self->handle;
 
         if (destroy == true) {
             free(self->name);
