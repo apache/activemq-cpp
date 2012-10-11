@@ -39,82 +39,79 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::create( const decaf::net::URI& location ) {
-
-    try{
-
-        Properties properties =
-            activemq::util::URISupport::parseQuery( location.getQuery() );
-
-        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
-
-        // Create the initial Transport, then wrap it in the normal Filters
-        Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
-
-        // Create the Transport for response correlator
-        transport.reset( new ResponseCorrelator( transport ) );
-
-        return transport;
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::createComposite( const decaf::net::URI& location ) {
-
-    try{
-
-        Properties properties =
-            activemq::util::URISupport::parseQuery( location.getQuery() );
-
-        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
-
-        // Create the initial Transport, then wrap it in the normal Filters
-        return doCreateComposite( location, wireFormat, properties );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
-                                                           const Pointer<wireformat::WireFormat>& wireFormat,
-                                                           const decaf::util::Properties& properties ) {
+Pointer<Transport> TcpTransportFactory::create(const decaf::net::URI& location) {
 
     try {
 
-        Pointer<Transport> transport( new TcpTransport(
-            Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+        Properties properties = activemq::util::URISupport::parseQuery(location.getQuery());
+
+        Pointer<WireFormat> wireFormat = this->createWireFormat(properties);
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        Pointer<Transport> transport(doCreateComposite(location, wireFormat, properties));
+
+        // Create the Transport for response correlator
+        transport.reset(new ResponseCorrelator(transport));
+
+        return transport;
+    }
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> TcpTransportFactory::createComposite(const decaf::net::URI& location) {
+
+    try {
+
+        Properties properties = activemq::util::URISupport::parseQuery(location.getQuery());
+
+        Pointer<WireFormat> wireFormat = this->createWireFormat(properties);
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        return doCreateComposite(location, wireFormat, properties);
+    }
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> TcpTransportFactory::doCreateComposite(const decaf::net::URI& location,
+                                                          const Pointer<wireformat::WireFormat> wireFormat,
+                                                          const decaf::util::Properties& properties) {
+
+    try {
+
+        Pointer<Transport> transport(new TcpTransport(Pointer<Transport>(new IOTransport(wireFormat))));
 
         // Initialize the Transport, creates Sockets and configures defaults.
-        transport.dynamicCast<TcpTransport>()->connect( location, properties );
+        transport.dynamicCast<TcpTransport>()->connect(location, properties);
 
-        if( properties.getProperty( "transport.useInactivityMonitor", "true" ) == "true" ) {
-            transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        if (properties.getProperty("transport.useInactivityMonitor", "true") == "true") {
+            transport.reset(new InactivityMonitor(transport, properties, wireFormat));
         }
 
         // If command tracing was enabled, wrap the transport with a logging transport.
         // We support the old CMS value, the ActiveMQ trace value and the NMS useLogging
         // value in order to be more friendly.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ||
-            properties.getProperty( "transport.useLogging", "false" ) == "true"  ||
-            properties.getProperty( "transport.trace", "false" ) == "true" ) {
+        if (properties.getProperty("transport.commandTracingEnabled", "false") == "true" ||
+            properties.getProperty("transport.useLogging", "false") == "true" ||
+            properties.getProperty("transport.trace", "false") == "true") {
 
             // Create the Transport for response correlator
-            transport.reset( new LoggingTransport( transport ) );
+            transport.reset(new LoggingTransport(transport));
         }
 
         // If there is a negotiator need then we create and wrap here.
-        if( wireFormat->hasNegotiator() ) {
-            transport = wireFormat->createNegotiator( transport );
+        if (wireFormat->hasNegotiator()) {
+            transport = wireFormat->createNegotiator(transport);
         }
 
         return transport;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }

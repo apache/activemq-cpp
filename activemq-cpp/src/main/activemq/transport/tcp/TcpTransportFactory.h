@@ -36,16 +36,15 @@ namespace tcp{
 
         virtual ~TcpTransportFactory() {}
 
-        virtual Pointer<Transport> create( const decaf::net::URI& location );
+        virtual Pointer<Transport> create(const decaf::net::URI& location);
 
-        virtual Pointer<Transport> createComposite( const decaf::net::URI& location );
+        virtual Pointer<Transport> createComposite(const decaf::net::URI& location);
 
     protected:
 
-        virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
-                                                      const Pointer<wireformat::WireFormat>& wireFormat,
-                                                      const decaf::util::Properties& properties );
-
+        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
+                                                     const Pointer<wireformat::WireFormat> wireFormat,
+                                                     const decaf::util::Properties& properties );
     };
 
 }}}

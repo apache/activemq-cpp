@@ -38,9 +38,9 @@ namespace openwire{
         OpenWireResponseBuilder() {}
         virtual ~OpenWireResponseBuilder() {}
 
-        virtual Pointer<commands::Response> buildResponse(const Pointer<commands::Command>& command);
+        virtual Pointer<commands::Response> buildResponse(const Pointer<commands::Command> command);
 
-        virtual void buildIncomingCommands(const Pointer<commands::Command>& command,
+        virtual void buildIncomingCommands(const Pointer<commands::Command> command,
                                            decaf::util::LinkedList<Pointer<commands::Command> >& queue);
 
     };

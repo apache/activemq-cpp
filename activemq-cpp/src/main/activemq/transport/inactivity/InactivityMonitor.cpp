@@ -25,6 +25,9 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/KeepAliveInfo.h>
 
+#include <decaf/util/Timer.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
@@ -202,7 +205,7 @@ namespace inactivity{
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-InactivityMonitor::InactivityMonitor(const Pointer<Transport>& next, const Pointer<WireFormat>& wireFormat) :
+InactivityMonitor::InactivityMonitor(const Pointer<Transport> next, const Pointer<WireFormat> wireFormat) :
     TransportFilter(next), members(new InactivityMonitorData()) {
 
     this->members->wireFormat = wireFormat;
@@ -219,7 +222,7 @@ InactivityMonitor::InactivityMonitor(const Pointer<Transport>& next, const Point
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InactivityMonitor::InactivityMonitor(const Pointer<Transport>& next, const decaf::util::Properties& properties, const Pointer<wireformat::WireFormat>& wireFormat) :
+InactivityMonitor::InactivityMonitor(const Pointer<Transport> next, const decaf::util::Properties& properties, const Pointer<wireformat::WireFormat> wireFormat) :
     TransportFilter(next), members(new InactivityMonitorData()) {
 
     this->members->wireFormat = wireFormat;
@@ -309,7 +312,7 @@ void InactivityMonitor::onException(const decaf::lang::Exception& ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::onCommand(const Pointer<Command>& command) {
+void InactivityMonitor::onCommand(const Pointer<Command> command) {
 
     this->members->commandReceived.set(true);
     this->members->inRead.set(true);
@@ -340,7 +343,7 @@ void InactivityMonitor::onCommand(const Pointer<Command>& command) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::oneway(const Pointer<Command>& command) {
+void InactivityMonitor::oneway(const Pointer<Command> command) {
 
     try {
         // Disable inactivity monitoring while processing a command. Synchronize this
@@ -395,7 +398,6 @@ void InactivityMonitor::readCheck() {
     }
 
     if (!this->members->commandReceived.get()) {
-
         // Set the failed state on our async Read Failure Task and wakeup its runner.
         this->members->asyncReadTask->setFailed(true);
         this->members->asyncTasks->wakeup();

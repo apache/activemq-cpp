@@ -24,9 +24,8 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransport::BackupTransport( BackupTransportPool* parent ) :
-    parent( parent ), transport(), uri(), closed( true ) {
-
+BackupTransport::BackupTransport(BackupTransportPool* parent) :
+    parent(parent), transport(), uri(), closed(true) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,11 +33,11 @@ BackupTransport::~BackupTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BackupTransport::onException( const decaf::lang::Exception& ex AMQCPP_UNUSED ) {
+void BackupTransport::onException(const decaf::lang::Exception& ex AMQCPP_UNUSED) {
 
     this->closed = true;
 
-    if( this->parent != NULL ) {
-        this->parent->onBackupTransportFailure( this );
+    if (this->parent != NULL) {
+        this->parent->onBackupTransportFailure(this);
     }
 }

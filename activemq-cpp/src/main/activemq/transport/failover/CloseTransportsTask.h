@@ -45,7 +45,7 @@ namespace failover {
         /**
          * Add a new Transport to close.
          */
-        void add(const Pointer<Transport>& transport);
+        void add(const Pointer<Transport> transport);
 
         /**
          * This Task is pending if there are transports in the Queue that need to be

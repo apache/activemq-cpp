@@ -49,7 +49,7 @@ namespace failover {
          *
          * @param uris - List of URI to place in the Pool.
          */
-        URIPool( const decaf::util::List<URI>& uris );
+        URIPool(const decaf::util::List<URI>& uris);
 
         ~URIPool();
 
@@ -72,7 +72,7 @@ namespace failover {
          *
          * @param uri - a URI previously taken from the pool.
          */
-        void addURI( const URI& uri );
+        void addURI(const URI& uri);
 
         /**
          * Adds a List of URIs to this Pool, the method checks for duplicates already
@@ -80,13 +80,13 @@ namespace failover {
          *
          * @param uris - List of URIs to add into the Pool.
          */
-        void addURIs( const LinkedList<URI>& uris );
+        void addURIs(const LinkedList<URI>& uris);
 
         /**
          * Remove a given URI from the Free List.
          * @param uri - the URI to find and remove from the free list
          */
-        void removeURI( const URI& uri );
+        void removeURI(const URI& uri);
 
         /**
          * Is the URI that is given randomly picked from the pool or is
@@ -104,7 +104,7 @@ namespace failover {
          *
          * @param value - true indicates URI gets are random.
          */
-        void setRandomize( bool value ) {
+        void setRandomize(bool value) {
             this->randomize = value;
         }
 

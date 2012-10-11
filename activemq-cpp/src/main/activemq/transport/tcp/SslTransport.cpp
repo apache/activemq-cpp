@@ -38,7 +38,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-SslTransport::SslTransport( const Pointer<Transport>& next ) : TcpTransport( next ) {
+SslTransport::SslTransport(const Pointer<Transport> next) : TcpTransport(next) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,32 +53,31 @@ Socket* SslTransport::createSocket() {
         SocketFactory* factory = SSLSocketFactory::getDefault();
         return factory->createSocket();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SslTransport::configureSocket( Socket* socket, decaf::util::Properties& properties ) {
+void SslTransport::configureSocket(Socket* socket, decaf::util::Properties& properties) {
 
-    try{
+    try {
 
-        if( socket == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__, "Socket instance passed was NULL" );
+        if (socket == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "Socket instance passed was NULL");
         }
 
-        SSLSocket* sslSocket = dynamic_cast<SSLSocket*>( socket );
-        if( sslSocket == NULL ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__, "Socket passed was not an SSLSocket instance." );
+        SSLSocket* sslSocket = dynamic_cast<SSLSocket*>(socket);
+        if (sslSocket == NULL) {
+            throw IllegalArgumentException(__FILE__, __LINE__,
+                "Socket passed was not an SSLSocket instance.");
         }
 
-        TcpTransport::configureSocket( socket, properties );
+        TcpTransport::configureSocket(socket, properties);
     }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCH_RETHROW(SocketException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, SocketException)
+    DECAF_CATCHALL_THROW(SocketException)
 }

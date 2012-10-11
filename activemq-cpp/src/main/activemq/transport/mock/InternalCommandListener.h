@@ -50,12 +50,12 @@ namespace mock {
         Pointer<ResponseBuilder> responseBuilder;
         bool done;
         decaf::util::concurrent::CountDownLatch startedLatch;
-        decaf::util::LinkedList< Pointer<Command> > inboundQueue;
+        decaf::util::LinkedList<Pointer<Command> > inboundQueue;
 
     private:
 
-        InternalCommandListener( const InternalCommandListener& );
-        InternalCommandListener operator= ( const InternalCommandListener& );
+        InternalCommandListener(const InternalCommandListener&);
+        InternalCommandListener operator=(const InternalCommandListener&);
 
     public:
 
@@ -63,15 +63,15 @@ namespace mock {
 
         virtual ~InternalCommandListener();
 
-        void setTransport( MockTransport* transport ) {
+        void setTransport(MockTransport* transport) {
             this->transport = transport;
         }
 
-        void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ) {
+        void setResponseBuilder(const Pointer<ResponseBuilder> responseBuilder) {
             this->responseBuilder = responseBuilder;
         }
 
-        virtual void onCommand( const Pointer<Command>& command );
+        virtual void onCommand(const Pointer<Command> command);
 
         void run();
 

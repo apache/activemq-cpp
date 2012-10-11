@@ -50,7 +50,7 @@ namespace transport{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> create( const decaf::net::URI& location ) = 0;
+        virtual Pointer<Transport> create(const decaf::net::URI& location) = 0;
 
         /**
          * Creates a slimed down Transport instance which can be used in composite
@@ -58,7 +58,7 @@ namespace transport{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> createComposite( const decaf::net::URI& location ) = 0;
+        virtual Pointer<Transport> createComposite(const decaf::net::URI& location) = 0;
 
     };
 

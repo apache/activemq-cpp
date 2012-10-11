@@ -37,8 +37,8 @@ namespace inactivity {
     class AMQCPP_API ReadChecker : public decaf::util::TimerTask {
     private:
 
-        ReadChecker( const ReadChecker& );
-        ReadChecker operator= ( const ReadChecker& );
+        ReadChecker(const ReadChecker&);
+        ReadChecker operator=(const ReadChecker&);
 
     private:
 
@@ -50,7 +50,7 @@ namespace inactivity {
 
     public:
 
-        ReadChecker( InactivityMonitor* parent );
+        ReadChecker(InactivityMonitor* parent);
         virtual ~ReadChecker();
 
         virtual void run();

@@ -41,7 +41,7 @@ namespace transport {
     class AMQCPP_API AbstractTransportFactory : public TransportFactory {
     public:
 
-        virtual ~AbstractTransportFactory() {}
+        virtual ~AbstractTransportFactory();
 
     protected:
 
@@ -57,7 +57,7 @@ namespace transport {
          * @throws NoSuchElementException if the configured WireFormat is not found.
          */
         virtual Pointer<wireformat::WireFormat> createWireFormat(
-            const decaf::util::Properties& properties );
+            const decaf::util::Properties& properties);
 
     };
 

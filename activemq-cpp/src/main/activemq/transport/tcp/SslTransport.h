@@ -36,8 +36,8 @@ namespace tcp {
     class AMQCPP_API SslTransport : public TcpTransport {
     private:
 
-        SslTransport( const SslTransport& );
-        SslTransport& operator= ( const SslTransport& );
+        SslTransport(const SslTransport&);
+        SslTransport& operator=(const SslTransport&);
 
     public:
 
@@ -47,7 +47,7 @@ namespace tcp {
          *
          * @param next the next transport in the chain
          */
-        SslTransport( const Pointer<Transport>& next );
+        SslTransport(const Pointer<Transport> next);
 
         virtual ~SslTransport();
 
@@ -61,8 +61,7 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual void configureSocket( decaf::net::Socket* socket, decaf::util::Properties& properties );
-
+        virtual void configureSocket(decaf::net::Socket* socket, decaf::util::Properties& properties);
 
     };
 

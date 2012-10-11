@@ -44,35 +44,34 @@ SslTransportFactory::~SslTransportFactory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> SslTransportFactory::doCreateComposite( const decaf::net::URI& location,
-                                                           const Pointer<wireformat::WireFormat>& wireFormat,
-                                                           const decaf::util::Properties& properties ) {
+Pointer<Transport> SslTransportFactory::doCreateComposite(const decaf::net::URI& location,
+                                                          const Pointer<wireformat::WireFormat> wireFormat,
+                                                          const decaf::util::Properties& properties) {
 
     try {
 
-        Pointer<Transport> transport( new SslTransport(
-            Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
+        Pointer<Transport> transport(new SslTransport(Pointer<Transport>(new IOTransport(wireFormat))));
 
-        transport.dynamicCast<SslTransport>()->connect( location, properties );
+        transport.dynamicCast<SslTransport>()->connect(location, properties);
 
-        if( properties.getProperty( "transport.useInactivityMonitor", "true" ) == "true" ) {
-            transport.reset( new InactivityMonitor( transport, properties, wireFormat ) );
+        if (properties.getProperty("transport.useInactivityMonitor", "true") == "true") {
+            transport.reset(new InactivityMonitor(transport, properties, wireFormat));
         }
 
         // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+        if (properties.getProperty("transport.commandTracingEnabled", "false") == "true") {
             // Create the Transport for response correlator
-            transport.reset( new LoggingTransport( transport ) );
+            transport.reset(new LoggingTransport(transport));
         }
 
         // If there is a negotiator need then we create and wrap here.
-        if( wireFormat->hasNegotiator() ) {
-            transport = wireFormat->createNegotiator( transport );
+        if (wireFormat->hasNegotiator()) {
+            transport = wireFormat->createNegotiator(transport);
         }
 
         return transport;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }

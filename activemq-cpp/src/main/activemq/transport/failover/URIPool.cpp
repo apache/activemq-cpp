@@ -35,7 +35,7 @@ URIPool::URIPool() : uriPool(), randomize( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool( const decaf::util::List<URI>& uris ) : uriPool(), randomize( false ) {
+URIPool::URIPool(const decaf::util::List<URI>& uris) : uriPool(), randomize( false ) {
     this->uriPool.copy( uris );
 }
 
@@ -46,13 +46,12 @@ URIPool::~URIPool() {
 ////////////////////////////////////////////////////////////////////////////////
 URI URIPool::getURI() {
 
-    synchronized( &uriPool ) {
+    synchronized(&uriPool) {
         if( !uriPool.isEmpty() ) {
 
             int index = 0;  // Take the first one in the list unless random is on.
 
             if( isRandomize() ) {
-
                 Random rand;
                 rand.setSeed( decaf::lang::System::currentTimeMillis() );
                 index = rand.nextInt( (int)uriPool.size() );
@@ -67,38 +66,38 @@ URI URIPool::getURI() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURI( const URI& uri ) {
+void URIPool::addURI(const URI& uri) {
 
-    synchronized( &uriPool ) {
-        if( !uriPool.contains( uri ) ) {
-            uriPool.add( uri );
+    synchronized(&uriPool) {
+        if (!uriPool.contains(uri)) {
+            uriPool.add(uri);
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURIs( const LinkedList<URI>& uris ) {
+void URIPool::addURIs(const LinkedList<URI>& uris) {
 
-    synchronized( &uriPool ) {
+    synchronized(&uriPool) {
 
-        std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
+        std::auto_ptr<Iterator<URI> > iter(uris.iterator());
 
-        while( iter->hasNext() ) {
+        while (iter->hasNext()) {
             URI uri = iter->next();
 
-            if( !uriPool.contains( uri ) ) {
-                uriPool.add( uri );
+            if (!uriPool.contains(uri)) {
+                uriPool.add(uri);
             }
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::removeURI( const URI& uri ) {
+void URIPool::removeURI(const URI& uri) {
 
-    synchronized( &uriPool ) {
-        if( uriPool.contains( uri ) ) {
-            uriPool.remove( uri );
+    synchronized(&uriPool) {
+        if (uriPool.contains(uri)) {
+            uriPool.remove(uri);
         }
     }
 }

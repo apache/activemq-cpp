@@ -21,9 +21,9 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/AbstractTransportFactory.h>
 
-namespace activemq{
-namespace transport{
-namespace mock{
+namespace activemq {
+namespace transport {
+namespace mock {
 
     using decaf::lang::Pointer;
 
@@ -31,7 +31,7 @@ namespace mock{
      * Manufactures MockTransports, which are objects that
      * read from input streams and write to output streams.
      */
-    class AMQCPP_API MockTransportFactory : public AbstractTransportFactory {
+    class AMQCPP_API MockTransportFactory: public AbstractTransportFactory {
     public:
 
         virtual ~MockTransportFactory() {}
@@ -42,7 +42,7 @@ namespace mock{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> create( const decaf::net::URI& location );
+        virtual Pointer<Transport> create(const decaf::net::URI& location);
 
         /**
          * Creates a slimed down Transport instance which can be used in composite
@@ -50,7 +50,7 @@ namespace mock{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> createComposite( const decaf::net::URI& location );
+        virtual Pointer<Transport> createComposite(const decaf::net::URI& location);
 
     protected:
 
@@ -65,9 +65,9 @@ namespace mock{
          * @return Pointer to a new Transport instance.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
-                                                      const Pointer<wireformat::WireFormat>& wireFormat,
-                                                      const decaf::util::Properties& properties );
+        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
+                                                     const Pointer<wireformat::WireFormat> wireFormat,
+                                                     const decaf::util::Properties& properties);
 
     };
 

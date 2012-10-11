@@ -39,12 +39,11 @@ namespace tcp{
     using decaf::lang::Pointer;
 
     /**
-     * Implements a TCP/IP based transport filter, this transport
-     * is meant to wrap an instance of an IOTransport.  The lower
-     * level transport should take care of managing stream reads
-     * and writes.
+     * Implements a TCP/IP based transport filter, this transport is meant to
+     * wrap an instance of an IOTransport.  The lower level transport should take
+     * care of managing stream reads and writes.
      */
-    class AMQCPP_API TcpTransport : public TransportFilter {
+    class AMQCPP_API TcpTransport: public TransportFilter {
     private:
 
         /**
@@ -74,8 +73,8 @@ namespace tcp{
 
     private:
 
-        TcpTransport( const TcpTransport& );
-        TcpTransport& operator= ( const TcpTransport& );
+        TcpTransport(const TcpTransport&);
+        TcpTransport& operator=(const TcpTransport&);
 
     public:
 
@@ -86,7 +85,7 @@ namespace tcp{
          * @param next
          *      The next transport in the chain
          */
-        TcpTransport( const Pointer<Transport>& next );
+        TcpTransport(const Pointer<Transport> next);
 
         virtual ~TcpTransport();
 
@@ -100,9 +99,9 @@ namespace tcp{
          * @param properties
          *      The Properties that have been parsed from the URI or from configuration files.
          */
-        void connect( const decaf::net::URI& uri, const decaf::util::Properties& properties );
+        void connect(const decaf::net::URI& uri, const decaf::util::Properties& properties);
 
-    public:  // Transport Methods
+    public: // Transport Methods
 
         virtual void close();
 
@@ -111,7 +110,7 @@ namespace tcp{
         }
 
         virtual bool isConnected() const {
-            if( this->socket.get() != NULL ) {
+            if (this->socket.get() != NULL) {
                 return this->socket->isConnected();
             }
 
@@ -147,8 +146,7 @@ namespace tcp{
          * @throw IllegalArgumentException if the socket instance is not handled by the class.
          * @throw SocketException if there is an error while setting one of the Socket options.
          */
-        virtual void configureSocket( decaf::net::Socket* socket,
-                                      const decaf::util::Properties& properties );
+        virtual void configureSocket(decaf::net::Socket* socket, const decaf::util::Properties& properties);
 
     };
 

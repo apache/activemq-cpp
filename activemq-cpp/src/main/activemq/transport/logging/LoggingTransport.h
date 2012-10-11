@@ -31,38 +31,38 @@ namespace logging{
     /**
      * A transport filter that logs commands as they are sent/received.
      */
-    class AMQCPP_API LoggingTransport : public TransportFilter {
+    class AMQCPP_API LoggingTransport: public TransportFilter {
     public:
 
         /**
          * Constructor.
          * @param next - the next Transport in the chain
          */
-        LoggingTransport( const Pointer<Transport>& next );
+        LoggingTransport(const Pointer<Transport> next);
 
         virtual ~LoggingTransport() {}
 
-    public:  // TransportFilter methods.
+    public: // TransportFilter methods.
 
-        virtual void onCommand( const Pointer<Command>& command );
+        virtual void onCommand(const Pointer<Command> command);
 
-    public:  // TransportFilter methods.
+    public: // TransportFilter methods.
 
-        virtual void oneway( const Pointer<Command>& command );
-
-        /**
-         * {@inheritDoc}
-         *
-         * Not supported by this class - throws an exception.
-         */
-        virtual Pointer<Response> request( const Pointer<Command>& command );
+        virtual void oneway(const Pointer<Command> command);
 
         /**
          * {@inheritDoc}
          *
          * Not supported by this class - throws an exception.
          */
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+        virtual Pointer<Response> request(const Pointer<Command> command);
+
+        /**
+         * {@inheritDoc}
+         *
+         * Not supported by this class - throws an exception.
+         */
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
     };
 

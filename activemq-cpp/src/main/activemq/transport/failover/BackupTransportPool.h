@@ -52,14 +52,14 @@ namespace failover {
 
     public:
 
-        BackupTransportPool( const Pointer<CompositeTaskRunner>& taskRunner,
-                             const Pointer<CloseTransportsTask>& closeTask,
-                             const Pointer<URIPool>& uriPool );
+        BackupTransportPool(const Pointer<CompositeTaskRunner> taskRunner,
+                            const Pointer<CloseTransportsTask> closeTask,
+                            const Pointer<URIPool> uriPool);
 
-        BackupTransportPool( int backupPoolSize,
-                             const Pointer<CompositeTaskRunner>& taskRunner,
-                             const Pointer<CloseTransportsTask>& closeTask,
-                             const Pointer<URIPool>& uriPool );
+        BackupTransportPool(int backupPoolSize,
+                            const Pointer<CompositeTaskRunner> taskRunner,
+                            const Pointer<CloseTransportsTask> closeTask,
+                            const Pointer<URIPool> uriPool);
 
         virtual ~BackupTransportPool();
 
@@ -94,7 +94,7 @@ namespace failover {
          * Sets the Max number of Backups this Task will create.
          * @param size - the max number of active BackupTransports that will be created.
          */
-        void setBackupPoolSize( int size ) {
+        void setBackupPoolSize(int size) {
             this->backupPoolSize = size;
         }
 
@@ -114,16 +114,16 @@ namespace failover {
          *
          * @param value - true to enable backup creation, false to disable.
          */
-        void setEnabled( bool value );
+        void setEnabled(bool value);
 
     private:
 
         // The backups report their failure to the pool, the pool removes them
         // from the list and returns their URIs to the URIPool, and then adds
         // the internal transport to the close transport's task for cleanup.
-        void onBackupTransportFailure( BackupTransport* failedTransport );
+        void onBackupTransportFailure(BackupTransport* failedTransport);
 
-        Pointer<Transport> createTransport( const URI& location ) const;
+        Pointer<Transport> createTransport(const URI& location) const;
 
     };
 

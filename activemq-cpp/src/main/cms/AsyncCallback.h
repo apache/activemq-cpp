@@ -15,32 +15,37 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_
+#ifndef _CMS_ASYNCCALLBACK_H_
+#define _CMS_ASYNCCALLBACK_H_
 
-#include <activemq/util/Config.h>
+#include <cms/Config.h>
 
-#include <activemq/transport/tcp/TcpTransportFactory.h>
+#include <cms/ExceptionListener.h>
 
-namespace activemq {
-namespace transport {
-namespace tcp {
+namespace cms {
 
-    using decaf::lang::Pointer;
-
-    class SslTransportFactory : public TcpTransportFactory {
+    /**
+     * Asynchronous event interface for CMS asynchronous operations.
+     *
+     * For operations in CMS that allow for Asynchronous execution the caller
+     * provides an instance of this interface.  If the asynchronous action is
+     * successful the onSuccess method is invoked, otherwise the onException
+     * method of cms::ExceptionListener is called.
+     *
+     * @since 3.0
+     */
+    class CMS_API AsyncCallback : public ExceptionListener {
     public:
 
-        virtual ~SslTransportFactory();
+        virtual ~AsyncCallback();
 
-    protected:
-
-        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
-                                                     const Pointer<wireformat::WireFormat> wireFormat,
-                                                     const decaf::util::Properties& properties );
+        /**
+         * Called when the asynchronous operation has completed successfully.
+         */
+        virtual void onSuccess() = 0;
 
     };
 
-}}}
+}
 
-#endif /* _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_ */
+#endif /* ASYNCCALLBACK_H_ */

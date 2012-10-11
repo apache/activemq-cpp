@@ -44,7 +44,7 @@ IOTransport::IOTransport() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport(const Pointer<WireFormat>& wireFormat) :
+IOTransport::IOTransport(const Pointer<WireFormat> wireFormat) :
     wireFormat(wireFormat), listener(NULL), inputStream(NULL), outputStream(NULL), thread(), closed(false) {
 }
 
@@ -68,7 +68,7 @@ void IOTransport::fire(decaf::lang::Exception& ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::fire(const Pointer<Command>& command) {
+void IOTransport::fire(const Pointer<Command> command) {
 
     try {
         // If we have been closed then we don't deliver any messages that
@@ -84,7 +84,7 @@ void IOTransport::fire(const Pointer<Command>& command) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::oneway(const Pointer<Command>& command) {
+void IOTransport::oneway(const Pointer<Command> command) {
 
     try {
 
@@ -265,11 +265,17 @@ void IOTransport::run() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> IOTransport::request(const Pointer<Command>& command AMQCPP_UNUSED) {
+Pointer<FutureResponse> IOTransport::asyncRequest(const Pointer<Command> command AMQCPP_UNUSED,
+                                                  const Pointer<ResponseCallback> responseCallback AMQCPP_UNUSED) {
+    throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::asyncRequest() - unsupported operation");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Response> IOTransport::request(const Pointer<Command> command AMQCPP_UNUSED) {
     throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::request() - unsupported operation");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> IOTransport::request(const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED) {
+Pointer<Response> IOTransport::request(const Pointer<Command> command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED) {
     throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::request() - unsupported operation");
 }

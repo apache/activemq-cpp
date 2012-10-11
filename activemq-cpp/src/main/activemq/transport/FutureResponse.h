@@ -15,20 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_
-#define _ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_
+#define _ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_
 
 #include <activemq/util/Config.h>
+
+#include <activemq/transport/ResponseCallback.h>
+#include <activemq/commands/Response.h>
+#include <activemq/exceptions/ActiveMQException.h>
+
+#include <decaf/lang/Thread.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
-#include <activemq/commands/Response.h>
+#include <decaf/lang/exceptions/InterruptedException.h>
+#include <decaf/io/InterruptedIOException.h>
 
-#include <activemq/exceptions/ActiveMQException.h>
-
-namespace activemq{
-namespace transport{
-namespace correlator{
+namespace activemq {
+namespace transport {
 
     using decaf::lang::Pointer;
     using activemq::commands::Response;
@@ -43,51 +47,47 @@ namespace correlator{
 
         mutable decaf::util::concurrent::CountDownLatch responseLatch;
         Pointer<Response> response;
+        Pointer<ResponseCallback> responseCallback;
 
     public:
 
-        FutureResponse() : responseLatch( 1 ), response() {}
+        FutureResponse();
 
-        virtual ~FutureResponse(){}
+        FutureResponse(const Pointer<ResponseCallback> responseCallback);
+
+        virtual ~FutureResponse();
 
         /**
          * Getters for the response property. Infinite Wait.
-         * @return the response object for the request
+         *
+         * @return the response object for the request.
+         *
+         * @throws InterruptedIOException if the wait for response is interrupted.
          */
-        virtual const Pointer<Response>& getResponse() const {
-            this->responseLatch.await();
-            return response;
-        }
-        virtual Pointer<Response>& getResponse() {
-            this->responseLatch.await();
-            return response;
-        }
+        Pointer<Response> getResponse() const;
+        Pointer<Response> getResponse();
 
         /**
          * Getters for the response property. Timed Wait.
-         * @param timeout - time to wait in milliseconds
+         *
+         * @param timeout
+         *      Time to wait in milliseconds for a Response.
+         *
          * @return the response object for the request
+         *
+         * @throws InterruptedIOException if the wait for response is interrupted.
          */
-        virtual const Pointer<Response>& getResponse( unsigned int timeout ) const {
-            this->responseLatch.await( timeout );
-            return response;
-        }
-        virtual Pointer<Response>& getResponse( unsigned int timeout ) {
-            this->responseLatch.await( timeout );
-            return response;
-        }
+        Pointer<Response> getResponse(unsigned int timeout) const;
+        Pointer<Response> getResponse(unsigned int timeout);
 
         /**
          * Setter for the response property.
          * @param response the response object for the request.
          */
-        virtual void setResponse( const Pointer<Response>& response ) {
-            this->response = response;
-            this->responseLatch.countDown();
-        }
+        void setResponse(Pointer<Response> response);
 
     };
 
-}}}
+}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_*/

@@ -34,7 +34,7 @@ namespace failover {
      *
      * @since 3.0
      */
-    class AMQCPP_API FailoverTransportListener : public TransportListener {
+    class AMQCPP_API FailoverTransportListener: public TransportListener {
     private:
 
         // The Transport that created this listener
@@ -42,12 +42,12 @@ namespace failover {
 
     private:
 
-        FailoverTransportListener( const FailoverTransportListener& );
-        FailoverTransportListener& operator= ( const FailoverTransportListener& );
+        FailoverTransportListener(const FailoverTransportListener&);
+        FailoverTransportListener& operator=(const FailoverTransportListener&);
 
     public:
 
-        FailoverTransportListener( FailoverTransport* parent );
+        FailoverTransportListener(FailoverTransport* parent);
 
         virtual ~FailoverTransportListener();
 
@@ -59,14 +59,14 @@ namespace failover {
          *
          * @param command the received command object.
          */
-        virtual void onCommand( const Pointer<Command>& command );
+        virtual void onCommand(const Pointer<Command> command);
 
         /**
          * Event handler for an exception from a command transport.
          *
          * @param ex The exception.
          */
-        virtual void onException( const decaf::lang::Exception& ex );
+        virtual void onException(const decaf::lang::Exception& ex);
 
         /**
          * The transport has suffered an interruption from which it hopes to recover

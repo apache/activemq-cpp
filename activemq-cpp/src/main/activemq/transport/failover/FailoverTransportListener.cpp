@@ -32,12 +32,10 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransportListener::FailoverTransportListener( FailoverTransport* parent ) :
-    parent( parent ) {
+FailoverTransportListener::FailoverTransportListener(FailoverTransport* parent) : parent(parent) {
 
-    if( this->parent == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Pointer to Parent Transport was NULL" );
+    if (this->parent == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Pointer to Parent Transport was NULL");
     }
 }
 
@@ -46,51 +44,51 @@ FailoverTransportListener::~FailoverTransportListener() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
+void FailoverTransportListener::onCommand(const Pointer<Command> command) {
 
-    if( command == NULL ) {
+    if (command == NULL) {
         return;
     }
 
-    if( command->isResponse() ) {
+    if (command->isResponse()) {
         Pointer<Response> response = command.dynamicCast<Response>();
         parent->processResponse(response);
     }
 
-    if( !parent->isInitialized() ) {
-        parent->setInitialized( true );
+    if (!parent->isInitialized()) {
+        parent->setInitialized(true);
     }
 
-    if( command->isConnectionControl() ) {
-        parent->handleConnectionControl( command );
+    if (command->isConnectionControl()) {
+        parent->handleConnectionControl(command);
     }
 
-    if( parent->getTransportListener() != NULL ) {
-        parent->getTransportListener()->onCommand( command );
+    if (parent->getTransportListener() != NULL) {
+        parent->getTransportListener()->onCommand(command);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportListener::onException( const decaf::lang::Exception& ex ) {
+void FailoverTransportListener::onException(const decaf::lang::Exception& ex) {
     try {
-        parent->handleTransportFailure( ex );
-    } catch( Exception& e ) {
-        if( parent->getTransportListener() != NULL ) {
-            parent->getTransportListener()->onException( e );
+        parent->handleTransportFailure(ex);
+    } catch (Exception& e) {
+        if (parent->getTransportListener() != NULL) {
+            parent->getTransportListener()->onException(e);
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportListener::transportInterrupted() {
-    if( parent->getTransportListener() != NULL ) {
+    if (parent->getTransportListener() != NULL) {
         parent->getTransportListener()->transportInterrupted();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportListener::transportResumed() {
-    if( parent->getTransportListener() != NULL ) {
+    if (parent->getTransportListener() != NULL) {
         parent->getTransportListener()->transportResumed();
     }
 }

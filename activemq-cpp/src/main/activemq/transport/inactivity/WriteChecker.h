@@ -38,8 +38,8 @@ namespace inactivity {
     class AMQCPP_API WriteChecker : public decaf::util::TimerTask {
     private:
 
-        WriteChecker( const WriteChecker& );
-        WriteChecker operator= ( const WriteChecker& );
+        WriteChecker(const WriteChecker&);
+        WriteChecker operator=(const WriteChecker&);
 
     private:
 
@@ -51,7 +51,7 @@ namespace inactivity {
 
     public:
 
-        WriteChecker( InactivityMonitor* parent );
+        WriteChecker(InactivityMonitor* parent);
         virtual ~WriteChecker();
 
         virtual void run();

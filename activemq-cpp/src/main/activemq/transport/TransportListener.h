@@ -35,7 +35,7 @@ namespace transport{
     /**
      * A listener of asynchronous exceptions from a command transport object.
      */
-    class AMQCPP_API TransportListener{
+    class AMQCPP_API TransportListener {
     public:
 
         virtual ~TransportListener() {}
@@ -49,7 +49,7 @@ namespace transport{
          * @param command
          *      The received command object.
          */
-        virtual void onCommand( const Pointer<Command>& command ) = 0;
+        virtual void onCommand(const Pointer<Command> command) = 0;
 
         /**
          * Event handler for an exception from a command transport.
@@ -57,7 +57,7 @@ namespace transport{
          * @param ex
          *      The exception being propagated to this listener to handle.
          */
-        virtual void onException( const decaf::lang::Exception& ex ) = 0;
+        virtual void onException(const decaf::lang::Exception& ex) = 0;
 
         /**
          * The transport has suffered an interruption from which it hopes to recover

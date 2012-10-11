@@ -53,10 +53,10 @@ namespace transport {
         TransportRegistry();
 
         // Hidden Copy Constructor
-        TransportRegistry( const TransportRegistry& registry );
+        TransportRegistry(const TransportRegistry& registry);
 
         // Hidden Assignment operator
-        TransportRegistry& operator=( const TransportRegistry& registry );
+        TransportRegistry& operator=(const TransportRegistry& registry);
 
     public:
 
@@ -74,7 +74,7 @@ namespace transport {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        TransportFactory* findFactory( const std::string& name ) const;
+        TransportFactory* findFactory(const std::string& name) const;
 
         /**
          * Registers a new TransportFactory with this Registry.  If a Factory with the
@@ -90,7 +90,7 @@ namespace transport {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, TransportFactory* factory );
+        void registerFactory(const std::string& name, TransportFactory* factory);
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the
@@ -99,7 +99,7 @@ namespace transport {
          * @param name
          *        Name of the Factory to unregister and destroy
          */
-        void unregisterFactory( const std::string& name );
+        void unregisterFactory(const std::string& name);
 
         /**
          * Removes all Factories and deletes the instances of the Factory objects.
@@ -114,7 +114,8 @@ namespace transport {
          */
         std::vector<std::string> getTransportNames() const;
 
-    public:  // Static methods
+    public:
+        // Static methods
 
         /**
          * Gets the single instance of the TransportRegistry

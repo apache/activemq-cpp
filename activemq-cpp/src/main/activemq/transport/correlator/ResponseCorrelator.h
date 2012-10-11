@@ -20,15 +20,17 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
+#include <activemq/transport/ResponseCallback.h>
+#include <activemq/transport/FutureResponse.h>
 #include <activemq/commands/Command.h>
 #include <activemq/commands/Response.h>
 
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/Pointer.h>
 
-namespace activemq{
-namespace transport{
-namespace correlator{
+namespace activemq {
+namespace transport {
+namespace correlator {
 
     using decaf::lang::Pointer;
     using activemq::commands::Command;
@@ -56,17 +58,20 @@ namespace correlator{
          *
          * @throws NullPointerException if next if NULL.
          */
-        ResponseCorrelator(const Pointer<Transport>& next);
+        ResponseCorrelator(Pointer<Transport> next);
 
         virtual ~ResponseCorrelator();
 
     public:  // Transport Methods
 
-        virtual void oneway(const Pointer<Command>& command);
+        virtual void oneway(const Pointer<Command> command);
 
-        virtual Pointer<Response> request(const Pointer<Command>& command);
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback);
 
-        virtual Pointer<Response> request(const Pointer<Command>& command, unsigned int timeout);
+        virtual Pointer<Response> request(const Pointer<Command> command);
+
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
         virtual void start();
 
@@ -81,7 +86,7 @@ namespace correlator{
          * @param command
          *      The received from the nested transport.
          */
-        virtual void onCommand(const Pointer<Command>& command);
+        virtual void onCommand(const Pointer<Command> command);
 
         /**
          * Event handler for an exception from a command transport.
@@ -95,7 +100,7 @@ namespace correlator{
 
     private:
 
-        void dispose(const Pointer<decaf::lang::Exception> ex);
+        void dispose(Pointer<decaf::lang::Exception> ex);
 
     };
 

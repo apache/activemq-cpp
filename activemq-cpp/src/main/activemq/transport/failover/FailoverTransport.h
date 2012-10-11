@@ -100,8 +100,8 @@ namespace failover {
 
     private:
 
-        FailoverTransport( const FailoverTransport& );
-        FailoverTransport& operator= ( const FailoverTransport& );
+        FailoverTransport(const FailoverTransport&);
+        FailoverTransport& operator=(const FailoverTransport&);
 
     public:
 
@@ -116,22 +116,22 @@ namespace failover {
          * @param rebalance
          *      Indicates if the current connection should be broken and reconnected.
          */
-        void reconnect( bool rebalance );
+        void reconnect(bool rebalance);
 
         /**
          * Adds a New URI to the List of URIs this transport can Connect to.
          * @param uri
          *        A String version of a URI to add to the URIs to failover to.
          */
-        void add( const std::string& uri );
+        void add(const std::string& uri);
 
     public: // CompositeTransport methods
 
-        virtual void addURI( bool rebalance, const List<URI>& uris );
+        virtual void addURI(bool rebalance, const List<URI>& uris);
 
-        virtual void removeURI( bool rebalance, const List<URI>& uris );
+        virtual void removeURI(bool rebalance, const List<URI>& uris);
 
-    public: // Transport Members
+    public:
 
         virtual void start();
 
@@ -139,17 +139,20 @@ namespace failover {
 
         virtual void close();
 
-        virtual void oneway( const Pointer<Command>& command );
+        virtual void oneway(const Pointer<Command> command);
 
-        virtual Pointer<Response> request( const Pointer<Command>& command );
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback);
 
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+        virtual Pointer<Response> request(const Pointer<Command> command);
+
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
         virtual Pointer<wireformat::WireFormat> getWireFormat() const;
 
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat AMQCPP_UNUSED) {}
 
-        virtual void setTransportListener( TransportListener* listener );
+        virtual void setTransportListener(TransportListener* listener);
 
         virtual TransportListener* getTransportListener() const;
 
@@ -163,17 +166,17 @@ namespace failover {
 
         bool isInitialized() const;
 
-        void setInitialized( bool value );
+        void setInitialized(bool value);
 
-        virtual Transport* narrow( const std::type_info& typeId );
+        virtual Transport* narrow(const std::type_info& typeId);
 
         virtual std::string getRemoteAddress() const;
 
-        virtual void reconnect( const decaf::net::URI& uri );
+        virtual void reconnect(const decaf::net::URI& uri);
 
-        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris );
+        virtual void updateURIs(bool rebalance, const decaf::util::List<decaf::net::URI>& uris);
 
-    public:  // CompositeTask Methods.
+    public:
 
         /**
          * @returns true if there is a need for the iterate method to be called by this
@@ -190,73 +193,73 @@ namespace failover {
          */
         virtual bool iterate();
 
-    public: // FailoverTransport Property Getters / Setters
+    public:
 
         long long getTimeout() const;
 
-        void setTimeout( long long value );
+        void setTimeout(long long value);
 
         long long getInitialReconnectDelay() const;
 
-        void setInitialReconnectDelay( long long value );
+        void setInitialReconnectDelay(long long value);
 
         long long getMaxReconnectDelay() const;
 
-        void setMaxReconnectDelay( long long value );
+        void setMaxReconnectDelay(long long value);
 
         long long getBackOffMultiplier() const;
 
-        void setBackOffMultiplier( long long value );
+        void setBackOffMultiplier(long long value);
 
         bool isUseExponentialBackOff() const;
 
-        void setUseExponentialBackOff( bool value );
+        void setUseExponentialBackOff(bool value);
 
         bool isRandomize() const;
 
-        void setRandomize( bool value );
+        void setRandomize(bool value);
 
         int getMaxReconnectAttempts() const;
 
-        void setMaxReconnectAttempts( int value );
+        void setMaxReconnectAttempts(int value);
 
         int getStartupMaxReconnectAttempts() const;
 
-        void setStartupMaxReconnectAttempts( int value );
+        void setStartupMaxReconnectAttempts(int value);
 
         long long getReconnectDelay() const;
 
-        void setReconnectDelay( long long value );
+        void setReconnectDelay(long long value);
 
         bool isBackup() const;
 
-        void setBackup( bool value );
+        void setBackup(bool value);
 
         int getBackupPoolSize() const;
 
-        void setBackupPoolSize( int value );
+        void setBackupPoolSize(int value);
 
         bool isTrackMessages() const;
 
-        void setTrackMessages( bool value );
+        void setTrackMessages(bool value);
 
         bool isTrackTransactionProducers() const;
 
-        void setTrackTransactionProducers( bool value );
+        void setTrackTransactionProducers(bool value);
 
         int getMaxCacheSize() const;
 
-        void setMaxCacheSize( int value );
+        void setMaxCacheSize(int value);
 
         bool isReconnectSupported() const;
 
-        void setReconnectSupported( bool value );
+        void setReconnectSupported(bool value);
 
         bool isUpdateURIsSupported() const;
 
-        void setUpdateURIsSupported( bool value );
+        void setUpdateURIsSupported(bool value);
 
-        void setConnectionInterruptProcessingComplete( const Pointer<commands::ConnectionId>& connectionId );
+        void setConnectionInterruptProcessingComplete(const Pointer<commands::ConnectionId> connectionId);
 
     protected:
 
@@ -269,14 +272,14 @@ namespace failover {
          *
          * @throw IOException if an errors occurs while restoring the old state.
          */
-        void restoreTransport( const Pointer<Transport>& transport );
+        void restoreTransport(const Pointer<Transport> transport);
 
         /**
          * Called when this class' TransportListener is notified of a Failure.
          * @param error - The CMS Exception that was thrown.
          * @throw Exception if an error occurs.
          */
-        void handleTransportFailure( const decaf::lang::Exception& error );
+        void handleTransportFailure(const decaf::lang::Exception& error);
 
         /**
          * Called when the Broker sends a ConnectionControl command which could
@@ -286,7 +289,7 @@ namespace failover {
          * @param control
          *      The ConnectionControl command sent from the Broker.
          */
-        void handleConnectionControl( const Pointer<Command>& control );
+        void handleConnectionControl(const Pointer<Command> control);
 
     private:
 
@@ -298,11 +301,11 @@ namespace failover {
          *
          * @throw IOException if an I/O error occurs while creating the new Transport.
          */
-        Pointer<Transport> createTransport( const URI& location ) const;
+        Pointer<Transport> createTransport(const URI& location) const;
 
-        void processNewTransports( bool rebalance, std::string newTransports );
+        void processNewTransports(bool rebalance, std::string newTransports);
 
-        void processResponse(const Pointer<Response>& response);
+        void processResponse(const Pointer<Response> response);
 
     };
 
