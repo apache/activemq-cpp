@@ -34,7 +34,7 @@ namespace failover {
 
     class BackupTransportPool;
 
-    class AMQCPP_API BackupTransport : public DefaultTransportListener {
+    class AMQCPP_API BackupTransport: public DefaultTransportListener {
     private:
 
         // The parent of this Backup
@@ -51,12 +51,12 @@ namespace failover {
 
     private:
 
-        BackupTransport( const BackupTransport& );
-        BackupTransport& operator= ( const BackupTransport& );
+        BackupTransport(const BackupTransport&);
+        BackupTransport& operator=(const BackupTransport&);
 
     public:
 
-        BackupTransport( BackupTransportPool* failover );
+        BackupTransport(BackupTransportPool* failover);
 
         virtual ~BackupTransport();
 
@@ -71,7 +71,7 @@ namespace failover {
         /**
          * Sets the URI assigned to this Transport.
          */
-        void setUri( const decaf::net::URI& uri ) {
+        void setUri(const decaf::net::URI& uri) {
             this->uri = uri;
         }
 
@@ -90,11 +90,11 @@ namespace failover {
          * @param transport
          *        The transport to hold.
          */
-        void setTransport( const Pointer<Transport>& transport ) {
+        void setTransport(const Pointer<Transport> transport) {
             this->transport = transport;
 
-            if( this->transport != NULL ) {
-                this->transport->setTransportListener( this );
+            if (this->transport != NULL) {
+                this->transport->setTransportListener(this);
             }
         }
 
@@ -107,7 +107,7 @@ namespace failover {
          * @param ex
          *      The exception that was passed to this listener to handle.
          */
-        virtual void onException( const decaf::lang::Exception& ex );
+        virtual void onException(const decaf::lang::Exception& ex);
 
         /**
          * Has the Transport been shutdown and no longer usable.
@@ -122,7 +122,7 @@ namespace failover {
          * Sets the closed flag on this Transport.
          * @param value - true for closed.
          */
-        void setClosed( bool value ) {
+        void setClosed(bool value) {
             this->closed = value;
         }
 

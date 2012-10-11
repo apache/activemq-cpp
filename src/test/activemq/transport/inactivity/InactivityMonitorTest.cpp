@@ -55,7 +55,7 @@ namespace {
         MyTransportListener() : exceptionFired( false ), commandsReceived( 0 ) {
         }
 
-        virtual void onCommand( const Pointer<Command>& command ) {
+        virtual void onCommand( const Pointer<Command> command ) {
             this->commandsReceived++;
         }
 

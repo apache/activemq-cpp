@@ -180,7 +180,7 @@ public:
     }
 
     std::string str;
-    virtual void onCommand( const Pointer<commands::Command>& command ){
+    virtual void onCommand( const Pointer<commands::Command> command ){
         const MyCommand* cmd = dynamic_cast<const MyCommand*>(command.get());
         str += cmd->c;
         latch.countDown();

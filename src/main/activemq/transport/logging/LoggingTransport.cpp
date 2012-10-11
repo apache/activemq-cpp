@@ -27,67 +27,66 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-LoggingTransport::LoggingTransport( const Pointer<Transport>& next )
- :  TransportFilter( next )
-{}
+LoggingTransport::LoggingTransport(const Pointer<Transport> next) : TransportFilter(next) {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::onCommand( const Pointer<Command>& command ) {
+void LoggingTransport::onCommand(const Pointer<Command> command) {
 
     std::cout << "RECV: " << command->toString() << std::endl;
 
     // Delegate to the base class.
-    TransportFilter::onCommand( command );
+    TransportFilter::onCommand(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::oneway( const Pointer<Command>& command ) {
+void LoggingTransport::oneway(const Pointer<Command> command) {
 
     try {
 
         std::cout << "SEND: " << command->toString() << std::endl;
 
         // Delegate to the base class.
-        TransportFilter::oneway( command );
+        TransportFilter::oneway(command);
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command ) {
+Pointer<Response> LoggingTransport::request(const Pointer<Command> command) {
 
     try {
 
         std::cout << "SEND: " << command->toString() << std::endl;
 
         // Delegate to the base class.
-        Pointer<Response> response = TransportFilter::request( command );
+        Pointer<Response> response = TransportFilter::request(command);
 
         return response;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout ) {
+Pointer<Response> LoggingTransport::request(const Pointer<Command> command, unsigned int timeout) {
 
     try {
 
         std::cout << "SEND: " << command->toString() << std::endl;
 
         // Delegate to the base class.
-        Pointer<Response> response = TransportFilter::request( command, timeout );
+        Pointer<Response> response = TransportFilter::request(command, timeout);
 
         return response;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }

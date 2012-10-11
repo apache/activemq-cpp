@@ -33,10 +33,10 @@ namespace transport {
      * A Utility class that create empty implementations for the TransportListener interface
      * so that a subclass only needs to override the one's its interested.
      */
-    class AMQCPP_API DefaultTransportListener : public TransportListener {
+    class AMQCPP_API DefaultTransportListener: public TransportListener {
     public:
 
-        virtual ~DefaultTransportListener() {}
+        virtual ~DefaultTransportListener();
 
         /**
          * Event handler for the receipt of a command.  The transport passes
@@ -46,14 +46,14 @@ namespace transport {
          *
          * @param command the received command object.
          */
-        virtual void onCommand( const Pointer<Command>& command AMQCPP_UNUSED ) {}
+        virtual void onCommand(const Pointer<Command> command AMQCPP_UNUSED) {}
 
         /**
          * Event handler for an exception from a command transport.
          *
          * @param ex The exception.
          */
-        virtual void onException( const decaf::lang::Exception& ex AMQCPP_UNUSED ) {}
+        virtual void onException(const decaf::lang::Exception& ex AMQCPP_UNUSED) {}
 
         /**
          * The transport has suffered an interruption from which it hopes to recover

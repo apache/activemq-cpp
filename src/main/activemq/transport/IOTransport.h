@@ -41,16 +41,13 @@ namespace transport {
     using activemq::commands::Response;
 
     /**
-     * Implementation of the Transport interface that performs
-     * marshaling of commands to IO streams.  This class does not
-     * implement the request method, it only handles oneway messages.
-     * A thread polls on the input stream for in-coming commands.  When
-     * a command is received, the command listener is notified.  The
-     * polling thread is not started until the start method is called.
-     * The close method will close the associated streams.  Close can
-     * be called explicitly by the user, but is also called in the
-     * destructor.  Once this object has been closed, it cannot be
-     * restarted.
+     * Implementation of the Transport interface that performs marshaling of commands
+     * to IO streams.  This class does not implement the request method, it only handles
+     * oneway messages.  A thread polls on the input stream for in-coming commands.  When
+     * a command is received, the command listener is notified.  The polling thread is not
+     * started until the start method is called.  The close method will close the associated
+     * streams.  Close can be called explicitly by the user, but is also called in the
+     * destructor.  Once this object has been closed, it cannot be restarted.
      */
     class AMQCPP_API IOTransport : public Transport,
                                    public decaf::lang::Runnable {
@@ -106,7 +103,7 @@ namespace transport {
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire(const Pointer<Command>& command);
+        void fire(const Pointer<Command> command);
 
     public:
 
@@ -122,7 +119,7 @@ namespace transport {
          * @param wireFormat
          *        Data encoder / decoder to use when reading and writing.
          */
-        IOTransport(const Pointer<wireformat::WireFormat>& wireFormat);
+        IOTransport(const Pointer<wireformat::WireFormat> wireFormat);
 
         virtual ~IOTransport();
 
@@ -148,27 +145,35 @@ namespace transport {
 
     public:  // Transport methods
 
-        virtual void oneway(const Pointer<Command>& command);
+        virtual void oneway(const Pointer<Command> command);
 
         /**
          * {@inheritDoc}
          *
          * This method always thrown an UnsupportedOperationException.
          */
-        virtual Pointer<Response> request(const Pointer<Command>& command);
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback);
 
         /**
          * {@inheritDoc}
          *
          * This method always thrown an UnsupportedOperationException.
          */
-        virtual Pointer<Response> request(const Pointer<Command>& command, unsigned int timeout);
+        virtual Pointer<Response> request(const Pointer<Command> command);
+
+        /**
+         * {@inheritDoc}
+         *
+         * This method always thrown an UnsupportedOperationException.
+         */
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
         virtual Pointer<wireformat::WireFormat> getWireFormat() const {
             return this->wireFormat;
         }
 
-        virtual void setWireFormat(const Pointer<wireformat::WireFormat>& wireFormat) {
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat) {
             this->wireFormat = wireFormat;
         }
 

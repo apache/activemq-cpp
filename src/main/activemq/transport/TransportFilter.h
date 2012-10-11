@@ -39,8 +39,7 @@ namespace transport{
      *
      * @since 1.0
      */
-    class AMQCPP_API TransportFilter : public Transport,
-                                       public TransportListener {
+    class AMQCPP_API TransportFilter: public Transport, public TransportListener {
     protected:
 
         /**
@@ -59,18 +58,18 @@ namespace transport{
          * Notify the listener of the thrown Exception.
          * @param ex - the exception to send to listeners
          */
-        void fire( const decaf::lang::Exception& ex );
+        void fire(const decaf::lang::Exception& ex);
 
         /**
          * Notify the listener of the new incoming Command.
          * @param command - the command to send to the listener
          */
-        void fire( const Pointer<Command>& command );
+        void fire(const Pointer<Command> command);
 
     private:
 
-        TransportFilter( const TransportFilter& );
-        TransportFilter& operator= ( const TransportFilter& );
+        TransportFilter(const TransportFilter&);
+        TransportFilter& operator=(const TransportFilter&);
 
     public:
 
@@ -78,24 +77,25 @@ namespace transport{
          * Constructor.
          * @param next - the next Transport in the chain
          */
-        TransportFilter( const Pointer<Transport>& next );
+        TransportFilter(const Pointer<Transport> next);
 
         virtual ~TransportFilter();
 
-    public:  // TransportListener methods
+    public:
+        // TransportListener methods
 
         /**
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( const Pointer<Command>& command );
+        virtual void onCommand(const Pointer<Command> command);
 
         /**
          * Event handler for an exception from a command transport.
          * @param ex
          *      The exception to handle.
          */
-        virtual void onException( const decaf::lang::Exception& ex );
+        virtual void onException(const decaf::lang::Exception& ex);
 
         /**
          * The transport has suffered an interruption from which it hopes to recover
@@ -107,21 +107,27 @@ namespace transport{
          */
         virtual void transportResumed();
 
-    public:  // Transport Methods.
+    public:
+        // Transport Methods.
 
-        virtual void oneway( const Pointer<Command>& command ) {
-            next->oneway( command );
+        virtual void oneway(const Pointer<Command> command) {
+            next->oneway(command);
         }
 
-        virtual Pointer<Response> request( const Pointer<Command>& command ) {
-            return next->request( command );
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback) {
+            return next->asyncRequest(command, responseCallback);
         }
 
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout ) {
-            return next->request( command, timeout );
+        virtual Pointer<Response> request(const Pointer<Command> command) {
+            return next->request(command);
         }
 
-        virtual void setTransportListener( TransportListener* listener ) {
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout) {
+            return next->request(command, timeout);
+        }
+
+        virtual void setTransportListener(TransportListener* listener) {
             this->listener = listener;
         }
 
@@ -131,7 +137,7 @@ namespace transport{
 
         virtual Pointer<wireformat::WireFormat> getWireFormat() const;
 
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat );
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat);
 
         virtual void start();
 
@@ -139,7 +145,7 @@ namespace transport{
 
         virtual void close();
 
-        virtual Transport* narrow( const std::type_info& typeId );
+        virtual Transport* narrow(const std::type_info& typeId);
 
         virtual bool isFaultTolerant() const {
             return next->isFaultTolerant();
@@ -165,10 +171,10 @@ namespace transport{
             return next->getRemoteAddress();
         }
 
-        virtual void reconnect( const decaf::net::URI& uri );
+        virtual void reconnect(const decaf::net::URI& uri);
 
-        virtual void updateURIs( bool rebalance, const decaf::util::List<decaf::net::URI>& uris ) {
-            next->updateURIs( rebalance, uris );
+        virtual void updateURIs(bool rebalance, const decaf::util::List<decaf::net::URI>& uris) {
+            next->updateURIs(rebalance, uris);
         }
 
     };

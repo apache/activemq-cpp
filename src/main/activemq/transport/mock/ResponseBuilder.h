@@ -41,7 +41,7 @@ namespace mock {
     class AMQCPP_API ResponseBuilder {
     public:
 
-        virtual ~ResponseBuilder() {}
+        virtual ~ResponseBuilder();
 
         /**
          * Given a Command, check if it requires a response and return the
@@ -49,7 +49,7 @@ namespace mock {
          * @param command - The command to build a response for
          * @return A Response object pointer, or NULL if no response.
          */
-        virtual Pointer<Response> buildResponse( const Pointer<Command>& command ) = 0;
+        virtual Pointer<Response> buildResponse(const Pointer<Command> command) = 0;
 
         /**
          * When called the ResponseBuilder must construct all the
@@ -59,7 +59,7 @@ namespace mock {
          * @param queue - Queue of Command sent back from the broker.
          */
         virtual void buildIncomingCommands(
-            const Pointer<Command>& command,
+            const Pointer<Command> command,
             decaf::util::LinkedList< Pointer<Command> >& queue ) = 0;
 
     };

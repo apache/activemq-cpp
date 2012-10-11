@@ -574,7 +574,7 @@ namespace core{
          * transport.
          * @param command the received command object.
          */
-        virtual void onCommand(const Pointer<commands::Command>& command);
+        virtual void onCommand(const Pointer<commands::Command> command);
 
         /**
          * Event handler for an exception from a command transport.

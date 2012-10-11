@@ -37,6 +37,11 @@ using namespace decaf::net;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
+AbstractTransportFactory::~AbstractTransportFactory() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Pointer<WireFormat> AbstractTransportFactory::createWireFormat(
     const decaf::util::Properties& properties ) {
 

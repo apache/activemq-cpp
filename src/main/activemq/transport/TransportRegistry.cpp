@@ -36,34 +36,32 @@ TransportRegistry::TransportRegistry() : registry() {
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportRegistry::~TransportRegistry() {
-
-    try{
+    try {
         this->unregisterAllFactories();
-    } catch(...) {}
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory* TransportRegistry::findFactory( const std::string& name ) const {
+TransportFactory* TransportRegistry::findFactory(const std::string& name) const {
 
-    if( !this->registry.containsKey( name ) ) {
-        throw NoSuchElementException( __FILE__, __LINE__,
-            "No Matching Factory Registered for format := %s", name.c_str() );
+    if (!this->registry.containsKey(name)) {
+        throw NoSuchElementException(__FILE__, __LINE__,
+            "No Matching Factory Registered for format := %s", name.c_str());
     }
 
-    return this->registry.get( name );
+    return this->registry.get(name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportRegistry::registerFactory(const std::string& name, TransportFactory* factory) {
 
     if (name == "") {
-        throw IllegalArgumentException( __FILE__, __LINE__,
-            "TransportFactory name cannot be the empty string" );
+        throw IllegalArgumentException(__FILE__, __LINE__, "TransportFactory name cannot be the empty string");
     }
 
     if (factory == NULL) {
-        throw NullPointerException( __FILE__, __LINE__,
-            "Supplied TransportFactory pointer was NULL" );
+        throw NullPointerException(__FILE__, __LINE__, "Supplied TransportFactory pointer was NULL");
     }
 
     this->registry.put(name, factory);
@@ -80,7 +78,7 @@ void TransportRegistry::unregisterFactory(const std::string& name) {
 ////////////////////////////////////////////////////////////////////////////////
 void TransportRegistry::unregisterAllFactories() {
 
-    Pointer< Iterator<TransportFactory*> > iterator(this->registry.values().iterator());
+    Pointer<Iterator<TransportFactory*> > iterator(this->registry.values().iterator());
     while (iterator->hasNext()) {
         delete iterator->next();
     }

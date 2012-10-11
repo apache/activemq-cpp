@@ -82,7 +82,7 @@ namespace correlator{
             close();
         }
 
-        virtual void oneway( const Pointer<Command>& command )
+        virtual void oneway( const Pointer<Command> command )
         {
             synchronized( &mutex ){
                 requests.push( command );
@@ -90,15 +90,19 @@ namespace correlator{
             }
         }
 
-        virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED )
-        {
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
         }
 
-        virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED,
-                                             unsigned int timeout AMQCPP_UNUSED )
-        {
+        virtual Pointer<Response> request( const Pointer<Command> command AMQCPP_UNUSED ) {
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                __FILE__, __LINE__, "stuff" );
+        }
+
+        virtual Pointer<Response> request( const Pointer<Command> command AMQCPP_UNUSED,
+                                           unsigned int timeout AMQCPP_UNUSED ) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
         }
@@ -108,7 +112,7 @@ namespace correlator{
         }
 
         virtual void setWireFormat(
-            const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
+            const Pointer<wireformat::WireFormat> wireFormat AMQCPP_UNUSED ) {}
 
         virtual void setTransportListener( TransportListener* listener ) {
             this->listener = listener;
@@ -143,7 +147,7 @@ namespace correlator{
             }
         }
 
-        virtual Pointer<Response> createResponse( const Pointer<Command>& command ){
+        virtual Pointer<Response> createResponse( const Pointer<Command> command ){
 
             Pointer<Response> resp( new commands::Response() );
             resp->setCorrelationId( command->getCommandId() );
@@ -252,7 +256,7 @@ namespace correlator{
         MyBrokenTransport(){}
         virtual ~MyBrokenTransport(){}
 
-        virtual Pointer<Response> createResponse( const Pointer<Command>& command ){
+        virtual Pointer<Response> createResponse( const Pointer<Command> command ){
             throw exceptions::ActiveMQException( __FILE__, __LINE__,
                 "bad stuff" );
         }
@@ -271,7 +275,7 @@ namespace correlator{
             exCount = 0;
         }
         virtual ~MyListener(){}
-        virtual void onCommand( const Pointer<Command>& command ){
+        virtual void onCommand( const Pointer<Command> command ){
 
             synchronized( &mutex ){
                 commands.insert( command->getCommandId() );

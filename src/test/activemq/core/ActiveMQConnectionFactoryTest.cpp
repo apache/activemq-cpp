@@ -61,7 +61,7 @@ namespace core{
             return this->resumed;
         }
 
-        virtual void onCommand( const Pointer<Command>& command ) {
+        virtual void onCommand( const Pointer<Command> command ) {
 
         }
 

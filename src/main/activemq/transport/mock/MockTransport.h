@@ -58,7 +58,7 @@ namespace mock{
      * up to the builder to create appropriate responses and schedule any asynchronous
      * messages that might result from a message sent to the Broker.
      */
-    class AMQCPP_API MockTransport : public Transport {
+    class AMQCPP_API MockTransport: public Transport {
     private:
 
         Pointer<ResponseBuilder> responseBuilder;
@@ -87,13 +87,12 @@ namespace mock{
 
     private:
 
-        MockTransport( const MockTransport& );
-        MockTransport operator= ( const MockTransport& );
+        MockTransport(const MockTransport&);
+        MockTransport operator=(const MockTransport&);
 
     public:
 
-        MockTransport( const Pointer<wireformat::WireFormat>& wireFormat,
-                       const Pointer<ResponseBuilder>& responseBuilder );
+        MockTransport(const Pointer<wireformat::WireFormat> wireFormat, const Pointer<ResponseBuilder> responseBuilder);
 
         virtual ~MockTransport() {}
 
@@ -106,9 +105,9 @@ namespace mock{
          * CommandListener if there is one.
          * @param command - Command to send to the Listener.
          */
-        virtual void fireCommand( const Pointer<Command>& command ){
-            if( listener != NULL ){
-                listener->onCommand( command );
+        virtual void fireCommand(const Pointer<Command> command) {
+            if (listener != NULL) {
+                listener->onCommand(command);
             }
         }
 
@@ -119,9 +118,9 @@ namespace mock{
          * @param ex
          *      The Exception that will be passed on the the Transport listener.
          */
-        virtual void fireException( const exceptions::ActiveMQException& ex ){
-            if( listener != NULL ){
-                listener->onException( ex );
+        virtual void fireException(const exceptions::ActiveMQException& ex) {
+            if (listener != NULL) {
+                listener->onException(ex);
             }
         }
 
@@ -131,10 +130,9 @@ namespace mock{
          * would have been sent Asynchronously be the Broker.
          * @param responseBuilder - The ResponseBuilder to use from now on.
          */
-        void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ){
+        void setResponseBuilder(const Pointer<ResponseBuilder> responseBuilder) {
             this->responseBuilder = responseBuilder;
         }
-
 
         /**
          * Sets a Listener that gets notified for every command that would
@@ -142,7 +140,7 @@ namespace mock{
          * to verify that its messages are making it to the wire.
          * @param listener - The CommandListener to notify for each message
          */
-        virtual void setOutgoingListener( TransportListener* listener ){
+        virtual void setOutgoingListener(TransportListener* listener) {
             outgoingListener = listener;
         }
 
@@ -155,17 +153,20 @@ namespace mock{
             return this->wireFormat;
         }
 
-    public:  // Transport Methods
+    public: // Transport Methods
 
-        virtual void oneway( const Pointer<Command>& command );
+        virtual void oneway(const Pointer<Command> command);
 
-        virtual Pointer<Response> request( const Pointer<Command>& command );
+        virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
+                                                     const Pointer<ResponseCallback> responseCallback);
 
-        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout );
+        virtual Pointer<Response> request(const Pointer<Command> command);
 
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
+        virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
-        virtual void setTransportListener( TransportListener* listener ){
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat AMQCPP_UNUSED) {}
+
+        virtual void setTransportListener(TransportListener* listener) {
             this->listener = listener;
         }
 
@@ -179,8 +180,8 @@ namespace mock{
 
         virtual void close();
 
-        virtual Transport* narrow( const std::type_info& typeId ) {
-            if( typeid( *this ) == typeId ) {
+        virtual Transport* narrow(const std::type_info& typeId) {
+            if (typeid( *this ) == typeId) {
                 return this;
             }
 
@@ -203,15 +204,15 @@ namespace mock{
             return "";
         }
 
-        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED ) {}
+        virtual void reconnect(const decaf::net::URI& uri AMQCPP_UNUSED) {}
 
-    public:  // Property Getters and Setters
+    public: // Property Getters and Setters
 
         std::string getName() const {
             return this->name;
         }
 
-        void setName( const std::string& name ) {
+        void setName(const std::string& name) {
             this->name = name;
         }
 
@@ -219,7 +220,7 @@ namespace mock{
             return this->failOnSendMessage;
         }
 
-        void setFailOnSendMessage( bool value ) {
+        void setFailOnSendMessage(bool value) {
             this->failOnSendMessage = value;
         }
 
@@ -227,7 +228,7 @@ namespace mock{
             return this->numSentMessageBeforeFail;
         }
 
-        void setNumSentMessageBeforeFail( int value ) {
+        void setNumSentMessageBeforeFail(int value) {
             this->numSentMessageBeforeFail = value;
         }
 
@@ -235,7 +236,7 @@ namespace mock{
             return this->numSentMessages;
         }
 
-        void setNumSentMessages( int value ) {
+        void setNumSentMessages(int value) {
             this->numSentMessages = value;
         }
 
@@ -243,7 +244,7 @@ namespace mock{
             return this->failOnReceiveMessage;
         }
 
-        void setFailOnReceiveMessage( bool value ) {
+        void setFailOnReceiveMessage(bool value) {
             this->failOnReceiveMessage = value;
         }
 
@@ -251,7 +252,7 @@ namespace mock{
             return this->numReceivedMessageBeforeFail;
         }
 
-        void setNumReceivedMessageBeforeFail( int value ) {
+        void setNumReceivedMessageBeforeFail(int value) {
             this->numReceivedMessageBeforeFail = value;
         }
 
@@ -259,7 +260,7 @@ namespace mock{
             return this->numReceivedMessages;
         }
 
-        void setNumReceivedMessages( int value ) {
+        void setNumReceivedMessages(int value) {
             this->numReceivedMessages = value;
         }
 
@@ -267,7 +268,7 @@ namespace mock{
             return this->failOnKeepAliveSends;
         }
 
-        void setFailOnKeepAliveSends( bool value ) {
+        void setFailOnKeepAliveSends(bool value) {
             this->failOnKeepAliveSends = value;
         }
 
@@ -275,7 +276,7 @@ namespace mock{
             return this->numSentKeepAlivesBeforeFail;
         }
 
-        void setNumSentKeepAlivesBeforeFail( int value ) {
+        void setNumSentKeepAlivesBeforeFail(int value) {
             this->numSentKeepAlivesBeforeFail = value;
         }
 
@@ -283,7 +284,7 @@ namespace mock{
             return this->numSentKeepAlives;
         }
 
-        void setNumSentKeepAlives( int value ) {
+        void setNumSentKeepAlives(int value) {
             this->numSentKeepAlives = value;
         }
 
@@ -291,7 +292,7 @@ namespace mock{
             return this->failOnReceiveMessage;
         }
 
-        void setFailOnStart( bool value ) {
+        void setFailOnStart(bool value) {
             this->failOnReceiveMessage = value;
         }
 
@@ -299,7 +300,7 @@ namespace mock{
             return this->failOnStop;
         }
 
-        void setFailOnStop( bool value ) {
+        void setFailOnStop(bool value) {
             this->failOnStop = value;
         }
 
@@ -307,7 +308,7 @@ namespace mock{
             return this->failOnClose;
         }
 
-        void setFailOnClose( bool value ) {
+        void setFailOnClose(bool value) {
             this->failOnClose = value;
         }
 
@@ -319,8 +320,7 @@ namespace mock{
             return false;
         }
 
-        virtual void updateURIs( bool rebalance AMQCPP_UNUSED,
-                                 const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED ) {
+        virtual void updateURIs(bool rebalance AMQCPP_UNUSED, const decaf::util::List<decaf::net::URI>& uris AMQCPP_UNUSED) {
             throw decaf::io::IOException();
         }
 

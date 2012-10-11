@@ -31,8 +31,8 @@ using namespace decaf::lang::exceptions;
 MockTransport* MockTransport::instance = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
-                              const Pointer<ResponseBuilder>& responseBuilder ) :
+MockTransport::MockTransport(const Pointer<WireFormat> wireFormat,
+                             const Pointer<ResponseBuilder> responseBuilder) :
     responseBuilder(responseBuilder),
     wireFormat(wireFormat),
     outgoingListener(),
@@ -61,114 +61,150 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::oneway( const Pointer<Command>& command ) {
+void MockTransport::oneway(const Pointer<Command> command) {
 
-    try{
+    try {
 
-        if( command->isMessage() && this->failOnSendMessage ) {
+        if (command->isMessage() && this->failOnSendMessage) {
             this->numSentMessages++;
 
-            if( this->numSentMessages > this->numSentMessageBeforeFail ) {
-                throw IOException(
-                    __FILE__, __LINE__, "Failed to Send Message.");
+            if (this->numSentMessages > this->numSentMessageBeforeFail) {
+                throw IOException(__FILE__, __LINE__, "Failed to Send Message.");
             }
         }
 
-        if( command->isKeepAliveInfo() && this->failOnKeepAliveSends ) {
+        if (command->isKeepAliveInfo() && this->failOnKeepAliveSends) {
             this->numSentKeepAlives++;
 
-            if( this->numSentKeepAlives > this->numSentKeepAlivesBeforeFail ) {
-                throw IOException(
-                    __FILE__, __LINE__, "Failed to Send KeepAliveInfo Command.");
+            if (this->numSentKeepAlives > this->numSentKeepAlivesBeforeFail) {
+                throw IOException(__FILE__, __LINE__, "Failed to Send KeepAliveInfo Command.");
             }
         }
 
         // Process and send any new Commands back.
-        internalListener.onCommand( command );
+        internalListener.onCommand(command);
 
         // Notify external Client of command that we "sent"
-        if( outgoingListener != NULL ){
-            outgoingListener->onCommand( command );
+        if (outgoingListener != NULL) {
+            outgoingListener->onCommand(command);
             return;
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW( IOException)
+    AMQ_CATCH_RETHROW( UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
+    AMQ_CATCHALL_THROW( IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> MockTransport::request( const Pointer<Command>& command ) {
+Pointer<FutureResponse> MockTransport::asyncRequest(const Pointer<Command> command,
+                                                    const Pointer<ResponseCallback> responseCallback) {
 
-    try{
 
-        if( responseBuilder != NULL ){
+    try {
 
-            if( command->isMessage() && this->failOnSendMessage ) {
+        if (responseBuilder != NULL) {
+
+            if (command->isMessage() && this->failOnSendMessage) {
                 this->numSentMessages++;
 
-                if( this->numSentMessages > this->numSentMessageBeforeFail ) {
-                    throw IOException(
-                        __FILE__, __LINE__, "Failed to Send Message.");
+                if (this->numSentMessages > this->numSentMessageBeforeFail) {
+                    throw IOException(__FILE__, __LINE__, "Failed to Send Message.");
                 }
             }
 
             // Notify external Client of command that we "sent"
-            if( outgoingListener != NULL ){
-                outgoingListener->onCommand( command );
+            if (outgoingListener != NULL) {
+                outgoingListener->onCommand(command);
             }
 
-            command->setCommandId( this->nextCommandId.incrementAndGet() );
-            command->setResponseRequired( true );
-            return responseBuilder->buildResponse( command );
+            command->setCommandId(this->nextCommandId.incrementAndGet());
+            command->setResponseRequired(true);
+
+            Pointer<FutureResponse> future(new FutureResponse(responseCallback));
+            Pointer<Response> response(responseBuilder->buildResponse(command));
+
+            future->setResponse(response);
+
+            return future;
         }
 
-        throw IOException(
-            __FILE__, __LINE__,
-            "MockTransport::request - no response builder available" );
+        throw IOException(__FILE__, __LINE__, "MockTransport::request - no response builder available");
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> MockTransport::request( const Pointer<Command>& command,
-                                          unsigned int timeout AMQCPP_UNUSED ) {
-    try{
-        return this->request( command );
+Pointer<Response> MockTransport::request(const Pointer<Command> command) {
+
+    try {
+
+        if (responseBuilder != NULL) {
+
+            if (command->isMessage() && this->failOnSendMessage) {
+                this->numSentMessages++;
+
+                if (this->numSentMessages > this->numSentMessageBeforeFail) {
+                    throw IOException(__FILE__, __LINE__, "Failed to Send Message.");
+                }
+            }
+
+            // Notify external Client of command that we "sent"
+            if (outgoingListener != NULL) {
+                outgoingListener->onCommand(command);
+            }
+
+            command->setCommandId(this->nextCommandId.incrementAndGet());
+            command->setResponseRequired(true);
+            return responseBuilder->buildResponse(command);
+        }
+
+        throw IOException(__FILE__, __LINE__, "MockTransport::request - no response builder available");
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Response> MockTransport::request(const Pointer<Command> command, unsigned int timeout AMQCPP_UNUSED) {
+    try {
+        return this->request(command);
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::start() {
 
-    if( this->failOnStart ) {
-        throw IOException( __FILE__, __LINE__, "Failed to Start MockTransport." );
+    if (this->failOnStart) {
+        throw IOException(__FILE__, __LINE__, "Failed to Start MockTransport.");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::stop() {
 
-    if( this->failOnStop ) {
-        throw IOException( __FILE__, __LINE__, "Failed to Stop MockTransport." );
+    if (this->failOnStop) {
+        throw IOException(__FILE__, __LINE__, "Failed to Stop MockTransport.");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::close() {
 
-    if( this->failOnClose ) {
-        throw IOException( __FILE__, __LINE__, "Failed to Close MockTransport." );
+    if (this->failOnClose) {
+        throw IOException(__FILE__, __LINE__, "Failed to Close MockTransport.");
     }
 }

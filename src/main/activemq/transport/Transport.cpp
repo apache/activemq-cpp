@@ -15,32 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_
+#include "Transport.h"
 
-#include <activemq/util/Config.h>
+using namespace activemq;
+using namespace activemq::transport;
 
-#include <activemq/transport/tcp/TcpTransportFactory.h>
+////////////////////////////////////////////////////////////////////////////////
+Transport::~Transport() {
 
-namespace activemq {
-namespace transport {
-namespace tcp {
-
-    using decaf::lang::Pointer;
-
-    class SslTransportFactory : public TcpTransportFactory {
-    public:
-
-        virtual ~SslTransportFactory();
-
-    protected:
-
-        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
-                                                     const Pointer<wireformat::WireFormat> wireFormat,
-                                                     const decaf::util::Properties& properties );
-
-    };
-
-}}}
-
-#endif /* _ACTIVEMQ_TRANSPORT_TCP_SSLTRANSPORTFACTORY_H_ */
+}

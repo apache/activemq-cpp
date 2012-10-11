@@ -46,7 +46,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireResponseBuilder::buildResponse(const Pointer<Command>& command) {
+Pointer<Response> OpenWireResponseBuilder::buildResponse(const Pointer<Command> command) {
 
     if (command->isResponseRequired()) {
         // These Commands just require a response that matches their command IDs
@@ -59,7 +59,7 @@ Pointer<Response> OpenWireResponseBuilder::buildResponse(const Pointer<Command>&
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireResponseBuilder::buildIncomingCommands(const Pointer<Command>& command, decaf::util::LinkedList<Pointer<Command> >& queue) {
+void OpenWireResponseBuilder::buildIncomingCommands(const Pointer<Command> command, decaf::util::LinkedList<Pointer<Command> >& queue) {
 
     // Delegate this to buildResponse
     if (command->isResponseRequired()) {

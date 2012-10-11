@@ -43,9 +43,9 @@ namespace failover {
 
         virtual ~FailoverTransportFactory() {}
 
-        virtual Pointer<Transport> create( const decaf::net::URI& location );
+        virtual Pointer<Transport> create(const decaf::net::URI& location);
 
-        virtual Pointer<Transport> createComposite( const decaf::net::URI& location );
+        virtual Pointer<Transport> createComposite(const decaf::net::URI& location);
 
     protected:
 
@@ -59,8 +59,8 @@ namespace failover {
          * @return Pointer to a new FailoverTransport instance.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
-                                                      const decaf::util::Properties& properties );
+        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
+                                                     const decaf::util::Properties& properties);
 
     };
 

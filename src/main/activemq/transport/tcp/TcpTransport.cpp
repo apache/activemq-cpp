@@ -42,7 +42,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport(const Pointer<Transport>& next) :
+TcpTransport::TcpTransport(const Pointer<Transport> next) :
     TransportFilter(next), connectTimeout(0), closed(false), socket(), dataInputStream(), dataOutputStream() {
 }
 
@@ -69,9 +69,9 @@ void TcpTransport::close() {
         // Invoke the paren't close first.
         TransportFilter::close();
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,9 +141,9 @@ void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Proper
         ioTransport->setInputStream(dataInputStream.get());
         ioTransport->setOutputStream(dataOutputStream.get());
     }
-    AMQ_CATCH_RETHROW( ActiveMQException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException)
-    AMQ_CATCHALL_THROW( ActiveMQException)
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,9 +153,9 @@ Socket* TcpTransport::createSocket() {
         SocketFactory* factory = SocketFactory::getDefault();
         return factory->createSocket();
     }
-    DECAF_CATCH_RETHROW( IOException)
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    DECAF_CATCHALL_THROW( IOException)
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,9 +197,9 @@ void TcpTransport::configureSocket(Socket* socket, const Properties& properties)
             socket->setSendBufferSize(soSendBufferSize);
         }
     }
-    DECAF_CATCH_RETHROW( NullPointerException)
-    DECAF_CATCH_RETHROW( IllegalArgumentException)
-    DECAF_CATCH_RETHROW( SocketException)
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException)
-    DECAF_CATCHALL_THROW( SocketException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCH_RETHROW(SocketException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, SocketException)
+    DECAF_CATCHALL_THROW(SocketException)
 }

@@ -124,7 +124,12 @@ cc_sources = \
     activemq/threads/Scheduler.cpp \
     activemq/threads/SchedulerTimerTask.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
+    activemq/transport/CompositeTransport.cpp \
+    activemq/transport/DefaultTransportListener.cpp \
+    activemq/transport/FutureResponse.cpp \
     activemq/transport/IOTransport.cpp \
+    activemq/transport/ResponseCallback.cpp \
+    activemq/transport/Transport.cpp \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/correlator/ResponseCorrelator.cpp \
@@ -142,6 +147,7 @@ cc_sources = \
     activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
+    activemq/transport/mock/ResponseBuilder.cpp \
     activemq/transport/tcp/SslTransport.cpp \
     activemq/transport/tcp/SslTransportFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
@@ -241,6 +247,7 @@ cc_sources = \
     activemq/wireformat/stomp/StompHelper.cpp \
     activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
+    cms/AsyncCallback.cpp \
     cms/BytesMessage.cpp \
     cms/CMSException.cpp \
     cms/CMSProperties.cpp \
@@ -648,13 +655,14 @@ h_sources = \
     activemq/transport/AbstractTransportFactory.h \
     activemq/transport/CompositeTransport.h \
     activemq/transport/DefaultTransportListener.h \
+    activemq/transport/FutureResponse.h \
     activemq/transport/IOTransport.h \
+    activemq/transport/ResponseCallback.h \
     activemq/transport/Transport.h \
     activemq/transport/TransportFactory.h \
     activemq/transport/TransportFilter.h \
     activemq/transport/TransportListener.h \
     activemq/transport/TransportRegistry.h \
-    activemq/transport/correlator/FutureResponse.h \
     activemq/transport/correlator/ResponseCorrelator.h \
     activemq/transport/failover/BackupTransport.h \
     activemq/transport/failover/BackupTransportPool.h \
@@ -777,6 +785,7 @@ h_sources = \
     activemq/wireformat/stomp/StompHelper.h \
     activemq/wireformat/stomp/StompWireFormat.h \
     activemq/wireformat/stomp/StompWireFormatFactory.h \
+    cms/AsyncCallback.h \
     cms/BytesMessage.h \
     cms/CMSException.h \
     cms/CMSProperties.h \

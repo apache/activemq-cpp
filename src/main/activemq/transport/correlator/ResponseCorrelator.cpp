@@ -25,7 +25,7 @@
 
 #include <activemq/commands/Response.h>
 #include <activemq/commands/ExceptionResponse.h>
-#include <activemq/transport/correlator/FutureResponse.h>
+#include <activemq/transport/FutureResponse.h>
 
 using namespace std;
 using namespace activemq;
@@ -93,8 +93,7 @@ namespace correlator{
 
     public:
 
-        CorrelatorData() : nextCommandId(1), requestMap(), mapMutex(), closed(true), priorError(NULL) {
-        }
+        CorrelatorData() : nextCommandId(1), requestMap(), mapMutex(), closed(true), priorError(NULL) {}
 
     };
 
@@ -102,11 +101,11 @@ namespace correlator{
 
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::ResponseCorrelator(const Pointer<Transport>& next) : TransportFilter(next), impl(new CorrelatorData) {
+ResponseCorrelator::ResponseCorrelator(Pointer<Transport> next) : TransportFilter(next), impl(new CorrelatorData) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::~ResponseCorrelator(){
+ResponseCorrelator::~ResponseCorrelator() {
 
     // Close the transport and destroy it.
     try {
@@ -118,7 +117,7 @@ ResponseCorrelator::~ResponseCorrelator(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::oneway(const Pointer<Command>& command) {
+void ResponseCorrelator::oneway(const Pointer<Command> command) {
 
     try {
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
@@ -130,15 +129,68 @@ void ResponseCorrelator::oneway(const Pointer<Command>& command) {
 
         next->oneway(command);
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ResponseCorrelator::request(const Pointer<Command>& command) {
+Pointer<FutureResponse> ResponseCorrelator::asyncRequest(const Pointer<Command> command, const Pointer<ResponseCallback> responseCallback) {
+
+    throw UnsupportedOperationException(__FILE__, __LINE__, "Not yet ready for use.");
+
+    try {
+
+        command->setCommandId(this->impl->nextCommandId.getAndIncrement());
+        command->setResponseRequired(true);
+
+        // Add a future response object to the map indexed by this command id.
+        Pointer<FutureResponse> futureResponse(new FutureResponse(responseCallback));
+        Pointer<Exception> priorError;
+
+        synchronized(&this->impl->mapMutex) {
+            priorError = this->impl->priorError;
+            if (priorError == NULL) {
+                this->impl->requestMap.insert(
+                    make_pair((unsigned int) command->getCommandId(), futureResponse));
+            }
+        }
+
+        if (priorError != NULL) {
+            //futureResponse->setResponse(new ExceptionResponse(priorError));
+            throw IOException(__FILE__, __LINE__, this->impl->priorError->getMessage().c_str());
+        }
+
+        // The finalizer will cleanup the map even if an exception is thrown.
+        ResponseFinalizer finalizer(&this->impl->mapMutex, command->getCommandId(), &this->impl->requestMap);
+
+        // Wait to be notified of the response via the futureResponse object.
+        Pointer<commands::Response> response;
+
+        // Send the request.
+        next->oneway(command);
+
+        // Get the response.
+        response = futureResponse->getResponse();
+
+        if (response == NULL) {
+            throw IOException(__FILE__, __LINE__,
+                "No valid response received for command: %s, check broker.", command->toString().c_str());
+        }
+
+        return futureResponse;
+    }
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Response> ResponseCorrelator::request(const Pointer<Command> command) {
 
     try {
 
@@ -180,15 +232,15 @@ Pointer<Response> ResponseCorrelator::request(const Pointer<Command>& command) {
 
         return response;
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> ResponseCorrelator::request(const Pointer<Command>& command, unsigned int timeout) {
+Pointer<Response> ResponseCorrelator::request(const Pointer<Command> command, unsigned int timeout) {
 
     try {
 
@@ -230,15 +282,15 @@ Pointer<Response> ResponseCorrelator::request(const Pointer<Command>& command, u
 
         return response;
     }
-    AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::onCommand(const Pointer<Command>& command) {
+void ResponseCorrelator::onCommand(const Pointer<Command> command) {
 
     // Let's see if the incoming command is a response, if not we just pass it along
     // and allow outstanding requests to keep waiting without stalling control commands.
@@ -290,9 +342,9 @@ void ResponseCorrelator::start() {
         // Mark it as open.
         this->impl->closed = false;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -308,9 +360,9 @@ void ResponseCorrelator::close() {
 
         this->impl->closed = true;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -320,7 +372,7 @@ void ResponseCorrelator::onException(const decaf::lang::Exception& ex) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::dispose(const Pointer<Exception> error) {
+void ResponseCorrelator::dispose(Pointer<Exception> error) {
 
     ArrayList<Pointer<FutureResponse> > requests;
     synchronized(&this->impl->mapMutex){

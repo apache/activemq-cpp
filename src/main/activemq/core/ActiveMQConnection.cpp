@@ -949,7 +949,7 @@ void ActiveMQConnection::destroyDestination(const cms::Destination* destination)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::onCommand(const Pointer<Command>& command) {
+void ActiveMQConnection::onCommand(const Pointer<Command> command) {
 
     try {
 

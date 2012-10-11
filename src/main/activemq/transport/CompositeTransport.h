@@ -40,7 +40,7 @@ namespace transport {
     class AMQCPP_API CompositeTransport: public activemq::transport::Transport {
     public:
 
-        virtual ~CompositeTransport() {}
+        virtual ~CompositeTransport();
 
         /**
          * Add a URI to the list of URI's that will represent the set of Transports
@@ -51,7 +51,7 @@ namespace transport {
          * @param uris
          *      The new URI set to add to the set this composite maintains.
          */
-        virtual void addURI( bool rebalance, const List<URI>& uris ) = 0;
+        virtual void addURI(bool rebalance, const List<URI>& uris) = 0;
 
         /**
          * Remove a URI from the set of URI's that represents the set of Transports
@@ -64,7 +64,7 @@ namespace transport {
          * @param uris
          *        The new URI set to remove to the set this composite maintains.
          */
-        virtual void removeURI( bool rebalance, const List<URI>& uris ) = 0;
+        virtual void removeURI(bool rebalance, const List<URI>& uris) = 0;
 
     };
 

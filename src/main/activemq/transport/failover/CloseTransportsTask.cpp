@@ -32,7 +32,6 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 CloseTransportsTask::CloseTransportsTask() :
     transports() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@ CloseTransportsTask::~CloseTransportsTask() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CloseTransportsTask::add(const Pointer<Transport>& transport) {
+void CloseTransportsTask::add(const Pointer<Transport> transport) {
     transports.put(transport);
 }
 
