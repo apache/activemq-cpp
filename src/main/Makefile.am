@@ -277,6 +277,7 @@ cc_sources = \
     cms/ObjectMessage.cpp \
     cms/Queue.cpp \
     cms/QueueBrowser.cpp \
+    cms/ResourceAllocationException.cpp \
     cms/Session.cpp \
     cms/Startable.cpp \
     cms/Stoppable.cpp \
@@ -816,6 +817,7 @@ h_sources = \
     cms/ObjectMessage.h \
     cms/Queue.h \
     cms/QueueBrowser.h \
+    cms/ResourceAllocationException.h \
     cms/Session.h \
     cms/Startable.h \
     cms/Stoppable.h \
