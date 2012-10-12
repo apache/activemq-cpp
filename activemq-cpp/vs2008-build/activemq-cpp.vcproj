@@ -1242,6 +1242,14 @@
 			Name="cms"
 			>
 			<File
+				RelativePath="..\src\main\cms\AsyncCallback.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\AsyncCallback.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\BytesMessage.cpp"
 				>
 			</File>
@@ -1779,6 +1787,14 @@
 			</File>
 			<File
 				RelativePath="..\src\main\cms\QueueBrowser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\ResourceAllocationException.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\ResourceAllocationException.h"
 				>
 			</File>
 			<File
@@ -2881,11 +2897,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\transport\CompositeTransport.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\transport\CompositeTransport.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\transport\DefaultTransportListener.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\transport\DefaultTransportListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\FutureResponse.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\FutureResponse.h"
 					>
 				</File>
 				<File
@@ -2894,6 +2926,18 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\transport\IOTransport.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\ResponseCallback.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\ResponseCallback.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\Transport.cpp"
 					>
 				</File>
 				<File
@@ -2928,10 +2972,6 @@
 					Name="correlator"
 					>
 					<File
-						RelativePath="..\src\main\activemq\transport\correlator\FutureResponse.h"
-						>
-					</File>
-					<File
 						RelativePath="..\src\main\activemq\transport\correlator\ResponseCorrelator.cpp"
 						>
 					</File>
@@ -2965,6 +3005,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\activemq\transport\mock\MockTransportFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\mock\ResponseBuilder.cpp"
 						>
 					</File>
 					<File
