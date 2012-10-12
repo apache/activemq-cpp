@@ -77,7 +77,7 @@ OpenWireFormat::~OpenWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Transport> OpenWireFormat::createNegotiator(const Pointer<Transport>& transport) {
+Pointer<Transport> OpenWireFormat::createNegotiator(const Pointer<Transport> transport) {
 
     try {
         return Pointer<Transport>(new OpenWireFormatNegotiator(this, transport));
@@ -127,12 +127,12 @@ void OpenWireFormat::addMarshaller(DataStreamMarshaller* marshaller) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo>& info) {
+void OpenWireFormat::setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo> info) {
     this->preferedWireFormatInfo = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::marshal(const Pointer<commands::Command>& command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* dataOut) {
+void OpenWireFormat::marshal(const Pointer<commands::Command> command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* dataOut) {
 
     if (transport == NULL) {
         throw decaf::io::IOException(__FILE__, __LINE__, "Transport passed is NULL");

@@ -40,7 +40,7 @@ using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-class MyCommand : public commands::BaseCommand{
+class MyCommand : public commands::BaseCommand {
 public:
     MyCommand(){ c = 0; }
     virtual ~MyCommand(){}
@@ -79,7 +79,7 @@ public:
     virtual bool hasNegotiator() const { return false; }
 
     virtual Pointer<Transport> createNegotiator(
-        const Pointer<transport::Transport>& transport ) {
+        const Pointer<transport::Transport> transport ) {
 
         return Pointer<wireformat::WireFormatNegotiator>();
     }
@@ -136,7 +136,7 @@ public:
         }
     }
 
-    virtual void marshal( const Pointer<commands::Command>& command,
+    virtual void marshal( const Pointer<commands::Command> command,
                           const activemq::transport::Transport* transport AMQCPP_UNUSED,
                           decaf::io::DataOutputStream* outputStream )
         throw (IOException)

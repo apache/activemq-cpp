@@ -75,9 +75,9 @@ namespace stomp {
          *
          * @throws IOException
          */
-        virtual void marshal( const Pointer<commands::Command>& command,
-                              const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out );
+        virtual void marshal(const Pointer<commands::Command> command,
+                             const activemq::transport::Transport* transport,
+                             decaf::io::DataOutputStream* out);
 
         /**
          * Stream based un-marshaling, blocks on reads on the input stream until a complete
@@ -89,8 +89,8 @@ namespace stomp {
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in );
+        virtual Pointer<commands::Command> unmarshal(const activemq::transport::Transport* transport,
+                                                     decaf::io::DataInputStream* in);
 
         /**
          * Set the Version
@@ -131,23 +131,23 @@ namespace stomp {
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport );
+            const Pointer<transport::Transport> transport);
 
     private:
 
-        Pointer<Command> unmarshalMessage( const Pointer<StompFrame>& frame );
-        Pointer<Command> unmarshalReceipt( const Pointer<StompFrame>& frame );
-        Pointer<Command> unmarshalConnected( const Pointer<StompFrame>& frame );
-        Pointer<Command> unmarshalError( const Pointer<StompFrame>& frame );
+        Pointer<Command> unmarshalMessage(const Pointer<StompFrame> frame);
+        Pointer<Command> unmarshalReceipt(const Pointer<StompFrame> frame);
+        Pointer<Command> unmarshalConnected(const Pointer<StompFrame> frame);
+        Pointer<Command> unmarshalError(const Pointer<StompFrame> frame);
 
-        Pointer<StompFrame> marshalMessage( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalAck( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalConnectionInfo( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalTransactionInfo( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalShutdownInfo( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalRemoveInfo( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalConsumerInfo( const Pointer<Command>& command );
-        Pointer<StompFrame> marshalRemoveSubscriptionInfo( const Pointer<Command>& command );
+        Pointer<StompFrame> marshalMessage(const Pointer<Command> command);
+        Pointer<StompFrame> marshalAck(const Pointer<Command> command);
+        Pointer<StompFrame> marshalConnectionInfo(const Pointer<Command> command);
+        Pointer<StompFrame> marshalTransactionInfo(const Pointer<Command> command);
+        Pointer<StompFrame> marshalShutdownInfo(const Pointer<Command> command);
+        Pointer<StompFrame> marshalRemoveInfo(const Pointer<Command> command);
+        Pointer<StompFrame> marshalConsumerInfo(const Pointer<Command> command);
+        Pointer<StompFrame> marshalRemoveSubscriptionInfo(const Pointer<Command> command);
 
     };
 

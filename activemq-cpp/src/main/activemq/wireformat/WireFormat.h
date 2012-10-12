@@ -60,9 +60,9 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void marshal( const Pointer<commands::Command>& command,
-                              const activemq::transport::Transport* transport,
-                              decaf::io::DataOutputStream* out ) = 0;
+        virtual void marshal(const Pointer<commands::Command> command,
+                             const activemq::transport::Transport* transport,
+                             decaf::io::DataOutputStream* out) = 0;
 
         /**
          * Stream based unmarshaling, blocks on reads on the input stream until a complete
@@ -78,8 +78,8 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport,
-                                                      decaf::io::DataInputStream* in ) = 0;
+        virtual Pointer<commands::Command> unmarshal(const activemq::transport::Transport* transport,
+                                                     decaf::io::DataInputStream* in) = 0;
 
         /**
          * Set the Version
@@ -87,7 +87,7 @@ namespace wireformat{
          * @param version
          *      the version of the wire format
          */
-        virtual void setVersion( int version ) = 0;
+        virtual void setVersion(int version) = 0;
 
         /**
          * Get the Version
@@ -126,7 +126,7 @@ namespace wireformat{
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(
-            const Pointer<transport::Transport>& transport ) = 0;
+            const Pointer<transport::Transport> transport) = 0;
 
     };
 

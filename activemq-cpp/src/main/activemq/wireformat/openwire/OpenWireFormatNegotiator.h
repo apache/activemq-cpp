@@ -75,7 +75,7 @@ namespace openwire{
          * @param wireFormat - The WireFormat object we use to negotiate
          * @param next - The next transport in the chain
          */
-        OpenWireFormatNegotiator(OpenWireFormat* wireFormat, const Pointer<transport::Transport>& next);
+        OpenWireFormatNegotiator(OpenWireFormat* wireFormat, const Pointer<transport::Transport> next);
 
         virtual ~OpenWireFormatNegotiator();
 
@@ -90,7 +90,7 @@ namespace openwire{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway(const Pointer<commands::Command>& command) throw (decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException);
+        virtual void oneway(const Pointer<commands::Command> command);
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -100,8 +100,7 @@ namespace openwire{
          * @return the response from the server.
          * @throws IOException if an error occurs with the request.
          */
-        virtual Pointer<commands::Response> request(const Pointer<commands::Command>& command) throw (decaf::io::IOException,
-                decaf::lang::exceptions::UnsupportedOperationException);
+        virtual Pointer<commands::Response> request(const Pointer<commands::Command> command);
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -112,8 +111,7 @@ namespace openwire{
          * @return the response from the server.
          * @throws IOException if an error occurs with the request.
          */
-        virtual Pointer<commands::Response> request(const Pointer<commands::Command>& command, unsigned int timeout) throw (decaf::io::IOException,
-                decaf::lang::exceptions::UnsupportedOperationException);
+        virtual Pointer<commands::Response> request(const Pointer<commands::Command> command, unsigned int timeout);
 
         /**
          * This is called in the context of the nested transport's
@@ -123,14 +121,14 @@ namespace openwire{
          * the command listener.
          * @param command the received from the nested transport.
          */
-        virtual void onCommand(const Pointer<commands::Command>& command);
+        virtual void onCommand(const Pointer<commands::Command> command);
 
         /**
          * Event handler for an exception from a command transport.
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException(transport::Transport* source, const decaf::lang::Exception& ex);
+        virtual void onException(const decaf::lang::Exception& ex);
 
         /**
          * Starts this transport object and creates the thread for
@@ -141,7 +139,7 @@ namespace openwire{
          * @throws IOException if an error occurs or if this transport
          * has already been closed.
          */
-        virtual void start() throw (decaf::io::IOException);
+        virtual void start();
 
         /**
          * Stops the polling thread and closes the streams.  This can
@@ -149,7 +147,7 @@ namespace openwire{
          * this object has been closed, it cannot be restarted.
          * @throws IOException if errors occur.
          */
-        virtual void close() throw (decaf::io::IOException);
+        virtual void close();
 
     };
 

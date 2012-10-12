@@ -100,7 +100,7 @@ namespace marshal {
         /**
          * {@inheritDoc}
          */
-        virtual Pointer<transport::Transport> createNegotiator(const Pointer<transport::Transport>& transport);
+        virtual Pointer<transport::Transport> createNegotiator(const Pointer<transport::Transport> transport);
 
         /**
          * Allows an external source to add marshalers to this object for
@@ -112,7 +112,7 @@ namespace marshal {
         /**
          * {@inheritDoc}
          */
-        virtual void marshal(const Pointer<commands::Command>& command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* out);
+        virtual void marshal(const Pointer<commands::Command> command, const activemq::transport::Transport* transport, decaf::io::DataOutputStream* out);
 
         /**
          * {@inheritDoc}
@@ -192,7 +192,7 @@ namespace marshal {
          *
          * @throws IllegalStateException if the WireFormat object has not been initialized.
          */
-        void setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo>& info);
+        void setPreferedWireFormatInfo(const Pointer<commands::WireFormatInfo> info);
 
         /**
          * Gets the Preferred WireFormatInfo object that this class holds
