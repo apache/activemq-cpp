@@ -38,7 +38,7 @@ using namespace decaf::lang::exceptions;
 const int OpenWireFormatNegotiator::negotiationTimeout = 15000;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormatNegotiator::OpenWireFormatNegotiator(OpenWireFormat* wireFormat, const Pointer<Transport>& next ) :
+OpenWireFormatNegotiator::OpenWireFormatNegotiator(OpenWireFormat* wireFormat, const Pointer<Transport> next ) :
     WireFormatNegotiator( next ),
     firstTime(true),
     wireInfoSentDownLatch(1),
@@ -56,7 +56,7 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::oneway(const Pointer<Command>& command) throw (IOException, UnsupportedOperationException) {
+void OpenWireFormatNegotiator::oneway(const Pointer<Command> command) {
 
     try {
 
@@ -79,7 +79,7 @@ void OpenWireFormatNegotiator::oneway(const Pointer<Command>& command) throw (IO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& command) throw (IOException, UnsupportedOperationException) {
+Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command> command) {
 
     try {
 
@@ -102,7 +102,7 @@ Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& comm
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& command, unsigned int timeout) throw (IOException, UnsupportedOperationException) {
+Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command> command, unsigned int timeout) {
 
     try {
 
@@ -125,7 +125,7 @@ Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command>& comm
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onCommand(const Pointer<Command>& command) {
+void OpenWireFormatNegotiator::onCommand(const Pointer<Command> command) {
 
     if (command->isWireFormatInfo()) {
 
@@ -152,17 +152,14 @@ void OpenWireFormatNegotiator::onCommand(const Pointer<Command>& command) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onTransportException(Transport* source AMQCPP_UNUSED, const decaf::lang::Exception& ex) {
+void OpenWireFormatNegotiator::onException(const decaf::lang::Exception& ex) {
     readyCountDownLatch.countDown();
     fire(ex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::start() throw (IOException) {
+void OpenWireFormatNegotiator::start() {
 
-    /**
-     * We're already started.
-     */
     if (!closed) {
         return;
     }
@@ -205,7 +202,7 @@ void OpenWireFormatNegotiator::start() throw (IOException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::close() throw (IOException) {
+void OpenWireFormatNegotiator::close() {
 
     try {
 
