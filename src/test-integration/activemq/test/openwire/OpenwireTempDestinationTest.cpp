@@ -357,6 +357,8 @@ void OpenwireTempDestinationTest::testPublishFailsForClosedConnection() {
     std::auto_ptr<Session> tempSession(tempConnection->createSession());
     std::auto_ptr<TemporaryQueue> queue(tempSession->createTemporaryQueue());
 
+    Thread::sleep(2000);
+
     // This message delivery should work since the temp connection is still open.
     std::auto_ptr<MessageProducer> producer(cmsProvider->getSession()->createProducer(queue.get()));
     producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
@@ -371,9 +373,9 @@ void OpenwireTempDestinationTest::testPublishFailsForClosedConnection() {
     message.reset(cmsProvider->getSession()->createTextMessage("Hello"));
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should throw a CMSException since temp destination should not exist anymore.",
+        "Should throw a InvalidDestinationException since temp destination should not exist anymore.",
         producer->send(message.get()),
-        CMSException);
+        cms::InvalidDestinationException);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -389,6 +391,8 @@ void OpenwireTempDestinationTest::testPublishFailsForDestoryedTempDestination() 
     std::auto_ptr<Session> tempSession(tempConnection->createSession());
     std::auto_ptr<TemporaryQueue> queue(tempSession->createTemporaryQueue());
 
+    Thread::sleep(2000);
+
     // This message delivery should work since the temp connection is still open.
     std::auto_ptr<MessageProducer> producer(cmsProvider->getSession()->createProducer(queue.get()));
     producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
@@ -403,9 +407,9 @@ void OpenwireTempDestinationTest::testPublishFailsForDestoryedTempDestination() 
     message.reset(cmsProvider->getSession()->createTextMessage("Hello"));
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should throw a CMSException since temp destination should not exist anymore.",
+        "Should throw a InvalidDestinationException since temp destination should not exist anymore.",
         producer->send(message.get()),
-        CMSException);
+        InvalidDestinationException);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
