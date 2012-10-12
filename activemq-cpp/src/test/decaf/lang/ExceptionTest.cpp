@@ -38,7 +38,7 @@ void ExceptionTest::testCtors() {
     CPPUNIT_ASSERT( exception2.getCause() == NULL );
     CPPUNIT_ASSERT( exception2.getMessage() == "EXCEPTION_2" );
 
-    Exception exception3( __FILE__, __LINE__, &exception1, "EXCEPTION_3" );
+    Exception exception3( __FILE__, __LINE__, exception1.clone(), "EXCEPTION_3" );
 
     CPPUNIT_ASSERT( exception3.getCause() != NULL );
     CPPUNIT_ASSERT( std::string( exception3.getCause()->what() ) == "EXCEPTION_1" );
@@ -49,7 +49,7 @@ void ExceptionTest::testCtors() {
     CPPUNIT_ASSERT( exception4.getMessage() == "EXCEPTION_1" );
 
     std::runtime_error runtime( "RUNTIME" );
-    Exception exception5( &runtime );
+    Exception exception5( new std::runtime_error(runtime) );
     CPPUNIT_ASSERT( exception5.getCause() != NULL );
     CPPUNIT_ASSERT( exception5.getMessage() == "RUNTIME" );
 }
@@ -102,11 +102,11 @@ void ExceptionTest::testInitCause() {
     std::runtime_error exception1("RUNTIME");
     Exception exception2( __FILE__, __LINE__, "EXCEPTION" );
 
-    ex.initCause( &exception1 );
+    ex.initCause( new std::runtime_error(exception1) );
     CPPUNIT_ASSERT( ex.getCause() != NULL );
     CPPUNIT_ASSERT( std::string( ex.getCause()->what() ) == "RUNTIME" );
 
-    ex.initCause( &exception2 );
+    ex.initCause( exception2.clone() );
     CPPUNIT_ASSERT( ex.getCause() != NULL );
     CPPUNIT_ASSERT( std::string( ex.getCause()->what() ) == "EXCEPTION" );
 

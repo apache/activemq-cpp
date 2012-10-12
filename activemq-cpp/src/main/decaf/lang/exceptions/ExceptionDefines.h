@@ -38,7 +38,7 @@
  */
 #define DECAF_CATCH_EXCEPTION_CONVERT( sourceType, targetType ) \
     catch( sourceType& ex ){ \
-        targetType target( &ex ); \
+        targetType target( ex.clone() ); \
         target.setMark( __FILE__, __LINE__ ); \
         throw target; \
     }

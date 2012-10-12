@@ -162,6 +162,9 @@ namespace commands {
         /**
          * Creates and returns a Decaf Exception object that contains the error data from the Broker.
          *
+         * The returned exception will if possible contain a cms::CMSException pointer that represents
+         * the actual JMS exception that was forwarded from the broker.
+         *
          * @return a new instance of a Decaf Exception
          */
         decaf::lang::Exception createExceptionObject();

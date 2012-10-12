@@ -160,7 +160,7 @@ namespace concurrent {
                     throw CancellationException();
                 }
                 if (exception != NULL) {
-                    throw ExecutionException(exception.get());
+                    throw ExecutionException(exception->clone());
                 }
                 return result;
             }
@@ -173,7 +173,7 @@ namespace concurrent {
                     throw CancellationException();
                 }
                 if (exception != NULL) {
-                    throw ExecutionException(exception.get());
+                    throw ExecutionException(exception->clone());
                 }
                 return result;
             }

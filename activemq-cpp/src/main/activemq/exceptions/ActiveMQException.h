@@ -48,7 +48,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose internal data is copied into this instance.
          */
-        ActiveMQException( const ActiveMQException& ex );
+        ActiveMQException(const ActiveMQException& ex);
 
         /**
          * Copy Constructor
@@ -56,7 +56,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose internal data is copied into this instance.
          */
-        ActiveMQException( const decaf::lang::Exception& ex );
+        ActiveMQException(const decaf::lang::Exception& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
