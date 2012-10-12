@@ -253,7 +253,7 @@ int InflaterInputStream::doReadArrayBounded( unsigned char* buffer, int size, in
                 }
 
                 IOException ex( __FILE__, __LINE__, "Error from Inflater" );
-                ex.initCause( &e );
+                ex.initCause(e.clone());
                 throw ex;
             }
 

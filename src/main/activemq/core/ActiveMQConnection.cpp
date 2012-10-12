@@ -307,8 +307,14 @@ namespace core{
             try {
                 cms::ExceptionListener* listener = this->connection->getExceptionListener();
                 if (listener != NULL) {
-                    ActiveMQException amqEx(ex);
-                    listener->onException(amqEx.convertToCMSException());
+
+                    const cms::CMSException* cause = dynamic_cast<const cms::CMSException*>(ex.getCause());
+                    if (cause != NULL) {
+                        listener->onException(*cause);
+                    } else {
+                        ActiveMQException amqEx(ex);
+                        listener->onException(amqEx.convertToCMSException());
+                    }
                 }
             } catch(Exception& ex) {}
         }
@@ -1178,21 +1184,22 @@ Pointer<Response> ActiveMQConnection::syncRequest(Pointer<Command> command, unsi
 
         if (exceptionResponse != NULL) {
 
-            // Create an exception to hold the error information.
-            BrokerException exception(__FILE__, __LINE__, exceptionResponse->getException().get());
+            Exception ex = exceptionResponse->getException()->createExceptionObject();
+            if (ex.getCause() != NULL) {
+                throw *(ex.getCause());
+            }
 
-            // Throw the exception.
-            throw exception;
+            throw BrokerException(__FILE__, __LINE__, exceptionResponse->getException()->getMessage().c_str());
         }
 
         return response;
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(cms::CMSException)
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(IOException, ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
