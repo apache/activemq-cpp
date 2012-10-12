@@ -45,7 +45,12 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerError::BrokerError() : BaseCommand(), message(), exceptionClass(), stackTraceElements(), cause() {
+BrokerError::BrokerError() : BaseCommand(), message(), exceptionClass(), stackTraceElements(), cause(), exCause() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+BrokerError::BrokerError(decaf::lang::Pointer<decaf::lang::Exception> exCause) :
+     BaseCommand(), message(), exceptionClass(), stackTraceElements(), cause(), exCause(exCause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,6 +71,7 @@ void BrokerError::copyDataStructure(const DataStructure* src) {
     this->setExceptionClass(srcErr->getExceptionClass());
     this->setStackTraceElements(srcErr->getStackTraceElements());
     this->setCause(srcErr->getCause());
+    this->setLocalException(srcErr->getLocalException());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +83,8 @@ Pointer<commands::Command> BrokerError::visit(activemq::state::CommandVisitor* v
 decaf::lang::Exception BrokerError::createExceptionObject() {
 
     StringTokenizer tokenizer(this->exceptionClass);
+
+
     std::string exceptionClass = this->exceptionClass;
 
     while (tokenizer.hasMoreTokens()) {
@@ -114,7 +122,11 @@ decaf::lang::Exception BrokerError::createExceptionObject() {
     } else if (exceptionClass == "UnsupportedOperationException") {
         cause = new cms::UnsupportedOperationException(this->message);
     } else {
-        cause = new cms::CMSException(this->message);
+        if (exCause != NULL) {
+            cause = new cms::CMSException(this->message);
+        } else {
+            cause = new cms::CMSException(this->exCause->getMessage());
+        }
     }
 
     // Wrap in a Decaf exception to carry the pointer until it can be
