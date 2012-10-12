@@ -53,10 +53,13 @@ namespace commands {
         std::string exceptionClass;
         std::vector< decaf::lang::Pointer<StackTraceElement> > stackTraceElements;
         decaf::lang::Pointer<BrokerError> cause;
+        decaf::lang::Pointer<decaf::lang::Exception> exCause;
 
     public:
 
         BrokerError();
+
+        BrokerError(decaf::lang::Pointer<decaf::lang::Exception> exCause);
 
         virtual ~BrokerError();
 
@@ -157,6 +160,23 @@ namespace commands {
          */
         virtual void setStackTraceElements(const std::vector<decaf::lang::Pointer<StackTraceElement> >& stackTraceElements) {
             this->stackTraceElements = stackTraceElements;
+        }
+
+        /**
+         * @returns the local Exception that was the source of this BrokerError instance
+         */
+        decaf::lang::Pointer<decaf::lang::Exception> getLocalException() const {
+            return this->exCause;
+        }
+
+        /**
+         * Sets the Pointer to the local exception that is the source of this Error
+         *
+         * @param exCause
+         *      The Exception that originated this BrokerError.
+         */
+        void setLocalException(decaf::lang::Pointer<decaf::lang::Exception> exCause) {
+            this->exCause = exCause;
         }
 
         /**

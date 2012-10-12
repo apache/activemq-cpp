@@ -139,8 +139,6 @@ void ResponseCorrelator::oneway(const Pointer<Command> command) {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<FutureResponse> ResponseCorrelator::asyncRequest(const Pointer<Command> command, const Pointer<ResponseCallback> responseCallback) {
 
-    throw UnsupportedOperationException(__FILE__, __LINE__, "Not yet ready for use.");
-
     try {
 
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
@@ -159,7 +157,13 @@ Pointer<FutureResponse> ResponseCorrelator::asyncRequest(const Pointer<Command> 
         }
 
         if (priorError != NULL) {
-            //futureResponse->setResponse(new ExceptionResponse(priorError));
+
+            Pointer<commands::BrokerError> exception(new commands::BrokerError(priorError));
+            Pointer<commands::ExceptionResponse> response(new commands::ExceptionResponse);
+            response->setException(exception);
+
+            futureResponse->setResponse(response);
+
             throw IOException(__FILE__, __LINE__, this->impl->priorError->getMessage().c_str());
         }
 
