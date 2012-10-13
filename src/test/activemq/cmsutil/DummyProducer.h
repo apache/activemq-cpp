@@ -54,72 +54,35 @@ namespace cmsutil {
         virtual void close() {
         }
 
-        /**
-         * Sends the message to the default producer destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         * Uses default values for deliveryMode, priority, and time to live.
-         *
-         * @param message
-         *      The message to be sent.
-         * @throws cms::CMSException
-         */
-        virtual void send(cms::Message* message) throw (cms::CMSException) {
+        virtual void send(cms::Message* message) {
             send(message, deliveryMode, priority, ttl);
         }
 
-        /**
-         * Sends the message to the default producer destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         *
-         * @param message
-         *      The message to be sent.
-         * @param deliveryMode
-         *      The delivery mode to be used.
-         * @param priority
-         *      The priority for this message.
-         * @param timeToLive
-         *      The time to live value for this message in milliseconds.
-         * @throws cms::CMSException
-         */
-        virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive) throw (cms::CMSException) {
+        virtual void send(cms::Message* message, cms::AsyncCallback* onComplate) {
+            send(message, deliveryMode, priority, ttl, onComplate);
+        }
 
+        virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive) {
             send(dest, message, deliveryMode, priority, timeToLive);
         }
 
-        /**
-         * Sends the message to the designated destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         * Uses default values for deliveryMode, priority, and time to live.
-         *
-         * @param destination
-         *      The destination on which to send the message
-         * @param message
-         *      the message to be sent.
-         * @throws cms::CMSException
-         */
-        virtual void send(const cms::Destination* destination, cms::Message* message) throw (cms::CMSException) {
+        virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* onComplete) {
+            send(dest, message, deliveryMode, priority, timeToLive, onComplete);
+        }
+
+        virtual void send(const cms::Destination* destination, cms::Message* message) {
             send(dest, message, deliveryMode, priority, ttl);
         }
 
-        /**
-         * Sends the message to the designated destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         *
-         * @param destination
-         *      The destination on which to send the message
-         * @param message
-         *      The message to be sent.
-         * @param deliveryMode
-         *      The delivery mode to be used.
-         * @param priority
-         *      The priority for this message.
-         * @param timeToLive
-         *      The time to live value for this message in milliseconds.
-         * @throws cms::CMSException
-         */
-        virtual void send(const cms::Destination* destination, cms::Message* message, int deliveryMode, int priority, long long timeToLive)
-            throw (cms::CMSException) {
+        virtual void send(const cms::Destination* destination, cms::Message* message, cms::AsyncCallback* onComplete) {
+            send(dest, message, deliveryMode, priority, ttl, onComplete);
+        }
 
+        virtual void send(const cms::Destination* destination, cms::Message* message, int deliveryMode, int priority, long long timeToLive) {
+            messageContext->send(destination, message, deliveryMode, priority, timeToLive);
+        }
+
+        virtual void send(const cms::Destination* destination, cms::Message* message, int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* onComplete) {
             messageContext->send(destination, message, deliveryMode, priority, timeToLive);
         }
 

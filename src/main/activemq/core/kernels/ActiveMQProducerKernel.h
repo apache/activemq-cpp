@@ -118,12 +118,21 @@ namespace kernels {
 
         virtual void send(cms::Message* message);
 
+        virtual void send(cms::Message* message, cms::AsyncCallback* callback);
+
         virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive);
+
+        virtual void send(cms::Message* message, int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* callback);
 
         virtual void send(const cms::Destination* destination, cms::Message* message);
 
+        virtual void send(const cms::Destination* destination, cms::Message* message, cms::AsyncCallback* callback);
+
         virtual void send(const cms::Destination* destination, cms::Message* message,
                           int deliveryMode, int priority, long long timeToLive);
+
+        virtual void send(const cms::Destination* destination, cms::Message* message,
+                          int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* callback);
 
         /**
          * Set an MessageTransformer instance that is applied to all cms::Message objects before they

@@ -19,6 +19,7 @@
 #define _CMS_MESSAGEPRODUCER_H_
 
 #include <cms/Config.h>
+#include <cms/AsyncCallback.h>
 #include <cms/Message.h>
 #include <cms/Destination.h>
 #include <cms/Closeable.h>
@@ -62,9 +63,9 @@ namespace cms{
         virtual ~MessageProducer();
 
         /**
-         * Sends the message to the default producer destination, but does
-         * not take ownership of the message, caller must still destroy it.
-         * Uses default values for deliveryMode, priority, and time to live.
+         * Sends the message to the default producer destination, but does not take ownership
+         * of the message, caller must still destroy it.  Uses default values for deliveryMode,
+         * priority, and time to live.
          *
          * @param message
          *      The message to be sent.
@@ -77,6 +78,29 @@ namespace cms{
          *         MessageProducer that did not specify a destination at creation time.
          */
         virtual void send(Message* message) = 0;
+
+        /**
+         * Sends the message to the default producer destination, but does not take ownership
+         * of the message, caller must still destroy it.  Uses default values for deliveryMode,
+         * priority, and time to live.  If the AsyncCallback parameter is set this method will
+         * return immediately and the call-back will be notified once the CMS Provider as
+         * acknowledge receipt of the Message or an Error occurs.
+         *
+         * @param message
+         *      The message to be sent.
+         * @param onComplete
+         *      The AsyncCallback instance to notify on send complete or error, caller
+         *      retains ownership of this pointer and must destroy it only after the
+         *      send completes or the connection is closed.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send(Message* message, AsyncCallback* onComplete) = 0;
 
         /**
          * Sends the message to the default producer destination, but does
@@ -101,6 +125,35 @@ namespace cms{
         virtual void send(Message* message, int deliveryMode, int priority, long long timeToLive) = 0;
 
         /**
+         * Sends the message to the default producer destination, but does not take ownership
+         * of the message, caller must still destroy it.  If the AsyncCallback parameter is set
+         * this method will return immediately and the call-back will be notified once the CMS
+         * Provider as acknowledge receipt of the Message or an Error occurs.
+         *
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         * @param onComplete
+         *      The AsyncCallback instance to notify on send complete or error, caller
+         *      retains ownership of this pointer and must destroy it only after the
+         *      send completes or the connection is closed.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send(Message* message, int deliveryMode, int priority,
+                          long long timeToLive, AsyncCallback* onComplete) = 0;
+
+        /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
          * Uses default values for deliveryMode, priority, and time to live.
@@ -120,8 +173,33 @@ namespace cms{
         virtual void send(const Destination* destination, Message* message) = 0;
 
         /**
-         * Sends the message to the designated destination, but does
-         * not take ownership of the message, caller must still destroy it.
+         * Sends the message to the designated destination, but does not take ownership of the
+         * message, caller must still destroy it.  Uses default values for deliveryMode, priority,
+         * and time to live.  If the AsyncCallback parameter is set this method will return
+         * immediately and the call-back will be notified once the CMS Provider as acknowledge
+         * receipt of the Message or an Error occurs.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      the message to be sent.
+         * @param onComplete
+         *      The AsyncCallback instance to notify on send complete or error, caller
+         *      retains ownership of this pointer and must destroy it only after the
+         *      send completes or the connection is closed.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send(const Destination* destination, Message* message, AsyncCallback* onComplete) = 0;
+
+        /**
+         * Sends the message to the designated destination, but does not take ownership
+         * of the message, caller must still destroy it.
          *
          * @param destination
          *      The destination on which to send the message
@@ -143,6 +221,37 @@ namespace cms{
          */
         virtual void send(const Destination* destination, Message* message,
                           int deliveryMode, int priority, long long timeToLive) = 0;
+
+        /**
+         * Sends the message to the designated destination, but does not take ownership
+         * of the message, caller must still destroy it.  If the AsyncCallback parameter
+         * is set this method will return immediately and the call-back will be notified
+         * once the CMS Provider as acknowledge receipt of the Message or an Error occurs.
+         *
+         * @param destination
+         *      The destination on which to send the message
+         * @param message
+         *      The message to be sent.
+         * @param deliveryMode
+         *      The delivery mode to be used.
+         * @param priority
+         *      The priority for this message.
+         * @param timeToLive
+         *      The time to live value for this message in milliseconds.
+         * @param onComplete
+         *      The AsyncCallback instance to notify on send complete or error, caller
+         *      retains ownership of this pointer and must destroy it only after the
+         *      send completes or the connection is closed.
+         *
+         * @throws CMSException - if an internal error occurs while sending the message.
+         * @throws MessageFormatException - if an Invalid Message is given.
+         * @throws InvalidDestinationException - if a client uses this method with a
+         *         MessageProducer with an invalid destination.
+         * @throws UnsupportedOperationException - if a client uses this method with a
+         *         MessageProducer that did not specify a destination at creation time.
+         */
+        virtual void send(const Destination* destination, Message* message, int deliveryMode,
+                          int priority, long long timeToLive, AsyncCallback* onComplete) = 0;
 
         /**
          * Sets the delivery mode for this Producer

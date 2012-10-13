@@ -135,7 +135,17 @@ void ActiveMQProducerKernel::send(cms::Message* message) {
 
     try {
         this->checkClosed();
-        this->send(this->destination.get(), message);
+        this->send(this->destination.get(), message, defaultDeliveryMode, defaultPriority, defaultTimeToLive, NULL);
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducerKernel::send(cms::Message* message, cms::AsyncCallback* callback) {
+
+    try {
+        this->checkClosed();
+        this->send(this->destination.get(), message, defaultDeliveryMode, defaultPriority, defaultTimeToLive, callback);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -145,7 +155,17 @@ void ActiveMQProducerKernel::send(cms::Message* message, int deliveryMode, int p
 
     try {
         this->checkClosed();
-        this->send(this->destination.get(), message, deliveryMode, priority, timeToLive);
+        this->send(this->destination.get(), message, deliveryMode, priority, timeToLive, NULL);
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducerKernel::send(cms::Message* message, int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* callback) {
+
+    try {
+        this->checkClosed();
+        this->send(this->destination.get(), message, deliveryMode, priority, timeToLive, callback);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -155,7 +175,17 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
 
     try {
         this->checkClosed();
-        this->send(destination, message, defaultDeliveryMode, defaultPriority, defaultTimeToLive);
+        this->send(destination, message, defaultDeliveryMode, defaultPriority, defaultTimeToLive, NULL);
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Message* message, cms::AsyncCallback* callback) {
+
+    try {
+        this->checkClosed();
+        this->send(destination, message, defaultDeliveryMode, defaultPriority, defaultTimeToLive, callback);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -163,6 +193,17 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Message* message,
                                   int deliveryMode, int priority, long long timeToLive) {
+
+    try {
+        this->checkClosed();
+        this->send(destination, message, deliveryMode, priority, timeToLive, NULL);
+    }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Message* message,
+                                  int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* callback) {
 
     try {
 
