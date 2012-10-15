@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_
-#define ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_
+#ifndef _ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_
+#define _ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_
 
 #include <cms/MessageConsumer.h>
 #include <activemq/cmsutil/MessageContext.h>
@@ -24,11 +24,12 @@
 namespace activemq {
 namespace cmsutil {
 
-    class DummyConsumer : public cms::MessageConsumer {
+    class DummyConsumer: public cms::MessageConsumer {
     private:
 
         std::string selector;
         cms::MessageListener* listener;
+        cms::MessageAvailableListener* messageAvailableListener;
         cms::MessageTransformer* transformer;
         MessageContext* messageContext;
         const cms::Destination* dest;
@@ -44,36 +45,48 @@ namespace cmsutil {
             this->listener = NULL;
             this->transformer = NULL;
         }
-        virtual ~DummyConsumer() {}
 
-        virtual void close() {}
+        virtual ~DummyConsumer() {
+        }
 
-        virtual void start() {}
+        virtual void close() {
+        }
 
-        virtual void stop() {}
+        virtual void start() {
+        }
 
-        virtual cms::Message* receive() throw ( cms::CMSException ) {
+        virtual void stop() {
+        }
+
+        virtual cms::Message* receive() {
             return messageContext->receive(dest, selector, noLocal, 0);
         }
 
-        virtual cms::Message* receive( int millisecs ) throw ( cms::CMSException ) {
+        virtual cms::Message* receive(int millisecs) {
             return messageContext->receive(dest, selector, noLocal, millisecs);
         }
 
-        virtual cms::Message* receiveNoWait() throw ( cms::CMSException ) {
+        virtual cms::Message* receiveNoWait() {
             return messageContext->receive(dest, selector, noLocal, -1);
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) throw ( cms::CMSException ) {
+        virtual void setMessageListener(cms::MessageListener* listener) {
             this->listener = listener;
         }
 
-        virtual cms::MessageListener* getMessageListener() const throw ( cms::CMSException ) {
+        virtual cms::MessageListener* getMessageListener() const {
             return listener;
         }
 
-        virtual std::string getMessageSelector() const
-            throw ( cms::CMSException ) {
+        virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener) {
+            messageAvailableListener = listener;
+        }
+
+        virtual cms::MessageAvailableListener* getMessageAvailableListener() const {
+            return messageAvailableListener;
+        }
+
+        virtual std::string getMessageSelector() const {
             return selector;
         }
 
@@ -89,4 +102,4 @@ namespace cmsutil {
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_DUMMYCONSUMER_H_*/

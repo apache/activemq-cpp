@@ -76,6 +76,7 @@ namespace kernels {
     public:
 
         cms::MessageListener* listener;
+        cms::MessageAvailableListener* messageAvailableListener;
         cms::MessageTransformer* transformer;
         decaf::util::concurrent::Mutex listenerMutex;
         AtomicBoolean deliveringAcks;
@@ -95,6 +96,7 @@ namespace kernels {
         Pointer<Scheduler> scheduler;
 
         ActiveMQConsumerKernelConfig() : listener(NULL),
+                                         messageAvailableListener(NULL),
                                          transformer(NULL),
                                          listenerMutex(),
                                          deliveringAcks(),
@@ -1111,6 +1113,9 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                         // No listener, add it to the unconsumed messages list it will get pushed on the
                         // next receive call or when a new listener is added.
                         this->internal->unconsumedMessages->enqueue(dispatch);
+                        if (this->internal->messageAvailableListener != NULL) {
+                            this->internal->messageAvailableListener->onMessageAvailable(this);
+                        }
                     }
                 }
             }
@@ -1399,4 +1404,14 @@ void ActiveMQConsumerKernel::setPrefetchSize(int prefetchSize) {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQConsumerKernel::isInUse(Pointer<ActiveMQDestination> destination) const {
     return this->consumerInfo->getDestination()->equals(destination.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumerKernel::setMessageAvailableListener(cms::MessageAvailableListener* listener) {
+    this->internal->messageAvailableListener = listener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageAvailableListener* ActiveMQConsumerKernel::getMessageAvailableListener() const {
+    return this->internal->messageAvailableListener;
 }

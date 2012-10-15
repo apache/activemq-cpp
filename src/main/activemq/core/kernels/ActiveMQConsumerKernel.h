@@ -19,6 +19,7 @@
 
 #include <cms/MessageConsumer.h>
 #include <cms/MessageListener.h>
+#include <cms/MessageAvailableListener.h>
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
@@ -101,6 +102,10 @@ namespace kernels {
         virtual void setMessageListener(cms::MessageListener* listener);
 
         virtual cms::MessageListener* getMessageListener() const;
+
+        virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener);
+
+        virtual cms::MessageAvailableListener* getMessageAvailableListener() const;
 
         virtual std::string getMessageSelector() const;
 

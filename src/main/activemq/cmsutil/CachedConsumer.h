@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_
-#define ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_
+#ifndef _ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_
+#define _ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_
 
 #include <cms/MessageConsumer.h>
 #include <activemq/util/Config.h>
@@ -27,20 +27,19 @@ namespace cmsutil {
     /**
      * A cached message consumer contained within a pooled session.
      */
-    class AMQCPP_API CachedConsumer : public cms::MessageConsumer {
+    class AMQCPP_API CachedConsumer: public cms::MessageConsumer {
     private:
 
         cms::MessageConsumer* consumer;
 
     private:
 
-        CachedConsumer( const CachedConsumer& );
-        CachedConsumer& operator= ( const CachedConsumer& );
+        CachedConsumer(const CachedConsumer&);
+        CachedConsumer& operator=(const CachedConsumer&);
 
     public:
 
-        CachedConsumer( cms::MessageConsumer* consumer ) : consumer( consumer ) {
-        }
+        CachedConsumer(cms::MessageConsumer* consumer) : consumer(consumer) {}
 
         virtual ~CachedConsumer() {}
 
@@ -64,7 +63,7 @@ namespace cmsutil {
             return consumer->receive();
         }
 
-        virtual cms::Message* receive( int millisecs ) {
+        virtual cms::Message* receive(int millisecs) {
             return consumer->receive(millisecs);
         }
 
@@ -72,8 +71,8 @@ namespace cmsutil {
             return consumer->receiveNoWait();
         }
 
-        virtual void setMessageListener( cms::MessageListener* listener ) {
-            consumer->setMessageListener( listener );
+        virtual void setMessageListener(cms::MessageListener* listener) {
+            consumer->setMessageListener(listener);
         }
 
         virtual cms::MessageListener* getMessageListener() const {
@@ -82,6 +81,14 @@ namespace cmsutil {
 
         virtual std::string getMessageSelector() const {
             return consumer->getMessageSelector();
+        }
+
+        virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener) {
+            consumer->setMessageAvailableListener(listener);
+        }
+
+        virtual cms::MessageAvailableListener* getMessageAvailableListener() const {
+            return consumer->getMessageAvailableListener();
         }
 
         virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
@@ -96,4 +103,4 @@ namespace cmsutil {
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_*/

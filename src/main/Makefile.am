@@ -265,6 +265,7 @@ cc_sources = \
     cms/InvalidSelectorException.cpp \
     cms/MapMessage.cpp \
     cms/Message.cpp \
+    cms/MessageAvailableListener.cpp \
     cms/MessageConsumer.cpp \
     cms/MessageEOFException.cpp \
     cms/MessageEnumeration.cpp \
@@ -805,6 +806,7 @@ h_sources = \
     cms/InvalidSelectorException.h \
     cms/MapMessage.h \
     cms/Message.h \
+    cms/MessageAvailableListener.h \
     cms/MessageConsumer.h \
     cms/MessageEOFException.h \
     cms/MessageEnumeration.h \

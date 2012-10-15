@@ -79,6 +79,10 @@ namespace core{
 
         virtual cms::MessageListener* getMessageListener() const;
 
+        virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener);
+
+        virtual cms::MessageAvailableListener* getMessageAvailableListener() const;
+
         virtual std::string getMessageSelector() const;
 
         virtual void setMessageTransformer(cms::MessageTransformer* transformer);
