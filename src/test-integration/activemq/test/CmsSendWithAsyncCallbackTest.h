@@ -15,15 +15,27 @@
  * limitations under the License.
  */
 
-#include "ResponseCallback.h"
+#ifndef _ACTIVEMQ_TEST_CMSSENDWITHASYNCCALLBACKTEST_H_
+#define _ACTIVEMQ_TEST_CMSSENDWITHASYNCCALLBACKTEST_H_
 
-using namespace activemq;
-using namespace activemq::transport;
+#include <activemq/test/CMSTestFixture.h>
 
-////////////////////////////////////////////////////////////////////////////////
-ResponseCallback::ResponseCallback() {
-}
+namespace activemq {
+namespace test {
 
-////////////////////////////////////////////////////////////////////////////////
-ResponseCallback::~ResponseCallback() {
-}
+    class CmsSendWithAsyncCallbackTest : public CMSTestFixture {
+    public:
+
+        CmsSendWithAsyncCallbackTest();
+        virtual ~CmsSendWithAsyncCallbackTest();
+
+        void testAsyncCallbackIsFaster();
+
+        virtual void setUp();
+        virtual void tearDown();
+
+    };
+
+}}
+
+#endif /* _ACTIVEMQ_TEST_CMSSENDWITHASYNCCALLBACKTEST_H_ */

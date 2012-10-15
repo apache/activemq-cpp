@@ -877,7 +877,7 @@ bool ActiveMQSessionKernel::isTransacted() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::send(kernels::ActiveMQProducerKernel* producer, Pointer<commands::ActiveMQDestination> destination,
                                  cms::Message* message, int deliveryMode, int priority, long long timeToLive,
-                                 util::MemoryUsage* producerWindow, long long sendTimeout) {
+                                 util::MemoryUsage* producerWindow, long long sendTimeout, cms::AsyncCallback* onComplete) {
 
     try {
 
@@ -955,17 +955,22 @@ void ActiveMQSessionKernel::send(kernels::ActiveMQProducerKernel* producer, Poin
             amqMessage->onSend();
             amqMessage->setProducerId(producerId);
 
-            if (sendTimeout <= 0 && !amqMessage->isResponseRequired() && !this->connection->isAlwaysSyncSend() &&
+            if (onComplete == NULL && sendTimeout <= 0 && !amqMessage->isResponseRequired() && !this->connection->isAlwaysSyncSend() &&
                 (!amqMessage->isPersistent() || this->connection->isUseAsyncSend() || amqMessage->getTransactionId() != NULL)) {
+
+                // No Response Required, send is asynchronous.
+                this->connection->oneway(amqMessage);
 
                 if (producerWindow != NULL) {
                     producerWindow->enqueueUsage(amqMessage->getSize());
                 }
 
-                // No Response Required, send is asynchronous.
-                this->connection->oneway(amqMessage);
             } else {
-                this->connection->syncRequest(amqMessage, (unsigned int)sendTimeout);
+                if (sendTimeout > 0 && onComplete == NULL) {
+                    this->connection->syncRequest(amqMessage, (unsigned int)sendTimeout);
+                } else {
+                    this->connection->asyncRequest(amqMessage, onComplete);
+                }
             }
         }
     }

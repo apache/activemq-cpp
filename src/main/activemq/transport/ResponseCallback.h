@@ -37,6 +37,7 @@ namespace transport {
 
     public:
 
+        ResponseCallback();
         virtual ~ResponseCallback();
 
     public:

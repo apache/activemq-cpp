@@ -167,21 +167,13 @@ Pointer<FutureResponse> ResponseCorrelator::asyncRequest(const Pointer<Command> 
             throw IOException(__FILE__, __LINE__, this->impl->priorError->getMessage().c_str());
         }
 
-        // The finalizer will cleanup the map even if an exception is thrown.
-        ResponseFinalizer finalizer(&this->impl->mapMutex, command->getCommandId(), &this->impl->requestMap);
-
-        // Wait to be notified of the response via the futureResponse object.
-        Pointer<commands::Response> response;
-
         // Send the request.
-        next->oneway(command);
-
-        // Get the response.
-        response = futureResponse->getResponse();
-
-        if (response == NULL) {
-            throw IOException(__FILE__, __LINE__,
-                "No valid response received for command: %s, check broker.", command->toString().c_str());
+        try {
+            next->oneway(command);
+        } catch (Exception &ex) {
+            // We have to ensure this gets cleaned out otherwise we can consume memory over time.
+            this->impl->requestMap.erase(command->getCommandId());
+            throw;
         }
 
         return futureResponse;

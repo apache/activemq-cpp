@@ -19,6 +19,7 @@ cc_sources = \
     TestRegistry.cpp \
     activemq/test/AsyncSenderTest.cpp \
     activemq/test/CmsConnectionStartStopTest.cpp \
+    activemq/test/CmsSendWithAsyncCallbackTest.cpp \
     activemq/test/CmsTemplateTest.cpp \
     activemq/test/DurableTest.cpp \
     activemq/test/ExpirationTest.cpp \
@@ -32,6 +33,7 @@ cc_sources = \
     activemq/test/SlowListenerTest.cpp \
     activemq/test/TransactionTest.cpp \
     activemq/test/VirtualTopicTest.cpp \
+    activemq/test/openwire/OpenWireCmsSendWithAsyncCallbackTest.cpp \
     activemq/test/openwire/OpenwireAdvisorysTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireClientAckTest.cpp \
@@ -74,6 +76,7 @@ h_sources = \
     activemq/test/AsyncSenderTest.h \
     activemq/test/CMSTestFixture.h \
     activemq/test/CmsConnectionStartStopTest.h \
+    activemq/test/CmsSendWithAsyncCallbackTest.h \
     activemq/test/CmsTemplateTest.h \
     activemq/test/DurableTest.h \
     activemq/test/ExpirationTest.h \
@@ -87,6 +90,7 @@ h_sources = \
     activemq/test/SlowListenerTest.h \
     activemq/test/TransactionTest.h \
     activemq/test/VirtualTopicTest.h \
+    activemq/test/openwire/OpenWireCmsSendWithAsyncCallbackTest.h \
     activemq/test/openwire/OpenwireAdvisorysTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireClientAckTest.h \

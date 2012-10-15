@@ -667,6 +667,20 @@ namespace core{
         Pointer<commands::Response> syncRequest(Pointer<commands::Command> command, unsigned int timeout = 0);
 
         /**
+         * Sends a synchronous request and returns the response from the broker.  This
+         * method converts any error responses it receives into an exception.
+         *
+         * @param command
+         *      The Command object that is to be sent to the broker.
+         * @param onComplete
+         *      Completion callback that will be notified on send success or failure.
+         *
+         * @throws BrokerException if the response from the broker is of type ExceptionResponse.
+         * @throws ActiveMQException if any other error occurs while sending the Command.
+         */
+        void asyncRequest(Pointer<commands::Command> command, cms::AsyncCallback* onComplete);
+
+        /**
          * Notify the exception listener
          * @param ex the exception to fire
          */

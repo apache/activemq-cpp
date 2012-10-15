@@ -275,7 +275,7 @@ namespace kernels {
          */
         void send(kernels::ActiveMQProducerKernel* producer, Pointer<commands::ActiveMQDestination> destination,
                   cms::Message* message, int deliveryMode, int priority, long long timeToLive,
-                  util::MemoryUsage* producerWindow, long long sendTimeout);
+                  util::MemoryUsage* producerWindow, long long sendTimeout, cms::AsyncCallback* onComplete);
 
         /**
          * This method gets any registered exception listener of this sessions
