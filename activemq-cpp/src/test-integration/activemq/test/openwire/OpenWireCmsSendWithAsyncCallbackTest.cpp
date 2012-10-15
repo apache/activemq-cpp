@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-#include "ResponseCallback.h"
+#include "OpenWireCmsSendWithAsyncCallbackTest.h"
 
 using namespace activemq;
-using namespace activemq::transport;
+using namespace activemq::test;
+using namespace activemq::test::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCallback::ResponseCallback() {
+OpenWireCmsSendWithAsyncCallbackTest::OpenWireCmsSendWithAsyncCallbackTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCallback::~ResponseCallback() {
+OpenWireCmsSendWithAsyncCallbackTest::~OpenWireCmsSendWithAsyncCallbackTest() {
 }
+

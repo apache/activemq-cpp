@@ -32,6 +32,7 @@
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/IdGenerator.h>
 #include <activemq/transport/failover/FailoverTransport.h>
+#include <activemq/transport/ResponseCallback.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Boolean.h>
@@ -361,6 +362,43 @@ namespace core{
                     }
                 }
             } catch(Exception& ex) {}
+        }
+    };
+
+    class AsyncResponseCallback : public ResponseCallback {
+    private:
+
+        ConnectionConfig* config;
+        cms::AsyncCallback* callback;
+
+    public:
+
+        AsyncResponseCallback(ConnectionConfig* config, cms::AsyncCallback* callback) :
+            ResponseCallback(), config(config), callback(callback) {
+
+        }
+
+        virtual ~AsyncResponseCallback() {
+        }
+
+        virtual void onComplete(Pointer<commands::Response> response) {
+
+            commands::ExceptionResponse* exceptionResponse =
+                dynamic_cast<ExceptionResponse*> (response.get());
+
+            if (exceptionResponse != NULL) {
+
+                Exception ex = exceptionResponse->getException()->createExceptionObject();
+                const cms::CMSException* cmsError = dynamic_cast<const cms::CMSException*>(ex.getCause());
+                if (cmsError != NULL) {
+                    this->callback->onException(*cmsError);
+                } else {
+                    BrokerException error = BrokerException(__FILE__, __LINE__, exceptionResponse->getException()->getMessage().c_str());
+                    this->callback->onException(error.convertToCMSException());
+                }
+            } else {
+                this->callback->onSuccess();
+            }
         }
     };
 
@@ -1193,6 +1231,29 @@ Pointer<Response> ActiveMQConnection::syncRequest(Pointer<Command> command, unsi
         }
 
         return response;
+    }
+    AMQ_CATCH_RETHROW(cms::CMSException)
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(IOException, ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::asyncRequest(Pointer<Command> command, cms::AsyncCallback* onComplete) {
+
+    try {
+
+        if (onComplete == NULL) {
+            this->syncRequest(command);
+            return;
+        }
+
+        checkClosedOrFailed();
+
+        Pointer<ResponseCallback> callback(new AsyncResponseCallback(this->config, onComplete));
+        this->config->transport->asyncRequest(command, callback);
     }
     AMQ_CATCH_RETHROW(cms::CMSException)
     AMQ_CATCH_RETHROW(ActiveMQException)

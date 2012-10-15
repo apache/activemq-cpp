@@ -203,7 +203,7 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Message* message,
-                                  int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* callback) {
+                                  int deliveryMode, int priority, long long timeToLive, cms::AsyncCallback* onComplete) {
 
     try {
 
@@ -265,7 +265,7 @@ void ActiveMQProducerKernel::send(const cms::Destination* destination, cms::Mess
         }
 
         this->session->send(this, dest, outbound, deliveryMode, priority, timeToLive,
-                            this->memoryUsage.get(), this->sendTimeout);
+                            this->memoryUsage.get(), this->sendTimeout, onComplete);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
