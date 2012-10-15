@@ -1534,6 +1534,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\MessageAvailableListener.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\MessageAvailableListener.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\MessageConsumer.cpp"
 				>
 			</File>

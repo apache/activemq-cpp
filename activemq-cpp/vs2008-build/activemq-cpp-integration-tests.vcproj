@@ -749,6 +749,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test-integration\activemq\test\CmsTemplateTest.cpp"
 						>
 					</File>
@@ -889,6 +897,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireCmsConnectionStartStopTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.h"
 							>
 						</File>
 						<File
