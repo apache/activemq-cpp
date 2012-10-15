@@ -20,6 +20,7 @@
 
 #include <cms/Config.h>
 #include <cms/MessageListener.h>
+#include <cms/MessageAvailableListener.h>
 #include <cms/Message.h>
 #include <cms/Closeable.h>
 #include <cms/Startable.h>
@@ -141,6 +142,27 @@ namespace cms{
          * @returns the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const = 0;
+
+        /**
+         * Sets the MessageAvailableListener that this class will send events to if the consumer
+         * is in synchronous consumption mode and a new Message has arrived.
+         *
+         * @param listener
+         *      The listener of new message events fired by this consumer.
+         *
+         * @throws CMSException - If an internal error occurs.
+         */
+        virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener) = 0;
+
+        /**
+         * Gets the MessageAvailableListener that this class will send mew Message
+         * notification events to.
+         *
+         * @return The listener of message events received by this consumer.
+         *
+         * @throws CMSException - If an internal error occurs.
+         */
+        virtual cms::MessageAvailableListener* getMessageAvailableListener() const = 0;
 
     };
 

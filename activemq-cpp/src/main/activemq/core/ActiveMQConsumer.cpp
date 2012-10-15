@@ -199,3 +199,13 @@ void ActiveMQConsumer::setMessageTransformer(cms::MessageTransformer* transforme
 cms::MessageTransformer* ActiveMQConsumer::getMessageTransformer() const {
     return this->config->kernel->getMessageTransformer();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::setMessageAvailableListener(cms::MessageAvailableListener* listener) {
+    this->config->kernel->setMessageAvailableListener(listener);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageAvailableListener* ActiveMQConsumer::getMessageAvailableListener() const {
+    return this->config->kernel->getMessageAvailableListener();
+}
