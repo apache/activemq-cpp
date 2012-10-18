@@ -75,6 +75,9 @@
         #ifndef HAVE_PROCESS_H
             #define HAVE_PROCESS_H
         #endif
+        #ifdef _NATIVE_WCHAR_T_DEFINED
+            #define HAVE_WCHAR_T
+        #endif
 
         #if defined(_MSC_VER) && _MSC_VER >= 1400
             #ifndef _CRT_SECURE_NO_DEPRECATE

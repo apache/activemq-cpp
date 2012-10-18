@@ -63,12 +63,14 @@ namespace util {
         }
     };
 
+    #if defined(HAVE_WCHAR_T)
     template<>
     struct HashCode<unsigned char> : public std::unary_function<unsigned char, int> {
         int operator()(unsigned char arg) const {
             return (int) arg;
         }
     };
+    #endif
 
     template<>
     struct HashCode<char> : public std::unary_function<char, int> {
