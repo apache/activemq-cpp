@@ -32,7 +32,7 @@ namespace cmsutil {
     class AMQCPP_API DestinationResolver {
     public:
 
-        virtual ~DestinationResolver() {}
+        virtual ~DestinationResolver();
 
         /**
          * Initializes this destination resolver for use.  Ensures that any
@@ -42,7 +42,7 @@ namespace cmsutil {
          * @param mgr
          *      the resource lifecycle manager.
          */
-        virtual void init( ResourceLifecycleManager* mgr ) = 0;
+        virtual void init(ResourceLifecycleManager* mgr) = 0;
 
         /**
          * Destroys any allocated resources.
@@ -67,9 +67,9 @@ namespace cmsutil {
          *
          * @throws cms::CMSException if resolution failed.
          */
-        virtual cms::Destination* resolveDestinationName( cms::Session* session,
-                                                          const std::string& destName,
-                                                          bool pubSubDomain ) = 0;
+        virtual cms::Destination* resolveDestinationName(cms::Session* session,
+                                                         const std::string& destName,
+                                                         bool pubSubDomain) = 0;
 
     };
 

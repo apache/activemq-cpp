@@ -25,54 +25,54 @@ using namespace cms;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic( const std::string& topicName ) {
+cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(const std::string& topicName) {
 
     cms::Topic* topic = NULL;
     try {
 
         // See if we already have a topic with this name.
-        topic = topicMap.get( topicName );
+        topic = topicMap.get(topicName);
 
-    } catch ( decaf::util::NoSuchElementException& ex ) {
+    } catch (decaf::util::NoSuchElementException& ex) {
 
         // Create a new topic.
-        topic = session->createTopic( topicName );
+        topic = session->createTopic(topicName);
 
         // Add the topic to the lifecycle manager.
-        resourceLifecycleManager->addDestination( topic );
+        resourceLifecycleManager->addDestination(topic);
 
         // Add the topic to the map.
-        topicMap.put( topicName, topic );
+        topicMap.put(topicName, topic);
     }
     return topic;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue( const std::string& queueName ) {
+cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(const std::string& queueName) {
 
     cms::Queue* queue = NULL;
     try {
 
         // See if we already have a queue with this name.
-        queue = queueMap.get( queueName );
+        queue = queueMap.get(queueName);
 
-    } catch ( decaf::util::NoSuchElementException& ex ) {
+    } catch (decaf::util::NoSuchElementException& ex) {
 
         // Create a new queue.
-        queue = session->createQueue( queueName );
+        queue = session->createQueue(queueName);
 
         // Add the queue to the lifecycle manager.
-        resourceLifecycleManager->addDestination( queue );
+        resourceLifecycleManager->addDestination(queue);
 
         // Add the queue to the map.
-        queueMap.put( queueName, queue );
+        queueMap.put(queueName, queue);
     }
     return queue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DynamicDestinationResolver::DynamicDestinationResolver()
-    : DestinationResolver(), sessionResolverMap(), resourceLifecycleManager( NULL ) {
+DynamicDestinationResolver::DynamicDestinationResolver() :
+    DestinationResolver(), sessionResolverMap(), resourceLifecycleManager(NULL) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ DynamicDestinationResolver::~DynamicDestinationResolver() {
 void DynamicDestinationResolver::destroy() {
 
     // Destroy the session resolvers.
-    std::auto_ptr< Iterator<SessionResolver*> > sessionResolvers(sessionResolverMap.values().iterator());
+    std::auto_ptr<Iterator<SessionResolver*> > sessionResolvers(sessionResolverMap.values().iterator());
     while (sessionResolvers->hasNext()) {
         delete sessionResolvers->next();
     }
@@ -93,26 +93,25 @@ void DynamicDestinationResolver::destroy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* DynamicDestinationResolver::resolveDestinationName(
-        cms::Session* session, const std::string& destName, bool pubSubDomain ) {
+cms::Destination* DynamicDestinationResolver::resolveDestinationName(cms::Session* session, const std::string& destName, bool pubSubDomain) {
 
-    if( destName == "" ) {
-        throw CMSException( "destination name is invalid", NULL );
+    if (destName == "") {
+        throw CMSException("destination name is invalid", NULL);
     }
 
     // Get the resolver for this session.
     SessionResolver* resolver = NULL;
     try {
-        resolver = sessionResolverMap.get( session );
-    } catch ( decaf::util::NoSuchElementException& ex ) {
-        resolver = new SessionResolver( session, resourceLifecycleManager );
-        sessionResolverMap.put( session, resolver );
+        resolver = sessionResolverMap.get(session);
+    } catch (decaf::util::NoSuchElementException& ex) {
+        resolver = new SessionResolver(session, resourceLifecycleManager);
+        sessionResolverMap.put(session, resolver);
     }
 
     // Return the appropriate destination.
-    if( pubSubDomain ) {
-        return resolver->getTopic( destName );
+    if (pubSubDomain) {
+        return resolver->getTopic(destName);
     } else {
-        return resolver->getQueue( destName );
+        return resolver->getQueue(destName);
     }
 }

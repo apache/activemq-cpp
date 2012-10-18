@@ -22,27 +22,31 @@ using namespace activemq::cmsutil;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionPool::SessionPool( cms::Connection* connection,
-                          cms::Session::AcknowledgeMode ackMode,
-                          ResourceLifecycleManager* resourceLifecycleManager)
-    : connection( connection ),
-      resourceLifecycleManager( resourceLifecycleManager ),
+SessionPool::SessionPool(cms::Connection* connection,
+                         cms::Session::AcknowledgeMode ackMode,
+                         ResourceLifecycleManager* resourceLifecycleManager)
+    : connection(connection),
+      resourceLifecycleManager(resourceLifecycleManager),
       mutex(),
       available(),
       sessions(),
-      acknowledgeMode( ackMode ) {
+      acknowledgeMode(ackMode) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionPool::~SessionPool() {
 
-    // Destroy all of the pooled session objects.
-    list<PooledSession*>::iterator iter = sessions.begin();
-    for( ; iter != sessions.end(); ++iter ) {
-        delete *iter;
+    try {
+        // Destroy all of the pooled session objects.
+        list<PooledSession*>::iterator iter = sessions.begin();
+        for (; iter != sessions.end(); ++iter) {
+            delete *iter;
+        }
+
+        sessions.clear();
+        available.clear();
+    } catch(...) {
     }
-    sessions.clear();
-    available.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,20 +57,20 @@ PooledSession* SessionPool::takeSession() {
         PooledSession* pooledSession = NULL;
 
         // If there are no sessions available, create a new one and return it.
-        if( available.size() == 0 ) {
+        if (available.size() == 0) {
 
             // No sessions were available - create a new one.
-            cms::Session* session = connection->createSession( acknowledgeMode );
+            cms::Session* session = connection->createSession(acknowledgeMode);
 
             // Give this resource to the life-cycle manager to manage. The pool
             // will not be in charge of destroying this resource.
-            resourceLifecycleManager->addSession( session );
+            resourceLifecycleManager->addSession(session);
 
             // Now wrap the session with a pooled session.
-            pooledSession = new PooledSession( this, session );
+            pooledSession = new PooledSession(this, session);
 
             // Add to the sessions list.
-            sessions.push_back( pooledSession );
+            sessions.push_back(pooledSession);
 
         } else {
 
@@ -85,11 +89,10 @@ PooledSession* SessionPool::takeSession() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SessionPool::returnSession( PooledSession* session ) {
+void SessionPool::returnSession(PooledSession* session) {
 
-    synchronized( &mutex ) {
-
+    synchronized(&mutex) {
         // Add to the available list.
-        available.push_back( session );
+        available.push_back(session);
     }
 }

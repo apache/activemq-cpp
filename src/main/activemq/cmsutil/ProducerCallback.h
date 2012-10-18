@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H
-#define ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H
+#ifndef _ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H_
+#define _ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H_
 
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
@@ -31,7 +31,7 @@ namespace cmsutil {
     class AMQCPP_API ProducerCallback {
     public:
 
-        virtual ~ProducerCallback() {}
+        virtual ~ProducerCallback();
 
         /**
          * Execute an action given a session and producer.
@@ -43,10 +43,10 @@ namespace cmsutil {
          *
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual void doInCms( cms::Session* session, cms::MessageProducer* producer ) = 0;
+        virtual void doInCms(cms::Session* session, cms::MessageProducer* producer) = 0;
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H*/
+#endif /*_ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H_*/

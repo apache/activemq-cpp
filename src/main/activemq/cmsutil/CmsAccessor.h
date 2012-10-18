@@ -47,8 +47,8 @@ namespace cmsutil {
 
     protected:
 
-        CmsAccessor( const CmsAccessor& );
-        CmsAccessor& operator= ( const CmsAccessor& );
+        CmsAccessor(const CmsAccessor&);
+        CmsAccessor& operator=(const CmsAccessor&);
 
     public:
 
@@ -67,7 +67,7 @@ namespace cmsutil {
         /**
          * Set the ConnectionFactory to use for obtaining CMS Connections.
          */
-        virtual void setConnectionFactory( cms::ConnectionFactory* connectionFactory ) {
+        virtual void setConnectionFactory(cms::ConnectionFactory* connectionFactory) {
             this->connectionFactory = connectionFactory;
         }
 
@@ -95,8 +95,7 @@ namespace cmsutil {
          * @param sessionAcknowledgeMode
          *      The acknowledgment mode to assign to the Session.
          */
-        virtual void setSessionAcknowledgeMode(
-                cms::Session::AcknowledgeMode sessionAcknowledgeMode ) {
+        virtual void setSessionAcknowledgeMode(cms::Session::AcknowledgeMode sessionAcknowledgeMode) {
             this->sessionAcknowledgeMode = sessionAcknowledgeMode;
         }
 
@@ -151,7 +150,7 @@ namespace cmsutil {
          * @throws CMSException if thrown by CMS API methods
          * @throws IllegalStateException if this object has not been initialized.
          */
-        virtual cms::Session* createSession( cms::Connection* con );
+        virtual cms::Session* createSession(cms::Connection* con);
 
         /**
          * Verifies that the connection factory is valid.

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H
-#define ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H
+#ifndef _ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H_
+#define _ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H_
 
 #include <cms/Session.h>
 #include <activemq/util/Config.h>
@@ -31,7 +31,7 @@ namespace cmsutil {
     class AMQCPP_API SessionCallback {
     public:
 
-        virtual ~SessionCallback(){}
+        virtual ~SessionCallback();
 
         /**
          * Execute any number of operations against the supplied CMS
@@ -42,10 +42,10 @@ namespace cmsutil {
          *
          * @throws CMSException if thrown by CMS API methods
          */
-        virtual void doInCms( cms::Session* session ) = 0;
+        virtual void doInCms(cms::Session* session) = 0;
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H*/
+#endif /*_ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H_*/

@@ -44,13 +44,12 @@ namespace cmsutil {
 
         private:
 
-            SessionResolver( const SessionResolver& );
-            SessionResolver& operator= ( const SessionResolver& );
+            SessionResolver(const SessionResolver&);
+            SessionResolver& operator=(const SessionResolver&);
 
         public:
 
-            SessionResolver( cms::Session* session,
-                             ResourceLifecycleManager* resourceLifecycleManager )
+            SessionResolver(cms::Session* session, ResourceLifecycleManager* resourceLifecycleManager )
                 : resourceLifecycleManager( resourceLifecycleManager ),
                   session( session ),
                   topicMap(),
@@ -59,9 +58,9 @@ namespace cmsutil {
 
             virtual ~SessionResolver() {}
 
-            cms::Topic* getTopic(const std::string& topicName );
+            cms::Topic* getTopic(const std::string& topicName);
 
-            cms::Queue* getQueue(const std::string& queueName );
+            cms::Queue* getQueue(const std::string& queueName);
 
         };
 
@@ -77,8 +76,8 @@ namespace cmsutil {
 
     private:
 
-        DynamicDestinationResolver( const DynamicDestinationResolver& );
-        DynamicDestinationResolver& operator= ( const DynamicDestinationResolver& );
+        DynamicDestinationResolver(const DynamicDestinationResolver&);
+        DynamicDestinationResolver& operator=(const DynamicDestinationResolver&);
 
     public:
 
@@ -86,7 +85,7 @@ namespace cmsutil {
 
         virtual ~DynamicDestinationResolver();
 
-        virtual void init( ResourceLifecycleManager* mgr ) {
+        virtual void init(ResourceLifecycleManager* mgr) {
 
             // since we're changing the lifecycle manager, clear out references
             // to old resources.
@@ -110,12 +109,14 @@ namespace cmsutil {
          * @param pubSubDomain
          *      If true, the name will be resolved to a Topic,
          *      otherwise a Queue.
+         *
          * @return the resolved destination
+         *
          * @throws cms::CMSException if resolution failed.
          */
-        virtual cms::Destination* resolveDestinationName( cms::Session* session,
-                                                          const std::string& destName,
-                                                          bool pubSubDomain );
+        virtual cms::Destination* resolveDestinationName(cms::Session* session,
+                                                         const std::string& destName,
+                                                         bool pubSubDomain);
 
     };
 

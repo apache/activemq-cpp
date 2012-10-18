@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_
-#define ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_
+#ifndef _ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_
+#define _ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_
 
 #include <cms/Connection.h>
 #include <cms/Session.h>
@@ -51,8 +51,8 @@ namespace cmsutil {
 
     protected:
 
-        ResourceLifecycleManager( const ResourceLifecycleManager& );
-        ResourceLifecycleManager& operator= ( const ResourceLifecycleManager& );
+        ResourceLifecycleManager(const ResourceLifecycleManager&);
+        ResourceLifecycleManager& operator=(const ResourceLifecycleManager&);
 
     public:
 
@@ -72,7 +72,7 @@ namespace cmsutil {
          *
          * @throws CMSException if an error occurs while performing this operation.
          */
-        void addConnection( cms::Connection* connection );
+        void addConnection(cms::Connection* connection);
 
         /**
          * Adds a session so that its life will be managed by
@@ -83,7 +83,7 @@ namespace cmsutil {
          *
          * @throws CMSException if an error occurs while performing this operation.
          */
-        void addSession( cms::Session* session );
+        void addSession(cms::Session* session);
 
         /**
          * Adds a destination so that its life will be managed by
@@ -94,7 +94,7 @@ namespace cmsutil {
          *
          * @throws CMSException if an error occurs while performing this operation.
          */
-        void addDestination( cms::Destination* dest );
+        void addDestination(cms::Destination* dest);
 
         /**
          * Adds a message producer so that its life will be managed by
@@ -105,7 +105,7 @@ namespace cmsutil {
          *
          * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageProducer( cms::MessageProducer* producer );
+        void addMessageProducer(cms::MessageProducer* producer);
 
         /**
          * Adds a message consumer so that its life will be managed by
@@ -116,7 +116,7 @@ namespace cmsutil {
          *
          * @throws CMSException if an error occurs while performing this operation.
          */
-        void addMessageConsumer( cms::MessageConsumer* consumer );
+        void addMessageConsumer(cms::MessageConsumer* consumer);
 
         /**
          * Closes and destroys the contained CMS resources.
@@ -135,4 +135,4 @@ namespace cmsutil {
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_RESOURCELIFECYCLEMANAGER_H_*/

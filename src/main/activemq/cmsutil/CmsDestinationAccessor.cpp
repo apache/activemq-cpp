@@ -24,9 +24,7 @@ using namespace activemq::cmsutil;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsDestinationAccessor::CmsDestinationAccessor() : CmsAccessor(),
-                                                   defaultDestinationResolver(),
-                                                   destinationResolver( &defaultDestinationResolver ),
-                                                   pubSubDomain( false ) {
+    defaultDestinationResolver(), destinationResolver(&defaultDestinationResolver), pubSubDomain(false) {
 
     // Default to using queues, and start with the default destinationResolver.
 }
@@ -44,13 +42,13 @@ void CmsDestinationAccessor::init() {
     checkDestinationResolver();
 
     // Give the resolver our lifecycle manager.
-    destinationResolver->init( getResourceLifecycleManager() );
+    destinationResolver->init(getResourceLifecycleManager());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessor::destroy() {
 
-    if( destinationResolver != NULL ) {
+    if (destinationResolver != NULL) {
         destinationResolver->destroy();
     }
 
@@ -58,19 +56,17 @@ void CmsDestinationAccessor::destroy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsDestinationAccessor::resolveDestinationName( cms::Session* session,
-                                                                  const std::string& destName ) {
+cms::Destination* CmsDestinationAccessor::resolveDestinationName(cms::Session* session, const std::string& destName) {
 
     checkDestinationResolver();
 
-    return getDestinationResolver()->resolveDestinationName(
-        session, destName, isPubSubDomain() );
+    return getDestinationResolver()->resolveDestinationName(session, destName, isPubSubDomain());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessor::checkDestinationResolver() {
 
-    if( getDestinationResolver() == NULL ) {
-        throw IllegalStateException( "Property 'destinationResolver' is required", NULL );
+    if (getDestinationResolver() == NULL) {
+        throw IllegalStateException("Property 'destinationResolver' is required", NULL);
     }
 }

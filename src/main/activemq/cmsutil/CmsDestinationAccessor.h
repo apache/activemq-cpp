@@ -52,8 +52,8 @@ namespace cmsutil {
 
     private:
 
-        CmsDestinationAccessor( const CmsDestinationAccessor& );
-        CmsDestinationAccessor& operator= ( const CmsDestinationAccessor& );
+        CmsDestinationAccessor(const CmsDestinationAccessor&);
+        CmsDestinationAccessor& operator=(const CmsDestinationAccessor&);
 
     public:
 
@@ -77,7 +77,7 @@ namespace cmsutil {
             return destinationResolver;
         }
 
-        virtual void setDestinationResolver( DestinationResolver* destRes ) {
+        virtual void setDestinationResolver(DestinationResolver* destRes) {
             this->destinationResolver = destRes;
         }
 
@@ -87,8 +87,7 @@ namespace cmsutil {
 
         virtual void destroy();
 
-        virtual cms::Destination* resolveDestinationName( cms::Session* session,
-                                                          const std::string& destName );
+    virtual cms::Destination* resolveDestinationName(cms::Session* session, const std::string& destName);
 
         virtual void checkDestinationResolver();
 
