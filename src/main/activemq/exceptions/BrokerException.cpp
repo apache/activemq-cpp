@@ -26,7 +26,7 @@ using namespace std;
 BrokerException::BrokerException() : ActiveMQException() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerException::BrokerException(const exceptions::ActiveMQException& ex) : exceptions::ActiveMQException() {
+BrokerException::BrokerException(const ActiveMQException& ex) : exceptions::ActiveMQException() {
     *(exceptions::ActiveMQException*)this = ex;
 }
 
